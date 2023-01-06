@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\EmployeeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,3 +35,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index']);
     });
 });*/
+
+
+
+
+Route::get('/users', [EmployeeController::class, 'index'])->name('users');
+Route::get('/users/create', [EmployeeController::class, 'create'])->name('users.create');
+Route::get('/users/show', [EmployeeController::class, 'show'])->name('users.show');
+Route::post('/users/edit', [EmployeeController::class, 'edit'])->name('users.edit');
+Route::post('/users/store', [EmployeeController::class, 'store'])->name('users.store');
+Route::post('/users/destroy', [EmployeeController::class, 'destroy'])->name('users.destroy');
