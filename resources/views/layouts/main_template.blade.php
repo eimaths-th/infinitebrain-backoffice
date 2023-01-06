@@ -36,6 +36,8 @@
       <!-- Scripts 
       @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     -->
+
+    <link rel="stylesheet" href="{{ asset('css/infinite.css') }}">
 </head>
 
 <body>

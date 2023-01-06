@@ -1,6 +1,6 @@
 <div class="app-header header-shadow">
     <div class="app-header__logo">
-        <div class="logo-src"></div>
+        <div class="logo-src"><img src="{{ asset('images/logo_infinitebrain.png') }}" alt="..." height="36" style="padding-bottom: 5px"></div>
         <div class="header__pane ms-auto">
             <div>
                 <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
