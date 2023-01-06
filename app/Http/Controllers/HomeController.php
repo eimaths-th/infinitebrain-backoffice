@@ -26,6 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if (Auth::check()) {
         if (Auth::user()->hasRole()==1) {
             
             //print_r(session()->all());
@@ -33,6 +34,8 @@ class HomeController extends Controller
             return view('admin/dashboard');
         } else {
             return view('home');
+            //abort(403, 'Unauthorized action.');
         }
+    }
     }
 }

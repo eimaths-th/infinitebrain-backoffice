@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 //use Auth;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class Admin
 {
@@ -18,10 +19,15 @@ class Admin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->hasRole()==1) {
+        //&& Auth::user()->hasRole()==1
+        if (Auth::check()) {
+           
+            //echo Session::get('level');
+            //exit();
             return $next($request);
         } else {
             abort(403, 'Unauthorized action.');
+            
         }
     }
 
