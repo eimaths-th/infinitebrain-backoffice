@@ -15,7 +15,11 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
-Auth::routes();
+Auth::routes([
+    'register' => false, // Registration Routes...
+    'reset' => false, // Password Reset Routes...
+    'verify' => false, // Email Verification Routes...
+]);
 
 
 
@@ -25,8 +29,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });
 //Route for admin
-Route::group(['prefix' => 'admin'], function(){
-    Route::group(['middleware' => ['admin']], function(){
+Route::group(['prefix' => 'admin'], function () {
+    Route::group(['middleware' => ['admin']], function () {
         Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index']);
     });
 });

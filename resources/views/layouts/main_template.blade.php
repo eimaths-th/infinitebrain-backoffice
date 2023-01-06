@@ -3,6 +3,10 @@
 
 <head>
     <meta charset="utf-8">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -28,6 +32,10 @@
     <script defer src="{{ asset('architectui/assets/scripts/fullcalendar.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/maps.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/chart_js.js') }}"></script>
+
+      <!-- Scripts 
+      @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    -->
 </head>
 
 <body>
