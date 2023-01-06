@@ -31,7 +31,7 @@ class LoginController extends Controller
     //protected $redirectTo = RouteServiceProvider::HOME;
     protected function redirectTo()
     {
-        if (Auth::user()->hasRole()==1) {
+        if (Auth::user()->hasRole() == 1) {
             return '/admin/dashboard';
         } else {
             return '/home';
@@ -47,9 +47,4 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
-    
-
-
-    
 }
