@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,4 +15,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Auth::routes();
+
+
+
+
+//Route for normal user
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
+//Route for admin
+Route::group(['prefix' => 'admin'], function(){
+    Route::group(['middleware' => ['admin']], function(){
+        Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index']);
+    });
 });

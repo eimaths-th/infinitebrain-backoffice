@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+use Illuminate\Support\Facades\Session;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -41,4 +43,33 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    const ADMIN_TYPE = 1;
+    const DEFAULT_TYPE = 0;
+    /*public  function isAdmin()
+    {
+        return $this->level === self::ADMIN_TYPE;
+    }*/
+
+    public function hasRole()
+    {
+        switch ($this->level) {
+            case 0:
+                session(['level' => self::DEFAULT_TYPE]);
+                return  self::DEFAULT_TYPE;
+                break;
+            case 1:
+                session(['level' => self::ADMIN_TYPE]);
+                return  self::ADMIN_TYPE;
+                break;
+            case 2:
+                session(['level' => self::DEFAULT_TYPE]);
+                return  self::DEFAULT_TYPE;
+                break;
+            default:
+                session(['level' => self::DEFAULT_TYPE]);
+                return self::DEFAULT_TYPE;
+        }
+    }
 }
