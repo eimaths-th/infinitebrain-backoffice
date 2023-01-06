@@ -27,15 +27,15 @@ class HomeController extends Controller
     public function index()
     {
         if (Auth::check()) {
-        if (Auth::user()->hasRole()==1) {
-            
-            //print_r(session()->all());
-            //echo $value = Session::get('level');
-            return view('admin/dashboard');
-        } else {
-            return view('home');
-            //abort(403, 'Unauthorized action.');
+            if (Auth::user()->level == 1) {
+
+                //print_r(session()->all());
+                //echo $value = Session::get('level');
+                return view('home');
+            } else {
+                return view('home');
+                //abort(403, 'Unauthorized action.');
+            }
         }
-    }
     }
 }

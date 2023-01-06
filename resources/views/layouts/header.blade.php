@@ -1,6 +1,7 @@
 <div class="app-header header-shadow">
     <div class="app-header__logo">
-        <div class="logo-src"><img src="{{ asset('images/logo_infinitebrain.png') }}" alt="..." height="36" style="padding-bottom: 5px"></div>
+        <div class="logo-src"><img src="{{ asset('images/logo_infinitebrain.png') }}" alt="..." height="36"
+                style="padding-bottom: 5px"></div>
         <div class="header__pane ms-auto">
             <div>
                 <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
@@ -66,8 +67,8 @@
                         <div class="widget-content-left">
                             <div class="btn-group">
                                 <a data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                    <img width="42" class="rounded-circle"
-                                        src="{{ asset('images/user.png') }}" alt="">
+                                    <img width="42" class="rounded-circle" src="{{ asset('images/user.png') }}"
+                                        alt="">
                                     <i class="fa fa-angle-down ms-2 opacity-8"></i>
                                 </a>
                                 <div tabindex="-1" role="menu" aria-hidden="true"
@@ -78,7 +79,7 @@
                                     <button type="button" tabindex="0" class="dropdown-item">Actions</button>
                                     <div tabindex="-1" class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
+                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
@@ -94,7 +95,12 @@
                                 {{ Str::upper(Auth::user()->name) }}
                             </div>
                             <div class="widget-subheading">
-                                {{ Auth::user()->level }}
+
+                                @if (Auth::user()->level == 1)
+                                    Admin
+                                @else
+                                    Teacher
+                                @endif
                             </div>
                         </div>
                         <div class="widget-content-right header-user-info ms-3">
