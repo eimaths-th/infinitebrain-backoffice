@@ -17,9 +17,9 @@ class EmployeeController extends Controller
     public function index()
     {
         //
-        $users = User::latest()->paginate(1);
+        $users = User::latest()->paginate(10);
         return view('users.index', compact('users'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**
@@ -27,7 +27,7 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(array $data)
+    public function create()
     {
         //
         return view('users.create'); // -> resources/views/users/create.blade.php

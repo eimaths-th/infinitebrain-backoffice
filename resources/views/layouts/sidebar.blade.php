@@ -39,6 +39,26 @@
                         Dashboard Example 1
                     </a>
                 </li>
+                @if (Auth::user()->level == 1)
+                    <li class="app-sidebar__heading">Admin</li>
+                    <li>
+                        <a href="#">
+                            <i class="metismenu-icon pe-7s-users"></i>
+                            Employees
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
+
+                        <ul>
+                            <li>
+                                <a href="{{ route('users') }}">
+                                    <i class="metismenu-icon"></i>
+                                    Users
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+
                 <li class="app-sidebar__heading">UI Components</li>
                 <li>
                     <a href="#">
