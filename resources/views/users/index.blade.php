@@ -12,95 +12,47 @@
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
-                        <i class="pe-7s-medal icon-gradient bg-tempting-azure"></i>
+                        <i class="pe-7s-user icon-gradient bg-tempting-azure"></i>
                     </div>
-                    <div>Data Tables
-                        <div class="page-title-subheading">Choose between regular React Bootstrap tables or advanced
-                            dynamic ones.</div>
+                    <div>Employee
+                        <div class="page-title-subheading">Infinite Brain Employee Data</div>
                     </div>
                 </div>
                 <div class="page-title-actions">
-                    <button type="button" data-toggle="tooltip" title="Example Tooltip" data-placement="bottom"
+                    <!--<button type="button" data-toggle="tooltip" title="Example Tooltip" data-placement="bottom"
                         class="btn-shadow mr-3 btn btn-dark">
                         <i class="fa fa-star"></i>
-                    </button>
+                    </button>-->
                     <div class="d-inline-block dropdown">
-                        <a class="btn btn-success" href="{{ route('users.create') }}"> Create New User</a>
-                        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                            class="btn-shadow dropdown-toggle btn btn-info">
-                            <span class="btn-icon-wrapper pr-2 opacity-7">
-                                <i class="fa fa-business-time fa-w-20"></i>
-                            </span>
-                            Buttons
-                        </button>
-                        <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
-                            <ul class="nav flex-column">
-                                <li class="nav-item">
-                                    <a class="nav-link">
-                                        <i class="nav-link-icon lnr-inbox"></i>
-                                        <span> Inbox</span>
-                                        <div class="ml-auto badge badge-pill badge-secondary">86</div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link">
-                                        <i class="nav-link-icon lnr-book"></i>
-                                        <span> Book</span>
-                                        <div class="ml-auto badge badge-pill badge-danger">5</div>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link">
-                                        <i class="nav-link-icon lnr-picture"></i>
-                                        <span> Picture</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a disabled class="nav-link disabled">
-                                        <i class="nav-link-icon lnr-file-empty"></i>
-                                        <span> File Disabled</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        <a class="btn btn-success" href="{{ route('users.create') }}"><i class="fa fa-plus"></i> Create New User</a>
+                        <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete All</a>
+                        
                     </div>
                 </div>
             </div>
         </div>
-        <div class="main-card mb-3 card">
+        <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-                <table style="width: 100%;" id="Listview" class="table table-striped table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Name</th>
-                            <th>Details</th>
-                            <th width="280px">Action</th>
-                        </tr>
-                    </thead>
-                    @foreach ($users as $user)
-                        <tbody>
+                <form method="post" action="{{ route('users.destroy_all') }}" name="delete_all" id="delete_all">
+                    @csrf
+                    @method('DELETE')
+                    <table style="width: 100%;" id="Listview"
+                        class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">
+                        <thead>
                             <tr>
-                                <td>{{ ++$i }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>
-                                    <form action="{{ route('users.destroy', $user->id) }}" method="POST">
-                                        <a class="btn btn-info" href="{{ route('users.show', $user->id) }}">Show</a>
-                                        <a class="btn btn-primary" href="{{ route('users.edit', $user->id) }}">Edit</a>
-
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
-                                </td>
+                                <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
+                                <th>No</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Level</th>
+                                <th width="280px">Action</th>
                             </tr>
-                        </tbody>
-                    @endforeach
-                </table>
-                <div style="margin-left: auto;  float: right;
-                margin-right: 0;">{!! $users->links() !!}</div>
+                        </thead>
+
+                    </table>
+                </form>
+
+
 
             </div>
         </div>
@@ -108,7 +60,45 @@
     </div>
 
 
-    @vite(['resources/js/app2.js'])
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <form class="form" action="" method="POST">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">New Customer</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id">
+
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" name="name" class="form-control input-sm">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="text" name="phone" class="form-control input-sm">
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">DOB</label>
+                            <input type="date" name="dob" class="form-control input-sm">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-save">Save</button>
+                        <button type="button" class="btn btn-primary btn-update">Update</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    @vite(['resources/js/Users.js'])
 @endsection
 
 @section('footer-scripts')

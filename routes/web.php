@@ -17,7 +17,7 @@ use App\Http\Controllers\Auth\EmployeeController;
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
 Auth::routes([
-    'register' => false, // Registration Routes...
+    'register' => true, // Registration Routes...
     'reset' => false, // Password Reset Routes...
     'verify' => false, // Email Verification Routes...
 ]);
@@ -44,4 +44,5 @@ Route::get('/users/create', [EmployeeController::class, 'create'])->name('users.
 Route::get('/users/show', [EmployeeController::class, 'show'])->name('users.show');
 Route::post('/users/edit', [EmployeeController::class, 'edit'])->name('users.edit');
 Route::post('/users/store', [EmployeeController::class, 'store'])->name('users.store');
-Route::post('/users/destroy', [EmployeeController::class, 'destroy'])->name('users.destroy');
+Route::delete('/users/destroy/{id}', [EmployeeController::class, 'destroy'])->name('users.destroy');
+Route::delete('/users/destroy_all', [EmployeeController::class, 'destroy_all'])->name('users.destroy_all');

@@ -21,19 +21,9 @@ class Admin
     {
         //&& Auth::user()->hasRole()==1
         if (Auth::check()) {
-           
-            //echo Session::get('level');
-            //exit();
             return $next($request);
         } else {
             abort(403, 'Unauthorized action.');
-            
         }
     }
-
-    
-
-    
 }
-
-

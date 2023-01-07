@@ -25,6 +25,12 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
+
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+
     <script defer src="{{ asset('architectui/assets/scripts/main.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/demo.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/toastr.js') }}"></script>
@@ -33,10 +39,10 @@
     <script defer src="{{ asset('architectui/assets/scripts/maps.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/chart_js.js') }}"></script>
 
-      <!-- Scripts 
+    <!-- Scripts
       @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     -->
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="{{ asset('css/infinite.css') }}">
@@ -51,7 +57,7 @@
         <!-- Theme Setting -->
         @include('layouts.theme_setting')
 
-       
+
         <div class="app-main">
 
 
@@ -69,11 +75,7 @@
             <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
         </div>
     </div>
+
 </body>
-<script src="https://code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script>
-<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
-<script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
-
-
 
 </html>
