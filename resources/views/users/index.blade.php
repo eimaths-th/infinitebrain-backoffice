@@ -99,12 +99,15 @@
                         </tbody>
                     @endforeach
                 </table>
+                <div style="margin-left: auto;  float: right;
+                margin-right: 0;">{!! $users->links() !!}</div>
+
             </div>
         </div>
 
     </div>
 
-    {!! $users->links() !!}
+
     @vite(['resources/js/app2.js'])
 @endsection
 
