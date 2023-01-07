@@ -6275,6 +6275,7 @@ fieldset:disabled .btn {
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 0.3rem;
   outline: 0;
+  
 }
 
 .modal-backdrop {
@@ -6285,6 +6286,7 @@ fieldset:disabled .btn {
   width: 100vw;
   height: 100vh;
   background-color: #000;
+  position: relative;
 }
 
 .modal-backdrop.fade {

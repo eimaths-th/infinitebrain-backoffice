@@ -30,6 +30,7 @@
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
 
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+    
 
     <script defer src="{{ asset('architectui/assets/scripts/main.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/demo.js') }}"></script>

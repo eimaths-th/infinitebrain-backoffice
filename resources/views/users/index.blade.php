@@ -59,15 +59,14 @@
 
     </div>
 
-
-    <div class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+    
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <form class="form" action="" method="POST">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">New Customer</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
                     <div class="modal-body">
@@ -101,5 +100,4 @@
     @vite(['resources/js/Users.js'])
 @endsection
 
-@section('footer-scripts')
-@endsection
+

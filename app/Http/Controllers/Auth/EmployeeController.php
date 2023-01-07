@@ -24,11 +24,20 @@ class EmployeeController extends Controller
         if ($request->ajax()) {
             $users = User::orderBy("id", "desc")->get();
             return datatables()->of($users)
+                ->editColumn('level', function (User $user) {
+                    if ($user->level == 1) {
+                        $ltext = "Admin";
+                    } else {
+                        $ltext = "Teacher";
+                    }
+
+                    return $ltext;
+                })
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a href="#" class="btn btn-xs btn-warning btn-edit "><i class="fa fa-edit"></i> Edit</a> ';
+                    $html = '<a href="#" class="btn btn-xs btn-warning btn-edit"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
                 })->toJson();
@@ -139,7 +148,6 @@ class EmployeeController extends Controller
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {
             User::find($arr_del[$xx])->delete();
-        
         }
         //$ids = $request->get('table_records');
         //User::whereIn('id',explode(",",$ids))->delete();
