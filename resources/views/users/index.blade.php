@@ -1,17 +1,8 @@
 @extends('layouts.main_template')
 
 @section('style')
-    <script src="https://code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
-    </script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
-
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
 @endsection
 
@@ -35,12 +26,9 @@
                     </div>
                 </div>
                 <div class="page-title-actions">
-                    <!--<button type="button" data-toggle="tooltip" title="Example Tooltip" data-placement="bottom"
-                                            class="btn-shadow mr-3 btn btn-dark">
-                                            <i class="fa fa-star"></i>
-                                        </button>-->
                     <div class="d-inline-block dropdown">
-                        <a class="btn btn-success" href="{{ route('users.create') }}"><i class="fa fa-plus"></i> Create New
+                        <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
+                            id="CreateButton"><i class="fa fa-plus"></i> Create New
                             User</a>
                         <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
                             All</a>
@@ -112,6 +100,107 @@
             </form>
         </div>
     </div>
+
+    <!-- Create Modal -->
+    <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" id="CreateModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <form class="form" action="" method="POST">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add Employee</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
+
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <label for="Name">Name:</label>
+                            <input type="text" class="form-control" name="name" id="AddName" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="Name">Email:</label>
+                            <input type="text" class="form-control" name="email" id="AddEmail" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="Name">Password:</label>
+                            <input type="password" class="form-control" name="password" required
+                                autocomplete="new-password" id="AddPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="Name">Confirm Password:</label>
+                            <input type="password" class="form-control" name="password_confirmation" id="AddPasswordC"
+                                required autocomplete="new-password">
+                        </div>
+                        <div class="form-group">
+                            <label for="Name">Level:</label>
+                            <select class="form-control" id="AddLevel" name="level">
+                                <option value="" selectes>Select Level</option>
+                                <option value="1">Admin</option>
+                                <option value="0">Teacher</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="SubmitCreateForm">Update</button>
+                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <!-- Edit  Modal -->
+    <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+        id="EditModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <form class="form" action="" method="POST">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Employee</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <strong>Success!</strong> Users was edit successfully.
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div id="EditModalBody">
+
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="SubmitEditForm">Update</button>
+                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -119,26 +208,13 @@
         $(document).ready(function() {
 
             $(".delete_all_button").click(function() {
-
-
                 var len = $('input[name="table_records[]"]:checked').length;
-
                 if (len > 0) {
-
                     if (confirm("Click OK to Delete?")) {
-
-
-
                         $('form#delete_all').submit();
-
                     }
-
                 } else {
-
                     alert("Please Select Record For Delete");
-
-
-
                 }
 
             });
@@ -154,12 +230,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var modal = $('.modal')
-            var form = $('.form')
-            var btnAdd = $('.add'),
-                btnSave = $('.btn-save'),
-                btnUpdate = $('.btn-update');
-
+            
             var table = $('#Listview').DataTable({
                 /*"aoColumnDefs": [
                 {
@@ -214,69 +285,127 @@
                 ]
             });
 
-            btnAdd.click(function() {
-                modal.modal()
-                form.trigger('reset')
-                modal.find('.modal-title').text('Add New')
-                btnSave.show();
-                btnUpdate.hide()
-            })
+               
 
-            btnSave.click(function(e) {
+            $(document).on('click', '#CreateButton', function(e) {
                 e.preventDefault();
-                var data = form.serialize()
-                console.log(data)
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+                $('#CreateModal').modal('show');
+            });
+
+            let id;
+            $(document).on('click', '#getEditData', function(e) {
+                e.preventDefault();
+
+
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+
+                id = $(this).data('id');
                 $.ajax({
-                    type: "POST",
-                    url: "",
-                    data: data + '&_token=' + token,
-                    success: function(data) {
-                        if (data.success) {
-                            table.draw();
-                            form.trigger("reset");
-                            modal.modal('hide');
+                    url: "/users/edit/" + id,
+                    method: 'GET',
+                    success: function(res) {
+                        $('#EditModalBody').html(res.html);
+                        $('#EditModal').modal('show');
+                    }
+                });
+
+            })
+
+
+            // Create product Ajax request.
+            $('#SubmitCreateForm').click(function(e) {
+                e.preventDefault();
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+
+                $.ajax({
+                    url: "{{ route('users.store') }}",
+                    method: 'post',
+                    data: {
+                        password: $('#AddPassword').val(),
+                        password_confirmation: $('#AddPasswordC').val(),
+                        name: $('#AddName').val(),
+                        email: $('#AddEmail').val(),
+                        level: $('#AddLevel').val(),
+                        _token: token,
+                    },
+                    success: function(result) {
+
+                        if (result.errors) {
+                            $('.alert-danger').html('');
+                            $.each(result.errors, function(key, value) {
+                                $('.alert-danger').show();
+                                $('.alert-danger').append('<strong><li>' + value +
+                                    '</li></strong>');
+                            });
                         } else {
-                            alert('Delete Fail');
+                            $('.alert-danger').hide();
+                            $('.alert-success').show();
+                            $('.alert-success').append('<strong><li>' + result.success +
+                                '</li></strong>');
+                            $('#Listview').DataTable().ajax.reload();
+                            //setTimeout(function() {
+                            //$('.alert-success').hide();
+                            //$('#CreateModal').modal('hide');
+                            //}, 10000);
+
                         }
                     }
-                }); //end ajax
-            })
+                });
+            });
 
-
-            $(document).on('click', '.btn-edit', function() {
-                btnSave.hide();
-                btnUpdate.show();
-
-
-                modal.find('.modal-title').text('Update Record')
-                modal.find('.modal-footer button[type="submit"]').text('Update')
-
-                var rowData = table.row($(this).parents('tr')).data()
-
-                form.find('input[name="id"]').val(rowData.id)
-                form.find('input[name="name"]').val(rowData.name)
-                form.find('input[name="email"]').val(rowData.email)
-                form.find('input[name="level"]').val(rowData.level)
-
-                modal.modal('show');
-            })
-
-            btnUpdate.click(function() {
+            $('#SubmitEditForm').click(function(e) {
                 if (!confirm("Are you sure?")) return;
-                var formData = form.serialize() + '&_method=PUT&_token=' + token
-                var updateId = form.find('input[name="id"]').val()
+                e.preventDefault();
+                
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+
+
                 $.ajax({
-                    type: "POST",
-                    url: "/" + updateId,
-                    data: formData,
-                    success: function(data) {
-                        if (data.success) {
-                            table.draw();
-                            modal.modal('hide');
+                    url: "/users/save/" + id,
+                    method: 'PUT',
+                    data: {
+                        name: $('#editName').val(),
+                        email: $('#editEmail').val(),
+                        level: $('#editLevel').val(),
+                    },
+
+                    success: function(result) {
+                        //console.log(result);
+                        if (result.errors) {
+                            $('.alert-danger').html('');
+                            $.each(result.errors, function(key, value) {
+                                $('.alert-danger').show();
+                                $('.alert-danger').append('<strong><li>' + value +
+                                    '</li></strong>');
+                            });
+                        } else {
+                            $('.alert-danger').hide();
+                            $('.alert-success').show();
+                            $('.alert-success').append('<strong><li>' + result.success +
+                                '</li></strong>');
+                            $('#Listview').DataTable().ajax.reload();
+                            //setTimeout(function() {
+                            //$('.alert-success').hide();
+                            //   $('#EditModal').modal('hide');
+                            //}, 10000);
+
                         }
                     }
-                }); //end ajax
-            })
+                });
+            });
 
 
             $(document).on('click', '.btn-delete', function() {

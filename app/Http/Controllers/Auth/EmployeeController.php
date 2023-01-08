@@ -6,10 +6,21 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 
 class EmployeeController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -37,7 +48,7 @@ class EmployeeController extends Controller
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a href="#" class="btn btn-xs btn-warning btn-edit"><i class="fa fa-edit"></i> Edit</a> ';
+                    $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
                 })->toJson();
@@ -79,20 +90,29 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         // Validation for required fields (and using some regex to validate our numeric value)
-        $request->validate([
+
+        //return response()->json(['success'=>$request->all()]);
+        //exit();
+        $validator =  Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed'
+            'password' => 'required|string|min:8|confirmed',
+            'level' => 'required',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
         // Getting values from the blade template form
         $user = new User([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => Hash::make($request->get('value')),
-            'level' => User::DEFAULT_TYPE,
+            'password' => Hash::make($request->get('password')),
+            'level' => $request->get('level'),
         ]);
         $user->save();
-        return redirect('/users')->with('success', 'User saved.');   // -> resources/views/users/index.blade.php
+        return response()->json(['success' => 'User Add successfully']);
+        //return redirect('/users')->with('success', 'User saved.');   // -> resources/views/users/index.blade.php
     }
 
     /**
@@ -115,6 +135,37 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         //
+        $data = User::find($id);
+        if ($data->level == 1) {
+            $aselected = 'selected';
+        } else {
+            $aselected = '';
+        }
+
+        if ($data->level == 0) {
+            $bselected = 'selected';
+        } else {
+            $bselected = '';
+        }
+
+        $html = '<div class="form-group">
+                    <label for="Name">Name:</label>
+                    <input type="text" class="form-control" name="name" id="editName" value="' . $data->name . '">
+                </div>
+                <div class="form-group">
+                    <label for="Name">Email:</label>
+                    <input type="text" class="form-control" name="email" id="editEmail" value="' . $data->email . '">
+                </div>
+                <div class="form-group">
+                    <label for="Name">Level:</label>
+                    <select class="form-control" id="editLevel" name="level">
+                     <option value="">Select Level</option>
+                     <option value="1" ' . $aselected . '>Admin</option>
+                     <option value="0" ' . $bselected . '>Teacher</option>
+                    </select>
+                </div>';
+
+        return response()->json(['html' => $html]);
     }
 
     /**
@@ -127,6 +178,22 @@ class EmployeeController extends Controller
     public function update(Request $request, $id)
     {
         //
+        //print_r($request);
+        //return response()->json(['success'=>$request->all()]);
+        //exit();
+        $validator =  Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'level' => 'required',
+            //'email' => 'required|string|email|max:255|unique:users',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        User::find($id)->update($request->all());
+
+        return response()->json(['success' => 'User updated successfully']);
     }
 
     /**

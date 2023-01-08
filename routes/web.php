@@ -42,7 +42,8 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('/users', [EmployeeController::class, 'index'])->name('users');
 Route::get('/users/create', [EmployeeController::class, 'create'])->name('users.create');
 Route::get('/users/show', [EmployeeController::class, 'show'])->name('users.show');
-Route::post('/users/edit', [EmployeeController::class, 'edit'])->name('users.edit');
+Route::get('/users/edit/{id}', [EmployeeController::class, 'edit'])->name('users.edit');
+Route::put('/users/save/{id}', [EmployeeController::class, 'update'])->name('users.save');
 Route::post('/users/store', [EmployeeController::class, 'store'])->name('users.store');
 Route::delete('/users/destroy/{id}', [EmployeeController::class, 'destroy'])->name('users.destroy');
 Route::delete('/users/destroy_all', [EmployeeController::class, 'destroy_all'])->name('users.destroy_all');
