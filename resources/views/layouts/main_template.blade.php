@@ -26,22 +26,9 @@
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
 
-    
+
     <script defer src="{{ asset('architectui/assets/scripts/main.js') }}"></script>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
-
-    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
-
-
-
+    @yield('style')
     <script defer src="{{ asset('architectui/assets/scripts/demo.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/toastr.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/scrollbar.js') }}"></script>
@@ -53,8 +40,8 @@
       @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     -->
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+
+
     <link rel="stylesheet" href="{{ asset('css/infinite.css') }}">
 </head>
 
@@ -86,6 +73,8 @@
         </div>
     </div>
 
+
+    @yield('script')
 </body>
 
 </html>
