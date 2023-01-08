@@ -123,7 +123,7 @@ $(document).ready(function () {
         form.find('input[name="email"]').val(rowData.email)
         form.find('input[name="level"]').val(rowData.level)
 
-        modal.modal();
+        modal.modal('show');
     })
 
     btnUpdate.click(function () {
