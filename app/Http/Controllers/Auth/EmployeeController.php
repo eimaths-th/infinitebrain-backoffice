@@ -32,7 +32,9 @@ class EmployeeController extends Controller
         /*$users = User::latest()->paginate(10);
         return view('users.index', compact('users'))
             ->with('i', (request()->input('page', 1) - 1) * 10);*/
+        //sleep(3);
         if ($request->ajax()) {
+            sleep(3);
             $users = User::orderBy("id", "desc")->get();
             return datatables()->of($users)
                 ->editColumn('level', function (User $user) {
@@ -57,18 +59,7 @@ class EmployeeController extends Controller
         return view('users.index');
     }
 
-    /*public function data_table()
-    {
-        $columns = array(
-            // datatable column index  => database column name
-            0 => 'id',
-            1 => 'name',
-            2 => 'email',
-            3 => 'level',
-        );
 
-        DB::table('users')->order_by('email', 'desc')->get();
-    }*/
 
     /**
      * Show the form for creating a new resource.
@@ -78,7 +69,7 @@ class EmployeeController extends Controller
     public function create()
     {
         //
-        return view('users.create'); // -> resources/views/users/create.blade.php
+        //return view('users.create'); // -> resources/views/users/create.blade.php
     }
 
     /**

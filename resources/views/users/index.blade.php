@@ -65,42 +65,6 @@
 
     </div>
 
-
-    <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <form class="form" action="" method="POST">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="id">
-
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" name="name" class="form-control input-sm">
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone</label>
-                            <input type="text" name="email" class="form-control input-sm">
-                        </div>
-                        <div class="form-group">
-                            <label for="dob">DOB</label>
-                            <input type="text" name="level" class="form-control input-sm">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-save">Save</button>
-                        <button type="button" class="btn btn-primary btn-update">Update</button>
-                        <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- Create Modal -->
     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" id="CreateModal">
@@ -114,14 +78,12 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
-                            style="display: none;">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert"
-                            style="display: none;">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
 
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true"></span>
@@ -137,8 +99,8 @@
                         </div>
                         <div class="form-group">
                             <label for="Name">Password:</label>
-                            <input type="password" class="form-control" name="password" required
-                                autocomplete="new-password" id="AddPassword">
+                            <input type="password" class="form-control" name="password" required autocomplete="new-password"
+                                id="AddPassword">
                         </div>
                         <div class="form-group">
                             <label for="Name">Confirm Password:</label>
@@ -230,7 +192,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            
+
             var table = $('#Listview').DataTable({
                 /*"aoColumnDefs": [
                 {
@@ -248,6 +210,10 @@
                 ajax: '',
                 serverSide: true,
                 processing: true,
+                language: {
+                    loadingRecords: '&nbsp;',
+                    processing: '<div class="spinner"></div>'
+                },
                 aaSorting: [
                     [0, "desc"]
                 ],
@@ -285,7 +251,7 @@
                 ]
             });
 
-               
+
 
             $(document).on('click', '#CreateButton', function(e) {
                 e.preventDefault();
@@ -366,7 +332,7 @@
             $('#SubmitEditForm').click(function(e) {
                 if (!confirm("Are you sure?")) return;
                 e.preventDefault();
-                
+
                 $('.alert-danger').html('');
                 $('.alert-danger').hide();
                 $('.alert-success').html('');

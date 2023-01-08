@@ -5,12 +5,12 @@
                 <ul class="nav">
                     <li class="nav-item">
                         <a href="javascript:void(0);" class="nav-link">
-                            Footer Link 1
+                            Copyright © 2021 infinitebrain.co.th All rights reserved.
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="javascript:void(0);" class="nav-link">
-                            Footer Link 2
+                            
                         </a>
                     </li>
                 </ul>
@@ -19,15 +19,15 @@
                 <ul class="nav">
                     <li class="nav-item">
                         <a href="javascript:void(0);" class="nav-link">
-                            Footer Link 3
+                            
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="javascript:void(0);" class="nav-link">
-                            <div class="badge bg-success me-1 ms-0">
+                            <!--<div class="badge bg-success me-1 ms-0">
                                 <small>NEW</small>
-                            </div>
-                            Footer Link 4
+                            </div>-->
+                            infinitebrain.co.th
                         </a>
                     </li>
                 </ul>

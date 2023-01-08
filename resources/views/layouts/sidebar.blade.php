@@ -34,9 +34,9 @@
             <ul class="vertical-nav-menu">
                 <li class="app-sidebar__heading">Dashboards</li>
                 <li>
-                    <a href="index.html" class="mm-active">
+                    <a href="{{ route('users') }}" class="mm-active">
                         <i class="metismenu-icon pe-7s-rocket"></i>
-                        Dashboard Example 1
+                        Dashboard
                     </a>
                 </li>
                 @if (Auth::user()->level == 1)
@@ -59,7 +59,7 @@
                     </li>
                 @endif
 
-                <li class="app-sidebar__heading">UI Components</li>
+                {{-- <li class="app-sidebar__heading">UI Components</li>
                 <li>
                     <a href="#">
                         <i class="metismenu-icon pe-7s-diamond"></i>
@@ -238,7 +238,7 @@
                         </i>
                         Upgrade to PRO
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </div>
     </div>

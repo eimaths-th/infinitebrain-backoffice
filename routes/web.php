@@ -14,7 +14,8 @@ use App\Http\Controllers\Auth\EmployeeController;
 |
 */
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+//Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+Route::get('/', [EmployeeController::class, 'index']);
 
 Auth::routes([
     'register' => true, // Registration Routes...
