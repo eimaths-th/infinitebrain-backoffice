@@ -21,7 +21,7 @@
                     <div class="page-title-icon">
                         <i class="pe-7s-user icon-gradient bg-tempting-azure"></i>
                     </div>
-                    <div>Employee
+                    <div>Employees
                         <div class="page-title-subheading">Infinite Brain Employee Data</div>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                         <div class="form-group">
                             <label for="Name">Level:</label>
                             <select class="form-control" id="AddLevel" name="level">
-                                <option value="" selectes>Select Level</option>
+                                <option value="" selected>Select Level</option>
                                 <option value="1">Admin</option>
                                 <option value="0">Teacher</option>
                             </select>
@@ -118,7 +118,7 @@
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="SubmitCreateForm">Update</button>
+                        <button type="button" class="btn btn-success" id="SubmitCreateForm">Save</button>
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>

@@ -77,16 +77,16 @@
                             <th width="280px">Action</th>
                         </tr>
                     </thead>
-                    @foreach ($users as $user)
+                    @foreach ($levels as $level)
                         <tbody>
                             <tr>
                                 <td>{{ ++$i }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->name }}</td>
+                                <td>{{ $level->email }}</td>
+                                <td>{{ $level->name }}</td>
                                 <td>
-                                    <form action="{{ route('users.destroy', $user->id) }}" method="POST">
-                                        <a class="btn btn-info" href="{{ route('users.show', $user->id) }}">Show</a>
-                                        <a class="btn btn-primary" href="{{ route('users.edit', $user->id) }}">Edit</a>
+                                    <form action="{{ route('users.destroy', $level->id) }}" method="POST">
+                                        <a class="btn btn-info" href="{{ route('users.show', $level->id) }}">Show</a>
+                                        <a class="btn btn-primary" href="{{ route('users.edit', $level->id) }}">Edit</a>
 
                                         @csrf
                                         @method('DELETE')
@@ -98,7 +98,7 @@
                         </tbody>
                     @endforeach
                 </table>
-                <div style="margin-left: auto;  float: right; margin-right: 0;">{!! $users->links() !!}
+                <div style="margin-left: auto;  float: right; margin-right: 0;">{!! $levels->links() !!}
                 </div>
 
             </div>

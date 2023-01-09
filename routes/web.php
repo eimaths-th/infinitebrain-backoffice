@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\EmployeeController;
+use App\Http\Controllers\LevelController;
+use App\Http\Controllers\StudentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,8 +16,8 @@ use App\Http\Controllers\Auth\EmployeeController;
 |
 */
 
-//Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
-Route::get('/', [EmployeeController::class, 'index']);
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+//Route::get('/', [EmployeeController::class, 'index']);
 
 Auth::routes([
     'register' => true, // Registration Routes...
@@ -48,3 +50,19 @@ Route::put('/users/save/{id}', [EmployeeController::class, 'update'])->name('use
 Route::post('/users/store', [EmployeeController::class, 'store'])->name('users.store');
 Route::delete('/users/destroy/{id}', [EmployeeController::class, 'destroy'])->name('users.destroy');
 Route::delete('/users/destroy_all', [EmployeeController::class, 'destroy_all'])->name('users.destroy_all');
+
+Route::get('/levels', [LevelController::class, 'index'])->name('levels');
+Route::get('/levels/edit/{id}', [LevelController::class, 'edit'])->name('levels.edit');
+Route::put('/levels/save/{id}', [LevelController::class, 'update'])->name('levels.save');
+Route::post('/levels/store', [LevelController::class, 'store'])->name('levels.store');
+Route::delete('/levels/destroy_all', [LevelController::class, 'destroy_all'])->name('levels.destroy_all');
+Route::delete('/levels/destroy/{id}', [LevelController::class, 'destroy'])->name('levels.destroy');
+
+Route::get('/students', [StudentController::class, 'index'])->name('students');
+Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
+Route::get('/students/show', [StudentController::class, 'show'])->name('students.show');
+Route::get('/students/edit/{id}', [StudentController::class, 'edit'])->name('students.edit');
+Route::put('/students/save/{id}', [StudentController::class, 'update'])->name('students.save');
+Route::post('/students/store', [StudentController::class, 'store'])->name('students.store');
+Route::delete('/students/destroy/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
+Route::delete('/students/destroy_all', [StudentController::class, 'destroy_all'])->name('students.destroy_all');

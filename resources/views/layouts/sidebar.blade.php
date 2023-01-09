@@ -59,6 +59,54 @@
                     </li>
                 @endif
 
+                @if (Auth::user()->level == 0 || Auth::user()->level == 1)
+                    <li class="app-sidebar__heading">School</li>
+                    <li>
+                        <a href="#">
+                            <i class="metismenu-icon pe-7s-network"></i>
+                            Level
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
+
+                        <ul>
+                            <li>
+                                <a href="{{ route('levels', ['id' => '0']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    English Level
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('levels' , ['id' => '1']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Math Level
+                                </a>
+                            </li>
+                        </ul>
+                        
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="metismenu-icon pe-7s-study"></i>
+                            Student
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
+
+                        <ul>
+                            <li>
+                                <a href="{{ route('students') }}">
+                                    <i class="metismenu-icon"></i>
+                                    Students
+                                </a>
+                            </li>
+                            
+                        </ul>
+                        
+                    </li>
+                @endif
+
+                
+
                 {{-- <li class="app-sidebar__heading">UI Components</li>
                 <li>
                     <a href="#">

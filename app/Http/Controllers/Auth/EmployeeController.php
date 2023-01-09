@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+//use Auth;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class EmployeeController extends Controller
@@ -20,6 +23,7 @@ class EmployeeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        
     }
     /**
      * Display a listing of the resource.
@@ -29,16 +33,22 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         //
-        /*$users = User::latest()->paginate(10);
+        /*$levels = User::latest()->paginate(10);
         return view('users.index', compact('users'))
             ->with('i', (request()->input('page', 1) - 1) * 10);*/
         //sleep(3);
+
+        if (Auth::check()) {
+            if (Auth::user()->level !== 1) {
+                abort(403, 'Unauthorized action.');
+            }
+        }
         if ($request->ajax()) {
-            sleep(3);
-            $users = User::orderBy("id", "desc")->get();
-            return datatables()->of($users)
-                ->editColumn('level', function (User $user) {
-                    if ($user->level == 1) {
+            sleep(2);
+            $levels = User::orderBy("id", "desc")->get();
+            return datatables()->of($levels)
+                ->editColumn('level', function (User $level) {
+                    if ($level->level == 1) {
                         $ltext = "Admin";
                     } else {
                         $ltext = "Teacher";
@@ -95,13 +105,13 @@ class EmployeeController extends Controller
             return response()->json(['errors' => $validator->errors()->all()]);
         }
         // Getting values from the blade template form
-        $user = new User([
+        $level = new User([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
             'level' => $request->get('level'),
         ]);
-        $user->save();
+        $level->save();
         return response()->json(['success' => 'User Add successfully']);
         //return redirect('/users')->with('success', 'User saved.');   // -> resources/views/users/index.blade.php
     }
