@@ -339,12 +339,14 @@
 
 
                 $.ajax({
-                    url: "/users/save/" + id,
+                    url: "/students/save/" + id,
                     method: 'PUT',
                     data: {
-                        name: $('#editName').val(),
-                        lastname: $('#editlastname').val(),
-                        nickname: $('#editnickname').val(),
+                        code: $('#EditCode').val(),
+                        name: $('#EditName').val(),
+                        lastname: $('#EditLastname').val(),
+                        nickname: $('#EditNickname').val(),
+                        mobile: $('#EditMobile').val(),
                     },
 
                     success: function(result) {
