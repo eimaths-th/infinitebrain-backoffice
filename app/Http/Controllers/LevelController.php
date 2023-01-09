@@ -6,7 +6,7 @@ use App\Models\Level;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Validation\Rule;
 
 
 
@@ -82,7 +82,10 @@ class LevelController extends Controller
             'subject' => 'required',
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'sort' => 'required|integer',
+            'sort' => 'required', Rule::unique('levels')->where(function ($query) use ($request) {
+                return $query->where('subject', $request->get('subject'))
+                    ->where('level_sort', $request->get('sort'));
+            }),
         ]);
 
         if ($validator->fails()) {
@@ -175,7 +178,7 @@ class LevelController extends Controller
             'subject' => 'required',
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'level_sort' => 'required|integer',
+            'level_sort' => 'required|integer|unique:levels,' . $request->get('subject') . ',level_sort,' . $id,
         ]);
 
         if ($validator->fails()) {
@@ -202,7 +205,7 @@ class LevelController extends Controller
 
     public function destroy_all(Request $request)
     {
-        
+
         $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {
@@ -210,6 +213,6 @@ class LevelController extends Controller
         }
         //$ids = $request->get('table_records');
         //User::whereIn('id',explode(",",$ids))->delete();
-        return redirect('/levels/?id='.$request->get('id'))->with('success', 'Deleted Successfully');;
+        return redirect('/levels/?id=' . $request->get('id'))->with('success', 'Deleted Successfully');;
     }
 }
