@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\EmployeeController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\CourseController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -66,3 +67,13 @@ Route::put('/students/save/{id}', [StudentController::class, 'update'])->name('s
 Route::post('/students/store', [StudentController::class, 'store'])->name('students.store');
 Route::delete('/students/destroy/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
 Route::delete('/students/destroy_all', [StudentController::class, 'destroy_all'])->name('students.destroy_all');
+
+
+Route::get('/course', [CourseController::class, 'index'])->name('course');
+Route::get('/course/create', [CourseController::class, 'create'])->name('course.create');
+Route::get('/course/show', [CourseController::class, 'show'])->name('course.show');
+Route::get('/course/edit/{id}', [CourseController::class, 'edit'])->name('course.edit');
+Route::put('/course/save/{id}', [CourseController::class, 'update'])->name('course.save');
+Route::post('/course/store', [CourseController::class, 'store'])->name('course.store');
+Route::delete('/course/destroy/{id}', [CourseController::class, 'destroy'])->name('course.destroy');
+Route::delete('/course/destroy_all', [CourseController::class, 'destroy_all'])->name('course.destroy_all');

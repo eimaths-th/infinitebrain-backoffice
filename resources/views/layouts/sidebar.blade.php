@@ -125,7 +125,12 @@
                                     Students
                                 </a>
                             </li>
-                            
+                            <li>
+                                <a href="{{ route('course') }}">
+                                    <i class="metismenu-icon"></i>
+                                    Study Course
+                                </a>
+                            </li>
                         </ul>
                         
                     </li>

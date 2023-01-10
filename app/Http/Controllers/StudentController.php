@@ -18,7 +18,7 @@ class StudentController extends Controller
     {
         //
         if ($request->ajax()) {
-            sleep(2);
+            //sleep(2);
             $students = Student::orderBy("code", "asc")
                 ->get();
             return datatables()->of($students)

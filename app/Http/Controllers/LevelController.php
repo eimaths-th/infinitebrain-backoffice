@@ -33,7 +33,7 @@ class LevelController extends Controller
             abort(403, 'Please input level subject');
         }
         if ($request->ajax()) {
-            sleep(2);
+            //sleep(2);
             $levels = Level::select(
                 "levels.id as id",
                 "levels.subject",
