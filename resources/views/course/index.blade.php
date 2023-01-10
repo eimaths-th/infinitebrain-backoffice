@@ -101,8 +101,8 @@
                         </div>
                         <div class="form-group">
                             <label for="Student">Student:</label><br>
-                            <select style="width: 100%;" class="select2 select2_multiple form-control" id="AddStudent" name="student"
-                                multiple="multiple">
+                            <select style="width: 100%;" class="select2 select2_single form-control" id="AddStudent"
+                                name="student" multiple="multiple">
                                 <!--<option value="" selected>Select Student</option>-->
                                 @foreach ($data2 as $key2)
                                     <option value="{{ $key2->id }}"> {{ $key2->name }} {{ $key2->lastname }} </option>
@@ -359,13 +359,13 @@
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
-               
+
 
                 $.ajax({
                     url: "{{ route('course.store') }}",
                     method: 'post',
                     data: {
-                        student: $('#AddStudent').val(),
+                        student: $('#AddStudent').val()[0],
                         subject: $('#AddSubject').val(),
                         level: $('#AddLevel').val(),
                         book: $('#AddBook').val(),
