@@ -3,7 +3,12 @@
 @section('style')
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -22,7 +27,7 @@
                         <i class="pe-7s-network icon-gradient bg-tempting-azure"></i>
                     </div>
                     <div>
-                       Study Course
+                        Study Course
                         <div class="page-title-subheading">Infinite Brain Study Course Data</div>
                     </div>
                 </div>
@@ -41,7 +46,7 @@
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
                 <form method="post" action="{{ route('course.destroy_all') }}" name="delete_all" id="delete_all">
-                   
+
                     @csrf
                     @method('DELETE')
                     <table style="width: 100%;" id="Listview"
@@ -70,6 +75,7 @@
     </div>
 
     <!-- Create Modal -->
+
     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" id="CreateModal">
         <div class="modal-dialog modal-lg" role="document">
@@ -94,29 +100,46 @@
                             </button>
                         </div>
                         <div class="form-group">
-                            <label for="Subject">Subject:</label>
-                            <select class="form-control" id="AddSubject" name="subject" disabled>
-                                <option value="" selected>Select Subject</option>
-                                @foreach ($data as $key)
-                                    <option value="{{ $key->id }}"  {{ request()->get('id') == $key->id ? 'selected' : '' }}> {{ $key->title }} </option>
+                            <label for="Student">Student:</label><br>
+                            <select style="width: 100%;" class="select2 select2_multiple form-control" id="AddStudent" name="student"
+                                multiple="multiple">
+                                <!--<option value="" selected>Select Student</option>-->
+                                @foreach ($data2 as $key2)
+                                    <option value="{{ $key2->id }}"> {{ $key2->name }} {{ $key2->lastname }} </option>
                                 @endforeach
-                                
+
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="Title">Title:</label>
-                            <input type="text" class="form-control" name="title" id="AddTitle" value="">
-                        </div>
+                            <label for="Subject">Subject:</label>
+                            <select class="form-control" id="AddSubject" name="subject">
+                                <option value="" selected>Select Subject</option>
+                                @foreach ($data as $key)
+                                    <option value="{{ $key->id }}"
+                                        {{ request()->get('id') == $key->id ? 'selected' : '' }}> {{ $key->title }}
+                                    </option>
+                                @endforeach
 
-                        <div class="form-group">
-                            <label for="Name">Description</label>
-                            <textarea class="form-control" name="description" id="AddDes"></textarea>
+                            </select>
                         </div>
-
                         <div class="form-group">
-                            <label for="Sort">Sort:</label>
-                            <input type="number" class="form-control" id="AddSort" name="sort" value=""
-                                min="1" max="99">
+                            <label for="Level">Level:</label>
+                            <select class="form-control" id="AddLevel" name="level">
+                                <option value="" selected>Select Level</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Book">Book Start:</label>
+                            <select class="form-control" id="AddBook" name="book">
+                                <option value="" selected>Select Book</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Date">Date Start:</label>
+                            <input readonly type="text" class="form-control" id="AddDate" name="date" required
+                                value="">
                         </div>
                     </div>
                     <!-- Modal footer -->
@@ -127,6 +150,7 @@
                 </div>
         </div>
     </div>
+
 
     <!-- Edit  Modal -->
     <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
@@ -171,6 +195,38 @@
 @section('script')
     <script>
         $(document).ready(function() {
+
+            $("#AddDate").datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+
+            $(".select2_single").select2({
+                maximumSelectionLength: 1,
+                allowClear: true
+            });
+            $(".select2_multiple").select2({
+                maximumSelectionLength: 1,
+                //placeholder: "With Max Selection limit 4",
+                allowClear: true
+            });
+
+            $("#AddSubject").change(function() {
+                var subject_id = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    dataType: 'JSON',
+                    url: "/levels/select_list/" + subject_id,
+                    data: {
+                        _token: token
+                    },
+                    success: function(result) {
+                        //console.log(result);
+                        $("#AddLevel").html(result.html);
+                        $("#AddBook").html(result.html2);
+                    }
+                });
+
+            });
 
             $(".delete_all_button").click(function() {
                 var len = $('input[name="table_records[]"]:checked').length;
@@ -303,19 +359,21 @@
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
+               
 
                 $.ajax({
                     url: "{{ route('course.store') }}",
                     method: 'post',
                     data: {
+                        student: $('#AddStudent').val(),
                         subject: $('#AddSubject').val(),
-                        title: $('#AddTitle').val(),
-                        description: $('#AddDes').val(),
-                        sort: $('#AddSort').val(),
+                        level: $('#AddLevel').val(),
+                        book: $('#AddBook').val(),
+                        date: $('#AddDate').val(),
                         _token: token,
                     },
                     success: function(result) {
-                        //console.log(result);
+                        console.log(result);
                         if (result.errors) {
                             $('.alert-danger').html('');
                             $.each(result.errors, function(key, value) {
@@ -357,6 +415,7 @@
                         title: $('#EditTitle').val(),
                         description: $('#EditDes').val(),
                         level_sort: $('#EditSort').val(),
+                        _token: token
                     },
 
                     success: function(result) {

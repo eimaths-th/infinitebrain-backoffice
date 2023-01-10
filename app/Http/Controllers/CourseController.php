@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Level;
 use App\Models\Subject;
+use App\Models\Student;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -61,7 +62,10 @@ class CourseController extends Controller
 
         //get subject
         $subject = Subject::orderBy("id", "asc")->get();
-        return view('course.index')->with(['data' => $subject]);
+        
+        //get student
+        $student = Student::orderBy("name", "asc")->get();
+        return view('course.index')->with(['data' => $subject])->with(['data2' => $student]);
     }
 
     /**
@@ -83,6 +87,29 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         //
+        //print_r($request);
+        //exit();
+        $validator =  Validator::make($request->all(), [
+            'student' => 'required',
+            'subject' => 'required',
+            'level' => 'required',
+            'book' => 'required',
+            'date' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+        // Getting values from the blade template form
+        $course = new Course([
+            'student_id' => $request->get('student'),
+            'subject_id' => $request->get('subject'),
+            'level_id' => $request->get('level'),
+            'book_start' => $request->get('book'),
+            'date_start' => $request->get('date'),
+        ]);
+        $course->save();
+        return response()->json(['success' => 'Course Add successfully']);
     }
 
     /**

@@ -54,6 +54,7 @@ Route::delete('/users/destroy_all', [EmployeeController::class, 'destroy_all'])-
 
 Route::get('/levels', [LevelController::class, 'index'])->name('levels');
 Route::get('/levels/edit/{id}', [LevelController::class, 'edit'])->name('levels.edit');
+Route::post('/levels/select_list/{id}', [LevelController::class, 'select_list'])->name('levels.select_list');
 Route::put('/levels/save/{id}', [LevelController::class, 'update'])->name('levels.save');
 Route::post('/levels/store', [LevelController::class, 'store'])->name('levels.store');
 Route::delete('/levels/destroy_all', [LevelController::class, 'destroy_all'])->name('levels.destroy_all');

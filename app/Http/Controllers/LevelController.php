@@ -45,8 +45,8 @@ class LevelController extends Controller
                 ->where('levels.subject', $request->id)
                 ->orderBy("levels.level_sort", "desc")
                 ->get();
-                //print_r($levels);
-                //exit();
+            //print_r($levels);
+            //exit();
             return datatables()->of($levels)
                 ->editColumn('subject', function (Level $level) {
                     return $level->subject_name;
@@ -172,6 +172,36 @@ class LevelController extends Controller
 
         return response()->json(['html' => $html]);
     }
+
+    public function select_list($id)
+    {
+        //
+
+
+        $data = Level::where('subject', $id)->orderBy("id", "asc")->get();
+
+        $select_list = "";
+
+        foreach ($data as $key) {
+
+            $select_list .= '<option value="' . $key->id . '" >' . $key->title . '</option>';
+        }
+
+        $data2 = Subject::find($id);
+
+        //print_r($data2);
+
+        $select_list2 = "";
+
+        for ($i=1; $i<=$data2->book; $i++) {
+
+            $select_list2 .= '<option value="' . $i . '" >' . $i . '</option>';
+        }
+
+
+        return response()->json(['html' => $select_list,'html2' => $select_list2]);
+    }
+
 
     /**
      * Update the specified resource in storage.
