@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Level;
+use App\Models\Subject;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -33,17 +34,22 @@ class LevelController extends Controller
         }
         if ($request->ajax()) {
             sleep(2);
-            $levels = Level::where('subject', $request->id)->orderBy("level_sort", "desc")
+            $levels = Level::select(
+                "levels.id as id",
+                "levels.subject",
+                "levels.level_sort",
+                "levels.title",
+                "subjects.title as subject_name"
+            )
+                ->join("subjects", "subjects.id", "=", "levels.subject")
+                ->where('levels.subject', $request->id)
+                ->orderBy("levels.level_sort", "desc")
                 ->get();
+                //print_r($levels);
+                //exit();
             return datatables()->of($levels)
                 ->editColumn('subject', function (Level $level) {
-                    if ($level->subject == 1) {
-                        $ltext = "Math";
-                    } else {
-                        $ltext = "English";
-                    }
-
-                    return $ltext;
+                    return $level->subject_name;
                 })
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
@@ -55,7 +61,9 @@ class LevelController extends Controller
                 })->toJson();
         }
 
-        return view('levels.index');
+        //get subject
+        $subject = Subject::orderBy("id", "asc")->get();
+        return view('levels.index')->with(['data' => $subject]);
     }
 
     /**
@@ -77,15 +85,18 @@ class LevelController extends Controller
     public function store(Request $request)
     {
         //
-
+        //echo $request->get('sort');
+        //$qq = Rule::unique('levels')
+        //    ->where('subject', $request->get('subject'))->where('subject', $request->get('subject'));
+        //echo $qq;
+        //exit();
         $validator =  Validator::make($request->all(), [
             'subject' => 'required',
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'sort' => 'required', Rule::unique('levels')->where(function ($query) use ($request) {
-                return $query->where('subject', $request->get('subject'))
-                    ->where('level_sort', $request->get('sort'));
-            }),
+            'sort' => 'required', Rule::unique('levels')
+                ->where('level_sort', $request->get('sort'))
+                ->where('subject', $request->get('subject')),
         ]);
 
         if ($validator->fails()) {
@@ -122,25 +133,26 @@ class LevelController extends Controller
     public function edit($id)
     {
         //
-        $data = Level::find($id);
-        if ($data->subject == 1) {
-            $aselected = 'selected';
-        } else {
-            $aselected = '';
-        }
 
-        if ($data->subject == 0) {
-            $bselected = 'selected';
-        } else {
-            $bselected = '';
+
+        $data = Level::find($id);
+
+        $select_list = "";
+        $subject = Subject::orderBy("id", "asc")->get();
+        foreach ($subject as $key) {
+            if ($data->subject == $key->id) {
+
+                $select_list .= '<option value="' . $key->id . '" selected>' . $key->title . '</option>';
+            } else {
+                $select_list .= '<option value="' . $key->id . '" >' . $key->title . '</option>';
+            }
         }
 
         $html = '<div class="form-group">
                     <label for="Subject">Subject:</label>
                     <select class="form-control" id="EditSubject" name="subject" disabled>
-                        <option value="" selected>Select Subject</option>
-                        <option value="1" ' . $aselected . '>Math</option>
-                        <option value="0" ' . $bselected . '>English</option>
+                        <option value="" >Select Subject</option>' .
+            $select_list . '
                     </select>
                 </div>
                 <div class="form-group">
@@ -178,7 +190,7 @@ class LevelController extends Controller
             'subject' => 'required',
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'level_sort' => 'required|integer|unique:levels,' . $request->get('subject') . ',level_sort,' . $id,
+            'level_sort' => 'required|integer',
         ]);
 
         if ($validator->fails()) {

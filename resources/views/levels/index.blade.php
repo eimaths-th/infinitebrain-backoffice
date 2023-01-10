@@ -22,12 +22,7 @@
                         <i class="pe-7s-network icon-gradient bg-tempting-azure"></i>
                     </div>
                     <div>
-                        
-                        @if (request()->get('id') == 1)
-                            Math
-                        @elseif (request()->get('id') == 0)
-                            English
-                        @endif
+                        {{ $data[request()->get('id')-1]->title }}
                         Levels
                         <div class="page-title-subheading">Infinite Brain Levels Data</div>
                     </div>
@@ -100,8 +95,10 @@
                             <label for="Subject">Subject:</label>
                             <select class="form-control" id="AddSubject" name="subject" disabled>
                                 <option value="" selected>Select Subject</option>
-                                <option value="1" {{ request()->get('id') == 1 ? 'selected' : '' }}>Math</option>
-                                <option value="0" {{ request()->get('id') == 0 ? 'selected' : '' }}>English</option>
+                                @foreach ($data as $key)
+                                    <option value="{{ $key->id }}"  {{ request()->get('id') == $key->id ? 'selected' : '' }}> {{ $key->title }} </option>
+                                @endforeach
+                                
                             </select>
                         </div>
                         <div class="form-group">
@@ -304,7 +301,7 @@
                         _token: token,
                     },
                     success: function(result) {
-
+                        //console.log(result);
                         if (result.errors) {
                             $('.alert-danger').html('');
                             $.each(result.errors, function(key, value) {

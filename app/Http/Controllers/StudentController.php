@@ -83,6 +83,7 @@ class StudentController extends Controller
             'lastname' => $request->get('lastname'),
             'nickname' => $request->get('nickname'),
             'mobile' => $request->get('mobile'),
+            'grade' => $request->get('grade'),
         ]);
         $student->save();
         return response()->json(['success' => 'Student Add successfully']);
@@ -131,6 +132,10 @@ class StudentController extends Controller
                     <label for="Name">Mobile:</label>
                     <input type="text" class="form-control" name="mobile" id="EditMobile" value="' . $data->mobile . '">
                 </div>
+                <div class="form-group">
+                <label for="Name">Grade:</label>
+                <input type="text" class="form-control" name="grade" id="Editgrade" value="' . $data->grade . '">
+            </div>
             ';
 
         return response()->json(['html' => $html]);

@@ -69,16 +69,42 @@
                         </a>
 
                         <ul>
+                           {{-- @foreach ($data as $key)
+                                <li>
+                                    <a href="{{ route('levels', ['id' => $key->id]) }}">
+                                        <i class="metismenu-icon"></i>
+                                        {{ $key->title }}
+                                    </a>
+                                </li>
+                            @endforeach --}}
                             <li>
-                                <a href="{{ route('levels', ['id' => '0']) }}">
+                                <a href="{{ route('levels', ['id' => '1']) }}">
                                     <i class="metismenu-icon"></i>
-                                    English Level
+                                    Math
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('levels' , ['id' => '1']) }}">
+                                <a href="{{ route('levels' , ['id' => '2']) }}">
                                     <i class="metismenu-icon"></i>
-                                    Math Level
+                                    Play Math
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('levels' , ['id' => '3']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Private Math
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('levels' , ['id' => '4']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    English
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('levels' , ['id' => '5']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    English Spark
                                 </a>
                             </li>
                         </ul>

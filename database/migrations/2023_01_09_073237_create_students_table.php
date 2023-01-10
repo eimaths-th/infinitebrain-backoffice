@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('lastname');
             $table->string('nickname');
             $table->string('mobile');
+            $table->string('grade');
             $table->timestamps();
         });
     }

@@ -110,6 +110,10 @@
                             <label for="Name">Mobile:</label>
                             <input type="text" class="form-control" name="mobile" id="AddMobile" value="">
                         </div>
+                        <div class="form-group">
+                            <label for="Name">Grade:</label>
+                            <input type="text" class="form-control" name="grade" id="AddGrade" value="">
+                        </div>
                         
                     </div>
                     <!-- Modal footer -->
@@ -302,6 +306,7 @@
                         lastname: $('#AddLastname').val(),
                         nickname: $('#AddNickname').val(),
                         mobile: $('#AddMobile').val(),
+                        grade: $('#AddGrade').val(),
                         _token: token,
                     },
                     success: function(result) {
@@ -347,6 +352,7 @@
                         lastname: $('#EditLastname').val(),
                         nickname: $('#EditNickname').val(),
                         mobile: $('#EditMobile').val(),
+                        grade: $('#EditGrade').val(),
                     },
 
                     success: function(result) {

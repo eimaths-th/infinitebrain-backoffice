@@ -14,6 +14,7 @@ class Student extends Model
         'name',
         'lastname',
         'nickname',
-        'mobile'
+        'mobile',
+        'grade'
     ];
 }
