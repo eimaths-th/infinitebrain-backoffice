@@ -57,7 +57,7 @@
                                 <th>Student Code</th>
                                 <th>Student Name</th>
                                 <th>Subject</th>
-                                <th>Level</th>
+                                <th>Start Level</th>
                                 <th>Start Book</th>
                                 <th>Start Date</th>
                                 <th width="280px">Action</th>

@@ -120,9 +120,35 @@ class CourseController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function show(Course $course)
+    public function show($id)
     {
         //
+        $course = Course::select(
+            "courses.id as course_id",
+            "levels.title as student_level",
+            "subjects.id as subject_id",
+            "subjects.title as student_subject",
+            "students.code as student_code",
+            "students.name as student_name",
+            "students.lastname as student_lastname",
+            "courses.book_start as book_start",
+            "courses.date_start as date_start",
+            "students.grade as student_grade",
+        )
+            ->join("students", "students.id", "=", "courses.student_id")
+            ->join("subjects", "subjects.id", "=", "courses.subject_id")
+            ->join("levels", "levels.id", "=", "courses.level_id")
+
+            ->where('courses.id', $id)
+            //->orderBy("courses.id", "desc")
+            ->get();
+
+        $levels = Level::where('subject', $course[0]->subject_id)->orderBy("level_sort", "desc")->get();
+
+        //print_r($level);
+
+
+
         $start_year = "2022";
         $last_year = $start_year + 1;
         $start_month = "9";
@@ -131,19 +157,44 @@ class CourseController extends Controller
         $key = "start_year";
         $key2 = "last_year";
         $year_span = array($$key => $span1, $$key2 => $span2);
-         
-        for ($i=1;  $i<=12; $i++) {
+
+        for ($i = 1; $i <= 12; $i++) {
             $months[$i] = $start_month;
             $start_month++;
-            if ($start_month==13) {
-                $start_month=1;
+            if ($start_month == 13) {
+                $start_month = 1;
             }
+        }
+
+        $tb_level = "";
+        foreach ($levels as $key) {
+            if ($key->id == $course[0]->level_id) {
+                
+            }
+            $tb_level .= '<tr>
+                        <td>' . $key->title . '</td>
+                        <td align="center">' . $key->level_sort . '</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>';
         }
 
         return view('course.view')->with(['year' => $start_year])->with(['last_year' => $last_year])
             ->with(['start_month' => $start_month])
             ->with(['months' => $months])
-            ->with(['year_span' => $year_span]);
+            ->with(['year_span' => $year_span])
+            ->with(['levels' => $tb_level])
+            ->with(['course' => $course]);
     }
 
     /**

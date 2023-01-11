@@ -43,67 +43,58 @@
                 </div>
             </div>
         </div>
+
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-
+                ( {{ $course[0]->student_code }} ) {{ $course[0]->student_name }} {{ $course[0]->student_lastname }}
                 <table style="width: 100%;" id="Listview"
                     class="table table-striped table-bordered responsive-utilities jambo_table bulk_action">
                     <thead>
                         <tr>
                             <th>School Grade</th>
                             <th></th>
-                            <th colspan="12">()</th>
+                            <th colspan="12" class="text-center">( {{ $course[0]->student_grade }} )</th>
 
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+
+                        {!! $levels !!}
+                        {{-- @foreach ($levels as $key)
+                            <tr>
+                                <td>{{ $key->title }}</td>
+                                <td align="center">{{ $key->level_sort }}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        @endforeach --}}
+
+
                     </tbody>
 
                     <tfoot>
                         <tr>
-                            <td colspan="2">Year</td>
+                            <td colspan="2" align="center">Year</td>
                             @for ($i = $year; $i <= $last_year; $i++)
-                                <td colspan="{{ $year_span[$i] }}">{{ $i }}</td>
+                                <td align="center" colspan="{{ $year_span[$i] }}">{{ $i }}</td>
                             @endfor
 
                         </tr>
                         <tr>
-                            <td colspan="2">Month</td>
+                            <td colspan="2" align="center">Month</td>
 
                             @foreach ($months as $key)
-                                <td>{{ $key }}</td>
+                                <td align="center">{{ $key }}</td>
                             @endforeach
                         </tr>
                     </tfoot>
