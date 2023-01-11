@@ -126,7 +126,9 @@ class CourseController extends Controller
         $course = Course::select(
             "courses.id as course_id",
             "levels.title as student_level",
+            "levels.id as level_id",
             "subjects.id as subject_id",
+            "subjects.book_per_month as subject_book",
             "subjects.title as student_subject",
             "students.code as student_code",
             "students.name as student_name",
@@ -167,25 +169,33 @@ class CourseController extends Controller
         }
 
         $tb_level = "";
+
+        //echo $course[0]->level_id;
+        //$course[0]->subject_book
         foreach ($levels as $key) {
             if ($key->id == $course[0]->level_id) {
-                
+                $monthcell = ceil(18 / 8);
+                $trb = "bgcolor=red";
+                $tdhtml = "";
+                for ($x = 1; $x <= 12; $x++) {
+                    if ($x <= $monthcell) {
+                        $tdhtml .= '<td style="padding:0" width="80"><div class="progress-bar-xs mb-3 progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                        </div></td>';
+                    }
+                }
+            } else {
+                $trb = "";
+                $tdhtml = "";
+                for ($x = 1; $x <= 12; $x++) {
+                    $tdhtml .= '<td></td>';
+                }
             }
             $tb_level .= '<tr>
                         <td>' . $key->title . '</td>
                         <td align="center">' . $key->level_sort . '</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        ' . $tdhtml . '
+
                     </tr>';
         }
 
