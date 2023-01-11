@@ -151,8 +151,8 @@ class LevelController extends Controller
         $html = '<div class="form-group">
                     <label for="Subject">Subject:</label>
                     <select class="form-control" id="EditSubject" name="subject" disabled>
-                        <option value="" >Select Subject</option>' .
-            $select_list . '
+                    <option value="" >Select Subject</option>' .
+                        $select_list . '
                     </select>
                 </div>
                 <div class="form-group">
