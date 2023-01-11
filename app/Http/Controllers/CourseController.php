@@ -123,7 +123,27 @@ class CourseController extends Controller
     public function show(Course $course)
     {
         //
-        return view('course.view');
+        $start_year = "2022";
+        $last_year = $start_year + 1;
+        $start_month = "9";
+        $span1 = (12 - $start_month) + 1;
+        $span2 = 12 - $span1;
+        $key = "start_year";
+        $key2 = "last_year";
+        $year_span = array($$key => $span1, $$key2 => $span2);
+         
+        for ($i=1;  $i<=12; $i++) {
+            $months[$i] = $start_month;
+            $start_month++;
+            if ($start_month==13) {
+                $start_month=1;
+            }
+        }
+
+        return view('course.view')->with(['year' => $start_year])->with(['last_year' => $last_year])
+            ->with(['start_month' => $start_month])
+            ->with(['months' => $months])
+            ->with(['year_span' => $year_span]);
     }
 
     /**
@@ -231,7 +251,7 @@ class CourseController extends Controller
         //print_r($course);
 
         $ret = Course::find($id)->update($course);
-        
+
 
         return response()->json(['success' => 'Course Save Successfully']);
     }

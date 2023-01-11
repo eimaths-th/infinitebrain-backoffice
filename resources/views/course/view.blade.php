@@ -45,36 +45,76 @@
         </div>
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-               
-                    <table style="width: 100%;" id="Listview"
-                        class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">
-                        <thead>
-                            <tr>
-                                <th>School Grade</th>
-                                <th></th>
-                                <th></th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                
-                            </tr>
-                        </tbody>
 
-                    </table>
+                <table style="width: 100%;" id="Listview"
+                    class="table table-striped table-bordered responsive-utilities jambo_table bulk_action">
+                    <thead>
+                        <tr>
+                            <th>School Grade</th>
+                            <th></th>
+                            <th colspan="12">()</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td colspan="2">Year</td>
+                            @for ($i = $year; $i <= $last_year; $i++)
+                                <td colspan="{{ $year_span[$i] }}">{{ $i }}</td>
+                            @endfor
+
+                        </tr>
+                        <tr>
+                            <td colspan="2">Month</td>
+
+                            @foreach ($months as $key)
+                                <td>{{ $key }}</td>
+                            @endforeach
+                        </tr>
+                    </tfoot>
+
+                </table>
 
             </div>
         </div>
 
     </div>
-
-    
 @endsection
 
 @section('script')
-   
 @endsection
