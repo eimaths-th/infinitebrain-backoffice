@@ -112,7 +112,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Subject">Subject:</label>
-                            <select class="form-control" id="AddSubject" name="subject">
+                            <select class="AddSubject form-control" id="AddSubject" name="subject">
                                 <option value="" selected>Select Subject</option>
                                 @foreach ($data as $key)
                                     <option value="{{ $key->id }}"
@@ -138,8 +138,8 @@
                         </div>
                         <div class="form-group">
                             <label for="Date">Date Start:</label>
-                            <input readonly type="text" class="form-control" id="AddDate" name="date" required
-                                value="">
+                            <input readonly type="text" class="AddDate form-control" id="AddDate" name="date"
+                                required value="">
                         </div>
                     </div>
                     <!-- Modal footer -->
@@ -179,7 +179,41 @@
                             </button>
                         </div>
                         <div id="EditModalBody">
+                            <div class="form-group">
+                                <label for="Student">Student:</label><br>
+                                <select style="width: 100%;" class="select2 select2_single form-control" id="EditStudent"
+                                    name="student" multiple="multiple">
 
+
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Subject">Subject:</label>
+                                <select class="AddSubject form-control" id="EditSubject" name="subject">
+                                    <option value="" selected>Select Subject</option>'.
+                                   
+
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Level">Level:</label>
+                                <select class="form-control" id="EditLevel" name="level">
+                                    <option value="" selected>Select Level</option>
+
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Book">Book Start:</label>
+                                <select class="form-control" id="EditBook" name="book">
+                                    <option value="" selected>Select Book</option>
+
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Date">Date Start:</label>
+                                <input readonly type="text" class="AddDate form-control" id="EditDate"
+                                    name="date" required>
+                            </div>
                         </div>
                     </div>
                     <!-- Modal footer -->
@@ -196,9 +230,11 @@
     <script>
         $(document).ready(function() {
 
-            $("#AddDate").datepicker({
+            $(".AddDate").datepicker({
                 dateFormat: "yy-mm-dd"
             });
+
+
 
             $(".select2_single").select2({
                 maximumSelectionLength: 1,
@@ -211,6 +247,7 @@
             });
 
             $("#AddSubject").change(function() {
+                
                 var subject_id = $(this).val();
                 $.ajax({
                     type: "POST",
@@ -223,6 +260,25 @@
                         //console.log(result);
                         $("#AddLevel").html(result.html);
                         $("#AddBook").html(result.html2);
+                    }
+                });
+
+            });
+
+            $("#EditSubject").change(function() {
+                
+                var subject_id = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    dataType: 'JSON',
+                    url: "/levels/select_list/" + subject_id,
+                    data: {
+                        _token: token
+                    },
+                    success: function(result) {
+                        //console.log(result);
+                        $("#EditLevel").html(result.html);
+                        $("#EditBook").html(result.html2);
                     }
                 });
 
@@ -276,8 +332,8 @@
                 aaSorting: [
                     [0, "desc"]
                 ],
-                iDisplayLength: 15,
-                lengthMenu: [15, 25, 50, 75, 100],
+                iDisplayLength: 10,
+                lengthMenu: [10, 20, 50, 75, 100],
                 stateSave: true,
                 sPaginationType: "full_numbers",
                 dom: 'T<"clear">lfrtip',
@@ -326,7 +382,9 @@
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
+                
                 $('#CreateModal').modal('show');
+                //$('#SubmitCreateForm').show();
             });
 
             let id;
@@ -344,7 +402,13 @@
                     url: "/course/edit/" + id,
                     method: 'GET',
                     success: function(res) {
-                        $('#EditModalBody').html(res.html);
+                        //$('#EditModalBody').html(res.html);
+                        //console.log(res);
+                        $('#EditStudent').html(res.student);
+                        $('#EditSubject').html(res.subject);
+                        $('#EditLevel').html(res.html);
+                        $('#EditBook').html(res.html2);
+                        $('#EditDate').val(res.date);
                         $('#EditModal').modal('show');
                     }
                 });
@@ -373,7 +437,7 @@
                         _token: token,
                     },
                     success: function(result) {
-                        console.log(result);
+                        //console.log(result);
                         if (result.errors) {
                             $('.alert-danger').html('');
                             $.each(result.errors, function(key, value) {
@@ -387,6 +451,12 @@
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
                             $('#Listview').DataTable().ajax.reload();
+                            $('#AddStudent').val('').select2();
+                            $('#AddSubject').val('');
+                            $('#AddLevel').val('');
+                            $('#AddBook').val('');
+                            $('#AddDate').val('');
+                            //$('#SubmitCreateForm').hide();
                             //setTimeout(function() {
                             //$('.alert-success').hide();
                             //$('#CreateModal').modal('hide');
@@ -398,7 +468,8 @@
             });
 
             $('#SubmitEditForm').click(function(e) {
-                if (!confirm("Are you sure?")) return;
+                //if (!confirm("Are you sure?")) return;
+                //alert(id);
                 e.preventDefault();
 
                 $('.alert-danger').html('');
@@ -411,11 +482,12 @@
                     url: "/course/save/" + id,
                     method: 'PUT',
                     data: {
+                        student: $('#EditStudent').val()[0],
                         subject: $('#EditSubject').val(),
-                        title: $('#EditTitle').val(),
-                        description: $('#EditDes').val(),
-                        level_sort: $('#EditSort').val(),
-                        _token: token
+                        level: $('#EditLevel').val(),
+                        book: $('#EditBook').val(),
+                        date: $('#EditDate').val(),
+                        _token: token,
                     },
 
                     success: function(result) {

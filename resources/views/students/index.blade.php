@@ -217,8 +217,8 @@
                 aaSorting: [
                     [0, "desc"]
                 ],
-                iDisplayLength: 15,
-                lengthMenu: [15, 25, 50, 75, 100],
+                iDisplayLength: 10,
+                lengthMenu: [10, 20, 50, 75, 100],
                 stateSave: true,
                 sPaginationType: "full_numbers",
                 dom: 'T<"clear">lfrtip',
@@ -323,6 +323,8 @@
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
                             $('#Listview').DataTable().ajax.reload();
+                            $('.form').trigger('reset');
+                            //$('#SubmitCreateForm').hide();
                             //setTimeout(function() {
                             //$('.alert-success').hide();
                             //$('#CreateModal').modal('hide');
@@ -334,7 +336,7 @@
             });
 
             $('#SubmitEditForm').click(function(e) {
-                if (!confirm("Are you sure?")) return;
+                //if (!confirm("Are you sure?")) return;
                 e.preventDefault();
 
                 $('.alert-danger').html('');

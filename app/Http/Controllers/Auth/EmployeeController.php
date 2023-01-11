@@ -44,7 +44,7 @@ class EmployeeController extends Controller
             }
         }
         if ($request->ajax()) {
-            sleep(2);
+            //sleep(2);
             $levels = User::orderBy("id", "desc")->get();
             return datatables()->of($levels)
                 ->editColumn('level', function (User $level) {
@@ -157,6 +157,16 @@ class EmployeeController extends Controller
                     <label for="Name">Email:</label>
                     <input type="text" class="form-control" name="email" id="editEmail" value="' . $data->email . '">
                 </div>
+                    <div class="form-group">
+                    <label for="Name">Password:</label>
+                    <input type="password" class="form-control" name="password" required autocomplete="new-password"
+                        id="EditPassword" >
+                </div>
+                <div class="form-group">
+                    <label for="Name">Confirm Password:</label>
+                    <input type="password" class="form-control" name="password_confirmation" id="EditPasswordC"
+                        required autocomplete="new-password" >
+                </div>
                 <div class="form-group">
                     <label for="Name">Level:</label>
                     <select class="form-control" id="editLevel" name="level">
@@ -185,6 +195,7 @@ class EmployeeController extends Controller
         $validator =  Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'level' => 'required',
+            'password' => 'required|string|min:8|confirmed',
             'email' => 'required|string|email|max:255|unique:users,email,'.$id,
         ]);
 
@@ -192,7 +203,14 @@ class EmployeeController extends Controller
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
-        User::find($id)->update($request->all());
+        $level = [
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
+            'level' => $request->get('level'),
+        ];
+
+        User::find($id)->update($level);
 
         return response()->json(['success' => 'User updated successfully']);
     }
