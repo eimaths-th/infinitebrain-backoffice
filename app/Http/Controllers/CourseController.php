@@ -205,13 +205,12 @@ class CourseController extends Controller
                     $level_progress = 18 / 8;
                 }
 
-                $monthcell = $start_cell+ceil($level_progress);
-
+                $monthcell = $start_cell + ceil($level_progress);
 
                 for ($x = 1; $x <= 12; $x++) {
 
                     if ($x <= $monthcell) {
-                        if ($level_progress - $x >= 0) {
+                        if ($level_progress - $x > 0) {
                             $bar_percent = "100";
                         } else {
                             $bar_percent = (($level_progress - $x) + 1) * 100;
@@ -222,7 +221,7 @@ class CourseController extends Controller
                         } else {
                             $tdhtml[$key->level_sort] .= "<td style=\"padding:0\" width=\"80\"><div class=\"progress-bar-xs mb-3 progress\">
                         <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: " . $bar_percent . "%;\"></div>
-                        </div></td>";
+                        </div>".$level_progress."</td>";
                         }
                     } else {
                         $tdhtml[$key->level_sort] .= "<td></td>";
