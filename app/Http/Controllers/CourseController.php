@@ -185,7 +185,7 @@ class CourseController extends Controller
         //exit();
         $tdhtml = array();
         $all_level = 1;
-        $start_cell = 1;
+        $start_cell = 0;
         foreach ($levels as $key) {
             //if ($key->id == $course[0]->level_id) {
             //echo $key->level_sort;
@@ -195,21 +195,17 @@ class CourseController extends Controller
                 <td align=\"center\">" . $key->level_sort . "</td>";
 
             if ($key->level_sort >= $start_sort) {
-                $stop_sort = $key->level_sort;
                 if ($all_level == $start_sort) {
                     if ($course[0]->book_start == 1) {
                         $level_progress = 18 / 8;
-                        //echo "s";
                     } else {
-                        //echo "ss";
                         $level_progress = ((18 - $course[0]->book_start)) / 8;
                     }
                 } else {
                     $level_progress = 18 / 8;
-                    //echo "SSS";
                 }
 
-                $monthcell = ceil($level_progress);
+                $monthcell = $start_cell+ceil($level_progress);
 
 
                 for ($x = 1; $x <= 12; $x++) {
@@ -221,14 +217,13 @@ class CourseController extends Controller
                             $bar_percent = (($level_progress - $x) + 1) * 100;
                         }
 
-                        //if ($x < ceil($start_cell)) {
-                        //$tdhtml[$key->level_sort] .= "<td>".$start_cell."</td>";
-                        //} else {
-                        $tdhtml[$key->level_sort] .= "<td style=\"padding:0\" width=\"80\"><div class=\"progress-bar-xs mb-3 progress\">
+                        if ($x < ceil($start_cell)) {
+                            $tdhtml[$key->level_sort] .= "<td></td>";
+                        } else {
+                            $tdhtml[$key->level_sort] .= "<td style=\"padding:0\" width=\"80\"><div class=\"progress-bar-xs mb-3 progress\">
                         <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: " . $bar_percent . "%;\"></div>
-                        </div>" . $start_cell . " " . $key->level_sort . "</td>";
-                        //}
-
+                        </div></td>";
+                        }
                     } else {
                         $tdhtml[$key->level_sort] .= "<td></td>";
                     }
@@ -255,7 +250,7 @@ class CourseController extends Controller
 
         //print_r($tdhtml);
         //echo $all_level;
-        for ($ret = ($all_level-1); $ret >= 1; $ret--) {
+        for ($ret = ($all_level - 1); $ret >= 1; $ret--) {
             $tb_level .= $tdhtml[$ret];
         }
 
