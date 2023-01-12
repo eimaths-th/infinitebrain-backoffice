@@ -187,53 +187,75 @@ class CourseController extends Controller
         $all_level = 1;
         $start_cell = 0;
 
-        if ($all_level == $start_sort) {
-            if ($course[0]->book_start == 1) {
-                $level_progress = 18 / 8;
-            } else {
-                $level_progress = ((18 - $course[0]->book_start)) / 8;
-            }
-        } else {
-            $level_progress = 18 / 8;
-        }
-
+        $level_progress_loop = 0;
+        $level_progress_standard = 18 / 8;
+        $endprogress = 0;
+        $last_per = 0;
+        $div_right = "";
         foreach ($levels as $key) {
             //if ($key->id == $course[0]->level_id) {
             //echo $key->level_sort;
-            $level_progress=$level_progress+$level_progress;
+
 
             $tdhtml[$key->level_sort] = "";
             $tdhtml[$key->level_sort] .= "<tr>
                 <td>" . $key->title . "</td>
                 <td align=\"center\">" . $key->level_sort . "</td>";
 
+            //start level
             if ($key->level_sort >= $start_sort) {
-               
+                if ($all_level == $start_sort) {
+                    if ($course[0]->book_start == 1) {
+                        $level_progress = 18 / 8;
+                    } else {
+                        $level_progress = ((18 - $course[0]->book_start)) / 8;
+                    }
+                } else {
+                    $level_progress = 18 / 8;
+                }
 
-                $monthcell = $start_cell + ceil($level_progress);
+                if ($level_progress_loop == 0) {
+                    $level_progress_loop = $level_progress;
+                }
+                //if ($level_progress_loop>10) {
+                //$monthcell = round($level_progress_loop);
+                //} else {
+                $monthcell = ceil($level_progress_loop);
+                //}
+
 
                 for ($x = 1; $x <= 12; $x++) {
 
                     if ($x <= $monthcell) {
-                        if ($level_progress - $x > 0) {
+                        if ($level_progress_loop - $x > 0) {
                             $bar_percent = "100";
                         } else {
-                            $bar_percent = (($level_progress - $x) + 1) * 100;
+                            $bar_percent = (($level_progress_loop - $x) + 1) * 100;
                         }
 
                         if ($x < ceil($start_cell)) {
                             $tdhtml[$key->level_sort] .= "<td></td>";
                         } else {
-                            $tdhtml[$key->level_sort] .= "<td style=\"padding:0\" width=\"80\"><div class=\"progress-bar-xs mb-3 progress\">
-                        <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: " . $bar_percent . "%;\"></div>
-                        </div>".$level_progress."</td>";
+                            if ($x == ceil($start_cell)) {
+                                $bar_percent = 100 - $last_per;
+                                $div_right = "align=\"right\"";
+                            } else {
+                                $div_right = "align=\"left\"";
+                            }
+                            $tdhtml[$key->level_sort] .= "<td " . $div_right . " style=\"padding:0\" width=\"80\"><div class=\"progress-bar-xs mb-3 progress\" style=\"width: " . $bar_percent . "%;\">
+                        <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 100%;\"></div>
+                        </div></td>";
                         }
                     } else {
                         $tdhtml[$key->level_sort] .= "<td></td>";
                     }
                 }
 
+
                 $start_cell += $level_progress;
+                $last_per = $bar_percent;
+                $level_progress_loop += $level_progress_standard;
+                $endprogress += 8;
                 //echo "<br>";
             } else {
                 $tdhtml[$key->level_sort] = "";
