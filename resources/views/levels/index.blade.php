@@ -52,6 +52,7 @@
                                 <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>Subject</th>
                                 <th>Sort</th>
+                                <th>Book</th>
                                 <th>Title</th>
                                 <th width="280px">Action</th>
                             </tr>
@@ -114,6 +115,11 @@
                         <div class="form-group">
                             <label for="Sort">Sort:</label>
                             <input type="number" class="form-control" id="AddSort" name="sort" value=""
+                                min="1" max="99">
+                        </div>
+                        <div class="form-group">
+                            <label for="Book">Book:</label>
+                            <input type="number" class="form-control" id="AddBook" name="book" value=""
                                 min="1" max="99">
                         </div>
                     </div>
@@ -238,6 +244,10 @@
                         name: 'level_sort'
                     },
                     {
+                        data: 'book_per_level',
+                        name: 'book_per_level'
+                    },
+                    {
                         data: 'title',
                         name: 'title'
                     },
@@ -295,6 +305,7 @@
                     method: 'post',
                     data: {
                         subject: $('#AddSubject').val(),
+                        book_per_level: $('#AddBook').val(),
                         title: $('#AddTitle').val(),
                         description: $('#AddDes').val(),
                         sort: $('#AddSort').val(),
@@ -342,6 +353,7 @@
                     method: 'PUT',
                     data: {
                         subject: $('#EditSubject').val(),
+                        book_per_level: $('#EditBook').val(),
                         title: $('#EditTitle').val(),
                         description: $('#EditDes').val(),
                         level_sort: $('#EditSort').val(),

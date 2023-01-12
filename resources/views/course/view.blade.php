@@ -33,11 +33,10 @@
                 </div>
                 <div class="page-title-actions">
                     <div class="d-inline-block dropdown">
-                        <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
-                            id="CreateButton"><i class="fa fa-plus"></i> Create New
-                            Course</a>
-                        <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
-                            All</a>
+                        <a href="{{ route('course') }}" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
+                            id="CreateButton"><i class="fa fa-backward"></i> Back
+                            Study Course</a>
+                        <a class="btn btn-warning " href="#"><i class="fa fa-print"></i> Print</a>
 
                     </div>
                 </div>
@@ -60,24 +59,6 @@
                     <tbody>
 
                         {!! $levels !!}
-                        {{-- @foreach ($levels as $key)
-                            <tr>
-                                <td>{{ $key->title }}</td>
-                                <td align="center">{{ $key->level_sort }}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        @endforeach --}}
 
 
                     </tbody>

@@ -14,6 +14,7 @@ class Level extends Model
         'description',
         'level_sort',
         'subject',
+        'book_per_level',
     ];
 
 }

@@ -127,6 +127,7 @@ class CourseController extends Controller
             "courses.id as course_id",
             "levels.title as student_level",
             "levels.id as level_id",
+            "levels.book_per_level as book",
             "subjects.id as subject_id",
             "subjects.book_per_month as subject_book",
             "subjects.title as student_subject",
@@ -188,7 +189,7 @@ class CourseController extends Controller
         $start_cell = 0;
 
         $level_progress_loop = 0;
-        $level_progress_standard = 18 / 8;
+        $level_progress_standard = $levels_start[0]->book_per_level / $course[0]->subject_book;
         $endprogress = 0;
         $last_per = 0;
         $div_right = "";
@@ -206,12 +207,12 @@ class CourseController extends Controller
             if ($key->level_sort >= $start_sort) {
                 if ($all_level == $start_sort) {
                     if ($course[0]->book_start == 1) {
-                        $level_progress = 18 / 8;
+                        $level_progress = $levels_start[0]->book_per_level / $course[0]->subject_book;
                     } else {
-                        $level_progress = ((18 - $course[0]->book_start)) / 8;
+                        $level_progress = (($levels_start[0]->book_per_level - $course[0]->book_start)) / $course[0]->subject_book;
                     }
                 } else {
-                    $level_progress = 18 / 8;
+                    $level_progress = $levels_start[0]->book_per_level / $course[0]->subject_book;
                 }
 
                 if ($level_progress_loop == 0) {
@@ -255,7 +256,7 @@ class CourseController extends Controller
                 $start_cell += $level_progress;
                 $last_per = $bar_percent;
                 $level_progress_loop += $level_progress_standard;
-                $endprogress += 8;
+                $endprogress += $course[0]->book_per_month;
                 //echo "<br>";
             } else {
                 $tdhtml[$key->level_sort] = "";

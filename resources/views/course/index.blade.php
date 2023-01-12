@@ -123,7 +123,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="Level">Level:</label>
+                            <label for="Level">Start Level:</label>
                             <select class="form-control" id="AddLevel" name="level">
                                 <option value="" selected>Select Level</option>
 
@@ -196,7 +196,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="Level">Level:</label>
+                                <label for="Level">Start Level:</label>
                                 <select class="form-control" id="EditLevel" name="level">
                                     <option value="" selected>Select Level</option>
 

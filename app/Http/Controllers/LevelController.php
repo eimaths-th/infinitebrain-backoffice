@@ -37,6 +37,7 @@ class LevelController extends Controller
             $levels = Level::select(
                 "levels.id as id",
                 "levels.subject",
+                "levels.book_per_level",
                 "levels.level_sort",
                 "levels.title",
                 "subjects.title as subject_name"
@@ -92,6 +93,7 @@ class LevelController extends Controller
         //exit();
         $validator =  Validator::make($request->all(), [
             'subject' => 'required',
+            'book_per_level' => 'required|integer',
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'sort' => 'required', Rule::unique('levels')
@@ -105,6 +107,7 @@ class LevelController extends Controller
         // Getting values from the blade template form
         $level = new Level([
             'subject' => $request->get('subject'),
+            'book_per_level' => $request->get('book_per_level'),
             'title' => $request->get('title'),
             'description' => $request->get('description'),
             'level_sort' => $request->get('sort'),
@@ -168,6 +171,10 @@ class LevelController extends Controller
                 <div class="form-group">
                     <label for="Sort">Sort:</label>
                     <input type="number" class="form-control" id="EditSort" name="sort" value="' . $data->level_sort . '" min="1" max="99">
+                </div>
+                <div class="form-group">
+                    <label for="Book">Book:</label>
+                    <input type="number" class="form-control" id="EditBook" name="book" value="' . $data->book . '" min="1" max="99">
                 </div>';
 
         return response()->json(['html' => $html]);
@@ -218,6 +225,7 @@ class LevelController extends Controller
         //exit();
         $validator =  Validator::make($request->all(), [
             'subject' => 'required',
+            'book_per_level' => 'required|integer',
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'level_sort' => 'required|integer',
