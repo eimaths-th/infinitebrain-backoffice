@@ -145,17 +145,26 @@ class CourseController extends Controller
             //->orderBy("courses.id", "desc")
             ->get();
 
-        $levels = Level::where('subject', $course[0]->subject_id)->orderBy("level_sort", "desc")->get();
+        $levels = Level::where('subject', $course[0]->subject_id)->orderBy("level_sort", "asc")->get();
 
-        //print_r($level);
+        $levels_start = Level::where('id', $course[0]->level_id)->get();
 
+        //print_r($levels_start);
 
+        $start_date = explode("-", $course[0]->date_start);
 
-        $start_year = "2022";
-        $last_year = $start_year + 1;
-        $start_month = "9";
-        $span1 = (12 - $start_month) + 1;
-        $span2 = 12 - $span1;
+        $start_month = (int)$start_date[1];
+        $start_year = $start_date[0];
+        if ($start_month == 1) {
+            $last_year = $start_year;
+            $span1 = 12;
+            $span2 = 12;
+        } else {
+            $span1 = (12 - $start_month) + 1;
+            $span2 = 12 - $span1;
+            $last_year = $start_year + 1;
+        }
+
         $key = "start_year";
         $key2 = "last_year";
         $year_span = array($$key => $span1, $$key2 => $span2);
@@ -172,31 +181,82 @@ class CourseController extends Controller
 
         //echo $course[0]->level_id;
         //$course[0]->subject_book
+        $start_sort = $levels_start[0]->level_sort;
+        //exit();
+        $tdhtml = array();
+        $all_level = 1;
+        $start_cell = 1;
         foreach ($levels as $key) {
-            if ($key->id == $course[0]->level_id) {
-                $monthcell = ceil(18 / 8);
-                $trb = "bgcolor=red";
-                $tdhtml = "";
+            //if ($key->id == $course[0]->level_id) {
+            //echo $key->level_sort;
+            $tdhtml[$key->level_sort] = "";
+            $tdhtml[$key->level_sort] .= "<tr>
+                <td>" . $key->title . "</td>
+                <td align=\"center\">" . $key->level_sort . "</td>";
+
+            if ($key->level_sort >= $start_sort) {
+                $stop_sort = $key->level_sort;
+                if ($all_level == $start_sort) {
+                    if ($course[0]->book_start == 1) {
+                        $level_progress = 18 / 8;
+                        //echo "s";
+                    } else {
+                        //echo "ss";
+                        $level_progress = ((18 - $course[0]->book_start)) / 8;
+                    }
+                } else {
+                    $level_progress = 18 / 8;
+                    //echo "SSS";
+                }
+
+                $monthcell = ceil($level_progress);
+
+
                 for ($x = 1; $x <= 12; $x++) {
+
                     if ($x <= $monthcell) {
-                        $tdhtml .= '<td style="padding:0" width="80"><div class="progress-bar-xs mb-3 progress">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                        </div></td>';
+                        if ($level_progress - $x >= 0) {
+                            $bar_percent = "100";
+                        } else {
+                            $bar_percent = (($level_progress - $x) + 1) * 100;
+                        }
+
+                        //if ($x < ceil($start_cell)) {
+                        //$tdhtml[$key->level_sort] .= "<td>".$start_cell."</td>";
+                        //} else {
+                        $tdhtml[$key->level_sort] .= "<td style=\"padding:0\" width=\"80\"><div class=\"progress-bar-xs mb-3 progress\">
+                        <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: " . $bar_percent . "%;\"></div>
+                        </div>" . $start_cell . " " . $key->level_sort . "</td>";
+                        //}
+
+                    } else {
+                        $tdhtml[$key->level_sort] .= "<td></td>";
                     }
                 }
+
+                $start_cell += $level_progress;
+                //echo "<br>";
             } else {
-                $trb = "";
-                $tdhtml = "";
+                $tdhtml[$key->level_sort] = "";
+                $tdhtml[$key->level_sort] .= "<tr>
+                <td>" . $key->title . "</td>
+                <td align=\"center\">" . $key->level_sort . "</td>";
                 for ($x = 1; $x <= 12; $x++) {
-                    $tdhtml .= '<td></td>';
+                    $tdhtml[$key->level_sort] .= "<td></td>";
                 }
             }
-            $tb_level .= '<tr>
-                        <td>' . $key->title . '</td>
-                        <td align="center">' . $key->level_sort . '</td>
-                        ' . $tdhtml . '
 
-                    </tr>';
+
+            //exit();
+
+            $tdhtml[$key->level_sort] .= "</tr>";
+            $all_level++;
+        }
+
+        //print_r($tdhtml);
+        //echo $all_level;
+        for ($ret = ($all_level-1); $ret >= 1; $ret--) {
+            $tb_level .= $tdhtml[$ret];
         }
 
         return view('course.view')->with(['year' => $start_year])->with(['last_year' => $last_year])
