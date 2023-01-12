@@ -186,24 +186,29 @@ class CourseController extends Controller
         $tdhtml = array();
         $all_level = 1;
         $start_cell = 0;
+
+        if ($all_level == $start_sort) {
+            if ($course[0]->book_start == 1) {
+                $level_progress = 18 / 8;
+            } else {
+                $level_progress = ((18 - $course[0]->book_start)) / 8;
+            }
+        } else {
+            $level_progress = 18 / 8;
+        }
+
         foreach ($levels as $key) {
             //if ($key->id == $course[0]->level_id) {
             //echo $key->level_sort;
+            $level_progress=$level_progress+$level_progress;
+
             $tdhtml[$key->level_sort] = "";
             $tdhtml[$key->level_sort] .= "<tr>
                 <td>" . $key->title . "</td>
                 <td align=\"center\">" . $key->level_sort . "</td>";
 
             if ($key->level_sort >= $start_sort) {
-                if ($all_level == $start_sort) {
-                    if ($course[0]->book_start == 1) {
-                        $level_progress = 18 / 8;
-                    } else {
-                        $level_progress = ((18 - $course[0]->book_start)) / 8;
-                    }
-                } else {
-                    $level_progress = 18 / 8;
-                }
+               
 
                 $monthcell = $start_cell + ceil($level_progress);
 
