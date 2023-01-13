@@ -55,7 +55,7 @@ class CourseController extends Controller
                     return '<input type="checkbox" id="' . $row->course_id . '" class="flat" name="table_records[]" value="' . $row->course_id . '" >';
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a href="course/show/' . $row->course_id . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->course_id . '"><i class="fa fa-eye"></i> View Chart</a> ';
+                    $html = '<a href="course/show/view/' . $row->course_id . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->course_id . '"><i class="fa fa-eye"></i> View Chart</a> ';
                     $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->course_id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->course_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
@@ -120,9 +120,11 @@ class CourseController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($type, $id)
     {
         //
+        //echo $type;
+        //exit();
         $course = Course::select(
             "courses.id as course_id",
             "levels.title as student_level",
@@ -193,6 +195,7 @@ class CourseController extends Controller
         $endprogress = 0;
         $last_per = 0;
         $div_right = "";
+        $bar_percent = "";
         foreach ($levels as $key) {
             //if ($key->id == $course[0]->level_id) {
             //echo $key->level_sort;
@@ -200,8 +203,8 @@ class CourseController extends Controller
 
             $tdhtml[$key->level_sort] = "";
             $tdhtml[$key->level_sort] .= "<tr>
-                <td>" . $key->title . "</td>
-                <td align=\"center\">" . $key->level_sort . "</td>";
+                <td width=\"35%\">" . $key->title . "</td>
+                <td width=\"100\" align=\"center\">" . $key->level_sort . "</td>";
 
             //start level
             if ($key->level_sort >= $start_sort) {
@@ -243,12 +246,24 @@ class CourseController extends Controller
                             } else {
                                 $div_right = "align=\"left\"";
                             }
-                            $tdhtml[$key->level_sort] .= "<td " . $div_right . " style=\"padding:0\" width=\"80\"><div class=\"progress-bar-xs mb-3 progress\" style=\"width: " . $bar_percent . "%;\">
-                        <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 100%;\"></div>
-                        </div></td>";
+
+                            if ($type == "view") {
+                                $progress_view = "
+                                <div class=\"progress-bar-xs mb-3 progress\" style=\"width: " . $bar_percent . "%;\">
+                                <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 100%;\"></div>
+                                </div>";
+                            } else if ($type == "print") {
+
+                                $progress_view = "
+                                <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width: " . $bar_percent . "%; height: 8px; top: 0; margin-top: -9px; \" ><tr><td bgcolor=\"blue\"></td></tr></table>";
+
+                            }
+
+                            $tdhtml[$key->level_sort] .= "<td " . $div_right . " style=\"padding:0; margin: 0; margin-right: 0px; margin-left: 0px;\" width=\"80\">" . $progress_view . "
+                            </td>";
                         }
                     } else {
-                        $tdhtml[$key->level_sort] .= "<td></td>";
+                        $tdhtml[$key->level_sort] .= "<td width=\"80\"></td>";
                     }
                 }
 
@@ -281,12 +296,19 @@ class CourseController extends Controller
             $tb_level .= $tdhtml[$ret];
         }
 
-        return view('course.view')->with(['year' => $start_year])->with(['last_year' => $last_year])
+        if ($type == "view") {
+            $viewr = "course.view";
+        } else if ($type == "print") {
+            $viewr = "course.print";
+        }
+
+        return view($viewr)->with(['year' => $start_year])->with(['last_year' => $last_year])
             ->with(['start_month' => $start_month])
             ->with(['months' => $months])
             ->with(['year_span' => $year_span])
             ->with(['levels' => $tb_level])
-            ->with(['course' => $course]);
+            ->with(['course' => $course])
+            ->with(['id' => $id]);
     }
 
     /**

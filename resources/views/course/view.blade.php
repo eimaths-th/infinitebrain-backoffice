@@ -33,10 +33,10 @@
                 </div>
                 <div class="page-title-actions">
                     <div class="d-inline-block dropdown">
-                        <a href="{{ route('course') }}" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
-                            id="CreateButton"><i class="fa fa-backward"></i> Back
+                        <a href="{{ route('course') }}" class="btn btn-success" data-toggle="modal"
+                            data-target=".bd-example-modal-lg" id="CreateButton"><i class="fa fa-backward"></i> Back
                             Study Course</a>
-                        <a class="btn btn-warning " href="#"><i class="fa fa-print"></i> Print</a>
+                        <a class="btn btn-warning " href="#" onclick="export_report();"><i class="fa fa-print"></i> Print</a>
 
                     </div>
                 </div>
@@ -45,7 +45,10 @@
 
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-                ( {{ $course[0]->student_code }} ) {{ $course[0]->student_name }} {{ $course[0]->student_lastname }}
+                <div style="float: right; padding-right: 250px;">
+                    <b> Student Code: </b> ( {{ $course[0]->student_code }} ) <b>Name:</b> {{ $course[0]->student_name }}
+                    {{ $course[0]->student_lastname }} <b>School Grade:</b> ( {{ $course[0]->student_grade }} )
+                </div>
                 <table style="width: 100%;" id="Listview"
                     class="table table-striped table-bordered responsive-utilities jambo_table bulk_action">
                     <thead>
@@ -89,4 +92,9 @@
 @endsection
 
 @section('script')
+<script>
+    function export_report() {
+      window.open('{{ route('course.show', array('type' => 'print','id'=>$id)) }}');
+    }
+</script>
 @endsection
