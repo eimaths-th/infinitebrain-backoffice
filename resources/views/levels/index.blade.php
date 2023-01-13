@@ -54,6 +54,7 @@
                                 <th>Sort</th>
                                 <th>Book</th>
                                 <th>Title</th>
+                                <th>Title Thai</th>
                                 <th width="280px">Action</th>
                             </tr>
                         </thead>
@@ -105,6 +106,10 @@
                         <div class="form-group">
                             <label for="Title">Title:</label>
                             <input type="text" class="form-control" name="title" id="AddTitle" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="Title">Title Thai:</label>
+                            <input type="text" class="form-control" name="title_th" id="AddTitleTh" value="">
                         </div>
 
                         <div class="form-group">
@@ -252,6 +257,10 @@
                         name: 'title'
                     },
                     {
+                        data: 'title_th',
+                        name: 'title_th'
+                    },
+                    {
                         data: 'action',
                         name: 'action'
                     },
@@ -281,7 +290,7 @@
 
                 id = $(this).data('id');
                 $.ajax({
-                    url: "/levels/edit/" + id,
+                    url: "http://192.168.0.197/infinite_backoffice/public/levels/edit/" + id,
                     method: 'GET',
                     success: function(res) {
                         $('#EditModalBody').html(res.html);
@@ -307,6 +316,7 @@
                         subject: $('#AddSubject').val(),
                         book_per_level: $('#AddBook').val(),
                         title: $('#AddTitle').val(),
+                        title_th: $('#AddTitleTh').val(),
                         description: $('#AddDes').val(),
                         sort: $('#AddSort').val(),
                         _token: token,
@@ -349,12 +359,13 @@
 
 
                 $.ajax({
-                    url: "/levels/save/" + id,
+                    url: "http://192.168.0.197/infinite_backoffice/public/levels/save/" + id,
                     method: 'PUT',
                     data: {
                         subject: $('#EditSubject').val(),
                         book_per_level: $('#EditBook').val(),
                         title: $('#EditTitle').val(),
+                        title_th: $('#EditTitleTh').val(),
                         description: $('#EditDes').val(),
                         level_sort: $('#EditSort').val(),
                     },
@@ -396,7 +407,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: 'JSON',
-                    url: "/levels/destroy/" + rowid,
+                    url: "http://192.168.0.197/infinite_backoffice/public/levels/destroy/" + rowid,
                     data: {
                         _method: 'delete',
                         _token: token

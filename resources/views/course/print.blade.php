@@ -19,15 +19,16 @@
 <body>
     <div class="row">
 
-        <div class="logo-src"><img src="{{ asset('images/eye_logo.jpg') }}" alt="..." height="36"
+        <div class="logo-src"><img src="{{ asset('images/eye_logo.jpg') }}" alt="..." height="26"
                 style="padding-bottom: 5px"> Eye Level Progress Projection Chart</div>
-        <div><br></div>
+        <div style="padding-bottom: 10px"></div>
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
                 <div style="float: right; padding-right: 250px;">
                     <b> Student Code: </b> ( {{ $course[0]->student_code }} ) <b>Name:</b>
                     {{ $course[0]->student_name }}
                     {{ $course[0]->student_lastname }} <b>School Grade:</b> ( {{ $course[0]->student_grade }} )
+                    Book Start:</b> ( {{ $course[0]->book_start }} )
                 </div>
                 <table cellpadding="0" cellspacing="0"
                     style="width: 100%; border: solid #000 !important; border-width: 1px 0 0 1px !important"

@@ -72,7 +72,7 @@ Route::delete('/students/destroy_all', [StudentController::class, 'destroy_all']
 
 Route::get('/course', [CourseController::class, 'index'])->name('course');
 Route::get('/course/create', [CourseController::class, 'create'])->name('course.create');
-Route::get('/course/show/{type}/{id}', [CourseController::class, 'show'])->name('course.show');
+Route::get('/course/show/{type}/{lang}/{id}', [CourseController::class, 'show'])->name('course.show');
 Route::get('/course/edit/{id}', [CourseController::class, 'edit'])->name('course.edit');
 Route::put('/course/save/{id}', [CourseController::class, 'update'])->name('course.save');
 Route::post('/course/store', [CourseController::class, 'store'])->name('course.store');

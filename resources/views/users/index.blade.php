@@ -274,7 +274,7 @@
 
                 id = $(this).data('id');
                 $.ajax({
-                    url: "/users/edit/" + id,
+                    url: "http://192.168.0.197/infinite_backoffice/public/users/edit/" + id,
                     method: 'GET',
                     success: function(res) {
                         $('#EditModalBody').html(res.html);
@@ -342,7 +342,7 @@
 
 
                 $.ajax({
-                    url: "/users/save/" + id,
+                    url: "http://192.168.0.197/infinite_backoffice/public/users/save/" + id,
                     method: 'PUT',
                     data: {
                         name: $('#editName').val(),
@@ -389,7 +389,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: 'JSON',
-                    url: "/users/destroy/" + rowid,
+                    url: "http://192.168.0.197/infinite_backoffice/public/users/destroy/" + rowid,
                     data: {
                         _method: 'delete',
                         _token: token

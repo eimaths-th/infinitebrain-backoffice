@@ -40,6 +40,7 @@ class LevelController extends Controller
                 "levels.book_per_level",
                 "levels.level_sort",
                 "levels.title",
+                "levels.title_th",
                 "subjects.title as subject_name"
             )
                 ->join("subjects", "subjects.id", "=", "levels.subject")
@@ -95,6 +96,7 @@ class LevelController extends Controller
             'subject' => 'required',
             'book_per_level' => 'required|integer',
             'title' => 'required|string|max:255',
+            'title_th' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'sort' => 'required', Rule::unique('levels')
                 ->where('level_sort', $request->get('sort'))
@@ -109,6 +111,7 @@ class LevelController extends Controller
             'subject' => $request->get('subject'),
             'book_per_level' => $request->get('book_per_level'),
             'title' => $request->get('title'),
+            'title_th' => $request->get('title_th'),
             'description' => $request->get('description'),
             'level_sort' => $request->get('sort'),
         ]);
@@ -162,6 +165,10 @@ class LevelController extends Controller
                     <label for="Title">Title:</label>
                     <input type="text" class="form-control" name="title" id="EditTitle" value="' . $data->title . '">
                 </div>
+                <div class="form-group">
+                    <label for="Title">Title Thai:</label>
+                    <input type="text" class="form-control" name="title_th" id="EditTitleTh" value="' . $data->title_th . '">
+                </div>
             
                 <div class="form-group">
                     <label for="Name">Description</label>
@@ -174,7 +181,7 @@ class LevelController extends Controller
                 </div>
                 <div class="form-group">
                     <label for="Book">Book:</label>
-                    <input type="number" class="form-control" id="EditBook" name="book" value="' . $data->book . '" min="1" max="99">
+                    <input type="number" class="form-control" id="EditBook" name="book" value="' . $data->book_per_level . '" min="1" max="99">
                 </div>';
 
         return response()->json(['html' => $html]);
@@ -227,6 +234,7 @@ class LevelController extends Controller
             'subject' => 'required',
             'book_per_level' => 'required|integer',
             'title' => 'required|string|max:255',
+            'title_th' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'level_sort' => 'required|integer',
         ]);

@@ -11,6 +11,7 @@ class Level extends Model
 
     protected $fillable = [
         'title',
+        'title_th',
         'description',
         'level_sort',
         'subject',

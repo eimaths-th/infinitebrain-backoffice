@@ -55,7 +55,7 @@ class CourseController extends Controller
                     return '<input type="checkbox" id="' . $row->course_id . '" class="flat" name="table_records[]" value="' . $row->course_id . '" >';
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a href="course/show/view/' . $row->course_id . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->course_id . '"><i class="fa fa-eye"></i> View Chart</a> ';
+                    $html = '<a href="course/show/view/en/' . $row->course_id . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->course_id . '"><i class="fa fa-eye"></i> View Chart</a> ';
                     $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->course_id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->course_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
@@ -120,7 +120,7 @@ class CourseController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function show($type, $id)
+    public function show($type,$lang, $id)
     {
         //
         //echo $type;
@@ -128,6 +128,7 @@ class CourseController extends Controller
         $course = Course::select(
             "courses.id as course_id",
             "levels.title as student_level",
+            "levels.title_th as student_level_th",
             "levels.id as level_id",
             "levels.book_per_level as book",
             "subjects.id as subject_id",
@@ -199,11 +200,16 @@ class CourseController extends Controller
         foreach ($levels as $key) {
             //if ($key->id == $course[0]->level_id) {
             //echo $key->level_sort;
+            if ($lang=="th") {
+                $level_title = $key->title_th;
+            } else if ($lang=="en") {
+                $level_title = $key->title;
+            }
 
 
             $tdhtml[$key->level_sort] = "";
             $tdhtml[$key->level_sort] .= "<tr>
-                <td width=\"35%\">" . $key->title . "</td>
+                <td width=\"35%\"><font size=\"2\">" . $level_title . "</font></td>
                 <td width=\"100\" align=\"center\">" . $key->level_sort . "</td>";
 
             //start level
@@ -259,7 +265,7 @@ class CourseController extends Controller
 
                             }
 
-                            $tdhtml[$key->level_sort] .= "<td " . $div_right . " style=\"padding:0; margin: 0; margin-right: 0px; margin-left: 0px;\" width=\"80\">" . $progress_view . "
+                            $tdhtml[$key->level_sort] .= "<td " . $div_right . " style=\"padding:0; margin: 0; margin-right: 0px; margin-left: 0px; \" width=\"80\">" . $progress_view . "
                             </td>";
                         }
                     } else {
@@ -276,7 +282,7 @@ class CourseController extends Controller
             } else {
                 $tdhtml[$key->level_sort] = "";
                 $tdhtml[$key->level_sort] .= "<tr>
-                <td>" . $key->title . "</td>
+                <td><font size=\"2\">" . $level_title . "</font></td>
                 <td align=\"center\">" . $key->level_sort . "</td>";
                 for ($x = 1; $x <= 12; $x++) {
                     $tdhtml[$key->level_sort] .= "<td></td>";
@@ -308,7 +314,8 @@ class CourseController extends Controller
             ->with(['year_span' => $year_span])
             ->with(['levels' => $tb_level])
             ->with(['course' => $course])
-            ->with(['id' => $id]);
+            ->with(['id' => $id])
+            ->with(['lang' => $lang]);
     }
 
     /**
