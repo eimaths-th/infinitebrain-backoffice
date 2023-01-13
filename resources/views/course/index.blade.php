@@ -137,8 +137,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="Date">Date Start:</label>
-                            <input readonly type="text" class="AddDate form-control" id="AddDate" name="date"
+                            <label for="Date">Date Start (yyyy-mm-dd):</label>
+                            <input  type="text" class="AddDate form-control" id="AddDate" name="date"
                                 required value="">
                         </div>
                     </div>
@@ -210,8 +210,8 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="Date">Date Start:</label>
-                                <input readonly type="text" class="AddDate form-control" id="EditDate"
+                                <label for="Date">Date Start (yyyy-mm-dd):</label>
+                                <input type="text" class="AddDate form-control" id="EditDate"
                                     name="date" required>
                             </div>
                         </div>

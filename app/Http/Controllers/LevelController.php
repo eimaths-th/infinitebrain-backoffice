@@ -198,7 +198,7 @@ class LevelController extends Controller
 
         foreach ($data as $key) {
 
-            $select_list .= '<option value="' . $key->id . '" >' . $key->title . '</option>';
+            $select_list .= '<option value="' . $key->id . '" > (' . $key->level_sort . ') ' . $key->title . '</option>';
         }
 
         $data2 = Subject::find($id);

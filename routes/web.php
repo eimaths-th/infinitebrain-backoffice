@@ -31,7 +31,7 @@ Auth::routes([
 
 //Route for normal user
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/home', [App\Http\Controllers\CourseController::class, 'index'])->name('home');
 });
 //Route for admin
 /*Route::group(['prefix' => 'admin'], function () {
