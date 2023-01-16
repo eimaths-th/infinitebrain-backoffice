@@ -184,8 +184,23 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Student $student)
+    public function destroy($id)
     {
         //
+        Student::find($id)->delete();
+        return ['success' => true, 'message' => 'Deleted Successfully'];
+    }
+
+    public function destroy_all(Request $request)
+    {
+
+        $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
+
+        for ($xx = 0; $xx < count($arr_del); $xx++) {
+            Student::find($arr_del[$xx])->delete();
+        }
+        //$ids = $request->get('table_records');
+        //User::whereIn('id',explode(",",$ids))->delete();
+        return redirect('/students' . $request->get('id'))->with('success', 'Deleted Successfully');;
     }
 }
