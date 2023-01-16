@@ -33,8 +33,10 @@ class LoginController extends Controller
     {
         if (Auth::user()->level == 1) {
             return '/home';
-        } else {
+        } elseif (Auth::user()->level == 2) { 
             return '/home';
+        } else {
+            
         }
     }
 

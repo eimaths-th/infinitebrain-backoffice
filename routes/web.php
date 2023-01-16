@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\EmployeeController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CustomAuthController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,7 +20,7 @@ use App\Http\Controllers\CourseController;
 */
 
 Route::get('/', [App\Http\Controllers\CourseController::class, 'index']);
-Route::get('/home', [EmployeeController::class, 'index'])->name('home');
+Route::get('/home', [CourseController::class, 'index'])->name('home');
 //Route::get('/', [EmployeeController::class, 'index']);
 
 Auth::routes([
@@ -27,7 +29,12 @@ Auth::routes([
     'verify' => false, // Email Verification Routes...
 ]);
 
-
+//Route::get('dashboard', [CustomAuthController::class, 'dashboard']); 
+Route::get('login', [CustomAuthController::class, 'index'])->name('login');
+Route::post('custom-login', [CustomAuthController::class, 'customLogin'])->name('login.custom'); 
+Route::get('registration', [CustomAuthController::class, 'registration'])->name('register-user');
+Route::post('custom-registration', [CustomAuthController::class, 'customRegistration'])->name('register.custom'); 
+Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout');
 
 
 //Route for normal user
