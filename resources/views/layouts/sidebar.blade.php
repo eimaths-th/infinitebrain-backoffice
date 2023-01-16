@@ -59,7 +59,7 @@
                     </li>
                 @endif
 
-                @if (Auth::user()->level == 0 || Auth::user()->level == 1)
+                @if (Auth::user()->level == 2 || Auth::user()->level == 1)
                     <li class="app-sidebar__heading">School</li>
                     <li>
                         <a href="#">

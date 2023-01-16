@@ -18,6 +18,7 @@ use App\Http\Controllers\CourseController;
 */
 
 Route::get('/', [App\Http\Controllers\CourseController::class, 'index']);
+Route::get('/home', [EmployeeController::class, 'index'])->name('home');
 //Route::get('/', [EmployeeController::class, 'index']);
 
 Auth::routes([
@@ -30,9 +31,10 @@ Auth::routes([
 
 
 //Route for normal user
-Route::group(['middleware' => ['auth']], function () {
-    Route::get('/home', [App\Http\Controllers\CourseController::class, 'index'])->name('home');
-});
+//Route::group(['middleware' => ['auth']], function () {
+//   Route::get('/home', [App\Http\Controllers\CourseController::class, 'index'])->name('home');
+//});
+
 //Route for admin
 /*Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => ['admin']], function () {

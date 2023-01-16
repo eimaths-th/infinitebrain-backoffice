@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+//use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class CourseController extends Controller
 {
@@ -17,6 +19,7 @@ class CourseController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+       
     }
     /**
      * Display a listing of the resource.
@@ -26,6 +29,12 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         //
+        if (Auth::check()) {
+            if (Auth::user()->level == 0) {
+                return view('home');
+            }
+        }
+
         if ($request->ajax()) {
             //sleep(2);
             $course = Course::select(

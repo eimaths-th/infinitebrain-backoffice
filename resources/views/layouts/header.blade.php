@@ -98,8 +98,10 @@
 
                                 @if (Auth::user()->level == 1)
                                     Admin
-                                @else
+                                @elseif (Auth::user()->level == 2)
                                     Teacher
+                                @else
+                                    Normal
                                 @endif
                             </div>
                         </div>

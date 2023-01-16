@@ -111,8 +111,9 @@
                             <label for="Name">Level:</label>
                             <select class="form-control" id="AddLevel" name="level">
                                 <option value="" selected>Select Level</option>
+                                <option value="0">Normal</option>
                                 <option value="1">Admin</option>
-                                <option value="0">Teacher</option>
+                                <option value="2">Teacher</option>
                             </select>
                         </div>
                     </div>

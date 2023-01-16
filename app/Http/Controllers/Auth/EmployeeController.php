@@ -50,9 +50,11 @@ class EmployeeController extends Controller
                 ->editColumn('level', function (User $level) {
                     if ($level->level == 1) {
                         $ltext = "Admin";
-                    } else {
+                    } elseif ($level->level == 2) {
                         $ltext = "Teacher";
-                    }
+                    } else {
+                        $ltext = "Normal";
+                    } 
 
                     return $ltext;
                 })
@@ -143,10 +145,16 @@ class EmployeeController extends Controller
             $aselected = '';
         }
 
-        if ($data->level == 0) {
+        if ($data->level == 2) {
             $bselected = 'selected';
         } else {
             $bselected = '';
+        }
+
+        if ($data->level == 0) {
+            $cselected = 'selected';
+        } else {
+            $cselected = '';
         }
 
         $html = '<div class="form-group">
@@ -156,7 +164,7 @@ class EmployeeController extends Controller
                 <div class="form-group">
                     <label for="Name">Email:</label>
                     <input type="text" class="form-control" name="email" id="editEmail" value="' . $data->email . '">
-                </div>
+                <!--</div>
                     <div class="form-group">
                     <label for="Name">Password:</label>
                     <input type="password" class="form-control" name="password" required autocomplete="new-password"
@@ -166,13 +174,14 @@ class EmployeeController extends Controller
                     <label for="Name">Confirm Password:</label>
                     <input type="password" class="form-control" name="password_confirmation" id="EditPasswordC"
                         required autocomplete="new-password" >
-                </div>
+                </div>-->
                 <div class="form-group">
                     <label for="Name">Level:</label>
                     <select class="form-control" id="editLevel" name="level">
                      <option value="">Select Level</option>
+                     <option value="0" ' . $cselected . '>Normal</option>
                      <option value="1" ' . $aselected . '>Admin</option>
-                     <option value="0" ' . $bselected . '>Teacher</option>
+                     <option value="2" ' . $bselected . '>Teacher</option>
                     </select>
                 </div>';
 
@@ -195,7 +204,7 @@ class EmployeeController extends Controller
         $validator =  Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'level' => 'required',
-            'password' => 'required|string|min:8|confirmed',
+            //'password' => 'required|string|min:8|confirmed',
             'email' => 'required|string|email|max:255|unique:users,email,'.$id,
         ]);
 
@@ -206,7 +215,7 @@ class EmployeeController extends Controller
         $level = [
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => Hash::make($request->get('password')),
+            //'password' => Hash::make($request->get('password')),
             'level' => $request->get('level'),
         ];
 

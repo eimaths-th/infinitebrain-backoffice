@@ -6,6 +6,8 @@ use App\Models\Student;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+//use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -17,6 +19,12 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         //
+
+        if (Auth::check()) {
+            if (Auth::user()->level == 0) {
+                return view('home');
+            }
+        }
         if ($request->ajax()) {
             //sleep(2);
             $students = Student::orderBy("code", "asc")
