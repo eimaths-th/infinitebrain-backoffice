@@ -252,7 +252,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: 'JSON',
-                    url: "http://192.168.0.197/infinite_backoffice/public/levels/select_list/" + subject_id,
+                    url: "levels/select_list/" + subject_id,
                     data: {
                         _token: token
                     },
@@ -271,7 +271,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: 'JSON',
-                    url: "http://192.168.0.197/infinite_backoffice/public/levels/select_list/" + subject_id,
+                    url: "levels/select_list/" + subject_id,
                     data: {
                         _token: token
                     },
@@ -399,7 +399,7 @@
 
                 id = $(this).data('id');
                 $.ajax({
-                    url: "http://192.168.0.197/infinite_backoffice/public/course/edit/" + id,
+                    url: "course/edit/" + id,
                     method: 'GET',
                     success: function(res) {
                         //$('#EditModalBody').html(res.html);
@@ -479,7 +479,7 @@
 
 
                 $.ajax({
-                    url: "http://192.168.0.197/infinite_backoffice/public/course/save/" + id,
+                    url: "course/save/" + id,
                     method: 'PUT',
                     data: {
                         student: $('#EditStudent').val()[0],
@@ -527,7 +527,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: 'JSON',
-                    url: "http://192.168.0.197/infinite_backoffice/public/course/destroy/" + rowid,
+                    url: "course/destroy/" + rowid,
                     data: {
                         _method: 'delete',
                         _token: token

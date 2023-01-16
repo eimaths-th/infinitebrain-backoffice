@@ -363,9 +363,9 @@ class CourseController extends Controller
 
             if ($data->level_id == $key->id) {
 
-                $select_list .= '<option value="' . $key->id . '" selected>' . $key->title . '</option>';
+                $select_list .= '<option value="' . $key->id . '" selected> (' . $key->level_sort . ') ' . $key->title . '</option>';
             } else {
-                $select_list .= '<option value="' . $key->id . '" >' . $key->title . '</option>';
+                $select_list .= '<option value="' . $key->id . '" > (' . $key->level_sort . ') ' . $key->title . '</option>';
             }
         }
 
