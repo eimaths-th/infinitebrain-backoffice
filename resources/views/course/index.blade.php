@@ -4,6 +4,7 @@
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://rawgit.com/RobinHerbots/Inputmask/5.x/dist/jquery.inputmask.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
@@ -221,7 +222,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Date">Date Start (yyyy-mm-dd):</label>
-                            <input type="text" class="AddDate form-control" id="AddDate" name="date" required
+                            <input  type="text" class="AddDate form-control" id="AddDate" name="date" required
                                 value="">
                         </div>
                     </div>
@@ -295,7 +296,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="Date">Date Start (yyyy-mm-dd):</label>
-                                <input type="text" class="AddDate form-control" id="EditDate" name="date"
+                                <input  type="text" class="AddDate form-control" id="EditDate" name="date"
                                     required>
                             </div>
                         </div>
@@ -316,8 +317,10 @@
         $(document).ready(function() {
 
             $(".AddDate").datepicker({
-                dateFormat: "yy-mm-dd"
+                dateFormat: "yy-mm"
             });
+
+            $(".AddDate").inputmask("9999-99");
 
 
             $(".select2_single").select2({
@@ -514,8 +517,7 @@
                     url: "course/edit/" + id,
                     method: 'GET',
                     success: function(res) {
-                        //$('#EditModalBody').html(res.html);
-                        //console.log(res);
+                   
                         $('#EditStudent').html(res.student);
                         $('#EditSubject').html(res.subject);
                         $('#EditLevel').html(res.html);
@@ -580,7 +582,7 @@
                         _token: token,
                     },
                     success: function(result) {
-                        //console.log(result);
+                       
                         if (result.errors) {
                             $('.alert-danger').html('');
                             $.each(result.errors, function(key, value) {
@@ -599,6 +601,7 @@
                             $('#AddLevel').val('');
                             $('#AddBook').val('');
                             $('#AddDate').val('');
+                        
                             //$('#SubmitCreateForm').hide();
                             //setTimeout(function() {
                             //$('.alert-success').hide();
@@ -634,7 +637,7 @@
                     },
 
                     success: function(result) {
-                        //console.log(result);
+                    
                         if (result.errors) {
                             $('.alert-danger').html('');
                             $.each(result.errors, function(key, value) {
@@ -648,9 +651,10 @@
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
                             $('#Listview').DataTable().ajax.reload();
+                            //$('#EditModal').modal('hide');
                             //setTimeout(function() {
                             //$('.alert-success').hide();
-                            //   $('#EditModal').modal('hide');
+                            //  
                             //}, 10000);
 
                         }
