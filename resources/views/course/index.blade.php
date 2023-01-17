@@ -33,6 +33,8 @@
                 </div>
                 <div class="page-title-actions">
                     <div class="d-inline-block dropdown">
+                        <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg"
+                            id="SimulateButton"><i class="fa fa-bar-chart"></i> Simulate Chart</a>
                         <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
                             Course</a>
@@ -74,15 +76,18 @@
 
     </div>
 
-    <!-- Create Modal -->
+
+
+    <!-- Simulate Modal -->
 
     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true" id="CreateModal">
+        aria-hidden="true" id="SimulateModal">
         <div class="modal-dialog modal-lg" role="document">
-            <form class="form" action="" method="POST">
+            <form class="form" id="simulate" action="{{ route('course.simulate', ['type' => 'view', 'lang' => 'en']) }}" method="POST">
+                @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Add Course</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Simulate Chart</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
@@ -100,12 +105,86 @@
                             </button>
                         </div>
                         <div class="form-group">
+                            <label for="Student">Student Name:</label><br>
+                            <input type="text" class="form-control" name="student" id="SStudent" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="Subject">Subject:</label>
+                            <select class="SSubject form-control" id="SSubject" name="subject">
+                                <option value="" selected>Select Subject</option>
+                                @foreach ($data as $key)
+                                    <option value="{{ $key->id }}"
+                                        {{ request()->get('id') == $key->id ? 'selected' : '' }}> {{ $key->title }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Level">Start Level:</label>
+                            <select class="form-control" id="SLevel" name="level">
+                                <option value="" selected>Select Level</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Book">Book Start:</label>
+                            <select class="form-control" id="SBook" name="book">
+                                <option value="" selected>Select Book</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Date">Date Start (yyyy-mm-dd):</label>
+                            <input type="text" class="AddDate form-control" id="SDate" name="date" required
+                                value="">
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" id="sSubmitSimulateForm">Generate</button>
+                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Modal -->
+
+    <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" id="CreateModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <form class="form" action="" method="POST">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add Course</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
+
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="form-group">
                             <label for="Student">Student:</label><br>
                             <select style="width: 100%;" class="select2 select2_single form-control" id="AddStudent"
                                 name="student" multiple="multiple">
                                 <!--<option value="" selected>Select Student</option>-->
                                 @foreach ($data2 as $key2)
-                                    <option value="{{ $key2->id }}"> {{ $key2->name }} {{ $key2->lastname }} </option>
+                                    <option value="{{ $key2->id }}"> {{ $key2->name }} {{ $key2->lastname }}
+                                    </option>
                                 @endforeach
 
                             </select>
@@ -138,8 +217,8 @@
                         </div>
                         <div class="form-group">
                             <label for="Date">Date Start (yyyy-mm-dd):</label>
-                            <input  type="text" class="AddDate form-control" id="AddDate" name="date"
-                                required value="">
+                            <input type="text" class="AddDate form-control" id="AddDate" name="date" required
+                                value="">
                         </div>
                     </div>
                     <!-- Modal footer -->
@@ -148,6 +227,7 @@
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
+            </form>
         </div>
     </div>
 
@@ -191,7 +271,7 @@
                                 <label for="Subject">Subject:</label>
                                 <select class="AddSubject form-control" id="EditSubject" name="subject">
                                     <option value="" selected>Select Subject</option>'.
-                                   
+
 
                                 </select>
                             </div>
@@ -211,8 +291,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="Date">Date Start (yyyy-mm-dd):</label>
-                                <input type="text" class="AddDate form-control" id="EditDate"
-                                    name="date" required>
+                                <input type="text" class="AddDate form-control" id="EditDate" name="date"
+                                    required>
                             </div>
                         </div>
                     </div>
@@ -222,6 +302,7 @@
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
+            </form>
         </div>
     </div>
 @endsection
@@ -235,7 +316,6 @@
             });
 
 
-
             $(".select2_single").select2({
                 maximumSelectionLength: 1,
                 allowClear: true
@@ -246,8 +326,27 @@
                 allowClear: true
             });
 
+            $("#SSubject").change(function() {
+
+                var subject_id = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    dataType: 'JSON',
+                    url: "levels/select_list/" + subject_id,
+                    data: {
+                        _token: token
+                    },
+                    success: function(result) {
+                        //console.log(result);
+                        $("#SLevel").html(result.html);
+                        $("#SBook").html(result.html2);
+                    }
+                });
+
+            });
+
             $("#AddSubject").change(function() {
-                
+
                 var subject_id = $(this).val();
                 $.ajax({
                     type: "POST",
@@ -266,7 +365,7 @@
             });
 
             $("#EditSubject").change(function() {
-                
+
                 var subject_id = $(this).val();
                 $.ajax({
                     type: "POST",
@@ -374,7 +473,16 @@
                 ]
             });
 
+            $(document).on('click', '#SimulateButton', function(e) {
+                e.preventDefault();
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
 
+                $('#SimulateModal').modal('show');
+                //$('#SubmitCreateForm').show();
+            });
 
             $(document).on('click', '#CreateButton', function(e) {
                 e.preventDefault();
@@ -382,7 +490,7 @@
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
-                
+
                 $('#CreateModal').modal('show');
                 //$('#SubmitCreateForm').show();
             });
@@ -415,6 +523,37 @@
 
             })
 
+            // Create product Ajax request.
+            $('#SubmitSimulateForm').click(function(e) {
+                e.preventDefault();
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+
+
+                $.ajax({
+                    url: "{{ route('course.simulate', ['type' => 'view', 'lang' => 'en']) }}",
+                    method: 'get',
+                    data: {
+                        student: $('#SStudent').val(),
+                        subject: $('#SSubject').val(),
+                        level: $('#SLevel').val(),
+                        book: $('#SBook').val(),
+                        date: $('#SDate').val(),
+                        _token: token,
+                    },
+                    success: function(result) {
+                        console.log(result);
+                        $('.alert-danger').html('');
+                        $.each(result.errors, function(key, value) {
+                            $('.alert-danger').show();
+                            $('.alert-danger').append('<strong><li>' + value +
+                                '</li></strong>');
+                        });
+                    }
+                });
+            });
 
             // Create product Ajax request.
             $('#SubmitCreateForm').click(function(e) {

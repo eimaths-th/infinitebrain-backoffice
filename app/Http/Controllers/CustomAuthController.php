@@ -30,9 +30,10 @@ class CustomAuthController extends Controller
                 Session::flush();
                 Auth::logout();
 
-                return back()->withErrors([
+                /*return back()->withErrors([
                     'email' => 'You are users but not have permissions. Please Contact Administrator',
-                ]);
+                ]);*/
+                return back()->withErrors('error','You are users but not have permissions. Please Contact Administrator');
             } else {
                 return redirect()->intended('home');
                     //->withSuccess('Signed in');

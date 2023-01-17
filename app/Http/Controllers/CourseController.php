@@ -19,7 +19,6 @@ class CourseController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-       
     }
     /**
      * Display a listing of the resource.
@@ -130,7 +129,7 @@ class CourseController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function show($type,$lang, $id)
+    public function show($type, $lang, $id)
     {
         //
         //echo $type;
@@ -211,9 +210,9 @@ class CourseController extends Controller
         foreach ($levels as $key) {
             //if ($key->id == $course[0]->level_id) {
             //echo $key->level_sort;
-            if ($lang=="th") {
+            if ($lang == "th") {
                 $level_title = $key->title_th;
-            } else if ($lang=="en") {
+            } else if ($lang == "en") {
                 $level_title = $key->title;
             }
 
@@ -273,7 +272,6 @@ class CourseController extends Controller
 
                                 $progress_view = "
                                 <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width: " . $bar_percent . "%; height: 8px; top: 0; margin-top: -9px; \" ><tr><td bgcolor=\"blue\"></td></tr></table>";
-
                             }
 
                             $tdhtml[$key->level_sort] .= "<td " . $div_right . " style=\"padding:0; margin: 0; margin-right: 0px; margin-left: 0px; \" width=\"80\">" . $progress_view . "
@@ -326,6 +324,215 @@ class CourseController extends Controller
             ->with(['levels' => $tb_level])
             ->with(['course' => $course])
             ->with(['id' => $id])
+            ->with(['lang' => $lang]);
+    }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Course  $course
+     * @return \Illuminate\Http\Response
+     */
+    public function simulate(Request $request, $type, $lang)
+    {
+        $validator =  Validator::make($request->all(), [
+            'student' => 'required',
+            'subject' => 'required',
+            'level' => 'required',
+            'book' => 'required',
+            'date' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        /*$course = [
+            'student_id' => $request->get('student'),
+            'subject_id' => $request->get('subject'),
+            'level_id' => $request->get('level'),
+            'book_start' => $request->get('book'),
+            'date_start' => $request->get('date'),
+        ];*/
+
+        //print_r($course);
+        //exit();
+
+
+        $levels = Level::where('subject', $request->get('subject'))->orderBy("level_sort", "asc")->get();
+
+        $levels_start = Level::where('id', $request->get('level'))->get();
+
+        $course = Subject::where('id', $request->get('subject'))->get();
+
+        //print_r($course);
+        //$course[0]->book;
+        //exit();
+
+        $start_date = explode("-", $request->get('date'));
+
+        $start_month = (int)$start_date[1];
+        $start_year = $start_date[0];
+        if ($start_month == 1) {
+            $last_year = $start_year;
+            $span1 = 12;
+            $span2 = 12;
+        } else {
+            $span1 = (12 - $start_month) + 1;
+            $span2 = 12 - $span1;
+            $last_year = $start_year + 1;
+        }
+
+        $key = "start_year";
+        $key2 = "last_year";
+        $year_span = array($$key => $span1, $$key2 => $span2);
+
+        for ($i = 1; $i <= 12; $i++) {
+            $months[$i] = $start_month;
+            $start_month++;
+            if ($start_month == 13) {
+                $start_month = 1;
+            }
+        }
+
+        $tb_level = "";
+
+        //echo $request->get('level');
+        //$course[0]->subject_book
+        $start_sort = $levels_start[0]->level_sort;
+        //exit();
+        $tdhtml = array();
+        $all_level = 1;
+        $start_cell = 0;
+
+        $level_progress_loop = 0;
+        $level_progress_standard = $levels_start[0]->book_per_level / $course[0]->book_per_month;
+        $endprogress = 0;
+        $last_per = 0;
+        $div_right = "";
+        $bar_percent = "";
+        foreach ($levels as $key) {
+            //if ($key->id == $request->get('level')) {
+            //echo $key->level_sort;
+            if ($lang == "th") {
+                $level_title = $key->title_th;
+            } else if ($lang == "en") {
+                $level_title = $key->title;
+            }
+
+
+            $tdhtml[$key->level_sort] = "";
+            $tdhtml[$key->level_sort] .= "<tr>
+                <td width=\"35%\"><font size=\"2\">" . $level_title . "</font></td>
+                <td width=\"100\" align=\"center\">" . $key->level_sort . "</td>";
+
+            //start level
+            if ($key->level_sort >= $start_sort) {
+                if ($all_level == $start_sort) {
+                    if ($course[0]->book_start == 1) {
+                        $level_progress = $levels_start[0]->book_per_level / $course[0]->book_per_month;
+                    } else {
+                        $level_progress = (($levels_start[0]->book_per_level - $course[0]->book_start)) / $course[0]->book_per_month;
+                    }
+                } else {
+                    $level_progress = $levels_start[0]->book_per_level / $course[0]->book_per_month;
+                }
+
+                if ($level_progress_loop == 0) {
+                    $level_progress_loop = $level_progress;
+                }
+                //if ($level_progress_loop>10) {
+                //$monthcell = round($level_progress_loop);
+                //} else {
+                $monthcell = ceil($level_progress_loop);
+                //}
+
+
+                for ($x = 1; $x <= 12; $x++) {
+
+                    if ($x <= $monthcell) {
+                        if ($level_progress_loop - $x > 0) {
+                            $bar_percent = "100";
+                        } else {
+                            $bar_percent = (($level_progress_loop - $x) + 1) * 100;
+                        }
+
+                        if ($x < ceil($start_cell)) {
+                            $tdhtml[$key->level_sort] .= "<td></td>";
+                        } else {
+                            if ($x == ceil($start_cell)) {
+                                $bar_percent = 100 - $last_per;
+                                $div_right = "align=\"right\"";
+                            } else {
+                                $div_right = "align=\"left\"";
+                            }
+
+                            if ($type == "view") {
+                                $progress_view = "
+                                <div class=\"progress-bar-xs mb-3 progress\" style=\"width: " . $bar_percent . "%;\">
+                                <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 100%;\"></div>
+                                </div>";
+                            } else if ($type == "print") {
+
+                                $progress_view = "
+                                <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width: " . $bar_percent . "%; height: 8px; top: 0; margin-top: -9px; \" ><tr><td bgcolor=\"blue\"></td></tr></table>";
+                            }
+
+                            $tdhtml[$key->level_sort] .= "<td " . $div_right . " style=\"padding:0; margin: 0; margin-right: 0px; margin-left: 0px; \" width=\"80\">" . $progress_view . "
+                            </td>";
+                        }
+                    } else {
+                        $tdhtml[$key->level_sort] .= "<td width=\"80\"></td>";
+                    }
+                }
+
+
+                $start_cell += $level_progress;
+                $last_per = $bar_percent;
+                $level_progress_loop += $level_progress_standard;
+                $endprogress += $course[0]->book_per_month;
+                //echo "<br>";
+            } else {
+                $tdhtml[$key->level_sort] = "";
+                $tdhtml[$key->level_sort] .= "<tr>
+                <td><font size=\"2\">" . $level_title . "</font></td>
+                <td align=\"center\">" . $key->level_sort . "</td>";
+                for ($x = 1; $x <= 12; $x++) {
+                    $tdhtml[$key->level_sort] .= "<td></td>";
+                }
+            }
+
+
+            //exit();
+
+            $tdhtml[$key->level_sort] .= "</tr>";
+            $all_level++;
+        }
+
+        //print_r($tdhtml);
+        //echo $all_level;
+        for ($ret = ($all_level - 1); $ret >= 1; $ret--) {
+            $tb_level .= $tdhtml[$ret];
+        }
+
+        if ($type == "view") {
+            $viewr = "course.simulate_view";
+        } else if ($type == "print") {
+            $viewr = "course.simulate_print";
+        }
+
+        return view($viewr)->with(['year' => $start_year])->with(['last_year' => $last_year])
+            ->with(['start_month' => $start_month])
+            ->with(['months' => $months])
+            ->with(['year_span' => $year_span])
+            ->with(['levels' => $tb_level])
+            ->with(['course' => $course])
+            ->with(['student' => $request->get('student')])
+            ->with(['subject' => $request->get('subject')])
+            ->with(['level' => $request->get('level')])
+            ->with(['book' => $request->get('book')])
+            ->with(['date' => $request->get('date')])
             ->with(['lang' => $lang]);
     }
 
@@ -462,6 +669,6 @@ class CourseController extends Controller
         }
         //$ids = $request->get('table_records');
         //User::whereIn('id',explode(",",$ids))->delete();
-        return redirect('/course')->with('success', 'Deleted Successfully');;
+        return redirect('/course')->with('success', 'Deleted Successfully');
     }
 }
