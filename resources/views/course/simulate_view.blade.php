@@ -33,17 +33,18 @@
                 </div>
                 <div class="page-title-actions">
                     <div class="d-inline-block dropdown">
-                        <a href="{{ route('course.simulate', ['type' => 'view', 'lang' => 'th', 'student' => $student, 'subject' => $subject, 'book' => $book, 'level' => $level, 'date' => $date , 'grade' => $grade]) }}"
+                        <a href="{{ route('course.simulate', ['type' => 'view', 'lang' => 'th', 'student' => $student, 'subject' => $subject, 'book' => $book, 'level' => $level, 'date' => $date, 'grade' => $grade]) }}"
                             class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="LangButtonth"><i
                                 class="fa fa-eye"></i> Thai</a>
                         <a href="{{ route('course.simulate', ['type' => 'view', 'lang' => 'en', 'student' => $student, 'subject' => $subject, 'book' => $book, 'level' => $level, 'date' => $date, 'grade' => $grade]) }}"
                             class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="LangButtonen"><i
                                 class="fa fa-eye"></i> Eng</a>
+                        <a class="btn btn-warning " href="#" onclick="export_report();"><i class="fa fa-print"></i>
+                            Print</a>
                         <a href="{{ route('course') }}" class="btn btn-success" data-toggle="modal"
                             data-target=".bd-example-modal-lg" id="CreateButton"><i class="fa fa-backward"></i> Back
                             Study Course</a>
-                        <a class="btn btn-warning " href="#" onclick="export_report();"><i class="fa fa-print"></i>
-                            Print</a>
+
 
                     </div>
                 </div>

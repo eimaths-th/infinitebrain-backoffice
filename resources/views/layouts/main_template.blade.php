@@ -69,18 +69,132 @@
 
             <div class="app-main__outer">
                 <div class="app-main__inner">
+                    
                     <!-- Your Page Content Here -->
                     @yield('content')
+
+                    <!-- Edit User Modal -->
+                    <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog"
+                        aria-labelledby="myLargeModalLabel" aria-hidden="true" id="EditUserModal">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <form class="form" action="" method="POST">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Users Data</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close">
+                                        </button>
+                                    </div>
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                                            style="display: none;">
+                                            <button type="button" class="btn-close" data-dismiss="alert"
+                                                aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                                            style="display: none;">
+
+                                            <button type="button" class="btn-close" data-dismiss="alert"
+                                                aria-label="Close">
+                                                <span aria-hidden="true"></span>
+                                            </button>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Name">Name:</label>
+                                            <input type="text" class="form-control" name="name" id="EdituName"
+                                                value="{{Auth::user()->name}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Name">Email:</label>
+                                            <input type="text" class="form-control" name="email" id="EdituEmail"
+                                                value="{{Auth::user()->email}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Name">Password:</label>
+                                            <input type="password" class="form-control" name="password" required
+                                                autocomplete="new-password" id="EdituPassword">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Name">Confirm Password:</label>
+                                            <input type="password" class="form-control" name="password_confirmation"
+                                                id="EdituPasswordC" required autocomplete="new-password">
+                                        </div>
+
+                                    </div>
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" id="SubmitUserEditForm">Save</button>
+                                        <button type="button" class="btn btn-danger modelClose"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
                 <!-- Footer -->
                 @include('layouts.footer')
             </div>
-            <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+           
         </div>
     </div>
 
 
     @yield('script')
+
+    <script>
+        $(document).ready(function() {
+
+
+            $('#SubmitUserEditForm').click(function(e) {
+                if (!confirm("Are you sure?")) return;
+                e.preventDefault();
+
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+
+                let id={{Auth::user()->id}};
+                $.ajax({
+                    url: "users/msave/" + id,
+                    method: 'PUT',
+                    data: {
+                        name: $('#EdituName').val(),
+                        password: $('#EdituPassword').val(),
+                        password_confirmation: $('#EdituPasswordC').val(),
+                        email: $('#EdituEmail').val(),
+                       
+                    },
+
+                    success: function(result) {
+                        console.log(result);
+                        if (result.errors) {
+                            $('.alert-danger').html('');
+                            $.each(result.errors, function(key, value) {
+                                $('.alert-danger').show();
+                                $('.alert-danger').append('<strong><li>' + value +
+                                    '</li></strong>');
+                            });
+                        } else {
+                            $('.alert-danger').hide();
+                            $('.alert-success').show();
+                            $('.alert-success').append('<strong><li>' + result.success +
+                                '</li></strong>');
+                           
+                            $('#EditModal').modal('hide');
+                           
+
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

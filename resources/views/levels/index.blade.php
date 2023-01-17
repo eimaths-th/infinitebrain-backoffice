@@ -32,6 +32,7 @@
                         <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
                             Level</a>
+                            
                         <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
                             All</a>
 
@@ -424,3 +425,4 @@
         })
     </script>
 @endsection
+

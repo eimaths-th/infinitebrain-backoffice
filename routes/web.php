@@ -57,6 +57,7 @@ Route::get('/users/create', [EmployeeController::class, 'create'])->name('users.
 Route::get('/users/show', [EmployeeController::class, 'show'])->name('users.show');
 Route::get('/users/edit/{id}', [EmployeeController::class, 'edit'])->name('users.edit');
 Route::put('/users/save/{id}', [EmployeeController::class, 'update'])->name('users.save');
+Route::put('/users/msave/{id}', [EmployeeController::class, 'mupdate'])->name('users.msave');
 Route::post('/users/store', [EmployeeController::class, 'store'])->name('users.store');
 Route::delete('/users/destroy/{id}', [EmployeeController::class, 'destroy'])->name('users.destroy');
 Route::delete('/users/destroy_all', [EmployeeController::class, 'destroy_all'])->name('users.destroy_all');

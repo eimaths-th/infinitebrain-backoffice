@@ -176,7 +176,7 @@ class EmployeeController extends Controller
                 <div class="form-group">
                     <label for="Name">Email:</label>
                     <input type="text" class="form-control" name="email" id="editEmail" value="' . $data->email . '">
-                <!--</div>
+                </div>
                     <div class="form-group">
                     <label for="Name">Password:</label>
                     <input type="password" class="form-control" name="password" required autocomplete="new-password"
@@ -186,7 +186,7 @@ class EmployeeController extends Controller
                     <label for="Name">Confirm Password:</label>
                     <input type="password" class="form-control" name="password_confirmation" id="EditPasswordC"
                         required autocomplete="new-password" >
-                </div>-->
+                </div>
                 <div class="form-group">
                     <label for="Name">Level:</label>
                     <select class="form-control" id="editLevel" name="level">
@@ -215,12 +215,17 @@ class EmployeeController extends Controller
         //exit();
         $this->check_permission();
 
-        $validator =  Validator::make($request->all(), [
+            
+        $rules = [
             'name' => 'required|string|max:255',
-            'level' => 'required',
-            //'password' => 'required|string|min:8|confirmed',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-        ]);
+        ];
+        
+        if ($request->get('password')) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+        }
+
+        $validator =  Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
@@ -230,9 +235,49 @@ class EmployeeController extends Controller
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             //'password' => Hash::make($request->get('password')),
-            'level' => $request->get('level'),
         ];
 
+
+        if ($request->get('password')) {
+            $level['password'] = Hash::make($request->get('password'));
+        }
+
+        User::find($id)->update($level);
+
+        return response()->json(['success' => 'User updated successfully']);
+    }
+
+    public function mupdate(Request $request, $id)
+    {
+
+       
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+        ];
+        
+        if ($request->get('password')) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+        }
+
+        $validator =  Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        $level = [
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            //'password' => Hash::make($request->get('password')),
+        ];
+
+
+        if ($request->get('password')) {
+            $level['password'] = Hash::make($request->get('password'));
+        }
+
+       
         User::find($id)->update($level);
 
         return response()->json(['success' => 'User updated successfully']);
