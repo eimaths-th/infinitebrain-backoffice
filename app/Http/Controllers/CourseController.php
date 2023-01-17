@@ -147,6 +147,7 @@ class CourseController extends Controller
             "students.code as student_code",
             "students.name as student_name",
             "students.lastname as student_lastname",
+            "students.nickname as student_nickname",
             "courses.book_start as book_start",
             "courses.date_start as date_start",
             "students.grade as student_grade",

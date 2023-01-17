@@ -53,7 +53,7 @@
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
                 <div style="float: right; padding-right: 250px;">
-                    <b> Student Code: </b> ( {{ $course[0]->student_code }} ) <b>Name:</b> {{ $course[0]->student_nickname }}
+                    <b> Student Code: </b> ( {{ $course[0]->student_code }} ) <b>Name:</b> ({{ $course[0]->student_nickname }}) 
                     {{-- $course[0]->student_lastname --}} <b>School Grade:</b> ( {{ $course[0]->student_grade }} ) <b>School
                         Book Start:</b> ( {{ $course[0]->book_start }} )
                 </div>
