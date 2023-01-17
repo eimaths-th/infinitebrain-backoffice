@@ -102,10 +102,11 @@
 @section('script')
     <script>
         function export_report() {
-            url = '{{ route('course.simulate', ['type' => 'print', 'lang' => $lang, 'student' => $student , 'subject' => $subject, 'book' => $book, 'level' => $level, 'date' => $date]) }}';
+            url =
+                '{{ route('course.simulate', ['type' => 'print', 'lang' => $lang, 'student' => $student, 'subject' => $subject, 'book' => $book, 'level' => $level, 'date' => $date]) }}';
             window.open(
                 url.replace(/&amp;/g, "&")
-                );
+            );
         }
     </script>
 @endsection
