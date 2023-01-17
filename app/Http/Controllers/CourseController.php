@@ -16,6 +16,17 @@ use Illuminate\Support\Facades\Auth;
 class CourseController extends Controller
 {
 
+    public function check_permission()
+    {
+        if (Auth::check()) {
+            if (Auth::user()->level == 1 || Auth::user()->level == 2) {
+                
+            } else {
+                abort(403, 'Unauthorized action.');
+            }
+        }
+    }
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -28,11 +39,7 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         //
-        if (Auth::check()) {
-            if (Auth::user()->level == 0) {
-                return view('home');
-            }
-        }
+        $this->check_permission();
 
         if ($request->ajax()) {
             //sleep(2);
@@ -100,6 +107,7 @@ class CourseController extends Controller
         //
         //print_r($request);
         //exit();
+        $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'student' => 'required',
             'subject' => 'required',
@@ -134,6 +142,7 @@ class CourseController extends Controller
         //
         //echo $type;
         //exit();
+        $this->check_permission();
         $course = Course::select(
             "courses.id as course_id",
             "levels.title as student_level",
@@ -336,6 +345,7 @@ class CourseController extends Controller
      */
     public function simulate(Request $request, $type, $lang)
     {
+        $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'student' => 'required',
             'subject' => 'required',
@@ -547,6 +557,7 @@ class CourseController extends Controller
     public function edit($id)
     {
         //
+        $this->check_permission();
         $data = Course::find($id);
 
         $select_list_subject = "";
@@ -620,6 +631,7 @@ class CourseController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'student' => 'required',
             'subject' => 'required',
@@ -657,13 +669,14 @@ class CourseController extends Controller
     public function destroy($id)
     {
         //
+        $this->check_permission();
         Course::find($id)->delete();
         return ['success' => true, 'message' => 'Deleted Successfully'];
     }
 
     public function destroy_all(Request $request)
     {
-
+        $this->check_permission();
         $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {

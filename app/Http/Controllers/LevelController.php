@@ -15,6 +15,16 @@ use Illuminate\Support\Facades\Auth;
 class LevelController extends Controller
 {
 
+    public function check_permission()
+    {
+        if (Auth::check()) {
+            if (Auth::user()->level == 1 || Auth::user()->level == 2) {
+            } else {
+                abort(403, 'Unauthorized action.');
+            }
+        }
+    }
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -29,11 +39,7 @@ class LevelController extends Controller
         //
         //echo $request->id;
         //exit();
-        if (Auth::check()) {
-            if (Auth::user()->level == 0) {
-                return view('home');
-            }
-        }
+        $this->check_permission();
 
         if ($request->id == "") {
             abort(403, 'Please input level subject');
@@ -98,6 +104,7 @@ class LevelController extends Controller
         //    ->where('subject', $request->get('subject'))->where('subject', $request->get('subject'));
         //echo $qq;
         //exit();
+        $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'subject' => 'required',
             'book_per_level' => 'required|integer',
@@ -146,7 +153,7 @@ class LevelController extends Controller
     {
         //
 
-
+        $this->check_permission();
         $data = Level::find($id);
 
         $select_list = "";
@@ -164,7 +171,7 @@ class LevelController extends Controller
                     <label for="Subject">Subject:</label>
                     <select class="form-control" id="EditSubject" name="subject" disabled>
                     <option value="" >Select Subject</option>' .
-                        $select_list . '
+            $select_list . '
                     </select>
                 </div>
                 <div class="form-group">
@@ -196,7 +203,7 @@ class LevelController extends Controller
     public function select_list($id)
     {
         //
-
+        $this->check_permission();
 
         $data = Level::where('subject', $id)->orderBy("id", "asc")->get();
 
@@ -213,13 +220,13 @@ class LevelController extends Controller
 
         $select_list2 = "";
 
-        for ($i=1; $i<=$data2->book; $i++) {
+        for ($i = 1; $i <= $data2->book; $i++) {
 
             $select_list2 .= '<option value="' . $i . '" >' . $i . '</option>';
         }
 
 
-        return response()->json(['html' => $select_list,'html2' => $select_list2]);
+        return response()->json(['html' => $select_list, 'html2' => $select_list2]);
     }
 
 
@@ -236,6 +243,7 @@ class LevelController extends Controller
         //print_r($request);
         //return response()->json(['success'=>$request->all()]);
         //exit();
+        $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'subject' => 'required',
             'book_per_level' => 'required|integer',
@@ -263,6 +271,7 @@ class LevelController extends Controller
     public function destroy($id)
     {
         //
+        $this->check_permission();
         Level::find($id)->delete();
         return ['success' => true, 'message' => 'Deleted Successfully'];
     }
@@ -270,6 +279,7 @@ class LevelController extends Controller
     public function destroy_all(Request $request)
     {
 
+        $this->check_permission();
         $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {

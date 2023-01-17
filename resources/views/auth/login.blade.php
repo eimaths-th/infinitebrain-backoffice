@@ -26,9 +26,9 @@
                                         </div>
                                     @endif
 
-                                    @if ($message = Session::get('error'))
-                                    <div class="alert alert-success">
-                                        <p>{{ $message }}</p>
+                                    @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <p>{{$errors->first()}}</p>
                                     </div>
                                 @endif
                                 </div>

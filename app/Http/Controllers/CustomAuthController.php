@@ -33,7 +33,7 @@ class CustomAuthController extends Controller
                 /*return back()->withErrors([
                     'email' => 'You are users but not have permissions. Please Contact Administrator',
                 ]);*/
-                return back()->withErrors('error','You are users but not have permissions. Please Contact Administrator');
+                return back()->withErrors(['error'=>'You are users but not have permissions. Please Contact Administrator']);
             } else {
                 return redirect()->intended('home');
                     //->withSuccess('Signed in');
@@ -61,7 +61,7 @@ class CustomAuthController extends Controller
         $data = $request->all();
         $check = $this->create($data);
         
-        return redirect("login")->withSuccess('Register Complete. Please SignIn');
+        return redirect("login")->withSuccess('Register Complete. Please Contact Administrator for permission');
         //return redirect("home")->withSuccess('You have signed-in');
     }
 

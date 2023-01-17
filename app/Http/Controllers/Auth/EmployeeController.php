@@ -15,6 +15,15 @@ use Illuminate\Support\Facades\Auth;
 class EmployeeController extends Controller
 {
 
+    public function check_permission()
+    {
+        if (Auth::check()) {
+            if (Auth::user()->level !== 1) {
+                abort(403, 'Unauthorized action.');
+            }
+        }
+    }
+
     /**
      * Create a new controller instance.
      *
@@ -23,8 +32,10 @@ class EmployeeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        
     }
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -37,12 +48,8 @@ class EmployeeController extends Controller
         return view('users.index', compact('users'))
             ->with('i', (request()->input('page', 1) - 1) * 10);*/
         //sleep(3);
+        $this->check_permission();
 
-        if (Auth::check()) {
-            if (Auth::user()->level !== 1) {
-                abort(403, 'Unauthorized action.');
-            }
-        }
         if ($request->ajax()) {
             //sleep(2);
             $levels = User::orderBy("id", "desc")->get();
@@ -54,7 +61,7 @@ class EmployeeController extends Controller
                         $ltext = "Teacher";
                     } else {
                         $ltext = "Normal";
-                    } 
+                    }
 
                     return $ltext;
                 })
@@ -96,6 +103,9 @@ class EmployeeController extends Controller
 
         //return response()->json(['success'=>$request->all()]);
         //exit();
+
+        $this->check_permission();
+
         $validator =  Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -138,6 +148,8 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         //
+        $this->check_permission();
+
         $data = User::find($id);
         if ($data->level == 1) {
             $aselected = 'selected';
@@ -201,11 +213,13 @@ class EmployeeController extends Controller
         //print_r($request);
         //return response()->json(['success'=>$request->all()]);
         //exit();
+        $this->check_permission();
+
         $validator =  Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'level' => 'required',
             //'password' => 'required|string|min:8|confirmed',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
         ]);
 
         if ($validator->fails()) {
@@ -233,12 +247,14 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
         //
+        $this->check_permission();
         User::find($id)->delete();
         return ['success' => true, 'message' => 'Deleted Successfully'];
     }
 
     public function destroy_all(Request $request)
     {
+        $this->check_permission();
         $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {
