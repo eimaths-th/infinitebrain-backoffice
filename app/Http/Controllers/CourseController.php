@@ -342,6 +342,7 @@ class CourseController extends Controller
             'level' => 'required',
             'book' => 'required',
             'date' => 'required',
+            'grade' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -533,6 +534,7 @@ class CourseController extends Controller
             ->with(['level' => $request->get('level')])
             ->with(['book' => $request->get('book')])
             ->with(['date' => $request->get('date')])
+            ->with(['grade' => $request->get('grade')])
             ->with(['lang' => $lang]);
     }
 

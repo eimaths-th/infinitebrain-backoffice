@@ -26,7 +26,7 @@
             <div class="card-body">
                 <div style="float: right; padding-right: 250px;">
                     <b>Name:</b> ({{ $student }})
-                    {{-- $course[0]->student_lastname --}} <b>School Grade:</b> ( {{ $course[0]->student_grade }} ) <b>
+                    {{-- $course[0]->student_lastname --}} <b>School Grade:</b> ( {{ $grade }} ) <b>
                         Book Start:</b> ( {{ $book }} )
                 </div>
                 <table cellpadding="0" cellspacing="0"
@@ -36,7 +36,7 @@
                         <tr>
                             <th>School Grade</th>
                             <th>Level</th>
-                            <th colspan="12" class="text-center">( {{ $course[0]->student_grade }} )</th>
+                            <th colspan="12" class="text-center">( {{ $grade }} )</th>
 
                         </tr>
                     </thead>

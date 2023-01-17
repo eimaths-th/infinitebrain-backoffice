@@ -106,11 +106,11 @@
                         </div>
                         <div class="form-group">
                             <label for="Student">Student Name:</label><br>
-                            <input type="text" class="form-control" name="student" id="SStudent" value="">
+                            <input type="text" class="form-control" name="student" id="SStudent" value="" required>
                         </div>
                         <div class="form-group">
                             <label for="Subject">Subject:</label>
-                            <select class="SSubject form-control" id="SSubject" name="subject">
+                            <select class="SSubject form-control" id="SSubject" name="subject" required>
                                 <option value="" selected>Select Subject</option>
                                 @foreach ($data as $key)
                                     <option value="{{ $key->id }}"
@@ -122,17 +122,21 @@
                         </div>
                         <div class="form-group">
                             <label for="Level">Start Level:</label>
-                            <select class="form-control" id="SLevel" name="level">
+                            <select class="form-control" id="SLevel" name="level" required>
                                 <option value="" selected>Select Level</option>
 
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="Book">Book Start:</label>
-                            <select class="form-control" id="SBook" name="book">
+                            <select class="form-control" id="SBook" name="book" required>
                                 <option value="" selected>Select Book</option>
 
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Grade">Grade:</label><br>
+                            <input type="number" class="form-control" name="grade" id="SGrade" value="" required>
                         </div>
                         <div class="form-group">
                             <label for="Date">Date Start (yyyy-mm-dd):</label>

@@ -33,10 +33,10 @@
                 </div>
                 <div class="page-title-actions">
                     <div class="d-inline-block dropdown">
-                        <a href="{{ route('course.simulate', ['type' => 'view', 'lang' => 'th', 'student' => $student, 'subject' => $subject, 'book' => $book, 'level' => $level, 'date' => $date]) }}"
+                        <a href="{{ route('course.simulate', ['type' => 'view', 'lang' => 'th', 'student' => $student, 'subject' => $subject, 'book' => $book, 'level' => $level, 'date' => $date , 'grade' => $grade]) }}"
                             class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="LangButtonth"><i
                                 class="fa fa-eye"></i> Thai</a>
-                        <a href="{{ route('course.simulate', ['type' => 'view', 'lang' => 'en', 'student' => $student, 'subject' => $subject, 'book' => $book, 'level' => $level, 'date' => $date]) }}"
+                        <a href="{{ route('course.simulate', ['type' => 'view', 'lang' => 'en', 'student' => $student, 'subject' => $subject, 'book' => $book, 'level' => $level, 'date' => $date, 'grade' => $grade]) }}"
                             class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="LangButtonen"><i
                                 class="fa fa-eye"></i> Eng</a>
                         <a href="{{ route('course') }}" class="btn btn-success" data-toggle="modal"
@@ -54,7 +54,7 @@
             <div class="card-body">
                 <div style="float: right; padding-right: 250px;">
                     <b>Name:</b> ({{ $student }})
-                    {{-- $course[0]->student_lastname --}} <b>School Grade:</b> ( {{ $course[0]->student_grade }} ) <b>
+                    {{-- $course[0]->student_lastname --}} <b>School Grade:</b> ( {{ $grade }} ) <b>
                         Book Start:</b> ( {{ $book }} )
                 </div>
                 <table style="width: 100%;" id="Listview"
@@ -63,7 +63,7 @@
                         <tr>
                             <th>School Grade</th>
                             <th class="text-center">Level</th>
-                            <th colspan="12" class="text-center">( {{ $course[0]->student_grade }} )</th>
+                            <th colspan="12" class="text-center">( {{ $grade }} )</th>
 
                         </tr>
                     </thead>
@@ -103,7 +103,7 @@
     <script>
         function export_report() {
             url =
-                '{{ route('course.simulate', ['type' => 'print', 'lang' => $lang, 'student' => $student, 'subject' => $subject, 'book' => $book, 'level' => $level, 'date' => $date]) }}';
+                '{{ route('course.simulate', ['type' => 'print', 'lang' => $lang, 'student' => $student, 'subject' => $subject, 'book' => $book, 'level' => $level, 'date' => $date, 'grade' => $grade]) }}';
             window.open(
                 url.replace(/&amp;/g, "&")
             );
