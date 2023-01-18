@@ -173,6 +173,8 @@ class CourseController extends Controller
         $levels_start = Level::where('id', $course[0]->level_id)->get();
 
         //print_r($levels_start);
+        $english1 = array("","Pre - A","A","B","B","D","E","F","G","H","I");
+        $english2 = array("","5","6","7","8");
 
         $start_date = explode("-", $course[0]->date_start);
 
@@ -224,12 +226,19 @@ class CourseController extends Controller
             } else if ($lang == "en") {
                 $level_title = $key->title;
             }
-
+           
+             if ($course[0]->subject_id==4) {
+                $level_sort = $english1[$key->level_sort];
+             } elseif ($course[0]->subject_id==5) {
+                $level_sort = $english2[$key->level_sort];
+             } else {
+                $level_sort = $key->level_sort;
+             }
 
             $tdhtml[$key->level_sort] = "";
             $tdhtml[$key->level_sort] .= "<tr>
                 <td width=\"35%\"><font size=\"2\">" . $level_title . "</font></td>
-                <td width=\"100\" align=\"center\">" . $key->level_sort . "</td>";
+                <td width=\"100\" align=\"center\">" . $level_sort . "</td>";
 
             //start level
             if ($key->level_sort >= $start_sort) {
@@ -301,7 +310,7 @@ class CourseController extends Controller
                 $tdhtml[$key->level_sort] = "";
                 $tdhtml[$key->level_sort] .= "<tr>
                 <td><font size=\"2\">" . $level_title . "</font></td>
-                <td align=\"center\">" . $key->level_sort . "</td>";
+                <td align=\"center\">" . $level_sort . "</td>";
                 for ($x = 1; $x <= 12; $x++) {
                     $tdhtml[$key->level_sort] .= "<td></td>";
                 }
@@ -423,6 +432,10 @@ class CourseController extends Controller
         $last_per = 0;
         $div_right = "";
         $bar_percent = "";
+
+        $english1 = array("","Pre - A","A","B","B","D","E","F","G","H","I");
+        $english2 = array("","5","6","7","8");
+
         foreach ($levels as $key) {
             //if ($key->id == $request->get('level')) {
             //echo $key->level_sort;
@@ -432,11 +445,19 @@ class CourseController extends Controller
                 $level_title = $key->title;
             }
 
+            if ($course[0]->id==4) {
+                $level_sort = $english1[$key->level_sort];
+             } elseif ($course[0]->id==5) {
+                $level_sort = $english2[$key->level_sort];
+             } else {
+                $level_sort = $key->level_sort;
+             }
+
 
             $tdhtml[$key->level_sort] = "";
             $tdhtml[$key->level_sort] .= "<tr>
                 <td width=\"35%\"><font size=\"2\">" . $level_title . "</font></td>
-                <td width=\"100\" align=\"center\">" . $key->level_sort . "</td>";
+                <td width=\"100\" align=\"center\">" . $level_sort . "</td>";
 
             //start level
             if ($key->level_sort >= $start_sort) {
@@ -444,7 +465,7 @@ class CourseController extends Controller
                     if ($course[0]->book_start == 1) {
                         $level_progress = $levels_start[0]->book_per_level / $course[0]->book_per_month;
                     } else {
-                        $level_progress = (($levels_start[0]->book_per_level - $course[0]->book_start)) / $course[0]->book_per_month;
+                        $level_progress = (($levels_start[0]->book_per_level - $request->get('book'))) / $course[0]->book_per_month;
                     }
                 } else {
                     $level_progress = $levels_start[0]->book_per_level / $course[0]->book_per_month;
@@ -508,7 +529,7 @@ class CourseController extends Controller
                 $tdhtml[$key->level_sort] = "";
                 $tdhtml[$key->level_sort] .= "<tr>
                 <td><font size=\"2\">" . $level_title . "</font></td>
-                <td align=\"center\">" . $key->level_sort . "</td>";
+                <td align=\"center\">" . $level_sort . "</td>";
                 for ($x = 1; $x <= 12; $x++) {
                     $tdhtml[$key->level_sort] .= "<td></td>";
                 }

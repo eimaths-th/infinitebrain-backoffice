@@ -114,6 +114,7 @@
                                 <option value="0">Normal</option>
                                 <option value="1">Admin</option>
                                 <option value="2">Teacher</option>
+                                <option value="3">Account</option>
                             </select>
                         </div>
                     </div>

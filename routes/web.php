@@ -7,6 +7,7 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CustomAuthController;
+use App\Http\Controllers\ReceiptController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,3 +90,13 @@ Route::put('/course/save/{id}', [CourseController::class, 'update'])->name('cour
 Route::post('/course/store', [CourseController::class, 'store'])->name('course.store');
 Route::delete('/course/destroy/{id}', [CourseController::class, 'destroy'])->name('course.destroy');
 Route::delete('/course/destroy_all', [CourseController::class, 'destroy_all'])->name('course.destroy_all');
+
+
+Route::get('/receipts', [ReceiptController::class, 'index'])->name('receipts');
+Route::get('/receipts/create', [ReceiptController::class, 'create'])->name('receipts.create');
+Route::get('/receipts/show', [ReceiptController::class, 'show'])->name('receipts.show');
+Route::get('/receipts/edit/{id}', [ReceiptController::class, 'edit'])->name('receipts.edit');
+Route::put('/receipts/save/{id}', [ReceiptController::class, 'update'])->name('receipts.save');
+Route::post('/receipts/store', [ReceiptController::class, 'store'])->name('receipts.store');
+Route::delete('/receipts/destroy/{id}', [ReceiptController::class, 'destroy'])->name('receipts.destroy');
+Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all'])->name('receipts.destroy_all');

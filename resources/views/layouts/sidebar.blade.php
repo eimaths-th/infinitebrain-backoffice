@@ -98,11 +98,17 @@
                             <li>
                                 <a href="{{ route('levels' , ['id' => '4']) }}">
                                     <i class="metismenu-icon"></i>
-                                    English
+                                    English A-I
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('levels' , ['id' => '5']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    English 5-8
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('levels' , ['id' => '6']) }}">
                                     <i class="metismenu-icon"></i>
                                     English Spark
                                 </a>
@@ -135,6 +141,27 @@
                         
                     </li>
                 @endif
+
+                @if (Auth::user()->level == 3 || Auth::user()->level == 1)
+                    <li class="app-sidebar__heading">Account</li>
+                    <li>
+                        <a href="#">
+                            <i class="metismenu-icon pe-7s-note2"></i>
+                            Receipt
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
+
+                        <ul>
+                            <li>
+                                <a href="{{ route('receipts') }}">
+                                    <i class="metismenu-icon"></i>
+                                    Tax invoice / Receipt
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+
 
                 
 

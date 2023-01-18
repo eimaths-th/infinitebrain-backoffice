@@ -108,9 +108,9 @@ class LevelController extends Controller
         $validator =  Validator::make($request->all(), [
             'subject' => 'required',
             'book_per_level' => 'required|integer',
-            'title' => 'required|string|max:255',
-            'title_th' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'title' => 'required|string',
+            'title_th' => 'required|string',
+            'description' => 'required|string',
             'sort' => 'required', Rule::unique('levels')
                 ->where('level_sort', $request->get('sort'))
                 ->where('subject', $request->get('subject')),
@@ -247,9 +247,9 @@ class LevelController extends Controller
         $validator =  Validator::make($request->all(), [
             'subject' => 'required',
             'book_per_level' => 'required|integer',
-            'title' => 'required|string|max:255',
-            'title_th' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'title' => 'required|string',
+            'title_th' => 'required|string',
+            'description' => 'required|string',
             'level_sort' => 'required|integer',
         ]);
 

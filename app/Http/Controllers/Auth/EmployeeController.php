@@ -163,6 +163,13 @@ class EmployeeController extends Controller
             $bselected = '';
         }
 
+        if ($data->level == 3) {
+            $dselected = 'selected';
+        } else {
+            $dselected = '';
+        }
+
+
         if ($data->level == 0) {
             $cselected = 'selected';
         } else {
@@ -194,6 +201,7 @@ class EmployeeController extends Controller
                      <option value="0" ' . $cselected . '>Normal</option>
                      <option value="1" ' . $aselected . '>Admin</option>
                      <option value="2" ' . $bselected . '>Teacher</option>
+                     <option value="3" ' . $dselected . '>Account</option>
                     </select>
                 </div>';
 
@@ -234,6 +242,7 @@ class EmployeeController extends Controller
         $level = [
             'name' => $request->get('name'),
             'email' => $request->get('email'),
+            'level' => $request->get('level'),
             //'password' => Hash::make($request->get('password')),
         ];
 
