@@ -27,6 +27,9 @@
                 </div>
                 <div class="page-title-actions">
                     <div class="d-inline-block dropdown">
+                        <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg"
+                            id="ImportButton"><i class="fa fa-file-excel"></i> Import Excel
+                            </a>
                         <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
                             Receipt</a>
@@ -68,9 +71,9 @@
 
     <!-- Import Modal -->
     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true" id="CreateModal">
+        aria-hidden="true" id="ImportModal">
         <div class="modal-dialog modal-lg" role="document">
-            <form class="form" action="" method="POST">
+            <form class="form" action="" method="POST" enctype="multipart/form-data">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Import Receipt</h5>
@@ -93,16 +96,17 @@
             
                         <div class="form-group">
                             <label for="Name">Import File:</label>
-                            <input type="file" name="import_file" />
+                            <input type="file" name="import_file" required />
                         </div>
                         
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="SubmitCreateForm">Save</button>
+                        <button type="button" class="btn btn-success" id="SubmitImportForm">Save</button>
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
+            </form>
         </div>
     </div>
 
@@ -163,6 +167,7 @@
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
+            </form>
         </div>
     </div>
 
@@ -202,6 +207,7 @@
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
+            </form>
         </div>
     </div>
 @endsection
@@ -305,6 +311,15 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
                 $('#CreateModal').modal('show');
+            });
+
+            $(document).on('click', '#ImportButton', function(e) {
+                e.preventDefault();
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+                $('#ImportModal').modal('show');
             });
 
             let id;
