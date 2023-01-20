@@ -179,9 +179,28 @@ class ReceiptController extends Controller
      * @param  \App\Models\Receipt  $receipt
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Receipt $receipt)
+    public function update(Request $request, $id)
     {
         //
+        $this->check_permission();
+        $validator =  Validator::make($request->all(), [
+            'submission_date' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'street_address' => 'required|string',
+            'city' => 'required|string',
+            'province' => 'required|string',
+            'description' => 'required|string',
+            'level_sort' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        Receipt::find($id)->update($request->all());
+
+        return response()->json(['success' => 'Receipt updated successfully']);
     }
 
     /**
