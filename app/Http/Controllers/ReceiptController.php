@@ -157,7 +157,7 @@ class ReceiptController extends Controller
             return redirect()->back();
             
         } else {
-            return response()->json(['errors' => 'Please insert Import file']);
+            return response()->json(['errors' => 'Please Check your file, Something is wrong there.']);
         }
 
 

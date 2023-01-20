@@ -12,10 +12,10 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 class ReceiptImport implements ToModel
 {
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     public function model(array $row)
     {
         return new Receipt([
@@ -33,5 +33,23 @@ class ReceiptImport implements ToModel
             'package' => $row[10],
             'file_att' => $row[11],
         ]);
+
+        /*
+        $bin = Receipt::orderBy("id", "asc")->get();
+
+        // Get all bin number from the $bin collection
+        $bin_number = $bin->pluck('bin_number');
+
+        // Checking if the bin number is already in the database
+        if ($bin_number->contains($row[0]) == false) {
+            return new Receipt([
+                'bin_number' => $row[0],
+                'type' => $row[1],
+                'product' => $row[2],
+                'category' => $row[3],
+                'bank' => $row[4],
+            ]);
+        } else null; // if the bin number is already in the database, return null
+        */
     }
 }
