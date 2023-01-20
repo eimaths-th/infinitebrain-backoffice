@@ -103,7 +103,7 @@
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success" id="SubmitImportForm2">import</button>
+                        <button type="submit" class="btn btn-success" id="SubmitImportForm">import</button>
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -179,7 +179,7 @@
             <form class="form" action="" method="POST">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Student</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Receipt</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
@@ -193,7 +193,7 @@
                         </div>
                         <div class="alert alert-success alert-dismissible fade show" role="alert"
                             style="display: none;">
-                            <strong>Success!</strong> Student was edit successfully.
+                            <strong>Success!</strong> Receipt was edit successfully.
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true"></span>
                             </button>
@@ -346,50 +346,7 @@
             })
 
 
-            
-
-            // Import Ajax request.
-            $('#SubmitImportForm').click(function(e) {
-                e.preventDefault();
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
-
-                $.ajax({
-                    url: "{{ route('receipts.import') }}",
-                    method: 'post',
-                    data: {
-                         import_file: $('#import_file').val(),
-                        _token: token,
-                    },
-                    success: function(result) {
-                        console.log(result);
-                        if (result.errors) {
-                            $('.alert-danger').html('');
-                            $.each(result.errors, function(key, value) {
-                                $('.alert-danger').show();
-                                $('.alert-danger').append('<strong><li>' + value +
-                                    '</li></strong>');
-                            });
-                        } else {
-                            $('.alert-danger').hide();
-                            $('.alert-success').show();
-                            $('.alert-success').append('<strong><li>' + result.success +
-                                '</li></strong>');
-                            $('#Listview').DataTable().ajax.reload();
-                            $('.form').trigger('reset');
-                            //$('#SubmitCreateForm').hide();
-                            //setTimeout(function() {
-                            //$('.alert-success').hide();
-                            //$('#CreateModal').modal('hide');
-                            //}, 10000);
-
-                        }
-                    }
-                });
-            });
-
+    
 
             // Create product Ajax request.
             $('#SubmitCreateForm').click(function(e) {

@@ -6221,7 +6221,7 @@ fieldset:disabled .btn {
 
 .modal-dialog {
   position: relative;
-  top: 7rem !important;
+  top: 3rem !important;
   width: auto;
   margin: 0.5rem;
   pointer-events: none;
