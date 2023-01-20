@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 //use Auth;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\UsersImport;
+use App\Imports\ReceiptImport;
 use App\Exports\UsersExport;
 
 class ReceiptController extends Controller
@@ -19,7 +19,7 @@ class ReceiptController extends Controller
     public function check_permission()
     {
         if (Auth::check()) {
-            if (Auth::user()->level == 1 || Auth::user()->level == 2) {
+            if (Auth::user()->level == 1 || Auth::user()->level == 3) {
             } else {
                 abort(403, 'Unauthorized action.');
             }
@@ -56,9 +56,9 @@ class ReceiptController extends Controller
             //print_r($levels);
             //exit();
             return datatables()->of($receipt)
-                ->editColumn('student_name', function (Receipt $receipt) {
+               /* ->editColumn('student_name', function (Receipt $receipt) {
                     return $receipt->student_name . ' ' . $receipt->student_lastname;
-                })
+                })*/
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->receipt_id . '" class="flat" name="table_records[]" value="' . $row->receipt_id . '" >';
                 })
@@ -151,29 +151,13 @@ class ReceiptController extends Controller
 
         if ($request->hasFile('import_file')) {
             $path = $request->file('import_file')->getRealPath();
-
-
-            $data = Excel::load($path, function ($reader) {
-            })->get();
-
-
-            if (!empty($data) && $data->count()) {
-
-
-                foreach ($data->toArray() as $key => $value) {
-                    if (!empty($value)) {
-                        foreach ($value as $v) {
-                            $insert[] = ['title' => $v['title'], 'description' => $v['description']];
-                        }
-                    }
-                }
-
-
-                if (!empty($insert)) {
-                    Receipt::insert($insert);
-                    return back()->with('success', 'Insert Record successfully.');
-                }
-            }
+            
+            //$request->file('file')->store('files')
+            Excel::import(new ReceiptImport, $path);
+            return redirect()->back();
+            
+        } else {
+            return response()->json(['errors' => 'Please insert Import file']);
         }
 
 

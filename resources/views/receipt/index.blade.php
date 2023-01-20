@@ -73,7 +73,8 @@
     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" id="ImportModal">
         <div class="modal-dialog modal-lg" role="document">
-            <form class="form" action="" method="POST" enctype="multipart/form-data">
+            <form class="form" action="{{ route('receipts.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Import Receipt</h5>
@@ -95,14 +96,14 @@
                         </div>
             
                         <div class="form-group">
-                            <label for="Name">Import File:</label>
-                            <input type="file" name="import_file" required />
+                            <label for="File">Import File:</label>
+                            <input type="file" name="import_file" id="import_file" required />
                         </div>
                         
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="SubmitImportForm">Save</button>
+                        <button type="submit" class="btn btn-success" id="SubmitImportForm2">import</button>
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -288,8 +289,8 @@
                         name: 'receipt_lastname'
                     },
                     {
-                        data: 'receipt_parentname',
-                        name: 'receipt_parentname'
+                        data: 'receipt_parent_name',
+                        name: 'receipt_parent_name'
                     },
                     {
                         data: 'receipt_mobile',
@@ -343,6 +344,51 @@
                 });
 
             })
+
+
+            
+
+            // Import Ajax request.
+            $('#SubmitImportForm').click(function(e) {
+                e.preventDefault();
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+
+                $.ajax({
+                    url: "{{ route('receipts.import') }}",
+                    method: 'post',
+                    data: {
+                         import_file: $('#import_file').val(),
+                        _token: token,
+                    },
+                    success: function(result) {
+                        console.log(result);
+                        if (result.errors) {
+                            $('.alert-danger').html('');
+                            $.each(result.errors, function(key, value) {
+                                $('.alert-danger').show();
+                                $('.alert-danger').append('<strong><li>' + value +
+                                    '</li></strong>');
+                            });
+                        } else {
+                            $('.alert-danger').hide();
+                            $('.alert-success').show();
+                            $('.alert-success').append('<strong><li>' + result.success +
+                                '</li></strong>');
+                            $('#Listview').DataTable().ajax.reload();
+                            $('.form').trigger('reset');
+                            //$('#SubmitCreateForm').hide();
+                            //setTimeout(function() {
+                            //$('.alert-success').hide();
+                            //$('#CreateModal').modal('hide');
+                            //}, 10000);
+
+                        }
+                    }
+                });
+            });
 
 
             // Create product Ajax request.

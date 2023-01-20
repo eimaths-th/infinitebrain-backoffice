@@ -16,18 +16,18 @@ return new class extends Migration
         //
         Schema::create('receipts', function (Blueprint $table) {
             $table->id();
-            $table->string('submission_date');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->text('street_address');
-            $table->text('street_address2');
-            $table->string('city');
-            $table->string('province');
-            $table->string('postcode');
-            $table->string('name_parent');
-            $table->string('mobile');
-            $table->string('package');
-            $table->string('file_att');
+            $table->string('submission_date')->nullable();;
+            $table->string('first_name')->nullable();;
+            $table->string('last_name')->nullable();;
+            $table->text('street_address')->nullable();;
+            $table->text('street_address2')->nullable();;
+            $table->string('city')->nullable();;
+            $table->string('province')->nullable();;
+            $table->string('postcode')->nullable();;
+            $table->string('name_parent')->nullable();;
+            $table->string('mobile')->nullable();;
+            $table->string('package')->nullable();;
+            $table->string('file_att')->nullable();;
             $table->timestamps();
         });
     }

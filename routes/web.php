@@ -98,5 +98,6 @@ Route::get('/receipts/show', [ReceiptController::class, 'show'])->name('receipts
 Route::get('/receipts/edit/{id}', [ReceiptController::class, 'edit'])->name('receipts.edit');
 Route::put('/receipts/save/{id}', [ReceiptController::class, 'update'])->name('receipts.save');
 Route::post('/receipts/store', [ReceiptController::class, 'store'])->name('receipts.store');
+Route::post('/receipts/import', [ReceiptController::class, 'importExcel'])->name('receipts.import');
 Route::delete('/receipts/destroy/{id}', [ReceiptController::class, 'destroy'])->name('receipts.destroy');
 Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all'])->name('receipts.destroy_all');
