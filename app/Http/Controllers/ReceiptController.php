@@ -190,7 +190,7 @@ class ReceiptController extends Controller
             'street_address' => 'required|string',
             'city' => 'required|string',
             'province' => 'required|string',
-            'description' => 'required|string',
+            'postcode' => 'required|string',
             'level_sort' => 'required|integer',
         ]);
 

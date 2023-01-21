@@ -137,28 +137,49 @@
                             </button>
                         </div>
                         <div class="form-group">
-                            <label for="Name">Code:</label>
-                            <input type="text" class="form-control" name="code" id="AddCode" value="">
+                            <label for="Submission Date">Submission Date:</label>
+                            <input type="text" class="form-control" name="submission_date" id="AddSubmissiondate" value="">
                         </div>
                         <div class="form-group">
-                            <label for="Name">Name:</label>
-                            <input type="text" class="form-control" name="name" id="AddName" value="">
+                            <label for="firstname">First Name:</label>
+                            <input type="text" class="form-control" name="firstname" id="AddFirstname" value="">
                         </div>
                         <div class="form-group">
-                            <label for="Name">Lastname:</label>
-                            <input type="text" class="form-control" name="lastname" id="AddLastname" value="">
+                           <label for="lastname">Last Name:</label>
+                           <input type="text" class="form-control" name="lastname" id="AddLastname" value="">
                         </div>
                         <div class="form-group">
-                            <label for="Name">Nickname:</label>
-                            <input type="text" class="form-control" name="nickname" id="AddNickname" value="">
+                            <label for="Name">Street Address:</label>
+                            <textarea class="form-control" name="address" id="AddAddress"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="Name">Mobile:</label>
-                            <input type="text" class="form-control" name="mobile" id="AddMobile" value="">
+                            <label for="Name">Street Address 2:</label>
+                            <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="Name">Grade:</label>
-                            <input type="text" class="form-control" name="grade" id="AddGrade" value="">
+                            <label for="City">City:</label>
+                            <input type="text" class="form-control" name="city" id="AddCity" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="Province">Province:</label>
+                            <input type="text" class="form-control" name="province" id="AddProvince" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="Postcode">Postcode:</label>
+                            <input type="text" class="form-control" name="postcode" id="AddPostcode" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="Parent">Name Parent:</label>
+                            <input type="text" class="form-control" name="name_parent" id="AddParent" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="Package">Package:</label>
+                            <input type="text" class="form-control" name="package" id="AddPackage" value="">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="File">File:</label>
+                            <input type="text" class="form-control" id="AddFile" name="file" value="">
                         </div>
                         
                     </div>
@@ -360,12 +381,18 @@
                     url: "{{ route('receipts.store') }}",
                     method: 'post',
                     data: {
-                        code: $('#AddCode').val(),
-                        name: $('#AddName').val(),
-                        lastname: $('#AddLastname').val(),
-                        nickname: $('#AddNickname').val(),
+                        submission_date: $('#AddSubmissiondate').val(),
+                        first_name: $('#AddFirstname').val(),
+                        last_name: $('#AddLastname').val(),
+                        street_address: $('#AddAddress').val(),
+                        street_address2: $('#Address2').val(),
+                        city: $('#AddCity').val(),
+                        province: $('#AddProvince').val(),
+                        postcode: $('#AddPostcode').val(),
+                        name_parent: $('#AddParent').val(),
                         mobile: $('#AddMobile').val(),
-                        grade: $('#AddGrade').val(),
+                        package: $('#AddPackage').val(),
+                        file_att: $('#AddFile').val(),
                         _token: token,
                     },
                     success: function(result) {
