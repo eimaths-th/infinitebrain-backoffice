@@ -561,7 +561,6 @@
                         $('#EditFile').val(res.data.file_att);
                         $('#EditModal').modal('show');
 
-                        
                     }
                 });
 
