@@ -4,6 +4,7 @@
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="http://malsup.github.io/jquery.blockUI.js"></script>
     <script src="https://rawgit.com/RobinHerbots/Inputmask/5.x/dist/jquery.inputmask.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
@@ -15,8 +16,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                        <p>{{ $message }}</p>
-                    </div>-->
+                                                <p>{{ $message }}</p>
+                                            </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -78,11 +79,28 @@
 
     </div>
 
+
+    <div class="body-block-example-2" style="display:none" id="loder_bar">
+        <br>
+        <div class="loader" id="loder_bar_div">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-border text-danger" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-border text-warning" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <br>
+    </div>
     <!-- Import Modal -->
     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" id="ImportModal">
         <div class="modal-dialog modal-lg" role="document">
-            <form class="form" action="{{ route('receipts.import') }}" method="POST" enctype="multipart/form-data">
+            <form id="importForm" class="form" action="{{ route('receipts.import') }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -124,7 +142,7 @@
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success" id="SubmitImportForm">import</button>
+                        <button type="button" class="btn btn-success" id="SubmitImportForm">import</button>
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -146,6 +164,7 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
+
                         <div class="alert alert-danger alert-dismissible fade show" role="alert"
                             style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
@@ -210,36 +229,38 @@
                         </div>
                         <div class="form-row">
                             <div class="col-md-6">
-                                 <div class="form-group">
+                                <div class="form-group">
                                     <label for="Parent">Name Parent:</label>
-                                    <input type="text" class="form-control" name="name_parent" id="AddParent" value="">
+                                    <input type="text" class="form-control" name="name_parent" id="AddParent"
+                                        value="">
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                    <div class="form-group">
+                                <div class="form-group">
                                     <label for="Mobile">Mobile:</label>
-                                    <input type="text" class="form-control" name="mobile" id="AddMobile" value="">
-                                </div> 
-                             </div>
-                            </div>    
-                            <div class="form-group">
+                                    <input type="text" class="form-control" name="mobile" id="AddMobile"
+                                        value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="Postcode">Postcode:</label>
                             <input type="text" class="form-control" name="postcode" id="AddPostcode" value="">
                         </div>
-                            <div class="form-group">
-                                <label for="Name">Street Address:</label>
-                                <textarea class="form-control" name="address" id="AddAddress"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="Name">Street Address 2:</label>
-                                <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
-                            </div>
-            
-                            <div class="form-group">
-                                <label for="File">File:</label>
-                                <input type="text" class="form-control" id="AddFile" name="file" value="">
-                            </div>
-                       
+                        <div class="form-group">
+                            <label for="Name">Street Address:</label>
+                            <textarea class="form-control" name="address" id="AddAddress"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="Name">Street Address 2:</label>
+                            <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="File">File:</label>
+                            <input type="text" class="form-control" id="AddFile" name="file" value="">
+                        </div>
+
 
                     </div>
                     <!-- Modal footer -->
@@ -278,9 +299,9 @@
                                 <span aria-hidden="true"></span>
                             </button>
                         </div>
-                    
+
                         <div id="EditModalBody">
-                            
+
                         </div>
                     </div>
                     <!-- Modal footer -->
@@ -296,10 +317,7 @@
 
 @section('script')
     <script>
-
-        
         $(document).ready(function() {
-
 
             $(".AddDate").datepicker({
                 dateFormat: "yy-mm-dd"
@@ -395,6 +413,7 @@
 
 
 
+
             $(document).on('click', '#CreateButton', function(e) {
                 e.preventDefault();
                 $('.alert-danger').html('');
@@ -404,6 +423,18 @@
                 $('#CreateModal').modal('show');
             });
 
+            $(document).on('click', '#SubmitImportForm', function(e) {
+                e.preventDefault();
+                //$('#loder_bar').show();
+                $.blockUI({
+                    message: $("#loder_bar")
+                });
+                $("#importForm").submit();
+
+            });
+
+
+
             $(document).on('click', '#ImportButton', function(e) {
                 e.preventDefault();
                 $('.alert-danger').html('');
@@ -411,6 +442,8 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
                 $('#ImportModal').modal('show');
+
+
             });
 
             let id;
