@@ -204,39 +204,26 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="form-row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="Parent">Name Parent:</label>
-                                    <input type="text" class="form-control" name="name_parent" id="AddParent"
-                                        value="">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="Mobile">Mobile:</label>
-                                    <input type="text" class="form-control" name="mobile" id="AddMobile"
-                                        value="">
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label for="Name">Name:</label>
+                            <input type="text" class="form-control" name="name" id="AddName" value="">
                         </div>
                         <div class="form-group">
-                            <label for="Postcode">Postcode:</label>
-                            <input type="text" class="form-control" name="postcode" id="AddPostcode" value="">
+                            <label for="Name">Lastname:</label>
+                            <input type="text" class="form-control" name="lastname" id="AddLastname" value="">
                         </div>
                         <div class="form-group">
-                            <label for="Name">Street Address:</label>
-                            <textarea class="form-control" name="address" id="AddAddress"></textarea>
+                            <label for="Name">Nickname:</label>
+                            <input type="text" class="form-control" name="nickname" id="AddNickname" value="">
                         </div>
                         <div class="form-group">
-                            <label for="Name">Street Address 2:</label>
-                            <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                            <label for="Name">Mobile:</label>
+                            <input type="text" class="form-control" name="mobile" id="AddMobile" value="">
                         </div>
 
                         <div class="form-group">
-                            <label for="File">File:</label>
-                            <input type="text" class="form-control" id="AddFile" name="file" value="">
+                            <label for="Name">Grade:</label>
+                            <input type="text" class="form-control" name="grade" id="AddGrade" value="">
                         </div>
 
                     </div>
@@ -438,15 +425,10 @@
                     url: "{{ route('receipts.store') }}",
                     method: 'post',
                     data: {
-                        submission_date: $('#AddSubmissiondate').val(),
-                        first_name: $('#AddFirstname').val(),
-                        last_name: $('#AddLastname').val(),
-                        street_address: $('#AddAddress').val(),
-                        street_address2: $('#AddAddress2').val(),
-                        city: $('#AddCity').val(),
-                        province: $('#AddProvince').val(),
-                        postcode: $('#AddPostcode').val(),
-                        name_parent: $('#AddParent').val(),
+                        code: $('#AddCode').val(),
+                        name: $('#AddName').val(),
+                        lastname: $('#AddLastname').val(),
+                        nickname: $('#AddNickname').val(),
                         mobile: $('#AddMobile').val(),
                         package: $('#AddPackage').val(),
                         file_att: $('#AddFile').val(),
