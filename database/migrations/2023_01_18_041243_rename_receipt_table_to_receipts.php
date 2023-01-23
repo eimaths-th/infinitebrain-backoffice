@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::rename('receipt', 'receipts');
+        //Schema::rename('receipt', 'receipts');
     }
 
     /**
