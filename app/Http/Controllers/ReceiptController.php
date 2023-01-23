@@ -149,7 +149,7 @@ class ReceiptController extends Controller
                    <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="Submission Date">Submission Date:</label>
-                            <input type="text" class="form-control" name="submission_date" id="EditSubmissiondate" value="' . $data->submission_date . '">
+                            <input type="text" class="AddDate form-control" name="submission_date" id="EditSubmissiondate" value="' . $data->submission_date . '">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -289,14 +289,12 @@ class ReceiptController extends Controller
 
     public function importExcel(Request $request)
     {
-
-
         if ($request->hasFile('import_file')) {
             $path = $request->file('import_file')->getRealPath();
 
             //$request->file('file')->store('files')
-            Excel::import(new ReceiptImport, $path);
-            return redirect()->back();
+            Excel::import(new ReceiptImport($request->get('sfield')), $path);
+            return redirect()->back()->with('success', 'Import Data Complete');
         } else {
             return response()->json(['errors' => 'Please Check your file, Something is wrong there.']);
         }

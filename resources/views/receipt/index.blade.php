@@ -3,7 +3,11 @@
 @section('style')
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://rawgit.com/RobinHerbots/Inputmask/5.x/dist/jquery.inputmask.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 @endsection
 
 @section('content')
@@ -11,8 +15,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                    <p>{{ $message }}</p>
-                </div>-->
+                        <p>{{ $message }}</p>
+                    </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -105,7 +109,7 @@
                                 <select class="form-control" id="AddField" name="sfield" required>
                                     <option value="2" selected>GMEC</option>
                                     <option value="4" selected>IMOCSEA</option>
-                                    <option value="5" selected> INFINITE Spelling Bee</option>
+                                    <option value="5" selected>INFINITE Spelling Bee</option>
                                     <option value="6" selected>GELOSEA</option>
                                     <option value="7" selected>LIMOC</option>
                                     <option value="8" selected>STEM</option>
@@ -159,7 +163,7 @@
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <label for="Submission Date">Submission Date:</label>
-                                    <input type="text" class="form-control" name="submission_date"
+                                    <input type="text" class="AddDate form-control" name="submission_date"
                                         id="AddSubmissiondate" value="">
                                 </div>
                             </div>
@@ -204,27 +208,38 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="Name">Name:</label>
-                            <input type="text" class="form-control" name="name" id="AddName" value="">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                 <div class="form-group">
+                                    <label for="Parent">Name Parent:</label>
+                                    <input type="text" class="form-control" name="name_parent" id="AddParent" value="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="Mobile">Mobile:</label>
+                                    <input type="text" class="form-control" name="mobile" id="AddMobile" value="">
+                                </div> 
+                             </div>
+                            </div>    
+                            <div class="form-group">
+                            <label for="Postcode">Postcode:</label>
+                            <input type="text" class="form-control" name="postcode" id="AddPostcode" value="">
                         </div>
-                        <div class="form-group">
-                            <label for="Name">Lastname:</label>
-                            <input type="text" class="form-control" name="lastname" id="AddLastname" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Nickname:</label>
-                            <input type="text" class="form-control" name="nickname" id="AddNickname" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Mobile:</label>
-                            <input type="text" class="form-control" name="mobile" id="AddMobile" value="">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="Name">Grade:</label>
-                            <input type="text" class="form-control" name="grade" id="AddGrade" value="">
-                        </div>
+                            <div class="form-group">
+                                <label for="Name">Street Address:</label>
+                                <textarea class="form-control" name="address" id="AddAddress"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="Name">Street Address 2:</label>
+                                <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                            </div>
+            
+                            <div class="form-group">
+                                <label for="File">File:</label>
+                                <input type="text" class="form-control" id="AddFile" name="file" value="">
+                            </div>
+                       
 
                     </div>
                     <!-- Modal footer -->
@@ -263,8 +278,9 @@
                                 <span aria-hidden="true"></span>
                             </button>
                         </div>
+                    
                         <div id="EditModalBody">
-
+                            
                         </div>
                     </div>
                     <!-- Modal footer -->
@@ -280,7 +296,16 @@
 
 @section('script')
     <script>
+
+        
         $(document).ready(function() {
+
+
+            $(".AddDate").datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+
+            $(".AddDate").inputmask("9999-99-99");
 
             $(".delete_all_button").click(function() {
                 var len = $('input[name="table_records[]"]:checked').length;
@@ -425,10 +450,15 @@
                     url: "{{ route('receipts.store') }}",
                     method: 'post',
                     data: {
-                        code: $('#AddCode').val(),
-                        name: $('#AddName').val(),
-                        lastname: $('#AddLastname').val(),
-                        nickname: $('#AddNickname').val(),
+                        submission_date: $('#AddSubmissiondate').val(),
+                        first_name: $('#AddFirstname').val(),
+                        last_name: $('#AddLastname').val(),
+                        street_address: $('#AddAddress').val(),
+                        street_address2: $('#AddAddress2').val(),
+                        city: $('#AddCity').val(),
+                        province: $('#AddProvince').val(),
+                        postcode: $('#AddPostcode').val(),
+                        name_parent: $('#AddParent').val(),
                         mobile: $('#AddMobile').val(),
                         package: $('#AddPackage').val(),
                         file_att: $('#AddFile').val(),

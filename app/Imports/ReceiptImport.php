@@ -11,6 +11,15 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 
 class ReceiptImport implements ToModel
 {
+
+    var $sfield_check = 0;
+
+    public function  __construct($sfield)
+    {
+        $this->sfield_check = $sfield;
+       
+    }
+
     /**
      * @param array $row
      *
@@ -18,9 +27,14 @@ class ReceiptImport implements ToModel
      */
     public function model(array $row)
     {
+
+        //echo $this->sfield_check;
+        ///exit();
+        $rsdate = strtotime($row[0]);
         return new Receipt([
             //
-            'submission_date' => $row[0],
+            'sfield' => $this->sfield_check,
+            'submission_date' => date('Y-m-d', $rsdate),
             'first_name' => $row[1],
             'last_name' => $row[2],
             'street_address' => $row[3],

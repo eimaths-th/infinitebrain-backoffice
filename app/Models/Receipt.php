@@ -28,5 +28,6 @@ class Receipt extends Model
         'mobile',
         'package',
         'file_att',
+        'sfield',
     ];
 }
