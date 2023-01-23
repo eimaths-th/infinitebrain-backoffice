@@ -119,7 +119,7 @@ class ReceiptController extends Controller
 
         $course = new Receipt($request->all());
         $course->save();
-        return response()->json(['success' => 'Course Add successfully']);
+        return response()->json(['success' => 'Receive Add successfully']);
     }
 
     /**
