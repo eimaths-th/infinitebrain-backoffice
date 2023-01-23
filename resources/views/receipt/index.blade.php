@@ -238,7 +238,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="Mobile">Mobile:</label>
-                                    <input type="text" class="form-control" name="mobile" id="AddMobile"
+                                    <input type="text" class="AddPhone form-control" name="mobile" id="AddMobile"
                                         value="">
                                 </div>
                             </div>
@@ -362,7 +362,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="Mobile">Mobile:</label>
-                                        <input type="text" class="form-control" name="mobile" id="EditMobile"
+                                        <input type="text" class="AddPhone form-control" name="mobile" id="EditMobile"
                                             value="">
                                     </div>
                                 </div>
@@ -408,6 +408,7 @@
             });
 
             $(".AddDate").inputmask("9999-99-99");
+            $(".AddPhone").inputmask("(999) 999-9999");
 
             $(".delete_all_button").click(function() {
                 var len = $('input[name="table_records[]"]:checked').length;
