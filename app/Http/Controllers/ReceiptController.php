@@ -145,83 +145,9 @@ class ReceiptController extends Controller
         $this->check_permission();
         $data = Receipt::find($id);
 
-        $html = '<div class="form-row">
-                   <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="Submission Date">Submission Date:</label>
-                            <input type="text" class="AddDate form-control" name="submission_date" id="EditSubmissiondate" value="' . $data->submission_date . '">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="position-relative  form-group">
-                            <label for="Package">Package:</label>
-                            <input type="text" class="form-control" name="package" id="EditPackage" value="' . $data->package . '">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                   <div class="col-md-6">
-                    <div class="position-relative form-group">
-                        <label for="firstname">First Name:</label>
-                        <input type="text" class="form-control" name="firstname" id="EditFirstname" value="' . $data->first_name . '">
-                    </div>
-                   </div>
-                   <div class="col-md-6">
-                    <div class="position-relative form-group">
-                        <label for="lastname">Last Name:</label>
-                        <input type="text" class="form-control" name="lastname" id="EditLastname" value="' . $data->last_name . '">
-                    </div>
-                  </div>
-                </div> 
-                
-                <div class="form-row">
-                <div class="col-md-6">
-                        <div class="position-relative form-group">
-                        <label for="City">City:</label>
-                        <input type="text" class="form-control" name="city" id="EditCity" value="' . $data->city . '">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                        <div class="position-relative form-group">
-                        <label for="Province">Province:</label>
-                        <input type="text" class="form-control" name="province" id="EditProvince" value="' . $data->province . '">
-                    </div>
-                 </div>
-                </div> 
-                
-                <div class="form-row">
-                <div class="col-md-6">
-                     <div class="form-group">
-                        <label for="Parent">Name Parent:</label>
-                        <input type="text" class="form-control" name="name_parent" id="EditParent" value="' . $data->name_parent . '">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                        <div class="form-group">
-                        <label for="Mobile">Mobile:</label>
-                        <input type="text" class="form-control" name="mobile" id="EditMobile" value="' . $data->mobile . '">
-                    </div> 
-                 </div>
-                </div>    
-                <div class="form-group">
-                <label for="Postcode">Postcode:</label>
-                <input type="text" class="form-control" name="postcode" id="EditPostcode" value="' . $data->postcode . '">
-            </div>
-                <div class="form-group">
-                    <label for="Name">Street Address:</label>
-                    <textarea class="form-control" name="address" id="EditAddress">' . $data->street_address . '</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="Name">Street Address 2:</label>
-                    <textarea class="form-control" name="address2" id="EditAddress2">' . $data->street_address2 . '</textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="File">File:</label>
-                    <input type="text" class="form-control" id="EditFile" name="file" value="' . $data->file_att . '">
-                </div>';
-
-        return response()->json(['html' => $html]);
+        return response()->json([
+            'data' =>  $data
+        ]);
     }
 
     /**
