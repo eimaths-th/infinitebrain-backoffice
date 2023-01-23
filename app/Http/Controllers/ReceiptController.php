@@ -98,6 +98,28 @@ class ReceiptController extends Controller
     public function store(Request $request)
     {
         //
+        $this->check_permission();
+        $validator =  Validator::make($request->all(), [
+            'submission_date' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'street_address' => 'required|string',
+            'city' => 'required|string',
+            'province' => 'required|string',
+            'postcode' => 'required|string',
+            'name_parent' => 'required|string',
+            'mobile' => 'required|string',
+            'package' => 'required|string',
+            'file_att' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        $course = new Receipt($request->all());
+        $course->save();
+        return response()->json(['success' => 'Course Add successfully']);
     }
 
     /**
@@ -123,18 +145,68 @@ class ReceiptController extends Controller
         $this->check_permission();
         $data = Receipt::find($id);
 
-        $html = '<div class="form-group">
-                    <label for="Submission Date">Submission Date:</label>
-                    <input type="text" class="form-control" name="submission_date" id="EditSubmissiondate" value="' . $data->submission_date . '">
+        $html = '<div class="form-row">
+                   <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="Submission Date">Submission Date:</label>
+                            <input type="text" class="form-control" name="submission_date" id="EditSubmissiondate" value="' . $data->submission_date . '">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative  form-group">
+                            <label for="Package">Package:</label>
+                            <input type="text" class="form-control" name="package" id="EditPackage" value="' . $data->package . '">
+                        </div>
+                    </div>
                 </div>
+                <div class="form-row">
+                   <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        <label for="firstname">First Name:</label>
+                        <input type="text" class="form-control" name="firstname" id="EditFirstname" value="' . $data->first_name . '">
+                    </div>
+                   </div>
+                   <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        <label for="lastname">Last Name:</label>
+                        <input type="text" class="form-control" name="lastname" id="EditLastname" value="' . $data->last_name . '">
+                    </div>
+                  </div>
+                </div> 
+                
+                <div class="form-row">
+                <div class="col-md-6">
+                        <div class="position-relative form-group">
+                        <label for="City">City:</label>
+                        <input type="text" class="form-control" name="city" id="EditCity" value="' . $data->city . '">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                        <div class="position-relative form-group">
+                        <label for="Province">Province:</label>
+                        <input type="text" class="form-control" name="province" id="EditProvince" value="' . $data->province . '">
+                    </div>
+                 </div>
+                </div> 
+                
+                <div class="form-row">
+                <div class="col-md-6">
+                     <div class="form-group">
+                        <label for="Parent">Name Parent:</label>
+                        <input type="text" class="form-control" name="name_parent" id="EditParent" value="' . $data->name_parent . '">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                        <div class="form-group">
+                        <label for="Mobile">Mobile:</label>
+                        <input type="text" class="form-control" name="mobile" id="EditMobile" value="' . $data->mobile . '">
+                    </div> 
+                 </div>
+                </div>    
                 <div class="form-group">
-                    <label for="firstname">First Name:</label>
-                    <input type="text" class="form-control" name="firstname" id="EditFirstname" value="' . $data->first_name . '">
-                </div>
-                <div class="form-group">
-                   <label for="lastname">Last Name:</label>
-                   <input type="text" class="form-control" name="lastname" id="EditLastname" value="' . $data->last_name . '">
-                </div>
+                <label for="Postcode">Postcode:</label>
+                <input type="text" class="form-control" name="postcode" id="EditPostcode" value="' . $data->postcode . '">
+            </div>
                 <div class="form-group">
                     <label for="Name">Street Address:</label>
                     <textarea class="form-control" name="address" id="EditAddress">' . $data->street_address . '</textarea>
@@ -143,27 +215,7 @@ class ReceiptController extends Controller
                     <label for="Name">Street Address 2:</label>
                     <textarea class="form-control" name="address2" id="EditAddress2">' . $data->street_address2 . '</textarea>
                 </div>
-                <div class="form-group">
-                    <label for="City">City:</label>
-                    <input type="text" class="form-control" name="city" id="EditCity" value="' . $data->city . '">
-                </div>
-                <div class="form-group">
-                    <label for="Province">Province:</label>
-                    <input type="text" class="form-control" name="province" id="EditProvince" value="' . $data->province . '">
-                </div>
-                <div class="form-group">
-                    <label for="Postcode">Postcode:</label>
-                    <input type="text" class="form-control" name="postcode" id="EditPostcode" value="' . $data->postcode . '">
-                </div>
-                <div class="form-group">
-                    <label for="Parent">Name Parent:</label>
-                    <input type="text" class="form-control" name="name_parent" id="EditParent" value="' . $data->name_parent . '">
-                </div>
-                <div class="form-group">
-                    <label for="Package">Package:</label>
-                    <input type="text" class="form-control" name="package" id="EditPackage" value="' . $data->package . '">
-                </div>
-                
+
                 <div class="form-group">
                     <label for="File">File:</label>
                     <input type="text" class="form-control" id="EditFile" name="file" value="' . $data->file_att . '">
@@ -190,8 +242,11 @@ class ReceiptController extends Controller
             'street_address' => 'required|string',
             'city' => 'required|string',
             'province' => 'required|string',
-            'description' => 'required|string',
-            'level_sort' => 'required|integer',
+            'postcode' => 'required|string',
+            'name_parent' => 'required|string',
+            'mobile' => 'required|string',
+            'package' => 'required|string',
+            'file_att' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -209,9 +264,27 @@ class ReceiptController extends Controller
      * @param  \App\Models\Receipt  $receipt
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Receipt $receipt)
+    public function destroy($id)
     {
         //
+        $this->check_permission();
+        Receipt::find($id)->delete();
+        return ['success' => true, 'message' => 'Deleted Successfully'];
+    }
+
+    public function destroy_all(Request $request)
+    {
+
+        $this->check_permission();
+        $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
+
+        for ($xx = 0; $xx < count($arr_del); $xx++) {
+            Receipt::find($arr_del[$xx])->delete();
+        }
+        //$ids = $request->get('table_records');
+        //User::whereIn('id',explode(",",$ids))->delete();
+        //return redirect('/receipt/?id=' . $request->get('id'))->with('success', 'Deleted Successfully');
+        return redirect('/receipts')->with('success', 'Deleted Successfully');;
     }
 
     public function importExcel(Request $request)

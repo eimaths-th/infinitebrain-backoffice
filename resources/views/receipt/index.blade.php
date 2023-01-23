@@ -10,9 +10,14 @@
     <div class="row">
 
         @if ($message = Session::get('success'))
-            <div class="alert alert-success">
-                <p>{{ $message }}</p>
-            </div>
+            <!--<div class="alert alert-success">
+                    <p>{{ $message }}</p>
+                </div>-->
+            <script>
+                toastr.success('{{ $message }}', {
+                    timeOut: 5000
+                });
+            </script>
         @endif
 
         <div class="app-page-title">
@@ -27,9 +32,9 @@
                 </div>
                 <div class="page-title-actions">
                     <div class="d-inline-block dropdown">
-                        <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg"
-                            id="ImportButton"><i class="fa fa-file-excel"></i> Import Excel
-                            </a>
+                        <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="ImportButton"><i
+                                class="fa fa-file-excel"></i> Import Excel
+                        </a>
                         <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
                             Receipt</a>
@@ -94,12 +99,24 @@
                                 <span aria-hidden="true"></span>
                             </button>
                         </div>
-            
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="File">สนามสอบ:</label>
+                                <select class="form-control" id="AddField" name="sfield" required>
+                                    <option value="2" selected>GMEC</option>
+                                    <option value="4" selected>IMOCSEA</option>
+                                    <option value="5" selected> INFINITE Spelling Bee</option>
+                                    <option value="6" selected>GELOSEA</option>
+                                    <option value="7" selected>LIMOC</option>
+                                    <option value="8" selected>STEM</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="File">Import File:</label>
                             <input type="file" name="import_file" id="import_file" required />
                         </div>
-                        
+
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
@@ -119,48 +136,109 @@
             <form class="form" action="" method="POST">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Add Student</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add Receipt</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
 
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true"></span>
                             </button>
                         </div>
-                        <div class="form-group">
-                            <label for="Name">Code:</label>
-                            <input type="text" class="form-control" name="code" id="AddCode" value="">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="Submission Date">Submission Date:</label>
+                                    <input type="text" class="form-control" name="submission_date"
+                                        id="AddSubmissiondate" value="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative  form-group">
+                                    <label for="Package">Package:</label>
+                                    <input type="text" class="form-control" name="package" id="AddPackage"
+                                        value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="firstname">First Name:</label>
+                                    <input type="text" class="form-control" name="firstname" id="AddFirstname"
+                                        value="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="lastname">Last Name:</label>
+                                    <input type="text" class="form-control" name="lastname" id="AddLastname"
+                                        value="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="City">City:</label>
+                                    <input type="text" class="form-control" name="city" id="AddCity"
+                                        value="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="Province">Province:</label>
+                                    <input type="text" class="form-control" name="province" id="AddProvince"
+                                        value="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Parent">Name Parent:</label>
+                                    <input type="text" class="form-control" name="name_parent" id="AddParent"
+                                        value="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Mobile">Mobile:</label>
+                                    <input type="text" class="form-control" name="mobile" id="AddMobile"
+                                        value="">
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="Name">Name:</label>
-                            <input type="text" class="form-control" name="name" id="AddName" value="">
+                            <label for="Postcode">Postcode:</label>
+                            <input type="text" class="form-control" name="postcode" id="AddPostcode" value="">
                         </div>
                         <div class="form-group">
-                            <label for="Name">Lastname:</label>
-                            <input type="text" class="form-control" name="lastname" id="AddLastname" value="">
+                            <label for="Name">Street Address:</label>
+                            <textarea class="form-control" name="address" id="AddAddress"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="Name">Nickname:</label>
-                            <input type="text" class="form-control" name="nickname" id="AddNickname" value="">
+                            <label for="Name">Street Address 2:</label>
+                            <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
                         </div>
+
                         <div class="form-group">
-                            <label for="Name">Mobile:</label>
-                            <input type="text" class="form-control" name="mobile" id="AddMobile" value="">
+                            <label for="File">File:</label>
+                            <input type="text" class="form-control" id="AddFile" name="file" value="">
                         </div>
-                        <div class="form-group">
-                            <label for="Name">Grade:</label>
-                            <input type="text" class="form-control" name="grade" id="AddGrade" value="">
-                        </div>
-                        
+
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
@@ -346,7 +424,7 @@
             })
 
 
-    
+
 
             // Create product Ajax request.
             $('#SubmitCreateForm').click(function(e) {
@@ -360,12 +438,18 @@
                     url: "{{ route('receipts.store') }}",
                     method: 'post',
                     data: {
-                        code: $('#AddCode').val(),
-                        name: $('#AddName').val(),
-                        lastname: $('#AddLastname').val(),
-                        nickname: $('#AddNickname').val(),
+                        submission_date: $('#AddSubmissiondate').val(),
+                        first_name: $('#AddFirstname').val(),
+                        last_name: $('#AddLastname').val(),
+                        street_address: $('#AddAddress').val(),
+                        street_address2: $('#AddAddress2').val(),
+                        city: $('#AddCity').val(),
+                        province: $('#AddProvince').val(),
+                        postcode: $('#AddPostcode').val(),
+                        name_parent: $('#AddParent').val(),
                         mobile: $('#AddMobile').val(),
-                        grade: $('#AddGrade').val(),
+                        package: $('#AddPackage').val(),
+                        file_att: $('#AddFile').val(),
                         _token: token,
                     },
                     success: function(result) {
@@ -381,6 +465,10 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
+                            toastr.success(result.success, {
+                                timeOut: 5000
+                            });
+                            $('#CreateModal').modal('hide');
                             $('#Listview').DataTable().ajax.reload();
                             $('.form').trigger('reset');
                             //$('#SubmitCreateForm').hide();
@@ -408,16 +496,22 @@
                     url: "receipts/save/" + id,
                     method: 'PUT',
                     data: {
-                        code: $('#EditCode').val(),
-                        name: $('#EditName').val(),
-                        lastname: $('#EditLastname').val(),
-                        nickname: $('#EditNickname').val(),
+                        submission_date: $('#EditSubmissiondate').val(),
+                        first_name: $('#EditFirstname').val(),
+                        last_name: $('#EditLastname').val(),
+                        street_address: $('#EditAddress').val(),
+                        street_address2: $('#EditAddress2').val(),
+                        city: $('#EditCity').val(),
+                        province: $('#EditProvince').val(),
+                        postcode: $('#EditPostcode').val(),
+                        name_parent: $('#EditParent').val(),
                         mobile: $('#EditMobile').val(),
-                        grade: $('#EditGrade').val(),
+                        package: $('#EditPackage').val(),
+                        file_att: $('#EditFile').val(),
                     },
 
                     success: function(result) {
-                        //console.log(result);
+                        console.log(result);
                         if (result.errors) {
                             $('.alert-danger').html('');
                             $.each(result.errors, function(key, value) {
@@ -430,6 +524,10 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
+                            toastr.success(result.success, {
+                                timeOut: 5000
+                            });
+                            $('#EditModal').modal('hide');
                             $('#Listview').DataTable().ajax.reload();
                             //setTimeout(function() {
                             //$('.alert-success').hide();
@@ -460,6 +558,9 @@
                     },
                     success: function(data) {
                         if (data.success) {
+                            toastr.success(data.message, {
+                                timeOut: 5000
+                            });
                             table.row(el.parents('tr'))
                                 .remove()
                                 .draw();

@@ -29,6 +29,7 @@
 
     <script defer src="{{ asset('architectui/assets/scripts/main.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
     </script>
@@ -49,6 +50,20 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('css/infinite.css') }}">
+    <style>
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -5px;
+            margin-left: -5px
+        }
+
+        .form-row>.col,
+        .form-row>[class*=col-] {
+            padding-right: 5px;
+            padding-left: 5px
+        }
+    </style>
 </head>
 
 <body>
@@ -69,7 +84,7 @@
 
             <div class="app-main__outer">
                 <div class="app-main__inner">
-                    
+
                     <!-- Your Page Content Here -->
                     @yield('content')
 
@@ -105,12 +120,12 @@
                                         <div class="form-group">
                                             <label for="Name">Name:</label>
                                             <input type="text" class="form-control" name="name" id="EdituName"
-                                                value="{{Auth::user()->name}}">
+                                                value="{{ Auth::user()->name }}">
                                         </div>
                                         <div class="form-group">
                                             <label for="Name">Email:</label>
                                             <input type="text" class="form-control" name="email" id="EdituEmail"
-                                                value="{{Auth::user()->email}}">
+                                                value="{{ Auth::user()->email }}">
                                         </div>
                                         <div class="form-group">
                                             <label for="Name">Password:</label>
@@ -126,7 +141,8 @@
                                     </div>
                                     <!-- Modal footer -->
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-success" id="SubmitUserEditForm">Save</button>
+                                        <button type="button" class="btn btn-success"
+                                            id="SubmitUserEditForm">Save</button>
                                         <button type="button" class="btn btn-danger modelClose"
                                             data-bs-dismiss="modal">Close</button>
                                     </div>
@@ -139,12 +155,33 @@
                 <!-- Footer -->
                 @include('layouts.footer')
             </div>
-           
+
         </div>
     </div>
 
 
     @yield('script')
+    <script>
+
+        //ตัวนี้จะเอาไว้ set ค่าต่างๆ toastr
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+    </script>
 
     <script>
         $(document).ready(function() {
@@ -159,7 +196,7 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
 
-                let id={{Auth::user()->id}};
+                let id = {{ Auth::user()->id }};
                 $.ajax({
                     url: "users/msave/" + id,
                     method: 'PUT',
@@ -168,7 +205,7 @@
                         password: $('#EdituPassword').val(),
                         password_confirmation: $('#EdituPasswordC').val(),
                         email: $('#EdituEmail').val(),
-                       
+
                     },
 
                     success: function(result) {
@@ -185,9 +222,9 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
-                           
+
                             $('#EditModal').modal('hide');
-                           
+
 
                         }
                     }
