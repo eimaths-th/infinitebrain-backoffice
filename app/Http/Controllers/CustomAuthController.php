@@ -33,10 +33,19 @@ class CustomAuthController extends Controller
                 /*return back()->withErrors([
                     'email' => 'You are users but not have permissions. Please Contact Administrator',
                 ]);*/
-                return back()->withErrors(['error'=>'You are users but not have permissions. Please Contact Administrator']);
+                return back()->withErrors(['error' => 'You are users but not have permissions. Please Contact Administrator']);
             } else {
-                return redirect()->intended('home');
-                    //->withSuccess('Signed in');
+                if (Auth::user()->level == 1) {
+                    //return redirect()->intended('users');
+                    return redirect('/users');
+                } elseif (Auth::user()->level == 2) {
+                    //return redirect()->intended('course');
+                    return redirect('/course');
+                } else if (Auth::user()->level == 3) {
+                    //return redirect()->intended('receipts');
+                    return redirect('/receipts?sfield=2');
+                }
+                //->withSuccess('Signed in');
             }
         }
 
@@ -60,7 +69,7 @@ class CustomAuthController extends Controller
 
         $data = $request->all();
         $check = $this->create($data);
-        
+
         return redirect("login")->withSuccess('Register Complete. Please Contact Administrator for permission');
         //return redirect("home")->withSuccess('You have signed-in');
     }

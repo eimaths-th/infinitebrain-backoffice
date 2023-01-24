@@ -16,10 +16,21 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                                    <p>{{ $message }}</p>
-                                                </div>-->
+                                                        <p>{{ $message }}</p>
+                                                    </div>-->
             <script>
                 toastr.success('{{ $message }}', {
+                    timeOut: 5000
+                });
+            </script>
+        @endif
+
+        @if ($message = Session::get('error'))
+            <!--<div class="alert alert-success">
+                                                        <p>{{ $message }}</p>
+                                                    </div>-->
+            <script>
+                toastr.error('{{ $message }}', {
                     timeOut: 5000
                 });
             </script>
@@ -31,7 +42,7 @@
                     <div class="page-title-icon">
                         <i class="pe-7s-note2 icon-gradient bg-tempting-azure"></i>
                     </div>
-                    <div>Receipts
+                    <div>{{ $sfielda[request()->get('sfield')] }} Receipts
                         <div class="page-title-subheading">Infinite Brain Receipt Data</div>
                     </div>
                 </div>
@@ -61,6 +72,9 @@
                             <tr>
                                 <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>Submission Date</th>
+                                <th>Voucher Number</th>
+                                <th>Customer Code</th>
+                               
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Parent Name</th>
@@ -125,12 +139,9 @@
                             <div class="form-group">
                                 <label for="File">สนามสอบ:</label>
                                 <select class="form-control" id="AddField" name="sfield" required>
-                                    <option value="2" selected>GMEC</option>
-                                    <option value="4" selected>IMOCSEA</option>
-                                    <option value="5" selected>INFINITE Spelling Bee</option>
-                                    <option value="6" selected>GELOSEA</option>
-                                    <option value="7" selected>LIMOC</option>
-                                    <option value="8" selected>STEM</option>
+                                    @foreach ($sfielda as $key=>$value)
+                                    <option value="{{ $key }}"  {{ request()->get('sfield') == $key ? 'selected' : '' }}> {{ $value }} </option>
+                                @endforeach
                                 </select>
                             </div>
                         </div>
@@ -184,6 +195,7 @@
                                     <label for="Submission Date">Submission Date:</label>
                                     <input type="text" class="AddDate form-control" name="submission_date"
                                         id="AddSubmissiondate" value="">
+                                        <input type="hidden" name="Sfield" id="Sfield" value="{{ $sfield }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -301,6 +313,23 @@
                         </div>
 
                         <div id="EditModalBody">
+
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="ReceiptNumber">Voucher Number:</label>
+                                        <input type="text" class="form-control" name="receipt_number" id="receipt_number"
+                                             value="" readonly> 
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative  form-group">
+                                        <label for="ReceiptCNumber">Customer Code:</label>
+                                        <input type="text" class="form-control" name="customer_code" id="customer_code"
+                                            value="" readonly>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-row">
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
@@ -362,8 +391,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="Mobile">Mobile:</label>
-                                        <input type="text" class="AddPhone form-control" name="mobile" id="EditMobile"
-                                            value="">
+                                        <input type="text" class="AddPhone form-control" name="mobile"
+                                            id="EditMobile" value="">
                                     </div>
                                 </div>
                             </div>
@@ -474,6 +503,14 @@
                         name: 'receipt_submission_date'
                     },
                     {
+                        data: 'receipt_number',
+                        name: 'receipt_number'
+                    },
+                    {
+                        data: 'receipt_customer_number',
+                        name: 'receipt_customer_number'
+                    },
+                    {
                         data: 'receipt_firstname',
                         name: 'receipt_firstname'
                     },
@@ -548,6 +585,8 @@
                     success: function(res) {
                         //console.log(res);
                         //$('#EditModalBody').html(res.html);
+                        $('#receipt_number').val(res.data.receipt_number);
+                        $('#customer_code').val(res.data.receipt_customer_number);
                         $('#EditSubmissiondate').val(res.data.submission_date);
                         $('#EditPackage').val(res.data.package);
                         $('#EditFirstname').val(res.data.first_name);
@@ -594,6 +633,7 @@
                         mobile: $('#AddMobile').val(),
                         package: $('#AddPackage').val(),
                         file_att: $('#AddFile').val(),
+                        sfield: $('#Sfield').val(),
                         _token: token,
                     },
                     success: function(result) {

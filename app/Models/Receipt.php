@@ -29,5 +29,7 @@ class Receipt extends Model
         'package',
         'file_att',
         'sfield',
+        'receipt_number',
+        'receipt_customer_number',
     ];
 }

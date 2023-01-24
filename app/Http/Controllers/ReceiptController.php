@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ReceiptImport;
 use App\Exports\UsersExport;
+use App\Models\Receipt_RunningNumber;
+use App\Models\Receipt_Customer_RunningNumber;
 
 class ReceiptController extends Controller
 {
@@ -123,12 +125,16 @@ class ReceiptController extends Controller
         //
 
         $this->check_permission();
-
+        if ($request->sfield == "") {
+            abort(403, 'Please input Field');
+        }
         if ($request->ajax()) {
             //sleep(2);
             $receipt = Receipt::select(
                 "receipts.id as receipt_id",
                 "receipts.submission_date as receipt_submission_date",
+                "receipts.receipt_number as receipt_number",
+                "receipts.receipt_customer_number as receipt_customer_number",
                 "receipts.first_name as receipt_firstname",
                 "receipts.last_name as receipt_lastname",
                 "receipts.name_parent as receipt_parent_name",
@@ -138,7 +144,7 @@ class ReceiptController extends Controller
                 //->join("subjects", "subjects.id", "=", "receipts.subject_id")
                 //->join("levels", "levels.id", "=", "receipts.level_id")
 
-                //->where('levels.subject', $request->id)
+                ->where('receipts.sfield', $request->sfield)
                 ->orderBy("receipts.id", "desc")
                 ->get();
             //print_r($levels);
@@ -163,8 +169,11 @@ class ReceiptController extends Controller
 
         //get student
         //$student = Student::orderBy("name", "asc")->get();
-        return view('receipt.index');
-        //->with(['data' => $subject])->with(['data2' => $student]);
+
+        $sfielda = array('2'=>'GMEC','4'=>'IMOCSEA','5'=>'INFINITE Spelling Bee','6'=>'GELOSEA','7'=>'LIMOC','8'=>'STEM');
+        return view('receipt.index')
+            ->with(['sfielda' =>  $sfielda])
+            ->with(['sfield' => $request->sfield]);
     }
 
     /**
@@ -205,6 +214,10 @@ class ReceiptController extends Controller
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
+        $rnumber = Receipt_RunningNumber::generate($request->get('sfield'));
+        $rcnumber = Receipt_Customer_RunningNumber::generate($request->get('sfield'));
+        $request->request->add(['receipt_number' => $rnumber, 'receipt_customer_number' => $rcnumber]);
+
         $course = new Receipt($request->all());
         $course->save();
         return response()->json(['success' => 'Receive Add successfully']);
@@ -233,12 +246,12 @@ class ReceiptController extends Controller
 
         $res = preg_replace("/[^0-9.]/", "", $data->package);
         $price = (int)$res;
-        $price_val = number_format($price ,2);
+        $price_val = number_format($price, 2);
         $price_text = $this->baht_text($price);
-        $vat_price = ($price*100)/107;
-        $vat_total = $price-$vat_price;
-        $vat_price_val = number_format($vat_price ,2);
-        $vat_val = number_format($vat_total ,2);
+        $vat_price = ($price * 100) / 107;
+        $vat_total = $price - $vat_price;
+        $vat_price_val = number_format($vat_price, 2);
+        $vat_val = number_format($vat_total, 2);
         //exit();
 
 
@@ -324,7 +337,7 @@ class ReceiptController extends Controller
         //$ids = $request->get('table_records');
         //User::whereIn('id',explode(",",$ids))->delete();
         //return redirect('/receipt/?id=' . $request->get('id'))->with('success', 'Deleted Successfully');
-        return redirect('/receipts')->with('success', 'Deleted Successfully');;
+        return redirect('/receipts')->with('success', 'Deleted Successfully');
     }
 
     public function importExcel(Request $request)
@@ -336,7 +349,7 @@ class ReceiptController extends Controller
             Excel::import(new ReceiptImport($request->get('sfield')), $path);
             return redirect()->back()->with('success', 'Import Data Complete');
         } else {
-            return response()->json(['errors' => 'Please Check your file, Something is wrong there.']);
+            return back()->with(['error' => 'Please Check your file, Something is wrong there.']);
         }
 
 

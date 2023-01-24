@@ -28,13 +28,14 @@ class HomeController extends Controller
     {
         if (Auth::check()) {
             if (Auth::user()->level == 1) {
-
-                //print_r(session()->all());
-                //echo $value = Session::get('level');
-                return view('home');
-            } else {
-                return view('home');
-                //abort(403, 'Unauthorized action.');
+                //return redirect()->intended('users');
+                return redirect('/users');
+            } elseif (Auth::user()->level == 2) {
+                //return redirect()->intended('course');
+                return redirect('/course');
+            } else if (Auth::user()->level == 3) {
+                //return redirect()->intended('receipts');
+                return redirect('/receipts?sfield=2');
             }
         }
     }

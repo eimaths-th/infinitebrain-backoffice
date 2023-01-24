@@ -43,7 +43,7 @@
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
-                        <i class="pe-7s-network icon-gradient bg-tempting-azure"></i>
+                        <i class="pe-7s-note2 icon-gradient bg-tempting-azure"></i>
                     </div>
                     <div>
                         Receipts
@@ -69,7 +69,7 @@
             <div class="card-body">
 
 
-                <table align="center" width="70%">
+                <table align="center" width="70%" cellpadding="0" cellspacing="0">
                     <thead>
                         <tr>
                             <td width="15%" rowspan="4"><img src="{{ asset('images/infinite.jpg') }}" alt="..."
@@ -88,17 +88,18 @@
                     </thead>
                 </table>
 
-                <table align="center" width="70%">
+                <table align="center" width="70%" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td colspan="5" align="center"><b>ใบกำกับภาษี/ใบเสร็จรับเงิน</b></td>
+                        <td colspan="4" align="center"><b>ใบกำกับภาษี/ใบเสร็จรับเงิน</b></td>
+                        <td  align="center"><b>ต้นฉบับ <br> สำหรับลูกค้า</b></td>
 
                     </tr>
                     <tr>
                         <td>นามลูกค้า,ที่อยู่/Client,Address</td>
                         <td align="right">รหัสลูกค้า/Customer's Code</td>
-                        <td></td>
+                        <td><b> {{ $data->receipt_customer_number }} </b></td>
                         <td align="right">เลขที่ / Voucher No.</td>
-                        <td><b> {{ $data->sfield }} </b></td>
+                        <td><b> {{ $data->receipt_number }} </b></td>
                     </tr>
                     <tr>
                         <td>คุณ <b> {{ $data->name_parent }} </b></td>
@@ -112,13 +113,13 @@
                             {{ $data->city }} {{ $data->province }} {{ $data->postcode }} </b></td>
 
                         <td align="right">ชำระเงิน / Credit Term</td>
-                        <td>....................</td>
+                        <td>..........................</td>
                     </tr>
                     <tr>
                         <td colspan="3"></td>
 
                         <td align="right">ครบกำหนด / Due Date</td>
-                        <td>....................</td>
+                        <td>..........................</td>
                     </tr>
                     <tr>
                         <td colspan="5">โทร. <b> {{ $data->mobile }} </b></td>
@@ -126,32 +127,32 @@
                     </tr>
                 </table>
                 <div class="tbr">
-                    <table align="center" width="70%">
+                    <table align="center" width="70%" cellpadding="0" cellspacing="0">
                         <tr class="active">
                             <td align="center">ลำดับที่ / NO.</td>
                             <td align="center">รายการ / Description</td>
                             <td align="center">จำนวนเงิน / Amount</td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
                         </tr>
                     </table>
-                    <table align="center" width="70%">
+                    <table align="center" width="70%" cellpadding="0" cellspacing="0">
                         <tr>
                             <td width="20%" class="activetop">
-                                <table width="100%">
+                                <table width="100%" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td colspan="2" class="active activebottom" align="center">จ่ายด้วย</td>
 
@@ -172,7 +173,7 @@
                                 </table>
                             </td>
                             <td colspan="3" class="activetop">
-                                <table width="100%">
+                                <table width="100%" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td width="30%"></td>
                                         <td width="20%"></td>
@@ -202,21 +203,21 @@
 
                         </tr>
                         <tr class="active">
-                            <td align="center">รวมทั้งสิ้น/Grand Total</td>
+                            <td align="center" >รวมทั้งสิ้น/Grand Total</td>
                             <td align="center"><b>{{ $price_text }}</b></td>
                             <td align="center"><b>{{ $price_val }}</b></td>
                             <td align="right">บาท</td>
                         </tr>
                     </table>
 
-                    <table align="center" width="70%">
+                    <table align="center" width="70%" cellpadding="0" cellspacing="0">
                         <tr>
                             <td align="center">ได้รับริการตามบริการถูกต้องแล้ว</td>
                             <td align="center">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
                         </tr>
                     </table>
 
-                    <table align="center" width="70%">
+                    <table align="center" width="70%" cellpadding="0" cellspacing="0">
                         <tr>
                             <td></td>
                             <td></td>

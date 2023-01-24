@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Receipt;
 use App\Models\Receipt_RunningNumber;
+use App\Models\Receipt_Customer_RunningNumber;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -33,9 +34,13 @@ class ReceiptImport implements ToModel
         ///exit();
         $rsdate = strtotime($row[0]);
         $rnumber = Receipt_RunningNumber::generate($this->sfield_check);
+        $rcnumber = Receipt_Customer_RunningNumber::generate($this->sfield_check);
+        //exit();
         return new Receipt([
             //
-            'sfield' => $rnumber,
+            'sfield' => $this->sfield_check,
+            'receipt_number' => $rnumber,
+            'receipt_customer_number' => $rcnumber,
             'submission_date' => date('Y-m-d', $rsdate),
             'first_name' => $row[1],
             'last_name' => $row[2],

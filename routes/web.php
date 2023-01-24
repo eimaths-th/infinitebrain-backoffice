@@ -20,8 +20,8 @@ use App\Http\Controllers\ReceiptController;
 |
 */
 
-Route::get('/', [App\Http\Controllers\CourseController::class, 'index']);
-Route::get('/home', [CourseController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 //Route::get('/', [EmployeeController::class, 'index']);
 
 Auth::routes([
