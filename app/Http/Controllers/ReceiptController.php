@@ -27,6 +27,11 @@ class ReceiptController extends Controller
     const BAHT_TEXT_SATANG = 'สตางค์';
     const BAHT_TEXT_POINT = 'จุด';
 
+    public function URL_exists($url){
+        $headers=get_headers($url);
+        return stripos($headers[0],"200 OK")?true:false;
+     }
+
     /**
      * Convert baht number to Thai text
      * @param double|int $number
@@ -254,10 +259,15 @@ class ReceiptController extends Controller
         $vat_val = number_format($vat_total, 2);
         //exit();
 
+        $file_att = '';
+        if ($this->URL_exists($data->file_att)) {
+            $file_att = "<img src=\"".$data->file_att."\">";
+        }
+
 
         return view($viewr)->with(['id' => $id])->with(['data' => $data])->with(['price_val' => $price_val])
             ->with(['price_text' => $price_text])->with(['vat_price_val' => $vat_price_val])
-            ->with(['vat_val' => $vat_val]);
+            ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att]);
     }
 
     /**

@@ -232,7 +232,7 @@
                             <td align="center">วันที่</td>
                         </tr>
                     </table>
-
+                    <center>{!! $file_att !!}</center>
             </div>
         </div>
 

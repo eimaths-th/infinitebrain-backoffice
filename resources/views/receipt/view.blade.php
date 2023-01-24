@@ -55,7 +55,7 @@
 
                         <a class="btn btn-warning " href="#" onclick="export_report();"><i class="fa fa-print"></i>
                             Print</a>
-                        <a href="{{ route('receipts') }}" class="btn btn-success" data-toggle="modal"
+                        <a href="{{ route('receipts', ['sfield' => $data->sfield]) }}" class="btn btn-success" data-toggle="modal"
                             data-target=".bd-example-modal-lg" id="CreateButton"><i class="fa fa-backward"></i> Back
                             Receipts</a>
 
@@ -259,6 +259,7 @@
                             <td align="center">วันที่</td>
                         </tr>
                     </table>
+                    <center>{!! $file_att !!}</center>
                 </div>
 
 
