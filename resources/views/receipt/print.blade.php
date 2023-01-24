@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <style>
+    
+
+        .tbr table tr.active td {
+            border-top: 2px solid rgb(138, 175, 61);
+            border-bottom: 2px solid rgb(138, 175, 61);
+        }
+
+        .tbr table td.activetop {
+            border-top: 2px solid rgb(138, 175, 61);
+        }
+
+        .tbr table td.active_twin {
+            border-left: 2px solid rgb(138, 175, 61);
+            border-right: 2px solid rgb(138, 175, 61);
+        }
+        .tbr table td.active {
+            
+            border-right: 2px solid rgb(138, 175, 61);
+        }
+
+        .tbr table td.activebottom {
+            border-bottom: 2px solid rgb(138, 175, 61);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row">
+
+        
+        <div class="main-card mb-3 card " id="x_content">
+            <div class="card-body">
+                <table align="center" width="95%">
+                    <thead>
+                        <tr>
+                            <td width="15%" rowspan="4"><img src="{{ asset('images/infinite.jpg') }}" alt="..."
+                                    height="106" style="padding-bottom: 5px"></td>
+                            <td>บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่) </td>
+                        </tr>
+                        <tr>
+                            <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                        </tr>
+                        <tr>
+                            <td>เลขประจำตัวผู้เสียภาษี: 0125563031038</td>
+                        </tr>
+                        <tr>
+                            <td>โทร 098 509 8554</td>
+                        </tr>
+                    </thead>
+                </table>
+
+                <table align="center" width="95%">
+                    <tr>
+                        <td colspan="5" align="center"><b>ใบกำกับภาษี/ใบเสร็จรับเงิน</b></td>
+
+                    </tr>
+                    <tr>
+                        <td>นามลูกค้า,ที่อยู่/Client,Address</td>
+                        <td align="right">รหัสลูกค้า/Customer's Code</td>
+                        <td></td>
+                        <td align="right">เลขที่ / Voucher No.</td>
+                        <td><b> {{ $data->sfield }} </b></td>
+                    </tr>
+                    <tr>
+                        <td>คุณ <b> {{ $data->name_parent }} </b></td>
+                        <td align="right">ชื่อนักเรียน</td>
+                        <td align="left" width="30%"><b>{{ $data->first_name }} {{ $data->last_name }}</b></td>
+                        <td align="right">วันที่ / Date</td>
+                        <td><b>{{ $data->submission_date }}</b></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">ที่อยู่ <b>{{ $data->street_address }} {{ $data->street_address2 }}
+                            {{ $data->city }} {{ $data->province }} {{ $data->postcode }} </b></td>
+
+                        <td align="right">ชำระเงิน / Credit Term</td>
+                        <td>....................</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+
+                        <td align="right">ครบกำหนด / Due Date</td>
+                        <td>....................</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">โทร. <b> {{ $data->mobile }} </b></td>
+
+                    </tr>
+                </table>
+                <div class="tbr">
+                    <table align="center" width="95%">
+                        <tr class="active">
+                            <td align="center">ลำดับที่ / NO.</td>
+                            <td align="center">รายการ / Description</td>
+                            <td align="center">จำนวนเงิน / Amount</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <table align="center" width="95%">
+                        <tr>
+                            <td width="20%" class="activetop">
+                                <table width="100%">
+                                    <tr>
+                                        <td colspan="2" class="active_twin activebottom" align="center">จ่ายด้วย</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="active_twin activebottom" width="30%"></td>
+                                        <td class="active activebottom">1.เงินสด</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active_twin activebottom" width="30%" align="center"><i
+                                                style="font-size: 1.8em; color:red" class="fa fa-close"></i></td>
+                                        <td class="active activebottom">2.โอนเงิน</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active_twin" width="30%"></td>
+                                        <td class="active">3.เครดิต</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td colspan="3" class="activetop">
+                                <table width="100%">
+                                    <tr>
+                                        <td width="30%"></td>
+                                        <td width="20%"></td>
+                                        <td width="30%">มูลค่าบริการ/Sub Total</td>
+                                        <td width="20%"> <b> {{ $vat_price_val }} </b></td>
+                                    </tr>
+                                    <tr>
+                                        <td width="30%"></td>
+                                        <td width="20%"></td>
+                                        <td width="30%"></td>
+                                        <td width="20%"></td>
+                                    </tr>
+                                    <tr>
+                                        <td width="30%"></td>
+                                        <td width="20%"></td>
+                                        <td width="30%">ส่วนลดบริการ/Discout</td>
+                                        <td width="20%"></td>
+                                    </tr>
+                                    <tr>
+                                        <td width="30%"></td>
+                                        <td width="20%"></td>
+                                        <td width="30%">ภาษีมูลค่าเพิ่ม Va 7%</td>
+                                        <td width="20%"><b>{{ $vat_val }}</b></td>
+                                    </tr>
+                                </table>
+                            </td>
+
+                        </tr>
+                        <tr class="active">
+                            <td align="center">รวมทั้งสิ้น/Grand Total</td>
+                            <td align="center"><b>{{ $price_text }}</b></td>
+                            <td align="center"><b>{{ $price_val }}</b></td>
+                            <td align="right">บาท</td>
+                        </tr>
+                    </table>
+
+                    <table align="center" width="95%">
+                        <tr>
+                            <td align="center">ได้รับริการตามบริการถูกต้องแล้ว</td>
+                            <td align="center">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
+                        </tr>
+                    </table>
+
+                    <table align="center" width="95%">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td align="center">.........................</td>
+                            <td align="center">.........................</td>
+                            <td align="center">.........................</td>
+                        </tr>
+                        <tr>
+                            <td align="center">ผู้รับบริการ</td>
+                            <td align="center">ผู้ให้บริการ</td>
+                            <td align="center">ผู้จัดการ</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td align="center">.........................</td>
+                            <td align="center">.........................</td>
+                            <td align="center">.........................</td>
+                        </tr>
+                        <tr>
+                            <td align="center">วันที่</td>
+                            <td align="center">วันที่</td>
+                            <td align="center">วันที่</td>
+                        </tr>
+                    </table>
+
+            </div>
+        </div>
+
+    </div>
+</body>
+
+
+<script>
+    function printrep() {
+        window.print();
+    }
+    printrep();
+    setTimeout(function() {
+        window.close();
+    }, 2000);
+</script>

@@ -16,6 +16,94 @@ use App\Exports\UsersExport;
 class ReceiptController extends Controller
 {
 
+    const BAHT_TEXT_NUMBERS = array('ศูนย์', 'หนึ่ง', 'สอง', 'สาม', 'สี่', 'ห้า', 'หก', 'เจ็ด', 'แปด', 'เก้า');
+    const BAHT_TEXT_UNITS = array('', 'สิบ', 'ร้อย', 'พัน', 'หมื่น', 'แสน', 'ล้าน');
+    const BAHT_TEXT_ONE_IN_TENTH = 'เอ็ด';
+    const BAHT_TEXT_TWENTY = 'ยี่';
+    const BAHT_TEXT_INTEGER = 'ถ้วน';
+    const BAHT_TEXT_BAHT = 'บาท';
+    const BAHT_TEXT_SATANG = 'สตางค์';
+    const BAHT_TEXT_POINT = 'จุด';
+
+    /**
+     * Convert baht number to Thai text
+     * @param double|int $number
+     * @param bool $include_unit
+     * @param bool $display_zero
+     * @return string|null
+     */
+    public function baht_text($number, $include_unit = true, $display_zero = true)
+    {
+
+        if (!is_numeric($number)) {
+            return null;
+        }
+
+        $log = floor(log($number, 10));
+        if ($log > 5) {
+            $millions = floor($log / 6);
+            $million_value = pow(1000000, $millions);
+            $normalised_million = floor($number / $million_value);
+            $rest = $number - ($normalised_million * $million_value);
+            $millions_text = '';
+            for ($i = 0; $i < $millions; $i++) {
+                $millions_text .= self::BAHT_TEXT_UNITS[6];
+            }
+            return $this($normalised_million, false) . $millions_text . $this($rest, true, false);
+        }
+
+        $number_str = (string)floor($number);
+        $text = '';
+        $unit = 0;
+
+        if ($display_zero && $number_str == '0') {
+            $text = self::BAHT_TEXT_NUMBERS[0];
+        } else for ($i = strlen($number_str) - 1; $i > -1; $i--) {
+            $current_number = (int)$number_str[$i];
+
+            $unit_text = '';
+            if ($unit == 0 && $i > 0) {
+                $previous_number = isset($number_str[$i - 1]) ? (int)$number_str[$i - 1] : 0;
+                if ($current_number == 1 && $previous_number > 0) {
+                    $unit_text .= self::BAHT_TEXT_ONE_IN_TENTH;
+                } else if ($current_number > 0) {
+                    $unit_text .= self::BAHT_TEXT_NUMBERS[$current_number];
+                }
+            } else if ($unit == 1 && $current_number == 2) {
+                $unit_text .= self::BAHT_TEXT_TWENTY;
+            } else if ($current_number > 0 && ($unit != 1 || $current_number != 1)) {
+                $unit_text .= self::BAHT_TEXT_NUMBERS[$current_number];
+            }
+
+            if ($current_number > 0) {
+                $unit_text .= self::BAHT_TEXT_UNITS[$unit];
+            }
+
+            $text = $unit_text . $text;
+            $unit++;
+        }
+
+        if ($include_unit) {
+            $text .= self::BAHT_TEXT_BAHT;
+
+            $satang = explode('.', number_format($number, 2, '.', ''))[1];
+            $text .= $satang == 0
+                ? self::BAHT_TEXT_INTEGER
+                : $this($satang, false) . self::BAHT_TEXT_SATANG;
+        } else {
+            $exploded = explode('.', $number);
+            if (isset($exploded[1])) {
+                $text .= self::BAHT_TEXT_POINT;
+                $decimal = (string)$exploded[1];
+                for ($i = 0; $i < strlen($decimal); $i++) {
+                    $text .= self::BAHT_TEXT_NUMBERS[$decimal[$i]];
+                }
+            }
+        }
+
+        return $text;
+    }
+
     public function check_permission()
     {
         if (Auth::check()) {
@@ -63,7 +151,7 @@ class ReceiptController extends Controller
                     return '<input type="checkbox" id="' . $row->receipt_id . '" class="flat" name="table_records[]" value="' . $row->receipt_id . '" >';
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a href="receipt/show/view/' . $row->receipt_id . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->receipt_id . '"><i class="fa fa-eye"></i> View Receipt</a> ';
+                    $html = '<a href="receipts/show/view/' . $row->receipt_id . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->receipt_id . '"><i class="fa fa-eye"></i> View Receipt</a> ';
                     $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
@@ -128,9 +216,35 @@ class ReceiptController extends Controller
      * @param  \App\Models\Receipt  $receipt
      * @return \Illuminate\Http\Response
      */
-    public function show(Receipt $receipt)
+    public function show($type, $id)
     {
         //
+        $this->check_permission();
+        $data = Receipt::find($id);
+
+        //print_r($data);
+        //exit();
+
+        if ($type == "view") {
+            $viewr = "receipt.view";
+        } else if ($type == "print") {
+            $viewr = "receipt.print";
+        }
+
+        $res = preg_replace("/[^0-9.]/", "", $data->package);
+        $price = (int)$res;
+        $price_val = number_format($price ,2);
+        $price_text = $this->baht_text($price);
+        $vat_price = ($price*100)/107;
+        $vat_total = $price-$vat_price;
+        $vat_price_val = number_format($vat_price ,2);
+        $vat_val = number_format($vat_total ,2);
+        //exit();
+
+
+        return view($viewr)->with(['id' => $id])->with(['data' => $data])->with(['price_val' => $price_val])
+            ->with(['price_text' => $price_text])->with(['vat_price_val' => $vat_price_val])
+            ->with(['vat_val' => $vat_val]);
     }
 
     /**
