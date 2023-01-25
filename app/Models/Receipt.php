@@ -31,5 +31,8 @@ class Receipt extends Model
         'sfield',
         'receipt_number',
         'receipt_customer_number',
+        'grade',
+        'description',
+        'description2',
     ];
 }

@@ -38,7 +38,7 @@ class ReceiptImport implements ToModel
         //exit();
         return new Receipt([
             //
-            'sfield' => $this->sfield_check,
+            /*'sfield' => $this->sfield_check,
             'receipt_number' => $rnumber,
             'receipt_customer_number' => $rcnumber,
             'submission_date' => date('Y-m-d', $rsdate),
@@ -52,7 +52,22 @@ class ReceiptImport implements ToModel
             'name_parent' => $row[8],
             'mobile' => $row[9],
             'package' => $row[10],
-            'file_att' => $row[11],
+            'file_att' => $row[11],*/
+            'sfield' => $this->sfield_check,
+            'receipt_number' => $rnumber,
+            'receipt_customer_number' => $rcnumber,
+            'submission_date' => date('Y-m-d', $rsdate),
+            'first_name' => $row[1],
+            'last_name' => $row[2],
+            'street_address' => $row[6],
+            'name_parent' => $row[5],
+            'postcode' => $row[7],
+            'mobile' => $row[8],
+            'package' => $row[4],
+            'grade' => $row[3],
+            'file_att' => $row[9],
+            'description' => $row[10],
+            'description2' => $row[11],
         ]);
 
         /*

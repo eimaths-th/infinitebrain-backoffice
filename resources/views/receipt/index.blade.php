@@ -222,8 +222,24 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="Grade">Grade:</label>
+                                    <input type="text" class="form-control" name="grade" id="AddGrade"
+                                        value="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="Des">Description:</label>
+                                    <input type="text" class="form-control" name="description" id="AddDes"
+                                        value="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--<div class="form-row">
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <label for="City">City:</label>
@@ -238,7 +254,7 @@
                                         value="">
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="form-row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -259,14 +275,15 @@
                             <label for="Postcode">Postcode:</label>
                             <input type="text" class="form-control" name="postcode" id="AddPostcode" value="">
                         </div>
+
                         <div class="form-group">
                             <label for="Name">Street Address:</label>
                             <textarea class="form-control" name="address" id="AddAddress"></textarea>
                         </div>
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label for="Name">Street Address 2:</label>
                             <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
-                        </div>
+                        </div>-->
 
                         <div class="form-group">
                             <label for="File">File:</label>
@@ -366,6 +383,21 @@
                             <div class="form-row">
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
+                                        <label for="Grade">Grade:</label>
+                                        <input type="text" class="form-control" name="grade" id="EditGrade"
+                                            value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Postcode">Postcode:</label>
+                                    <input type="text" class="form-control" name="postcode" id="EditPostcode"
+                                        value="">
+                                </div>
+                            </div>
+
+                            <!--<div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
                                         <label for="City">City:</label>
                                         <input type="text" class="form-control" name="city" id="EditCity"
                                             value="">
@@ -378,7 +410,8 @@
                                             value="">
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
+
 
                             <div class="form-row">
                                 <div class="col-md-6">
@@ -396,19 +429,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="Postcode">Postcode:</label>
-                                <input type="text" class="form-control" name="postcode" id="EditPostcode"
-                                    value="">
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="Des">Description:</label>
+                                    <textarea class="form-control" name="drescription" id="EditDes"></textarea>
+                                </div>
                             </div>
+                           
                             <div class="form-group">
                                 <label for="Name">Street Address:</label>
                                 <textarea class="form-control" name="address" id="EditAddress"></textarea>
                             </div>
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label for="Name">Street Address 2:</label>
                                 <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                            </div>
+                            </div>-->
 
                             <div class="form-group">
                                 <label for="File">File:</label>
@@ -591,10 +626,12 @@
                         $('#EditPackage').val(res.data.package);
                         $('#EditFirstname').val(res.data.first_name);
                         $('#EditLastname').val(res.data.last_name);
+                        $('#EditDes').val(res.data.description);
+                        $('#EditGrade').val(res.data.grade);
                         $('#EditAddress').val(res.data.street_address);
-                        $('#EditAddress2').val(res.data.street_address2);
-                        $('#EditCity').val(res.data.city);
-                        $('#EditProvince').val(res.data.province);
+                        //$('#EditAddress2').val(res.data.street_address2);
+                        //$('#EditCity').val(res.data.city);
+                        //$('#EditProvince').val(res.data.province);
                         $('#EditPostcode').val(res.data.postcode);
                         $('#EditParent').val(res.data.name_parent);
                         $('#EditMobile').val(res.data.mobile);
@@ -624,10 +661,12 @@
                         submission_date: $('#AddSubmissiondate').val(),
                         first_name: $('#AddFirstname').val(),
                         last_name: $('#AddLastname').val(),
+                        grade: $('#AddGrade').val(),
+                        description: $('#AddDes').val(),
                         street_address: $('#AddAddress').val(),
-                        street_address2: $('#AddAddress2').val(),
-                        city: $('#AddCity').val(),
-                        province: $('#AddProvince').val(),
+                        //street_address2: $('#AddAddress2').val(),
+                        //city: $('#AddCity').val(),
+                        //province: $('#AddProvince').val(),
                         postcode: $('#AddPostcode').val(),
                         name_parent: $('#AddParent').val(),
                         mobile: $('#AddMobile').val(),
@@ -683,10 +722,12 @@
                         submission_date: $('#EditSubmissiondate').val(),
                         first_name: $('#EditFirstname').val(),
                         last_name: $('#EditLastname').val(),
+                        grade: $('#EditGrade').val(),
+                        description: $('#EditDes').val(),
                         street_address: $('#EditAddress').val(),
-                        street_address2: $('#EditAddress2').val(),
-                        city: $('#EditCity').val(),
-                        province: $('#EditProvince').val(),
+                        //street_address2: $('#EditAddress2').val(),
+                        //city: $('#EditCity').val(),
+                        //province: $('#EditProvince').val(),
                         postcode: $('#EditPostcode').val(),
                         name_parent: $('#EditParent').val(),
                         mobile: $('#EditMobile').val(),

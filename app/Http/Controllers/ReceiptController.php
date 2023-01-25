@@ -27,10 +27,26 @@ class ReceiptController extends Controller
     const BAHT_TEXT_SATANG = 'สตางค์';
     const BAHT_TEXT_POINT = 'จุด';
 
-    public function URL_exists($url){
-        $headers=get_headers($url);
-        return stripos($headers[0],"200 OK")?true:false;
-     }
+    public function URL_exists($url)
+    {
+        $headers = get_headers($url);
+        return stripos($headers[0], "200 OK") ? true : false;
+    }
+
+    public function get_img_url($url)
+    {
+        //$url = "https://www.jotform.com/uploads/metaknowledge2022/230067598816466/5503526223327192231/receipt_20230124135338.png";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Must be set to true so that PHP follows any "Location:" header
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $a = curl_exec($ch); // $a will contain all headers
+
+        $url_return = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL); // This is what you need, it will return you the last effective URL
+        return $url_return;
+    }
 
     /**
      * Convert baht number to Thai text
@@ -175,7 +191,7 @@ class ReceiptController extends Controller
         //get student
         //$student = Student::orderBy("name", "asc")->get();
 
-        $sfielda = array('2'=>'GMEC','4'=>'IMOCSEA','5'=>'INFINITE Spelling Bee','6'=>'GELOSEA','7'=>'LIMOC','8'=>'STEM');
+        $sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM');
         return view('receipt.index')
             ->with(['sfielda' =>  $sfielda])
             ->with(['sfield' => $request->sfield]);
@@ -206,13 +222,15 @@ class ReceiptController extends Controller
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'street_address' => 'required|string',
-            'city' => 'required|string',
-            'province' => 'required|string',
+            //'city' => 'required|string',
+            //'province' => 'required|string',
             'postcode' => 'required|string',
             'name_parent' => 'required|string',
             'mobile' => 'required|string',
             'package' => 'required|string',
             'file_att' => 'required|string',
+            'description' => 'required|string',
+            'grade' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -249,7 +267,10 @@ class ReceiptController extends Controller
             $viewr = "receipt.print";
         }
 
-        $res = preg_replace("/[^0-9.]/", "", $data->package);
+        if ($data->package) {
+            $res = preg_replace("/[^0-9.]/", "", $data->package);
+        }
+
         $price = (int)$res;
         $price_val = number_format($price, 2);
         $price_text = $this->baht_text($price);
@@ -260,14 +281,27 @@ class ReceiptController extends Controller
         //exit();
 
         $file_att = '';
-        if ($this->URL_exists($data->file_att)) {
-            $file_att = "<img src=\"".$data->file_att."\">";
+        if ($data->file_att) {
+
+            $arrl = explode('https', $data->file_att);
+            for ($i = 1; $i <= count($arrl) - 1; $i++) {
+                $urla = "https".$arrl[$i];
+                $retu = $this->get_img_url($urla);
+                //if ($this->URL_exists($retu)) {
+                    $file_att.= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
+                //}
+            }
         }
+
+
+        $des_text = nl2br($data->description);
+
 
 
         return view($viewr)->with(['id' => $id])->with(['data' => $data])->with(['price_val' => $price_val])
             ->with(['price_text' => $price_text])->with(['vat_price_val' => $vat_price_val])
-            ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att]);
+            ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att])
+            ->with(['des_text' => $des_text]);
     }
 
     /**
@@ -303,13 +337,15 @@ class ReceiptController extends Controller
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'street_address' => 'required|string',
-            'city' => 'required|string',
-            'province' => 'required|string',
+            //'city' => 'required|string',
+            //'province' => 'required|string',
             'postcode' => 'required|string',
             'name_parent' => 'required|string',
             'mobile' => 'required|string',
             'package' => 'required|string',
             'file_att' => 'required|string',
+            'description' => 'required|string',
+            'grade' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -353,7 +389,9 @@ class ReceiptController extends Controller
     public function importExcel(Request $request)
     {
         if ($request->hasFile('import_file')) {
-            $path = $request->file('import_file')->getRealPath();
+            //$path = $request->file('import_file')->getRealPath();
+
+            $path = $request->file('import_file');
 
             //$request->file('file')->store('files')
             Excel::import(new ReceiptImport($request->get('sfield')), $path);

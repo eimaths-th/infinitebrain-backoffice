@@ -63,7 +63,7 @@ class Receipt_RunningNumber extends Model
         $running_number->number++;
         $running_number->save();
         $number = $running_number->number;
-        $number = str_pad($number, 4, '0', STR_PAD_LEFT);
+        $number = str_pad($number, 3, '0', STR_PAD_LEFT);
 
         // A-21-00001
         return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . date('m') . '' . $number;
