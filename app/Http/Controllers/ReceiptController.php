@@ -206,7 +206,7 @@ class ReceiptController extends Controller
      */
     public function create()
     {
-        //
+        //create
     }
 
     /**
