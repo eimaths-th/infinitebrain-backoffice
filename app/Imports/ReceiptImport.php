@@ -19,7 +19,6 @@ class ReceiptImport implements ToModel
     public function  __construct($sfield)
     {
         $this->sfield_check = $sfield;
-       
     }
 
     /**
@@ -35,6 +34,8 @@ class ReceiptImport implements ToModel
         $rsdate = strtotime($row[0]);
         $rnumber = Receipt_RunningNumber::generate($this->sfield_check);
         $rcnumber = Receipt_Customer_RunningNumber::generate($this->sfield_check);
+
+        $description = explode("(",$row[4]);
         //exit();
         return new Receipt([
             //
@@ -66,7 +67,7 @@ class ReceiptImport implements ToModel
             'package' => $row[4],
             'grade' => $row[3],
             'file_att' => $row[9],
-            'description' => $row[10],
+            'description' => $description[0],
             'description2' => $row[11],
         ]);
 
