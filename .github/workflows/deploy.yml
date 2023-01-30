@@ -5,10 +5,10 @@ name: Deploy
 on:
   push:
     branches:
-      - main
+      - production
   pull_request:
     branches:
-      - main
+      - production
       
 # Authenticate to the the server via ssh 
 # and run our deployment script 
