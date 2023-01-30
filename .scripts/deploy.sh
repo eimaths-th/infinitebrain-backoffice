@@ -23,7 +23,7 @@ php artisan optimize
 npm run prod
 
 # Run database migrations
-php artisan migrate --force
+#php artisan migrate --force
 
 # Exit maintenance mode
 php artisan up
