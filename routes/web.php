@@ -38,7 +38,7 @@ Route::post('custom-registration', [CustomAuthController::class, 'customRegistra
 Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout');
 
 
-//Route for normal user
+//Route for normal user//
 //Route::group(['middleware' => ['auth']], function () {
 //   Route::get('/home', [App\Http\Controllers\CourseController::class, 'index'])->name('home');
 //});
