@@ -38,7 +38,7 @@ class ReceiptImport implements ToModel
         $description = explode("(",$row[4]);
         //exit();
         return new Receipt([
-            // import
+            // 
             /*'sfield' => $this->sfield_check,
             'receipt_number' => $rnumber,
             'receipt_customer_number' => $rcnumber,
