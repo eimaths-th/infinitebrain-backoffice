@@ -26,7 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        //auth
+        //auth redirect
         if (Auth::check()) {
             if (Auth::user()->level == 1) {
                 //return redirect()->intended('users');
