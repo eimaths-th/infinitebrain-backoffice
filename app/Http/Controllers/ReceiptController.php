@@ -14,6 +14,8 @@ use App\Imports\ReceiptImport;
 use App\Exports\UsersExport;
 use App\Models\Receipt_RunningNumber;
 use App\Models\Receipt_Customer_RunningNumber;
+use Illuminate\Support\Facades\DB;
+use mysqli;
 
 class ReceiptController extends Controller
 {

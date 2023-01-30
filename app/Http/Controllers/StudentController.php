@@ -29,7 +29,7 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         //
-        
+
         $this->check_permission();
         if ($request->ajax()) {
             //sleep(2);
