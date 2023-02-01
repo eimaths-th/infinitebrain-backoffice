@@ -46,8 +46,8 @@ class Receipt_RunningNumber extends Model
         }
         $number = 0;
         $year = date('Y');
-        //$month = date('m');
-        $month = "01";
+        $month = date('m');
+        //$month = "01";
 
         if (! Receipt_RunningNumber::where('type', $type)->where('year', $year)->where('month', $month)->exists()) {
             Receipt_RunningNumber::create([
@@ -67,7 +67,7 @@ class Receipt_RunningNumber extends Model
         $number = str_pad($number, 3, '0', STR_PAD_LEFT);
 
         // A-21-00001
-        //return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . date('m') . '' . $number;
-        return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '01' . $number;
+        return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . date('m') . '' . $number;
+        //return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '01' . $number;
     }
 }
