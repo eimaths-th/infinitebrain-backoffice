@@ -133,6 +133,8 @@ class ReceiptController extends Controller
     {
         if (Auth::check()) {
             if (Auth::user()->level == 1 || Auth::user()->level == 3) {
+                echo "xxxx";
+                exit();
             } else {
                 abort(403, 'Unauthorized action.');
             }
