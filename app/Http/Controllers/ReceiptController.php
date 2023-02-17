@@ -28,6 +28,23 @@ class ReceiptController extends Controller
     const BAHT_TEXT_BAHT = 'บาท';
     const BAHT_TEXT_SATANG = 'สตางค์';
     const BAHT_TEXT_POINT = 'จุด';
+    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM');
+    const sfieldas = array('2' => 'G', '4' => 'J', '5' => 'I', '6' => 'L', '7' => 'M', '8' => 'NS');
+    const thmonth = array(
+        "",
+        "มกราคม",
+        "กุมภาพันธ์",
+        "มีนาคม",
+        "เมษายน",
+        "พฤษภาคม",
+        "มิถุนายน",
+        "กรกฎาคม",
+        "สิงหาคม",
+        "กันยายน",
+        "ตุลาคม",
+        "พฤศจิกายน",
+        "ธันวาคม"
+    );
 
     public function URL_exists($url)
     {
@@ -196,9 +213,8 @@ class ReceiptController extends Controller
         //get student
         //$student = Student::orderBy("name", "asc")->get();
 
-        $sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM');
         return view('receipt.index')
-            ->with(['sfielda' =>  $sfielda])
+            ->with(['sfielda' =>  self::sfielda])
             ->with(['sfield' => $request->sfield]);
     }
 
@@ -316,6 +332,7 @@ class ReceiptController extends Controller
         $validator =  Validator::make($request->all(), [
             'pdsfield' => 'required|string',
             'print_date' => 'required|string',
+            'print_number' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -333,13 +350,77 @@ class ReceiptController extends Controller
 
         $sfield = $request->get('pdsfield');
 
+        $a_date = explode("-", $request->get('print_date'));
+
+        $ymcode = (($a_date[0] - 2000) + 43) . $a_date[1];
+        $thai_year = $a_date[0] + 543;
+        $thai_month = self::thmonth[(int)$a_date[1]];
+
+        $receipts = Receipt::select(
+            "receipts.submission_date as receipt_submission_date",
+            "receipts.receipt_number as receipt_number",
+            "receipts.first_name as receipt_firstname",
+            "receipts.last_name as receipt_lastname",
+            "receipts.package as receipt_price",
+        )
+            //->join("students", "students.id", "=", "receipts.student_id")
+            //->join("subjects", "subjects.id", "=", "receipts.subject_id")
+            //->join("levels", "levels.id", "=", "receipts.level_id")
+
+            ->where([['receipts.sfield', $sfield], ['submission_date', $request->get('print_date')]])
+            ->orderBy("receipts.receipt_number", "asc")
+            ->get();
+        //->toArray();
+        //print_r($receipts);
+        //exit();
+        $i = 0;
+        $ret_receipt = array();
+        $total_price = 0;
+        foreach ($receipts as $result) {
+            $ret_receipt[$i]['receipt_submission_date'] = $result->receipt_submission_date;
+            $ret_receipt[$i]['receipt_number'] = $result->receipt_number;
+            $ret_receipt[$i]['receipt_firstname'] = $result->receipt_firstname;
+            $ret_receipt[$i]['receipt_lastname'] = $result->receipt_lastname;
+
+            $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
+            $price = (int)$res;
+            $price_val = number_format($price, 2);
+            $ret_receipt[$i]['receipt_price'] = $price_val;
+            $ret_receipt[$i]['receipt_price_label'] = "บาท";
+            $i++;
+            $total_price += $price;
+        }
+
+        if (count($ret_receipt) < 19) {
+            $start = $i;
+            $em = 19 - count($ret_receipt)+$start;
+            for ($x = $start; $x <= $em; $x++) {
+                $ret_receipt[$x]['receipt_submission_date'] = "";
+                $ret_receipt[$x]['receipt_number'] = "";
+                $ret_receipt[$x]['receipt_firstname'] = "";
+                $ret_receipt[$x]['receipt_lastname'] = "";
+                $ret_receipt[$x]['receipt_price'] = "";
+                $ret_receipt[$x]['receipt_price_label'] = "";
+            }
+        }
+        //echo $start;
+        //print_r($ret_receipt);
+        //exit();
 
 
-        return view($viewr)->with(['sfield' => $sfield]);
-        /* ->with(['id' => $id])->with(['data' => $data])->with(['price_val' => $price_val])
-            ->with(['price_text' => $price_text])->with(['vat_price_val' => $vat_price_val])
-            ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att])
-            ->with(['des_text' => $des_text]); */
+
+
+        return view($viewr)->with(['sfield' => $sfield])->with(['sfielda' =>  self::sfielda])
+            ->with(['sfieldas' =>  self::sfieldas])
+            ->with(['ymcode' =>  $ymcode])
+            ->with(['thaiyear' =>  $thai_year])
+            ->with(['thaimonth' =>  $thai_month])
+            ->with(['data' => $ret_receipt])
+            ->with(['pdsfield' => $request->get('pdsfield')])
+            ->with(['print_date' => $request->get('print_date')])
+            ->with(['total_price' => number_format($total_price, 2)])
+            ->with(['print_number' =>  $request->get('print_number')])
+            ->with(['fprint_number' =>  sprintf("%02d",$request->get('print_number'))]);
     }
 
     /**

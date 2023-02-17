@@ -16,8 +16,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                            <p>{{ $message }}</p>
-                             </div>-->
+                                <p>{{ $message }}</p>
+                                 </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -27,8 +27,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                            <p>{{ $message }}</p>
-                             </div>-->
+                                <p>{{ $message }}</p>
+                                 </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -58,7 +58,7 @@
                                 Print ใบปะหน้า
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                <li><a class="dropdown-item" href="#">ใบปะหน้ารายเดือน</a></li>
+                               {{--  <li><a class="dropdown-item" href="#">ใบปะหน้ารายเดือน</a></li> --}}
                                 <li><a class="dropdown-item" href="#" id="printr1">ใบปะหน้ารายวัน</a></li>
                             </ul>
                         </div>
@@ -136,8 +136,7 @@
     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" id="PrintDayModal">
         <div class="modal-dialog modal-lg" role="document">
-            <form id="PrintDayForm" class="form" action="{{ route('receipts.print_day') }}" method="POST"
-                enctype="multipart/form-data">
+            <form id="PrintDayForm" class="form" action="{{ route('receipts.print_day') }}" method="POST">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -159,7 +158,7 @@
                                 <span aria-hidden="true"></span>
                             </button>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="File">สนามสอบ:</label>
                                 <select class="form-control" id="PrintDaysField" name="pdsfield" required>
@@ -171,20 +170,23 @@
                                 </select>
                                 <input type="hidden" name="type" value="view">
                             </div>
-                            <div class="col-md-6">
-                                <div class="position-relative form-group">
-                                    <label for="Submission Date">Print Date:</label>
-                                    <input type="text" class="AddDate form-control" name="print_date"
-                                        id="PrintDaySubmissiondate" value="">
-                                </div>
+                            <div class="form-group">
+                                <label for="Submission Date">Print Date:</label>
+                                <input type="text" class="AddDate form-control" name="print_date"
+                                    id="PrintDaySubmissiondate" value="" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="Submission Date">รหัสเอกสาร:</label>
+                                <input type="number" class="form-control" name="print_number" id="PrintDayNumber"
+                                    value="" required>
                             </div>
                         </div>
-                      
+
 
                     </div>
-                    <!-- Modal footer -->
+                    <!-- Modal footer id="SubmitPrintDayForm"-->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="SubmitPrintDayForm">Print</button>
+                        <button type="submit" class="btn btn-success" >Print</button>
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -207,7 +209,8 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -326,21 +329,21 @@
                         </div>
 
                         <!--<div class="form-row">
-                            <div class="col-md-6">
-                                <div class="position-relative form-group">
-                                    <label for="City">City:</label>
-                                    <input type="text" class="form-control" name="city" id="AddCity"
-                                        value="">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="City">City:</label>
+                                        <input type="text" class="form-control" name="city" id="AddCity"
+                                            value="">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="position-relative form-group">
-                                    <label for="Province">Province:</label>
-                                    <input type="text" class="form-control" name="province" id="AddProvince"
-                                        value="">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="Province">Province:</label>
+                                        <input type="text" class="form-control" name="province" id="AddProvince"
+                                            value="">
+                                    </div>
                                 </div>
-                            </div>
-                        </div>-->
+                            </div>-->
                         <div class="form-row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -367,9 +370,9 @@
                             <textarea class="form-control" name="address" id="AddAddress"></textarea>
                         </div>
                         <!--<div class="form-group">
-                            <label for="Name">Street Address 2:</label>
-                            <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
-                        </div>-->
+                                <label for="Name">Street Address 2:</label>
+                                <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                            </div>-->
 
                         <div class="form-group">
                             <label for="File">File:</label>
@@ -482,21 +485,21 @@
                             </div>
 
                             <!--<div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="City">City:</label>
-                                        <input type="text" class="form-control" name="city" id="EditCity"
-                                            value="">
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <label for="City">City:</label>
+                                            <input type="text" class="form-control" name="city" id="EditCity"
+                                                value="">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="Province">Province:</label>
-                                        <input type="text" class="form-control" name="province" id="EditProvince"
-                                            value="">
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <label for="Province">Province:</label>
+                                            <input type="text" class="form-control" name="province" id="EditProvince"
+                                                value="">
+                                        </div>
                                     </div>
-                                </div>
-                            </div>-->
+                                </div>-->
 
 
                             <div class="form-row">
@@ -527,9 +530,9 @@
                                 <textarea class="form-control" name="address" id="EditAddress"></textarea>
                             </div>
                             <!--<div class="form-group">
-                                                                <label for="Name">Street Address 2:</label>
-                                                                <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                            </div>-->
+                                                                    <label for="Name">Street Address 2:</label>
+                                                                    <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                                </div>-->
 
                             <div class="form-group">
                                 <label for="File">File:</label>
@@ -681,10 +684,10 @@
             $(document).on('click', '#SubmitPrintDayForm', function(e) {
                 e.preventDefault();
                 //$('#loder_bar').show();
-                $.blockUI({
-                    message: $("#loder_bar")
-                });
-                $("#PrintDayForm").submit();
+                //$.blockUI({
+                //    message: $("#loder_bar")
+                //});
+                //$("#PrintDayForm").submit();
 
             });
 

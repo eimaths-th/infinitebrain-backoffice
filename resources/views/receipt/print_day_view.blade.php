@@ -23,16 +23,19 @@
         .tbr table tr.active td {
             border-top: 2px solid rgb(138, 175, 61);
             border-bottom: 2px solid rgb(138, 175, 61);
+        }
 
+        .tbr table tr.activebg td {
+           background: #c9fcb9;
         }
 
         .tbr table tr.actived td {
-            border-bottom: 2px solid rgb(7, 7, 7);
+            border-bottom: 1px solid rgb(7, 7, 7);
 
         }
         .tbr table tr.activeda td {
-            border-bottom: 2px solid rgb(7, 7, 7);
-            border-top: 2px solid rgb(7, 7, 7);
+            border-bottom: 1px solid rgb(7, 7, 7);
+            border-top: 1px solid rgb(7, 7, 7);
 
         }
 
@@ -46,8 +49,8 @@
         }
 
         .tbr table td.actived {
-            border-left: 2px solid rgb(7, 7, 7);
-            border-right: 2px solid rgb(7, 7, 7);
+            border-left: 1px solid rgb(7, 7, 7);
+            border-right: 1px solid rgb(7, 7, 7);
         }
 
         .tbr table td.active_left {
@@ -60,6 +63,10 @@
 
         .tbr table td.activebottom {
             border-bottom: 2px solid rgb(138, 175, 61);
+        }
+
+        .tbr table td.activebottomd {
+            border-bottom: 1px solid rgb(7, 7, 7);
         }
     </style>
 @endsection
@@ -125,22 +132,22 @@
 
                 <div class="tbr">
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                        <tr class="active">
+                        <tr class="active" height="30">
                             <td align="center" width="15%" class="active_left grey"></td>
                             <td align="center" width="40%">
-                                <font class="grey">รายรับประจำเดือน</font>
+                                <font class="grey">รายรับประจำเดือน </font> <b>{{ $thaimonth }} {{ $thaiyear }} </b>
                             </td>
-                            <td align="center" width="15%">GMEC</td>
+                            <td align="center" width="15%"><b>{{ $sfielda[$sfield] }}</b></td>
                             <td align="center" width="15%">
                                 <font class="grey">รหัสเอกสาร</font>
                             </td>
-                            <td align="center" width="15%" class="active_right">G6601/13</td>
+                            <td align="center" width="15%" class="active_right"><b>{{ $sfieldas[$sfield] }}{{ $ymcode }}/{{ $fprint_number }}</b></td>
                         </tr>
 
                     </table>
 
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                        <tr class="actived">
+                        <tr class="actived activebg" height="30">
                             <td align="center" width="15%" class="actived grey">วัน / เดือน / ปี</td>
                             <td align="center" width="40%">
                                 <font class="actived grey">รายการ</font>
@@ -151,63 +158,37 @@
                             </td>
                             <td align="center" width="15%" class="actived gray">หน่วย</td>
                         </tr>
-                        <tr class="activeda">
-                            <td align="center" width="15%" class="actived">.</td>
-                            <td align="center" width="40%" class="actived">.</td>
-                            <td align="center" width="15%" class="actived">.</td>
-                            <td align="center" width="15%" class="actived">.</td>
-                            <td align="center" width="15%" class="actived grey">บาท</td>
+                        @foreach ($data as $receipt)
+                        <tr class="activeda" height="30">
+                            <td align="center" width="15%" class="actived"><b>{{ $receipt['receipt_submission_date'] }}</b></td>
+                            <td align="left" width="40%" class="actived">&nbsp; <b>{{ $receipt['receipt_firstname'] }} {{ $receipt['receipt_lastname'] }}</b></td>
+                            <td align="center" width="15%" class="actived"><b>{{ $receipt['receipt_number'] }}</b></td>
+                            <td align="center" width="15%" class="actived"><b>{{ $receipt['receipt_price'] }}</b></td>
+                            <td align="center" width="15%" class="actived grey"><b>{{ $receipt['receipt_price_label'] }}</b></td>
+                        </tr>
+                        @endforeach
+                        <tr class="activebg" height="50">
+                            <td align="center" colspan="3" width="15%" class="actived activebottomd grey"><font size="3"><b>รวมทั้งสิ้น</b></font></td>
+                            <td align="center" width="15%" class="actived activebottomd"><b>{{ $total_price }}</b></td>
+                            <td align="center" width="15%" class="actived activebottomd grey"><font size="3"><b>บาท</b></font></td>
                         </tr>
                     </table>
+                    
+                
+              
 
+                    <br>
 
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
-                            <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
-                        </tr>
-                    </table>
-
-                    <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                        <tr>
                             <td></td>
                             <td></td>
-                            <td></td>
+                            <td align="center">ลงชื่อ...................................</td>
                         </tr>
                         <tr>
                             <td></td>
                             <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td align="center">.........................</td>
-                            <td align="center">.........................</td>
-                            <td align="center">.........................</td>
-                        </tr>
-                        <tr>
-                            <td align="center" class="grey">ผู้รับบริการ</td>
-                            <td align="center" class="grey">ผู้ให้บริการ</td>
-                            <td align="center" class="grey">ผู้จัดการ</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td align="center">.........................</td>
-                            <td align="center">.........................</td>
-                            <td align="center">.........................</td>
-                        </tr>
-                        <tr>
-                            <td align="center" class="grey">วันที่</td>
-                            <td align="center" class="grey">วันที่</td>
-                            <td align="center" class="grey">วันที่</td>
+                            <td align="center">ผู้จัดการ</td>
                         </tr>
                     </table>
 
@@ -223,7 +204,10 @@
 @section('script')
     <script>
         function export_report() {
-            window.open('{{ route('receipts.print_day', ['type' => 'print']) }}');
+           url = '{{ route('receipts.print_day', ['type' => 'print', 'pdsfield' => $pdsfield, 'print_date' => $print_date, 'print_number' => $print_number]) }}';
+           window.open(
+                url.replace(/&amp;/g, "&")
+            );
         }
     </script>
 @endsection
