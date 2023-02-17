@@ -22,6 +22,8 @@ class LevelController extends Controller
             } else {
                 abort(403, 'Unauthorized action.');
             }
+        } else {
+            abort(403, 'Unauthorized action.');
         }
     }
 

@@ -24,6 +24,8 @@ class CourseController extends Controller
             } else {
                 abort(403, 'Unauthorized action.');
             }
+        } else {
+            abort(403, 'Unauthorized action.');
         }
     }
 
@@ -173,7 +175,7 @@ class CourseController extends Controller
         $levels_start = Level::where('id', $course[0]->level_id)->get();
 
         //print_r($levels_start);
-        $english1 = array("","Pre - A","A","B","B","D","E","F","G","H","I");
+        $english1 = array("","Pre - A","A","B","C","D","E","F","G","H","I");
         $english2 = array("","5","6","7","8");
 
         $start_date = explode("-", $course[0]->date_start);
@@ -433,7 +435,7 @@ class CourseController extends Controller
         $div_right = "";
         $bar_percent = "";
 
-        $english1 = array("","Pre - A","A","B","B","D","E","F","G","H","I");
+        $english1 = array("","Pre - A","A","B","C","D","E","F","G","H","I");
         $english2 = array("","5","6","7","8");
 
         foreach ($levels as $key) {

@@ -309,6 +309,66 @@ class ReceiptController extends Controller
             ->with(['des_text' => $des_text]);
     }
 
+    public function print_day(Request $request)
+    {
+        //
+        $this->check_permission();
+        $validator =  Validator::make($request->all(), [
+            'pdsfield' => 'required|string',
+            'print_date' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            //return response()->json(['errors' => $validator->errors()->all()]);
+            return back()->with(['error' => 'Please input print day']);
+        }
+
+        //print_r($data);
+        //exit();
+
+        if ($type == "view") {
+            $viewr = "receipt.view";
+        } else if ($type == "print") {
+            $viewr = "receipt.print";
+        }
+
+        if ($data->package) {
+            $res = preg_replace("/[^0-9.]/", "", $data->package);
+        }
+
+        $price = (int)$res;
+        $price_val = number_format($price, 2);
+        $price_text = $this->baht_text($price);
+        $vat_price = ($price * 100) / 107;
+        $vat_total = $price - $vat_price;
+        $vat_price_val = number_format($vat_price, 2);
+        $vat_val = number_format($vat_total, 2);
+        //exit();
+
+        $file_att = '';
+        if ($data->file_att) {
+
+            $arrl = explode('https', $data->file_att);
+            for ($i = 1; $i <= count($arrl) - 1; $i++) {
+                $urla = "https".$arrl[$i];
+                $retu = $this->get_img_url($urla);
+                //if ($this->URL_exists($retu)) {
+                    $file_att.= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
+                //}
+            }
+        }
+
+
+        $des_text = nl2br($data->description);
+
+
+
+        return view($viewr)->with(['id' => $id])->with(['data' => $data])->with(['price_val' => $price_val])
+            ->with(['price_text' => $price_text])->with(['vat_price_val' => $vat_price_val])
+            ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att])
+            ->with(['des_text' => $des_text]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

@@ -21,6 +21,8 @@ class EmployeeController extends Controller
             if (Auth::user()->level !== 1) {
                 abort(403, 'Unauthorized action.');
             }
+        } else {
+            abort(403, 'Unauthorized action.');
         }
     }
 

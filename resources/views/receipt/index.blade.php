@@ -16,8 +16,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                                        <p>{{ $message }}</p>
-                                                    </div>-->
+                            <p>{{ $message }}</p>
+                             </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -27,8 +27,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                                        <p>{{ $message }}</p>
-                                                    </div>-->
+                            <p>{{ $message }}</p>
+                             </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -47,6 +47,25 @@
                     </div>
                 </div>
                 <div class="page-title-actions">
+                    <div class="d-inline-block dropdown">
+                        <div class="dropdown show">
+                            <button class="btn btn-shadow btn-secondary dropdown-toggle" href="#" role="button"
+                                id="dropdownMenuLink" data-toggle="dropdown" autoClose="true" aria-haspopup="true"
+                                aria-expanded="false">
+                                <span class="btn-icon-wrapper pr-2 opacity-7">
+                                    <i class="fa fa-print fa-w-20"></i>
+                                </span>
+                                Print ใบปะหน้า
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <li><a class="dropdown-item" href="#">ใบปะหน้ารายเดือน</a></li>
+                                <li><a class="dropdown-item" href="#" id="printr1">ใบปะหน้ารายวัน</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+
                     <div class="d-inline-block dropdown">
                         <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="ImportButton"><i
                                 class="fa fa-file-excel"></i> Import Excel
@@ -74,7 +93,7 @@
                                 <th>Submission Date</th>
                                 <th>Voucher Number</th>
                                 <th>Customer Code</th>
-                               
+
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Parent Name</th>
@@ -109,6 +128,70 @@
         </div>
         <br>
     </div>
+
+
+
+
+    <!-- PrintDay Modal -->
+    <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" id="PrintDayModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <form id="PrintDayForm" class="form" action="{{ route('receipts.print_day') }}" method="POST"
+                enctype="multipart/form-data">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Print ใบปะหน้ารายวัน</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
+
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="File">สนามสอบ:</label>
+                                <select class="form-control" id="PrintDaysField" name="pdsfield" required>
+                                    @foreach ($sfielda as $key => $value)
+                                        <option value="{{ $key }}"
+                                            {{ request()->get('sfield') == $key ? 'selected' : '' }}> {{ $value }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <input type="hidden" name="type" value
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="Submission Date">Print Date:</label>
+                                    <input type="text" class="AddDate form-control" name="print_date"
+                                        id="PrintDaySubmissiondate" value="">
+                                </div>
+                            </div>
+                        </div>
+                      
+
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="SubmitPrintDayForm">Print</button>
+                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Import Modal -->
     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" id="ImportModal">
@@ -129,7 +212,8 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
 
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true"></span>
@@ -139,9 +223,11 @@
                             <div class="form-group">
                                 <label for="File">สนามสอบ:</label>
                                 <select class="form-control" id="AddField" name="sfield" required>
-                                    @foreach ($sfielda as $key=>$value)
-                                    <option value="{{ $key }}"  {{ request()->get('sfield') == $key ? 'selected' : '' }}> {{ $value }} </option>
-                                @endforeach
+                                    @foreach ($sfielda as $key => $value)
+                                        <option value="{{ $key }}"
+                                            {{ request()->get('sfield') == $key ? 'selected' : '' }}> {{ $value }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -195,7 +281,7 @@
                                     <label for="Submission Date">Submission Date:</label>
                                     <input type="text" class="AddDate form-control" name="submission_date"
                                         id="AddSubmissiondate" value="">
-                                        <input type="hidden" name="Sfield" id="Sfield" value="{{ $sfield }}">
+                                    <input type="hidden" name="Sfield" id="Sfield" value="{{ $sfield }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -335,15 +421,15 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="ReceiptNumber">Voucher Number:</label>
-                                        <input type="text" class="form-control" name="receipt_number" id="receipt_number"
-                                             value="" readonly> 
+                                        <input type="text" class="form-control" name="receipt_number"
+                                            id="receipt_number" value="" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative  form-group">
                                         <label for="ReceiptCNumber">Customer Code:</label>
-                                        <input type="text" class="form-control" name="customer_code" id="customer_code"
-                                            value="" readonly>
+                                        <input type="text" class="form-control" name="customer_code"
+                                            id="customer_code" value="" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -435,15 +521,15 @@
                                     <textarea class="form-control" name="drescription" id="EditDes"></textarea>
                                 </div>
                             </div>
-                           
+
                             <div class="form-group">
                                 <label for="Name">Street Address:</label>
                                 <textarea class="form-control" name="address" id="EditAddress"></textarea>
                             </div>
                             <!--<div class="form-group">
-                                <label for="Name">Street Address 2:</label>
-                                <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                            </div>-->
+                                                                <label for="Name">Street Address 2:</label>
+                                                                <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                            </div>-->
 
                             <div class="form-group">
                                 <label for="File">File:</label>
@@ -466,6 +552,8 @@
 @section('script')
     <script>
         $(document).ready(function() {
+
+            $('.dropdown-toggle').dropdown();
 
             $(".AddDate").datepicker({
                 dateFormat: "yy-mm-dd"
@@ -570,6 +658,16 @@
 
 
 
+            $('.dropdown-menu li #printr1').on('click', function(e) {
+                //console.log("TEST");
+                e.preventDefault();
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+                $('.dropdown-toggle').dropdown('hide');
+                $('#PrintDayModal').modal('show');
+            });
 
             $(document).on('click', '#CreateButton', function(e) {
                 e.preventDefault();
@@ -578,6 +676,16 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
                 $('#CreateModal').modal('show');
+            });
+
+            $(document).on('click', '#SubmitPrintDayForm', function(e) {
+                e.preventDefault();
+                //$('#loder_bar').show();
+                $.blockUI({
+                    message: $("#loder_bar")
+                });
+                $("#PrintDayForm").submit();
+
             });
 
             $(document).on('click', '#SubmitImportForm', function(e) {
@@ -599,8 +707,6 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
                 $('#ImportModal').modal('show');
-
-
             });
 
             let id;
@@ -642,8 +748,6 @@
                 });
 
             })
-
-
 
 
             // Create product Ajax request.
