@@ -169,7 +169,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <input type="hidden" name="type" value
+                                <input type="hidden" name="type" value="view">
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
