@@ -39,6 +39,12 @@
 
         }
 
+        .tbr table tr.activedab td {
+            border-bottom: 1px solid rgb(7, 7, 7); 
+            border-top: 1px solid rgb(7, 7, 7);
+
+        }
+
         .tbr table td.activetop {
             border-top: 2px solid rgb(138, 175, 61);
         }

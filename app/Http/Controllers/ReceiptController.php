@@ -423,6 +423,56 @@ class ReceiptController extends Controller
             ->with(['fprint_number' =>  sprintf("%02d",$request->get('print_number'))]);
     }
 
+    public function print_month(Request $request)
+    {
+        $this->check_permission();
+        $validator =  Validator::make($request->all(), [
+            'pmsfield' => 'required|string',
+            'print_month' => 'required|string',
+            'Pmdescription' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            //return response()->json(['errors' => $validator->errors()->all()]);
+            return back()->with(['error' => 'Please input all field ']);
+        }
+
+        $type = $request->get('type');
+
+        if ($type == "view") {
+            $viewr = "receipt.print_month_view";
+        } else if ($type == "print") {
+            $viewr = "receipt.print_month_print";
+        }
+
+        $sfield = $request->get('pmsfield');
+
+        $a_month = explode("-", $request->get('print_month'));
+
+        $ymcode = (($a_month[0] - 2000) + 43) . $a_month[1];
+        $thai_year = $a_month[0] + 543;
+        $thai_month = self::thmonth[(int)$a_month[1]];
+
+        $receipts = Receipt::select(
+            "receipts.submission_date as receipt_submission_date",
+            "receipts.receipt_number as receipt_number",
+            "receipts.first_name as receipt_firstname",
+            "receipts.last_name as receipt_lastname",
+            "receipts.package as receipt_price",
+        )
+            //->join("students", "students.id", "=", "receipts.student_id")
+            //->join("subjects", "subjects.id", "=", "receipts.subject_id")
+            //->join("levels", "levels.id", "=", "receipts.level_id")
+            ->where([['receipts.sfield', $sfield], ['submission_date', 'LIKE', $request->get('print_month').'%' ]])
+            ->orderBy("receipts.receipt_number", "asc")
+            ->get()
+        ->toArray();
+        print_r($receipts);
+        exit();
+
+       
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
