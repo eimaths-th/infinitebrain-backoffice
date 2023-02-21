@@ -391,9 +391,15 @@ class ReceiptController extends Controller
             $total_price += $price;
         }
 
-        if (count($ret_receipt) < 19) {
+        if ($i < 19) {
+            $pagen = 19;
+        } elseif ($i > 19 and $i < 38) {
+            $pagen = 38;
+        }
+
+        if (count($ret_receipt) < $pagen) {
             $start = $i;
-            $em = 19 - count($ret_receipt) + $start;
+            $em = $pagen - count($ret_receipt) + $start;
             for ($x = $start; $x <= $em; $x++) {
                 $ret_receipt[$x]['receipt_submission_date'] = "";
                 $ret_receipt[$x]['receipt_number'] = "";
