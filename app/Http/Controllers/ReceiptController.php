@@ -14,8 +14,7 @@ use App\Imports\ReceiptImport;
 use App\Exports\UsersExport;
 use App\Models\Receipt_RunningNumber;
 use App\Models\Receipt_Customer_RunningNumber;
-use Illuminate\Support\Facades\DB;
-use mysqli;
+//use Illuminate\Support\Facades\DB;
 
 class ReceiptController extends Controller
 {
@@ -156,6 +155,8 @@ class ReceiptController extends Controller
             }
         } else {
             abort(403, 'Unauthorized action.');
+            //return Redirect("login")->withSuccess('Please Login');
+            //exit();
         }
     }
     /**
