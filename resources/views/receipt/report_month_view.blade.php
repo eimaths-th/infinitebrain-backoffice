@@ -177,7 +177,7 @@
                                 <select class="form-control" id="PrintMonthsField" name="pmsfields" required disabled>
                                     @foreach ($sfielda as $key => $value)
                                         <option value="{{ $key }}"
-                                            {{ request()->get('pmsfields') == $key ? 'selected' : '' }}> {{ $value }}
+                                            {{ request()->get('pmsfield') == $key ? 'selected' : '' }}> {{ $value }}
                                         </option>
                                     @endforeach
                                 </select>
