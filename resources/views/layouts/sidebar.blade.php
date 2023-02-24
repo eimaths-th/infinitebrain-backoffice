@@ -32,13 +32,13 @@
     <div class="scrollbar-sidebar">
         <div class="app-sidebar__inner">
             <ul class="vertical-nav-menu">
-                {{--<li class="app-sidebar__heading">Dashboards</li>
+                {{-- <li class="app-sidebar__heading">Dashboards</li>
                 <li>
                     <a href="{{ route('users') }}" class="mm-active">
                         <i class="metismenu-icon pe-7s-rocket"></i>
                         Dashboard
                     </a>
-                </li>--}}
+                </li> --}}
                 @if (Auth::user()->level == 1)
                     <li class="app-sidebar__heading">Admin</li>
                     <li>
@@ -69,7 +69,7 @@
                         </a>
 
                         <ul>
-                           {{-- @foreach ($data as $key)
+                            {{-- @foreach ($data as $key)
                                 <li>
                                     <a href="{{ route('levels', ['id' => $key->id]) }}">
                                         <i class="metismenu-icon"></i>
@@ -84,37 +84,37 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('levels' , ['id' => '2']) }}">
+                                <a href="{{ route('levels', ['id' => '2']) }}">
                                     <i class="metismenu-icon"></i>
                                     Play Math
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('levels' , ['id' => '3']) }}">
+                                <a href="{{ route('levels', ['id' => '3']) }}">
                                     <i class="metismenu-icon"></i>
                                     Private Math
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('levels' , ['id' => '4']) }}">
+                                <a href="{{ route('levels', ['id' => '4']) }}">
                                     <i class="metismenu-icon"></i>
                                     English A-I
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('levels' , ['id' => '5']) }}">
+                                <a href="{{ route('levels', ['id' => '5']) }}">
                                     <i class="metismenu-icon"></i>
                                     English 5-8
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('levels' , ['id' => '6']) }}">
+                                <a href="{{ route('levels', ['id' => '6']) }}">
                                     <i class="metismenu-icon"></i>
                                     English Spark
                                 </a>
                             </li>
                         </ul>
-                        
+
                     </li>
 
                     <li>
@@ -138,7 +138,7 @@
                                 </a>
                             </li>
                         </ul>
-                        
+
                     </li>
                 @endif
 
@@ -165,31 +165,83 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('receipts' , ['sfield' => '4']) }}">
+                                <a href="{{ route('receipts', ['sfield' => '4']) }}">
                                     <i class="metismenu-icon"></i>
                                     IMOCSEA
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('receipts' , ['sfield' => '5']) }}">
+                                <a href="{{ route('receipts', ['sfield' => '5']) }}">
                                     <i class="metismenu-icon"></i>
                                     INFINITE Spelling Bee
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('receipts' , ['sfield' => '6']) }}">
+                                <a href="{{ route('receipts', ['sfield' => '6']) }}">
                                     <i class="metismenu-icon"></i>
                                     GELOSEA
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('receipts' , ['sfield' => '7']) }}">
+                                <a href="{{ route('receipts', ['sfield' => '7']) }}">
                                     <i class="metismenu-icon"></i>
                                     LIMOC
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('receipts' , ['sfield' => '8']) }}">
+                                <a href="{{ route('receipts', ['sfield' => '8']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    STEM
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        @php 
+                        {{ 
+                            $ymonth =date("Y-m"); 
+                            $pmd = date("Y");
+                        }} 
+                        @endphp
+                        <a href="#">
+                            <i class="metismenu-icon pe-7s-graph2"></i>
+                            Receipt Report
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i> 
+                        </a>
+                        <ul>
+                            
+                            <li>
+                                <a href="{{ route('receipts.print_month', ['pmsfield' => '2','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร GMEC รอบแรก '. $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    GMEC
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts.print_month', ['pmsfield' => '4','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร IMOCSEA รอบแรก '. $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    IMOCSEA
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts.print_month', ['pmsfield' => '5','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร INFINITE Spelling Bee รอบแรก '. $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    INFINITE Spelling Bee
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts.print_month', ['pmsfield' => '6','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร GELOSEA รอบแรก '. $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    GELOSEA
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts.print_month', ['pmsfield' => '7','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร LIMOC รอบแรก '. $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    LIMOC
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts.print_month', ['pmsfield' => '8','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร STEM รอบแรก '. $pmd]) }}">
                                     <i class="metismenu-icon"></i>
                                     STEM
                                 </a>
@@ -199,7 +251,7 @@
                 @endif
 
 
-                
+
 
                 {{-- <li class="app-sidebar__heading">UI Components</li>
                 <li>

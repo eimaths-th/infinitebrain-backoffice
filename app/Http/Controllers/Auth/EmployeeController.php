@@ -61,6 +61,8 @@ class EmployeeController extends Controller
                         $ltext = "Admin";
                     } elseif ($level->level == 2) {
                         $ltext = "Teacher";
+                    } elseif ($level->level == 3) {
+                        $ltext = "Account";
                     } else {
                         $ltext = "Normal";
                     }

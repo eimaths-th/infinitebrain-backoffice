@@ -43,7 +43,10 @@ class CustomAuthController extends Controller
                     return redirect('/course');
                 } else if (Auth::user()->level == 3) {
                     //return redirect()->intended('receipts');
-                    return redirect('/receipts?sfield=2');
+                    //return redirect('/receipts?sfield=2');
+                    $this_month = date("Y-m");
+                    $this_year = date("Y");
+                    return redirect('/receipts/print_month?pmsfield=2&type=report_view&print_month='.$this_month.'&Pmdescription=ค่าสมัคร GMEC รอบแรก '. $this_year);
                 }
                 //->withSuccess('Signed in');
             }

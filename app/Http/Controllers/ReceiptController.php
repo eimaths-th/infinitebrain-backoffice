@@ -450,6 +450,8 @@ class ReceiptController extends Controller
             $viewr = "receipt.print_month_view";
         } else if ($type == "print") {
             $viewr = "receipt.print_month_print";
+        } else if ($type == "report_view") {
+            $viewr = "receipt.report_month_view";
         }
 
         $sfield = $request->get('pmsfield');
@@ -481,6 +483,8 @@ class ReceiptController extends Controller
         $total_price = 0;
         $lastdate = "";
         $lastprice = 0;
+        $chart_date = "";
+        $chart_date_price = "";
         foreach ($receipts as $result) {
 
             if ($result->receipt_submission_date !== $lastdate) {
@@ -500,10 +504,14 @@ class ReceiptController extends Controller
             $ret_receipt[$result->receipt_submission_date]['receipt_price'] = $price;
             $ret_receipt[$result->receipt_submission_date]['receipt_price_label'] = "บาท";
             $lastprice = $lastprice + $ret_receipt[$result->receipt_submission_date]['receipt_price'];
-
+            $ret_receipt[$result->receipt_submission_date]['last_price'] =  $lastprice;
             $ret_receipt[$result->receipt_submission_date]['total_price'] =  number_format($lastprice, 2);
 
             $lastdate = $ret_receipt[$result->receipt_submission_date]['receipt_submission_date'];
+
+
+
+
             $i++;
 
             $total_price += $price;
@@ -515,18 +523,31 @@ class ReceiptController extends Controller
             $pagen = 38;
         }
 
-        if (count($ret_receipt) < $pagen) {
-            $start = $i;
-            $em = $pagen - count($ret_receipt) + $start;
-            for ($x = $start; $x <= $em; $x++) {
-                $ret_receipt[$x]['receipt_submission_date'] = "";
-                $ret_receipt[$x]['receipt_numbers'] = "";
-                $ret_receipt[$x]['total_price'] = "";
-                $ret_receipt[$x]['receipt_firstname'] = "";
-                $ret_receipt[$x]['receipt_lastname'] = "";
-                $ret_receipt[$x]['receipt_price'] = "";
-                $ret_receipt[$x]['receipt_price_label'] = "";
-                $ret_receipt[$x]['description'] = "";
+        foreach ($ret_receipt as $receipt) {
+            $chart_date .= "'" . $receipt['receipt_submission_date'] . "',";
+            $chart_date_price .= $receipt['last_price'] . ",";
+        }
+
+        $chart_date = rtrim($chart_date, ',');;
+        $chart_date_price = rtrim($chart_date_price, ',');;
+
+
+
+        if ($type !== "report_view") {
+
+            if (count($ret_receipt) < $pagen) {
+                $start = $i;
+                $em = $pagen - count($ret_receipt) + $start;
+                for ($x = $start; $x <= $em; $x++) {
+                    $ret_receipt[$x]['receipt_submission_date'] = "";
+                    $ret_receipt[$x]['receipt_numbers'] = "";
+                    $ret_receipt[$x]['total_price'] = "";
+                    $ret_receipt[$x]['receipt_firstname'] = "";
+                    $ret_receipt[$x]['receipt_lastname'] = "";
+                    $ret_receipt[$x]['receipt_price'] = "";
+                    $ret_receipt[$x]['receipt_price_label'] = "";
+                    $ret_receipt[$x]['description'] = "";
+                }
             }
         }
 
@@ -537,6 +558,8 @@ class ReceiptController extends Controller
             ->with(['ymcode' =>  $ymcode])
             ->with(['thaiyear' =>  $thai_year])
             ->with(['thaimonth' =>  $thai_month])
+            ->with(['chart_date' =>  $chart_date])
+            ->with(['chart_date_price' => $chart_date_price])
             ->with(['data' => $ret_receipt])
             ->with(['pmsfield' => $request->get('pmsfield')])
             ->with(['pmdes' => $request->get('Pmdescription')])
