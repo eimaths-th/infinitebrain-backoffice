@@ -524,7 +524,8 @@ class ReceiptController extends Controller
         }
 
         foreach ($ret_receipt as $receipt) {
-            $chart_date .= "'" . $receipt['receipt_submission_date'] . "',";
+            $chartd = explode("-",$receipt['receipt_submission_date']);
+            $chart_date .= "'" . $chartd[1].'-'.$chartd[2] . "',";
             $chart_date_price .= $receipt['last_price'] . ",";
         }
 
