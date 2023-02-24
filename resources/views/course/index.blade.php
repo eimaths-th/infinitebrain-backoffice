@@ -188,7 +188,7 @@
                                 name="student" multiple="multiple">
                                 <!--<option value="" selected>Select Student</option>-->
                                 @foreach ($data2 as $key2)
-                                    <option value="{{ $key2->id }}"> {{ $key2->name }} {{ $key2->lastname }}
+                                    <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->name }} {{ $key2->lastname }}
                                     </option>
                                 @endforeach
 
