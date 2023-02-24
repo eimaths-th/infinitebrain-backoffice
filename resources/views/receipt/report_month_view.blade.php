@@ -174,15 +174,15 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="File">สนามสอบ:</label>
-                                <select class="form-control" id="PrintMonthsField" name="pmsfield" required>
+                                <select class="form-control" id="PrintMonthsField" name="pmsfields" required disabled>
                                     @foreach ($sfielda as $key => $value)
                                         <option value="{{ $key }}"
-                                            {{ request()->get('pmsfield') == $key ? 'selected' : '' }}> {{ $value }}
+                                            {{ request()->get('pmsfields') == $key ? 'selected' : '' }}> {{ $value }}
                                         </option>
                                     @endforeach
                                 </select>
                                 <input type="hidden" name="type" value="report_view">
-                                {{-- <input type="hidden" name="pmsfield" value="{{ request()->get('pmsfield') }}"> --}}
+                                <input type="hidden" name="pmsfield" value="{{ request()->get('pmsfield') }}">
                                 <input type="hidden" name="Pmdescription" value="ค่าสมัคร {{ $sfielda[request()->get('pmsfield')] }} รอบแรก  @php {{ echo date("Y"); }} @endphp">
                             </div>
                             <div class="form-group">
