@@ -30,7 +30,7 @@
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
                                             <p>{{ $message }}</p>
-                                             </div>-->
+                                             </div>--->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000

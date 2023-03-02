@@ -129,11 +129,11 @@
                         </tr>
                         @foreach ($data as $receipt)
                         <tr class="activeda" height="30">
-                            <td align="center" width="15%" class="actived"><b>{{ $receipt['receipt_submission_date'] }}</b></td>
-                            <td align="left" width="40%" class="actived">&nbsp; <b>{{ $receipt['description'] }}</b></td>
-                            <td align="center" width="15%" class="actived"><b>{{ $receipt['receipt_numbers'] }}</b></td>
-                            <td align="center" width="15%" class="actived"><b>{{ $receipt['total_price'] }}</b></td>
-                            <td align="center" width="15%" class="actived grey"><b>{{ $receipt['receipt_price_label'] }}</b></td>
+                            <td align="center" width="15%" class="actived"><b><font size="2">{{ $receipt['receipt_submission_date'] }}</font></b></td>
+                            <td align="left" width="40%" class="actived">&nbsp; <b><font size="2">{{ $receipt['description'] }}</font></b></td>
+                            <td align="center" width="15%" class="actived"><b><font size="2">{{ $receipt['receipt_numbers'] }}</font></b></td>
+                            <td align="center" width="15%" class="actived"><b><font size="2">{{ $receipt['total_price'] }}</font></b></td>
+                            <td align="center" width="15%" class="actived grey"><b><font size="2">{{ $receipt['receipt_price_label'] }}</font></b></td>
                         </tr>
                         @endforeach
                         <tr class="activebg" height="50">
