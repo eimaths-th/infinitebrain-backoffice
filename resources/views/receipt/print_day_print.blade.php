@@ -140,7 +140,7 @@
                             <td align="center" width="15%" class="activedr gray">หน่วย</td>
                         </tr>
                         @foreach ($data as $receipt)
-                            <tr class="activeda" height="20">
+                            <tr class="activeda" height="25">
                                 <td align="center" width="15%" class="actived">
                                     <b><font size="2">{{ $receipt['receipt_submission_date'] }}</font></b>
                                 </td>
