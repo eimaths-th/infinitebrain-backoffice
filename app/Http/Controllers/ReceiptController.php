@@ -395,7 +395,7 @@ class ReceiptController extends Controller
         if ($i < 19) {
             $pagen = 19;
         } elseif ($i > 19 and $i < 38) {
-            $pagen = 38;
+            $pagen = 19;
         }
 
         if (count($ret_receipt) < $pagen) {
