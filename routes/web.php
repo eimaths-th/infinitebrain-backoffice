@@ -8,6 +8,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\ReceiptController;
+use App\Http\Controllers\ReceiptFormController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,3 +104,6 @@ Route::post('/receipts/store', [ReceiptController::class, 'store'])->name('recei
 Route::post('/receipts/import', [ReceiptController::class, 'importExcel'])->name('receipts.import');
 Route::delete('/receipts/destroy/{id}', [ReceiptController::class, 'destroy'])->name('receipts.destroy');
 Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all'])->name('receipts.destroy_all');
+
+
+Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
