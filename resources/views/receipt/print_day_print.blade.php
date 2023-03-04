@@ -140,21 +140,21 @@
                             <td align="center" width="15%" class="activedr gray">หน่วย</td>
                         </tr>
                         @foreach ($data as $receipt)
-                            <tr class="activeda" height="22">
+                            <tr class="activeda" height="15">
                                 <td align="center" width="15%" class="actived">
-                                    <b><font size="2">{{ $receipt['receipt_submission_date'] }}</font></b>
+                                    <b><font size="x-small;">{{ $receipt['receipt_submission_date'] }}</font></b>
                                 </td>
                                 <td align="left" width="40%" class="actived">&nbsp;
-                                    <b><font size="2">{{ $receipt['receipt_firstname'] }} {{ $receipt['receipt_lastname'] }}</font></b>
+                                    <b><font size="x-small;">{{ $receipt['receipt_firstname'] }} {{ $receipt['receipt_lastname'] }}</font></b>
                                 </td>
                                 <td align="center" width="15%" class="actived">
-                                    <b><font size="2">{{ $receipt['receipt_number'] }}</font></b>
+                                    <b><font size="x-small;">{{ $receipt['receipt_number'] }}</font></b>
                                 </td>
                                 <td align="center" width="15%" class="actived">
-                                    <b><font size="2">{{ $receipt['receipt_price'] }}</font></b>
+                                    <b><font size="x-small;">{{ $receipt['receipt_price'] }}</font></b>
                                 </td>
                                 <td align="center" width="15%" class="activedr grey">
-                                    <b><font size="2">{{ $receipt['receipt_price_label'] }}</font></b>
+                                    <b><font size="x-small;">{{ $receipt['receipt_price_label'] }}</font></b>
                                 </td>
                             </tr>
                         @endforeach
