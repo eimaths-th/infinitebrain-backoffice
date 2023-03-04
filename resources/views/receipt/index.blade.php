@@ -183,7 +183,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="font">ขนาดตัวอักษร:</label>
-                                <select class="form-control" id="PrintDaysFont" name="pdfont" required>
+                                <select class="form-control" id="PrintDaysFont" name="fontsize" required>
                                     <option value="1" > เล็กมาก </option>
                                         <option value="2" selected> เล็ก </option>
                                         <option value="3" > ปานกลาง </option>
