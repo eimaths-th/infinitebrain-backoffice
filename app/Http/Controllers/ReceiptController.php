@@ -332,6 +332,7 @@ class ReceiptController extends Controller
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'pdsfield' => 'required|string',
+            'pdfont' => 'required|string',
             'print_date' => 'required|string',
             'print_number' => 'required|string',
         ]);
@@ -391,7 +392,7 @@ class ReceiptController extends Controller
             $i++;
             $total_price += $price;
         }
-        
+
         $pagen = 0;
         if ($i < 19) {
             $pagen = 19;
@@ -426,6 +427,7 @@ class ReceiptController extends Controller
             ->with(['data' => $ret_receipt])
             ->with(['pdsfield' => $request->get('pdsfield')])
             ->with(['print_date' => $request->get('print_date')])
+            ->with(['fontsize' => $request->get('pdfont')])
             ->with(['total_price' => number_format($total_price, 2)])
             ->with(['print_number' =>  $request->get('print_number')])
             ->with(['fprint_number' =>  sprintf("%02d", $request->get('print_number'))]);

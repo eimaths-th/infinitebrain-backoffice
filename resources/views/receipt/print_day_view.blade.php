@@ -160,17 +160,17 @@
                         </tr>
                         @foreach ($data as $receipt)
                         <tr class="activeda" height="30">
-                            <td align="center" width="15%" class="actived"><b>{{ $receipt['receipt_submission_date'] }}</b></td>
-                            <td align="left" width="40%" class="actived">&nbsp; <b>{{ $receipt['receipt_firstname'] }} {{ $receipt['receipt_lastname'] }}</b></td>
-                            <td align="center" width="15%" class="actived"><b>{{ $receipt['receipt_number'] }}</b></td>
-                            <td align="center" width="15%" class="actived"><b>{{ $receipt['receipt_price'] }}</b></td>
-                            <td align="center" width="15%" class="actived grey"><b>{{ $receipt['receipt_price_label'] }}</b></td>
+                            <td align="center" width="15%" class="actived"><font size="{{ $fontsize }}"><b>{{ $receipt['receipt_submission_date'] }}</b></font></td>
+                            <td align="left" width="40%" class="actived">&nbsp; <font size="{{ $fontsize }}"><b>{{ $receipt['receipt_firstname'] }} {{ $receipt['receipt_lastname'] }}</b></font></td>
+                            <td align="center" width="15%" class="actived"><font size="{{ $fontsize }}"><b>{{ $receipt['receipt_number'] }}</b></font></td>
+                            <td align="center" width="15%" class="actived"><font size="{{ $fontsize }}"><b>{{ $receipt['receipt_price'] }}</b></font></td>
+                            <td align="center" width="15%" class="actived grey"><font size="{{ $fontsize }}"><b>{{ $receipt['receipt_price_label'] }}</b></font></td>
                         </tr>
                         @endforeach
                         <tr class="activebg" height="50">
-                            <td align="center" colspan="3" width="15%" class="actived activebottomd grey"><font size="3"><b>รวมทั้งสิ้น</b></font></td>
-                            <td align="center" width="15%" class="actived activebottomd"><b>{{ $total_price }}</b></td>
-                            <td align="center" width="15%" class="actived activebottomd grey"><font size="3"><b>บาท</b></font></td>
+                            <td align="center" colspan="3" width="15%" class="actived activebottomd grey"><font size="{{ $fontsize }}"><b>รวมทั้งสิ้น</b></font></td>
+                            <td align="center" width="15%" class="actived activebottomd"><font size="{{ $fontsize }}"><b>{{ $total_price }}</b></font></td>
+                            <td align="center" width="15%" class="actived activebottomd grey"><font size="{{ $fontsize }}"><b>บาท</b></font></td>
                         </tr>
                     </table>
                     
@@ -204,7 +204,7 @@
 @section('script')
     <script>
         function export_report() {
-           url = '{{ route('receipts.print_day', ['type' => 'print', 'pdsfield' => $pdsfield, 'print_date' => $print_date, 'print_number' => $print_number]) }}';
+           url = '{{ route('receipts.print_day', ['type' => 'print', 'pdsfield' => $pdsfield, 'print_date' => $print_date, 'print_number' => $print_number, 'fontsize' => $fontsize]) }}';
            window.open(
                 url.replace(/&amp;/g, "&")
             );

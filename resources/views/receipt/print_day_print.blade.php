@@ -142,30 +142,30 @@
                         @foreach ($data as $receipt)
                             <tr class="activeda" height="15">
                                 <td align="center" width="15%" class="actived">
-                                    <b><font size="1">{{ $receipt['receipt_submission_date'] }}</font></b>
+                                    <b><font size="{{ $fontsize }}">{{ $receipt['receipt_submission_date'] }}</font></b>
                                 </td>
                                 <td align="left" width="40%" class="actived">&nbsp;
-                                    <b><font size="1">{{ $receipt['receipt_firstname'] }} {{ $receipt['receipt_lastname'] }}</font></b>
+                                    <b><font size="{{ $fontsize }}">{{ $receipt['receipt_firstname'] }} {{ $receipt['receipt_lastname'] }}</font></b>
                                 </td>
                                 <td align="center" width="15%" class="actived">
-                                    <b><font size="1">{{ $receipt['receipt_number'] }}</font></b>
+                                    <b><font size="{{ $fontsize }}">{{ $receipt['receipt_number'] }}</font></b>
                                 </td>
                                 <td align="center" width="15%" class="actived">
-                                    <b><font size="1">{{ $receipt['receipt_price'] }}</font></b>
+                                    <b><font size="{{ $fontsize }}">{{ $receipt['receipt_price'] }}</font></b>
                                 </td>
                                 <td align="center" width="15%" class="activedr grey">
-                                    <b><font size="1">{{ $receipt['receipt_price_label'] }}</font></b>
+                                    <b><font size="{{ $fontsize }}">{{ $receipt['receipt_price_label'] }}</font></b>
                                 </td>
                             </tr>
                         @endforeach
                         <tr class="activebg" height="25">
                             <td align="center" colspan="3" width="15%" class="actived activebottomd grey">
-                                <font size="3"><b>รวมทั้งสิ้น</b></font>
+                                <font size="{{ $fontsize }}"><b>รวมทั้งสิ้น</b></font>
                             </td>
-                            <td align="center" width="15%" class="actived activebottomd"><b>{{ $total_price }}</b>
+                            <td align="center" width="15%" class="actived activebottomd"><font size="{{ $fontsize }}"><b>{{ $total_price }}</b></font>
                             </td>
                             <td align="center" width="15%" class="activedr activebottomd grey">
-                                <font size="3"><b>บาท</b></font>
+                                <font size="{{ $fontsize }}"><b>บาท</b></font>
                             </td>
                         </tr>
                     </table>
