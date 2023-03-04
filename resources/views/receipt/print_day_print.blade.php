@@ -88,7 +88,7 @@
 
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-                <table align="center" width="85%" cellpadding="0" cellspacing="0">
+                <table align="center" width="90%" cellpadding="0" cellspacing="0">
                     <thead>
                         <tr>
                             <td width="15%" rowspan="4"><img src="{{ asset('images/infinite.jpg') }}"
@@ -109,7 +109,7 @@
 
 
                 <div class="tbr">
-                    <table align="center" width="85%" cellpadding="0" cellspacing="0">
+                    <table align="center" width="90%" cellpadding="0" cellspacing="0">
                         <tr class="active" height="30">
                             <td align="center" width="15%" class="active_left grey"></td>
                             <td align="center" width="40%">
@@ -127,7 +127,7 @@
 
                     </table>
 
-                    <table align="center" width="85%" cellpadding="0" cellspacing="0">
+                    <table align="center" width="90%" cellpadding="0" cellspacing="0">
                         <tr class=" activebg" height="30">
                             <td class="actived grey" align="center" width="15%">วัน / เดือน / ปี</td>
                             <td class="actived" align="center" width="40%">
@@ -175,7 +175,7 @@
 
                     <br><br><br>
 
-                    <table align="center" width="85%" cellpadding="0" cellspacing="0">
+                    <table align="center" width="90%" cellpadding="0" cellspacing="0">
                         <tr>
                             <td></td>
                             <td></td>
