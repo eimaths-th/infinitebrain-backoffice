@@ -391,7 +391,8 @@ class ReceiptController extends Controller
             $i++;
             $total_price += $price;
         }
-
+        
+        $pagen = 0;
         if ($i < 19) {
             $pagen = 19;
         } elseif ($i > 19 and $i < 38) {
@@ -516,7 +517,7 @@ class ReceiptController extends Controller
 
             $total_price += $price;
         }
-
+        $pagen = 0;
         if ($i < 19) {
             $pagen = 19;
         } elseif ($i > 19 and $i < 38) {
