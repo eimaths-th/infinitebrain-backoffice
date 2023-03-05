@@ -13,10 +13,10 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('form-9a5289b3.css') }}">
+
 
     <!-- Scripts -->
-    @vite([ 'resources/js/app.js'])
+    @vite(['resources/sass/form.scss', 'resources/js/app.js'])
 </head>
 
 <body>
