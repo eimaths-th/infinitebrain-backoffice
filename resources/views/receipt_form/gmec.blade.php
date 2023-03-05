@@ -1,5 +1,14 @@
 @extends('layouts.form')
 
+@section('style')
+<style>
+    body {
+        background-color: #112d53;
+    }
+</style>
+@endsection
+
+
 @section('content')
     <div align="center"><img src="{{ asset('images/BG_0.63c0ecacd51e91.88109489.jpg') }}" alt="..." height="300"></div>
 
