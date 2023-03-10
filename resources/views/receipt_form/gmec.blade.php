@@ -26,22 +26,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                background-size: 15px;
-                            }*/
+                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                            background-size: 15px;
+                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                        border-color: var(--color-invalid);
-                                                    }*/
+                                                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                    border-color: var(--color-invalid);
+                                                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                        display: block;
-                                                    }*/
+                                                                                    display: block;
+                                                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -167,6 +167,322 @@
             width: 150px;
             padding: 0.25em 0.5em 0.25em 1.625em;
         }
+
+        .form_none {
+            display: none;
+        }
+
+        .dropzone {
+            width: 100%;
+            height: 180px;
+            min-height: 0px !important;
+        }
+
+
+
+        .dropzonex,
+        .dropzonex * {
+            box-sizing: border-box;
+        }
+
+        .dropzonex {
+            min-height: 150px;
+            background: #e4efff;
+            padding: 20px 20px;
+            display: none;
+        }
+
+        .dropzonex.dz-clickable {
+            cursor: pointer;
+        }
+
+        .dropzonex.dz-clickable * {
+            cursor: default;
+        }
+
+        .dropzonex.dz-clickable .dz-message,
+        .dropzonex.dz-clickable .dz-message * {
+            cursor: pointer;
+        }
+
+        .dropzonex.dz-started .dz-message {
+            display: none;
+        }
+
+        .dropzonex.dz-drag-hover {
+            border-style: solid;
+        }
+
+        .dropzonex.dz-drag-hover .dz-message {
+            opacity: 0.5;
+        }
+
+        .dropzonex .dz-message {
+            text-align: center;
+            margin: 2em 0;
+        }
+
+        .dropzonex .dz-preview {
+            position: relative;
+            display: inline-block;
+            vertical-align: top;
+            margin: 16px;
+            min-height: 100px;
+        }
+
+        .dropzonex .dz-preview:hover {
+            z-index: 1000;
+        }
+
+        .dropzonex .dz-preview:hover .dz-details {
+            opacity: 1;
+        }
+
+        .dropzonex .dz-preview.dz-file-preview .dz-image {
+            border-radius: 20px;
+            background: #999;
+            background: linear-gradient(to bottom, #eee, #ddd);
+        }
+
+        .dropzonex .dz-preview.dz-file-preview .dz-details {
+            opacity: 1;
+        }
+
+        .dropzonex .dz-preview.dz-image-preview {
+            background: #e4efff;
+        }
+
+        .dropzonex .dz-preview.dz-image-preview .dz-details {
+            -webkit-transition: opacity 0.2s linear;
+            -moz-transition: opacity 0.2s linear;
+            -ms-transition: opacity 0.2s linear;
+            -o-transition: opacity 0.2s linear;
+            transition: opacity 0.2s linear;
+        }
+
+        .dropzonex .dz-preview .dz-remove {
+            font-size: 14px;
+            text-align: center;
+            display: block;
+            cursor: pointer;
+            border: none;
+        }
+
+        .dropzonex .dz-preview .dz-remove:hover {
+            text-decoration: underline;
+        }
+
+        .dropzonex .dz-preview:hover .dz-details {
+            opacity: 1;
+        }
+
+        .dropzonex .dz-preview .dz-details {
+            z-index: 20;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            font-size: 13px;
+            min-width: 100%;
+            max-width: 100%;
+            padding: 2em 1em;
+            text-align: center;
+            color: rgba(0, 0, 0, 0.9);
+            line-height: 150%;
+        }
+
+        .dropzonex .dz-preview .dz-details .dz-size {
+            margin-bottom: 1em;
+            font-size: 16px;
+        }
+
+        .dropzonex .dz-preview .dz-details .dz-filename {
+            white-space: nowrap;
+        }
+
+        .dropzonex .dz-preview .dz-details .dz-filename:hover span {
+            border: 1px solid rgba(200, 200, 200, 0.8);
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .dropzonex .dz-preview .dz-details .dz-filename:not(:hover) {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropzonex .dz-preview .dz-details .dz-filename:not(:hover) span {
+            border: 1px solid transparent;
+        }
+
+        .dropzonex .dz-preview .dz-details .dz-filename span,
+        .dropzonex .dz-preview .dz-details .dz-size span {
+            background-color: rgba(255, 255, 255, 0.4);
+            padding: 0 0.4em;
+            border-radius: 3px;
+        }
+
+        .dropzonex .dz-preview:hover .dz-image img {
+            -webkit-transform: scale(1.05, 1.05);
+            -moz-transform: scale(1.05, 1.05);
+            -ms-transform: scale(1.05, 1.05);
+            -o-transform: scale(1.05, 1.05);
+            transform: scale(1.05, 1.05);
+            -webkit-filter: blur(8px);
+            filter: blur(8px);
+        }
+
+        .dropzonex .dz-preview .dz-image {
+            border-radius: 20px;
+            overflow: hidden;
+            width: 120px;
+            height: 120px;
+            position: relative;
+            display: block;
+            z-index: 10;
+        }
+
+        .dropzonex .dz-preview .dz-image img {
+            display: block;
+        }
+
+        .dropzonex .dz-preview.dz-success .dz-success-mark {
+            -webkit-animation: passing-through 3s cubic-bezier(0.77, 0, 0.175, 1);
+            -moz-animation: passing-through 3s cubic-bezier(0.77, 0, 0.175, 1);
+            -ms-animation: passing-through 3s cubic-bezier(0.77, 0, 0.175, 1);
+            -o-animation: passing-through 3s cubic-bezier(0.77, 0, 0.175, 1);
+            animation: passing-through 3s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .dropzonex .dz-preview.dz-error .dz-error-mark {
+            opacity: 1;
+            -webkit-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+            -moz-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+            -ms-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+            -o-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+            animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .dropzonex .dz-preview .dz-success-mark,
+        .dropzonex .dz-preview .dz-error-mark {
+            pointer-events: none;
+            opacity: 0;
+            z-index: 500;
+            position: absolute;
+            display: block;
+            top: 50%;
+            left: 50%;
+            margin-left: -27px;
+            margin-top: -27px;
+        }
+
+        .dropzonex .dz-preview .dz-success-mark svg,
+        .dropzonex .dz-preview .dz-error-mark svg {
+            display: block;
+            width: 54px;
+            height: 54px;
+        }
+
+        .dropzonex .dz-preview.dz-processing .dz-progress {
+            opacity: 1;
+            -webkit-transition: all 0.2s linear;
+            -moz-transition: all 0.2s linear;
+            -ms-transition: all 0.2s linear;
+            -o-transition: all 0.2s linear;
+            transition: all 0.2s linear;
+        }
+
+        .dropzonex .dz-preview.dz-complete .dz-progress {
+            opacity: 0;
+            -webkit-transition: opacity 0.4s ease-in;
+            -moz-transition: opacity 0.4s ease-in;
+            -ms-transition: opacity 0.4s ease-in;
+            -o-transition: opacity 0.4s ease-in;
+            transition: opacity 0.4s ease-in;
+        }
+
+        .dropzonex .dz-preview:not(.dz-processing) .dz-progress {
+            -webkit-animation: pulse 6s ease infinite;
+            -moz-animation: pulse 6s ease infinite;
+            -ms-animation: pulse 6s ease infinite;
+            -o-animation: pulse 6s ease infinite;
+            animation: pulse 6s ease infinite;
+        }
+
+        .dropzonex .dz-preview .dz-progress {
+            opacity: 1;
+            z-index: 1000;
+            pointer-events: none;
+            position: absolute;
+            height: 16px;
+            left: 50%;
+            top: 50%;
+            margin-top: -8px;
+            width: 80px;
+            margin-left: -40px;
+            background: rgba(255, 255, 255, 0.9);
+            -webkit-transform: scale(1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .dropzonex .dz-preview .dz-progress .dz-upload {
+            background: #333;
+            background: linear-gradient(to bottom, #666, #444);
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            -webkit-transition: width 300ms ease-in-out;
+            -moz-transition: width 300ms ease-in-out;
+            -ms-transition: width 300ms ease-in-out;
+            -o-transition: width 300ms ease-in-out;
+            transition: width 300ms ease-in-out;
+        }
+
+        .dropzonex .dz-preview.dz-error .dz-error-message {
+            display: block;
+        }
+
+        .dropzonex .dz-preview.dz-error:hover .dz-error-message {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .dropzonex .dz-preview .dz-error-message {
+            pointer-events: none;
+            z-index: 1000;
+            position: absolute;
+            display: block;
+            display: none;
+            opacity: 0;
+            -webkit-transition: opacity 0.3s ease;
+            -moz-transition: opacity 0.3s ease;
+            -ms-transition: opacity 0.3s ease;
+            -o-transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease;
+            border-radius: 8px;
+            font-size: 13px;
+            top: 130px;
+            left: -10px;
+            width: 140px;
+            background: #be2626;
+            background: linear-gradient(to bottom, #be2626, #a92222);
+            padding: 0.5em 1.2em;
+            color: white;
+        }
+
+        .dropzonex .dz-preview .dz-error-message:after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 64px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid #be2626;
+        }
     </style>
 @endsection
 
@@ -179,43 +495,50 @@
                     {{-- <div class="card-header">{{ __('Login') }}</div> --}}
                     <div align="center"><img class="card-img" src="{{ asset('images/BG_0.63c0ecacd51e91.88109489.jpg') }}"
                             alt="..." height="360"></div>
-                    <div class="card-body">
-                        <br>
-                        <div class="text-center">
-                            <h2 class="card-title form_header">GMEC 2023 Registration Form</h2>
-                            <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
-                        </div>
-                        <br>
-                        <hr />
-
-                        <div style="padding-left: 50px" id="cid_48" class="form-input-wide" data-layout="full">
-                            <div id="text_48" class="form-html" data-component="text" tabindex="0">
-                                <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                style="text-decoration: underline;">GMEC 2023 Registration
-                                                Form</span></strong></span></p>
-                                <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                            Date:</strong> 15 January - 3 March 2023</span></p>
-                                <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;25 March&nbsp;2023</span>
-                                </p>
-                                <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April 2023</span>
-                                </p>
-                                <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span></p>
-                                <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
-                                <p><span style="color: #6351a2;"><strong>Test:</strong> 790 baht (1
-                                        category)</span><br><span style="color: #6351a2;">1290 baht (2 categories)</span>
-                                </p>
-                                <p><span style="color: #6351a2;"><strong>Test+tutoring course:</strong> </span><span
-                                        style="color: #6351a2;">1090 bath (1 class/ 1 category)</span><br><span
-                                        style="color: #6351a2;">1790 baht(2 classes/ 2 categories: 1 class for basic math
-                                        and 1 class for olympiad math)</span></p>
-                                <p>&nbsp;</p>
-                                <p><span style="color: #6351a2;">&nbsp;</span></p>
+                    <form id="infinite" method="POST" action="{{ route('login.custom') }}"
+                        onsubmit="return check_input();">
+                        @csrf
+                        <div class="card-body">
+                            <br>
+                            <div class="text-center">
+                                <h2 class="card-title form_header">GMEC 2023 Registration Form</h2>
+                                <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
-                        </div>
+                            <br>
+                            <hr />
 
-                        <div class="col-md-10 div_center">
-                            <form id="infinite" method="POST" action="{{ route('login.custom') }}">
-                                @csrf
+                            <div style="padding-left: 50px" id="cid_48" class="form-input-wide" data-layout="full">
+                                <div id="text_48" class="form-html" data-component="text" tabindex="0">
+                                    <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
+                                                    style="text-decoration: underline;">GMEC 2023 Registration
+                                                    Form</span></strong></span></p>
+                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
+                                                Date:</strong> 15 January - 3 March 2023</span></p>
+                                    <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;25
+                                            March&nbsp;2023</span>
+                                    </p>
+                                    <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
+                                            2023</span>
+                                    </p>
+                                    <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
+                                    </p>
+                                    <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
+                                    <p><span style="color: #6351a2;"><strong>Test:</strong> 790 baht (1
+                                            category)</span><br><span style="color: #6351a2;">1290 baht (2
+                                            categories)</span>
+                                    </p>
+                                    <p><span style="color: #6351a2;"><strong>Test+tutoring course:</strong> </span><span
+                                            style="color: #6351a2;">1090 bath (1 class/ 1 category)</span><br><span
+                                            style="color: #6351a2;">1790 baht(2 classes/ 2 categories: 1 class for basic
+                                            math
+                                            and 1 class for olympiad math)</span></p>
+                                    <p>&nbsp;</p>
+                                    <p><span style="color: #6351a2;">&nbsp;</span></p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-10 div_center">
+
 
                                 <div class="row mb-3 ">
                                     <label for="success" class="col-md-4 col-form-label text-md-end"></label>
@@ -408,25 +731,17 @@
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="Name">Address / ที่อยู่ภาษาไทยสำหรับจัดส่งของรางวัล <span
                                                     class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="address" id="AddAddress"
+                                            <input type="text" class="form-control" name="address" id="address"
                                                 required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Street Address</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10">
-                                                <span class="error-navigation-message">This field is required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="Name"></label>
-                                            <input type="text" class="form-control" name="address2" id="AddAddress2"
+                                            <input type="text" class="form-control" name="postcode" id="postcode"
                                                 required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Postal / Zip Code / รหัสไปรษณีย์</label>
@@ -441,6 +756,89 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="form-row form-focus">
+
+                                    <div class="col-md-6">
+
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="schoolname">Phone Number / เบอร์โทรศัพท์</label>
+                                            <input type="text" class="form-control" name="schoolname"
+                                                id="Addschoolname" value="" maxlength="50" required>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Phone Number</label>
+                                            <div class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10"> <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto" for="grade">E-mail
+                                                (กรุณาตรวจสอบที่อยู่อีเมลให้ถูกต้อง หากกรอกผิด
+                                                จะไม่สามารถส่งข้อมูลในการเข้าสอบได้)</label>
+                                            <input type="date" class="AddDate form-control" name="grade"
+                                                id="AddGrade" value="" maxlength="10" required>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">example@example.com</label>
+                                            <div class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10"> <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <label class="form-label form-label-top form-label-auto" for="grade">อัพโหลดรูปภาพผู้สมัคร</label>
+                                        <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
+                                            <div class="fallback">
+                                                <!--<input name="file" type="file" multiple class="form-control" accept="image/jpg" />-->
+                                            </div>
+                                        </div>
+                                        <div class="dropzonex dz-default dz-message" id="dropzone_preview"
+                                            style="font-size: 1.5em;">
+                                            <h3 class="dropzone-previews ui"></h3>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br>
+                                <div align="center"><img src="{{ asset('images/PayMent.63c0ecf0d798f5.64990304.png') }}"
+                                        alt="..." height="360"></div>
+                                <br>
+
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <label class="form-label form-label-top form-label-auto" for="grade">อัพโหลดหลักฐานการชำระเงิน</label>
+                                        <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
+                                            <div class="fallback">
+                                                <!--<input name="file" type="file" multiple class="form-control" accept="image/jpg" />-->
+                                            </div>
+                                        </div>
+                                        <div class="dropzonex dz-default dz-message" id="dropzone_preview2"
+                                            style="font-size: 1.5em;">
+                                            <h3 class="dropzone-previews ui"></h3>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
 
                                 <div class="form-row">
                                     <div class="col-md-6 form-focus">
@@ -614,11 +1012,19 @@
 
 
 
-                            </form>
-                        </div>
 
-                    </div>
+                            </div>
+
+                        </div>
+                        <div class="card-footer text-center">
+                            <br>
+                            <br>
+                            <button type="submit" class="btn btn-lg btn-primary">Submit Application</button>
+                            <button type="reset" class="btn btn-lg btn-primary">Clear Form</button><br><br><br>
+                        </div>
                 </div>
+
+                </form>
             </div>
         </div>
     </div>
@@ -686,14 +1092,64 @@
                         $(this).closest(inputxx).find('.form-error-message').css("display", "none");
                     }
 
+                } else if (nameinput == 'address') {
+                    if ($(this).val() == '' || $('#postcode').val() == '') {
+                        //alert();
+                        $(this).closest(inputxx).addClass('form-focus-error');
+                        $(this).closest(inputxx).find('.form-error-message').css("display", "block");
+                        if ($(this).val() == '') {
+                            $(this).css('border', 'solid 1px red');
+                        } else {
+                            $(this).css('border', 'solid 1px green');
+                        }
+
+                        if ($("#postcode").val() == '') {
+                            $("#postcode").css('border', 'solid 1px red');
+                        } else {
+                            $("#postcode").css('border', 'solid 1px green');
+                        }
+                        //$(this).parents().css( "background-color", "red" );
+                    } else {
+                        // If it is not blank.
+                        $(this).css('border', 'solid 1px green');
+                        $("#postcode").css('border', 'solid 1px green');
+                        $(this).closest(inputxx).removeClass('form-focus-error');
+                        $(this).closest(inputxx).find('.form-error-message').css("display", "none");
+                    }
+
+                } else if (nameinput == 'postcode') {
+                    if ($(this).val() == '' || $('#address').val() == '') {
+                        //alert();
+                        $(this).closest(inputxx).addClass('form-focus-error');
+                        $(this).closest(inputxx).find('.form-error-message').css("display", "block");
+                        if ($(this).val() == '') {
+                            $(this).css('border', 'solid 1px red');
+                        } else {
+                            $(this).css('border', 'solid 1px green');
+                        }
+
+                        if ($("#address").val() == '') {
+                            $("#address").css('border', 'solid 1px red');
+                        } else {
+                            $("#address").css('border', 'solid 1px green');
+                        }
+                        //$(this).parents().css( "background-color", "red" );
+                    } else {
+                        // If it is not blank.
+                        $(this).css('border', 'solid 1px green');
+                        $("#address").css('border', 'solid 1px green');
+                        $(this).closest(inputxx).removeClass('form-focus-error');
+                        $(this).closest(inputxx).find('.form-error-message').css("display", "none");
+                    }
+
                 } else {
                     if ($(this).val() == '') {
-                        $(this).closest(inputxx).addClass('form-focus-error'); $(this).closest(inputxx)
-                        .find('.form-error-message').css("display", "block");
+                        $(this).closest(inputxx).addClass('form-focus-error');
+                        $(this).closest(inputxx)
+                            .find('.form-error-message').css("display", "block");
                         $(this).css('border', 'solid 1px red');
                         //$(this).parents().css( "background-color", "red" );
-                    }
-                    else {
+                    } else {
                         // If it is not blank.
                         $(this).css('border', 'solid 1px green');
                         $(this).closest(inputxx).removeClass('form-focus-error');
@@ -711,5 +1167,207 @@
             });*/
 
         });
+    </script>
+    <script type="text/javascript">
+        var myDropzone = {};
+        Dropzone.options.myAwesomeDropzone = {
+            url: '{{ route('form.upload') }}',
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            paramName: "file", // ชื่อไฟล์ปลายทางเมื่อ upload แบบ mutiple จะเป็น array
+            autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
+            uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
+            parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
+            maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+            /*maxfilesexceeded: function(file) {
+            this.removeAllFiles();
+            this.addFile(file);
+            },*/
+            addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
+            maxFilesize: 2, // MB
+            previewsContainer: "#dropzone_preview", // ระบุ element เป้าหลาย
+            //previewTemplate: $('#template-preview').html(),
+            dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
+            dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
+            dictDefaultMessage: "<img height='50' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
+            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด		
+            acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
+            // The setting up of the dropzone
+            init: function() {
+                myDropzone = this;
+                this.on("addedfile", function(file) {
+                    //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.name + "'/>");
+                }).on("removedfile", function(file) {
+                    //alert(file.id);
+                    var name = file.name;
+
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        type: 'POST',
+                        url: '{{ route('form.delete') }}',
+                        data: {
+                            name: name,
+                        },
+                        success: function(data) {
+                            console.log('success: ' + data);
+                            var element = document.getElementById("infinite");
+                            var child = document.getElementById(name);
+                            element.removeChild(child);
+                        }
+                    });
+                    if (!document.getElementsByName('imgFiles[]').length) {
+                        $('#dropzone_preview').css("display", "none");
+                    }
+                    //var _ref;
+                    //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+
+                }).on("maxfilesexceeded", function(file) {
+                    alert('allow maximum 5 file');
+                    this.removeFile(file);
+                }).on('complete', function(file) {
+                    let val = file.accepted;
+                    if (file.accepted == true) {
+                        console.log(file.xhr.response);
+                        $('#infinite').append("<input type='text' id='" + file.name +
+                            "' class='form_none' name='imgFiles[]' value='" + file.name + "'/>");
+                    }
+                    let val1 = file.name;
+                    $('#dropzone_preview').css("display", "block");
+                }).on("success", function(file) {
+                    //var responseText = file.id // or however you would point to your assigned file ID here;
+                    //console.log(response); // console should show the ID you pointed to
+                    // do stuff with file.id ...
+                });
+                /*this.on("addedfile", function(file) {
+                	
+                }).on("removedfile", function(file) {
+                	
+                }).on("thumbnail", function(file) {
+                	
+                }).on("error", function(file) {
+                	
+                }).on("processing", function(file) {
+                	
+                }).on("uploadprogress", function(file) {
+                	
+                });*/
+
+            }
+        }
+
+        Dropzone.options.myAwesomeDropzone2 = {
+            url: '{{ route('form.upload') }}',
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            paramName: "file", // ชื่อไฟล์ปลายทางเมื่อ upload แบบ mutiple จะเป็น array
+            autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
+            uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
+            parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
+            maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+            /*maxfilesexceeded: function(file) {
+            this.removeAllFiles();
+            this.addFile(file);
+            },*/
+            addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
+            maxFilesize: 2, // MB
+            previewsContainer: "#dropzone_preview2", // ระบุ element เป้าหลาย
+            //previewTemplate: $('#template-preview').html(),
+            dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
+            dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
+            dictDefaultMessage: "<img height='50' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
+            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด		
+            acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
+            // The setting up of the dropzone
+            init: function() {
+                myDropzone = this;
+                this.on("addedfile", function(file) {
+                    //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.name + "'/>");
+                }).on("removedfile", function(file) {
+                    //alert(file.id);
+                    var name = file.name;
+
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        type: 'POST',
+                        url: '{{ route('form.delete') }}',
+                        data: {
+                            name: name,
+                        },
+                        success: function(data) {
+                            console.log('success: ' + data);
+                            var element = document.getElementById("infinite");
+                            var child = document.getElementById(name);
+                            element.removeChild(child);
+                        }
+                    });
+                    if (!document.getElementsByName('imgFiles2[]').length) {
+                        $('#dropzone_preview2').css("display", "none");
+                    }
+                    //var _ref;
+                    //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+
+                }).on("maxfilesexceeded", function(file) {
+                    alert('allow maximum 5 file');
+                    this.removeFile(file);
+                }).on('complete', function(file) {
+                    let val = file.accepted;
+                    if (file.accepted == true) {
+                        console.log(file.xhr.response);
+                        $('#infinite').append("<input type='text' id='" + file.name +
+                            "' class='form_none' name='imgFiles2[]' value='" + file.name + "'/>");
+                    }
+                    let val1 = file.name;
+                    $('#dropzone_preview2').css("display", "block");
+                }).on("success", function(file) {
+                    //var responseText = file.id // or however you would point to your assigned file ID here;
+                    //console.log(response); // console should show the ID you pointed to
+                    // do stuff with file.id ...
+                });
+                /*this.on("addedfile", function(file) {
+                	
+                }).on("removedfile", function(file) {
+                	
+                }).on("thumbnail", function(file) {
+                	
+                }).on("error", function(file) {
+                	
+                }).on("processing", function(file) {
+                	
+                }).on("uploadprogress", function(file) {
+                	
+                });*/
+
+            }
+        }
+
+        $(document).ready(function() {
+            $('#btnUpload').on('click', function() {
+                myDropzone.processQueue();
+            });
+        });
+
+        function check_input() {
+
+            if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]').length) {
+                return true;
+            } else {
+                if (!document.getElementsByName('imgFiles[]').length) {
+                    alert('1');
+                }
+                if (!document.getElementsByName('imgFiles2[]').length) {
+                    alert('2');
+                }
+
+
+                return false;
+            }
+
+        }
     </script>
 @endsection

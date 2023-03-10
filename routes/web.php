@@ -107,3 +107,5 @@ Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all']
 
 
 Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
+Route::post('/form/upload',[ReceiptFormController::class, 'fileStore'])->name('form.upload');
+Route::post('/form/upload/delete',[ReceiptFormController::class, 'fileDestroy'])->name('form.delete');
