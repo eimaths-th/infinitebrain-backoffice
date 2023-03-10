@@ -607,7 +607,7 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
-                                                (English)/ ชื่อเล่น (ภาษาอังกฤษ)</label>
+                                                (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="nickname" id="Addnickname"
                                                 value="" maxlength="50" required>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Nick
@@ -625,7 +625,7 @@
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="birthdate">Birth
-                                                Date / วันเกิด</label>
+                                                Date / วันเกิด <span class="form-required">*</span></label>
                                             <input type="date" class="AddDate form-control" name="birthdate"
                                                 id="AddBirthdate" value="" maxlength="10" required>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -648,7 +648,7 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="schoolname">School name (English) / ชื่อโรงเรียน (ภาษาอังกฤษ)</label>
+                                                for="schoolname">School name (English) / ชื่อโรงเรียน (ภาษาอังกฤษ) <span class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="schoolname"
                                                 id="Addschoolname" value="" maxlength="50" required>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -666,7 +666,7 @@
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="grade">Grade
-                                                / ระดับชั้น</label>
+                                                / ระดับชั้น <span class="form-required">*</span></label>
                                             <input type="date" class="AddDate form-control" name="grade"
                                                 id="AddGrade" value="" maxlength="10" required>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -690,7 +690,7 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="schoolname">แพคเกจในการสอบ / Packages</label>
+                                                for="schoolname">แพคเกจในการสอบ / Packages <span class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="schoolname"
                                                 id="Addschoolname" value="" maxlength="50" required>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -708,7 +708,7 @@
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="grade">Parent's name / ชื่อและนามสกุลผู้ปกครอง</label>
+                                                for="grade">Parent's name / ชื่อและนามสกุลผู้ปกครอง <span class="form-required">*</span></label>
                                             <input type="date" class="AddDate form-control" name="grade"
                                                 id="AddGrade" value="" maxlength="10" required>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -744,7 +744,7 @@
                                             <input type="text" class="form-control" name="postcode" id="postcode"
                                                 required>
                                             <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Postal / Zip Code / รหัสไปรษณีย์</label>
+                                                aria-hidden="false">Postal / Zip Code / รหัสไปรษณีย์ </label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
                                                     height="10">
@@ -763,7 +763,7 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="schoolname">Phone Number / เบอร์โทรศัพท์</label>
+                                                for="schoolname">Phone Number / เบอร์โทรศัพท์ <span class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="schoolname"
                                                 id="Addschoolname" value="" maxlength="50" required>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -782,7 +782,7 @@
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="grade">E-mail
                                                 (กรุณาตรวจสอบที่อยู่อีเมลให้ถูกต้อง หากกรอกผิด
-                                                จะไม่สามารถส่งข้อมูลในการเข้าสอบได้)</label>
+                                                จะไม่สามารถส่งข้อมูลในการเข้าสอบได้) <span class="form-required">*</span></label>
                                             <input type="date" class="AddDate form-control" name="grade"
                                                 id="AddGrade" value="" maxlength="10" required>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -801,7 +801,7 @@
 
                                 <div class="form-row">
                                     <div class="col-md-12">
-                                        <label class="form-label form-label-top form-label-auto" for="grade">อัพโหลดรูปภาพผู้สมัคร</label>
+                                        <label class="form-label form-label-top form-label-auto" for="grade">อัพโหลดรูปภาพผู้สมัคร <span class="form-required">*</span></label>
                                         <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
                                             <div class="fallback">
                                                 <!--<input name="file" type="file" multiple class="form-control" accept="image/jpg" />-->
@@ -823,7 +823,7 @@
 
                                 <div class="form-row">
                                     <div class="col-md-12">
-                                        <label class="form-label form-label-top form-label-auto" for="grade">อัพโหลดหลักฐานการชำระเงิน</label>
+                                        <label class="form-label form-label-top form-label-auto" for="grade">อัพโหลดหลักฐานการชำระเงิน <span class="form-required">*</span></label>
                                         <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
                                             <div class="fallback">
                                                 <!--<input name="file" type="file" multiple class="form-control" accept="image/jpg" />-->
@@ -844,7 +844,7 @@
                                     <div class="col-md-6 form-focus">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="Submission Date">Submission Date: <span
+                                                for="Submission Date">ท่านทราบข่าวสารการจัดสอบ GMEC จากช่องทางใด <span
                                                     class="form-required">*</span></label>
                                             <input type="date" class="AddDate form-control" name="submission_date"
                                                 id="AddSubmissiondate" value="" maxlength="10" required>
@@ -862,156 +862,10 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-md-6 form-focus">
-                                        <div class="position-relative  form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="Package">Package:
-                                                <span class="form-required">*</span></label>
-                                            <input type="email" class="form-control" name="package" id="AddPackage"
-                                                value="" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">First Name</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                   
                                 </div>
 
-                                <div class="form-row">
-                                    <div class="col-md-6 form-focus">
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="Grade">Grade:
-                                                <span class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="grade" id="AddGrade"
-                                                value="" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">First Name</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 form-focus">
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="Des">Description:</label>
-                                            <input type="text" class="form-control" name="description" id="AddDes"
-                                                value="" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">First Name</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="form-row">
-                                    <div class="col-md-6 form-focus">
-                                        <div class="form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="Parent">Name
-                                                Parent: <span class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="name_parent" id="AddParent"
-                                                value="" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">First Name</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 form-focus">
-                                        <div class="form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="Mobile">Mobile: <span class="form-required">*</span></label>
-                                            <input type="text" class="AddPhone form-control" name="mobile"
-                                                id="AddMobile" value="" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">First Name</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row form-focus">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="Postcode">Postcode:
-                                                <span class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="postcode" id="AddPostcode"
-                                                value="" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">First Name</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10">
-                                                <span class="error-navigation-message">This field is required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-                                <div class="form-row form-focus">
-
-                                </div>
-
-                                <div class="form-row form-focus">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="File">File:
-                                                <span class="form-required">*</span></label>
-                                            <input type="text" class="form-control" id="AddFile" name="file"
-                                                value="" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">First Name</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10">
-                                                <span class="error-navigation-message">This field is required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
+                        
 
                             </div>
 
