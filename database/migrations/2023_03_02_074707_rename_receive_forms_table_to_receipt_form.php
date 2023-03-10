@@ -16,7 +16,7 @@ return new class extends Migration
         //Schema::table('receipt_form', function (Blueprint $table) {
             //
         //});
-        Schema::rename('receive_forms', 'receipt_forms');
+        //Schema::rename('receive_forms', 'receipt_forms');
     }
 
     /**
