@@ -13,6 +13,31 @@
             /*text-align: center;*/
         }
 
+        .error_div {
+            background: rgb(240, 89, 83);
+            color: white;
+            height: 70px;
+            text-align: center;
+            margin: 0;
+            top: 50%;
+            width: 100%;
+            margin-top: 0;
+            margin-left: 0;
+            position: absolute;
+            z-index: 999999;
+            opacity: 0.89;
+            display: none;
+        }
+
+        .error-rounded-bg {
+            background-clip: padding-box;
+            border-radius: 20px;
+            background-color: #F0F0F0;
+            color: #000000;
+            padding: 5px 10px;
+            display: inline;
+        }
+
 
 
         .error-message {
@@ -28,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                    background-size: 15px;
-                                                }*/
+                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                    background-size: 15px;
+                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                    border-color: var(--color-invalid);
-                                                }*/
+                input:not(:focus):not(:placeholder-shown):invalid {
+                    border-color: var(--color-invalid);
+                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                    display: block;
-                                                }*/
+                    display: block;
+                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -490,6 +515,7 @@
 
 
 @section('content')
+    <div class="error_div" id="error_div"><br>There are errors in this page. Please correct them before moving on.</div>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-9">
@@ -497,7 +523,7 @@
                     {{-- <div class="card-header">{{ __('Login') }}</div> --}}
                     <div align="center"><img class="card-img" src="{{ asset('images/BG_0.63c0ecacd51e91.88109489.jpg') }}"
                             alt="..." height="360"></div>
-                    <form id="infinite" method="POST" action="{{ route('login.custom') }}"
+                    <form id="infinite" method="POST" action="{{ route('form.store') }}"
                         onsubmit="return check_input();">
                         @csrf
                         <div class="card-body">
@@ -571,7 +597,7 @@
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="firstname"></label>
                                             <input type="text" class="form-control" name="firstname" id="firstname"
-                                                value="" maxlength="50" minlength="5" required>
+                                                value="" maxlength="50" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">First
                                                 Name</label>
                                             <div class="form-error-message" role="alert"><img
@@ -588,7 +614,7 @@
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="lastname"></label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
-                                                value="" maxlength="50" minlength="5" required>
+                                                value="" maxlength="50" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
                                                 Name</label>
                                             {{-- <div class="form-error-message" role="alert"><img
@@ -613,7 +639,8 @@
                                                     class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="nickname" id="nickname"
                                                 value="" maxlength="50" minlength="1" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Nick
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Nick
                                                 Name</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -741,8 +768,8 @@
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="parent">Parent's name / ชื่อและนามสกุลผู้ปกครอง<span
                                                     class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="parent"
-                                                id="parent" value="" maxlength="100" required>
+                                            <input type="text" class="form-control" name="parent" id="parent"
+                                                value="" maxlength="100" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Parent's name</label>
                                             <div class="form-error-message" role="alert"><img
@@ -764,7 +791,7 @@
                                                 for="address">Address / ที่อยู่ภาษาไทยสำหรับจัดส่งของรางวัล <span
                                                     class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="address" id="address"
-                                                maxlength="150" minlength="5" required>
+                                                maxlength="150" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Street Address</label>
                                         </div>
@@ -774,7 +801,7 @@
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="postcode"></label>
                                             <input type="text" class="form-control" name="postcode" id="postcode"
-                                                maxlength="50" minlength="5" required>
+                                                maxlength="50" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Postal / Zip Code / รหัสไปรษณีย์ </label>
                                             <div class="form-error-message" role="alert"><img
@@ -796,8 +823,8 @@
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="phone">Phone
                                                 Number / เบอร์โทรศัพท์ <span class="form-required">*</span></label>
-                                            <input type="text" class="AddPhone form-control" name="phone" id="phone"
-                                                value="" maxlength="20" required>
+                                            <input type="text" class="AddPhone form-control" name="phone"
+                                                id="phone" value="" maxlength="20" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Phone Number</label>
                                             <div class="form-error-message" role="alert"><img
@@ -816,8 +843,8 @@
                                                 (กรุณาตรวจสอบที่อยู่อีเมลให้ถูกต้อง หากกรอกผิด
                                                 จะไม่สามารถส่งข้อมูลในการเข้าสอบได้) <span
                                                     class="form-required">*</span></label>
-                                            <input type="email" class="form-control" name="email"
-                                                id="email" value="" maxlength="70" required>
+                                            <input type="email" class="form-control" name="email" id="email"
+                                                value="" maxlength="70" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">example@example.com</label>
                                             <div class="form-error-message" role="alert"><img
@@ -839,6 +866,7 @@
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="photo">อัพโหลดรูปภาพผู้สมัคร <span
                                                     class="form-required">*</span></label>
+                                                    <input type="text" id="drop1" name="drop1" class="form-control form_none" value="" required>
                                             <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
                                                 <div class="fallback">
                                                     {{-- <input name="file" id="file" type="file" multiple
@@ -879,6 +907,7 @@
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="att">อัพโหลดหลักฐานการชำระเงิน <span
                                                     class="form-required">*</span></label>
+                                                    <input type="text" id="drop2" name="drop2" class="form-control form_none" value="" required>
                                             <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
                                                 <div class="fallback">
                                                     {{--  <input name="file2" id="file2" type="file" multiple
@@ -914,8 +943,8 @@
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="newsf">ท่านทราบข่าวสารการจัดสอบ GMEC จากช่องทางใด <span
                                                     class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="newsf"
-                                                id="newsf" value="" maxlength="50" required>
+                                            <input type="text" class="form-control" name="newsf" id="newsf"
+                                                value="" maxlength="50" required>
                                             <input type="hidden" name="Sfield" id="Sfield" value="2">
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false"></label>
@@ -954,6 +983,7 @@
         $(document).ready(function() {
             var inputlist = ["firstname", "lastname", "address", "postcode"];
             $(".form-control").focusout(function() {
+                //$(".form-control").focus();
                 let inputxx;
                 let nameinput = $(this).attr("name");
 
@@ -1066,7 +1096,8 @@
 
                 } else {
                     if ($(this).attr('type') == 'email') {
-                        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+                        var validRegex =
+                            /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
                         if ($(this).val() == '' || !$(this).val().match(validRegex)) {
                             $(this).closest(inputxx).addClass('form-focus-error');
                             $(this).closest(inputxx)
@@ -1129,10 +1160,15 @@
             previewsContainer: "#dropzone_preview", // ระบุ element เป้าหลาย
             //previewTemplate: $('#template-preview').html(),
             dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
+            renameFile: function (file) {
+                 let newName = new Date().getTime() + '_' + file.name;
+                 return newName;
+            },
             dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
             dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
             dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด		
             acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
+            
             // The setting up of the dropzone
             init: function() {
                 myDropzone = this;
@@ -1140,7 +1176,8 @@
                     //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.name + "'/>");
                 }).on("removedfile", function(file) {
                     //alert(file.id);
-                    var name = file.name;
+                    //var name = file.name;
+                    var name = file.previewElement.id;
 
                     $.ajax({
                         headers: {
@@ -1169,15 +1206,17 @@
                     //var _ref;
                     //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
 
-                }).on("maxfilesexceeded", function(file) {
+                }).on("maxfilesexceeded", function(file, response) {
                     alert('allow maximum 2 file');
                     this.removeFile(file);
                 }).on('complete', function(file) {
                     let val = file.accepted;
                     if (file.accepted == true) {
-                        console.log(file.xhr.response);
-                        $('#infinite').append("<input type='text' id='" + file.name +
-                            "' class='form_none' name='imgFiles[]' value='" + file.name + "'/>");
+                        obj = JSON.parse(file.xhr.response);
+                        file.previewElement.id = obj.success;
+                        console.log(obj.success);
+                        $('#infinite').append("<input type='text' id='" + obj.success +
+                            "' class='form_none' name='imgFiles[]' value='" + obj.success + "'/>");
                     }
                     let val1 = file.name;
                     $('#dropzone_preview').css("display", "block");
@@ -1185,6 +1224,9 @@
                     $('#dropzone-photo')
                         .find('.form-error-message').css("display", "none");
                     $('#dropzone-photo').css('border', 'solid 1px green');
+                    if (document.getElementsByName('imgFiles[]').length) {
+                        //$('#error_div').css('display', 'none');
+                    }
                 }).on("success", function(file) {
                     //var responseText = file.id // or however you would point to your assigned file ID here;
                     //console.log(response); // console should show the ID you pointed to
@@ -1223,6 +1265,10 @@
             },*/
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
             maxFilesize: 2, // MB
+            renameFile: function (file) {
+                 let newName = new Date().getTime() + '_' + file.name;
+                 return newName;
+            },
             previewsContainer: "#dropzone_preview2", // ระบุ element เป้าหลาย
             //previewTemplate: $('#template-preview').html(),
             dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
@@ -1237,7 +1283,8 @@
                     //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.name + "'/>");
                 }).on("removedfile", function(file) {
                     //alert(file.id);
-                    var name = file.name;
+                    //var name = file.name;
+                    var name = file.previewElement.id;
 
                     $.ajax({
                         headers: {
@@ -1273,9 +1320,11 @@
                 }).on('complete', function(file) {
                     let val = file.accepted;
                     if (file.accepted == true) {
-                        console.log(file.xhr.response);
-                        $('#infinite').append("<input type='text' id='" + file.name +
-                            "' class='form_none' name='imgFiles2[]' value='" + file.name + "'/>");
+                        obj = JSON.parse(file.xhr.response);
+                        file.previewElement.id = obj.success;
+                        console.log(obj.success);
+                        $('#infinite').append("<input type='text' id='" + obj.success +
+                            "' class='form_none' name='imgFiles2[]' value='" + obj.success + "'/>");
                     }
                     let val1 = file.name;
                     $('#dropzone_preview2').css("display", "block");
@@ -1283,6 +1332,9 @@
                     $('#dropzone-att')
                         .find('.form-error-message').css("display", "none");
                     $('#dropzone-att').css('border', 'solid 1px green');
+                    if (document.getElementsByName('imgFiles2[]').length) {
+                        //$('#error_div').css('display', 'none');
+                    }
                 }).on("success", function(file) {
                     //var responseText = file.id // or however you would point to your assigned file ID here;
                     //console.log(response); // console should show the ID you pointed to
@@ -1305,12 +1357,36 @@
             }
         }
 
+        const valid_option = {
+                onkeyup: false,
+                showErrors: function(errorMap, errorList) {
+                    var errors = this.numberOfInvalids();
+                    /* if (!document.getElementsByName('imgFiles[]').length) {
+                        errors = errors + 1;
+                    }
+                    if (!document.getElementsByName('imgFiles2[]').length) {
+                        errors = errors + 1;
+                    } */
+                    if (errors) {
+                        var message = errors == 1 ?
+                            '<br>You missed <span class="error-rounded-bg">1</span> field. It has been highlighted' :
+                            '<br>You have missed <span class="error-rounded-bg">' + errors +
+                            '</span> fields. Please fill before submitted.';
+                        $("#error_div").html(message);
+                        $(".error_div").show();
+                    } else {
+                        $(".error_div").hide();
+                    }
+                    this.defaultShowErrors();
+                }
+            }
+
         $(document).ready(function() {
 
             $(".AddDate").inputmask("99-99-9999");
             $(".AddPhone").inputmask("(999) 999-9999");
 
-            $("#infinite").validate();
+            $("#infinite").validate(valid_option);
 
             $('#btnUpload').on('click', function() {
                 myDropzone.processQueue();
@@ -1318,11 +1394,14 @@
         });
 
         function check_input() {
-
             $('.form-control').focus();
-            //$('select').focus();
+            //$('.form-control').focus({ preventScroll: false });
+            //$('input').focus();
+            //$('input').focus({ preventScroll: false });
+
             if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]')
                 .length) {
+                //$('#error_div').css('display', 'none');
                 return true;
             } else {
                 if (!document.getElementsByName('imgFiles[]').length) {
@@ -1340,7 +1419,7 @@
                     jumpTo('datt');
                 }
 
-
+                //$('#error_div').css('display', 'block');
                 return false;
             }
 
@@ -1352,5 +1431,21 @@
             var get = location.href;
             location.href = "#" + id;
         }
+
+        var fixmeTop = $('.error_div').offset().top;
+        $(window).scroll(function() {
+            var currentScroll = $(window).scrollTop();
+            if (currentScroll >= fixmeTop) {
+                $('.error_div').css({
+                    position: 'fixed',
+                    top: '0',
+                    left: '0'
+                });
+            } else {
+                $('.error_div').css({
+                    position: 'absolute'
+                });
+            }
+        });
     </script>
 @endsection
