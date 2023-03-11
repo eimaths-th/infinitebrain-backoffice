@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                            background-size: 15px;
-                        }*/
+                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                background-size: 15px;
+                            }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                        input:not(:focus):not(:placeholder-shown):invalid {
-                            border-color: var(--color-invalid);
-                        }*/
+                            input:not(:focus):not(:placeholder-shown):invalid {
+                                border-color: var(--color-invalid);
+                            }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                            display: block;
-                        }*/
+                                display: block;
+                            }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -516,11 +516,24 @@
         .form-control {
             width: 100%;
         }
+
+        #loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
+            z-index: 10000;
+        }
     </style>
 @endsection
 
 
 @section('content')
+    <div id="loader"></div>
     <div class="error_div" id="error_div"><br>There are errors in this page. Please correct them before moving on.</div>
     <div class="container">
         <div class="row justify-content-center">
@@ -599,8 +612,9 @@
                                     <div class="col-md-6">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="firstname"><div style="width: 270px"></div></label>
+                                            <label class="form-label form-label-top form-label-auto" for="firstname">
+                                                <div style="width: 270px"></div>
+                                            </label>
                                             <input type="text" class="form-control" name="firstname" id="firstname"
                                                 value="" maxlength="50" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">First
@@ -617,8 +631,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="lastname"><div style="width: 270px"></div></label>
+                                            <label class="form-label form-label-top form-label-auto" for="lastname">
+                                                <div style="width: 270px"></div>
+                                            </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
@@ -641,11 +656,13 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
-                                                (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span
-                                                    class="form-required">*</span><div style="width: 270px"></div></label>
+                                                (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
+                                                <div style="width: 270px"></div>
+                                            </label>
                                             <input type="text" class="form-control" name="nickname" id="nickname"
                                                 value="" maxlength="50" minlength="1" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Nick
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Nick
                                                 Name</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -660,7 +677,9 @@
                                     <div class="col-md-6 col-sm-12">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="birthdate">Birth
-                                                Date / วันเกิด <span class="form-required">*</span><div style="width: 270px"></div></label>
+                                                Date / วันเกิด <span class="form-required">*</span>
+                                                <div style="width: 270px"></div>
+                                            </label>
                                             <input type="date" class="AddDate form-control" name="birthdate"
                                                 id="birthdate" value="" required>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -702,7 +721,9 @@
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="grade">Grade
-                                                / ระดับชั้น <span class="form-required">*</span><div style="width: 270px"></div></label>
+                                                / ระดับชั้น <span class="form-required">*</span>
+                                                <div style="width: 270px"></div>
+                                            </label>
                                             <select style="width: 100%" class="form-control" id="grade"
                                                 name="grade" data-component="dropdown" aria-label="Grade / ระดับชั้น"
                                                 required>
@@ -804,8 +825,9 @@
                                     </div>
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="postcode"><div style="width: 270px"></div></label>
+                                            <label class="form-label form-label-top form-label-auto" for="postcode">
+                                                <div style="width: 270px"></div>
+                                            </label>
                                             <input type="text" class="form-control" name="postcode" id="postcode"
                                                 maxlength="50" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -828,7 +850,9 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="phone">Phone
-                                                Number / เบอร์โทรศัพท์ <span class="form-required">*</span><div style="width: 270px"></div></label>
+                                                Number / เบอร์โทรศัพท์ <span class="form-required">*</span>
+                                                <div style="width: 270px"></div>
+                                            </label>
                                             <input type="text" class="AddPhone form-control" name="phone"
                                                 id="phone" value="" maxlength="20" required>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -871,7 +895,8 @@
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="photo">อัพโหลดรูปภาพผู้สมัคร <span class="form-required">*</span>
-                                                <div style="width: 280px"></div></label>
+                                                <div style="width: 280px"></div>
+                                            </label>
                                             <input type="text" id="drop1" name="drop1"
                                                 class="form-control form_none" value="" required>
                                             <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
@@ -913,7 +938,9 @@
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="att">อัพโหลดหลักฐานการชำระเงิน<span
-                                                    class="form-required">*</span><div style="width: 280px"></div></label>
+                                                    class="form-required">*</span>
+                                                <div style="width: 280px"></div>
+                                            </label>
                                             <input type="text" id="drop2" name="drop2"
                                                 class="form-control form_none" value="" required>
                                             <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
@@ -1384,9 +1411,15 @@
                     $(".error_div").show();
                 } else {
                     $(".error_div").hide();
+                   
                 }
                 this.defaultShowErrors();
             }
+            /*  submitHandler: function() { 
+                var spinner = $('#loader');
+                spinner.show();
+                return true;
+             }  */
         }
 
         $(document).ready(function() {
@@ -1410,6 +1443,8 @@
             if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]')
                 .length) {
                 //$('#error_div').css('display', 'none');
+                
+                
                 return true;
             } else {
                 if (!document.getElementsByName('imgFiles[]').length) {
