@@ -941,7 +941,7 @@
                         <div class="card-footer text-center">
                             <br>
                             <br>
-                            <button type="submit" class="btn btn-lg btn-primary">Submit Application</button>
+                            <input type="submit" class="btn btn-lg btn-primary" value="Submit Application">
                             <button type="reset" class="btn btn-lg btn-primary">Clear Form</button><br><br><br>
                         </div>
                 </div>
