@@ -13,6 +13,8 @@
             /*text-align: center;*/
         }
 
+
+
         .error-message {
             display: none;
             font-weight: bold;
@@ -26,22 +28,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                            background-size: 15px;
-                                                        }*/
+                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                            background-size: 15px;
+                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                    border-color: var(--color-invalid);
-                                                                                }*/
+                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                            border-color: var(--color-invalid);
+                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                    display: block;
-                                                                                }*/
+                                            display: block;
+                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -164,7 +166,7 @@
             background-position: 0.375em;
             background-repeat: no-repeat;
             display: none;
-            width: 150px;
+            width: 200px;
             padding: 0.25em 0.5em 0.25em 1.625em;
         }
 
@@ -607,8 +609,9 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
-                                                (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="nickname" id="Addnickname"
+                                                (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span
+                                                    class="form-required">*</span></label>
+                                            <input type="text" class="form-control" name="nickname" id="nickname"
                                                 value="" maxlength="50" required>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Nick
                                                 Name</label>
@@ -627,7 +630,7 @@
                                             <label class="form-label form-label-top form-label-auto" for="birthdate">Birth
                                                 Date / วันเกิด <span class="form-required">*</span></label>
                                             <input type="date" class="AddDate form-control" name="birthdate"
-                                                id="AddBirthdate" value="" maxlength="10" required>
+                                                id="birthdate" value="" maxlength="10" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Date</label>
                                             <div class="form-error-message" role="alert"><img
@@ -648,9 +651,10 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="schoolname">School name (English) / ชื่อโรงเรียน (ภาษาอังกฤษ) <span class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="schoolname"
-                                                id="Addschoolname" value="" maxlength="50" required>
+                                                for="schoolname">School name (English) / ชื่อโรงเรียน (ภาษาอังกฤษ) <span
+                                                    class="form-required">*</span></label>
+                                            <input type="text" class="form-control" name="schoolname" id="schoolname"
+                                                value="" maxlength="50" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">School Name</label>
                                             <div class="form-error-message" role="alert"><img
@@ -668,7 +672,7 @@
                                             <label class="form-label form-label-top form-label-auto" for="grade">Grade
                                                 / ระดับชั้น <span class="form-required">*</span></label>
                                             <input type="date" class="AddDate form-control" name="grade"
-                                                id="AddGrade" value="" maxlength="10" required>
+                                                id="grade" value="" maxlength="10" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Grade</label>
                                             <div class="form-error-message" role="alert"><img
@@ -690,9 +694,10 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="schoolname">แพคเกจในการสอบ / Packages <span class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="schoolname"
-                                                id="Addschoolname" value="" maxlength="50" required>
+                                                for="schoolname">แพคเกจในการสอบ / Packages <span
+                                                    class="form-required">*</span></label>
+                                            <input type="text" class="form-control" name="package" id="package"
+                                                value="" maxlength="50" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Packages</label>
                                             <div class="form-error-message" role="alert"><img
@@ -708,9 +713,10 @@
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="grade">Parent's name / ชื่อและนามสกุลผู้ปกครอง <span class="form-required">*</span></label>
-                                            <input type="date" class="AddDate form-control" name="grade"
-                                                id="AddGrade" value="" maxlength="10" required>
+                                                for="grade">Parent's name / ชื่อและนามสกุลผู้ปกครอง <span
+                                                    class="form-required">*</span></label>
+                                            <input type="date" class="AddDate form-control" name="parent"
+                                                id="parent" value="" maxlength="10" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Parent's name</label>
                                             <div class="form-error-message" role="alert"><img
@@ -763,9 +769,10 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="schoolname">Phone Number / เบอร์โทรศัพท์ <span class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="schoolname"
-                                                id="Addschoolname" value="" maxlength="50" required>
+                                                for="schoolname">Phone Number / เบอร์โทรศัพท์ <span
+                                                    class="form-required">*</span></label>
+                                            <input type="text" class="form-control" name="phone" id="phone"
+                                                value="" maxlength="50" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Phone Number</label>
                                             <div class="form-error-message" role="alert"><img
@@ -782,14 +789,43 @@
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="grade">E-mail
                                                 (กรุณาตรวจสอบที่อยู่อีเมลให้ถูกต้อง หากกรอกผิด
-                                                จะไม่สามารถส่งข้อมูลในการเข้าสอบได้) <span class="form-required">*</span></label>
-                                            <input type="date" class="AddDate form-control" name="grade"
-                                                id="AddGrade" value="" maxlength="10" required>
+                                                จะไม่สามารถส่งข้อมูลในการเข้าสอบได้) <span
+                                                    class="form-required">*</span></label>
+                                            <input type="date" class="AddDate form-control" name="email"
+                                                id="email" value="" maxlength="10" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">example@example.com</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
+                                                    height="10"> <span class="error-navigation-message">Please input
+                                                    correct email.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row form-focus" id="dropzone-photo">
+                                    <div class="col-md-12">
+                                        <a id="dphoto"></a>
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="grade">อัพโหลดรูปภาพผู้สมัคร <span
+                                                    class="form-required">*</span></label>
+                                            <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
+                                                <div class="fallback">
+                                                    {{-- <input name="file" id="file" type="file" multiple
+                                                        class="form-control" /> --}}
+                                                </div>
+                                            </div>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Date</label>
+                                            <div id="dropzone-photo-error" class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10">
+                                                <span class="error-navigation-message">This field is
                                                     required.</span>
                                                 <div class="form-error-arrow">
                                                     <div class="form-error-arrow-inner"></div>
@@ -799,21 +835,11 @@
                                     </div>
                                 </div>
 
-                                <div class="form-row">
-                                    <div class="col-md-12">
-                                        <label class="form-label form-label-top form-label-auto" for="grade">อัพโหลดรูปภาพผู้สมัคร <span class="form-required">*</span></label>
-                                        <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
-                                            <div class="fallback">
-                                                <!--<input name="file" type="file" multiple class="form-control" accept="image/jpg" />-->
-                                            </div>
-                                        </div>
-                                        <div class="dropzonex dz-default dz-message" id="dropzone_preview"
-                                            style="font-size: 1.5em;">
-                                            <h3 class="dropzone-previews ui"></h3>
+                                <div class="dropzonex dz-default dz-message" id="dropzone_preview"
+                                    style="font-size: 1.5em;">
+                                    <h3 class="dropzone-previews ui"></h3>
 
 
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <br>
@@ -821,21 +847,38 @@
                                         alt="..." height="360"></div>
                                 <br>
 
-                                <div class="form-row">
+                                <div class="form-row form-focus" id="dropzone-att">
                                     <div class="col-md-12">
-                                        <label class="form-label form-label-top form-label-auto" for="grade">อัพโหลดหลักฐานการชำระเงิน <span class="form-required">*</span></label>
-                                        <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
-                                            <div class="fallback">
-                                                <!--<input name="file" type="file" multiple class="form-control" accept="image/jpg" />-->
+                                        <a id="datt"></a>
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="grade">อัพโหลดหลักฐานการชำระเงิน <span
+                                                    class="form-required">*</span></label>
+                                            <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
+                                                <div class="fallback">
+                                                    {{--  <input name="file2" id="file2" type="file" multiple
+                                                        class="form-control" /> --}}
+                                                </div>
+                                            </div>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Date</label>
+                                            <div id="dropzone-att-error" class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10">
+                                                <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="dropzonex dz-default dz-message" id="dropzone_preview2"
-                                            style="font-size: 1.5em;">
-                                            <h3 class="dropzone-previews ui"></h3>
-
-
-                                        </div>
                                     </div>
+                                </div>
+                                <div class="dropzonex dz-default dz-message" id="dropzone_preview2"
+                                    style="font-size: 1.5em;">
+                                    <h3 class="dropzone-previews ui"></h3>
+
+
                                 </div>
 
 
@@ -846,8 +889,8 @@
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="Submission Date">ท่านทราบข่าวสารการจัดสอบ GMEC จากช่องทางใด <span
                                                     class="form-required">*</span></label>
-                                            <input type="date" class="AddDate form-control" name="submission_date"
-                                                id="AddSubmissiondate" value="" maxlength="10" required>
+                                            <input type="date" class="AddDate form-control" name="newsf"
+                                                id="newsf" value="" maxlength="10" required>
                                             <input type="hidden" name="Sfield" id="Sfield" value="2">
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">First Name</label>
@@ -862,10 +905,10 @@
 
                                         </div>
                                     </div>
-                                   
+
                                 </div>
 
-                        
+
 
                             </div>
 
@@ -1044,7 +1087,7 @@
             //previewTemplate: $('#template-preview').html(),
             dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
             dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
-            dictDefaultMessage: "<img height='50' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
+            dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
             dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด		
             acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
             // The setting up of the dropzone
@@ -1070,11 +1113,16 @@
                             var element = document.getElementById("infinite");
                             var child = document.getElementById(name);
                             element.removeChild(child);
+                            if (!document.getElementsByName('imgFiles[]').length) {
+                                $('#dropzone_preview').css("display", "none");
+                                $('#dropzone-photo').addClass('form-focus-error');
+                                $('#dropzone-photo')
+                                    .find('.form-error-message').css("display", "block");
+                                $('#dropzone-photo').css('border', 'solid 1px red');
+                            }
                         }
                     });
-                    if (!document.getElementsByName('imgFiles[]').length) {
-                        $('#dropzone_preview').css("display", "none");
-                    }
+
                     //var _ref;
                     //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
 
@@ -1090,6 +1138,10 @@
                     }
                     let val1 = file.name;
                     $('#dropzone_preview').css("display", "block");
+                    $('#dropzone-photo').removeClass('form-focus-error');
+                    $('#dropzone-photo')
+                        .find('.form-error-message').css("display", "none");
+                    $('#dropzone-photo').css('border', 'solid 1px green');
                 }).on("success", function(file) {
                     //var responseText = file.id // or however you would point to your assigned file ID here;
                     //console.log(response); // console should show the ID you pointed to
@@ -1132,7 +1184,7 @@
             //previewTemplate: $('#template-preview').html(),
             dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
             dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
-            dictDefaultMessage: "<img height='50' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
+            dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
             dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด		
             acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
             // The setting up of the dropzone
@@ -1158,11 +1210,17 @@
                             var element = document.getElementById("infinite");
                             var child = document.getElementById(name);
                             element.removeChild(child);
+                            if (!document.getElementsByName('imgFiles2[]').length) {
+                                //alert();
+                                $('#dropzone_preview2').css("display", "none");
+                                $('#dropzone-att').addClass('form-focus-error');
+                                $('#dropzone-att')
+                                    .find('.form-error-message').css("display", "block");
+                                $('#dropzone-att').css('border', 'solid 1px red');
+                            }
                         }
                     });
-                    if (!document.getElementsByName('imgFiles2[]').length) {
-                        $('#dropzone_preview2').css("display", "none");
-                    }
+
                     //var _ref;
                     //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
 
@@ -1178,6 +1236,10 @@
                     }
                     let val1 = file.name;
                     $('#dropzone_preview2').css("display", "block");
+                    $('#dropzone-att').removeClass('form-focus-error');
+                    $('#dropzone-att')
+                        .find('.form-error-message').css("display", "none");
+                    $('#dropzone-att').css('border', 'solid 1px green');
                 }).on("success", function(file) {
                     //var responseText = file.id // or however you would point to your assigned file ID here;
                     //console.log(response); // console should show the ID you pointed to
@@ -1201,6 +1263,8 @@
         }
 
         $(document).ready(function() {
+            $("#infinite").validate();
+
             $('#btnUpload').on('click', function() {
                 myDropzone.processQueue();
             });
@@ -1208,20 +1272,37 @@
 
         function check_input() {
 
-            if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]').length) {
+            $('input').focus();
+            if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]')
+                .length) {
                 return true;
             } else {
                 if (!document.getElementsByName('imgFiles[]').length) {
-                    alert('1');
+                    $('#dropzone-photo').addClass('form-focus-error');
+                    $('#dropzone-photo')
+                        .find('.form-error-message').css("display", "block");
+                    $('#dropzone-photo').css('border', 'solid 1px red');
+                    jumpTo('dphoto');
                 }
                 if (!document.getElementsByName('imgFiles2[]').length) {
-                    alert('2');
+                    $('#dropzone-att').addClass('form-focus-error');
+                    $('#dropzone-att')
+                        .find('.form-error-message').css("display", "block");
+                    $('#dropzone-att').css('border', 'solid 1px red');
+                    jumpTo('datt');
                 }
 
 
                 return false;
             }
 
+        }
+
+
+
+        function jumpTo(id) {
+            var get = location.href;
+            location.href = "#" + id;
         }
     </script>
 @endsection
