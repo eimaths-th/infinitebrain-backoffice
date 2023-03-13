@@ -147,6 +147,58 @@
                     <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-note2"></i>
+                            Online Form
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
+
+                        <ul>
+                            <!--<li>
+                                <a href="{{ route('receipts') }}">
+                                    <i class="metismenu-icon"></i>
+                                    Tax invoice / Receipt
+                                </a>
+                            </li>-->
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '2']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    GMEC
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '4']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    IMOCSEA
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '5']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    INFINITE Spelling Bee
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '6']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    GELOSEA
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '7']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    LIMOC
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '8']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    STEM
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="metismenu-icon pe-7s-note2"></i>
                             Receipt
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>

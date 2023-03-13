@@ -980,7 +980,7 @@
                                                     class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="newsf" id="newsf"
                                                 value="" maxlength="50" required>
-                                            <input type="hidden" name="Sfield" id="Sfield" value="2">
+                                            <input type="hidden" name="sfield" id="sfield" value="2">
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false"></label>
                                             <div class="form-error-message" role="alert"><img

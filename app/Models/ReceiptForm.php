@@ -12,6 +12,7 @@ class ReceiptForm extends Model
     protected $table="receipt_forms";
 
     protected $fillable = [
+        'sfield',
         'submission_date',
         'first_name',
         'last_name',
@@ -30,7 +31,7 @@ class ReceiptForm extends Model
         'photo_att',
         'file_att',
         'news_form',
-        'sfield',
+        'generate',
         'receipt_number',
         'receipt_customer_number',
         'grade',
