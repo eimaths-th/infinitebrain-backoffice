@@ -116,4 +116,4 @@ Route::get('/receipts_form', [ReceiptFormController::class, 'index'])->name('rec
 Route::get('/receipts_form/edit/{id}', [ReceiptFormController::class, 'edit'])->name('receipts_form.edit');
 Route::delete('/receipts_form/destroy/{id}', [ReceiptFormController::class, 'destroy'])->name('receipts_form.destroy');
 Route::delete('/receipts_form/destroy_all', [ReceiptFormController::class, 'destroy_all'])->name('receipts_form.destroy_all');
-Route::post('/receipts_form/store', [ReceiptFormController::class, 'store'])->name('receipts_form.store');
+Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->name('receipts_form.store');

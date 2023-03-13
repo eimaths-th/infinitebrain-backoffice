@@ -12,6 +12,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use File;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Receipt_RunningNumber;
+use App\Models\Receipt_Customer_RunningNumber;
 
 class ReceiptFormController extends Controller
 {
@@ -147,12 +149,41 @@ class ReceiptFormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, $id)
     {
         //
-        $receipt = new Receipt();
-        $receipt->store($request);
-        ReceiptForm::find($request->get('id'))->update($request->all());
+        $this->check_permission();
+        $validator =  Validator::make($request->all(), [
+            'submission_date' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'street_address' => 'required|string',
+            //'city' => 'required|string',
+            //'province' => 'required|string',
+            'postcode' => 'required|string',
+            'name_parent' => 'required|string',
+            'mobile' => 'required|string',
+            'package' => 'required|string',
+            'file_att' => 'required|string',
+            'description' => 'required|string',
+            'grade' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        $rnumber = Receipt_RunningNumber::generate($request->get('sfield'));
+        $rcnumber = Receipt_Customer_RunningNumber::generate($request->get('sfield'));
+        $request->request->add(['receipt_number' => $rnumber, 'receipt_customer_number' => $rcnumber]);
+
+        $course = new Receipt($request->all());
+        $course->save();
+        
+        $form = ReceiptForm::find($id);
+        // Getting values from the blade template form
+        $form->generate =  1;
+        $form->save();
         return response()->json(['success' => 'Receive Add successfully']);
     }
 
