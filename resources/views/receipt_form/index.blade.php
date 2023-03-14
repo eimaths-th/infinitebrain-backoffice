@@ -364,8 +364,8 @@
                         searchable: false
                     },
                     {
-                        data: 'receipt_generate',
-                        name: 'receipt_generate'
+                        data: 'receipt_status',
+                        name: 'receipt_status'
                     },
                     {
                         data: 'receipt_submission_date',

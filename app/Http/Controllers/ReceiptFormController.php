@@ -30,19 +30,29 @@ class ReceiptFormController extends Controller
         //return response()->json(['success'=>$x]);
         //print_r($request->file('file'));
         //exit();
+        $newname = "";
         for ($i = 0; $i <= ($filecount - 1); $i++) {
             $image = $request->file('file')[$i];
             //print_r($image);
             //exit();
             $imageName = $image->getClientOriginalName();
-            $newname = Str::random(40) . "_" . $imageName;
-            $image->move(public_path('form_images'), $newname);
+            $oldfile = FileUpload::where('oldname', $imageName)->get();
+            
 
-            $imageUpload = new FileUpload();
-            $imageUpload->filename = $newname;
-            $imageUpload->oldname = $imageName;
-            $imageUpload->save();
-            //return response()->json(['success' => $imageName]);
+            if (!is_array($oldfile)) {
+                
+                $newname = Str::random(40) . "_" . $imageName;
+                $image->move(public_path('form_images'), $newname);
+
+                $imageUpload = new FileUpload();
+                $imageUpload->filename = $newname;
+                $imageUpload->oldname = $imageName;
+                $imageUpload->save();
+            }
+
+            //return response()->json(['success' => $newname]);
+
+            //$newnamea[$i] = $newname;
         }
         return response()->json(['success' => $newname]);
     }
@@ -118,16 +128,16 @@ class ReceiptFormController extends Controller
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->receipt_id . '" class="flat" name="table_records[]" value="' . $row->receipt_id . '" >';
                 })
-                ->editColumn('receipt_generate', function ($row) {
+                ->addColumn('receipt_status', function ($row) {
                     if ($row->receipt_generate == 0) {
-                        $html = '<font class="text-danger"> ยังไม่ได้ออกใบเสร็จ </font>';
+                        $html = '<i class="text-danger fa fa-edit"></i> ยังไม่ได้ออกใบเสร็จ ';
                     } else {
-                        $html = '<font class="text-success"> ออกใบเสร็จแล้ว </font>';
+                        $html = '<i class="text-success fa fa-edit"></i> ออกใบเสร็จแล้ว ';
                     }
                     return $html;
                 })
                 ->addColumn('action', function ($row) {
-                    
+
                     if ($row->receipt_generate == 0) {
                         $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Generate Receipt</a> ';
                         $html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
@@ -138,7 +148,7 @@ class ReceiptFormController extends Controller
                         });" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</a>';
                     }
                     return $html;
-                })->toJson();
+                })->rawColumns(['checkbox', 'receipt_status', 'action'])->toJson();
         }
 
         //get subject
@@ -228,6 +238,10 @@ class ReceiptFormController extends Controller
         }
         $filesa = $request->get('imgFiles');
         $filesb = $request->get('imgFiles2');
+
+        print_r($filesa);
+        print_r($filesb);
+        exit();
         $fileas = "";
         foreach ($filesa as $filea) {
             //echo $filea;

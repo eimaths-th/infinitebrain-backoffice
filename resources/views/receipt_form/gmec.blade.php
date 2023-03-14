@@ -1358,6 +1358,7 @@
                         obj = JSON.parse(file.xhr.response);
                         file.previewElement.id = obj.success;
                         console.log(obj.success);
+                        alert(obj.success);
                         $('#infinite').append("<input type='text' id='" + obj.success +
                             "' class='form_none' name='imgFiles2[]' value='" + obj.success + "'/>");
                     }

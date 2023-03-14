@@ -63,8 +63,7 @@ class ReceiptController extends Controller
         $a = curl_exec($ch); // $a will contain all headers
 
         $url_return = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL); // This is what you need, it will return you the last effective URL
-        echo $url;
-        exit();
+ 
         return $url_return;
     }
 
@@ -314,13 +313,16 @@ class ReceiptController extends Controller
                 $urlf = "http";
             }
 
-            echo $urlf;
-            exit();
 
             $arrl = explode($urlf, $data->file_att);
             for ($i = 1; $i <= count($arrl) - 1; $i++) {
-                $urla = "https" . $arrl[$i];
-                $retu = $this->get_img_url($urla);
+                $urla = $urlf . $arrl[$i];
+                if (strpos($urla,"jotform")) {
+                    $retu = $this->get_img_url($urla);
+                } else {
+                    $retu = $urla;
+                }
+                
                 //if ($this->URL_exists($retu)) {
                 $file_att .= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
                 //}
