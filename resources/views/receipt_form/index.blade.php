@@ -148,6 +148,7 @@
                                         <input type="text" class="form-control" name="submission_date"
                                             id="AddSubmissiondate" value="" readonly>
                                             <input type="hidden" name="Sfield" id="Sfield" value="{{ $sfield }}">
+                                            <input type="hidden" name="fid" id="fid" value="">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -434,6 +435,7 @@
                         $('#AddNewsf').val(res.data.news_form);
                         //alert(res.data.file_re);
                         $('#AddFile').val(res.data.file_re);
+                        $('#fid').val(res.data.id);
                         $('#sphoto').html(res.data.photo);
                         $('#satt').html(res.data.file);
                         if (res.data.generate==1) {
@@ -479,6 +481,7 @@
                         package: $('#AddPackage').val(),
                         file_att: $('#AddFile').val(),
                         sfield: $('#Sfield').val(),
+                        fid: $('#fid').val(),
                         _token: token,
                     },
 

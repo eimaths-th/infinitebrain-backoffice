@@ -127,8 +127,16 @@ class ReceiptFormController extends Controller
                     return $html;
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Generate Receipt</a> ';
-                    $html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
+                    
+                    if ($row->receipt_generate == 0) {
+                        $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Generate Receipt</a> ';
+                        $html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
+                    } else {
+                        $html = '<a href="#" class="btn btn-xs btn-info btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-search"></i> View</a> ';
+                        $html .= '<a href="#" onclick="toastr.success(\'ออก Receive แล้วไม่สามารถลบได้\', {
+                            timeOut: 5000
+                        });" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</a>';
+                    }
                     return $html;
                 })->toJson();
         }
@@ -149,7 +157,7 @@ class ReceiptFormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, $id)
+    public function create(Request $request)
     {
         //
         $this->check_permission();
@@ -173,16 +181,18 @@ class ReceiptFormController extends Controller
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
+        $id = $request->get('fid');
+
+
         $rnumber = Receipt_RunningNumber::generate($request->get('sfield'));
         $rcnumber = Receipt_Customer_RunningNumber::generate($request->get('sfield'));
         $request->request->add(['receipt_number' => $rnumber, 'receipt_customer_number' => $rcnumber]);
 
-        $course = new Receipt($request->all());
-        $course->save();
-        
+        $receipt = new Receipt($request->all());
+        $receipt->save();
+
         $form = ReceiptForm::find($id);
-        // Getting values from the blade template form
-        $form->generate =  1;
+        $form->generate =  '1';
         $form->save();
         return response()->json(['success' => 'Receive Add successfully']);
     }
@@ -310,7 +320,7 @@ class ReceiptFormController extends Controller
                 //if ($this->URL_exists($retu)) {
                 $file_att .= "<div><a href=\"" . urldecode($urlb) . "\" target=\"blank\"><img src=\"" . $urlb . "\" height=\"80\">click to view</a></div>&nbsp;&nbsp;";
                 //}
-                $furl.=$urlb;
+                $furl .= $urlb;
             }
         }
 
@@ -346,24 +356,26 @@ class ReceiptFormController extends Controller
     {
         //
         $oldfile = ReceiptForm::where('id', $id)->get();
-        $arrl = explode('|', $oldfile[0]->photo_att);
-        for ($i = 0; $i <= count($arrl) - 1; $i++) {
-            $path = public_path() . '/receipt_form_images/' . $arrl[$i];
-            if (file_exists($path)) {
-                unlink($path);  
+        if ($oldfile[0]->generate == 0) {
+            $arrl = explode('|', $oldfile[0]->photo_att);
+            for ($i = 0; $i <= count($arrl) - 1; $i++) {
+                $path = public_path() . '/receipt_form_images/' . $arrl[$i];
+                if (file_exists($path)) {
+                    unlink($path);
+                }
             }
-        }
 
-        $arrb = explode('|', $oldfile[0]->file_att);
-        for ($j = 0; $j <= count($arrb) - 1; $j++) {
-            $path = public_path() . '/receipt_form_images/' . $arrb[$j];
-            if (file_exists($path)) {
-                unlink($path);  
+            $arrb = explode('|', $oldfile[0]->file_att);
+            for ($j = 0; $j <= count($arrb) - 1; $j++) {
+                $path = public_path() . '/receipt_form_images/' . $arrb[$j];
+                if (file_exists($path)) {
+                    unlink($path);
+                }
             }
-        }
-        //print_r($oldfile);
+            //print_r($oldfile);
 
-        ReceiptForm::where('id', $id)->delete();
+            ReceiptForm::where('id', $id)->delete();
+        }
     }
 
     public function destroy($id)
