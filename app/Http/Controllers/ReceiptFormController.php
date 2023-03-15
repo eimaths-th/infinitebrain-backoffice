@@ -61,11 +61,11 @@ class ReceiptFormController extends Controller
     {
 
         $filename =  $request->get('name');
-        $oldfile = FileUpload::where('filename', $filename)->get();
+        $oldfile = FileUpload::where('oldname', $filename)->get();
         $path = public_path() . '/form_images/' . $oldfile[0]->filename;
         if (file_exists($path)) {
             unlink($path);
-            FileUpload::where('filename', $filename)->delete();
+            FileUpload::where('oldname', $filename)->delete();
         }
         return $filename;
     }
@@ -239,22 +239,26 @@ class ReceiptFormController extends Controller
         $filesa = $request->get('imgFiles');
         $filesb = $request->get('imgFiles2');
 
-        print_r($filesa);
-        print_r($filesb);
-        exit();
+        //print_r($filesa);
+        //print_r($filesb);
+        //exit();
         $fileas = "";
         foreach ($filesa as $filea) {
             //echo $filea;
-            $fileas .= $filea . "|";
-            File::move(public_path() . '/form_images/' . $filea, public_path() . '/receipt_form_images/' . $filea);
-            FileUpload::where('filename', $filea)->delete();
+            $oldfile = FileUpload::where('oldname', $filea)->get();
+            $fileas .= $oldfile[0]->filename . "|";
+            
+            File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+            FileUpload::where('filename', $oldfile[0]->filename)->delete();
         }
         $filebs = "";
         foreach ($filesb as $fileb) {
             //echo $fileb;
-            $filebs .= $fileb . "|";
-            File::move(public_path() . '/form_images/' . $fileb, public_path() . '/receipt_form_images/' . $fileb);
-            FileUpload::where('filename', $fileb)->delete();
+            
+            $oldfile = FileUpload::where('oldname', $fileb)->get();
+            $filebs .= $oldfile[0]->filename . "|";
+            File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+            FileUpload::where('filename', $oldfile[0]->filename)->delete();
         }
 
         $filebs = rtrim($filebs, "|");

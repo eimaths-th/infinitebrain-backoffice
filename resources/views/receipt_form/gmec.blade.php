@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                background-size: 15px;
-                            }*/
+                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                    background-size: 15px;
+                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                            input:not(:focus):not(:placeholder-shown):invalid {
-                                border-color: var(--color-invalid);
-                            }*/
+                                input:not(:focus):not(:placeholder-shown):invalid {
+                                    border-color: var(--color-invalid);
+                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                display: block;
-                            }*/
+                                    display: block;
+                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -198,7 +198,7 @@
         }
 
         .form_none {
-            display: none;
+             display: none; 
         }
 
         .dropzone {
@@ -1197,6 +1197,7 @@
             dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
             renameFile: function(file) {
                 let newName = new Date().getTime() + '_' + file.name;
+                file.newName = newName;
                 return newName;
             },
             dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
@@ -1208,7 +1209,10 @@
             init: function() {
                 myDropzone = this;
                 this.on("addedfile", function(file) {
-                    //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.name + "'/>");
+                    //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
+                    $('#infinite').append("<input type='text' id='" + file.newName +
+                       "' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
+                    file.previewElement.id = file.newName;
                 }).on("removedfile", function(file) {
                     //alert(file.id);
                     //var name = file.name;
@@ -1248,10 +1252,10 @@
                     let val = file.accepted;
                     if (file.accepted == true) {
                         obj = JSON.parse(file.xhr.response);
-                        file.previewElement.id = obj.success;
+                        //file.previewElement.id = obj.success;
                         console.log(obj.success);
-                        $('#infinite').append("<input type='text' id='" + obj.success +
-                            "' class='form_none' name='imgFiles[]' value='" + obj.success + "'/>");
+                        //$('#infinite').append("<input type='text' id='" + obj.success +
+                        //    "' class='form_none' name='imgFiles[]' value='" + obj.success + "'/>");
                     }
                     let val1 = file.name;
                     $('#dropzone_preview').css("display", "block");
@@ -1302,6 +1306,7 @@
             maxFilesize: 2, // MB
             renameFile: function(file) {
                 let newName = new Date().getTime() + '_' + file.name;
+                file.newName = newName;
                 return newName;
             },
             previewsContainer: "#dropzone_preview2", // ระบุ element เป้าหลาย
@@ -1316,6 +1321,9 @@
                 myDropzone = this;
                 this.on("addedfile", function(file) {
                     //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.name + "'/>");
+                    $('#infinite').append("<input type='text' id='" + file.newName +
+                        "' class='form_none' name='imgFiles2[]' value='" + file.newName + "'/>");
+                    file.previewElement.id = file.newName;
                 }).on("removedfile", function(file) {
                     //alert(file.id);
                     //var name = file.name;
@@ -1356,11 +1364,11 @@
                     let val = file.accepted;
                     if (file.accepted == true) {
                         obj = JSON.parse(file.xhr.response);
-                        file.previewElement.id = obj.success;
+                        //file.previewElement.id = obj.success;
                         console.log(obj.success);
-                        alert(obj.success);
-                        $('#infinite').append("<input type='text' id='" + obj.success +
-                            "' class='form_none' name='imgFiles2[]' value='" + obj.success + "'/>");
+                        //alert(obj.success);
+                        //$('#infinite').append("<input type='text' id='" + obj.success +
+                        //   "' class='form_none' name='imgFiles2[]' value='" + obj.success + "'/>");
                     }
                     let val1 = file.name;
                     $('#dropzone_preview2').css("display", "block");
@@ -1412,7 +1420,7 @@
                     $(".error_div").show();
                 } else {
                     $(".error_div").hide();
-                   
+
                 }
                 this.defaultShowErrors();
             }
@@ -1444,8 +1452,8 @@
             if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]')
                 .length) {
                 //$('#error_div').css('display', 'none');
-                
-                
+
+
                 return true;
             } else {
                 if (!document.getElementsByName('imgFiles[]').length) {
