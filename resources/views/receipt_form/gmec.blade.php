@@ -1185,13 +1185,13 @@
             autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
             uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
             parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
-            maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+            maxFiles: 10, // ไฟล์สูงสุด 5 ไฟล์
             /*maxfilesexceeded: function(file) {
             this.removeAllFiles();
             this.addFile(file);
             },*/
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
-            maxFilesize: 2, // MB
+            maxFilesize: 10, // MB
             previewsContainer: "#dropzone_preview", // ระบุ element เป้าหลาย
             //previewTemplate: $('#template-preview').html(),
             dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
@@ -1296,8 +1296,8 @@
             paramName: "file", // ชื่อไฟล์ปลายทางเมื่อ upload แบบ mutiple จะเป็น array
             autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
             uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
-            parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
-            maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+            parallelUploads: 10, // ให้ทำงานพร้อมกัน 10 ไฟล์
+            maxFiles: 10, // ไฟล์สูงสุด 5 ไฟล์
             /*maxfilesexceeded: function(file) {
             this.removeAllFiles();
             this.addFile(file);
