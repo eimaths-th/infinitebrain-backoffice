@@ -1303,7 +1303,7 @@
             this.addFile(file);
             },*/
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
-            maxFilesize: 2, // MB
+            maxFilesize: 10, // MB
             renameFile: function(file) {
                 let newName = new Date().getTime() + '_' + file.name;
                 file.newName = newName;
