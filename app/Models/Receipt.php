@@ -16,6 +16,7 @@ class Receipt extends Model
      * @var array
      */
     protected $fillable = [
+        'type',
         'submission_date',
         'first_name',
         'last_name',

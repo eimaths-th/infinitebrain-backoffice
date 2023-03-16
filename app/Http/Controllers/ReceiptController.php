@@ -241,6 +241,7 @@ class ReceiptController extends Controller
         //
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
+            'type'=> 'required|string',
             'submission_date' => 'required|string',
             'first_name' => 'required|string',
             'last_name' => 'required|string',
@@ -283,7 +284,13 @@ class ReceiptController extends Controller
 
         //print_r($data);
         //exit();
-
+        if($data->type==2){
+            $mes = "ใบลดหนี้";
+        }else{
+        
+        $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน" ;
+        }
+        
         if ($type == "view") {
             $viewr = "receipt.view";
         } else if ($type == "print") {
@@ -293,6 +300,8 @@ class ReceiptController extends Controller
         if ($data->package) {
             $res = preg_replace("/[^0-9.]/", "", $data->package);
         }
+
+        
 
         $price = (int)$res;
         $price_val = number_format($price, 2);
@@ -335,6 +344,7 @@ class ReceiptController extends Controller
 
 
         return view($viewr)->with(['id' => $id])->with(['data' => $data])->with(['price_val' => $price_val])
+            ->with(['mes'=>$mes])
             ->with(['price_text' => $price_text])->with(['vat_price_val' => $vat_price_val])
             ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att])
             ->with(['des_text' => $des_text]);
@@ -343,6 +353,7 @@ class ReceiptController extends Controller
     public function print_day(Request $request)
     {
         //
+        
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'pdsfield' => 'required|string',
@@ -378,6 +389,7 @@ class ReceiptController extends Controller
             "receipts.first_name as receipt_firstname",
             "receipts.last_name as receipt_lastname",
             "receipts.package as receipt_price",
+            "receipts.type as receipt_type",
         )
             //->join("students", "students.id", "=", "receipts.student_id")
             //->join("subjects", "subjects.id", "=", "receipts.subject_id")
@@ -387,8 +399,9 @@ class ReceiptController extends Controller
             ->orderBy("receipts.receipt_number", "asc")
             ->get();
         //->toArray();
-        //print_r($receipts);
-        //exit();
+        // print_r($receipts);
+        // exit();
+        
         $i = 0;
         $ret_receipt = array();
         $total_price = 0;
@@ -397,14 +410,26 @@ class ReceiptController extends Controller
             $ret_receipt[$i]['receipt_number'] = $result->receipt_number;
             $ret_receipt[$i]['receipt_firstname'] = $result->receipt_firstname;
             $ret_receipt[$i]['receipt_lastname'] = $result->receipt_lastname;
+            $ret_receipt[$i]['receipt_type'] = $result->receipt_type;
 
             $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
             $price = (int)$res;
             $price_val = number_format($price, 2);
+            $a=0;
+            if($ret_receipt[$i]['receipt_type']==2){
+                $ret_receipt[$i]['receipt_type'] = "ใบลดหนี้";
+                $price_val = number_format(-$price, 2);
+                $a = $price;
+            }else{
+                $ret_receipt[$i]['receipt_type'] = "";
+
+            }
+            
             $ret_receipt[$i]['receipt_price'] = $price_val;
             $ret_receipt[$i]['receipt_price_label'] = "บาท";
             $i++;
-            $total_price += $price;
+            
+            $total_price = ($total_price+$price)-$a;
         }
 
         $pagen = 0;
@@ -424,16 +449,19 @@ class ReceiptController extends Controller
                 $ret_receipt[$x]['receipt_lastname'] = "";
                 $ret_receipt[$x]['receipt_price'] = "";
                 $ret_receipt[$x]['receipt_price_label'] = "";
+                $ret_receipt[$x]['receipt_type'] = "";
+                
             }
         }
         //echo $start;
-        //print_r($ret_receipt);
-        //exit();
-
+        // print_r($ret_receipt);
+        // exit();
+        
 
 
 
         return view($viewr)->with(['sfield' => $sfield])->with(['sfielda' =>  self::sfielda])
+            // ->with(['mes' =>  $mes])
             ->with(['sfieldas' =>  self::sfieldas])
             ->with(['ymcode' =>  $ymcode])
             ->with(['thaiyear' =>  $thai_year])
@@ -485,6 +513,8 @@ class ReceiptController extends Controller
             "receipts.first_name as receipt_firstname",
             "receipts.last_name as receipt_lastname",
             "receipts.package as receipt_price",
+            "receipts.type as receipt_type",
+
         )
             //->join("students", "students.id", "=", "receipts.student_id")
             //->join("subjects", "subjects.id", "=", "receipts.subject_id")
@@ -492,9 +522,10 @@ class ReceiptController extends Controller
             ->where([['receipts.sfield', $sfield], ['submission_date', 'LIKE', $request->get('print_month') . '%']])
             ->orderBy("receipts.submission_date", "asc")
             ->get();
-        //->toArray();
-        //print_r($receipts);
-        //exit();
+        // ->toArray();
+        
+        // print_r($receipts);
+        // exit();
         $i = 0;
         $ret_receipt = array();
         $total_price = 0;
@@ -513,12 +544,21 @@ class ReceiptController extends Controller
             $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i] = $result->receipt_number;
             $maxdate = max(array_keys($ret_receipt[$result->receipt_submission_date]['receipt_number']));
             $ret_receipt[$result->receipt_submission_date]['receipt_numbers'] = $ret_receipt[$result->receipt_submission_date]['receipt_number'][0] . ' - ' . $ret_receipt[$result->receipt_submission_date]['receipt_number'][$maxdate];
+            $ret_receipt[$result->receipt_submission_date]['receipt_type'][$i] = $result->receipt_type;
 
             $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
             $price = (int)$res;
+            $price_val = number_format($price, 2);
+            $a=0;
+            if($ret_receipt[$result->receipt_submission_date]['receipt_type']==2){
+                $a = $price;
+            }else{
+                $ret_receipt[$result->receipt_submission_date]['receipt_type'] = "";
 
+            }
+            
             $ret_receipt[$result->receipt_submission_date]['description'] = $request->get('Pmdescription');
-            $ret_receipt[$result->receipt_submission_date]['receipt_price'] = $price;
+            $ret_receipt[$result->receipt_submission_date]['receipt_price'] = $price-$a;
             $ret_receipt[$result->receipt_submission_date]['receipt_price_label'] = "บาท";
             $lastprice = $lastprice + $ret_receipt[$result->receipt_submission_date]['receipt_price'];
             $ret_receipt[$result->receipt_submission_date]['last_price'] =  $lastprice;
@@ -531,7 +571,7 @@ class ReceiptController extends Controller
 
             $i++;
 
-            $total_price += $price;
+            $total_price = ($total_price + $price)-$a;
         }
         $pagen = 0;
         if ($i < 19) {

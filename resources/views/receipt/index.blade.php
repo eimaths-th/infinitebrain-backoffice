@@ -347,7 +347,7 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-
+                   
                         <div class="alert alert-danger alert-dismissible fade show" role="alert"
                             style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
@@ -362,6 +362,16 @@
                             </button>
                         </div>
                         <div class="form-row">
+
+                        <div class="col-md-12 ">
+                        <select  class="form-select" name="type" id="type" style="width:300px">
+                        
+                        <option value="1">ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
+                        <option value="2">ใบลดหนี้</option>
+
+                        </select>              
+                        </div>
+
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <label for="Submission Date">Submission Date:</label>
@@ -864,6 +874,7 @@
                     url: "{{ route('receipts.store') }}",
                     method: 'post',
                     data: {
+                        type: $('#type').val(),
                         submission_date: $('#AddSubmissiondate').val(),
                         first_name: $('#AddFirstname').val(),
                         last_name: $('#AddLastname').val(),
