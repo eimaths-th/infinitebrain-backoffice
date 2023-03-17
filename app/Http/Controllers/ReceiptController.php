@@ -565,10 +565,6 @@ class ReceiptController extends Controller
             $ret_receipt[$result->receipt_submission_date]['total_price'] =  number_format($lastprice, 2);
 
             $lastdate = $ret_receipt[$result->receipt_submission_date]['receipt_submission_date'];
-
-
-
-
             $i++;
 
             $total_price = ($total_price + $price)-$a;
