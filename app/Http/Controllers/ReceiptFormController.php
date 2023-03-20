@@ -14,6 +14,8 @@ use File;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Receipt_RunningNumber;
 use App\Models\Receipt_Customer_RunningNumber;
+use Mail;
+use App\Mail\ContactMail;
 
 class ReceiptFormController extends Controller
 {
@@ -37,10 +39,10 @@ class ReceiptFormController extends Controller
             //exit();
             $imageName = $image->getClientOriginalName();
             $oldfile = FileUpload::where('oldname', $imageName)->get();
-            
+
 
             if (!is_array($oldfile)) {
-                
+
                 $newname = Str::random(40) . "_" . $imageName;
                 $image->move(public_path('form_images'), $newname);
 
@@ -247,14 +249,14 @@ class ReceiptFormController extends Controller
             //echo $filea;
             $oldfile = FileUpload::where('oldname', $filea)->get();
             $fileas .= $oldfile[0]->filename . "|";
-            
+
             File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
             FileUpload::where('filename', $oldfile[0]->filename)->delete();
         }
         $filebs = "";
         foreach ($filesb as $fileb) {
             //echo $fileb;
-            
+
             $oldfile = FileUpload::where('oldname', $fileb)->get();
             $filebs .= $oldfile[0]->filename . "|";
             File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
@@ -283,6 +285,8 @@ class ReceiptFormController extends Controller
             'photo_att' => $fileas,
             'file_att' => $filebs,
         ]);
+        $adminEmail = $request->get('email');
+        Mail::to($adminEmail)->send(new ContactMail($receiptForm));
         $receiptForm->save();
         return redirect('/form/complete');
     }

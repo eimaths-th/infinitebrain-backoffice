@@ -74,7 +74,8 @@
 
                 <table align="center" width="98%" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td colspan="4" align="center"><b>ใบกำกับภาษี/ใบเสร็จรับเงิน</b></td>
+                    <td colspan="4" align="center"><b>ใบกำกับภาษี/ใบเสร็จรับเงิน</b></td>
+                    
                         <td  align="center" class="grey"><b>ต้นฉบับ <br> สำหรับลูกค้า</b></td>
                     </tr>
                     <tr>
