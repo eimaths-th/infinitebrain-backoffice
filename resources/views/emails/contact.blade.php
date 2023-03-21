@@ -604,7 +604,7 @@
                                                             <td class="pad">
                                                                 <div style="direction:ltr;font-family:Inter, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;">
                                                                     
-                                                                                            <img src="{{ asset('receipt_form_images/') }}/<?php echo $data->photo_att ?>" alt="..." srcset="" style="vertical-align:middle;">
+                                                                                            <img src="{{ asset('receipt_form_images/') }}/<?php echo $data->photo_att ?>" alt="..." srcset="" style="vertical-align:middle; width: 50%; height: 300px;">
 
                                                                 </div>
                                                             </td>
