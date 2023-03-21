@@ -285,6 +285,8 @@ class ReceiptFormController extends Controller
             'photo_att' => $fileas,
             'file_att' => $filebs,
         ]);
+                           
+                                                                                                    
         $adminEmail = $request->get('email');
         Mail::to($adminEmail)->send(new ContactMail($receiptForm));
         $receiptForm->save();
