@@ -639,8 +639,8 @@
                                                     <table border="0" cellpadding="10" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
                                                         <tr>
                                                             <td class="pad">
-                                                                <div style="font-size:12px;font-weight:400;ext-align:left;mso-line-height-alt:25.2px;width: 50%; height: 300px;">
-                                                                <img src="{{ asset('receipt_form_images/') }}/<?php echo $data->file_att ?>" alt="..." srcset="" style="vertical-align:middle;">
+                                                                <div style="font-size:12px;font-weight:400;ext-align:left;mso-line-height-alt:25.2px;">
+                                                                <img src="{{ asset('receipt_form_images/') }}/<?php echo $data->file_att ?>" alt="..." srcset="" style="vertical-align:middle;  width: 50%; height: 300px;">
 
                                                                 </div>
                                                             </td>
