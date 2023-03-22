@@ -604,7 +604,7 @@
                                                             <td class="pad">
                                                                 <div style="direction:ltr;font-family:Inter, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;">
                                                                     
-                                                                                            <img src="{{ asset('receipt_form_images/') }}/<?php echo $data->photo_att ?>" alt="..." srcset="" style="vertical-align:middle; width: 50%; height: 300px;">
+                                                                                            <img src="{{ asset('receipt_form_images/') }}/<?php echo $data->photo_att ?>" alt="..." srcset="" style="vertical-align:middle;  height: 200px;">
 
                                                                 </div>
                                                             </td>
@@ -640,7 +640,7 @@
                                                         <tr>
                                                             <td class="pad">
                                                                 <div style="font-size:12px;font-weight:400;ext-align:left;mso-line-height-alt:25.2px;">
-                                                                <img src="{{ asset('receipt_form_images/') }}/<?php echo $data->file_att ?>" alt="..." srcset="" style="vertical-align:middle;  width: 50%; height: 300px;">
+                                                                <img src="{{ asset('receipt_form_images/') }}/<?php echo $data->file_att ?>" alt="..." srcset="" style="vertical-align:middle;  height: 200px;">
 
                                                                 </div>
                                                             </td>
