@@ -79,27 +79,30 @@ class RegisterController extends Controller
             //return response()->json(['errors' => $validator->errors()->all()]);
             return back()->withErrors(['errors' => $validator->errors()->all()]);
         }
-        $filesa = $request->get('imgFiles');
+        // $filesa = $request->get('imgFiles');
         // $filesb = $request->get('imgFiles2');
 
         //print_r($filesa);
         //print_r($filesb);
         //exit();
-        $fileas = "";
-        foreach ($filesa as $filea) {
-            //echo $filea;
-            $oldfile = FileUpload::where('oldname', $filea)->get();
-            $fileas .= $oldfile[0]->filename . "|";
+        // $fileas = "";
+        // foreach ($filesa as $filea) {
+        //     //echo $filea;
+        //     $oldfile = FileUpload::where('oldname', $filea)->get();
+        //     $fileas .= $oldfile[0]->filename . "|";
 
-            File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
-            FileUpload::where('filename', $oldfile[0]->filename)->delete();
-        }
-        // $filebs = "";
+        //     File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+        //     FileUpload::where('filename', $oldfile[0]->filename)->delete();
+        // }
+        // $fileas = rtrim($fileas, "|");
+
+
         
-
-        // $filebs = rtrim($filebs, "|");
-        $fileas = rtrim($fileas, "|");
-        $rnumber = RunningNumber::generate(new Register,'code',5,'IFN');
+        $rnumber = RunningNumber::generate(new Register,'code',4,"");
+        $rnumber = substr($rnumber, 1);
+        
+        $rnumber1 = RunningNumber::generate(new Student,'code',4,"");
+        $rnumber1 = substr($rnumber1, 1);
 
         $registerForm = new Register([
             'email' => $request->get('email'),
@@ -112,7 +115,7 @@ class RegisterController extends Controller
 
         ]);
         $student = new Student([
-            'code'=> $rnumber ,
+            'code'=> $rnumber1 ,
             'first_name' => $request->get('firstname'),
             'last_name' => $request->get('lastname'),
             'nick_name' => $request->get('nickname'),
@@ -120,7 +123,7 @@ class RegisterController extends Controller
             'school_name' => $request->get('schoolname'),
             'grade' => $request->get('grade'),
             'mobile'=> "" ,
-            'photo_att' =>$fileas,
+            'photo_att' =>"",
         ]);
         $student->save();
         $registerForm->save();

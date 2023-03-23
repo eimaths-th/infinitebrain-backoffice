@@ -528,8 +528,9 @@
             background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
             z-index: 10000;
         }
-        .aaa{
-            background-color: #fff;
+        .form2{
+            background-color: #d8e8b0;
+            margin-bottom: 50px;
         }
     </style>
 @endsection
@@ -892,7 +893,203 @@
                             
                             </div>
 
+
+
+                            <!-- <div class="form2">                
+                                <div class="form-row form-focus">
+                                    <label style="padding-left: 20px"
+                                        class="form-label form-label-top form-label-auto">Name-Surname (English) /
+                                        ชื่อ - นามสกุล ภาษาอังกฤษ <span class="form-required">*</span></label>
+                                    <div class="col-md-6">
+
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto" for="firstname">
+                                                <div style="width: 270px"></div>
+                                            </label>
+                                            <input type="text" class="form-control" name="firstname" id="firstname"
+                                                value="" maxlength="50" minlength="2" required>
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">First
+                                                Name</label>
+                                            <div class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10"> <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto" for="lastname">
+                                                <div style="width: 270px"></div>
+                                            </label>
+                                            <input type="text" class="form-control" name="lastname" id="lastname"
+                                                value="" maxlength="50" minlength="2" required>
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
+                                                Name</label>
+                                            {{-- <div class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10"> <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div> --}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row form-focus">
+
+                                    <div class="col-md-6 col-sm-12">
+
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
+                                                (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
+                                                <div style="width: 270px"></div>
+                                            </label>
+                                            <input type="text" class="form-control" name="nickname" id="nickname"
+                                                value="" maxlength="50" minlength="1" required>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Nick
+                                                Name</label>
+                                            <div class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10"> <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto" for="birthdate">Birth
+                                                Date / วันเกิด <span class="form-required">*</span>
+                                                <div style="width: 270px"></div>
+                                            </label>
+                                            <input type="date" class="AddDate form-control" name="birthdate"
+                                                id="birthdate" value="" required>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Date</label>
+                                            <div class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10"> <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row form-focus">
+
+                                    <div class="col-md-6">
+
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="schoolname">School name (English) / ชื่อโรงเรียน (ภาษาอังกฤษ)<span
+                                                    class="form-required">*</span></label>
+                                            <input type="text" class="form-control" name="schoolname" id="schoolname"
+                                                value="" maxlength="100" required>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">School Name</label>
+                                            <div class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10"> <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto" for="grade">Grade
+                                                / ระดับชั้น <span class="form-required">*</span>
+                                                <div style="width: 270px"></div>
+                                            </label>
+                                            <select style="width: 100%" class="form-control" id="grade"
+                                                name="grade" data-component="dropdown" aria-label="Grade / ระดับชั้น"
+                                                required>
+                                                <option value="">Please Select</option>
+                                                <option value="Kindergarten">Kindergarten</option>
+                                                <option value="Grade 1">Grade 1</option>
+                                                <option value="Grade 2">Grade 2</option>
+                                                <option value="Grade 3">Grade 3</option>
+                                                <option value="Grade 4">Grade 4</option>
+                                                <option value="Grade 5">Grade 5</option>
+                                                <option value="Grade 6">Grade 6</option>
+                                                <option value="Grade 7">Grade 7</option>
+                                                <option value="Grade 8">Grade 8</option>
+                                                <option value="Grade 9">Grade 9</option>
+                                                <option value="Grade 10">Grade 10</option>
+                                                <option value="Grade 11">Grade 11</option>
+                                                <option value="Grade 12">Grade 12</option>
+                                            </select>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Grade</label>
+                                            <div class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10"> <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                
+                                <div class="form-row form-focus" id="dropzone-photo">
+                                    <div class="col-md-12 col-sm-12">
+                                        <a id="dphoto"></a>
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="photo">อัพโหลดรูปภาพผู้สมัคร <span class="form-required">*</span>
+                                                <div style="width: 280px"></div>
+                                            </label>
+                                            <input type="text" id="drop1" name="drop1"
+                                                class="form-control form_none" value="" required>
+                                            <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
+                                                <div class="fallback">
+                                                    {{-- <input name="file" id="file" type="file" multiple
+                                                        class="form-control" /> --}}
+                                                </div>
+                                            </div>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Photo</label>
+                                            <div id="dropzone-photo-error" class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10">
+                                                <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="dropzonex dz-default dz-message" id="dropzone_preview2"
+                                    style="font-size: 1.5em;">
+                                    <h3 class="dropzone-previews ui"></h3>
+
+
+                                </div> -->
+
+                                <br>
+
+                            </div>
+                               
+                            <button type="button" id="addbtn" class="btn btn-lg btn-success">เพิ่มนักเรียนคนที่2</button><br><br><br>
 
 
                             </div>
@@ -911,7 +1108,15 @@
         </div>
     </div>
     <script>
+           
         $(document).ready(function() {
+            // $('.form2').hide();
+            
+            $('#addbtn').click(function(){
+                $('.form2').show();
+            })
+        
+           
             var inputlist = ["firstname", "lastname", "address", "postcode","password"];
             $(".form-control").focusout(function() {
                 //$(".form-control").focus();
@@ -1072,6 +1277,7 @@
         });
     </script>
     <script type="text/javascript">
+  
         var myDropzone = {};
         Dropzone.options.myAwesomeDropzone = {
             url: '{{ route('form.upload') }}',

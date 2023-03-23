@@ -265,7 +265,7 @@ class ReceiptFormController extends Controller
 
         $filebs = rtrim($filebs, "|");
         $fileas = rtrim($fileas, "|");
-
+      
         $receiptForm = new ReceiptForm([
             'sfield' => $request->get('sfield'),
             'submission_date' => date("Y-m-d"),
