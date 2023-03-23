@@ -443,7 +443,7 @@ class ReceiptController extends Controller
             'name_parent' => 'required|string',
             'mobile' => 'required|string',
             'package' => 'required|string',
-            'file_att' => 'required|string',
+            // 'file_att' => 'required|string
             'description' => 'required|string',
             'grade' => 'required|string',
             

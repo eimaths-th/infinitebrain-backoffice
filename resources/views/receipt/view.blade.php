@@ -43,6 +43,9 @@
         .tbr table td.activeleft {
             border-left: 2px solid rgb(138, 175, 61);
         }
+        .aaa{
+            color:rgb(138, 175, 61);
+        }
     </style>
 @endsection
 
@@ -112,7 +115,7 @@
                         {{ $text }}
                         </b></td>
                         
-                        <td align="center" class="grey"><b>ต้นฉบับ <br> Original <br>สำหรับลูกค้า</b></td>
+                        <td align="center" class="aaa"><b>ต้นฉบับ <br> Original <br>สำหรับลูกค้า</b></td>
 
                     </tr>
                     <tr>

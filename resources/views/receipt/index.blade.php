@@ -366,7 +366,7 @@
                         <div class="col-md-12 ">
                         <select  class="form-select" name="type" id="type" style="width:300px">
                         
-                        <option value="1">ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
+                        <option value="1" hidden disabled>ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
                         <option value="2">ใบลดหนี้</option>
 
                         </select>              
@@ -469,7 +469,7 @@
 
                         <div class="form-group">
                             <label for="File">File:</label>
-                            <input type="text" class="form-control" id="AddFile" name="file" value="">
+                            <input type="text" class="form-control" id="AddFile" name="file" value="" disabled>
                         </div>
 
 
