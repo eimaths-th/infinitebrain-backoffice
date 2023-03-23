@@ -39,32 +39,14 @@
                         Dashboard
                     </a>
                 </li> --}}
-                @if (Auth::user()->level == 1)
-                    <li class="app-sidebar__heading">Admin</li>
-                    <li>
-                        <a href="#">
-                            <i class="metismenu-icon pe-7s-users"></i>
-                            Employees
-                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                        </a>
-
-                        <ul>
-                            <li>
-                                <a href="{{ route('users') }}">
-                                    <i class="metismenu-icon"></i>
-                                    Users
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @endif
+                
 
                 @if (Auth::user()->level == 2 || Auth::user()->level == 1)
-                    <li class="app-sidebar__heading">School</li>
+                    <li class="app-sidebar__heading">โรงเรียน</li>
                     <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-network"></i>
-                            Level
+                            รายวิชา ( Level )
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
 
@@ -120,7 +102,7 @@
                     <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-study"></i>
-                            Student
+                            ผู้ปกครอง / นักเรียน
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
 
@@ -128,13 +110,13 @@
                             <li>
                                 <a href="{{ route('students') }}">
                                     <i class="metismenu-icon"></i>
-                                    Students
+                                    รายชื่อนักเรียน
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('course') }}">
                                     <i class="metismenu-icon"></i>
-                                    Study Course
+                                    Progress Chart
                                 </a>
                             </li>
                         </ul>
@@ -143,7 +125,7 @@
                 @endif
 
                 @if (Auth::user()->level == 3 || Auth::user()->level == 1)
-                    <li class="app-sidebar__heading">Account</li>
+                    <li class="app-sidebar__heading">สนามสอบ</li>
                     <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-note2"></i>
@@ -303,7 +285,25 @@
                 @endif
 
 
+                @if (Auth::user()->level == 1)
+                <li class="app-sidebar__heading">ผู้ดูแลระบบ</li>
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-users"></i>
+                        พนักงาน
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
 
+                    <ul>
+                        <li>
+                            <a href="{{ route('users') }}">
+                                <i class="metismenu-icon"></i>
+                                รายชื่อพนักงาน
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
 
                 {{-- <li class="app-sidebar__heading">UI Components</li>
                 <li>
