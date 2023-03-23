@@ -50,9 +50,9 @@ class CourseController extends Controller
                 "levels.title as student_level",
                 "subjects.title as student_subject",
                 "students.code as student_code",
-                "students.name as student_name",
-                "students.lastname as student_lastname",
-                "students.nickname as student_nickname",
+                "students.first_name as student_name",
+                "students.last_name as student_lastname",
+                "students.nick_name as student_nickname",
                 "courses.book_start as book_start",
                 "courses.date_start as date_start",
             )
@@ -155,9 +155,9 @@ class CourseController extends Controller
             "subjects.book_per_month as subject_book",
             "subjects.title as student_subject",
             "students.code as student_code",
-            "students.name as student_name",
-            "students.lastname as student_lastname",
-            "students.nickname as student_nickname",
+            "students.first_name as student_name",
+            "students.last_name as student_lastname",
+            "students.nick_name as student_nickname",
             "courses.book_start as book_start",
             "courses.date_start as date_start",
             "students.grade as student_grade",
@@ -600,9 +600,9 @@ class CourseController extends Controller
         foreach ($student as $keys) {
             if ($data->student_id == $keys->id) {
 
-                $select_list_student .= '<option value="' . $keys->id . '" selected>' . $keys->name . ' ' . $keys->lastname . '</option>';
+                $select_list_student .= '<option value="' . $keys->id . '" selected>' . $keys->first_name . ' ' . $keys->last_name . '</option>';
             } else {
-                $select_list_student .= '<option value="' . $keys->id . '" >' . $keys->name . ' ' . $keys->lastname . '</option>';
+                $select_list_student .= '<option value="' . $keys->id . '" >' . $keys->first_name . ' ' . $keys->last_name . '</option>';
             }
         }
 

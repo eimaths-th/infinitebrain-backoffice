@@ -233,16 +233,16 @@
                         name: 'code'
                     },
                     {
-                        data: 'name',
-                        name: 'name'
+                        data: 'first_name',
+                        name: 'first_name'
                     },
                     {
-                        data: 'lastname',
-                        name: 'lastname'
+                        data: 'last_name',
+                        name: 'last_name'
                     },
                     {
-                        data: 'nickname',
-                        name: 'nickname'
+                        data: 'nick_name',
+                        name: 'nick_name'
                     },
                     {
                         data: 'mobile',
@@ -350,9 +350,9 @@
                     method: 'PUT',
                     data: {
                         code: $('#EditCode').val(),
-                        name: $('#EditName').val(),
-                        lastname: $('#EditLastname').val(),
-                        nickname: $('#EditNickname').val(),
+                        first_name: $('#EditName').val(),
+                        last_name: $('#EditLastname').val(),
+                        nick_name: $('#EditNickname').val(),
                         mobile: $('#EditMobile').val(),
                         grade: $('#EditGrade').val(),
                     },

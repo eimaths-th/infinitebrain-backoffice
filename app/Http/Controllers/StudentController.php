@@ -96,9 +96,9 @@ class StudentController extends Controller
         // Getting values from the blade template form
         $student = new Student([
             'code' => $request->get('code'),
-            'name' => $request->get('name'),
-            'lastname' => $request->get('lastname'),
-            'nickname' => $request->get('nickname'),
+            'first_name' => $request->get('name'),
+            'last_name' => $request->get('lastname'),
+            'nick_name' => $request->get('nickname'),
             'mobile' => $request->get('mobile'),
             'grade' => $request->get('grade'),
         ]);
@@ -136,15 +136,15 @@ class StudentController extends Controller
                 </div>
                 <div class="form-group">
                     <label for="Name">Name:</label>
-                    <input type="text" class="form-control" name="name" id="EditName" value="' . $data->name . '">
+                    <input type="text" class="form-control" name="name" id="EditName" value="' . $data->first_name . '">
                 </div>
                 <div class="form-group">
                     <label for="Name">Lastname:</label>
-                    <input type="text" class="form-control" name="lastname" id="EditLastname" value="' . $data->lastname . '">
+                    <input type="text" class="form-control" name="lastname" id="EditLastname" value="' . $data->last_name . '">
                 </div>
                 <div class="form-group">
                     <label for="Name">Nickname:</label>
-                    <input type="text" class="form-control" name="nickname" id="EditNickname" value="' . $data->nickname . '">
+                    <input type="text" class="form-control" name="nickname" id="EditNickname" value="' . $data->nick_name . '">
                 </div>
                 <div class="form-group">
                     <label for="Name">Mobile:</label>
@@ -174,9 +174,9 @@ class StudentController extends Controller
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'code' => 'required|string|max:4|unique:students,code,' . $id,
-            'name' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'nickname' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'nick_name' => 'required|string|max:255',
             'mobile' => 'required|string|max:10',
         ]);
 
