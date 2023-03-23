@@ -84,7 +84,7 @@ class CourseController extends Controller
         $subject = Subject::orderBy("id", "asc")->get();
 
         //get student
-        $student = Student::orderBy("name", "asc")->get();
+        $student = Student::orderBy("first_name", "asc")->get();
         return view('course.index')->with(['data' => $subject])->with(['data2' => $student]);
     }
 
