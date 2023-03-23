@@ -600,9 +600,9 @@ class CourseController extends Controller
         foreach ($student as $keys) {
             if ($data->student_id == $keys->id) {
 
-                $select_list_student .= '<option value="' . $keys->id . '" selected>' . $keys->name . ' ' . $keys->lastname . '</option>';
+                $select_list_student .= '<option value="' . $keys->id . '" selected>' . $keys->first_name . ' ' . $keys->last_name . '</option>';
             } else {
-                $select_list_student .= '<option value="' . $keys->id . '" >' . $keys->name . ' ' . $keys->lastname . '</option>';
+                $select_list_student .= '<option value="' . $keys->id . '" >' . $keys->first_name . ' ' . $keys->last_name . '</option>';
             }
         }
 
