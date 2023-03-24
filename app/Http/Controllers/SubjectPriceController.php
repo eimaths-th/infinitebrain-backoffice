@@ -203,7 +203,7 @@ class SubjectPriceController extends Controller
                     </select>
                 </div>
                 <div class="form-group">
-                            <label for="Title">Title:</label>
+                            <label for="Title">Week:</label>
                             <select class="form-control" id="EditWeek" name="week">
                                 <option value="" selected>Select Week</option>
                                 ' .

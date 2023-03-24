@@ -114,7 +114,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="Title">Title:</label>
+                            <label for="Title">Week:</label>
                             <select class="form-control" id="AddWeek" name="week">
                                 <option value="" selected>Select Week</option>
                                 <option value="1">1 week</option>
