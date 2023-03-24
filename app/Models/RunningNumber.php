@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class RunningNumber extends Model
 {
+  
     
     public static function generate($model, $trow, $length = 4 , $prefix)
     {
-        $data = $model::orderBy('id','desc')->first();
+        $data = $model::orderBy('code','desc')->first();
        if(!$data){
             $og_length = $length;
             $last_number = '';
@@ -26,7 +27,7 @@ class RunningNumber extends Model
        for($i=0;$i<$og_length;$i++){
         $zeros.="0";
        }
-       return $prefix.'-'.$zeros.$last_number;
+       return $prefix.$zeros.$last_number;
     }
 }
 
