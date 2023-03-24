@@ -307,6 +307,9 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
+                                toastr.success(result.success, {
+                                timeOut: 5000
+                            });
                             $('#Listview').DataTable().ajax.reload();
                             $('.form').trigger('reset');
                             //$('#SubmitCreateForm').hide();
@@ -354,6 +357,9 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
+                                toastr.success(result.success, {
+                                timeOut: 5000
+                            });
                             $('#Listview').DataTable().ajax.reload();
                             //setTimeout(function() {
                             //$('.alert-success').hide();

@@ -322,12 +322,15 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
+                                toastr.success(result.success, {
+                                timeOut: 5000
+                            });
                             $('#Listview').DataTable().ajax.reload();
                             $('.form').trigger('reset');
                             //$('#SubmitCreateForm').hide();
                             //setTimeout(function() {
                             //$('.alert-success').hide();
-                            //$('#CreateModal').modal('hide');
+                            $('#CreateModal').modal('hide');
                             //}, 10000);
 
                         }
@@ -371,10 +374,13 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
+                                toastr.success(result.success, {
+                                timeOut: 5000
+                            });
                             $('#Listview').DataTable().ajax.reload();
                             //setTimeout(function() {
                             //$('.alert-success').hide();
-                            //   $('#EditModal').modal('hide');
+                            $('#EditModal').modal('hide');
                             //}, 10000);
 
                         }

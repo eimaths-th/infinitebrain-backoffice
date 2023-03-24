@@ -19,20 +19,20 @@
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
-                        <i class="pe-7s-network icon-gradient bg-tempting-azure"></i>
+                        <i class="pe-7s-cash icon-gradient bg-tempting-azure"></i>
                     </div>
                     <div>
-                        {{ $data[request()->get('id')-1]->title }}
-                        Levels
-                        <div class="page-title-subheading">Infinite Brain Levels Data</div>
+                        {{ $subject[request()->get('id') - 1]->title }}
+                        Cost
+                        <div class="page-title-subheading">Infinite Brain Cost Data</div>
                     </div>
                 </div>
                 <div class="page-title-actions">
                     <div class="d-inline-block dropdown">
                         <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
-                            Level</a>
-                            
+                            Cost</a>
+
                         <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
                             All</a>
 
@@ -42,7 +42,7 @@
         </div>
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-                <form method="post" action="{{ route('levels.destroy_all') }}" name="delete_all" id="delete_all">
+                <form method="post" action="{{ route('subjects_price.destroy_all') }}" name="delete_all" id="delete_all">
                     <input type="hidden" name="id" id="id" value="{{ request()->get('id') }}">
                     @csrf
                     @method('DELETE')
@@ -52,10 +52,9 @@
                             <tr>
                                 <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>Subject</th>
-                                <th>Sort</th>
-                                <th>Book</th>
-                                <th>Title</th>
-                                <th>Title Thai</th>
+                                <th>Level</th>
+                                <th>Week</th>
+                                <th>Price</th>
                                 <th width="280px">Action</th>
                             </tr>
                         </thead>
@@ -77,7 +76,7 @@
             <form class="form" action="" method="POST">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Add Level</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add Cost</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
@@ -98,34 +97,55 @@
                             <label for="Subject">Subject:</label>
                             <select class="form-control" id="AddSubject" name="subject" disabled>
                                 <option value="" selected>Select Subject</option>
-                                @foreach ($data as $key)
-                                    <option value="{{ $key->id }}"  {{ request()->get('id') == $key->id ? 'selected' : '' }}> {{ $key->title }} </option>
+                                @foreach ($subject as $key)
+                                    <option value="{{ $key->id }}"
+                                        {{ request()->get('id') == $key->id ? 'selected' : '' }}> {{ $key->title }}
+                                    </option>
                                 @endforeach
-                                
+
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="Level">Level:</label>
+                            <select class="form-control" id="AddLevel" name="level">
+                                <option value="" selected>Select Level</option>
+
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
                             <label for="Title">Title:</label>
-                            <input type="text" class="form-control" name="title" id="AddTitle" value="">
+                            <select class="form-control" id="AddWeek" name="week">
+                                <option value="" selected>Select Week</option>
+                                <option value="1">1 week</option>
+                                <option value="2">2 week</option>
+                                <option value="3">3 week</option>
+                                <option value="4">4 week</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="Title">Title Thai:</label>
-                            <input type="text" class="form-control" name="title_th" id="AddTitleTh" value="">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="Name">Description</label>
-                            <textarea class="form-control" name="description" id="AddDes"></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="Sort">Sort:</label>
-                            <input type="number" class="form-control" id="AddSort" name="sort" value=""
+                            <label for="Oldprice">Course Old Price:</label>
+                            <input type="number" class="form-control" id="AddOprice" name="old_price" value=""
                                 min="1" max="99">
                         </div>
                         <div class="form-group">
-                            <label for="Book">Book:</label>
+                            <label for="Price">Course Price:</label>
+                            <input type="number" class="form-control" id="AddPrice" name="price" value=""
+                                min="1" max="99">
+                        </div>
+                        <div class="form-group">
+                            <label for="Book">Booklets:</label>
                             <input type="number" class="form-control" id="AddBook" name="book" value=""
+                                min="1" max="99">
+                        </div>
+                        <div class="form-group">
+                            <label for="Price">Book Old Price:</label>
+                            <input type="number" class="form-control" id="AddBoprice" name="boprice" value=""
+                                min="1" max="99">
+                        </div>
+                        <div class="form-group">
+                            <label for="Price">Book Price:</label>
+                            <input type="number" class="form-control" id="AddBprice" name="bprice" value=""
                                 min="1" max="99">
                         </div>
                     </div>
@@ -145,7 +165,7 @@
             <form class="form" action="" method="POST">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Level</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Cost</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
@@ -159,7 +179,7 @@
                         </div>
                         <div class="alert alert-success alert-dismissible fade show" role="alert"
                             style="display: none;">
-                            <strong>Success!</strong> Level was edit successfully.
+                            <strong>Success!</strong> Cost was edit successfully.
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true"></span>
                             </button>
@@ -182,6 +202,48 @@
     <script>
         $(document).ready(function() {
 
+            var token = ''
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            var subject_id = {{ request()->get('id') }};
+                $.ajax({
+                    type: "POST",
+                    dataType: 'JSON',
+                    url: "levels/select_list/" + subject_id,
+                    data: {
+                        _token: token
+                    },
+                    success: function(result) {
+                        //console.log(result);
+                        $("#AddLevel").html(result.html);
+                        //$("#AddBook").html(result.html2);
+                    }
+                });
+            
+
+            $("#AddSubject").change(function() {
+
+                var subject_id = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    dataType: 'JSON',
+                    url: "levels/select_list/" + subject_id,
+                    data: {
+                        _token: token
+                    },
+                    success: function(result) {
+                        //console.log(result);
+                        $("#AddLevel").html(result.html);
+                        //$("#AddBook").html(result.html2);
+                    }
+                });
+
+            });
+
             $(".delete_all_button").click(function() {
                 var len = $('input[name="table_records[]"]:checked').length;
                 if (len > 0) {
@@ -199,12 +261,7 @@
             });
 
             //$.noConflict();
-            var token = ''
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+            
 
             var table = $('#Listview').DataTable({
                 /*"aoColumnDefs": [
@@ -246,20 +303,16 @@
                         name: 'subject'
                     },
                     {
-                        data: 'level_sort',
-                        name: 'level_sort'
+                        data: 'level',
+                        name: 'level'
                     },
                     {
-                        data: 'book_per_level',
-                        name: 'book_per_level'
+                        data: 'week',
+                        name: 'week'
                     },
                     {
-                        data: 'title',
-                        name: 'title'
-                    },
-                    {
-                        data: 'title_th',
-                        name: 'title_th'
+                        data: 'price',
+                        name: 'price'
                     },
                     {
                         data: 'action',
@@ -291,7 +344,7 @@
 
                 id = $(this).data('id');
                 $.ajax({
-                    url: "levels/edit/" + id,
+                    url: "subjects_price/edit/" + id,
                     method: 'GET',
                     success: function(res) {
                         $('#EditModalBody').html(res.html);
@@ -311,15 +364,17 @@
                 $('.alert-success').hide();
 
                 $.ajax({
-                    url: "{{ route('levels.store') }}",
+                    url: "{{ route('subjects_price.store') }}",
                     method: 'post',
                     data: {
                         subject: $('#AddSubject').val(),
-                        book_per_level: $('#AddBook').val(),
-                        title: $('#AddTitle').val(),
-                        title_th: $('#AddTitleTh').val(),
-                        description: $('#AddDes').val(),
-                        sort: $('#AddSort').val(),
+                        level: $('#AddLevel').val(),
+                        week: $('#AddWeek').val(),
+                        old_price: $('#AddOprice').val(),
+                        price: $('#AddPrice').val(),
+                        book: $('#AddBook').val(),
+                        book_old_price: $('#AddBoprice').val(),
+                        book_price: $('#AddBprice').val(),
                         _token: token,
                     },
                     success: function(result) {
@@ -336,12 +391,15 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
+                                toastr.success(result.success, {
+                                timeOut: 5000
+                            });
                             $('#Listview').DataTable().ajax.reload();
                             $('.form').trigger('reset');
                             //$('#SubmitCreateForm').hide();
                             //setTimeout(function() {
                             //$('.alert-success').hide();
-                            //$('#CreateModal').modal('hide');
+                            $('#CreateModal').modal('hide');
                             //}, 10000);
 
                         }
@@ -360,15 +418,17 @@
 
 
                 $.ajax({
-                    url: "levels/save/" + id,
+                    url: "subjects_price/save/" + id,
                     method: 'PUT',
                     data: {
                         subject: $('#EditSubject').val(),
-                        book_per_level: $('#EditBook').val(),
-                        title: $('#EditTitle').val(),
-                        title_th: $('#EditTitleTh').val(),
-                        description: $('#EditDes').val(),
-                        level_sort: $('#EditSort').val(),
+                        level: $('#EditLevel').val(),
+                        week: $('#EditWeek').val(),
+                        old_price: $('#EditOprice').val(),
+                        price: $('#EditPrice').val(),
+                        book: $('#EditBook').val(),
+                        book_old_price: $('#EditBoprice').val(),
+                        book_price: $('#EditBprice').val(),
                     },
 
                     success: function(result) {
@@ -385,10 +445,13 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
+                                toastr.success(result.success, {
+                                timeOut: 5000
+                            });
                             $('#Listview').DataTable().ajax.reload();
                             //setTimeout(function() {
                             //$('.alert-success').hide();
-                            //   $('#EditModal').modal('hide');
+                            $('#EditModal').modal('hide');
                             //}, 10000);
 
                         }
@@ -408,7 +471,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: 'JSON',
-                    url: "levels/destroy/" + rowid,
+                    url: "subjects_price/destroy/" + rowid,
                     data: {
                         _method: 'delete',
                         _token: token
@@ -425,4 +488,3 @@
         })
     </script>
 @endsection
-
