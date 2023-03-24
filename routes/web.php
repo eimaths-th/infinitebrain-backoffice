@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\EmployeeController;
+use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CourseController;
@@ -64,6 +65,15 @@ Route::put('/users/msave/{id}', [EmployeeController::class, 'mupdate'])->name('u
 Route::post('/users/store', [EmployeeController::class, 'store'])->name('users.store');
 Route::delete('/users/destroy/{id}', [EmployeeController::class, 'destroy'])->name('users.destroy');
 Route::delete('/users/destroy_all', [EmployeeController::class, 'destroy_all'])->name('users.destroy_all');
+
+Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects');
+Route::get('/subjects/edit/{id}', [SubjectController::class, 'edit'])->name('subjects.edit');
+Route::post('/subjects/select_list/{id}', [SubjectController::class, 'select_list'])->name('subjects.select_list');
+Route::put('/subjects/save/{id}', [SubjectController::class, 'update'])->name('subjects.save');
+Route::post('/subjects/store', [SubjectController::class, 'store'])->name('subjects.store');
+Route::delete('/subjects/destroy_all', [SubjectController::class, 'destroy_all'])->name('subjects.destroy_all');
+Route::delete('/subjects/destroy/{id}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
+
 
 Route::get('/levels', [LevelController::class, 'index'])->name('levels');
 Route::get('/levels/edit/{id}', [LevelController::class, 'edit'])->name('levels.edit');

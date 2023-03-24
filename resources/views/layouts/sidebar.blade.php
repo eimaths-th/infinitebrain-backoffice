@@ -45,8 +45,27 @@
                     <li class="app-sidebar__heading">โรงเรียน</li>
                     <li>
                         <a href="#">
+                            <i class="metismenu-icon pe-7s-study"></i>
+                            รายวิชา
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
+
+                        <ul>
+                            <li>
+                                <a href="{{ route('subjects') }}">
+                                    <i class="metismenu-icon"></i>
+                                    รายวิชาที่เปิดสอน
+                                </a>
+                            </li>
+                            
+                        </ul>
+
+                    </li>
+
+                    <li>
+                        <a href="#">
                             <i class="metismenu-icon pe-7s-network"></i>
-                            รายวิชา ( Level )
+                            Level
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
 
@@ -101,7 +120,7 @@
 
                     <li>
                         <a href="#">
-                            <i class="metismenu-icon pe-7s-study"></i>
+                            <i class="metismenu-icon pe-7s-users"></i>
                             ผู้ปกครอง / นักเรียน
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
@@ -303,7 +322,7 @@
                 <li class="app-sidebar__heading">ผู้ดูแลระบบ</li>
                 <li>
                     <a href="#">
-                        <i class="metismenu-icon pe-7s-users"></i>
+                        <i class="metismenu-icon pe-7s-user"></i>
                         พนักงาน
                         <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                     </a>

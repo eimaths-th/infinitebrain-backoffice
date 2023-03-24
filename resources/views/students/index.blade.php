@@ -19,7 +19,7 @@
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
-                        <i class="pe-7s-study icon-gradient bg-tempting-azure"></i>
+                        <i class="pe-7s-users icon-gradient bg-tempting-azure"></i>
                     </div>
                     <div>Students
                         <div class="page-title-subheading">Infinite Brain Student Data</div>
