@@ -46,7 +46,7 @@
                     <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-study"></i>
-                            รายวิชา
+                            รายวิชา ( Subject )
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
 
@@ -54,18 +54,71 @@
                             <li>
                                 <a href="{{ route('subjects') }}">
                                     <i class="metismenu-icon"></i>
-                                    รายวิชาที่เปิดสอน
+                                    รายวิชา
+                                </a>
+                            </li>
+                            
+                            
+                        </ul>
+                        
+
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="metismenu-icon pe-7s-cash"></i>
+                              ค่าเล่าเรียน ( Cost )
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
+
+                        <ul>
+                          
+                            <li>
+                                <a href="{{ route('subjects_price', ['id' => '1']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Math
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('subjects_price', ['id' => '2']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Play Math
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('subjects_price', ['id' => '3']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Private Math
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('subjects_price', ['id' => '4']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    English A-I
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('subjects_price', ['id' => '5']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    English 5-8
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('subjects_price', ['id' => '6']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    English Spark
                                 </a>
                             </li>
                             
                         </ul>
+                        
 
                     </li>
 
                     <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-network"></i>
-                            Level
+                            ระดับ ( Level )
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
 

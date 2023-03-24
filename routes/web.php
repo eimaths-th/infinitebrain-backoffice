@@ -11,6 +11,7 @@ use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\ReceiptFormController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SubjectPriceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +74,14 @@ Route::put('/subjects/save/{id}', [SubjectController::class, 'update'])->name('s
 Route::post('/subjects/store', [SubjectController::class, 'store'])->name('subjects.store');
 Route::delete('/subjects/destroy_all', [SubjectController::class, 'destroy_all'])->name('subjects.destroy_all');
 Route::delete('/subjects/destroy/{id}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
+
+Route::get('/subjects_price', [SubjectPriceController::class, 'index'])->name('subjects_price');
+Route::get('/subjects_price/edit/{id}', [SubjectPriceController::class, 'edit'])->name('subjects_price.edit');
+Route::post('/subjects_price/select_list/{id}', [SubjectPriceController::class, 'select_list'])->name('subjects_price.select_list');
+Route::put('/subjects_price/save/{id}', [SubjectPriceController::class, 'update'])->name('subjects_price.save');
+Route::post('/subjects_price/store', [SubjectPriceController::class, 'store'])->name('subjects_price.store');
+Route::delete('/subjects_price/destroy_all', [SubjectPriceController::class, 'destroy_all'])->name('subjects_price.destroy_all');
+Route::delete('/subjects_price/destroy/{id}', [SubjectPriceController::class, 'destroy'])->name('subjects_price.destroy');
 
 
 Route::get('/levels', [LevelController::class, 'index'])->name('levels');
