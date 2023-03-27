@@ -12,6 +12,7 @@ use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\ReceiptFormController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SubjectPriceController;
+use App\Http\Controllers\SchoolController;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,7 +129,7 @@ Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all']
 Route::get('/parent-register', [RegisterController::class, 'register'])->name('register');
 Route::post('/parent-register/store', [RegisterController::class, 'store'])->name('register.store');
 Route::get('/parent-register/complete', [RegisterController::class, 'show'])->name('register.complete');
-
+Route::get('/school', [SchoolController::class, 'index'])->name('school');
 
 
 Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
