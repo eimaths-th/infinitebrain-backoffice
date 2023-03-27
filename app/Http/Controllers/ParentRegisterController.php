@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use App\Models\Student;
-use App\Models\Register;
+use App\Models\ParentRegister;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\FileUpload;
@@ -14,12 +14,12 @@ use App\Models\FileUpload;
 use App\Models\RunningNumber;
 use App\Models\Parent_RunningNumber;
 
-class RegisterController extends Controller
+class ParentRegisterController extends Controller
 { 
     
     public function register()
     {
-        return view("register.register");
+        return view("register.parentregister");
     }
     /**
      * Display a listing of the resource.
@@ -107,7 +107,7 @@ class RegisterController extends Controller
         
         $rpnumber = Parent_RunningNumber::generate();
 
-        $registerForm = new Register([
+        $registerForm = new ParentRegister([
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
             'name_parent' => $request->get('parent'),
@@ -172,7 +172,7 @@ class RegisterController extends Controller
      * @param  \App\Models\Register  $register
      * @return \Illuminate\Http\Response
      */
-    public function show(Register $register)
+    public function show(ParentRegister $register)
     {
         //
             return view("register.complete");
@@ -185,7 +185,7 @@ class RegisterController extends Controller
      * @param  \App\Models\Register  $register
      * @return \Illuminate\Http\Response
      */
-    public function edit(Register $register)
+    public function edit(ParentRegister $register)
     {
         //
     }
@@ -197,7 +197,7 @@ class RegisterController extends Controller
      * @param  \App\Models\Register  $register
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Register $register)
+    public function update(Request $request, ParentRegister $register)
     {
         //
     }
@@ -208,7 +208,7 @@ class RegisterController extends Controller
      * @param  \App\Models\Register  $register
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Register $register)
+    public function destroy(ParentRegister $register)
     {
         //
     }

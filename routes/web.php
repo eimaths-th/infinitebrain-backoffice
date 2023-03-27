@@ -10,7 +10,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\ReceiptFormController;
-use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ParentRegisterController;
 use App\Http\Controllers\SubjectPriceController;
 use App\Http\Controllers\SchoolController;
 
@@ -126,9 +126,9 @@ Route::post('/receipts/import', [ReceiptController::class, 'importExcel'])->name
 Route::delete('/receipts/destroy/{id}', [ReceiptController::class, 'destroy'])->name('receipts.destroy');
 Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all'])->name('receipts.destroy_all');
 
-Route::get('/parent-register', [RegisterController::class, 'register'])->name('register');
-Route::post('/parent-register/store', [RegisterController::class, 'store'])->name('register.store');
-Route::get('/parent-register/complete', [RegisterController::class, 'show'])->name('register.complete');
+Route::get('/parent-register', [ParentRegisterController::class, 'register'])->name('parentregister');
+Route::post('/parent-register/store', [ParentRegisterController::class, 'store'])->name('parentregister.store');
+Route::get('/parent-register/complete', [ParentRegisterController::class, 'show'])->name('parentregister.complete');
 Route::get('/school', [SchoolController::class, 'index'])->name('school');
 
 

@@ -555,7 +555,7 @@
             </div> --}}
 
             <div align="center"><img class="" src="{{ asset('images/infinite.jpg') }}" alt="..." height="300"></div>
-            <form id="infinite" method="POST" action="{{ route('register.store') }}">
+            <form id="infinite" method="POST" action="{{ route('parentregister.store') }}">
                 @csrf
                 <div class="card-body">
                     <br>
