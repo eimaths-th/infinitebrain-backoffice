@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class ParentRegister extends Model
+use Illuminate\Foundation\Auth\User as Authenticatable;
+class ParentRegister extends Authenticatable
 {
     use HasFactory;
     protected $table="parent";
-
+    protected $guard = 'parent';
     protected $fillable = [
         'email',
         'password',
@@ -28,5 +28,8 @@ class ParentRegister extends Model
         // 'grade',
         'code',
         
+    ];
+    protected $hidden = [
+        'password', 'remember_token',
     ];
 }
