@@ -611,7 +611,7 @@
                                             <label class="form-label form-label-top form-label-auto" for="password">Password <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            <input type="password" class="AddPassword form-control" name="password" placeholder="ความยาวขั้นต่ำ 4 ตัว"
+                                            <input type="password" class="AddPassword form-control" name="password" placeholder="ความยาวขั้นต่ำ 8 ตัว"
                                                 id="password" value="" maxlength="20" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Password</label>
@@ -705,6 +705,7 @@
                                 </div>
                                 <div class="aaa">                
                                 <div class="form-row form-focus">
+                                    <h3 class="form-label form-label-top form-label-auto ps-4" >นักเรียนคนที่ 1</h2>
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Name-Surname (English) /
                                         ชื่อ - นามสกุล ภาษาอังกฤษ <span class="form-required">*</span></label>
@@ -820,7 +821,7 @@
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="grade">Grade
-                                                / ระดับชั้น <span class="form-required">*</span>
+                                                / ระดับชั้น (ปัจจุบัน) <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
                                             <select style="width: 100%" class="form-control" id="grade"
@@ -901,6 +902,7 @@
 
                             <div class="form2" >                
                                 <div class="form-row form-focus">
+                                <h3 class="form-label form-label-top form-label-auto ps-4" >นักเรียนคนที่ 2</h2>
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Name-Surname (English) /
                                         ชื่อ - นามสกุล ภาษาอังกฤษ <span class="form-required">*</span></label>
@@ -1016,7 +1018,7 @@
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="grade">Grade
-                                                / ระดับชั้น <span class="form-required">*</span>
+                                                / ระดับชั้น (ปัจจุบัน)<span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
                                             <select style="width: 100%" class="form-control" id="grade"
@@ -1094,6 +1096,7 @@
                             </div>
                             <div class="form3" >                
                                 <div class="form-row form-focus">
+                                <h3 class="form-label form-label-top form-label-auto ps-4" >นักเรียนคนที่ 3</h2>
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Name-Surname (English) /
                                         ชื่อ - นามสกุล ภาษาอังกฤษ <span class="form-required">*</span></label>
@@ -1209,7 +1212,7 @@
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="grade">Grade
-                                                / ระดับชั้น <span class="form-required">*</span>
+                                                / ระดับชั้น (ปัจจุบัน)<span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
                                             <select style="width: 100%" class="form-control" id="grade"
@@ -1520,11 +1523,11 @@
             paramName: "file", // ชื่อไฟล์ปลายทางเมื่อ upload แบบ mutiple จะเป็น array
             autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
             uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
-            parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
-            maxFiles: 10, // ไฟล์สูงสุด 5 ไฟล์
+            parallelUploads: 1, // ให้ทำงานพร้อมกัน 10 ไฟล์
+            maxFiles: 1, // ไฟล์สูงสุด 5 ไฟล์
+            
             /*maxfilesexceeded: function(file) {
             this.removeAllFiles();
-            this.addFile(file);
             },*/
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
             maxFilesize: 10, // MB
@@ -1632,8 +1635,8 @@
             paramName: "file", // ชื่อไฟล์ปลายทางเมื่อ upload แบบ mutiple จะเป็น array
             autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
             uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
-            parallelUploads: 10, // ให้ทำงานพร้อมกัน 10 ไฟล์
-            maxFiles: 10, // ไฟล์สูงสุด 5 ไฟล์
+            parallelUploads: 1, // ให้ทำงานพร้อมกัน 10 ไฟล์
+            maxFiles: 1, // ไฟล์สูงสุด 5 ไฟล์
             /*maxfilesexceeded: function(file) {
             this.removeAllFiles();
             this.addFile(file);
@@ -1744,8 +1747,8 @@
             paramName: "file", // ชื่อไฟล์ปลายทางเมื่อ upload แบบ mutiple จะเป็น array
             autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
             uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
-            parallelUploads: 10, // ให้ทำงานพร้อมกัน 10 ไฟล์
-            maxFiles: 10, // ไฟล์สูงสุด 5 ไฟล์
+            parallelUploads: 1, // ให้ทำงานพร้อมกัน 10 ไฟล์
+            maxFiles: 1, // ไฟล์สูงสุด 5 ไฟล์
             /*maxfilesexceeded: function(file) {
             this.removeAllFiles();
             this.addFile(file);

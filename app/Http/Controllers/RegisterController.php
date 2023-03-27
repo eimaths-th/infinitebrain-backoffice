@@ -56,7 +56,7 @@ class RegisterController extends Controller
                 'required',
                 'string',
                 'regex:/^[a-zA-Z0-9 ]+$/',
-                'min:4',             // must be at least 10 characters in length
+                'min:8',             // must be at least 10 characters in length
                 // 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
                 // 'regex:/[a-z]/',      // must contain at least one lowercase letter
                 // 'regex:/[A-Z]/',      // must contain at least one uppercase letter
@@ -111,7 +111,7 @@ class RegisterController extends Controller
             'password' => Hash::make($request->get('password')),
             'name_parent' => $request->get('parent'),
             'mobile' => $request->get('phone'),
-            'street_address' => $request->get('address'),
+            'street_address' => $request->get('address'), 
             'postcode' => $request->get('postcode'),
             'code'=> $rnumber,
 
