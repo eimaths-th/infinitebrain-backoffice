@@ -102,9 +102,8 @@ class RegisterController extends Controller
 
 //         exit();
         
-        $rnumber = RunningNumber::generate(new Register,'code',4,"");
+        // $rnumber = RunningNumber::generate(new Register,'code',4,"");
         
-        $rnumber1 = RunningNumber::generate(new Student,'code',4,"");
 
         $registerForm = new Register([
             'email' => $request->get('email'),
@@ -113,16 +112,18 @@ class RegisterController extends Controller
             'mobile' => $request->get('phone'),
             'street_address' => $request->get('address'), 
             'postcode' => $request->get('postcode'),
-            'code'=> $rnumber,
+            'code'=> "",
 
         ]);
-        $data = [];
         // echo $request->get('val');
         // exit();
         // $error = 1 ;
         for($x=0; $x<$request->get('val');$x++){
+            // $rnumber1 = RunningNumber::generate(new Student,'code',4,"");
+            $rcnumber = RunningNumber::generate();
+            $data = [];
             $data[]=[
-                'code'=> $rnumber1 ,
+                'code'=> $rcnumber ,
                 'first_name' => $request->get('firstname')[$x],
                 'last_name' => $request->get('lastname')[$x],
                 'nick_name' => $request->get('nickname')[$x],
@@ -132,12 +133,16 @@ class RegisterController extends Controller
                 'mobile'=> "" ,
                 'photo_att' => $fileas[$x],
             ];
+            // $data = [];
+
+            // print_r($data);
+            Student::upsert($data,['code','first_name','last_name','nick_name'
+            ,'birth_data','school_name','grade','photo_att']);
         }
         // if(count($data)>0){
         //     $error = '';
         // }
-        Student::upsert($data,['code','first_name','last_name','nick_name'
-        ,'birth_data','school_name','grade','photo_att']);
+       
         // $student = new Student([
         //     'code'=> $rnumber1 ,
         //     'first_name' => $request->get('firstname'),

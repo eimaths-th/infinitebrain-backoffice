@@ -1290,7 +1290,8 @@
                             </div>
 
                                <input type="text" name="val" id="val" hidden value="1" >
-                            
+                               <input type="text" name="field" id="field" hidden  >
+
                             <button type="button" id="addbtn" class="btn btn-lg btn-success">เพิ่มนักเรียนคนที่2</button><br><br><br>
                             <button type="button" id="addbtn3" class="btn btn-lg btn-success">เพิ่มนักเรียนคนที่3</button><br><br><br>
                             <button type="button" id="bbtn" class="btn btn-lg btn-danger">ลบนักเรียนคนที่2</button><br><br><br>
