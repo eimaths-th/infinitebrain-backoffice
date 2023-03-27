@@ -125,9 +125,10 @@ Route::post('/receipts/import', [ReceiptController::class, 'importExcel'])->name
 Route::delete('/receipts/destroy/{id}', [ReceiptController::class, 'destroy'])->name('receipts.destroy');
 Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all'])->name('receipts.destroy_all');
 
-Route::get('/register', [RegisterController::class, 'register'])->name('register');
-Route::post('/register/store', [RegisterController::class, 'store'])->name('register.store');
-Route::get('/register/complete', [RegisterController::class, 'show'])->name('register.complete');
+Route::get('/parent-register', [RegisterController::class, 'register'])->name('register');
+Route::post('/parent-register/store', [RegisterController::class, 'store'])->name('register.store');
+Route::get('/parent-register/complete', [RegisterController::class, 'show'])->name('register.complete');
+
 
 
 Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');

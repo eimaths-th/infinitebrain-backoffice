@@ -31,7 +31,7 @@ class RunningNumber extends Model
     // }
     use HasFactory;
 
-    protected $table = 'running_numbers';
+    protected $table = 'students_running_numbers';
 
     protected $fillable = [
         

@@ -20,5 +20,7 @@ class Student extends Model
         'mobile',
         'photo_att',
         'grade',
+        'sex',
+        'pid'
     ];
 }

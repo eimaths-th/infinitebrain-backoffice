@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Register extends Model
 {
     use HasFactory;
-    protected $table="register_form";
+    protected $table="parent";
 
     protected $fillable = [
         'email',

@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\FileUpload;
 // use App\Models\Receipt_RunningNumber;
 use App\Models\RunningNumber;
+use App\Models\Parent_RunningNumber;
 
 class RegisterController extends Controller
 { 
@@ -104,6 +105,7 @@ class RegisterController extends Controller
         
         // $rnumber = RunningNumber::generate(new Register,'code',4,"");
         
+        $rpnumber = Parent_RunningNumber::generate();
 
         $registerForm = new Register([
             'email' => $request->get('email'),
@@ -112,9 +114,12 @@ class RegisterController extends Controller
             'mobile' => $request->get('phone'),
             'street_address' => $request->get('address'), 
             'postcode' => $request->get('postcode'),
-            'code'=> "",
+            'code'=> "$rpnumber",
 
         ]);
+        $registerForm->save();
+        $pid = $registerForm->id;
+
         // echo $request->get('val');
         // exit();
         // $error = 1 ;
@@ -132,12 +137,14 @@ class RegisterController extends Controller
                 'grade' => $request->get('grade')[$x],
                 'mobile'=> "" ,
                 'photo_att' => $fileas[$x],
+                'sex'=>$request->get('sex')[$x],
+                'pid'=> $pid ,
             ];
             // $data = [];
 
             // print_r($data);
             Student::upsert($data,['code','first_name','last_name','nick_name'
-            ,'birth_data','school_name','grade','photo_att']);
+            ,'birth_data','school_name','grade','photo_att','sex','pid']);
         }
         // if(count($data)>0){
         //     $error = '';
@@ -155,8 +162,7 @@ class RegisterController extends Controller
         //     'photo_att' =>"",
         // ]);
         // $student->save();
-        $registerForm->save();
-        return redirect('/register/complete');
+        return redirect('/parent-register/complete');
 
     }
 
