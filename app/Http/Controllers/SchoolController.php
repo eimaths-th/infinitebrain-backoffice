@@ -8,18 +8,164 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Level;
 use App\Models\Subject;
+use App\Models\ParentRegister;
 use App\Models\Student;
 
 class SchoolController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        
-        return view('register.home');
+        $id = 2;
+        $parent = ParentRegister::find($id);
+
+
+        $parent_html = '<div class="container rounded bg-white mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-4 border-right">
+                <div
+                    class="d-flex flex-column align-items-center text-center p-3 py-5">
+                    <img class="rounded-circle mt-5" width="150px"
+                        src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span
+                        class="font-weight-bold">' . ucfirst($parent->name_parent) . '</span><span
+                        class="text-black-50">' . $parent->email . '</span><span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-7 border-right">
+                <div class="p-3 py-5">
+                    <div
+                        class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">ข้อมูลผู้ปกครอง</h4>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12"><label
+                                class="labels">รหัสผู้ปกครอง</label><input type="text"
+                                class="form-control"
+                                value="' . $parent->code . '" readonly></div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12"><label
+                                class="labels">ชื่อ - นามสกุล</label><input type="text"
+                                class="form-control" placeholder="ชื่อ - นามสกุล"
+                                value="' . $parent->name_parent . '"></div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12"><label class="labels">เบอร์มือถือ
+                               </label><input type="text"
+                                class="form-control"
+                                placeholder="เบอร์มือถือ"
+                                value="' . $parent->mobile . '"></div>
+                        <div class="col-md-12"><label class="labels">ที่อยู่
+                                </label><input type="text"
+                                class="form-control"
+                                placeholder="ที่อยู่"
+                                value="' . $parent->street_address . '"></div>
+                        <div class="col-md-12"><label
+                                class="labels">รหัสไปรษณีย์</label><input
+                                type="text" class="form-control"
+                                placeholder="รหัสไปรษณีย์"
+                                value="' . $parent->postcode . '"></div>
+                        <div class="col-md-12"><label class="labels">Email
+                                </label><input type="text"
+                                class="form-control"
+                                placeholder="enter email id" value="' . $parent->email . '" readonly>
+                        </div>
+                        <div class="col-md-12"><label class="labels">Password
+                        </label><input type="password"
+                        class="form-control"
+                        placeholder="enter password" value="">
+                         </div>
+                
+                    </div>
+                    <div class="mt-5 text-center"><button
+                            class="btn btn-primary profile-button"
+                            type="button">Save Profile</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+            ';
+        $student_html = "";
+        $student = Student::where([['pid', $id]])
+            ->orderBy("id", "asc")
+            ->get();
+
+        foreach ($student as $stu_result) {
+            $photo = url('/') .'/receipt_form_images/'.$stu_result->photo_att;
+            $student_html .= '<div class="container rounded bg-white mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-4 border-right">
+                <div
+                    class="d-flex flex-column align-items-center text-center p-3 py-5">
+                    <img class="rounded-circle mt-5" width="150px"
+                        src="'.$photo.'"><span
+                        class="font-weight-bold">' . ucfirst($stu_result->name) . '</span><span
+                        class="text-black-50">' . $stu_result->code . '</span><span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-7 border-right">
+                <div class="p-3 py-5">
+                    <div
+                        class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">ข้อมูลนักเรียน</h4>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12"><label
+                                class="labels">รหัสผู้ปกครอง</label><input type="text"
+                                class="form-control"
+                                value="' . $parent->code . '" readonly></div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12"><label
+                                class="labels">ชื่อ - นามสกุล</label><input type="text"
+                                class="form-control" placeholder="ชื่อ - นามสกุล"
+                                value="' . $parent->name_parent . '"></div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12"><label class="labels">เบอร์มือถือ
+                               </label><input type="text"
+                                class="form-control"
+                                placeholder="เบอร์มือถือ"
+                                value="' . $parent->mobile . '"></div>
+                        <div class="col-md-12"><label class="labels">ที่อยู่
+                                </label><input type="text"
+                                class="form-control"
+                                placeholder="ที่อยู่"
+                                value="' . $parent->street_address . '"></div>
+                        <div class="col-md-12"><label
+                                class="labels">รหัสไปรษณีย์</label><input
+                                type="text" class="form-control"
+                                placeholder="รหัสไปรษณีย์"
+                                value="' . $parent->postcode . '"></div>
+                        <div class="col-md-12"><label class="labels">Email
+                                </label><input type="text"
+                                class="form-control"
+                                placeholder="enter email id" value="' . $parent->email . '" readonly>
+                        </div>
+                        <div class="col-md-12"><label class="labels">Password
+                        </label><input type="password"
+                        class="form-control"
+                        placeholder="enter password" value="">
+                         </div>
+                
+                    </div>
+                    <div class="mt-5 text-center"><button
+                            class="btn btn-primary profile-button"
+                            type="button">Save Profile</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+            ';
+        }
+
+        return view('register.home')->with(['parent_html' =>  $parent_html])
+            ->with(['student_html' =>  $student_html]);
     }
 }
