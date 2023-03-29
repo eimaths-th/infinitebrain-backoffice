@@ -90,7 +90,7 @@ class CustomAuthController extends Controller
 
     public function dashboard()
     {
-        if (Auth::user()->check()) {
+        if (Auth::check()) {
             return view('dashboard');
         }
 

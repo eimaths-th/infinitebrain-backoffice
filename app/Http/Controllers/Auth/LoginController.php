@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
 
@@ -79,5 +80,13 @@ class LoginController extends Controller
         //echo ("hello2");
         return back()->withInput($request->only('email', 'remember'))
         ->withErrors(['error' => 'Your Username Or Password Not Match']);
+    }
+
+    public function ParentsignOut()
+    {
+        Session::flush();
+        Auth::guard('parent')->logout();
+
+        return Redirect('login/parent');
     }
 }
