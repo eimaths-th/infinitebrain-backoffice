@@ -38,9 +38,9 @@ Auth::routes([
 
 //Route::get('dashboard', [CustomAuthController::class, 'dashboard']); 
 Route::get('login', [CustomAuthController::class, 'index'])->name('login');
-Route::post('custom-login', [CustomAuthController::class, 'customLogin'])->name('login.custom'); 
+Route::post('custom-login', [CustomAuthController::class, 'customLogin'])->name('login.custom');
 Route::get('registration', [CustomAuthController::class, 'registration'])->name('register-user');
-Route::post('custom-registration', [CustomAuthController::class, 'customRegistration'])->name('register.custom'); 
+Route::post('custom-registration', [CustomAuthController::class, 'customRegistration'])->name('register.custom');
 Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout');
 
 
@@ -117,8 +117,8 @@ Route::delete('/course/destroy_all', [CourseController::class, 'destroy_all'])->
 
 Route::get('/receipts', [ReceiptController::class, 'index'])->name('receipts');
 Route::get('/receipts/create', [ReceiptController::class, 'create'])->name('receipts.create');
-Route::match(array('GET','POST'),'/receipts/print_day', [ReceiptController::class, 'print_day'])->name('receipts.print_day');
-Route::match(array('GET','POST'),'/receipts/print_month', [ReceiptController::class, 'print_month'])->name('receipts.print_month');
+Route::match(array('GET', 'POST'), '/receipts/print_day', [ReceiptController::class, 'print_day'])->name('receipts.print_day');
+Route::match(array('GET', 'POST'), '/receipts/print_month', [ReceiptController::class, 'print_month'])->name('receipts.print_month');
 Route::get('/receipts/show/{type}/{id}', [ReceiptController::class, 'show'])->name('receipts.show');
 Route::get('/receipts/edit/{id}', [ReceiptController::class, 'edit'])->name('receipts.edit');
 Route::put('/receipts/save/{id}', [ReceiptController::class, 'update'])->name('receipts.save');
@@ -134,8 +134,8 @@ Route::get('/school', [SchoolController::class, 'index'])->name('school');
 
 
 Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
-Route::post('/form/upload',[ReceiptFormController::class, 'fileStore'])->name('form.upload');
-Route::post('/form/upload/delete',[ReceiptFormController::class, 'fileDestroy'])->name('form.delete');
+Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
+Route::post('/form/upload/delete', [ReceiptFormController::class, 'fileDestroy'])->name('form.delete');
 Route::post('/form/store', [ReceiptFormController::class, 'store'])->name('form.store');
 Route::get('/form/complete', [ReceiptFormController::class, 'show'])->name('form.complete');
 
@@ -145,10 +145,10 @@ Route::delete('/receipts_form/destroy/{id}', [ReceiptFormController::class, 'des
 Route::delete('/receipts_form/destroy_all', [ReceiptFormController::class, 'destroy_all'])->name('receipts_form.destroy_all');
 Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->name('receipts_form.store');
 
-    //Auth::routes();
-    Route::get('/login/parent', [LoginController::class, 'showParentLoginForm']);
-    Route::post('/login/parent', [LoginController::class, 'parentLogin']);
+//Auth::routes();
+Route::get('/login/parent', [LoginController::class, 'showParentLoginForm']);
+Route::post('/login/parent', [LoginController::class, 'parentLogin']);
 
-    // Route::view('/home', 'home')->middleware('auth');
-    ////Route::view('/parent', 'parent')->middleware('auth');
-    Route::get('/parent', [SchoolController::class, 'index'])->name('parent');
+// Route::view('/home', 'home')->middleware('auth');
+////Route::view('/parent', 'parent')->middleware('auth');
+Route::get('/parent', [SchoolController::class, 'index'])->name('parent');

@@ -21,7 +21,10 @@ class SchoolController extends Controller
      */
     public function index()
     {
-        $id = Auth::guard('parent')->id();
+        //$id = Auth::guard('parent')->id();
+        //Auth::guard('parent')->user()->email;
+        $users = Auth::guard('parent')->user();
+        $id = $users->id;
         $parent = ParentRegister::find($id);
 
 
