@@ -77,6 +77,7 @@ class LoginController extends Controller
             return redirect('/parent');
         } 
         //echo ("hello2");
-        return back()->withInput($request->only('email', 'remember'));
+        return back()->withInput($request->only('email', 'remember'))
+        ->withErrors(['error' => 'Your Username Or Password Not Match']);
     }
 }

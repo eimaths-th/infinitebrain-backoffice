@@ -211,10 +211,6 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                <a class="nav-link"  href="{{ route('parentregister') }}">{{ __('Register') }}</a>
-
-                                </div>
 
                             </div>
 

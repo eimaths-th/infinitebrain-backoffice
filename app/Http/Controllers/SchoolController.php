@@ -24,7 +24,7 @@ class SchoolController extends Controller
     {
         //$id = Auth::guard('parent')->id();
         //Auth::guard('parent')->user()->email;
-        if (!Auth::check()) {
+        if (!Auth::guard('parent')->check()) {
             return redirect("/login/parent/");
         } 
         $users = Auth::guard('parent')->user();
