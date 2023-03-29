@@ -338,7 +338,7 @@ class CourseController extends Controller
         }
 
         if ($type == "html") {
-            $html = array();
+            $html = array('html'=>$tb_level);
              return  $html;
         } else {
             return view($viewr)->with(['year' => $start_year])->with(['last_year' => $last_year])
