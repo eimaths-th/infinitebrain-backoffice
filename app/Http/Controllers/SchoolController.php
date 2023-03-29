@@ -95,6 +95,7 @@ class SchoolController extends Controller
         </div>
     </div>
             ';
+        $course_html = '';
         $student_html = "";
         $student = Student::where([['pid', $id]])
             ->orderBy("id", "asc")
@@ -175,19 +176,19 @@ class SchoolController extends Controller
     </div>
             ';
 
-            $course = Course::where([['student_id', $stu_result->id]])
-            ->orderBy("id", "asc")
-            ->get();
+            if ($student) {
+                $course = Course::where([['student_id', $stu_result->id]])
+                    ->orderBy("id", "asc")
+                    ->get();
+            }
 
-            $course_html = '';
+
             if ($course) {
-
                 foreach ($course as $course_data) {
                     //$course_html = CourseController::show('html','th',$course_data->id);
                     $course_html = (new CourseController)->show('html', 'th', $course_data->id);
                 }
             }
-
         }
 
         return view('register.home')->with(['parent_html' =>  $parent_html])
