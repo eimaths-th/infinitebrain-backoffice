@@ -100,15 +100,22 @@ class SchoolController extends Controller
             ->orderBy("id", "asc")
             ->get();
 
+        
+
         foreach ($student as $stu_result) {
-            $photo = url('/') .'/receipt_form_images/'.$stu_result->photo_att;
+            $photo = url('/') . '/receipt_form_images/' . $stu_result->photo_att;
+
+            $course = Course::where([['id', $stu_result->id]])
+            ->orderBy("id", "asc")
+            ->get();
+
             $student_html .= '<div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
             <div class="col-md-4 border-right">
                 <div
                     class="d-flex flex-column align-items-center text-center p-3 py-5">
                     <img class="rounded-circle mt-5" width="150px"
-                        src="'.$photo.'"><span
+                        src="' . $photo . '"><span
                         class="font-weight-bold">' . ucfirst($stu_result->name) . '</span><span
                         class="text-black-50">' . $stu_result->code . '</span><span>
                     </span>
@@ -172,7 +179,11 @@ class SchoolController extends Controller
         </div>
     </div>
             ';
-            
+
+            foreach ($course as $course_data) {
+                echo $course_data->id;
+            }
+
             $student_chart = "";
         }
 
