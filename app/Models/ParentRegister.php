@@ -27,7 +27,7 @@ class ParentRegister extends Authenticatable
         'postcode',
         // 'grade',
         'code',
-        
+        'google_id',
     ];
     protected $hidden = [
         'password', 'remember_token',

@@ -14,6 +14,7 @@ use App\Http\Controllers\ReceiptFormController;
 use App\Http\Controllers\ParentRegisterController;
 use App\Http\Controllers\SubjectPriceController;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -146,6 +147,22 @@ Route::delete('/receipts_form/destroy/{id}', [ReceiptFormController::class, 'des
 Route::delete('/receipts_form/destroy_all', [ReceiptFormController::class, 'destroy_all'])->name('receipts_form.destroy_all');
 Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->name('receipts_form.store');
 
+// Route::prefix('google')->name('google.')->group( function(){
+//     Route::get('login', [GoogleController::class, 'loginWithGoogle'])->name('login');
+//     Route::any('callback', [GoogleController::class, 'callbackFromGoogle'])->name('callback');
+// });
+Route::get('/login/google', [GoogleController::class, 'loginWithGoogle'])->name('google.login');
+Route::get('/login/google/callback',[GoogleController::class, 'callbackFromGoogle'])->name('google.callback');
+
+// <<<<<<< HEAD
+    //Auth::routes();
+    Route::get('/login/parent', [LoginController::class, 'showParentLoginForm'])->name('loginparent');
+    Route::post('/login/parent', [LoginController::class, 'parentLogin']);
+// =======
+//Auth::routes();
+Route::get('/login/parent', [LoginController::class, 'showParentLoginForm']);
+Route::post('/login/parent', [LoginController::class, 'parentLogin']);
+// >>>>>>> dc8e8644044467482850ab7431b2b4a38d9517c0
 //Auth::routes();
 Route::get('/login/parent', [LoginController::class, 'showParentLoginForm']);
 Route::post('/login/parent', [LoginController::class, 'parentLogin']);
