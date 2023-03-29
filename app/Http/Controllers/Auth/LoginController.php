@@ -30,7 +30,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    //protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = RouteServiceProvider::HOME;
     protected function redirectTo()
     {
         if (Auth::user()->level == 1) {
@@ -65,7 +65,8 @@ class LoginController extends Controller
             'password' => 'required|min:6'
         ]);
          if (Auth::guard('parent')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
-            
+            // echo ("hello");
+            // exit();
             return redirect()->intended('/parent');
         } 
         return back()->withInput($request->only('email', 'remember'));

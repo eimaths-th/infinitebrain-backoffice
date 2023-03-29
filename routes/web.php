@@ -149,5 +149,5 @@ Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->n
     Route::get('/login/parent', [LoginController::class, 'showParentLoginForm']);
     Route::post('/login/parent', [LoginController::class, 'parentLogin']);
 
-    Route::view('/home', 'home')->middleware('auth');
-    Route::view('/parent', 'parent');
+    // Route::view('/home', 'home')->middleware('auth');
+    Route::view('/parent', 'parent')->middleware('auth');
