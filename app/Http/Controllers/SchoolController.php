@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CourseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -154,11 +155,11 @@ class SchoolController extends Controller
                     <div class="row mt-3">
                                 <div class="col-md-6">
                                 <label
-                                class="labels">ชื่อเล่น </label><input type="text"
+                                class="labels">ชื่อโรงเรียน </label><input type="text"
                                 class="form-control" placeholder="ชื่อ"
                                 value="' . $stu_result->school_name . '"></div>
                                 <div class="col-md-6"><label
-                                class="labels">วันเกิด </label><input type="text"
+                                class="labels">ระดับชั้น </label><input type="text"
                                 class="form-control" placeholder="นามสกุล"
                                 value="' . $stu_result->grade . '"></div>
                 
@@ -171,7 +172,7 @@ class SchoolController extends Controller
         </div>
     </div>
             ';
-
+            
             $student_chart = "";
         }
 
