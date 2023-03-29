@@ -101,7 +101,7 @@ class SchoolController extends Controller
             ->get();
 
         
-
+//
         foreach ($student as $stu_result) {
             $photo = url('/') . '/receipt_form_images/' . $stu_result->photo_att;
 
