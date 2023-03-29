@@ -6,9 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-use App\Models\ParentRegister;
+
 
 
 class LoginController extends Controller
@@ -69,7 +68,7 @@ class LoginController extends Controller
             //echo ("hello1");
             //echo Auth::user()->email;
             //dd(session()->all());
-            //$users = Auth::guard('parent')->user();
+            //echo $users = Auth::guard('parent')->user()->email;
             //$users->email;
             //exit();
             //return redirect()->intended('/parent');

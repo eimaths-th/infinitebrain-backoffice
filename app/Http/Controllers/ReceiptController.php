@@ -479,7 +479,7 @@ class ReceiptController extends Controller
         //exit();
         if($data->type==2){
             $mes = "ใบลดหนี้";
-            $text = "";
+            $text = "Credit Note";
         }else{
         
         $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน" ;
