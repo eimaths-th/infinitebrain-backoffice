@@ -42,8 +42,8 @@ class GoogleController extends Controller
                // $saveUser = ParentRegister::where('email', $user->getEmail())->first();
             //}
 
-            echo $saveUser->id;
-            exit();
+            //echo $saveUser->id;
+            //exit();
 
 
            // Auth::loginUsingId($saveUser->id);
