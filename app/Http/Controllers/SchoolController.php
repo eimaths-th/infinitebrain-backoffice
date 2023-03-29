@@ -180,12 +180,18 @@ class SchoolController extends Controller
     </div>
             ';
 
+        $course_html='';
+        if ($course) {
+
             foreach ($course as $course_data) {
                 //echo $course_data->id;(
                 //$course_html = CourseController::show('html','th',$course_data->id);
                 $course_html = (new CourseController)->show('html','th',$course_data->id);
                 
             }
+
+        }
+            
 
             //$student_chart = $course_html['html'];
         }
