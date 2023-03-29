@@ -107,7 +107,9 @@
                                 <a class="nav-link"  href="{{ route('parentregister') }}">{{ __('Register') }}</a>
 
                                 </div>
-
+                                <a href="{{ route('google.login') }}" class="btn btn-google btn-user btn-block">
+                                            <i class="fab fa-google fa-fw"></i> Login with Google
+                                        </a>
                             </div>
 
                             <div class="row mb-0">
@@ -221,7 +223,7 @@
                                     <button type="submit" class="btn btn-primary">
                                         {{ __('Login') }}
                                     </button>
-
+                                    
                                     @if (Route::has('password.request'))
                                         <a class="btn btn-link" href="{{ route('password.request') }}">
                                             {{ __('Forgot Your Password?') }}
