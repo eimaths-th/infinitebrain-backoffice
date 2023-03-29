@@ -13,7 +13,6 @@ return new class extends Migration
      */
     public function up()
     {
-        //
         Schema::table('parent', function (Blueprint $table) {
             //
             $table->string('google_id')->nullable();
