@@ -337,7 +337,11 @@ class CourseController extends Controller
             $viewr = "course.print";
         }
 
-        return view($viewr)->with(['year' => $start_year])->with(['last_year' => $last_year])
+        if ($type == "html") {
+            $html = array();
+             return  $html;
+        } else {
+            return view($viewr)->with(['year' => $start_year])->with(['last_year' => $last_year])
             ->with(['start_month' => $start_month])
             ->with(['months' => $months])
             ->with(['year_span' => $year_span])
@@ -345,6 +349,9 @@ class CourseController extends Controller
             ->with(['course' => $course])
             ->with(['id' => $id])
             ->with(['lang' => $lang]);
+        }
+
+        
     }
 
 

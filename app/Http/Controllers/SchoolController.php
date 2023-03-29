@@ -120,43 +120,47 @@ class SchoolController extends Controller
                         <h4 class="text-right">ข้อมูลนักเรียน</h4>
                     </div>
                     <div class="row mt-2">
-                        <div class="col-md-12"><label
-                                class="labels">รหัสผู้ปกครอง</label><input type="text"
+                        <div class="col-md-6"><label
+                                class="labels">รหัสนักเรียน</label><input type="text"
                                 class="form-control"
-                                value="' . $parent->code . '" readonly></div>
+                                value="' . $stu_result->code . '" readonly></div>
+                                <div class="col-md-6"><label
+                                class="labels">เพศ</label><input type="text"
+                                class="form-control"
+                                value="' . $stu_result->sex . '" ></div>
                     </div>
                     <div class="row mt-2">
-                        <div class="col-md-12"><label
-                                class="labels">ชื่อ - นามสกุล</label><input type="text"
-                                class="form-control" placeholder="ชื่อ - นามสกุล"
-                                value="' . $parent->name_parent . '"></div>
+                        <div class="col-md-6"><label
+                                class="labels">ชื่อ </label><input type="text"
+                                class="form-control" placeholder="ชื่อ"
+                                value="' . $stu_result->first_name . '"></div>
+                                <div class="col-md-6"><label
+                                class="labels">นามสกุล </label><input type="text"
+                                class="form-control" placeholder="นามสกุล"
+                                value="' . $stu_result->last_name . '"></div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-md-12"><label class="labels">เบอร์มือถือ
-                               </label><input type="text"
-                                class="form-control"
-                                placeholder="เบอร์มือถือ"
-                                value="' . $parent->mobile . '"></div>
-                        <div class="col-md-12"><label class="labels">ที่อยู่
-                                </label><input type="text"
-                                class="form-control"
-                                placeholder="ที่อยู่"
-                                value="' . $parent->street_address . '"></div>
-                        <div class="col-md-12"><label
-                                class="labels">รหัสไปรษณีย์</label><input
-                                type="text" class="form-control"
-                                placeholder="รหัสไปรษณีย์"
-                                value="' . $parent->postcode . '"></div>
-                        <div class="col-md-12"><label class="labels">Email
-                                </label><input type="text"
-                                class="form-control"
-                                placeholder="enter email id" value="' . $parent->email . '" readonly>
-                        </div>
-                        <div class="col-md-12"><label class="labels">Password
-                        </label><input type="password"
-                        class="form-control"
-                        placeholder="enter password" value="">
-                         </div>
+                                <div class="col-md-6">
+                                <label
+                                class="labels">ชื่อเล่น </label><input type="text"
+                                class="form-control" placeholder="ชื่อ"
+                                value="' . $stu_result->nick_name . '"></div>
+                                <div class="col-md-6"><label
+                                class="labels">วันเกิด </label><input type="text"
+                                class="form-control" placeholder="นามสกุล"
+                                value="' . $stu_result->birth_date . '"></div>
+                
+                    </div>
+                    <div class="row mt-3">
+                                <div class="col-md-6">
+                                <label
+                                class="labels">ชื่อเล่น </label><input type="text"
+                                class="form-control" placeholder="ชื่อ"
+                                value="' . $stu_result->school_name . '"></div>
+                                <div class="col-md-6"><label
+                                class="labels">วันเกิด </label><input type="text"
+                                class="form-control" placeholder="นามสกุล"
+                                value="' . $stu_result->grade . '"></div>
                 
                     </div>
                     <div class="mt-5 text-center"><button
@@ -167,6 +171,8 @@ class SchoolController extends Controller
         </div>
     </div>
             ';
+
+            $student_chart = 
         }
 
         return view('register.home')->with(['parent_html' =>  $parent_html])
