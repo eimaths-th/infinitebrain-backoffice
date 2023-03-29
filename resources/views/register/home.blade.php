@@ -191,7 +191,7 @@
                                                     aria-controls="custom-tabs-three-settings" aria-selected="false">Comment
                                                     อาจารย์</a>
                                             </li>
-                                           
+
                                             <li class="nav-item">
                                                 <a class="nav-link " id="custom-tabs-three-promotion-tab" data-toggle="pill"
                                                     href="#custom-tabs-three-promotion" role="tab"
@@ -215,10 +215,62 @@
                                             <div class="tab-pane fade show active" id="custom-tabs-three-profile"
                                                 role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
                                                 {!! $student_html !!}
-                                                
+
                                             </div>
                                             <div class="tab-pane fade" id="custom-tabs-three-messages" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-messages-tab">
+
+                                               
+                                                @foreach ($student_chart as $chart_key) 
+                                                
+                                                <table style="width: 100%;" id="Listview"
+                                                    class="table table-striped table-bordered responsive-utilities jambo_table bulk_action">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>School Grade</th>
+                                                            <th class="text-center">Level</th>
+                                                            <th colspan="12" class="text-center">(
+                                                                 )</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                      
+
+                                                    </tbody>
+
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td colspan="2" align="center">Year</td>
+                                                            @for ($i = $chart_key->$year; $i <= $chart_key->$last_year; $i++)
+                                                                <td align="center" colspan="{{ $chart_key->$year_span[$i] }}">
+                                                                    {{ $i }}</td>
+                                                            @endfor
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2" align="center">Month</td>
+
+                                                            @foreach ($chart_key->$months as $mkey)
+                                                                <td align="center">{{ $mkey }}</td>
+                                                            @endforeach
+                                                        </tr>
+                                                    </tfoot>
+
+                                                </table>
+                                                @endforeach
+
+
+
+
+
+
+
+
+
+
+
                                                 <div style="float: right; padding-right: 250px;">
                                                     <b> Student Code: </b> ( 009 ) <b>Name:</b>
                                                     (Pakin)

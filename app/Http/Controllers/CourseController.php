@@ -20,7 +20,6 @@ class CourseController extends Controller
     {
         if (Auth::check()) {
             if (Auth::user()->level == 1 || Auth::user()->level == 2) {
-                
             } else {
                 abort(403, 'Unauthorized action.');
             }
@@ -175,8 +174,8 @@ class CourseController extends Controller
         $levels_start = Level::where('id', $course[0]->level_id)->get();
 
         //print_r($levels_start);
-        $english1 = array("","Pre - A","A","B","C","D","E","F","G","H","I");
-        $english2 = array("","5","6","7","8");
+        $english1 = array("", "Pre - A", "A", "B", "C", "D", "E", "F", "G", "H", "I");
+        $english2 = array("", "5", "6", "7", "8");
 
         $start_date = explode("-", $course[0]->date_start);
 
@@ -228,14 +227,14 @@ class CourseController extends Controller
             } else if ($lang == "en") {
                 $level_title = $key->title;
             }
-           
-             if ($course[0]->subject_id==4) {
+
+            if ($course[0]->subject_id == 4) {
                 $level_sort = $english1[$key->level_sort];
-             } elseif ($course[0]->subject_id==5) {
+            } elseif ($course[0]->subject_id == 5) {
                 $level_sort = $english2[$key->level_sort];
-             } else {
+            } else {
                 $level_sort = $key->level_sort;
-             }
+            }
 
             $tdhtml[$key->level_sort] = "";
             $tdhtml[$key->level_sort] .= "<tr>
@@ -292,6 +291,11 @@ class CourseController extends Controller
 
                                 $progress_view = "
                                 <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width: " . $bar_percent . "%; height: 8px; top: 0; margin-top: -9px; \" ><tr><td bgcolor=\"blue\"></td></tr></table>";
+                            } else if ($type == "html") {
+                                $progress_view = "
+                                <div class=\"progress-bar-xs mb-3 progress\" style=\"width: " . $bar_percent . "%;\">
+                                <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 100%;\"></div>
+                                </div>";
                             }
 
                             $tdhtml[$key->level_sort] .= "<td " . $div_right . " style=\"padding:0; margin: 0; margin-right: 0px; margin-left: 0px; \" width=\"80\">" . $progress_view . "
@@ -338,20 +342,19 @@ class CourseController extends Controller
         }
 
         if ($type == "html") {
-            $html = array('html'=>$tb_level);
-             return  $html;
+            $html = array('html' => $tb_level, 'year' => $start_year, 'last_year' => $last_year, 'start_month' => $start_month
+            , 'year_span' => $year_span, 'levels' => $tb_level, 'course' => $course);
+            return  $html;
         } else {
             return view($viewr)->with(['year' => $start_year])->with(['last_year' => $last_year])
-            ->with(['start_month' => $start_month])
-            ->with(['months' => $months])
-            ->with(['year_span' => $year_span])
-            ->with(['levels' => $tb_level])
-            ->with(['course' => $course])
-            ->with(['id' => $id])
-            ->with(['lang' => $lang]);
+                ->with(['start_month' => $start_month])
+                ->with(['months' => $months])
+                ->with(['year_span' => $year_span])
+                ->with(['levels' => $tb_level])
+                ->with(['course' => $course])
+                ->with(['id' => $id])
+                ->with(['lang' => $lang]);
         }
-
-        
     }
 
 
@@ -442,8 +445,8 @@ class CourseController extends Controller
         $div_right = "";
         $bar_percent = "";
 
-        $english1 = array("","Pre - A","A","B","C","D","E","F","G","H","I");
-        $english2 = array("","5","6","7","8");
+        $english1 = array("", "Pre - A", "A", "B", "C", "D", "E", "F", "G", "H", "I");
+        $english2 = array("", "5", "6", "7", "8");
 
         foreach ($levels as $key) {
             //if ($key->id == $request->get('level')) {
@@ -454,13 +457,13 @@ class CourseController extends Controller
                 $level_title = $key->title;
             }
 
-            if ($course[0]->id==4) {
+            if ($course[0]->id == 4) {
                 $level_sort = $english1[$key->level_sort];
-             } elseif ($course[0]->id==5) {
+            } elseif ($course[0]->id == 5) {
                 $level_sort = $english2[$key->level_sort];
-             } else {
+            } else {
                 $level_sort = $key->level_sort;
-             }
+            }
 
 
             $tdhtml[$key->level_sort] = "";

@@ -104,7 +104,7 @@ class SchoolController extends Controller
         foreach ($student as $stu_result) {
             $photo = url('/') . '/receipt_form_images/' . $stu_result->photo_att;
 
-            $course = Course::where([['id', $stu_result->id]])
+            $course = Course::where([['student_id', $stu_result->id]])
             ->orderBy("id", "asc")
             ->get();
             //
@@ -181,13 +181,17 @@ class SchoolController extends Controller
             ';
 
             foreach ($course as $course_data) {
-                echo $course_data->id;
+                //echo $course_data->id;(
+                //$course_html = CourseController::show('html','th',$course_data->id);
+                $course_html = (new CourseController)->show('html','th',$course_data->id);
+                
             }
 
-            $student_chart = "";
+            //$student_chart = $course_html['html'];
         }
 
         return view('register.home')->with(['parent_html' =>  $parent_html])
-            ->with(['student_html' =>  $student_html]);
+            ->with(['student_html' =>  $student_html])
+            ->with(['student_chart' =>  $course_html]);
     }
 }

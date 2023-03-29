@@ -25,26 +25,30 @@ class GoogleController extends Controller
 
             // Check Users Email If Already There
             $is_user = ParentRegister::where('email', $user->getEmail())->first();
-            if(!$is_user){
+            $saveUser = ParentRegister::where('email', $user->getEmail())->first();
+            //if(!$is_user){
 
-                $saveUser = ParentRegister::updateOrCreate([
-                    'google_id' => $user->getId(),
-                ],[
-                    'name' => $user->getName(),
-                    'email' => $user->getEmail(),
-                    'password' => Hash::make($user->getName().'@'.$user->getId())
-                ]);
-            }else{
-                $saveUser = ParentRegister::where('email',  $user->getEmail())->update([
-                    'google_id' => $user->getId(),
-                ]);
-                $saveUser = ParentRegister::where('email', $user->getEmail())->first();
-            }
+               // $saveUser = ParentRegister::updateOrCreate([
+                //    'google_id' => $user->getId(),
+                //],[
+                //    'name' => $user->getName(),
+                 //   'email' => $user->getEmail(),
+                //    'password' => Hash::make($user->getName().'@'.$user->getId())
+                //]);
+            //}else{
+                //$saveUser = ParentRegister::where('email',  $user->getEmail())->update([
+                 //   'google_id' => $user->getId(),
+                //]);
+               // $saveUser = ParentRegister::where('email', $user->getEmail())->first();
+            //}
 
 
-            Auth::loginUsingId($saveUser->id);
+           // Auth::loginUsingId($saveUser->id);
          
-            return redirect()->route('parent');
+            //return redirect()->route('parent');
+            if (Auth::guard('parent')->loginUsingId($saveUser->id)) {
+                return redirect('/parent');
+            } 
         } catch (\Throwable $th) {
             throw $th;
         }
