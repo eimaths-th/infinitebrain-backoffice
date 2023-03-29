@@ -73,6 +73,8 @@ class LoginController extends Controller
             //$users->email;
             //exit();
             //return redirect()->intended('/parent');
+            // $this->check_permission();
+
             return redirect('/parent');
         } 
         //echo ("hello2");

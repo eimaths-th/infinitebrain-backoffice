@@ -540,6 +540,12 @@
         background-color: #f8cccd;
         /* margin-bottom: 50px; */
     }
+    .card-header-custom {
+            background-image: url("{{ asset('images/school_309241295.jpg') }}");
+            height: 420px;
+            background-repeat: no-repeat;
+        }
+        
 </style>
 @endsection
 
@@ -553,8 +559,14 @@
             <div class="card bg-light2 mb-3 ">
                 {{-- <div class="card-header">{{ __('Login') }}
             </div> --}}
-
-            <div align="center"><img class="" src="{{ asset('images/infinite.jpg') }}" alt="..." height="300"></div>
+            <div class="card-header card-header-custom" style="background-color: #fff;margin-bottom:100px;">
+                        <div class="text-center avatar mx-auto white">
+                            <img class="rounded-circle img-responsive bg-white p-3 image"
+                                style="margin-top: 300px; border:solid #eeeded 1px ;"
+                                src="{{ asset('images/infinite.jpg') }}" alt="..." height="200">    
+                        </div>
+                    </div>
+            <!-- <div align="center"><img class="" src="{{ asset('images/infinite.jpg') }}" alt="..." height="300"></div> -->
             <form id="infinite" method="POST" action="{{ route('parentregister.store') }}">
                 @csrf
                 <div class="card-body">
