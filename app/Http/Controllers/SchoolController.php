@@ -172,7 +172,7 @@ class SchoolController extends Controller
     </div>
             ';
 
-            $student_chart = 
+            $student_chart = "";
         }
 
         return view('register.home')->with(['parent_html' =>  $parent_html])
