@@ -157,7 +157,7 @@ Route::get('/login/google/callback', [GoogleController::class, 'callbackFromGoog
 //Auth::routes();
 Route::get('/login/parent', [LoginController::class, 'showParentLoginForm'])->name('login.parent');
 Route::post('/login/parent', [LoginController::class, 'parentLogin']);
-Route::get('/login/parent/logout', [SchoolController::class, 'ParentsignOut'])->name('parent.logout');
+Route::get('/login/parent/logout', [LoginController::class, 'ParentsignOut'])->name('parent.logout');
 
 
 // Route::view('/home', 'home')->middleware('auth');
