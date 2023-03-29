@@ -107,6 +107,7 @@ class SchoolController extends Controller
             $course = Course::where([['id', $stu_result->id]])
             ->orderBy("id", "asc")
             ->get();
+            //
 
             $student_html .= '<div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
