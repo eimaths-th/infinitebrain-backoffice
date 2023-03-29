@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Models\ParentRegister;
 
@@ -65,10 +66,13 @@ class LoginController extends Controller
             'password' => 'required|min:6'
         ]);
          if (Auth::guard('parent')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
-            // echo ("hello");
-            // exit();
-            return redirect()->intended('/parent');
+            //echo ("hello1");
+            print_r($_SESSION);
+            exit();
+            //return redirect()->intended('/parent');
+            return redirect('/parent');
         } 
-        return back()->withInput($request->only('email', 'remember'));
+        echo ("hello2");
+        //return back()->withInput($request->only('email', 'remember'));
     }
 }

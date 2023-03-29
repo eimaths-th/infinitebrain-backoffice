@@ -145,10 +145,10 @@ Route::delete('/receipts_form/destroy/{id}', [ReceiptFormController::class, 'des
 Route::delete('/receipts_form/destroy_all', [ReceiptFormController::class, 'destroy_all'])->name('receipts_form.destroy_all');
 Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->name('receipts_form.store');
 
-    Auth::routes();
+    //Auth::routes();
     Route::get('/login/parent', [LoginController::class, 'showParentLoginForm']);
     Route::post('/login/parent', [LoginController::class, 'parentLogin']);
 
     // Route::view('/home', 'home')->middleware('auth');
     ////Route::view('/parent', 'parent')->middleware('auth');
-    Route::view('/parent', [SchoolController::class, 'index'])->name('parent');
+    Route::get('/parent', [SchoolController::class, 'index'])->name('parent');
