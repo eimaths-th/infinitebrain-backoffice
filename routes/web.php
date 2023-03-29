@@ -124,6 +124,7 @@ Route::get('/receipts/show/{type}/{id}', [ReceiptController::class, 'show'])->na
 Route::get('/receipts/edit/{id}', [ReceiptController::class, 'edit'])->name('receipts.edit');
 Route::put('/receipts/save/{id}', [ReceiptController::class, 'update'])->name('receipts.save');
 Route::post('/receipts/store', [ReceiptController::class, 'store'])->name('receipts.store');
+Route::post('/receipts/conv', [ReceiptController::class, 'conv'])->name('receipts.conv');
 Route::post('/receipts/import', [ReceiptController::class, 'importExcel'])->name('receipts.import');
 Route::delete('/receipts/destroy/{id}', [ReceiptController::class, 'destroy'])->name('receipts.destroy');
 Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all'])->name('receipts.destroy_all');
@@ -162,6 +163,9 @@ Route::get('/login/google/callback',[GoogleController::class, 'callbackFromGoogl
 Route::get('/login/parent', [LoginController::class, 'showParentLoginForm']);
 Route::post('/login/parent', [LoginController::class, 'parentLogin']);
 // >>>>>>> dc8e8644044467482850ab7431b2b4a38d9517c0
+//Auth::routes();
+Route::get('/login/parent', [LoginController::class, 'showParentLoginForm']);
+Route::post('/login/parent', [LoginController::class, 'parentLogin']);
 
 // Route::view('/home', 'home')->middleware('auth');
 ////Route::view('/parent', 'parent')->middleware('auth');

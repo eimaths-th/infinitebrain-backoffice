@@ -18,14 +18,14 @@ use App\Models\Receipt_Customer_RunningNumber;
 
 class ReceiptController extends Controller
 {
-   
 
-    
-    
-  
-   
-   
-   
+
+
+
+
+
+
+
     const BAHT_TEXT_NUMBERS = array('ศูนย์', 'หนึ่ง', 'สอง', 'สาม', 'สี่', 'ห้า', 'หก', 'เจ็ด', 'แปด', 'เก้า');
     const BAHT_TEXT_UNITS = array('', 'สิบ', 'ร้อย', 'พัน', 'หมื่น', 'แสน', 'ล้าน');
     const BAHT_TEXT_ONE_IN_TENTH = 'เอ็ด';
@@ -53,20 +53,29 @@ class ReceiptController extends Controller
     );
     private function convertDigit($digit)
     {
-       switch($digit)
-       {
-          case '0': return 'zero';
-          case '1': return 'one';
-          case '2': return 'two';
-          case '3': return 'three';
-          case '4': return 'four';
-          case '5': return 'five';
-          case '6': return 'six';
-          case '7': return 'seven';
-          case '8': return 'eight';
-          case '9': return 'nine';
-       }
-    }//convertDigit
+        switch ($digit) {
+            case '0':
+                return 'zero';
+            case '1':
+                return 'one';
+            case '2':
+                return 'two';
+            case '3':
+                return 'three';
+            case '4':
+                return 'four';
+            case '5':
+                return 'five';
+            case '6':
+                return 'six';
+            case '7':
+                return 'seven';
+            case '8':
+                return 'eight';
+            case '9':
+                return 'nine';
+        }
+    } //convertDigit
 
 
     /**
@@ -78,20 +87,32 @@ class ReceiptController extends Controller
     private function convertGroup($index)
     {
         switch ($index) {
-            case 11: return ' decillion';
-            case 10: return ' nonillion';
-            case 9: return ' octillion';
-            case 8: return ' septillion';
-            case 7: return ' sextillion';
-            case 6: return ' quintrillion';
-            case 5: return ' quadrillion';
-            case 4: return ' trillion';
-            case 3: return ' billion';
-            case 2: return ' million';
-            case 1: return ' thousand';
-            case 0: return '';
+            case 11:
+                return ' decillion';
+            case 10:
+                return ' nonillion';
+            case 9:
+                return ' octillion';
+            case 8:
+                return ' septillion';
+            case 7:
+                return ' sextillion';
+            case 6:
+                return ' quintrillion';
+            case 5:
+                return ' quadrillion';
+            case 4:
+                return ' trillion';
+            case 3:
+                return ' billion';
+            case 2:
+                return ' million';
+            case 1:
+                return ' thousand';
+            case 0:
+                return '';
         }
-    }// convertGroup
+    } // convertGroup
 
     /**
      * convert the number (and with dot).
@@ -99,7 +120,7 @@ class ReceiptController extends Controller
      * @param number $num number integer or decimal. negative or positive.
      * @return string translated number to text in Thai language.
      */
-    public function convertNumber($num) 
+    public function convertNumber($num)
     {
         $num = strval($num);
 
@@ -125,7 +146,7 @@ class ReceiptController extends Controller
             if (strlen($num) > 36) {
                 return 'Error!';
             }
-            
+
             $num = str_pad($num, 36, '0', STR_PAD_LEFT);
             $group = rtrim(chunk_split($num, 3, ' '), ' ');
             $groups = explode(' ', $group);
@@ -133,26 +154,26 @@ class ReceiptController extends Controller
             $groups2 = array();
             foreach ($groups as $g) {
                 $groups2[] = $this->convertThreeDigit($g[0], $g[1], $g[2]);
-            }// endforeach;
+            } // endforeach;
 
             for ($z = 0; $z < count($groups2); $z++) {
                 if ($groups2[$z] != '') {
                     $output .= $groups2[$z] . $this->convertGroup(11 - $z) . ($z < 11 && !array_search('', array_slice($groups2, $z + 1, -1)) && $groups2[11] != '' && $groups[11][0] == '0' ? ' and ' : ', ');
                 }
-            }// endfor;
+            } // endfor;
 
             $output = rtrim($output, ', ');
-        }// endif;
+        } // endif;
 
         if ($dec > 0) {
             $output .= ' point';
             for ($i = 0; $i < strlen($dec); $i++) {
                 $output .= ' ' . $this->convertDigit($dec[$i]);
-            }// endfor;
-        }// endif;
+            } // endfor;
+        } // endif;
 
         return $output;
-    }// convertNumber
+    } // convertNumber
 
 
     /**
@@ -185,7 +206,7 @@ class ReceiptController extends Controller
         }
 
         return $output;
-    }// convertThreeDigit
+    } // convertThreeDigit
 
 
     /**
@@ -199,42 +220,68 @@ class ReceiptController extends Controller
     {
         if ($dig2 == '0') {
             switch ($dig1) {
-                case '1': return 'ten';
-                case '2': return 'twenty';
-                case '3': return 'thirty';
-                case '4': return 'forty';
-                case '5': return 'fifty';
-                case '6': return 'sixty';
-                case '7': return 'seventy';
-                case '8': return 'eighty';
-                case '9': return 'ninety';
+                case '1':
+                    return 'ten';
+                case '2':
+                    return 'twenty';
+                case '3':
+                    return 'thirty';
+                case '4':
+                    return 'forty';
+                case '5':
+                    return 'fifty';
+                case '6':
+                    return 'sixty';
+                case '7':
+                    return 'seventy';
+                case '8':
+                    return 'eighty';
+                case '9':
+                    return 'ninety';
             }
         } else if ($dig1 == '1') {
             switch ($dig2) {
-                case '1': return 'eleven';
-                case '2': return 'twelve';
-                case '3': return 'thirteen';
-                case '4': return 'fourteen';
-                case '5': return 'fifteen';
-                case '6': return 'sixteen';
-                case '7': return 'seventeen';
-                case '8': return 'eighteen';
-                case '9': return 'nineteen';
+                case '1':
+                    return 'eleven';
+                case '2':
+                    return 'twelve';
+                case '3':
+                    return 'thirteen';
+                case '4':
+                    return 'fourteen';
+                case '5':
+                    return 'fifteen';
+                case '6':
+                    return 'sixteen';
+                case '7':
+                    return 'seventeen';
+                case '8':
+                    return 'eighteen';
+                case '9':
+                    return 'nineteen';
             }
         } else {
             $temp = $this->convertDigit($dig2);
             switch ($dig1) {
-                case '2': return "twenty-$temp";
-                case '3': return "thirty-$temp";
-                case '4': return "forty-$temp";
-                case '5': return "fifty-$temp";
-                case '6': return "sixty-$temp";
-                case '7': return "seventy-$temp";
-                case '8': return "eighty-$temp";
-                case '9': return "ninety-$temp";
+                case '2':
+                    return "twenty-$temp";
+                case '3':
+                    return "thirty-$temp";
+                case '4':
+                    return "forty-$temp";
+                case '5':
+                    return "fifty-$temp";
+                case '6':
+                    return "sixty-$temp";
+                case '7':
+                    return "seventy-$temp";
+                case '8':
+                    return "eighty-$temp";
+                case '9':
+                    return "ninety-$temp";
             }
         }
-    }// convertTwoDigit
+    } // convertTwoDigit
 
     public function URL_exists($url)
     {
@@ -254,7 +301,7 @@ class ReceiptController extends Controller
         $a = curl_exec($ch); // $a will contain all headers
 
         $url_return = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL); // This is what you need, it will return you the last effective URL
- 
+
         return $url_return;
     }
 
@@ -368,6 +415,7 @@ class ReceiptController extends Controller
             //sleep(2);
             $receipt = Receipt::select(
                 "receipts.id as receipt_id",
+                "receipts.type as receipt_type",
                 "receipts.submission_date as receipt_submission_date",
                 "receipts.receipt_number as receipt_number",
                 "receipts.receipt_customer_number as receipt_customer_number",
@@ -386,16 +434,25 @@ class ReceiptController extends Controller
             //print_r($levels);
             //exit();
             return datatables()->of($receipt)
-                /* ->editColumn('student_name', function (Receipt $receipt) {
-                    return $receipt->student_name . ' ' . $receipt->student_lastname;
-                })*/
+                ->editColumn('receipt_type', function (Receipt $receipt) {
+                    if ($receipt->receipt_type == 2) {
+                        $mes = "ใบลดหนี้";
+                        $text = "Credit Note";
+                    } else {
+            
+                        $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+                        $text = "Tax Invoice/Receipt";
+                    }
+                    return $mes;
+                })
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->receipt_id . '" class="flat" name="table_records[]" value="' . $row->receipt_id . '" >';
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a href="receipts/show/view/' . $row->receipt_id . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->receipt_id . '"><i class="fa fa-eye"></i> View Receipt</a> ';
+                    $html = '<a href="receipts/show/view/' . $row->receipt_id . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->receipt_id . '"><i class="fa fa-eye"></i> View </a> ';
                     $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Edit</a> ';
-                    $html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
+                    $html .= '<a href="#" class="btn btn-xs btn-info btn-edit" id="getConvData" data-id="' . $row->receipt_id . '"><i class="fa fa-code-compare"></i></i> Credit Note</a> ';
+                    //$html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
                 })->toJson();
         }
@@ -432,7 +489,7 @@ class ReceiptController extends Controller
         //
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
-            'type'=> 'required|string',
+            'type' => 'required|string',
             'submission_date' => 'required|string',
             'first_name' => 'required|string',
             'last_name' => 'required|string',
@@ -446,13 +503,13 @@ class ReceiptController extends Controller
             // 'file_att' => 'required|string
             'description' => 'required|string',
             'grade' => 'required|string',
-            
+
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-        
+
         $rnumber = Receipt_RunningNumber::generate($request->get('sfield'));
         $rcnumber = Receipt_Customer_RunningNumber::generate($request->get('sfield'));
         $request->request->add(['receipt_number' => $rnumber, 'receipt_customer_number' => $rcnumber]);
@@ -463,6 +520,47 @@ class ReceiptController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function conv(Request $request)
+    {
+        //
+        $this->check_permission();
+        $validator =  Validator::make($request->all(), [
+            'type' => 'required|string',
+            'submission_date' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'street_address' => 'required|string',
+            'receipt_number' => 'required|string',
+            'receipt_customer_number' => 'required|string',
+            'postcode' => 'required|string',
+            'name_parent' => 'required|string',
+            'mobile' => 'required|string',
+            'package' => 'required|string',
+            // 'file_att' => 'required|string
+            'description' => 'required|string',
+            'grade' => 'required|string',
+
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        //$rnumber = Receipt_RunningNumber::generate($request->get('sfield'));
+        //$rcnumber = Receipt_Customer_RunningNumber::generate($request->get('sfield'));
+        //$request->request->add(['receipt_number' => $rnumber, 'receipt_customer_number' => $rcnumber]);
+
+        $conv = new Receipt($request->all());
+        $conv->save();
+        return response()->json(['success' => 'Credit Note Add successfully']);
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  \App\Models\Receipt  $receipt
@@ -470,22 +568,22 @@ class ReceiptController extends Controller
      */
     public function show($type, $id)
     {
-        
+
         //
         $this->check_permission();
         $data = Receipt::find($id);
 
         //print_r($data);
         //exit();
-        if($data->type==2){
+        if ($data->type == 2) {
             $mes = "ใบลดหนี้";
             $text = "Credit Note";
-        }else{
-        
-        $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน" ;
-        $text = "Tax Invoice/Receipt";
+        } else {
+
+            $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+            $text = "Tax Invoice/Receipt";
         }
-        
+
         if ($type == "view") {
             $viewr = "receipt.view";
         } else if ($type == "print") {
@@ -496,7 +594,7 @@ class ReceiptController extends Controller
             $res = preg_replace("/[^0-9.]/", "", $data->package);
         }
 
-        
+
 
         $price = (int)$res;
         $price_val = number_format($price, 2);
@@ -507,7 +605,7 @@ class ReceiptController extends Controller
         $vat_price_val = number_format($vat_price, 2);
         $vat_val = number_format($vat_total, 2);
         //exit();
-        
+
         $file_att = '';
         if ($data->file_att) {
 
@@ -522,12 +620,12 @@ class ReceiptController extends Controller
             $arrl = explode($urlf, $data->file_att);
             for ($i = 1; $i <= count($arrl) - 1; $i++) {
                 $urla = $urlf . $arrl[$i];
-                if (strpos($urla,"jotform")) {
+                if (strpos($urla, "jotform")) {
                     $retu = $this->get_img_url($urla);
                 } else {
                     $retu = $urla;
                 }
-                
+
                 //if ($this->URL_exists($retu)) {
                 $file_att .= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
                 //}
@@ -540,8 +638,8 @@ class ReceiptController extends Controller
 
 
         return view($viewr)->with(['id' => $id])->with(['data' => $data])->with(['price_val' => $price_val])
-            ->with(['mes'=>$mes])
-            ->with(['text'=>$text])
+            ->with(['mes' => $mes])
+            ->with(['text' => $text])
             ->with(['price_texten' => $price_texten])
             ->with(['price_text' => $price_text])
             ->with(['vat_price_val' => $vat_price_val])
@@ -552,7 +650,7 @@ class ReceiptController extends Controller
     public function print_day(Request $request)
     {
         //
-        
+
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'pdsfield' => 'required|string',
@@ -600,7 +698,7 @@ class ReceiptController extends Controller
         //->toArray();
         // print_r($receipts);
         // exit();
-        
+
         $i = 0;
         $ret_receipt = array();
         $total_price = 0;
@@ -613,17 +711,17 @@ class ReceiptController extends Controller
 
             $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
             $price = (int)$res;
-            if($ret_receipt[$i]['receipt_type']==2){
+            if ($ret_receipt[$i]['receipt_type'] == 2) {
                 $ret_receipt[$i]['receipt_type'] = "ใบลดหนี้";
-                $price = $price*-1;
+                $price = $price * -1;
             }
             $price_val = number_format($price, 2);
 
             $ret_receipt[$i]['receipt_price'] = $price_val;
             $ret_receipt[$i]['receipt_price_label'] = "บาท";
             $i++;
-            
-            $total_price = ($total_price+$price);
+
+            $total_price = ($total_price + $price);
         }
 
         $pagen = 0;
@@ -644,13 +742,12 @@ class ReceiptController extends Controller
                 $ret_receipt[$x]['receipt_price'] = "";
                 $ret_receipt[$x]['receipt_price_label'] = "";
                 $ret_receipt[$x]['receipt_type'] = "";
-                
             }
         }
         //echo $start;
         // print_r($ret_receipt);
         // exit();
-        
+
 
 
 
@@ -717,7 +814,7 @@ class ReceiptController extends Controller
             ->orderBy("receipts.submission_date", "asc")
             ->get();
         // ->toArray();
-        
+
         // print_r($receipts);
         // exit();
         $i = 0;
@@ -743,10 +840,10 @@ class ReceiptController extends Controller
             $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
             $price = (int)$res;
             $price_val = number_format($price, 2);
-            if($result->receipt_type==2){
-                $price=$price*-1;
+            if ($result->receipt_type == 2) {
+                $price = $price * -1;
             }
-            
+
             $ret_receipt[$result->receipt_submission_date]['description'] = $request->get('Pmdescription');
             $ret_receipt[$result->receipt_submission_date]['receipt_price'] = $price;
             $ret_receipt[$result->receipt_submission_date]['receipt_price_label'] = "บาท";
@@ -767,8 +864,8 @@ class ReceiptController extends Controller
         }
 
         foreach ($ret_receipt as $receipt) {
-            $chartd = explode("-",$receipt['receipt_submission_date']);
-            $chart_date .= "'" . $chartd[1].'-'.$chartd[2] . "',";
+            $chartd = explode("-", $receipt['receipt_submission_date']);
+            $chart_date .= "'" . $chartd[1] . '-' . $chartd[2] . "',";
             $chart_date_price .= $receipt['last_price'] . ",";
         }
 

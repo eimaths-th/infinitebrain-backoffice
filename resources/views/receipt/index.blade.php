@@ -90,6 +90,7 @@
                         <thead>
                             <tr>
                                 <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
+                                <th>Type</th>
                                 <th>Submission Date</th>
                                 <th>Voucher Number</th>
                                 <th>Customer Code</th>
@@ -643,6 +644,144 @@
             </form>
         </div>
     </div>
+
+    <!-- Convert credit note  Modal -->
+    <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+        id="ConvModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <form class="form" action="" method="POST">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Create Credit Note</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <strong>Success!</strong> Credit Note was create successfully.
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+
+                        <div id="ConvModalBody">
+
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="ReceiptNumber">Voucher Number:</label>
+                                        <input type="text" class="form-control" name="conv_receipt_number"
+                                            id="conv_receipt_number" value="" >
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative  form-group">
+                                        <label for="ReceiptCNumber">Customer Code:</label>
+                                        <input type="text" class="form-control" name="conv_customer_code"
+                                            id="conv_customer_code" value="" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="Submission Date">Submission Date:</label>
+                                        <input type="text" class="AddDate form-control" name="conv_submission_date"
+                                            id="ConvSubmissiondate" value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative  form-group">
+                                        <label for="Package">Package:</label>
+                                        <input type="text" class="form-control" name="conv_package" id="ConvPackage"
+                                            value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="firstname">First Name:</label>
+                                        <input type="text" class="form-control" name="conv_firstname" id="ConvFirstname"
+                                            value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="lastname">Last Name:</label>
+                                        <input type="text" class="form-control" name="conv_lastname" id="ConvLastname"
+                                            value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="Grade">Grade:</label>
+                                        <input type="text" class="form-control" name="conv_grade" id="ConvGrade"
+                                            value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Postcode">Postcode:</label>
+                                    <input type="text" class="form-control" name="conv_postcode" id="ConvPostcode"
+                                        value="">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="Parent">Name Parent:</label>
+                                        <input type="text" class="form-control" name="conv_name_parent" id="ConvParent"
+                                            value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="Mobile">Mobile:</label>
+                                        <input type="text" class="AddPhone form-control" name="conv_mobile"
+                                            id="ConvMobile" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="Des">Description:</label>
+                                    <textarea class="form-control" name="conv_drescription" id="ConvDes"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Name">Street Address:</label>
+                                <textarea class="form-control" name="conv_address" id="ConvAddress"></textarea>
+                            </div>
+                    
+                           {{--  <div class="form-group">
+                                <label for="File">File:</label>
+                                <input type="text" class="form-control" id="EditFile" name="file"
+                                    value="">
+                            </div> --}}
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="SubmitConvForm">Create</button>
+                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -721,6 +860,10 @@
                         name: 'checkbox',
                         orderable: false,
                         searchable: false
+                    },
+                    {
+                        data: 'receipt_type',
+                        name: 'receipt_type'
                     },
                     {
                         data: 'receipt_submission_date',
@@ -859,6 +1002,45 @@
                     }
                 });
 
+            });
+
+        
+            $(document).on('click', '#getConvData', function(e) {
+                e.preventDefault();
+
+
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+
+                id = $(this).data('id');
+                $.ajax({
+                    url: "receipts/edit/" + id,
+                    method: 'GET',
+                    success: function(res) {
+                        //console.log(res);
+                        //$('#conv_receipt_number').val(res.data.receipt_number);
+                        $('#conv_customer_code').val(res.data.receipt_customer_number);
+                        //$('#ConvSubmissiondate').val(res.data.submission_date);
+                        $('#ConvPackage').val(res.data.package);
+                        $('#ConvFirstname').val(res.data.first_name);
+                        $('#ConvLastname').val(res.data.last_name);
+                        $('#ConvDes').val(res.data.description);
+                        $('#ConvGrade').val(res.data.grade);
+                        $('#ConvAddress').val(res.data.street_address);
+                        //$('#EditAddress2').val(res.data.street_address2);
+                        //$('#EditCity').val(res.data.city);
+                        //$('#EditProvince').val(res.data.province);
+                        $('#ConvPostcode').val(res.data.postcode);
+                        $('#ConvParent').val(res.data.name_parent);
+                        $('#ConvMobile').val(res.data.mobile);
+                        $('#ConvFile').val(res.data.file_att);
+                        $('#ConvModal').modal('show');
+
+                    }
+                });
+
             })
 
 
@@ -974,6 +1156,67 @@
                             //setTimeout(function() {
                             //$('.alert-success').hide();
                             //   $('#EditModal').modal('hide');
+                            //}, 10000);
+
+                        }
+                    }
+                });
+            });
+
+            $('#SubmitConvForm').click(function(e) {
+                e.preventDefault();
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+
+                $.ajax({
+                    url: "{{ route('receipts.conv') }}",
+                    method: 'post',
+                    data: {
+                        type: 2,
+                        receipt_number: $('#conv_receipt_number').val(),
+                        receipt_customer_number: $('#conv_customer_code').val(),
+                        submission_date: $('#ConvSubmissiondate').val(),
+                        first_name: $('#ConvFirstname').val(),
+                        last_name: $('#ConvLastname').val(),
+                        grade: $('#ConvGrade').val(),
+                        description: $('#ConvDes').val(),
+                        street_address: $('#ConvAddress').val(),
+                        //street_address2: $('#AddAddress2').val(),
+                        //city: $('#AddCity').val(),
+                        //province: $('#AddProvince').val(),
+                        postcode: $('#ConvPostcode').val(),
+                        name_parent: $('#ConvParent').val(),
+                        mobile: $('#ConvMobile').val(),
+                        package: $('#ConvPackage').val(),
+                        //file_att: $('#AddFile').val(),
+                        sfield: $('#Sfield').val(),
+                        _token: token,
+                    },
+                    success: function(result) {
+                        if (result.errors) {
+                            $('.alert-danger').html('');
+                            $.each(result.errors, function(key, value) {
+                                $('.alert-danger').show();
+                                $('.alert-danger').append('<strong><li>' + value +
+                                    '</li></strong>');
+                            });
+                        } else {
+                            $('.alert-danger').hide();
+                            $('.alert-success').show();
+                            $('.alert-success').append('<strong><li>' + result.success +
+                                '</li></strong>');
+                            toastr.success(result.success, {
+                                timeOut: 5000
+                            });
+                            $('#CreateModal').modal('hide');
+                            $('#Listview').DataTable().ajax.reload();
+                            $('.form').trigger('reset');
+                            //$('#SubmitCreateForm').hide();
+                            //setTimeout(function() {
+                            //$('.alert-success').hide();
+                            //$('#CreateModal').modal('hide');
                             //}, 10000);
 
                         }
