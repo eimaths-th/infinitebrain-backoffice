@@ -67,12 +67,15 @@ class LoginController extends Controller
         ]);
          if (Auth::guard('parent')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
             //echo ("hello1");
-            print_r($_SESSION);
-            exit();
+            //echo Auth::user()->email;
+            //dd(session()->all());
+            //$users = Auth::guard('parent')->user();
+            //$users->email;
+            //exit();
             //return redirect()->intended('/parent');
             return redirect('/parent');
         } 
-        echo ("hello2");
-        //return back()->withInput($request->only('email', 'remember'));
+        //echo ("hello2");
+        return back()->withInput($request->only('email', 'remember'));
     }
 }

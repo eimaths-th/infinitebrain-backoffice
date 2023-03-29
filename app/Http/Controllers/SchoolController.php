@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Course;
 use App\Models\Level;
@@ -20,7 +21,7 @@ class SchoolController extends Controller
      */
     public function index()
     {
-        $id = 2;
+        $id = Auth::guard('parent')->id();
         $parent = ParentRegister::find($id);
 
 
