@@ -26,10 +26,12 @@ class SchoolController extends Controller
         //Auth::guard('parent')->user()->email;
         if (!Auth::guard('parent')->check()) {
             return redirect("/login/parent/");
-        } 
+        }
         $users = Auth::guard('parent')->user();
         $id = $users->id;
         $parent = ParentRegister::find($id);
+
+
 
 
         $parent_html = '<div class="container rounded bg-white mt-5 mb-5">
@@ -90,9 +92,9 @@ class SchoolController extends Controller
                          </div>
                 
                     </div>
-                    <div class="mt-5 text-center"><button
+                    <div class="mt-5"><button
                             class="btn btn-primary profile-button"
-                            type="button">Save Profile</button></div>
+                            type="button">บันทึกข้อมูล</button></div>
                 </div>
             </div>
         </div>
@@ -106,6 +108,34 @@ class SchoolController extends Controller
 
 
         foreach ($student as $stu_result) {
+
+
+
+            $select_grade = "";
+            $grade = array(
+                "Kindergarten" => "Kindergarten", "Grade 1" => "Grade 1", "Grade 2" => "Grade 2", "Grade 3" => "Grade 3", "Grade 4" => "Grade 4", "Grade 5" => "Grade 5", "Grade 6" => "Grade 6", "Grade 7" => "Grade 7", "Grade 8" => "Grade 8", "Grade 9" => "Grade 9", "Grade 10" => "Grade 10", "Grade 11" => "Grade 11", "Grade 12" => "Grade 12"
+            );
+            foreach ($grade as $key_grade => $value_grade) {
+                if ($stu_result->grade == $key_grade) {
+
+                    $select_grade .= '<option value="' . $key_grade . '" selected>' . $value_grade . '</option>';
+                } else {
+                    $select_grade .= '<option value="' . $key_grade . '" >' . $value_grade . '</option>';
+                }
+            }
+
+
+            $select_sex = "";
+            $sex = array("Male" => "Male", "Female" => "Female");
+            foreach ($sex as $key_sex => $value_sex) {
+                if ($stu_result->sex == $key_sex) {
+
+                    $select_sex .= '<option value="' . $key_sex . '" selected>' . $value_sex . '</option>';
+                } else {
+                    $select_sex .= '<option value="' . $key_sex . '" >' . $value_sex . '</option>';
+                }
+            }
+
             $photo = url('/') . '/receipt_form_images/' . $stu_result->photo_att;
 
             $student_html .= '<div class="container rounded bg-white mt-5 mb-5">
@@ -130,11 +160,14 @@ class SchoolController extends Controller
                         <div class="col-md-6"><label
                                 class="labels">รหัสนักเรียน</label><input type="text"
                                 class="form-control"
-                                value="' . $stu_result->code . '" readonly></div>
-                                <div class="col-md-6"><label
-                                class="labels">เพศ</label><input type="text"
-                                class="form-control"
-                                value="' . $stu_result->sex . '" ></div>
+                                value="' . $stu_result->code . '" readonly>
+                        </div>
+                        <div class="col-md-6"><label
+                                class="labels">เพศ</label>
+                                <select class="form-control" id="EditLevel" name="level">' .
+                                 $select_sex . '
+                                </select>
+                        </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6"><label
@@ -154,7 +187,7 @@ class SchoolController extends Controller
                                 value="' . $stu_result->nick_name . '"></div>
                                 <div class="col-md-6"><label
                                 class="labels">วันเกิด </label><input type="text"
-                                class="form-control" placeholder="นามสกุล"
+                                class="form-control AddDate" placeholder="นามสกุล"
                                 value="' . $stu_result->birth_date . '"></div>
                 
                     </div>
@@ -165,14 +198,16 @@ class SchoolController extends Controller
                                 class="form-control" placeholder="ชื่อ"
                                 value="' . $stu_result->school_name . '"></div>
                                 <div class="col-md-6"><label
-                                class="labels">ระดับชั้น </label><input type="text"
-                                class="form-control" placeholder="นามสกุล"
-                                value="' . $stu_result->grade . '"></div>
+                                class="labels">ระดับชั้น</label>
+                                <select class="form-control" id="EditGrade" name="grade">' .
+                                  $select_grade . '
+                                </select>
+                        </div>
                 
                     </div>
-                    <div class="mt-5 text-center"><button
+                    <div class="mt-5 "><button
                             class="btn btn-primary profile-button"
-                            type="button">Save Profile</button></div>
+                            type="button">บันทึกข้อมูล</button></div>
                 </div>
             </div>
         </div>
@@ -180,19 +215,27 @@ class SchoolController extends Controller
             ';
 
             if ($student) {
-                $course = Course::where([['student_id', $stu_result->id]])
+                $course[] = Course::where([['student_id', $stu_result->id]])
                     ->orderBy("id", "asc")
                     ->get();
             }
 
 
             if ($course) {
+                $course_html = array();
+                //$i = 0;
                 foreach ($course as $course_data) {
-                    //$course_html = CourseController::show('html','th',$course_data->id);
-                    $course_html = (new CourseController)->show('html', 'th', $course_data->id);
+                    foreach ($course_data as $course_data_val) {
+                        //$course_html = CourseController::show('html','th',$course_data->id);
+                        $course_html[] = (new CourseController)->show('html', 'th', $course_data_val->id);
+                        //$i++;
+                    }
                 }
             }
         }
+
+        //print_r($course_html);
+        //exit();
 
         return view('register.home')->with(['parent_html' =>  $parent_html])
             ->with(['student_html' =>  $student_html])
