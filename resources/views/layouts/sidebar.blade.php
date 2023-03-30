@@ -262,6 +262,12 @@
                                     STEM
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '9']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    OLPCS
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
