@@ -572,7 +572,7 @@
                 <div class="card-body">
                     <br>
                     <div class="text-center">
-                        <h2 class="card-title form_header">Registration Form</h2>
+                        <h2 class="card-title form_header" style="text-shadow: 2px 2px 4px;">Registration Form</h2>
                     </div>
                     <br>
                     <hr />
@@ -690,8 +690,9 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+                        <hr>
+
                         <div class="aaa">
                             <div class="form-row form-focus">
                                 <h3 class="form-label form-label-top form-label-auto ps-4">นักเรียนคนที่ 1</h2>
@@ -1262,10 +1263,10 @@
                     <input type="text" name="val" id="val" hidden value="1">
                     <input type="text" name="field" id="field" hidden>
 
-                    <button type="button" id="addbtn" class="btn btn-lg btn-success">เพิ่มนักเรียนคนที่2</button>
-                    <button type="button" id="addbtn3" class="btn btn-lg btn-success">เพิ่มนักเรียนคนที่3</button><br><br>
-                    <button type="button" id="bbtn" class="btn btn-lg btn-danger">ลบนักเรียนคนที่2</button>
-                    <button type="button" id="bbtn3" class="btn btn-lg btn-danger">ลบนักเรียนคนที่3</button><br><br><br>
+                    <button type="button" id="addbtn" class="btn btn-lg btn-success" style="box-shadow: 5px 5px 10px gray; color:#fff; text-shadow: 2px 2px 4px #000000;">เพิ่มนักเรียนคนที่2</button>
+                    <button type="button" id="addbtn3" class="btn btn-lg btn-success" style="box-shadow: 5px 5px 10px gray; color:#fff; text-shadow: 2px 2px 4px #000000;">เพิ่มนักเรียนคนที่3</button><br><br>
+                    <button type="button" id="bbtn" class="btn btn-lg btn-danger" style="box-shadow: 5px 5px 10px gray; color:#fff; text-shadow: 2px 2px 4px #000000;">ลบนักเรียนคนที่2</button>
+                    <button type="button" id="bbtn3" class="btn btn-lg btn-danger" style="box-shadow: 5px 5px 10px gray; color:#fff; text-shadow: 2px 2px 4px #000000;">ลบนักเรียนคนที่3</button><br><br><br>
 
 
                 </div>
@@ -1274,8 +1275,8 @@
         <div class="card-footer text-center">
             <br>
             <br>
-            <input type="submit" class="btn btn-lg btn-primary" value="Register">
-            <button type="reset" class="btn btn-lg btn-danger">Clear Form</button><br><br><br>
+            <input type="submit"style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:20%;" class="btn btn-lg btn-primary me-3" value="Register">
+            <button type="reset"style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:20%;"  class="btn btn-lg btn-danger">Clear Form</button><br><br><br>
         </div>
     </div>
 

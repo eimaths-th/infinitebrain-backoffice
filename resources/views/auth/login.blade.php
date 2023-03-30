@@ -11,7 +11,7 @@
 
         }
         .aaa {
-        color: #082d5f;
+        color: #d8e8b0;
         font-weight: 1000;
     }
         
@@ -26,7 +26,7 @@
         <div class="row justify-content-center">
             <div class="col-md-9">         
             <div class="card">
-            <div class="card-header card-header-custom" style="background-color: #fff;margin-bottom:150px;">
+            <div class="card-header card-header-custom" style="background-color: #fff;margin-bottom:100px;">
                         <div class="div_center avatar mx-auto white">
                             <img class="rounded-circle img-responsive bg-white p-3 image"
                                 style="margin-top: 300px; border:solid #eeeded 1px ;"
@@ -34,9 +34,10 @@
                         </div>
                     </div>
 
-                    <div class="card-header form_header "> <h2 class="text-center aaa">{{ isset($url) ? ucwords($url) : ""}} {{ __('Login') }}</h2></div>
+                    <div class="card-header form_header "> <h2 class="text-center aaa" style="text-shadow: 2px 2px 4px black;
+">{{ isset($url) ? ucwords($url) : ""}} {{ __('Login') }}</h2></div>
 
-                    <div class="card-body">
+                    <div class="card-body" style="padding-bottom:70px;">
                         <form method="POST" action='{{ url("login/$url") }}' aria-label="{{ __('Login') }}">
                             @csrf
                             <div class="row mb-3  ">
@@ -105,26 +106,31 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                <a class="nav-link btn btn-success" style="color:#fff"  href="{{ route('parentregister') }}">{{ __('Register') }}</a>
-
-                                </div>
+                                
                                         
                             </div>
 
-                            <div class="row mb-0">
-                                <div class="col-md-6 text-end">
-                                    <button type="submit" class="btn btn-primary">
+                            <div class="row mb-0" style="margin-top:30px;">
+                                
+                                <div class="col-md-3">
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary" style="    box-shadow: 5px 5px 10px gray; text-shadow: 2px 2px 4px #000000;width:100%; border-radius: 100px;">
                                         {{ __('Login') }}
                                     </button>
 
                                 </div>
                                 
-                                <div class="col-md-4 text-start">
-                                <a href="{{ route('google.login') }}" class="btn btn-google btn-user btn-block"style="background-color:red; color:white;">
+                                <div class="col-md-3 ">
+                                <a href="{{ route('google.login') }}" class="btn btn-google btn-user btn-block"style=" box-shadow: 5px 5px 10px gray; text-shadow: 2px 2px 4px #000000;background-color:red; color:white;width:100%;border-radius: 100px;" >
                                 <i class="fa fa-google"></i> Login with Google
                                         </a>
                                         </div>
+                                        <div class="col-md-2">
+                                <a class="btn btn-success" style="box-shadow: 5px 5px 10px gray; color:#fff;width:100%;border-radius: 100px;  text-shadow: 2px 2px 4px #000000;"  href="{{ route('parentregister') }}">{{ __('Register') }}</a>
+
+                                </div>
                             </div>
                         </form>
                     </div>
