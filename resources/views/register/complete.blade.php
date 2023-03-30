@@ -70,7 +70,7 @@
                         </div>
                         <div class="card-footer text-center">
                            <br><br>
-                           <a class="btn btn-lg btn-primary" href="{{ route('loginparent') }}">Go Back To Form</a><br><br>
+                           <a class="btn btn-lg btn-primary" href="{{ route('login.parent') }}">Go Back To Form</a><br><br>
                         </div>
                 </div>
 

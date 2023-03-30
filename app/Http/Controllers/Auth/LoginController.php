@@ -78,13 +78,6 @@ class LoginController extends Controller
             return redirect('/parent');
         } 
         //echo ("hello2");
-<<<<<<< HEAD
-        
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
-        // return back()->withInput($request->only('email'));
-=======
         return back()->withInput($request->only('email', 'remember'))
         ->withErrors(['error' => 'Your Username Or Password Not Match']);
     }
@@ -95,6 +88,5 @@ class LoginController extends Controller
         Auth::guard('parent')->logout();
 
         return Redirect('login/parent');
->>>>>>> dabc35a8b59fe58419c58f14dec3395ca8fa4c85
     }
 }
