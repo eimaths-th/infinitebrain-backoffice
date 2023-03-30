@@ -837,7 +837,7 @@
 
                                     <div class="col-md-6 col-sm-12">
 
-                                        <div class="position-relative form-group">
+                                        <div class="position-relative form-group" style="padding-top:24px;">
                                             <label class="form-label form-label-top form-label-auto" for="phone">Phone
                                                 Number / เบอร์โทรศัพท์ <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
@@ -857,7 +857,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12">
-                                        <div class="position-relative form-group">
+                                        <div class="position-relative form-group" style="padding-top:0px;">
                                             <label class="form-label form-label-top form-label-auto" for="grade">E-mail
                                                 (กรุณาตรวจสอบที่อยู่อีเมลให้ถูกต้อง หากกรอกผิด
                                                 จะไม่สามารถส่งข้อมูลในการเข้าสอบได้) <span

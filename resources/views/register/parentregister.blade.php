@@ -652,7 +652,7 @@
                             <div class="col-md-6 col-sm-12">
 
                                 <div class="position-relative form-group">
-                                    <label class="form-label form-label-top form-label-auto" for="password_confirmation">Confirm Password <span class="form-required">*</span>
+                                    <label class="form-label form-label-top form-label-auto" for="password_confirmation">Password Confirm  <span class="form-required">*</span>
                                         <div style="width: 270px"></div>
                                     </label>
                                     <input type="password" class="AddPassword form-control" name="password_confirmation" placeholder="ความยาวขั้นต่ำ 8 ตัว" id="password_confirmation" value="" maxlength="20" required>
