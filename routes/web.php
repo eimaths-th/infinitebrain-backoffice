@@ -136,10 +136,16 @@ Route::get('/school', [SchoolController::class, 'index'])->name('school');
 
 
 Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
+Route::get('/olpcs', [ReceiptFormController::class, 'olpcs'])->name('olpcs');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
 Route::post('/form/upload/delete', [ReceiptFormController::class, 'fileDestroy'])->name('form.delete');
 Route::post('/form/store', [ReceiptFormController::class, 'store'])->name('form.store');
 Route::get('/form/complete', [ReceiptFormController::class, 'show'])->name('form.complete');
+Route::get('/form/complete1', [ReceiptFormController::class, 'show1'])->name('form.complete1');
+
+Route::post('/form/store1', [ReceiptFormController::class, 'store1'])->name('form.store1');
+
+
 
 Route::get('/receipts_form', [ReceiptFormController::class, 'index'])->name('receipts_form');
 Route::get('/receipts_form/edit/{id}', [ReceiptFormController::class, 'edit'])->name('receipts_form.edit');

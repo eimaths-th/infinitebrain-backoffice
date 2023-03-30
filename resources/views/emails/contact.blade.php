@@ -260,8 +260,14 @@
                                                             <td class="pad" style="text-align:center;width:100%;">
                                                                 <h2
                                                                     style="margin: 0; color: #201f42; direction: ltr; font-family: 'Noto Serif', Georgia, serif; font-size: 24px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0;">
-                                                                    <span class="tinyMce-placeholder">GMEC 2023
-                                                                        Registration Form</span></h2>
+                                                                    <span class="tinyMce-placeholder"><?php 
+                                                                    if($data->sfield==9){
+                                                                        $message = "OLPCS 2023 Registration Form";
+                                                                    }else{
+                                                                        $message = "GMEC 2023 Registration Form";
+                                                                    }
+                                                                    ?>
+                                                                    {{ $message }}</span></h2>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -945,7 +951,13 @@
                                                             <td class="pad" style="text-align:left;width:100%;">
                                                                 <h2
                                                                     style="margin: 0;  font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 50px;">
-                                                                    <span class="tinyMce-placeholder"> สอบ GMEC
+                                                                    <span class="tinyMce-placeholder"><?php 
+                                                                    if($data->sfield==9){
+                                                                        $message1 = "OLPCS";
+                                                                    }else{
+                                                                        $message1 = "GMEC";
+                                                                    }
+                                                                    ?> สอบ {{ $message1 }}
                                                                         จากช่องทาง<br>ใด</span></h2>
                                                             </td>
                                                         </tr>

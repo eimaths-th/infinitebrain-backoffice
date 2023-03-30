@@ -19,13 +19,16 @@ use App\Mail\ContactMail;
 
 class ReceiptFormController extends Controller
 {
-    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM');
+    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM','9' =>'OLPCS');
 
     public function gmec()
     {
         return view("receipt_form.gmec");
     }
 
+    public function olpcs(){
+        return view("receipt_form.olpcs");
+    }
     public function fileStore(Request $request)
     {
         $filecount = count($request->file('file'));
@@ -285,12 +288,28 @@ class ReceiptFormController extends Controller
             'photo_att' => $fileas,
             'file_att' => $filebs,
         ]);
-                           
+                          
+        // print_r (['sfielda' =>  self::sfielda]);
+        // print_r (['sfield' => $request->sfield]);
+        // exit();
                                                                                                     
         $adminEmail = $request->get('email');
         Mail::to($adminEmail)->send(new ContactMail($receiptForm));
         $receiptForm->save();
-        return redirect('/form/complete');
+        //  print_r (['sfield' => $request->sfield]);
+        // exit();
+        
+        if($request->get('sfield')==9){
+            return redirect('/form/complete1');
+            // echo ("1111");
+        }
+        else{
+            return redirect('/form/complete');
+// echo("2222");
+        }
+            // ->with(['sfielda' =>  self::sfielda])
+   
+
     }
 
     /**
@@ -304,7 +323,11 @@ class ReceiptFormController extends Controller
         //
         return view("receipt_form.complete");
     }
-
+    public function show1(ReceiptForm $receiptForm)
+    {
+        //
+        return view("receipt_form.complete1");
+    }
     /**
      * Show the form for editing the specified resource.
      *
