@@ -556,7 +556,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-9">
-            <div class="card bg-light2 mb-3 ">
+            <div class="card bg-light2 mb-3 " style="-webkit-box-shadow: 0 30px 50px rgba(0,0,0,.2);box-shadow: 0 30px 50px rgba(0,0,0,.2);">
                 {{-- <div class="card-header">{{ __('Login') }}
             </div> --}}
             <div class="card-header card-header-custom" style="background-color: #fff;margin-bottom:100px;">
@@ -1267,17 +1267,17 @@
                     <button type="button" id="addbtn3" class="btn btn-lg btn-success" style="box-shadow: 5px 5px 10px gray; color:#fff; text-shadow: 2px 2px 4px #000000;">เพิ่มนักเรียนคนที่3</button><br><br>
                     <button type="button" id="bbtn" class="btn btn-lg btn-danger" style="box-shadow: 5px 5px 10px gray; color:#fff; text-shadow: 2px 2px 4px #000000;">ลบนักเรียนคนที่2</button>
                     <button type="button" id="bbtn3" class="btn btn-lg btn-danger" style="box-shadow: 5px 5px 10px gray; color:#fff; text-shadow: 2px 2px 4px #000000;">ลบนักเรียนคนที่3</button><br><br><br>
-
+                    <div class="text-center">
+      
+          
+            <input type="submit"style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:20%;" class="btn btn-lg btn-primary me-3" value="Register">
+            <button type="reset"style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:20%;"  class="btn btn-lg btn-danger">Clear Form</button><br><br><br>
+        </div>
 
                 </div>
 
         </div>
-        <div class="card-footer text-center">
-            <br>
-            <br>
-            <input type="submit"style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:20%;" class="btn btn-lg btn-primary me-3" value="Register">
-            <button type="reset"style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:20%;"  class="btn btn-lg btn-danger">Clear Form</button><br><br><br>
-        </div>
+        
     </div>
 
     </form>

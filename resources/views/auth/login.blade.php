@@ -24,8 +24,8 @@
 <body style="background-color: #d8e8b0;">
 <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-9">         
-            <div class="card">
+            <div class="col-md-9" >         
+            <div class="card" style="-webkit-box-shadow: 0 30px 50px rgba(0,0,0,.2);box-shadow: 0 30px 50px rgba(0,0,0,.2);">
             <div class="card-header card-header-custom" style="background-color: #fff;margin-bottom:100px;">
                         <div class="div_center avatar mx-auto white">
                             <img class="rounded-circle img-responsive bg-white p-3 image"
