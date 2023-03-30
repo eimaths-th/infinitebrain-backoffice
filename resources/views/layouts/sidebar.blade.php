@@ -320,6 +320,12 @@
                                     STEM
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '9']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    OLPCS
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -370,6 +376,12 @@
                                 <a href="{{ route('receipts.print_month', ['pmsfield' => '8','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร STEM รอบแรก '. $pmd]) }}">
                                     <i class="metismenu-icon"></i>
                                     STEM
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts.print_month', ['pmsfield' => '9','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร OLPCS รอบแรก '. $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    OLPCS
                                 </a>
                             </li>
                         </ul>
