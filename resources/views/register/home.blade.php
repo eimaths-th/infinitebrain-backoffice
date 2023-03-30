@@ -3,6 +3,10 @@
 @section('style')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <script src="http://malsup.github.io/jquery.blockUI.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://rawgit.com/RobinHerbots/Inputmask/5.x/dist/jquery.inputmask.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -155,10 +159,11 @@
 
                     <div class="card-body">
                         <br>
-                        <div class="text-center">
+                        <div>
                             <br><br><br>
-                            <h3 class="card-title">Student Information</h3>
+                            <h3 class="card-title"><i class="fa fa-graduation-cap"></i> Student Information</h3>
                         </div>
+                        <div style="float: right"><a href="{{ route('parent.logout') }}"><i class="fa fa-power-off"></i> ออกจากระบบ</a></div>
                         <br>
 
                         <div class="row">
@@ -171,24 +176,24 @@
                                                 <a class="nav-link active" id="custom-tabs-three-profile-tab"
                                                     data-toggle="pill" href="#custom-tabs-three-profile" role="tab"
                                                     aria-controls="custom-tabs-three-profile"
-                                                    aria-selected="false">ข้อมูลนักเรียน</a>
+                                                    aria-selected="false"><i class="fa fa-user-circle"></i> นักเรียน</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link " id="custom-tabs-three-home-tab" data-toggle="pill"
                                                     href="#custom-tabs-three-home" role="tab"
                                                     aria-controls="custom-tabs-three-home"
-                                                    aria-selected="true">ข้อมูลผู้ปกครอง</a>
+                                                    aria-selected="true"><i class="fa fa-users"></i> ผู้ปกครอง</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link" id="custom-tabs-three-messages-tab" data-toggle="pill"
                                                     href="#custom-tabs-three-messages" role="tab"
                                                     aria-controls="custom-tabs-three-messages"
-                                                    aria-selected="false">รายวิชาที่เรียน / สถานะการเรียน</a>
+                                                    aria-selected="false"> <i class="fa fa-sitemap"></i> รายวิชาที่เรียน </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link" id="custom-tabs-three-settings-tab" data-toggle="pill"
                                                     href="#custom-tabs-three-settings" role="tab"
-                                                    aria-controls="custom-tabs-three-settings" aria-selected="false">Comment
+                                                    aria-controls="custom-tabs-three-settings" aria-selected="false"> <i class="fa fa-comments"></i> Comment
                                                     อาจารย์</a>
                                             </li>
 
@@ -196,13 +201,13 @@
                                                 <a class="nav-link " id="custom-tabs-three-promotion-tab" data-toggle="pill"
                                                     href="#custom-tabs-three-promotion" role="tab"
                                                     aria-controls="custom-tabs-three-promotion"
-                                                    aria-selected="true">โปรโมชั่น</a>
+                                                    aria-selected="true"><i class="fa fa-envelope "></i> โปรโมชั่น</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link " id="custom-tabs-three-holiday-tab" data-toggle="pill"
                                                     href="#custom-tabs-three-holiday" role="tab"
                                                     aria-controls="custom-tabs-three-holiday"
-                                                    aria-selected="true">วันหยุดโรงเรียน</a>
+                                                    aria-selected="true"><i class="fa fa-calendar"></i> วันหยุดโรงเรียน</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -219,458 +224,63 @@
                                             </div>
                                             <div class="tab-pane fade" id="custom-tabs-three-messages" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-messages-tab">
+                                                {{-- @php
+                                                var_dump($student_chart);
+                                                @endphp  --}}
 
-                                               
-                                                @foreach ($student_chart as $chart_key) 
-                                                
-                                                <table style="width: 100%;" id="Listview"
-                                                    class="table table-striped table-bordered responsive-utilities jambo_table bulk_action">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>School Grade</th>
-                                                            <th class="text-center">Level</th>
-                                                            <th colspan="12" class="text-center">(
-                                                                 )</th>
+                                                @foreach ($student_chart as $chart_key)
+                                                    <div>
+                                                        <b> วิชาที่เรียน: ( {{ $chart_key['course'][0]->student_subject }} )
+                                                        </b>
+                                                        <b> รหัสนักเรียน: ( {{ $chart_key['course'][0]->student_code }} )
+                                                        </b> <b>ชื่อเล่น:</b>
+                                                        ({{ $chart_key['course'][0]->student_nickname }})
+                                                        <b>ระดับชั้น:</b> ( {{ $chart_key['course'][0]->student_grade }}
+                                                        ) <b>
+                                                            Book Start:</b> ( {{ $chart_key['course'][0]->book_start }} )
+                                                    </div>
+                                                    <table style="width: 100%;" id="Listview"
+                                                        class="table table-striped table-bordered responsive-utilities jambo_table bulk_action">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>School Grade</th>
+                                                                <th class="text-center">Level</th>
+                                                                <th colspan="12" class="text-center">(
+                                                                    {{ $chart_key['course'][0]->student_grade }} )</th>
 
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {{--  @php
+                                                        var_dump($chart_key['course']);
+                                                        @endphp   --}}
+                                                            {!! $chart_key['html'] !!}
 
-                                                      
 
-                                                    </tbody>
+                                                        </tbody>
 
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td colspan="2" align="center">Year</td>
-                                                            @for ($i = $chart_key->$year; $i <= $chart_key->$last_year; $i++)
-                                                                <td align="center" colspan="{{ $chart_key->$year_span[$i] }}">
-                                                                    {{ $i }}</td>
-                                                            @endfor
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td colspan="2" align="center">Year</td>
+                                                                @for ($i = $chart_key['year']; $i <= $chart_key['last_year']; $i++)
+                                                                    <td align="center"
+                                                                        colspan="{{ $chart_key['year_span'][$i] }}">
+                                                                        {{ $i }}</td>
+                                                                @endfor
 
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2" align="center">Month</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" align="center">Month</td>
 
-                                                            @foreach ($chart_key->$months as $mkey)
-                                                                <td align="center">{{ $mkey }}</td>
-                                                            @endforeach
-                                                        </tr>
-                                                    </tfoot>
+                                                                @foreach ($chart_key['months'] as $mkey)
+                                                                    <td align="center">{{ $mkey }}</td>
+                                                                @endforeach
+                                                            </tr>
+                                                        </tfoot>
 
-                                                </table>
+                                                    </table>
+                                                    <br><br><br>
                                                 @endforeach
-
-
-
-
-
-
-
-
-
-
-
-                                                <div style="float: right; padding-right: 250px;">
-                                                    <b> Student Code: </b> ( 009 ) <b>Name:</b>
-                                                    (Pakin)
-                                                    <b>School Grade:</b> ( K3 ) <b>
-                                                        Book Start:</b> ( 22 )
-                                                </div>
-                                                <table style="width: 100%;" id="Listview"
-                                                    class="table table-striped table-bordered responsive-utilities jambo_table bulk_action">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>School Grade</th>
-                                                            <th class="text-center">Level</th>
-                                                            <th colspan="12" class="text-center">( K3 )</th>
-
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                        <tr>
-                                                            <td width="35%">
-                                                                <font size="2">Level I Verb sentences (past, present,
-                                                                    future,) nouns (irregular, abstract noun,) spelling
-                                                                    (e.g., commonly misspelled words, spoken and formal
-                                                                    English,) text structures (e.g., identifying text
-                                                                    structure, explanatory text,) story structure (e.g.,
-                                                                    plot p, character, resolution,) literary devices (e.g.,
-                                                                    simile, metaphor, onomatopoeia,) writing</font>
-                                                            </td>
-                                                            <td width="100" align="center">I</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td width="35%">
-                                                                <font size="2">Level H Reading of Text features,
-                                                                    features of informational text, research, word work
-                                                                    (e.g., Greek and Latin roots, clarifying meaning,)
-                                                                    synonyms and antonyms, sentences, sentences, conventions
-                                                                    (possessive, quotation marks, articles,) comprehension
-                                                                    strategies, writing</font>
-                                                            </td>
-                                                            <td width="100" align="center">H</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td align="right"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 50%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td align="left"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 100%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td align="left"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 100%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td align="left"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 100%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td width="35%">
-                                                                <font size="2">Level G Part of speech, abbreviation,
-                                                                    reading comprehension of fact and opinion, fiction
-                                                                    reading, informational text, narrative text, spelling
-                                                                    (root words, prefixes, suffixes, homophones,) writing
-                                                                </font>
-                                                            </td>
-                                                            <td width="100" align="center">G</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td align="right"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 25%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td align="left"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 100%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td align="left"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 100%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td align="left"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 100%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td align="left"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 50%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td width="35%">
-                                                                <font size="2">Level F 3-letter blends, consonant
-                                                                    clusters, silent letters, long vowel spellings,
-                                                                    consonant digraphs, soft c and g sound, prefixes,
-                                                                    suffixes, part of speech, adverbs, subjects and
-                                                                    predicates, objects, subject, object, and reflexive
-                                                                    pronouns, contraction, possessive, commas, writing
-                                                                </font>
-                                                            </td>
-                                                            <td width="100" align="center">F</td>
-                                                            <td align="right"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 0%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td align="left"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 100%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td align="left"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 100%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td align="left"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 100%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td align="left"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 75%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td width="35%">
-                                                                <font size="2">Level E R-controlled vowels, vowel
-                                                                    teams (e.g.ee, ou, aw,) vowel diphthongs, inflectional
-                                                                    ending (-ed,) Y as a vowel, multi syllabic words,
-                                                                    question words, verbs (irregular past tense, future
-                                                                    tense,) capitalization, writing questions, paragraph
-                                                                    writing</font>
-                                                            </td>
-                                                            <td width="100" align="center">E</td>
-                                                            <td align="left"
-                                                                style="padding:0; margin: 0; margin-right: 0px; margin-left: 0px; "
-                                                                width="80">
-                                                                <div class="progress-bar-xs mb-3 progress"
-                                                                    style="width: 100%;">
-                                                                    <div class="progress-bar" role="progressbar"
-                                                                        aria-valuenow="100" aria-valuemin="0"
-                                                                        aria-valuemax="100" style="width: 100%;"></div>
-                                                                </div>
-                                                            </td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                            <td width="80"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <font size="2">Level D Consonant digraph (beginning
-                                                                    and ending,) consonant blend (ending,) silent e, Y as
-                                                                    vowel, adjectives, nouns, verbs (irregular present tense
-                                                                    and past tense,) subject-verb agreement (present tense),
-                                                                    short sentences writing</font>
-                                                            </td>
-                                                            <td align="center">D</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <font size="2">Level C Phonics (consonant ending
-                                                                    sounds,) word families, double consonants, nouns, verbs,
-                                                                    sentences, text reading, reading comprehension, short
-                                                                    sentences writing</font>
-                                                            </td>
-                                                            <td align="center">C</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <font size="2">Level B Phonics (consonant beginning
-                                                                    sounds and short vowels,) basic words, text reading,
-                                                                    reading comprehension, coloring mini-book</font>
-                                                            </td>
-                                                            <td align="center">B</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <font size="2">Level A Alphabet writing: capital and
-                                                                    lowercase, basic words, alphabet practice sheet</font>
-                                                            </td>
-                                                            <td align="center">A</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <font size="2">Level Pre-A Colors, shapes, motor
-                                                                    skills, basic nouns, orientation, words (e.g., rhyming
-                                                                    word, book awareness), no writing</font>
-                                                            </td>
-                                                            <td align="center">Pre - A</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-
-
-                                                    </tbody>
-
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td colspan="2" align="center">Year</td>
-                                                            <td align="center" colspan="12">2023</td>
-
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2" align="center">Month</td>
-
-                                                            <td align="center">1</td>
-                                                            <td align="center">2</td>
-                                                            <td align="center">3</td>
-                                                            <td align="center">4</td>
-                                                            <td align="center">5</td>
-                                                            <td align="center">6</td>
-                                                            <td align="center">7</td>
-                                                            <td align="center">8</td>
-                                                            <td align="center">9</td>
-                                                            <td align="center">10</td>
-                                                            <td align="center">11</td>
-                                                            <td align="center">12</td>
-                                                        </tr>
-                                                    </tfoot>
-
-                                                </table>
 
 
                                             </div>
@@ -679,7 +289,7 @@
                                                 <div class="timeline">
 
                                                     <div class="time-label">
-                                                        <span class="bg-red">10 Feb. 2014</span>
+                                                        <span class="bg-green">10 Feb. 2023</span>
                                                     </div>
 
 
@@ -687,26 +297,20 @@
                                                         <i class="fas fa-envelope bg-blue"></i>
                                                         <div class="timeline-item">
                                                             <span class="time"><i class="fas fa-clock"></i> 12:05</span>
-                                                            <h3 class="timeline-header"><a href="#">Support Team</a>
-                                                                sent you an email</h3>
+                                                            <h3 class="timeline-header"><a href="#">ครู ป้อ</a>
+                                                                {{-- sent you an email --}}</h3>
                                                             <div class="timeline-body">
-                                                                Etsy doostang zoodles disqus groupon greplin oooj voxy
-                                                                zoodles,
-                                                                weebly ning heekya handango imeem plugg dopplr jibjab,
-                                                                movity
-                                                                jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo
-                                                                kaboodle
-                                                                quora plaxo ideeli hulu weebly balihoo...
+                                                                เข้าใจเนื้อหาได้ดี
                                                             </div>
-                                                            <div class="timeline-footer">
+                                                            {{-- <div class="timeline-footer">
                                                                 <a class="btn btn-primary btn-sm">Read more</a>
                                                                 <a class="btn btn-danger btn-sm">Delete</a>
-                                                            </div>
+                                                            </div> --}}
                                                         </div>
                                                     </div>
 
 
-                                                    <div>
+                                                  {{--   <div>
                                                         <i class="fas fa-user bg-green"></i>
                                                         <div class="timeline-item">
                                                             <span class="time"><i class="fas fa-clock"></i> 5 mins
@@ -714,10 +318,10 @@
                                                             <h3 class="timeline-header no-border"><a href="#">Sarah
                                                                     Young</a> accepted your friend request</h3>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
 
-                                                    <div>
+                                                    {{-- <div>
                                                         <i class="fas fa-comments bg-yellow"></i>
                                                         <div class="timeline-item">
                                                             <span class="time"><i class="fas fa-clock"></i> 27 mins
@@ -733,11 +337,27 @@
                                                                 <a class="btn btn-warning btn-sm">View comment</a>
                                                             </div>
                                                         </div>
+                                                    </div> --}}
+
+                                                    <div>
+                                                        <i class="fas fa-comments bg-yellow"></i>
+                                                        <div class="timeline-item">
+                                                            <span class="time"><i class="fas fa-clock"></i> 27 mins
+                                                                ago</span>
+                                                            <h3 class="timeline-header"><a href="#">ครู ป้อ</a>
+                                                                {{-- commented on your post --}}</h3>
+                                                            <div class="timeline-body">
+                                                               มีความร่าเริง สนใจเนื้อหาที่เรียน
+                                                            </div>
+                                                            {{-- <div class="timeline-footer">
+                                                                <a class="btn btn-warning btn-sm">View comment</a>
+                                                            </div> --}}
+                                                        </div>
                                                     </div>
 
 
                                                     <div class="time-label">
-                                                        <span class="bg-green">3 Jan. 2014</span>
+                                                        <span class="bg-green">3 Jan. 2023</span>
                                                     </div>
 
 
@@ -746,8 +366,8 @@
                                                         <div class="timeline-item">
                                                             <span class="time"><i class="fas fa-clock"></i> 2 days
                                                                 ago</span>
-                                                            <h3 class="timeline-header"><a href="#">Mina Lee</a>
-                                                                uploaded new photos</h3>
+                                                            <h3 class="timeline-header"><a href="#">ครู ป้อ</a>
+                                                                รูปน้องตอนเรียน</h3>
                                                             <div class="timeline-body">
                                                                 <img src="https://placehold.it/150x100" alt="...">
                                                                 <img src="https://placehold.it/150x100" alt="...">
@@ -764,8 +384,8 @@
                                                         <div class="timeline-item">
                                                             <span class="time"><i class="fas fa-clock"></i> 5 days
                                                                 ago</span>
-                                                            <h3 class="timeline-header"><a href="#">Mr. Doe</a>
-                                                                shared a video</h3>
+                                                            <h3 class="timeline-header"><a href="#">ครู ป้อ</a>
+                                                                วิดีโอน้องตอนเรียน</h3>
                                                             <div class="timeline-body">
                                                                 <div class="embed-responsive embed-responsive-16by9">
                                                                     <iframe class="embed-responsive-item"
@@ -773,10 +393,10 @@
                                                                         allowfullscreen></iframe>
                                                                 </div>
                                                             </div>
-                                                            <div class="timeline-footer">
+                                                           {{--  <div class="timeline-footer">
                                                                 <a href="#" class="btn btn-sm bg-maroon">See
                                                                     comments</a>
-                                                            </div>
+                                                            </div> --}}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -806,6 +426,10 @@
                 $(document).ready(function() {
                     $(".nav-tabs a").click(function() {
                         $(this).tab('show');
+                    });
+
+                    $(".AddDate").datepicker({
+                        dateFormat: "yy-mm-dd"
                     });
                 });
             </script>

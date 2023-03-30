@@ -143,7 +143,10 @@ class CourseController extends Controller
         //
         //echo $type;
         //exit();
-        $this->check_permission();
+        if ($type !== "html") {
+            $this->check_permission();
+        }
+        
         $course = Course::select(
             "courses.id as course_id",
             "levels.title as student_level",
@@ -342,8 +345,9 @@ class CourseController extends Controller
         }
 
         if ($type == "html") {
-            $html = array('html' => $tb_level, 'year' => $start_year, 'last_year' => $last_year, 'start_month' => $start_month
-            , 'year_span' => $year_span, 'levels' => $tb_level, 'course' => $course);
+            $html = array(
+                'html' => $tb_level, 'year' => (int)$start_year, 'last_year' => (int)$last_year, 'start_month' => $start_month, 'year_span' => $year_span, 'months' => $months, 'levels' => $tb_level, 'course' => $course
+            );
             return  $html;
         } else {
             return view($viewr)->with(['year' => $start_year])->with(['last_year' => $last_year])
