@@ -64,6 +64,7 @@ class LoginController extends Controller
         $this->validate($request, [
             'email'   => 'required|email',
             'password' => 'required|min:6'
+            
         ]);
          if (Auth::guard('parent')->attempt(['email' => $request->email, 'password' => $request->password])) {
             //echo ("hello1");

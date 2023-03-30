@@ -540,12 +540,12 @@
         background-color: #f8cccd;
         /* margin-bottom: 50px; */
     }
+
     .card-header-custom {
-            background-image: url("{{ asset('images/school_309241295.jpg') }}");
-            height: 420px;
-            background-repeat: no-repeat;
-        }
-        
+        background-image: url("{{ asset('images/school_309241295.jpg') }}");
+        height: 420px;
+        background-repeat: no-repeat;
+    }
 </style>
 @endsection
 
@@ -560,12 +560,10 @@
                 {{-- <div class="card-header">{{ __('Login') }}
             </div> --}}
             <div class="card-header card-header-custom" style="background-color: #fff;margin-bottom:100px;">
-                        <div class="text-center avatar mx-auto white">
-                            <img class="rounded-circle img-responsive bg-white p-3 image"
-                                style="margin-top: 300px; border:solid #eeeded 1px ;"
-                                src="{{ asset('images/infinite.jpg') }}" alt="..." height="200">    
-                        </div>
-                    </div>
+                <div class="text-center avatar mx-auto white">
+                    <img class="rounded-circle img-responsive bg-white p-3 image" style="margin-top: 300px; border:solid #eeeded 1px ;" src="{{ asset('images/infinite.jpg') }}" alt="..." height="200">
+                </div>
+            </div>
             <!-- <div align="center"><img class="" src="{{ asset('images/infinite.jpg') }}" alt="..." height="300"></div> -->
             <form id="infinite" method="POST" action="{{ route('parentregister.store') }}">
                 @csrf
@@ -616,6 +614,24 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label class="form-label form-label-top form-label-auto" for="parent">Parent's name / ชื่อและนามสกุลผู้ปกครอง<span class="form-required">*</span></label>
+                                    <input type="text" class="form-control" name="parent" id="parent" value="" maxlength="100" required>
+                                    <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Parent's name</label>
+                                    <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
+                                            required.</span>
+                                        <div class="form-error-arrow">
+                                            <div class="form-error-arrow-inner"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-row form-focus">
+
                             <div class="col-md-6 col-sm-12">
 
                                 <div class="position-relative form-group">
@@ -632,14 +648,15 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="form-row form-focus">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
+
                                 <div class="position-relative form-group">
-                                    <label class="form-label form-label-top form-label-auto" for="parent">Parent's name / ชื่อและนามสกุลผู้ปกครอง<span class="form-required">*</span></label>
-                                    <input type="text" class="form-control" name="parent" id="parent" value="" maxlength="100" required>
-                                    <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Parent's name</label>
+                                    <label class="form-label form-label-top form-label-auto" for="password_confirmation">Confirm Password <span class="form-required">*</span>
+                                        <div style="width: 270px"></div>
+                                    </label>
+                                    <input type="password" class="AddPassword form-control" name="password_confirmation" placeholder="ความยาวขั้นต่ำ 8 ตัว" id="password_confirmation" value="" maxlength="20" required>
+                                    <label class="form-sub-label" style="min-height:13px" aria-hidden="false">password_confirmation</label>
                                     <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
                                             required.</span>
                                         <div class="form-error-arrow">
@@ -648,6 +665,10 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="form-row form-focus">
+
                             <div class="col-md-6 col-sm-12">
 
                                 <div class="position-relative form-group">
@@ -1268,16 +1289,16 @@
                     <button type="button" id="bbtn" class="btn btn-lg btn-danger" style="box-shadow: 5px 5px 10px gray; color:#fff; text-shadow: 2px 2px 4px #000000;">ลบนักเรียนคนที่2</button>
                     <button type="button" id="bbtn3" class="btn btn-lg btn-danger" style="box-shadow: 5px 5px 10px gray; color:#fff; text-shadow: 2px 2px 4px #000000;">ลบนักเรียนคนที่3</button><br><br><br>
                     <div class="text-center">
-      
-          
-            <input type="submit"style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:20%;" class="btn btn-lg btn-primary me-3" value="Register">
-            <button type="reset"style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:20%;"  class="btn btn-lg btn-danger">Clear Form</button><br><br><br>
-        </div>
+
+
+                        <input type="submit" style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:20%;" class="btn btn-lg btn-primary me-3" value="Register">
+                        <button type="reset" style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:20%;" class="btn btn-lg btn-danger">Clear Form</button><br><br><br>
+                    </div>
 
                 </div>
 
         </div>
-        
+
     </div>
 
     </form>

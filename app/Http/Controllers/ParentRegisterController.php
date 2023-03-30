@@ -54,17 +54,15 @@ class ParentRegisterController extends Controller
         //
         $validator =  Validator::make($request->all(), [
             'email' => 'required|email|unique:parent',
-            'password' => [
-                'required',
-                'string',
-                'regex:/^[a-zA-Z0-9 ]+$/',
-                'min:8',             // must be at least 10 characters in length
-                // 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-                // 'regex:/[a-z]/',      // must contain at least one lowercase letter
-                // 'regex:/[A-Z]/',      // must contain at least one uppercase letter
-                // 'regex:/[0-9]/',      // must contain at least one digit
-                // 'regex:/[@$!%*#?&]/', // must contain a special character
-            ],
+            // 'password' => [
+            //     'required',
+            //     'string',
+            //     'regex:/^[a-zA-Z0-9 ]+$/',
+            //     'min:8',            
+               
+            // ],
+            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:6',
             'parent' => 'required|string',
             'phone' => 'required|string',
             'address' => 'required|string',

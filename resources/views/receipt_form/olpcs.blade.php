@@ -557,7 +557,7 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">OLPCS 2023 Registration
+                                                    style="text-decoration: underline;font-size:20px;">OLPCS 2023 Registration
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
                                                 Date:</strong> 1 April - 2 June 2023</span></p>
@@ -917,7 +917,7 @@
                                 </div>
 
                                 <br>
-                                <div align="center"><img src="{{ asset('images/PayMent.63c0ecf0d798f5.64990304.png') }}"
+                                <div align="center"><img src="{{ asset('images/PayMent.png') }}"
                                         alt="..." height="300"></div>
                                 <br>
 
