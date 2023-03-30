@@ -152,23 +152,15 @@ Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->n
 //     Route::any('callback', [GoogleController::class, 'callbackFromGoogle'])->name('callback');
 // });
 Route::get('/login/google', [GoogleController::class, 'loginWithGoogle'])->name('google.login');
-Route::get('/login/google/callback',[GoogleController::class, 'callbackFromGoogle'])->name('google.callback');
+Route::get('/login/google/callback', [GoogleController::class, 'callbackFromGoogle'])->name('google.callback');
 
-// <<<<<<< HEAD
-    //Auth::routes();
-    Route::get('/login/parent', [LoginController::class, 'showParentLoginForm'])->name('loginparent');
-    Route::post('/login/parent', [LoginController::class, 'parentLogin']);
-// =======
 //Auth::routes();
-// Route::get('/login/parent', [LoginController::class, 'showParentLoginForm']);
-// Route::post('/login/parent', [LoginController::class, 'parentLogin']);
-// >>>>>>> dc8e8644044467482850ab7431b2b4a38d9517c0
-//Auth::routes();
-// Route::get('/login/parent', [LoginController::class, 'showParentLoginForm']);
-// Route::post('/login/parent', [LoginController::class, 'parentLogin']);
+Route::get('/login/parent', [LoginController::class, 'showParentLoginForm'])->name('login.parent');
+Route::post('/login/parent', [LoginController::class, 'parentLogin']);
+Route::get('/login/parent/logout', [LoginController::class, 'ParentsignOut'])->name('parent.logout');
+
 
 // Route::view('/home', 'home')->middleware('auth');
 ////Route::view('/parent', 'parent')->middleware('auth');
 Route::get('/parent', [SchoolController::class, 'index'])->name('parent');
-
 
