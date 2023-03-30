@@ -16,7 +16,9 @@
     }
         
 </style>
-
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 @section('content')
 @isset($url)
 <body style="background-color: #d8e8b0;">
@@ -103,27 +105,26 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                <a class="nav-link"  href="{{ route('parentregister') }}">{{ __('Register') }}</a>
+                                <div class="col-md-2">
+                                <a class="nav-link btn btn-success" style="color:#fff"  href="{{ route('parentregister') }}">{{ __('Register') }}</a>
 
                                 </div>
-                                <a href="{{ route('google.login') }}" class="btn btn-google btn-user btn-block">
-                                            <i class="fab fa-google fa-fw"></i> Login with Google..
-                                        </a>
+                                        
                             </div>
 
                             <div class="row mb-0">
-                                <div class="col-md-8 offset-md-4">
+                                <div class="col-md-6 text-end">
                                     <button type="submit" class="btn btn-primary">
                                         {{ __('Login') }}
                                     </button>
 
-                                    @if (Route::has('password.request'))
-                                        <a class="btn btn-link" href="{{ route('password.request') }}">
-                                            {{ __('Forgot Your Password?') }}
-                                        </a>
-                                    @endif
                                 </div>
+                                
+                                <div class="col-md-4 text-start">
+                                <a href="{{ route('google.login') }}" class="btn btn-google btn-user btn-block"style="background-color:red; color:white;">
+                                <i class="fa fa-google"></i> Login with Google
+                                        </a>
+                                        </div>
                             </div>
                         </form>
                     </div>
@@ -211,10 +212,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                <a class="nav-link"  href="{{ route('parentregister') }}">{{ __('Register') }}</a>
-
-                                </div>
+                              
 
                             </div>
 

@@ -52,7 +52,7 @@ class ParentRegisterController extends Controller
         
         //
         $validator =  Validator::make($request->all(), [
-            'email' => 'required|email',
+            'email' => 'required|email|unique:parent',
             'password' => [
                 'required',
                 'string',
@@ -106,7 +106,7 @@ class ParentRegisterController extends Controller
         // $rnumber = RunningNumber::generate(new Register,'code',4,"");
         
         $rpnumber = Parent_RunningNumber::generate();
-
+        
         $registerForm = new ParentRegister([
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
@@ -117,6 +117,7 @@ class ParentRegisterController extends Controller
             'code'=> "$rpnumber",
 
         ]);
+        
         $registerForm->save();
         $pid = $registerForm->id;
 

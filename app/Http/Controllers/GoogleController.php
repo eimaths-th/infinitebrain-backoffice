@@ -26,8 +26,19 @@ class GoogleController extends Controller
             // Check Users Email If Already There
             $is_user = ParentRegister::where('email', $user->getEmail())->first();
             $saveUser = ParentRegister::where('email', $user->getEmail())->first();
+            // echo $saveUser;
+            // exit();
             //if(!$is_user){
-
+            if($saveUser!="" && $saveUser!=NULL){
+                (Auth::guard('parent')->loginUsingId($saveUser->id)) ;
+                return redirect('/parent');
+            
+            }else{
+              
+                return redirect('/parent-register')->withErrors([
+                    'email' => 'Your email has not been registered , Please register',
+                ]);
+            }
                // $saveUser = ParentRegister::updateOrCreate([
                 //    'google_id' => $user->getId(),
                 //],[
@@ -49,9 +60,7 @@ class GoogleController extends Controller
            // Auth::loginUsingId($saveUser->id);
          
             //return redirect()->route('parent');
-            if (Auth::guard('parent')->loginUsingId($saveUser->id)) {
-                return redirect('/parent');
-            } 
+           
         } catch (\Throwable $th) {
             throw $th;
         }
