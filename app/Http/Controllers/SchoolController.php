@@ -24,6 +24,9 @@ class SchoolController extends Controller
     {
         //$id = Auth::guard('parent')->id();
         //Auth::guard('parent')->user()->email;
+        if (!Auth::guard('parent')->check()) {
+            return redirect("/login/parent/");
+        } 
         $users = Auth::guard('parent')->user();
         $id = $users->id;
         $parent = ParentRegister::find($id);
@@ -95,19 +98,15 @@ class SchoolController extends Controller
         </div>
     </div>
             ';
+        $course_html = '';
         $student_html = "";
         $student = Student::where([['pid', $id]])
             ->orderBy("id", "asc")
             ->get();
 
-        
+
         foreach ($student as $stu_result) {
             $photo = url('/') . '/receipt_form_images/' . $stu_result->photo_att;
-
-            $course = Course::where([['student_id', $stu_result->id]])
-            ->orderBy("id", "asc")
-            ->get();
-            //
 
             $student_html .= '<div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
@@ -180,14 +179,19 @@ class SchoolController extends Controller
     </div>
             ';
 
-            foreach ($course as $course_data) {
-                //echo $course_data->id;(
-                //$course_html = CourseController::show('html','th',$course_data->id);
-                $course_html = (new CourseController)->show('html','th',$course_data->id);
-                
+            if ($student) {
+                $course = Course::where([['student_id', $stu_result->id]])
+                    ->orderBy("id", "asc")
+                    ->get();
             }
 
-            //$student_chart = $course_html['html'];
+
+            if ($course) {
+                foreach ($course as $course_data) {
+                    //$course_html = CourseController::show('html','th',$course_data->id);
+                    $course_html = (new CourseController)->show('html', 'th', $course_data->id);
+                }
+            }
         }
 
         return view('register.home')->with(['parent_html' =>  $parent_html])

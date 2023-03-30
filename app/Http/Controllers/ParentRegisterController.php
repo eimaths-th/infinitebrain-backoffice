@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -15,8 +16,8 @@ use App\Models\RunningNumber;
 use App\Models\Parent_RunningNumber;
 
 class ParentRegisterController extends Controller
-{ 
-    
+{
+
     public function register()
     {
         return view("register.parentregister");
@@ -49,7 +50,7 @@ class ParentRegisterController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         //
         $validator =  Validator::make($request->all(), [
             'email' => 'required|email|unique:parent',
@@ -74,9 +75,9 @@ class ParentRegisterController extends Controller
             // 'birthdate' => 'required|string',
             // 'schoolname' => 'required|string',
             // 'grade' => 'required|string',
-            
+
         ]);
-        
+
         if ($validator->fails()) {
             //return response()->json(['errors' => $validator->errors()->all()]);
             return back()->withErrors(['errors' => $validator->errors()->all()]);
@@ -91,20 +92,20 @@ class ParentRegisterController extends Controller
         foreach ($filesa as $filea) {
             //echo $filea;
             $oldfile = FileUpload::where('oldname', $filea)->get();
-            $fileas[] .= $oldfile[0]->filename ;
+            $fileas[] .= $oldfile[0]->filename;
             // $file2 = $oldfile[1]->filename ;
             File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
             FileUpload::where('filename', $oldfile[0]->filename)->delete();
-        } 
+        }
         // $fileas = rtrim($fileas, "|");
-        
-//         print_r($fileas) ;
-// //         echo $filea;
 
-//         exit();
-        
+        //         print_r($fileas) ;
+        // //         echo $filea;
+
+        //         exit();
+
         // $rnumber = RunningNumber::generate(new Register,'code',4,"");
-        
+
         $rpnumber = Parent_RunningNumber::generate();
         
         $registerForm = new ParentRegister([
@@ -112,9 +113,9 @@ class ParentRegisterController extends Controller
             'password' => Hash::make($request->get('password')),
             'name_parent' => $request->get('parent'),
             'mobile' => $request->get('phone'),
-            'street_address' => $request->get('address'), 
+            'street_address' => $request->get('address'),
             'postcode' => $request->get('postcode'),
-            'code'=> "$rpnumber",
+            'code' => "$rpnumber",
 
         ]);
         
@@ -124,33 +125,34 @@ class ParentRegisterController extends Controller
         // echo $request->get('val');
         // exit();
         // $error = 1 ;
-        for($x=0; $x<$request->get('val');$x++){
+        for ($x = 0; $x < $request->get('val'); $x++) {
             // $rnumber1 = RunningNumber::generate(new Student,'code',4,"");
             $rcnumber = RunningNumber::generate();
             $data = [];
-            $data[]=[
-                'code'=> $rcnumber ,
+            $data[] = [
+                'code' => $rcnumber,
                 'first_name' => $request->get('firstname')[$x],
                 'last_name' => $request->get('lastname')[$x],
                 'nick_name' => $request->get('nickname')[$x],
                 'birth_date' => $request->get('birthdate')[$x],
                 'school_name' => $request->get('schoolname')[$x],
                 'grade' => $request->get('grade')[$x],
-                'mobile'=> "" ,
+                'mobile' => "",
                 'photo_att' => $fileas[$x],
-                'sex'=>$request->get('sex')[$x],
-                'pid'=> $pid ,
+                'sex' => $request->get('sex')[$x],
+                'pid' => $pid,
             ];
             // $data = [];
 
             // print_r($data);
-            Student::upsert($data,['code','first_name','last_name','nick_name'
-            ,'birth_data','school_name','grade','photo_att','sex','pid']);
+            Student::upsert($data, [
+                'code', 'first_name', 'last_name', 'nick_name', 'birth_data', 'school_name', 'grade', 'photo_att', 'sex', 'pid'
+            ]);
         }
         // if(count($data)>0){
         //     $error = '';
         // }
-       
+
         // $student = new Student([
         //     'code'=> $rnumber1 ,
         //     'first_name' => $request->get('firstname'),
@@ -164,7 +166,6 @@ class ParentRegisterController extends Controller
         // ]);
         // $student->save();
         return redirect('/parent-register/complete');
-
     }
 
     /**
@@ -176,8 +177,7 @@ class ParentRegisterController extends Controller
     public function show(ParentRegister $register)
     {
         //
-            return view("register.complete");
-        
+        return view("register.complete");
     }
 
     /**
@@ -213,5 +213,4 @@ class ParentRegisterController extends Controller
     {
         //
     }
-    
 }

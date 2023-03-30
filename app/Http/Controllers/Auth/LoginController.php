@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
 
@@ -77,10 +78,23 @@ class LoginController extends Controller
             return redirect('/parent');
         } 
         //echo ("hello2");
+<<<<<<< HEAD
         
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
         // return back()->withInput($request->only('email'));
+=======
+        return back()->withInput($request->only('email', 'remember'))
+        ->withErrors(['error' => 'Your Username Or Password Not Match']);
+    }
+
+    public function ParentsignOut()
+    {
+        Session::flush();
+        Auth::guard('parent')->logout();
+
+        return Redirect('login/parent');
+>>>>>>> dabc35a8b59fe58419c58f14dec3395ca8fa4c85
     }
 }
