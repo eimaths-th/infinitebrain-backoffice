@@ -401,11 +401,177 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade " id="custom-tabs-three-promotion" role="tabpanel"
+                                            <div class="tab-pane fade div_center" id="custom-tabs-three-promotion" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-promotion-tab">
+                                                <img src="{{ asset('images/promotion1.jpg') }}" width="90%">
+                                                <img src="{{ asset('images/promotion2.jpg') }}" width="90%">
+                                                <img src="{{ asset('images/promotion3.png') }}" width="90%">
+                                                <img src="{{ asset('images/promotion4.png') }}" width="90%">
                                             </div>
                                             <div class="tab-pane fade " id="custom-tabs-three-holiday" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-holiday-tab">
+
+                                                <div class="timeline">
+
+                                                    <div class="time-label">
+                                                        <span class="bg-green">1 มกราคม 2566</span>
+                                                    </div>
+
+
+                                                     <div>
+                                                        <i class="fas fa-calendar bg-green"></i>
+                                                        <div class="timeline-item">
+                                                            {{-- <span class="time"><i class="fas fa-clock"></i> 5 mins
+                                                                ago</span> --}}
+                                                            <h3 class="timeline-header no-border"> วันขึ้นปีใหม่</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="time-label">
+                                                        <span class="bg-yellow">2 มกราคม 2566</span>
+                                                    </div>
+
+
+                                                     <div>
+                                                        <i class="fas fa-calendar bg-yellow"></i>
+                                                        <div class="timeline-item">
+                                                            {{-- <span class="time"><i class="fas fa-clock"></i> 5 mins
+                                                                ago</span> --}}
+                                                            <h3 class="timeline-header no-border"> วันหยุดชดเชย วันขึ้นปีใหม่</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="time-label">
+                                                        <span class="bg-green">6 มีนาคม 2566</span>
+                                                    </div>
+
+
+                                                     <div>
+                                                        <i class="fas fa-calendar bg-green"></i>
+                                                        <div class="timeline-item">
+                                                            {{-- <span class="time"><i class="fas fa-clock"></i> 5 mins
+                                                                ago</span> --}}
+                                                            <h3 class="timeline-header no-border"> วันมาฆะบูชา</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="time-label">
+                                                        <span class="bg-yellow">13-14 เมษายน 2566</span>
+                                                    </div>
+
+
+                                                     <div>
+                                                        <i class="fas fa-calendar bg-yellow"></i>
+                                                        <div class="timeline-item">
+                                                            {{-- <span class="time"><i class="fas fa-clock"></i> 5 mins
+                                                                ago</span> --}}
+                                                            <h3 class="timeline-header no-border"> วันสงกรานต์</h3>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                   
+
+                                                    <div class="time-label">
+                                                        <span class="bg-green">1 พฤษภาคม 2566</span>
+                                                    </div>
+
+
+                                                     <div>
+                                                        <i class="fas fa-calendar bg-green"></i>
+                                                        <div class="timeline-item">
+                                                            {{-- <span class="time"><i class="fas fa-clock"></i> 5 mins
+                                                                ago</span> --}}
+                                                            <h3 class="timeline-header no-border"> วันแรงงาน</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="time-label">
+                                                        <span class="bg-yellow">5 พฤษภาคม 2566</span>
+                                                    </div>
+
+
+                                                     <div>
+                                                        <i class="fas fa-calendar bg-yellow"></i>
+                                                        <div class="timeline-item">
+                                                            {{-- <span class="time"><i class="fas fa-clock"></i> 5 mins
+                                                                ago</span> --}}
+                                                            <h3 class="timeline-header no-border"> วันวิสาขบูชา</h3>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="time-label">
+                                                        <span class="bg-green">28 กรกฎาคม 2566</span>
+                                                    </div>
+
+
+                                                     <div>
+                                                        <i class="fas fa-calendar bg-green"></i>
+                                                        <div class="timeline-item">
+                                                            {{-- <span class="time"><i class="fas fa-clock"></i> 5 mins
+                                                                ago</span> --}}
+                                                            <h3 class="timeline-header no-border"> วันเฉลิมพระชนมพรรษา พระบาทสมเด็จพระปรเมนทรรามาธิบดีศรีสินทรมหาวชิราลงกรณ พระวชิรเกล้าเจ้าอยู่หัว</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="time-label">
+                                                        <span class="bg-yellow">12 สิงหาคม 2566</span>
+                                                    </div>
+
+
+                                                     <div>
+                                                        <i class="fas fa-calendar bg-yellow"></i>
+                                                        <div class="timeline-item">
+                                                            {{-- <span class="time"><i class="fas fa-clock"></i> 5 mins
+                                                                ago</span> --}}
+                                                            <h3 class="timeline-header no-border"> วันแม่แห่งชาติ</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="time-label">
+                                                        <span class="bg-green">13 ตุลาคม 2566</span>
+                                                    </div>
+
+
+                                                     <div>
+                                                        <i class="fas fa-calendar bg-green"></i>
+                                                        <div class="timeline-item">
+                                                            {{-- <span class="time"><i class="fas fa-clock"></i> 5 mins
+                                                                ago</span> --}}
+                                                            <h3 class="timeline-header no-border"> วันคล้ายวันสวรรคต พระบาทสมเด็จพระบรมชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราช บรมนาถบพิตร</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="time-label">
+                                                        <span class="bg-yellow">23 ตุลาคม 2566</span>
+                                                    </div>
+
+
+                                                     <div>
+                                                        <i class="fas fa-calendar bg-yellow"></i>
+                                                        <div class="timeline-item">
+                                                            {{-- <span class="time"><i class="fas fa-clock"></i> 5 mins
+                                                                ago</span> --}}
+                                                            <h3 class="timeline-header no-border"> วันปิยะมหาราช</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="time-label">
+                                                        <span class="bg-green">30-31 ธันวาคม 2566</span>
+                                                    </div>
+
+
+                                                     <div>
+                                                        <i class="fas fa-calendar bg-green"></i>
+                                                        <div class="timeline-item">
+                                                            {{-- <span class="time"><i class="fas fa-clock"></i> 5 mins
+                                                                ago</span> --}}
+                                                            <h3 class="timeline-header no-border"> วันสิ้นปี</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
