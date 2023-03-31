@@ -35,7 +35,7 @@ Route::group(array('domain' => 'form.infinitebrain.co.th'), function()
 
 Route::group(array('domain' => 'school.infinitebrain.co.th'), function()
 {
-    Route::get('/', [SchoolController::class, 'index'])->name('school');
+    Route::get('/', [SchoolController::class, 'index']);
 
 });
 
