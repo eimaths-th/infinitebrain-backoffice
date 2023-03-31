@@ -383,10 +383,10 @@ class ReceiptController extends Controller
             if (Auth::user()->level == 1 || Auth::user()->level == 3) {
                 return true;
             } else {
-                abort(403, 'Unauthorized action.');
+                abort(403, 'Unauthorized action 1.');
             }
         } else {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action 2.');
             //return Redirect("login")->withSuccess('Please Login');
             //exit();
         }
