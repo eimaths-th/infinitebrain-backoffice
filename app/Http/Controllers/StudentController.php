@@ -55,7 +55,7 @@ class StudentController extends Controller
                         $urla = url('/') . '/images/user2.png';
                     }
 
-                    $ltext = "<img src='".$urla."' height='34' class='rounded-circle'>";
+                    $ltext = "<img src='".$urla."' width='34' height='34' class='rounded-circle'>";
                     return $ltext;
                 })
                 ->editColumn('checkbox', function ($row) {
