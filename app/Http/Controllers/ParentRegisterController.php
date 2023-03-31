@@ -58,7 +58,7 @@ class ParentRegisterController extends Controller
         return view('parents.parents');
     }
 
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -87,7 +87,7 @@ class ParentRegisterController extends Controller
             //     'string',
             //     'regex:/^[a-zA-Z0-9 ]+$/',
             //     'min:8',            
-               
+
             // ],
             'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
             'password_confirmation' => 'min:6',
@@ -133,7 +133,7 @@ class ParentRegisterController extends Controller
         // $rnumber = RunningNumber::generate(new Register,'code',4,"");
 
         $rpnumber = Parent_RunningNumber::generate();
-        
+
         $registerForm = new ParentRegister([
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
@@ -144,7 +144,7 @@ class ParentRegisterController extends Controller
             'code' => "$rpnumber",
 
         ]);
-        
+
         $registerForm->save();
         $pid = $registerForm->id;
 
@@ -212,7 +212,7 @@ class ParentRegisterController extends Controller
      * @param  \App\Models\Register  $register
      * @return \Illuminate\Http\Response
      */
- 
+
 
     /**
      * Show the form for editing the specified resource.
