@@ -223,34 +223,29 @@ class ParentRegisterController extends Controller
     public function edit($id)
     {
         //
-        $this->check_permission();
+        // $this->check_permission();
         $data = ParentRegister::find($id);
 
 
-        $html = '<div class="form-group">
-                    <label for="Name">Code:</label>
-                    <input type="text" class="form-control" name="code" id="EditCode" value="' . $data->code . '">
+        $html = '
+                <div class="form-group">
+                    <label for="Name">Email:</label>
+                    <input type="email" class="form-control" name="email" id="EditEmail" value="' . $data->email . '">
                 </div>
                 <div class="form-group">
-                    <label for="Name">Name:</label>
-                    <input type="text" class="form-control" name="name" id="EditName" value="' . $data->first_name . '">
+                    <label for="Name">Parent Name:</label>
+                    <input type="text" class="form-control" name="name_parent" id="EditParentName" value="' . $data->name_parent . '">
                 </div>
                 <div class="form-group">
-                    <label for="Name">Lastname:</label>
-                    <input type="text" class="form-control" name="lastname" id="EditLastname" value="' . $data->last_name . '">
-                </div>
-                <div class="form-group">
-                    <label for="Name">Nickname:</label>
-                    <input type="text" class="form-control" name="nickname" id="EditNickname" value="' . $data->nick_name . '">
-                </div>
-                <div class="form-group">
-                    <label for="Name">Mobile:</label>
-                    <input type="text" class="form-control" name="mobile" id="EditMobile" value="' . $data->mobile . '">
-                </div>
-                <div class="form-group">
-                <label for="Name">Grade:</label>
-                <input type="text" class="form-control" name="grade" id="Editgrade" value="' . $data->grade . '">
+                <label for="Name">Mobile:</label>
+                <input type="text" class="form-control" name="mobile" id="EditMobile" value="' . $data->mobile . '">
             </div>
+                <div class="form-group">
+                    <label for="Name">street_address:</label>
+                    <input type="text" class="form-control" name="street_address" id="EditAddress" value="' . $data->street_address . '">
+                </div>
+               
+          
             ';
 
         return response()->json(['html' => $html]);
@@ -262,7 +257,7 @@ class ParentRegisterController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Student  $student
+     * @param  \App\Models\ParentRegister  $student
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -270,33 +265,33 @@ class ParentRegisterController extends Controller
         //
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
-            'code' => 'required|string|max:4|unique:students,code,' . $id,
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'nick_name' => 'required|string|max:255',
+            'code' => 'required|string|max:4|unique:parent,code,' . $id,
+            'email' => 'required|string|max:255',
+            'name_parent' => 'required|string|max:255',
             'mobile' => 'required|string|max:10',
+            'street_address' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
-        Student::find($id)->update($request->all());
+        ParentRegister::find($id)->update($request->all());
 
-        return response()->json(['success' => 'Student updated successfully']);
+        return response()->json(['success' => 'Parent updated successfully']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Student  $student
+     * @param  \App\Models\ParentRegister  $student
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         //
-        $this->check_permission();
-        Student::find($id)->delete();
+        // $this->check_permission();
+        ParentRegister::find($id)->delete();
         return ['success' => true, 'message' => 'Deleted Successfully'];
     }
 
@@ -307,10 +302,10 @@ class ParentRegisterController extends Controller
         $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {
-            Student::find($arr_del[$xx])->delete();
+            ParentRegister::find($arr_del[$xx])->delete();
         }
         //$ids = $request->get('table_records');
         //User::whereIn('id',explode(",",$ids))->delete();
-        return redirect('/students' . $request->get('id'))->with('success', 'Deleted Successfully');;
+        return redirect('/parents' . $request->get('id'))->with('success', 'Deleted Successfully');;
     }
 }

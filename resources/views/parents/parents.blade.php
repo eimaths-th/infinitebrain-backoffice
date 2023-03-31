@@ -90,10 +90,10 @@
                                 <span aria-hidden="true"></span>
                             </button>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="Name">Code:</label>
                             <input type="text" class="form-control" name="code" id="AddCode" value="">
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <label for="Name">Email:</label>
                             <input type="text" class="form-control" name="email" id="AddEmail" value="">
@@ -298,15 +298,15 @@
                 $('.alert-success').hide();
 
                 $.ajax({
-                    url: "{{ route('students.store') }}",
+                    url: "{{ route('parents.store') }}",
                     method: 'post',
                     data: {
-                        code: $('#AddCode').val(),
-                        name: $('#AddName').val(),
-                        lastname: $('#AddLastname').val(),
-                        nickname: $('#AddNickname').val(),
+                        // code: $('#AddCode').val(),
+                        email: $('#AddEmail').val(),
+                        password: $('#AddPassword').val(),
+                        parent: $('#AddParent').val(),
                         mobile: $('#AddMobile').val(),
-                        grade: $('#AddGrade').val(),
+                        address: $('#AddAddress').val(),
                         _token: token,
                     },
                     success: function(result) {
@@ -349,15 +349,15 @@
 
 
                 $.ajax({
-                    url: "students/save/" + id,
+                    url: "parents/save/" + id,
                     method: 'PUT',
                     data: {
                         code: $('#EditCode').val(),
-                        first_name: $('#EditName').val(),
-                        last_name: $('#EditLastname').val(),
-                        nick_name: $('#EditNickname').val(),
+                        email: $('#EditEmail').val(),
+                        name_parent: $('#EditParentName').val(),
                         mobile: $('#EditMobile').val(),
-                        grade: $('#EditGrade').val(),
+                        street_address: $('#EditAddress').val(),
+                        // grade: $('#EditGrade').val(),
                     },
 
                     success: function(result) {
@@ -400,7 +400,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: 'JSON',
-                    url: "students/destroy/" + rowid,
+                    url: "parents/destroy/" + rowid,
                     data: {
                         _method: 'delete',
                         _token: token
