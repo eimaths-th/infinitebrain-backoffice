@@ -224,7 +224,7 @@
                                                                     <!-- <a href="https://www.example.com" style="outline:none" tabindex="-1" target="_blank"><img alt="your-logo" class="big" src="images/Your-logo.png" style="display: block; height: auto; border: 0; width: 304px; max-width: 100%;" title="your-logo" width="304"/></a> -->
                                                                     <img src="{{ asset('images/Logo_Mata-knowledfe_final_PNG.png') }}"
                                                                         alt="..." srcset=""
-                                                                        style="vertical-align:middle; width:50%; height:200px;">
+                                                                        style="vertical-align:middle;  height:200px;">
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -911,9 +911,9 @@
                                                             <td class="pad">
                                                                 <div
                                                                     style="font-size:12px;font-weight:400;ext-align:left;mso-line-height-alt:25.2px;">
-                                                                    <img src="{{ asset('receipt_form_images/') }}/<?php echo $data->file_att; ?>"
+                                                                    <img height="200px" src="{{ asset('receipt_form_images/') }}/<?php echo $data->file_att; ?>"
                                                                         alt="..." srcset=""
-                                                                        style="vertical-align:middle;  height: 200px;">
+                                                                        style="vertical-align:middle;">
 
                                                                 </div>
                                                             </td>
