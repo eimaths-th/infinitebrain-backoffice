@@ -21,7 +21,7 @@ class GoogleController extends Controller
     {
         try {
             
-            $user = Socialite::driver('google')->stateless()->user();
+            $user = Socialite::driver('google')->user();
 
             // Check Users Email If Already There
             $is_user = ParentRegister::where('email', $user->getEmail())->first();
