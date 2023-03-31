@@ -188,7 +188,7 @@
                                                 <a class="nav-link" id="custom-tabs-three-messages-tab" data-toggle="pill"
                                                     href="#custom-tabs-three-messages" role="tab"
                                                     aria-controls="custom-tabs-three-messages"
-                                                    aria-selected="false"> <i class="fa fa-sitemap"></i> รายวิชาที่เรียน </a>
+                                                    aria-selected="false"> <i class="fa fa-list-alt"></i> รายวิชาที่เรียน </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link" id="custom-tabs-three-settings-tab" data-toggle="pill"

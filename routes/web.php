@@ -28,6 +28,18 @@ use App\Models\ParentRegister;
 |
 */
 
+Route::group(array('domain' => 'form.infinitebrain.co.th'), function()
+{
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+
+});
+
+Route::group(array('domain' => 'school.infinitebrain.co.th'), function()
+{
+    Route::get('/', [SchoolController::class, 'index']);
+
+});
+
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 //Route::get('/', [EmployeeController::class, 'index']);
