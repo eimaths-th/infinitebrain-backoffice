@@ -47,6 +47,17 @@ class StudentController extends Controller
 
                     return $ltext;
                 })*/
+                ->editColumn('photo', function (Student $Student) {
+
+                    if ($Student->photo_att!=="") {
+                        $urla = url('/') . '/form_images/'.$Student->photo_att;
+                    } else {
+                        $urla = url('/') . '/images/user2.png';
+                    }
+
+                    $ltext = "<img src='".$urla."' height='34' class='rounded-circle'>";
+                    return $ltext;
+                })
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
@@ -54,7 +65,7 @@ class StudentController extends Controller
                     $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
-                })->toJson();
+                })->rawColumns(['checkbox', 'photo', 'action'])->toJson();
         }
 
         return view('students.index');
