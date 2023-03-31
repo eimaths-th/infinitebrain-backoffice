@@ -39,7 +39,7 @@ class RedirectIfAuthenticated
                 // return redirect('/parent');
             }
 
-            if ($guard == NULL &&Auth::guard($guard)->check()) {
+            if ($guard == NULL && Auth::guard($guard)->check()) {
                 // return redirect(RouteServiceProvider::HOME);
             }
         }

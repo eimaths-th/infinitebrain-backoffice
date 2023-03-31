@@ -36,10 +36,9 @@ class LoginController extends Controller
     {
         if (Auth::user()->level == 1) {
             return '/home';
-        } elseif (Auth::user()->level == 2) { 
+        } elseif (Auth::user()->level == 2) {
             return '/home';
         } else {
-            
         }
     }
 
@@ -52,7 +51,6 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('guest:parent')->except('logout');
-
     }
     public function showParentLoginForm()
     {
@@ -64,9 +62,9 @@ class LoginController extends Controller
         $this->validate($request, [
             'email'   => 'required|email',
             'password' => 'required|min:6'
-            
+
         ]);
-         if (Auth::guard('parent')->attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::guard('parent')->attempt(['email' => $request->email, 'password' => $request->password])) {
             //echo ("hello1");
             //echo Auth::user()->email;
             //dd(session()->all());
@@ -77,10 +75,10 @@ class LoginController extends Controller
             // $this->check_permission();
 
             return redirect('/parent');
-        } 
+        }
         //echo ("hello2");
         return back()->withInput($request->only('email', 'remember'))
-        ->withErrors(['error' => 'Your Username Or Password Not Match']);
+            ->withErrors(['error' => 'Your Username Or Password Not Match']);
     }
 
     public function ParentsignOut()

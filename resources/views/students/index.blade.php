@@ -47,6 +47,7 @@
                         <thead>
                             <tr>
                                 <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
+                                <th width="20px" align="center"></th>
                                 <th>Code</th>
                                 <th>Name</th>
                                 <th>Lastname</th>
@@ -227,6 +228,10 @@
                         name: 'checkbox',
                         orderable: false,
                         searchable: false
+                    },
+                    {
+                        data: 'photo',
+                        name: 'photo'
                     },
                     {
                         data: 'code',
