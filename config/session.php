@@ -155,7 +155,7 @@ return [
     |
     */
 
-    'domain' => 'form.infinitebrain.co.th',
+    'domain' => env('SESSION_DOMAIN'),
 
     /*
     |--------------------------------------------------------------------------
