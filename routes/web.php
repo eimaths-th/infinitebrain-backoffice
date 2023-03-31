@@ -122,7 +122,7 @@ Route::get('/parents/create', [ParentRegisterController::class, 'create'])->name
 Route::get('/parents/show', [ParentRegisterController::class, 'show'])->name('parents.show');
 Route::get('/parents/edit/{id}', [ParentRegisterController::class, 'edit'])->name('parents.edit');
 Route::put('/parents/save/{id}', [ParentRegisterController::class, 'update'])->name('parents.save');
-Route::post('/parents/store', [ParentRegisterController::class, 'store'])->name('parents.store');
+Route::post('/parents/store1', [ParentRegisterController::class, 'store1'])->name('parents.store1');
 Route::delete('/parents/destroy/{id}', [ParentRegisterController::class, 'destroy'])->name('parents.destroy');
 Route::delete('/parents/destroy_all', [ParentRegisterController::class, 'destroy_all'])->name('parents.destroy_all');
 

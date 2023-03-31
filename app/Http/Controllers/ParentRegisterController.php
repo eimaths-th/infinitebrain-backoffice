@@ -14,6 +14,8 @@ use App\Models\FileUpload;
 // use App\Models\Receipt_RunningNumber;
 use App\Models\RunningNumber;
 use App\Models\Parent_RunningNumber;
+use App\Mail\ContactMail2;
+use Mail;
 
 class ParentRegisterController extends Controller
 {
@@ -76,6 +78,41 @@ class ParentRegisterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function store1(Request $request)
+    {
+        $validator =  Validator::make($request->all(), [
+            'email' => 'required|email|unique:parent',
+            'password' => [
+                'required',
+                'string',
+                'regex:/^[a-zA-Z0-9 ]+$/',
+                'min:8',            
+               
+            ],
+            'parent' => 'required|string',
+            'mobile' => 'required|string',
+            'address' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            //return response()->json(['errors' => $validator->errors()->all()]);
+            return back()->withErrors(['errors' => $validator->errors()->all()]);
+        }
+      
+        $rpnumber1 = Parent_RunningNumber::generate();
+        
+        $registerForm1 = new ParentRegister([
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
+            'name_parent' => $request->get('parent'),
+            'mobile' => $request->get('mobile'),
+            'street_address' => $request->get('address'),
+            // 'postcode' => $request->get('postcode'),
+            'code' => "$rpnumber1",
+
+        ]);
+        $registerForm1->save();
+        
+    }
     public function store(Request $request)
     {
 
@@ -108,6 +145,7 @@ class ParentRegisterController extends Controller
             //return response()->json(['errors' => $validator->errors()->all()]);
             return back()->withErrors(['errors' => $validator->errors()->all()]);
         }
+
         $filesa = $request->get('imgFiles');
         // $filesb = $request->get('imgFiles2');
 
@@ -147,7 +185,7 @@ class ParentRegisterController extends Controller
         
         $registerForm->save();
         $pid = $registerForm->id;
-
+       
         // echo $request->get('val');
         // exit();
         // $error = 1 ;
@@ -155,7 +193,7 @@ class ParentRegisterController extends Controller
             // $rnumber1 = RunningNumber::generate(new Student,'code',4,"");
             $rcnumber = RunningNumber::generate();
             $data = [];
-            $data[] = [
+            $data[$x] = [
                 'code' => $rcnumber,
                 'first_name' => $request->get('firstname')[$x],
                 'last_name' => $request->get('lastname')[$x],
@@ -170,11 +208,17 @@ class ParentRegisterController extends Controller
             ];
             // $data = [];
 
-            // print_r($data);
+            $data2[] = $data;
+            
             Student::upsert($data, [
                 'code', 'first_name', 'last_name', 'nick_name', 'birth_data', 'school_name', 'grade', 'photo_att', 'sex', 'pid'
             ]);
+            // 
         }
+        // print_r($data2);
+        // exit();
+        $adminEmail = $request->get('email');
+        Mail::to($adminEmail)->send(new ContactMail2($registerForm,$data2));
         // if(count($data)>0){
         //     $error = '';
         // }
@@ -263,12 +307,11 @@ class ParentRegisterController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $this->check_permission();
         $validator =  Validator::make($request->all(), [
-            'code' => 'required|string|max:4|unique:parent,code,' . $id,
+            // 'code' => 'required|string|max:4|unique:parent,code,' . $id,
             'email' => 'required|string|max:255',
             'name_parent' => 'required|string|max:255',
-            'mobile' => 'required|string|max:10',
+            // 'mobile' => 'required|string|max:10',
             'street_address' => 'required|string|max:255',
         ]);
 
@@ -298,7 +341,7 @@ class ParentRegisterController extends Controller
     public function destroy_all(Request $request)
     {
 
-        $this->check_permission();
+        // $this->check_permission();
         $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {

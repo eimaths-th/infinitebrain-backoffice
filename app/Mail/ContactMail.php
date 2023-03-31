@@ -23,6 +23,7 @@ class ContactMail extends Mailable
     {
         //
         $this->data = $data;
+       
     }
 
     /**

@@ -245,8 +245,9 @@
                         name: 'mobile'
                     },
                     {
-                        data: 'street_address' ,
-                        name: 'street_address'
+                        data: 'street_address'  ,
+                        name: 'street_address',
+                   
                     },
                     {
                         data: 'action',
@@ -298,7 +299,7 @@
                 $('.alert-success').hide();
 
                 $.ajax({
-                    url: "{{ route('parents.store') }}",
+                    url: "{{ route('parents.store1') }}",
                     method: 'post',
                     data: {
                         // code: $('#AddCode').val(),
