@@ -15,6 +15,7 @@ use App\Http\Controllers\ParentRegisterController;
 use App\Http\Controllers\SubjectPriceController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\GoogleController;
+use App\Models\ParentRegister;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,6 +129,8 @@ Route::post('/receipts/conv', [ReceiptController::class, 'conv'])->name('receipt
 Route::post('/receipts/import', [ReceiptController::class, 'importExcel'])->name('receipts.import');
 Route::delete('/receipts/destroy/{id}', [ReceiptController::class, 'destroy'])->name('receipts.destroy');
 Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all'])->name('receipts.destroy_all');
+
+Route::get('/parents', [ParentRegisterController::class, 'index'])->name('parents');
 
 Route::get('/parent-register', [ParentRegisterController::class, 'register'])->name('parentregister');
 Route::post('/parent-register/store', [ParentRegisterController::class, 'store'])->name('parentregister.store');

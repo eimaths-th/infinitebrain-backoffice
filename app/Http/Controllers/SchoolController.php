@@ -207,7 +207,7 @@ class SchoolController extends Controller
                     </div>
                     <div class="mt-5 "><button
                             class="btn btn-primary profile-button"
-                            type="button">บันทึกข้อมูล</button></div>
+                            type="submit">บันทึกข้อมูล</button></div>
                 </div>
             </div>
         </div>

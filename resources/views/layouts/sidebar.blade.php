@@ -185,6 +185,12 @@
                                     รายชื่อนักเรียน
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('parents') }}">
+                                    <i class="metismenu-icon"></i>
+                                    รายชื่อผู้ปกครอง
+                                </a>
+                            </li>
                             
                         </ul>
 
