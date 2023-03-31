@@ -33,6 +33,6 @@ return [
     'google' => [
         'client_id' => '315026935235-1fk08k7dale2t93u6aecsunp6ulrr877.apps.googleusercontent.com', //USE FROM Google DEVELOPER ACCOUNT
         'client_secret' => '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', //USE FROM Google DEVELOPER ACCOUNT
-        'redirect' => 'http://127.0.0.1:8000/login/google/callback'
+        'redirect' => 'http://https://form.infinitebrain.co.th/login/google/callback'
 ],
 ];
