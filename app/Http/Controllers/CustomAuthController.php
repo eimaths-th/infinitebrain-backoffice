@@ -38,9 +38,10 @@ class CustomAuthController extends Controller
                 return back()->withErrors(['error' => 'You are users but not have permissions. Please Contact Administrator']);
             } else {
                 if (Auth::user()->level == 1) {
+                    echo "xxx";
                     //return redirect()->intended('users');
                     //return redirect('/users');
-                    return redirect('/receipts/print_month?pmsfield=2&type=report_view&print_month='.$this_month.'&Pmdescription=ค่าสมัคร GMEC รอบแรก '. $this_year);
+                    //return redirect('/receipts/print_month?pmsfield=2&type=report_view&print_month='.$this_month.'&Pmdescription=ค่าสมัคร GMEC รอบแรก '. $this_year);
                 } elseif (Auth::user()->level == 2) {
                     //return redirect()->intended('course');
                     return redirect('/course');
