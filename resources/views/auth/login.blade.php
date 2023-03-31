@@ -159,7 +159,7 @@
                             <div class="card-header"> {{ isset($url) ? ucwords($url) : '' }} {{ __('Login') }}</div>
 
                             <div class="card-body">
-                                <form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
+                                <form method="POST" action="{{ route('login.custom') }}" aria-label="{{ __('Login') }}">
 
                                     @csrf
                                     <div class="row mb-3  ">
