@@ -117,6 +117,14 @@ Route::post('/students/store', [StudentController::class, 'store'])->name('stude
 Route::delete('/students/destroy/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
 Route::delete('/students/destroy_all', [StudentController::class, 'destroy_all'])->name('students.destroy_all');
 
+Route::get('/parents', [ParentRegisterController::class, 'index'])->name('parents');
+Route::get('/parents/create', [ParentRegisterController::class, 'create'])->name('parents.create');
+Route::get('/parents/show', [ParentRegisterController::class, 'show'])->name('parents.show');
+Route::get('/parents/edit/{id}', [ParentRegisterController::class, 'edit'])->name('parents.edit');
+Route::put('/parents/save/{id}', [ParentRegisterController::class, 'update'])->name('parents.save');
+Route::post('/parents/store', [ParentRegisterController::class, 'store'])->name('parents.store');
+Route::delete('/parents/destroy/{id}', [ParentRegisterController::class, 'destroy'])->name('parents.destroy');
+Route::delete('/parents/destroy_all', [ParentRegisterController::class, 'destroy_all'])->name('parents.destroy_all');
 
 Route::get('/course', [CourseController::class, 'index'])->name('course');
 Route::get('/course/create', [CourseController::class, 'create'])->name('course.create');
@@ -142,7 +150,6 @@ Route::post('/receipts/import', [ReceiptController::class, 'importExcel'])->name
 Route::delete('/receipts/destroy/{id}', [ReceiptController::class, 'destroy'])->name('receipts.destroy');
 Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all'])->name('receipts.destroy_all');
 
-Route::get('/parents', [ParentRegisterController::class, 'index'])->name('parents');
 
 Route::get('/parent-register', [ParentRegisterController::class, 'register'])->name('parentregister');
 Route::post('/parent-register/store', [ParentRegisterController::class, 'store'])->name('parentregister.store');
