@@ -849,11 +849,12 @@ class ReceiptController extends Controller
 
             $total_price = ($total_price + $price);
         }
+        $numrec = count($ret_receipt);
         $pagen = 0;
-        if ($i < 19) {
-            $pagen = 19;
-        } elseif ($i > 19 and $i < 38) {
-            $pagen = 38;
+        if ($numrec < 19) {
+            $pagen = 25;
+        } elseif ($numrec > 19 and $numrec < 38) {
+            $pagen = 50;
         }
 
         foreach ($ret_receipt as $receipt) {
@@ -865,7 +866,7 @@ class ReceiptController extends Controller
         $chart_date = rtrim($chart_date, ',');;
         $chart_date_price = rtrim($chart_date_price, ',');;
 
-
+    
 
         if ($type !== "report_view") {
 
@@ -885,7 +886,7 @@ class ReceiptController extends Controller
             }
         }
 
-        //print_r($ret_receipt);
+
 
         return view($viewr)->with(['sfield' => $sfield])->with(['sfielda' =>  self::sfielda])
             ->with(['sfieldas' =>  self::sfieldas])
