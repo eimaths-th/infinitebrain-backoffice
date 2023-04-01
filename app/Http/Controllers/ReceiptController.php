@@ -852,9 +852,9 @@ class ReceiptController extends Controller
         $numrec = count($ret_receipt);
         $pagen = 0;
         if ($numrec < 19) {
-            $pagen = 25;
+            $pagen = 22;
         } elseif ($numrec > 19 and $numrec < 38) {
-            $pagen = 50;
+            $pagen = 44;
         }
 
         foreach ($ret_receipt as $receipt) {
