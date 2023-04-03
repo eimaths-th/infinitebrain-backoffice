@@ -117,7 +117,8 @@ class ParentRegisterController extends Controller
     {
 
         //
-        $validator =  Validator::make($request->all(), [
+        // $validator =  Validator::make($request->all(), [
+            $request->validate([
             'email' => 'required|email|unique:parent',
             // 'password' => [
             //     'required',
@@ -132,18 +133,18 @@ class ParentRegisterController extends Controller
             'phone' => 'required|string',
             'address' => 'required|string',
             'postcode' => 'required|string',
-            // 'firstname' => 'required|string',
-            // 'lastname' => 'required|string',
-            // 'nickname' => 'required|string',
-            // 'birthdate' => 'required|string',
-            // 'schoolname' => 'required|string',
-            // 'grade' => 'required|string',
+            'firstname' => 'required|string',
+            'lastname' => 'required|string',
+            'nickname' => 'required|string',
+            'birthdate' => 'required|string',
+            'schoolname' => 'required|string',
+            'grade' => 'required|string',
 
-        ]);
+        ]); 
 
-        if ($validator->fails()) {
+        if ($request->fails()) {
             //return response()->json(['errors' => $validator->errors()->all()]);
-            return back()->withErrors(['errors' => $validator->errors()->all()]);
+            return back()->withErrors(['errors' => $request->errors()->all()]);
         }
 
         $filesa = $request->get('imgFiles');

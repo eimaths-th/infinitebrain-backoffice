@@ -604,7 +604,7 @@
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <label class="form-label form-label-top form-label-auto" for="parent">Email<span class="form-required">*</span></label>
-                                    <input type="email" class="form-control" name="email" id="email" value="" maxlength="100" required>
+                                    <input type="email" class="form-control" name="email" id="email" value="{{ old('email') }}"   maxlength="100" required>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Email</label>
                                     <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
                                             required.</span>
@@ -617,7 +617,7 @@
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
                                     <label class="form-label form-label-top form-label-auto" for="parent">Parent's name / ชื่อและนามสกุลผู้ปกครอง<span class="form-required">*</span></label>
-                                    <input type="text" class="form-control" name="parent" id="parent" value="" maxlength="100" required>
+                                    <input type="text" class="form-control" name="parent" id="parent" value="{{ old('parent') }}"  maxlength="100" required>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Parent's name</label>
                                     <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
                                             required.</span>
@@ -676,7 +676,7 @@
                                         Number / เบอร์โทรศัพท์ <span class="form-required">*</span>
                                         <div style="width: 270px"></div>
                                     </label>
-                                    <input type="text" class="AddPhone form-control" name="phone" id="phone" value="" maxlength="20" required>
+                                    <input type="text" class="AddPhone form-control" name="phone" id="phone" value="{{ old('phone') }}" maxlength="20" required>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Phone Number</label>
                                     <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
                                             required.</span>
@@ -691,7 +691,7 @@
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
                                         <label class="form-label form-label-top form-label-auto" for="address">Address / ที่อยู่ภาษาไทย <span class="form-required">*</span></label>
-                                        <input type="text" class="form-control" name="address" id="address" maxlength="150" minlength="2" required>
+                                        <input type="text" class="form-control" name="address" id="address" value="{{ old('address') }}" maxlength="150" minlength="2" required>
                                         <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Street Address</label>
                                     </div>
                                 </div>
@@ -700,7 +700,7 @@
                                         <label class="form-label form-label-top form-label-auto" for="postcode">
                                             <div style="width: 270px"></div>
                                         </label>
-                                        <input type="text" class="form-control" name="postcode" id="postcode" maxlength="50" minlength="2" required>
+                                        <input type="text" class="form-control" name="postcode" id="postcode" value="{{ old('postcode') }}" maxlength="50" minlength="2" required>
                                         <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Postal / Zip Code / รหัสไปรษณีย์ </label>
                                         <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10">
                                             <span class="error-navigation-message">This field is required.</span>
@@ -725,7 +725,7 @@
                                             <label class="form-label form-label-top form-label-auto" for="firstname">
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            <input type="text" class="form-control" name="firstname[]" id="firstname" value="" maxlength="50" minlength="2" required>
+                                            <input type="text" class="form-control" name="firstname[]" id="firstname" value="{{ old('firstname.0') }}" maxlength="50" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">First
                                                 Name</label>
                                             <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
@@ -741,7 +741,7 @@
                                             <label class="form-label form-label-top form-label-auto" for="lastname">
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            <input type="text" class="form-control" name="lastname[]" id="lastname" value="" maxlength="50" minlength="2" required>
+                                            <input type="text" class="form-control" name="lastname[]" id="lastname" value="{{ old('lastname.0') }}" maxlength="50" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
                                                 Name</label>
                                             {{-- <div class="form-error-message" role="alert"><img
@@ -765,7 +765,7 @@
                                             (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                             <div style="width: 270px"></div>
                                         </label>
-                                        <input type="text" class="form-control" name="nickname[]" id="nickname" value="" maxlength="50" minlength="1" required>
+                                        <input type="text" class="form-control" name="nickname[]" id="nickname" value="{{ old('nickname.0') }}" maxlength="50" minlength="1" required>
                                         <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Nick
                                             Name</label>
                                         <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
@@ -782,7 +782,7 @@
                                             Date / วันเกิด <span class="form-required">*</span>
                                             <div style="width: 270px"></div>
                                         </label>
-                                        <input type="date" class="AddDate form-control" name="birthdate[]" id="birthdate" value="" required>
+                                        <input type="date" class="AddDate form-control" name="birthdate[]" id="birthdate" value="{{ old('birthdate.0') }}" required>
                                         <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Date</label>
                                         <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
                                                 required.</span>
@@ -800,7 +800,7 @@
 
                                     <div class="position-relative form-group">
                                         <label class="form-label form-label-top form-label-auto" for="schoolname">School name (English) / ชื่อโรงเรียน (ภาษาอังกฤษ)<span class="form-required">*</span></label>
-                                        <input type="text" class="form-control" name="schoolname[]" id="schoolname" value="" maxlength="100" required>
+                                        <input type="text" class="form-control" name="schoolname[]" id="schoolname" value="{{ old('schoolname.0') }}" maxlength="100" required>
                                         <label class="form-sub-label" style="min-height:13px" aria-hidden="false">School Name</label>
                                         <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
                                                 required.</span>
@@ -818,20 +818,20 @@
                                         </label>
                                         <select style="width: 100% ; " class="form-control" id="grade" name="grade[]" data-component="dropdown" aria-label="Grade / ระดับชั้น" required>
                                             <option value="">Please Select</option>
-                                            <option value="Nursery">Nursery</option>
-                                            <option value="Kindergarten">Kindergarten</option>
-                                            <option value="Grade 1">Grade 1</option>
-                                            <option value="Grade 2">Grade 2</option>
-                                            <option value="Grade 3">Grade 3</option>
-                                            <option value="Grade 4">Grade 4</option>
-                                            <option value="Grade 5">Grade 5</option>
-                                            <option value="Grade 6">Grade 6</option>
-                                            <option value="Grade 7">Grade 7</option>
-                                            <option value="Grade 8">Grade 8</option>
-                                            <option value="Grade 9">Grade 9</option>
-                                            <option value="Grade 10">Grade 10</option>
-                                            <option value="Grade 11">Grade 11</option>
-                                            <option value="Grade 12">Grade 12</option>
+                                            <option value="Nursery" {{ old('grade.0') == 'Nursery' ? 'selected' : '' }}>Nursery</option>
+                                            <option value="Kindergarten" {{ old('grade.0') == 'Kindergarten' ? 'selected' : '' }}>Kindergarten</option>
+                                            <option value="Grade 1" {{ old('grade.0') == 'Grade 1' ? 'selected' : '' }}>Grade 1</option>
+                                            <option value="Grade 2" {{ old('grade.0') == 'Grade 2' ? 'selected' : '' }}>Grade 2</option>
+                                            <option value="Grade 3" {{ old('grade.0') == 'Grade 3' ? 'selected' : '' }}>Grade 3</option>
+                                            <option value="Grade 4" {{ old('grade.0') == 'Grade 4' ? 'selected' : '' }}>Grade 4</option>
+                                            <option value="Grade 5" {{ old('grade.0') == 'Grade 5' ? 'selected' : '' }}>Grade 5</option>
+                                            <option value="Grade 6" {{ old('grade.0') == 'Grade 6' ? 'selected' : '' }}>Grade 6</option>
+                                            <option value="Grade 7" {{ old('grade.0') == 'Grade 7' ? 'selected' : '' }}>Grade 7</option>
+                                            <option value="Grade 8" {{ old('grade.0') == 'Grade 8' ? 'selected' : '' }}>Grade 8</option>
+                                            <option value="Grade 9" {{ old('grade.0') == 'Grade 9' ? 'selected' : '' }}>Grade 9</option>
+                                            <option value="Grade 10"{{ old('grade.0') == 'Grade 10' ? 'selected' : '' }}>Grade 10</option>
+                                            <option value="Grade 11"{{ old('grade.0') == 'Grade 11' ? 'selected' : '' }}>Grade 11</option>
+                                            <option value="Grade 12"{{ old('grade.0') == 'Grade 12' ? 'selected' : '' }}>Grade 12</option>
                                         </select>
                                         <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Grade</label>
                                         <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
@@ -853,8 +853,8 @@
                                         </label>
                                         <select style="width: 100%" class="form-control" id="sex" name="sex[]" data-component="dropdown" aria-label="Gender / เพศ" required>
                                             <option value="">Please Select</option>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
+                                            <option value="Male"{{ old('sex.0') == 'Male' ? 'selected' : '' }}>Male</option>
+                                            <option value="Female" {{ old('sex.0') == 'Female' ? 'selected' : '' }}>Female</option>
 
                                         </select>
                                         <label class="form-sub-label" style="min-height:13px" aria-hidden="false">sex</label>
@@ -917,7 +917,7 @@
                                         <label class="form-label form-label-top form-label-auto" for="firstname">
                                             <div style="width: 270px"></div>
                                         </label>
-                                        <input type="text" class="form-control" name="firstname[]" id="firstname" value="" maxlength="50" minlength="2" required>
+                                        <input type="text" class="form-control" name="firstname[]" id="firstname" value="{{ old('firstname.1') }}" maxlength="50" minlength="2" required>
                                         <label class="form-sub-label" style="min-height:13px" aria-hidden="false">First
                                             Name</label>
                                         <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
@@ -933,7 +933,7 @@
                                         <label class="form-label form-label-top form-label-auto" for="lastname">
                                             <div style="width: 270px"></div>
                                         </label>
-                                        <input type="text" class="form-control" name="lastname[]" id="lastname" value="" maxlength="50" minlength="2" required>
+                                        <input type="text" class="form-control" name="lastname[]" id="lastname" value="{{ old('lastname.1') }}" maxlength="50" minlength="2" required>
                                         <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
                                             Name</label>
                                         {{-- <div class="form-error-message" role="alert"><img
@@ -957,7 +957,7 @@
                                         (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                         <div style="width: 270px"></div>
                                     </label>
-                                    <input type="text" class="form-control" name="nickname[]" id="nickname" value="" maxlength="50" minlength="1" required>
+                                    <input type="text" class="form-control" name="nickname[]" id="nickname" value="{{ old('nickname.1') }}" maxlength="50" minlength="1" required>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Nick
                                         Name</label>
                                     <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
@@ -974,7 +974,7 @@
                                         Date / วันเกิด <span class="form-required">*</span>
                                         <div style="width: 270px"></div>
                                     </label>
-                                    <input type="date" class="AddDate form-control" name="birthdate[]" id="birthdate" value="" required>
+                                    <input type="date" class="AddDate form-control" name="birthdate[]" id="birthdate" value="{{ old('birthdate.1') }}" required>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Date</label>
                                     <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
                                             required.</span>
@@ -992,7 +992,7 @@
 
                                 <div class="position-relative form-group">
                                     <label class="form-label form-label-top form-label-auto" for="schoolname">School name (English) / ชื่อโรงเรียน (ภาษาอังกฤษ)<span class="form-required">*</span></label>
-                                    <input type="text" class="form-control" name="schoolname[]" id="schoolname" value="" maxlength="100" required>
+                                    <input type="text" class="form-control" name="schoolname[]" id="schoolname" value="{{ old('schoolname.1') }}" maxlength="100" required>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">School Name</label>
                                     <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
                                             required.</span>
@@ -1010,20 +1010,20 @@
                                     </label>
                                     <select style="width: 100% " class="form-control" id="grade" name="grade[]" data-component="dropdown" aria-label="Grade / ระดับชั้น" required>
                                         <option value="">Please Select</option>
-                                        <option value="Nursery">Nursery</option>
-                                        <option value="Kindergarten">Kindergarten</option>
-                                        <option value="Grade 1">Grade 1</option>
-                                        <option value="Grade 2">Grade 2</option>
-                                        <option value="Grade 3">Grade 3</option>
-                                        <option value="Grade 4">Grade 4</option>
-                                        <option value="Grade 5">Grade 5</option>
-                                        <option value="Grade 6">Grade 6</option>
-                                        <option value="Grade 7">Grade 7</option>
-                                        <option value="Grade 8">Grade 8</option>
-                                        <option value="Grade 9">Grade 9</option>
-                                        <option value="Grade 10">Grade 10</option>
-                                        <option value="Grade 11">Grade 11</option>
-                                        <option value="Grade 12">Grade 12</option>
+                                        <option value="Nursery" {{ old('grade.1') == 'Nursery' ? 'selected' : '' }}>Nursery</option>
+                                        <option value="Kindergarten" {{ old('grade.1') == 'Kindergartens' ? 'selected' : '' }}>Kindergarten</option>
+                                        <option value="Grade 1" {{ old('grade.1') == 'Grade 1' ? 'selected' : '' }}>Grade 1</option>
+                                        <option value="Grade 2" {{ old('grade.1') == 'Grade 2' ? 'selected' : '' }}>Grade 2</option>
+                                        <option value="Grade 3" {{ old('grade.1') == 'Grade 3' ? 'selected' : '' }}>Grade 3</option>
+                                        <option value="Grade 4" {{ old('grade.1') == 'Grade 4' ? 'selected' : '' }}>Grade 4</option>
+                                        <option value="Grade 5" {{ old('grade.1') == 'Grade 5' ? 'selected' : '' }}>Grade 5</option>
+                                        <option value="Grade 6" {{ old('grade.1') == 'Grade 6' ? 'selected' : '' }}>Grade 6</option>
+                                        <option value="Grade 7" {{ old('grade.1') == 'Grade 7' ? 'selected' : '' }}>Grade 7</option>
+                                        <option value="Grade 8" {{ old('grade.1') == 'Grade 8' ? 'selected' : '' }}>Grade 8</option>
+                                        <option value="Grade 9" {{ old('grade.1') == 'Grade 9' ? 'selected' : '' }}>Grade 9</option>
+                                        <option value="Grade 10"{{ old('grade.1') == 'Grade 10' ? 'selected' : '' }}>Grade 10</option>
+                                        <option value="Grade 11"{{ old('grade.1') == 'Grade 11' ? 'selected' : '' }}>Grade 11</option>
+                                        <option value="Grade 12"{{ old('grade.1') == 'Grade 12' ? 'selected' : '' }}>Grade 12</option>
                                     </select>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Grade</label>
                                     <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
@@ -1044,8 +1044,8 @@
                                     </label>
                                     <select style="width: 100%" class="form-control" id="sex" name="sex[]" data-component="dropdown" aria-label="Gender / เพศ" required>
                                         <option value="">Please Select</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
+                                        <option value="Male"{{ old('sex.1') == 'Male' ? 'selected' : '' }}>Male</option>
+                                        <option value="Female"{{ old('sex.1') == 'Female' ? 'selected' : '' }}>Female</option>
 
                                     </select>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">sex</label>
@@ -1104,7 +1104,7 @@
                                         <label class="form-label form-label-top form-label-auto" for="firstname">
                                             <div style="width: 270px"></div>
                                         </label>
-                                        <input type="text" class="form-control" name="firstname[]" id="firstname" value="" maxlength="50" minlength="2" required>
+                                        <input type="text" class="form-control" name="firstname[]" id="firstname" value="{{ old('firstname.2') }}" maxlength="50" minlength="2" required>
                                         <label class="form-sub-label" style="min-height:13px" aria-hidden="false">First
                                             Name</label>
                                         <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
@@ -1120,7 +1120,7 @@
                                         <label class="form-label form-label-top form-label-auto" for="lastname">
                                             <div style="width: 270px"></div>
                                         </label>
-                                        <input type="text" class="form-control" name="lastname[]" id="lastname" value="" maxlength="50" minlength="2" required>
+                                        <input type="text" class="form-control" name="lastname[]" id="lastname" value="{{ old('lastname.2') }}" maxlength="50" minlength="2" required>
                                         <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
                                             Name</label>
                                         {{-- <div class="form-error-message" role="alert"><img
@@ -1144,7 +1144,7 @@
                                         (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                         <div style="width: 270px"></div>
                                     </label>
-                                    <input type="text" class="form-control" name="nickname[]" id="nickname" value="" maxlength="50" minlength="1" required>
+                                    <input type="text" class="form-control" name="nickname[]" id="nickname" value="{{ old('nickname.2') }}" maxlength="50" minlength="1" required>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Nick
                                         Name</label>
                                     <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
@@ -1161,7 +1161,7 @@
                                         Date / วันเกิด <span class="form-required">*</span>
                                         <div style="width: 270px"></div>
                                     </label>
-                                    <input type="date" class="AddDate form-control" name="birthdate[]" id="birthdate" value="" required>
+                                    <input type="date" class="AddDate form-control" name="birthdate[]" id="birthdate" value="{{ old('birthdate.2') }}" required>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Date</label>
                                     <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
                                             required.</span>
@@ -1179,7 +1179,7 @@
 
                                 <div class="position-relative form-group">
                                     <label class="form-label form-label-top form-label-auto" for="schoolname">School name (English) / ชื่อโรงเรียน (ภาษาอังกฤษ)<span class="form-required">*</span></label>
-                                    <input type="text" class="form-control" name="schoolname[]" id="schoolname" value="" maxlength="100" required>
+                                    <input type="text" class="form-control" name="schoolname[]" id="schoolname" value="{{ old('schoolname.2') }}" maxlength="100" required>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">School Name</label>
                                     <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
                                             required.</span>
@@ -1197,20 +1197,20 @@
                                     </label>
                                     <select style="width: 100%" class="form-control" id="grade" name="grade[]" data-component="dropdown" aria-label="Grade / ระดับชั้น" required>
                                         <option value="">Please Select</option>
-                                        <option value="Nursery">Nursery</option>
-                                        <option value="Kindergarten">Kindergarten</option>
-                                        <option value="Grade 1">Grade 1</option>
-                                        <option value="Grade 2">Grade 2</option>
-                                        <option value="Grade 3">Grade 3</option>
-                                        <option value="Grade 4">Grade 4</option>
-                                        <option value="Grade 5">Grade 5</option>
-                                        <option value="Grade 6">Grade 6</option>
-                                        <option value="Grade 7">Grade 7</option>
-                                        <option value="Grade 8">Grade 8</option>
-                                        <option value="Grade 9">Grade 9</option>
-                                        <option value="Grade 10">Grade 10</option>
-                                        <option value="Grade 11">Grade 11</option>
-                                        <option value="Grade 12">Grade 12</option>
+                                        <option value="Nursery" {{ old('grade.2') == 'Nursery' ? 'selected' : '' }}>Nursery</option>
+                                        <option value="Kindergarten" {{ old('grade.2') == 'Kindergarten' ? 'selected' : '' }}>Kindergarten</option>
+                                        <option value="Grade 1" {{ old('grade.2') == 'Grade 1' ? 'selected' : '' }}>Grade 1</option>
+                                        <option value="Grade 2" {{ old('grade.2') == 'Grade 2' ? 'selected' : '' }}>Grade 2</option>
+                                        <option value="Grade 3" {{ old('grade.2') == 'Grade 3' ? 'selected' : '' }}>Grade 3</option>
+                                        <option value="Grade 4" {{ old('grade.2') == 'Grade 4' ? 'selected' : '' }}>Grade 4</option>
+                                        <option value="Grade 5" {{ old('grade.2') == 'Grade 5' ? 'selected' : '' }}>Grade 5</option>
+                                        <option value="Grade 6" {{ old('grade.2') == 'Grade 6' ? 'selected' : '' }}>Grade 6</option>
+                                        <option value="Grade 7" {{ old('grade.2') == 'Grade 7' ? 'selected' : '' }}>Grade 7</option>
+                                        <option value="Grade 8" {{ old('grade.2') == 'Grade 8' ? 'selected' : '' }}>Grade 8</option>
+                                        <option value="Grade 9" {{ old('grade.2') == 'Grade 9' ? 'selected' : '' }}>Grade 9</option>
+                                        <option value="Grade 10"{{ old('grade.2') == 'Grade 10' ? 'selected' : '' }}>Grade 10</option>
+                                        <option value="Grade 11"{{ old('grade.2') == 'Grade 11' ? 'selected' : '' }}>Grade 11</option>
+                                        <option value="Grade 12"{{ old('grade.2') == 'Grade 12' ? 'selected' : '' }}>Grade 12</option>
                                     </select>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Grade</label>
                                     <div class="form-error-message" role="alert"><img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10"> <span class="error-navigation-message">This field is
@@ -1231,8 +1231,8 @@
                                     </label>
                                     <select style="width: 100%" class="form-control" id="sex" name="sex[]" data-component="dropdown" aria-label="Gender / เพศ" required>
                                         <option value="">Please Select</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
+                                        <option value="Male"{{ old('sex.2') == 'Male' ? 'selected' : '' }}>Male</option>
+                                        <option value="Female"{{ old('sex.2') == 'Female' ? 'selected' : '' }}>Female</option>
 
                                     </select>
                                     <label class="form-sub-label" style="min-height:13px" aria-hidden="false">sex</label>
