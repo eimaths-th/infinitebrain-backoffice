@@ -146,7 +146,7 @@
                                     <div class="position-relative form-group">
                                         <label for="Submission Date">Submission Date:</label>
                                         <input type="text" class="form-control" name="submission_date"
-                                            id="AddSubmissiondate" value="" readonly>
+                                            id="AddSubmissiondate" value="" >
                                             <input type="hidden" name="Sfield" id="Sfield" value="{{ $sfield }}">
                                             <input type="hidden" name="fid" id="fid" value="">
                                     </div>
@@ -155,7 +155,7 @@
                                     <div class="position-relative  form-group">
                                         <label for="Package">Package:</label>
                                         <input type="text" class="form-control" name="package" id="AddPackage"
-                                            value="" readonly>
+                                            value="" >
                                     </div>
                                 </div>
                             </div>
@@ -164,14 +164,14 @@
                                     <div class="position-relative form-group">
                                         <label for="firstname">First Name:</label>
                                         <input type="text" class="form-control" name="firstname" id="AddFirstname"
-                                            value="" readonly>
+                                            value="" >
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="lastname">Last Name:</label>
                                         <input type="text" class="form-control" name="lastname" id="AddLastname"
-                                            value="" readonly>
+                                            value="" >
                                     </div>
                                 </div>
                             </div>
@@ -181,14 +181,14 @@
                                     <div class="position-relative form-group">
                                         <label for="Nickname">Nick Name:</label>
                                         <input type="text" class="form-control" name="nickname" id="AddNickname"
-                                            value="" readonly>
+                                            value="" >
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="BirthDate">Birth Date:</label>
                                         <input type="text" class="form-control" name="birthdate" id="AddBirthdate"
-                                            value="" readonly>
+                                            value="" >
                                     </div>
                                 </div>
                             </div>
@@ -198,14 +198,14 @@
                                     <div class="position-relative form-group">
                                         <label for="School">School Name:</label>
                                         <input type="text" class="form-control" name="school" id="AddSchoolname"
-                                            value="" readonly>
+                                            value="" >
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="Grade">Grade:</label>
                                         <input type="text" class="form-control" name="grade" id="AddGrade"
-                                            value="" readonly>
+                                            value="" >
                                     </div>
                                 </div>
                            
@@ -217,14 +217,14 @@
                                     <div class="form-group">
                                         <label for="Parent">Name Parent:</label>
                                         <input type="text" class="form-control" name="name_parent" id="AddParent"
-                                            value="" readonly>
+                                            value="" >
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="Mobile">Mobile:</label>
                                         <input type="text" class="AddPhone form-control" name="mobile"
-                                            id="AddMobile" value="" readonly>
+                                            id="AddMobile" value="" >
                                     </div>
                                 </div>
                             </div>
@@ -233,14 +233,14 @@
                                     <div class="form-group">
                                         <label for="Parent">Email:</label>
                                         <input type="text" class="form-control" name="email" id="AddEmail"
-                                            value="" readonly>
+                                            value="" >
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="Newsf">ข่าวสารการจัดสอบ:</label>
                                         <input type="text" class="form-control" name="newsf"
-                                            id="AddNewsf" value="" readonly>
+                                            id="AddNewsf" value="" >
                                     </div>
                                 </div>
                             </div>
@@ -248,13 +248,13 @@
 
                             <div class="form-group">
                                 <label for="Name">Street Address:</label>
-                                <input type="text" class="form-control" name="address" id="AddAddress" readonly>
+                                <input type="text" class="form-control" name="address" id="AddAddress" >
                             </div>
 
                             <div class="form-group">
                                 <label for="Postcode">Postcode:</label>
                                 <input type="text" class="form-control" name="postcode" id="AddPostcode"
-                                    value="" readonly>
+                                    value="" >
                             </div>
    
 
