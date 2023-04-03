@@ -156,6 +156,7 @@
                             <td align="center" width="10%" class="grey">ลำดับที่<br> NO.</td>
                             <td align="center" class="grey">รายการ <br>Description</td>
                             <td align="center" class="grey">จำนวน <br>Quantity</td>
+                            <td align="center" class="grey">หน่วย <br>Unit</td>
                             <td align="center" class="grey">ราคาต่อหน่วย <br>Unit Price</td>
                             <td align="center" class="grey">ส่วนลด <br>Discount</td>
                             <td align="center" class="grey">จำนวนเงิน <br>Amount</td>
@@ -164,6 +165,7 @@
                         <tr>
                             <td align="center" style="vertical-align: top;">1</td>
                             <td align="left">{!! $des_text !!}</td>
+                            <td ></td>
                             <td ></td>
                             <td ></td>
                             <td ></td>
@@ -176,9 +178,11 @@
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
+                            <td>&nbsp;</td>
 
                         </tr>
                         <tr>
+                            <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>

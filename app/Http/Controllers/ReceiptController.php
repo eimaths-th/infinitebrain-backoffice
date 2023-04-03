@@ -163,7 +163,11 @@ class ReceiptController extends Controller
             for ($i = 0; $i < strlen($dec); $i++) {
                 $output .= ' ' . $this->convertDigit($dec[$i]);
             } // endfor;
+             
         } // endif;
+        else {
+            $output .= ' Bath only ';
+        }
 
         return $output;
     } // convertNumber
