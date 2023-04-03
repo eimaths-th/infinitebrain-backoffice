@@ -19,14 +19,15 @@ use App\Mail\ContactMail;
 
 class ReceiptFormController extends Controller
 {
-    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM','9' =>'OLPCS');
+    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS');
 
     public function gmec()
     {
         return view("receipt_form.gmec");
     }
 
-    public function olpcs(){
+    public function olpcs()
+    {
         return view("receipt_form.olpcs");
     }
     public function fileStore(Request $request)
@@ -268,7 +269,7 @@ class ReceiptFormController extends Controller
 
         $filebs = rtrim($filebs, "|");
         $fileas = rtrim($fileas, "|");
-      
+
         $receiptForm = new ReceiptForm([
             'sfield' => $request->get('sfield'),
             'submission_date' => date("Y-m-d"),
@@ -288,27 +289,26 @@ class ReceiptFormController extends Controller
             'photo_att' => $fileas,
             'file_att' => $filebs,
         ]);
-                          
+
         // print_r (['sfielda' =>  self::sfielda]);
         // print_r (['sfield' => $request->sfield]);
         // exit();
-                                                                                                    
+
         $adminEmail = $request->get('email');
         Mail::to($adminEmail)->send(new ContactMail($receiptForm));
         $receiptForm->save();
         //  print_r (['sfield' => $request->sfield]);
         // exit();
-        
-        if($request->get('sfield')==9){
+
+        if ($request->get('sfield') == 9) {
             return redirect('/form/complete1');
             // echo ("1111");
-        }
-        else{
+        } else {
             return redirect('/form/complete');
-// echo("2222");
+            // echo("2222");
         }
-            // ->with(['sfielda' =>  self::sfielda])
-   
+        // ->with(['sfielda' =>  self::sfielda])
+
 
     }
 
