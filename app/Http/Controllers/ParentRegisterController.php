@@ -133,19 +133,19 @@ class ParentRegisterController extends Controller
             'phone' => 'required|string',
             'address' => 'required|string',
             'postcode' => 'required|string',
-            'firstname' => 'required|string',
-            'lastname' => 'required|string',
-            'nickname' => 'required|string',
-            'birthdate' => 'required|string',
-            'schoolname' => 'required|string',
-            'grade' => 'required|string',
-
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'nickname' => 'required',
+            'birthdate' => 'required',
+            'schoolname' => 'required',
+            'grade' => 'required',
+            'sex' => 'required',
         ]); 
 
-        if ($request->fails()) {
-            //return response()->json(['errors' => $validator->errors()->all()]);
-            return back()->withErrors(['errors' => $request->errors()->all()]);
-        }
+        // if ($request->fails()) {
+        //     //return response()->json(['errors' => $validator->errors()->all()]);
+        //     return back()->withErrors(['errors' => $request->errors()->all()]);
+        // }
 
         $filesa = $request->get('imgFiles');
         // $filesb = $request->get('imgFiles2');
