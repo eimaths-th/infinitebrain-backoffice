@@ -50,7 +50,7 @@ Auth::routes([
     'verify' => false, // Email Verification Routes...
 ]);
 
-//Route::get('dashboard', [CustomAuthController::class, 'dashboard']); 
+//Route::get('dashboard', [CustomAuthController::class, 'dashboard']);
 Route::get('login', [CustomAuthController::class, 'index'])->name('login');
 Route::post('custom-login', [CustomAuthController::class, 'customLogin'])->name('login.custom');
 Route::get('registration', [CustomAuthController::class, 'registration'])->name('register-user');
@@ -143,6 +143,7 @@ Route::match(array('GET', 'POST'), '/receipts/print_day', [ReceiptController::cl
 Route::match(array('GET', 'POST'), '/receipts/print_month', [ReceiptController::class, 'print_month'])->name('receipts.print_month');
 Route::get('/receipts/show/{type}/{id}', [ReceiptController::class, 'show'])->name('receipts.show');
 Route::get('/receipts/edit/{id}', [ReceiptController::class, 'edit'])->name('receipts.edit');
+Route::get('/receipts/migrate/{id}', [ReceiptController::class, 'migrateReceipt'])->name('receipts.migrate');
 Route::put('/receipts/save/{id}', [ReceiptController::class, 'update'])->name('receipts.save');
 Route::post('/receipts/store', [ReceiptController::class, 'store'])->name('receipts.store');
 Route::post('/receipts/conv', [ReceiptController::class, 'conv'])->name('receipts.conv');

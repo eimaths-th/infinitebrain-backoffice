@@ -16,8 +16,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                    <p>{{ $message }}</p>
-                                     </div>-->
+                                <p>{{ $message }}</p>
+                                    </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -28,7 +28,7 @@
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
                                     <p>{{ $message }}</p>
-                                     </div>-->
+                                        </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -66,7 +66,7 @@
                     </div>
 
 
-                    <div class="d-inline-block dropdown">
+                    {{-- <div class="d-inline-block dropdown">
                         <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="ImportButton"><i
                                 class="fa fa-file-excel"></i> Import Excel
                         </a>
@@ -76,7 +76,7 @@
                         <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
                             All</a>
 
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -152,8 +152,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert"
-                            style="display: none;">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
 
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true"></span>
@@ -185,12 +184,12 @@
                             <div class="form-group">
                                 <label for="font">ขนาดตัวอักษร:</label>
                                 <select class="form-control" id="PrintDaysFont" name="fontsize" required>
-                                    <option value="1" > เล็กมาก </option>
-                                        <option value="2" selected> เล็ก </option>
-                                        <option value="3" > ปานกลาง </option>
-                                        <option value="4" > ใหญ่ </option>
+                                    <option value="1"> เล็กมาก </option>
+                                    <option value="2" selected> เล็ก </option>
+                                    <option value="3"> ปานกลาง </option>
+                                    <option value="4"> ใหญ่ </option>
 
-                                        </select>
+                                </select>
                                 <input type="hidden" name="type" value="view">
                                 <input type="hidden" name="pdsfield" value="{{ request()->get('sfield') }}">
                             </div>
@@ -208,75 +207,76 @@
         </div>
     </div>
 
-     <!-- PrintMonth Modal -->
-     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-     aria-hidden="true" id="PrintMonthModal">
-     <div class="modal-dialog modal-lg" role="document">
-         <form id="PrintMonthForm" class="form" action="{{ route('receipts.print_month') }}" method="POST">
-             @csrf
-             <div class="modal-content">
-                 <div class="modal-header">
-                     <h5 class="modal-title" id="exampleModalLongTitle">Print ใบปะหน้ารายเดือน</h5>
-                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                     </button>
-                 </div>
-                 <!-- Modal body -->
-                 <div class="modal-body">
-                     <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
-                         <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                             <span aria-hidden="true">&times;</span>
-                         </button>
-                     </div>
-                     <div class="alert alert-success alert-dismissible fade show" role="alert"
-                         style="display: none;">
-
-                         <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                             <span aria-hidden="true"></span>
-                         </button>
-                     </div>
-                     <div class="col-md-4">
-                         <div class="form-group">
-                             <label for="File">สนามสอบ:</label>
-                             <select class="form-control" id="PrintMonthsField" name="pmsfields" required disabled>
-                                 @foreach ($sfielda as $key => $value)
-                                     <option value="{{ $key }}"
-                                         {{ request()->get('sfield') == $key ? 'selected' : '' }}> {{ $value }}
-                                     </option>
-                                 @endforeach
-                             </select>
-                             <input type="hidden" name="type" value="view">
-                             <input type="hidden" name="pmsfield" value="{{ request()->get('sfield') }}">
-                         </div>
-                         <div class="form-group">
-                             <label for="Submission Month">Print Month:</label>
-                             <input type="text" class="AddMonth form-control" name="print_month"
-                                 id="PrintMonthSubmissiondate" value="" required>
-                         </div>
-                         <div class="form-group">
-                            <div class="position-relative form-group">
-                                <label for="Des">รายการ:</label>
-                                <input type="text" class="form-control" name="Pmdescription" id="PmDes"
-                                    value="ค่าสมัคร {{ $sfielda[request()->get('sfield')] }} รอบแรก @php {{ echo date("Y"); }} @endphp">
-                            </div>
+    <!-- PrintMonth Modal -->
+    <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" id="PrintMonthModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <form id="PrintMonthForm" class="form" action="{{ route('receipts.print_month') }}" method="POST">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Print ใบปะหน้ารายเดือน</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                         {{-- <div class="form-group">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
+
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="File">สนามสอบ:</label>
+                                <select class="form-control" id="PrintMonthsField" name="pmsfields" required disabled>
+                                    @foreach ($sfielda as $key => $value)
+                                        <option value="{{ $key }}"
+                                            {{ request()->get('sfield') == $key ? 'selected' : '' }}> {{ $value }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <input type="hidden" name="type" value="view">
+                                <input type="hidden" name="pmsfield" value="{{ request()->get('sfield') }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="Submission Month">Print Month:</label>
+                                <input type="text" class="AddMonth form-control" name="print_month"
+                                    id="PrintMonthSubmissiondate" value="" required>
+                            </div>
+                            <div class="form-group">
+                                <div class="position-relative form-group">
+                                    <label for="Des">รายการ:</label>
+                                    <input type="text" class="form-control" name="Pmdescription" id="PmDes"
+                                        value="ค่าสมัคร {{ $sfielda[request()->get('sfield')] }} รอบแรก {{-- @php {{ echo date("Y"); }} @endphp --}}">
+                                </div>
+                            </div>
+                            {{-- <div class="form-group">
                              <label for="Submission Date">รหัสเอกสาร:</label>
                              <input type="number" class="form-control" name="print_number" id="PrintDayNumber"
                                  value="" required>
                          </div> --}}
-                     </div>
+                        </div>
 
 
-                 </div>
-                 <!-- Modal footer id="SubmitPrintDayForm"-->
-                 <div class="modal-footer">
-                     <button type="submit" class="btn btn-success">Print</button>
-                     <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
-                 </div>
-             </div>
-         </form>
-     </div>
- </div>
+                    </div>
+                    <!-- Modal footer id="SubmitPrintDayForm"-->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Print</button>
+                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Import Modal -->
     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -348,7 +348,7 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                   
+
                         <div class="alert alert-danger alert-dismissible fade show" role="alert"
                             style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
@@ -364,14 +364,14 @@
                         </div>
                         <div class="form-row">
 
-                        <div class="col-md-12 ">
-                        <select  class="form-select" name="type" id="type" style="width:300px">
-                        
-                        <option value="1" hidden disabled>ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
-                        <option value="2">ใบลดหนี้</option>
+                            <div class="col-md-12 ">
+                                <select class="form-select" name="type" id="type" style="width:300px">
 
-                        </select>              
-                        </div>
+                                    <option value="1" hidden disabled>ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
+                                    <option value="2">ใบลดหนี้</option>
+
+                                </select>
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="position-relative form-group">
@@ -423,21 +423,21 @@
                         </div>
 
                         <!--<div class="form-row">
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label for="City">City:</label>
-                                            <input type="text" class="form-control" name="city" id="AddCity"
-                                                value="">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label for="Province">Province:</label>
-                                            <input type="text" class="form-control" name="province" id="AddProvince"
-                                                value="">
-                                        </div>
-                                    </div>
-                                </div>-->
+                                                <div class="col-md-6">
+                                                    <div class="position-relative form-group">
+                                                        <label for="City">City:</label>
+                                                        <input type="text" class="form-control" name="city" id="AddCity"
+                                                            value="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="position-relative form-group">
+                                                        <label for="Province">Province:</label>
+                                                        <input type="text" class="form-control" name="province" id="AddProvince"
+                                                            value="">
+                                                    </div>
+                                                </div>
+                                            </div>-->
                         <div class="form-row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -464,13 +464,14 @@
                             <textarea class="form-control" name="address" id="AddAddress"></textarea>
                         </div>
                         <!--<div class="form-group">
-                                    <label for="Name">Street Address 2:</label>
-                                    <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
-                                </div>-->
+                                                <label for="Name">Street Address 2:</label>
+                                                <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                                            </div>-->
 
                         <div class="form-group">
                             <label for="File">File:</label>
-                            <input type="text" class="form-control" id="AddFile" name="file" value="" disabled>
+                            <input type="text" class="form-control" id="AddFile" name="file" value=""
+                                disabled>
                         </div>
 
 
@@ -492,12 +493,14 @@
             <form class="form" action="" method="POST">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Receipt</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Edit </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         </button>
+
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
+
                         <div class="alert alert-danger alert-dismissible fade show" role="alert"
                             style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
@@ -513,128 +516,231 @@
                         </div>
 
                         <div id="EditModalBody">
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item"><a data-toggle="tab" href="#tab-eg10-0"
+                                        class="active nav-link">ข้อมูลลูกค้า</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#tab-eg10-1"
+                                        class="nav-link">รายการในใบเสร็จ</a></li>
 
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="ReceiptNumber">Voucher Number:</label>
-                                        <input type="text" class="form-control" name="receipt_number"
-                                            id="receipt_number" value="" readonly>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab-eg10-0" role="tabpanel">
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="ReceiptNumber">Voucher Number:</label>
+                                                <input type="text" class="form-control" name="receipt_number"
+                                                    id="receipt_number" value="" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative  form-group">
+                                                <label for="ReceiptCNumber">Customer Code:</label>
+                                                <input type="text" class="form-control" name="customer_code"
+                                                    id="customer_code" value="" readonly>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative  form-group">
-                                        <label for="ReceiptCNumber">Customer Code:</label>
-                                        <input type="text" class="form-control" name="customer_code"
-                                            id="customer_code" value="" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="Submission Date">Submission Date:</label>
-                                        <input type="text" class="AddDate form-control" name="submission_date"
-                                            id="EditSubmissiondate" value="">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="Submission Date">Submission Date:</label>
+                                                <input type="text" class="AddDate form-control" name="submission_date"
+                                                    id="EditSubmissiondate" value="">
+                                            </div>
+                                        </div>
+                                        {{--  <div class="col-md-6">
                                     <div class="position-relative  form-group">
                                         <label for="Package">Package:</label>
                                         <input type="text" class="form-control" name="package" id="EditPackage"
                                             value="">
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="firstname">First Name:</label>
-                                        <input type="text" class="form-control" name="firstname" id="EditFirstname"
-                                            value="">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="lastname">Last Name:</label>
-                                        <input type="text" class="form-control" name="lastname" id="EditLastname"
-                                            value="">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="Grade">Grade:</label>
-                                        <input type="text" class="form-control" name="grade" id="EditGrade"
-                                            value="">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="Postcode">Postcode:</label>
-                                    <input type="text" class="form-control" name="postcode" id="EditPostcode"
-                                        value="">
-                                </div>
-                            </div>
-
-                            <!--<div class="form-row">
+                                    </div> --}}
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
-                                                <label for="City">City:</label>
-                                                <input type="text" class="form-control" name="city" id="EditCity"
+                                                <label for="Grade">Grade:</label>
+                                                <input type="text" class="form-control" name="grade" id="EditGrade"
                                                     value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="firstname">First Name:</label>
+                                                <input type="text" class="form-control" name="firstname"
+                                                    id="EditFirstname" value="">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
-                                                <label for="Province">Province:</label>
-                                                <input type="text" class="form-control" name="province" id="EditProvince"
-                                                    value="">
+                                                <label for="lastname">Last Name:</label>
+                                                <input type="text" class="form-control" name="lastname"
+                                                    id="EditLastname" value="">
                                             </div>
                                         </div>
-                                    </div>-->
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Parent">Name Parent:</label>
+                                                <input type="text" class="form-control" name="name_parent"
+                                                    id="EditParent" value="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Mobile">Mobile:</label>
+                                                <input type="text" class="AddPhone form-control" name="mobile"
+                                                    id="EditMobile" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Postcode">Postcode:</label>
+                                                <input type="text" class="form-control" name="postcode"
+                                                    id="EditPostcode" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--<div class="form-row">
+                                                                <div class="col-md-6">
+                                                                    <div class="position-relative form-group">
+                                                                        <label for="City">City:</label>
+                                                                        <input type="text" class="form-control" name="city" id="EditCity"
+                                                                            value="">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="position-relative form-group">
+                                                                        <label for="Province">Province:</label>
+                                                                        <input type="text" class="form-control" name="province" id="EditProvince"
+                                                                            value="">
+                                                                    </div>
+                                                                </div>
+                                                            </div>-->
 
 
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="Parent">Name Parent:</label>
-                                        <input type="text" class="form-control" name="name_parent" id="EditParent"
-                                            value="">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="Mobile">Mobile:</label>
-                                        <input type="text" class="AddPhone form-control" name="mobile"
-                                            id="EditMobile" value="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="position-relative form-group">
+
+                                    {{--  <div class="col-md-6">
+                                  <div class="position-relative form-group">
                                     <label for="Des">Description:</label>
                                     <textarea class="form-control" name="drescription" id="EditDes"></textarea>
+                                  </div>
+                                 </div> --}}
+
+                                    <div class="form-group">
+                                        <label for="Name">Street Address:</label>
+                                        <textarea class="form-control" name="address" id="EditAddress"></textarea>
+                                    </div>
+                                    <!--<div class="form-group">
+                                                                                                                                                                                            <label for="Name">Street Address 2:</label>
+                                                                                                                                                                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                                                                                                                                                        </div>-->
+
+                                    {{-- <div class="form-group">
+                                  <label for="File">File:</label>
+                                  <input type="text" class="form-control" id="EditFile" name="file"
+                                    value="">
+                                 </div> --}}
+                                </div>
+                                <div class="tab-pane" id="tab-eg10-1" role="tabpanel">
+
+                                    <table id="myTbl"
+                                        class="table table-striped table-bordered responsive-utilities jambo_table "
+                                        width="90%" align="center">
+                                        <thead>
+
+                                            <tr class="headings">
+
+                                                <th class="column-title"> NO.</th>
+                                                <th class="column-title"> Detail</th>
+                                                <th class="column-title"> Qty</th>
+                                                <th class="column-title"> Unit</th>
+                                                <th class="column-title"> Unit Price</th>
+                                                <th class="column-title"> Discount</th>
+                                                {{-- <th class="column-title"> </th> --}}
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+                                            <tr class="firstTr">
+                                                <td width="10%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value="1"
+                                                            required="required">
+
+                                                    </div>
+                                                </td>
+                                                <td width="35%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value=""
+                                                            required="required">
+                                                    </div>
+                                                </td>
+                                                <td width="10%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value=""
+                                                            required="required">
+                                                    </div>
+                                                </td>
+
+                                                <td width="15%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value=""
+                                                            required="required">
+                                                    </div>
+                                                </td>
+                                                <td width="15%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value=""
+                                                            required="required">
+                                                    </div>
+                                                </td>
+
+                                                <td width="15%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value=""
+                                                            required="required">
+                                                    </div>
+                                                </td>
+
+                                                {{-- <td><button type="button" id="removeRowt"
+                                                        class="btn btn-sm btn-danger btnRemoveg"><i
+                                                            class="fa fa-minus"></i></button></td> --}}
+
+                                            </tr>
+                                        </tbody>
+
+
+                                    </table>
+                                    <div class="col-md-12" align="right">
+
+                                        <button type="button" id="addRow" class="btn btn-sm btn-primary btnAddg"><i
+                                                class="fa fa-plus"></i></button>
+                                        <button type="button" id="removeRow" class="btn btn-sm btn-danger btnRemoveg"><i
+                                                class="fa fa-minus"></i></button>
+                                    </div>
+
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="Name">Street Address:</label>
-                                <textarea class="form-control" name="address" id="EditAddress"></textarea>
-                            </div>
-                            <!--<div class="form-group">
-                                                                        <label for="Name">Street Address 2:</label>
-                                                                        <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                                    </div>-->
-
-                            <div class="form-group">
-                                <label for="File">File:</label>
-                                <input type="text" class="form-control" id="EditFile" name="file"
-                                    value="">
-                            </div>
+                            <!--tab-->
                         </div>
+
                     </div>
+
                     <!-- Modal footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="SubmitEditForm">Update</button>
@@ -673,100 +779,199 @@
                         </div>
 
                         <div id="ConvModalBody">
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item"><a data-toggle="tab" href="#tab-eg20-0"
+                                        class="active nav-link">ข้อมูลลูกค้า</a></li>
+                                <li class="nav-item"><a data-toggle="tab" href="#tab-eg20-1"
+                                        class="nav-link">รายการในใบเสร็จ</a></li>
 
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="ReceiptNumber">Voucher Number:</label>
-                                        <input type="text" class="form-control" name="conv_receipt_number"
-                                            id="conv_receipt_number" value="" >
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab-eg20-0" role="tabpanel">
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="ReceiptNumber">Voucher Number:</label>
+                                                <input type="text" class="form-control" name="conv_receipt_number"
+                                                    id="conv_receipt_number" value="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative  form-group">
+                                                <label for="ReceiptCNumber">Customer Code:</label>
+                                                <input type="text" class="form-control" name="conv_customer_code"
+                                                    id="conv_customer_code" value="" readonly>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative  form-group">
-                                        <label for="ReceiptCNumber">Customer Code:</label>
-                                        <input type="text" class="form-control" name="conv_customer_code"
-                                            id="conv_customer_code" value="" readonly>
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="Submission Date">Submission Date:</label>
+                                                <input type="text" class="AddDate form-control"
+                                                    name="conv_submission_date" id="ConvSubmissiondate" value="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="Grade">Grade:</label>
+                                                <input type="text" class="form-control" name="conv_grade"
+                                                    id="ConvGrade" value="">
+                                            </div>
+                                        </div>
+                                       {{--  <div class="col-md-6">
+                                            <div class="position-relative  form-group">
+                                                <label for="Package">Package:</label>
+                                                <input type="text" class="form-control" name="conv_package"
+                                                    id="ConvPackage" value="">
+                                            </div>
+                                        </div> --}}
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="Submission Date">Submission Date:</label>
-                                        <input type="text" class="AddDate form-control" name="conv_submission_date"
-                                            id="ConvSubmissiondate" value="">
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="firstname">First Name:</label>
+                                                <input type="text" class="form-control" name="conv_firstname"
+                                                    id="ConvFirstname" value="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="lastname">Last Name:</label>
+                                                <input type="text" class="form-control" name="conv_lastname"
+                                                    id="ConvLastname" value="">
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative  form-group">
-                                        <label for="Package">Package:</label>
-                                        <input type="text" class="form-control" name="conv_package" id="ConvPackage"
-                                            value="">
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Parent">Name Parent:</label>
+                                                <input type="text" class="form-control" name="conv_name_parent"
+                                                    id="ConvParent" value="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Mobile">Mobile:</label>
+                                                <input type="text" class="AddPhone form-control" name="conv_mobile"
+                                                    id="ConvMobile" value="">
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="firstname">First Name:</label>
-                                        <input type="text" class="form-control" name="conv_firstname" id="ConvFirstname"
-                                            value="">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="lastname">Last Name:</label>
-                                        <input type="text" class="form-control" name="conv_lastname" id="ConvLastname"
-                                            value="">
-                                    </div>
-                                </div>
-                            </div>
+                                    <div class="form-row">
 
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="Grade">Grade:</label>
-                                        <input type="text" class="form-control" name="conv_grade" id="ConvGrade"
-                                            value="">
+                                        <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Postcode">Postcode:</label>
+                                            <input type="text" class="form-control" name="conv_postcode"
+                                                id="ConvPostcode" value="">
+                                        </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="Postcode">Postcode:</label>
-                                    <input type="text" class="form-control" name="conv_postcode" id="ConvPostcode"
-                                        value="">
-                                </div>
-                            </div>
 
-                            <div class="form-row">
-                                <div class="col-md-6">
+
+                                    {{-- <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <label for="Des">Description:</label>
+                                            <textarea class="form-control" name="conv_drescription" id="ConvDes"></textarea>
+                                        </div>
+                                    </div> --}}
+
                                     <div class="form-group">
-                                        <label for="Parent">Name Parent:</label>
-                                        <input type="text" class="form-control" name="conv_name_parent" id="ConvParent"
-                                            value="">
+                                        <label for="Name">Street Address:</label>
+                                        <textarea class="form-control" name="conv_address" id="ConvAddress"></textarea>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="Mobile">Mobile:</label>
-                                        <input type="text" class="AddPhone form-control" name="conv_mobile"
-                                            id="ConvMobile" value="">
+                                <div class="tab-pane" id="tab-eg20-1" role="tabpanel">
+
+                                    <table id="myTbl2"
+                                        class="table table-striped table-bordered responsive-utilities jambo_table "
+                                        width="90%" align="center">
+                                        <thead>
+
+                                            <tr class="headings">
+
+                                                <th class="column-title"> NO.</th>
+                                                <th class="column-title"> Detail</th>
+                                                <th class="column-title"> Qty</th>
+                                                <th class="column-title"> Unit</th>
+                                                <th class="column-title"> Unit Price</th>
+                                                <th class="column-title"> Discount</th>
+                                                {{-- <th class="column-title"> </th> --}}
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+                                            <tr class="firstTr">
+                                                <td width="10%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value="1"
+                                                            required="required">
+
+                                                    </div>
+                                                </td>
+                                                <td width="35%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value=""
+                                                            required="required">
+                                                    </div>
+                                                </td>
+                                                <td width="10%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value=""
+                                                            required="required">
+                                                    </div>
+                                                </td>
+
+                                                <td width="15%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value=""
+                                                            required="required">
+                                                    </div>
+                                                </td>
+                                                <td width="15%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value=""
+                                                            required="required">
+                                                    </div>
+                                                </td>
+
+                                                <td width="15%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value=""
+                                                            required="required">
+                                                    </div>
+                                                </td>
+
+                                                {{-- <td><button type="button" id="removeRowt"
+                                                        class="btn btn-sm btn-danger btnRemoveg"><i
+                                                            class="fa fa-minus"></i></button></td> --}}
+
+                                            </tr>
+                                        </tbody>
+
+
+                                    </table>
+                                    <div class="col-md-12" align="right">
+
+                                        <button type="button" id="addRow2" class="btn btn-sm btn-primary btnAddg2"><i
+                                                class="fa fa-plus"></i></button>
+                                        <button type="button" id="removeRow2" class="btn btn-sm btn-danger btnRemoveg2"><i
+                                                class="fa fa-minus"></i></button>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="position-relative form-group">
-                                    <label for="Des">Description:</label>
-                                    <textarea class="form-control" name="conv_drescription" id="ConvDes"></textarea>
+
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="Name">Street Address:</label>
-                                <textarea class="form-control" name="conv_address" id="ConvAddress"></textarea>
-                            </div>
-                    
-                           {{--  <div class="form-group">
+                            {{--  <div class="form-group">
                                 <label for="File">File:</label>
                                 <input type="text" class="form-control" id="EditFile" name="file"
                                     value="">
@@ -787,6 +992,11 @@
 @section('script')
     <script>
         $(document).ready(function() {
+
+            $(".nav-tabs a").click(function() {
+                $(this).tab('show');
+            });
+
 
             $('.dropdown-toggle').dropdown();
 
@@ -912,7 +1122,7 @@
                 $('.dropdown-toggle').dropdown('hide');
                 $('#PrintDayModal').modal('show');
             });
-            
+
             $('.dropdown-menu li #printr2').on('click', function(e) {
                 //console.log("TEST");
                 e.preventDefault();
@@ -976,15 +1186,16 @@
 
                 id = $(this).data('id');
                 $.ajax({
-                    url: "receipts/edit/" + id,
+                    url: "receipts/edit/" + id+ "/0",
                     method: 'GET',
                     success: function(res) {
                         //console.log(res);
                         //$('#EditModalBody').html(res.html);
+                        //console.log(res.data_html);
                         $('#receipt_number').val(res.data.receipt_number);
                         $('#customer_code').val(res.data.receipt_customer_number);
                         $('#EditSubmissiondate').val(res.data.submission_date);
-                        $('#EditPackage').val(res.data.package);
+                        //$('#EditPackage').val(res.data.package);
                         $('#EditFirstname').val(res.data.first_name);
                         $('#EditLastname').val(res.data.last_name);
                         $('#EditDes').val(res.data.description);
@@ -996,7 +1207,9 @@
                         $('#EditPostcode').val(res.data.postcode);
                         $('#EditParent').val(res.data.name_parent);
                         $('#EditMobile').val(res.data.mobile);
-                        $('#EditFile').val(res.data.file_att);
+                        $('#myTbl tbody').html(res.data_html);
+                        //append
+                        //$('#EditFile').val(res.data.file_att);
                         $('#EditModal').modal('show');
 
                     }
@@ -1004,7 +1217,7 @@
 
             });
 
-        
+
             $(document).on('click', '#getConvData', function(e) {
                 e.preventDefault();
 
@@ -1016,10 +1229,10 @@
 
                 id = $(this).data('id');
                 $.ajax({
-                    url: "receipts/edit/" + id,
+                    url: "receipts/edit/" + id + "/2",
                     method: 'GET',
                     success: function(res) {
-                        //console.log(res);
+                        //console.log(res.data_html);
                         //$('#conv_receipt_number').val(res.data.receipt_number);
                         $('#conv_customer_code').val(res.data.receipt_customer_number);
                         //$('#ConvSubmissiondate').val(res.data.submission_date);
@@ -1036,6 +1249,7 @@
                         $('#ConvParent').val(res.data.name_parent);
                         $('#ConvMobile').val(res.data.mobile);
                         $('#ConvFile').val(res.data.file_att);
+                        $('#myTbl2 tbody').html(res.data_html);
                         $('#ConvModal').modal('show');
 
                     }
@@ -1113,6 +1327,39 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
 
+                let rid = [];
+                let rdes = [];
+                let rqty = [];
+                let runit = [];
+                let runitp = [];
+                let rdis = [];
+
+                // Initializing array values
+                $("input[name='rid[]']").each(function() {
+                    rid.push(this.value);
+                });
+
+
+                $("input[name='rdes[]']").each(function() {
+                    rdes.push(this.value);
+                });
+
+                $("input[name='rqty[]']").each(function() {
+                    rqty.push(this.value);
+                });
+
+                $("input[name='runit[]']").each(function() {
+                    runit.push(this.value);
+                });
+
+                $("input[name='runitp[]']").each(function() {
+                    runitp.push(this.value);
+                });
+
+                $("input[name='rdis[]']").each(function() {
+                    rdis.push(this.value);
+                });
+
 
                 $.ajax({
                     url: "receipts/save/" + id,
@@ -1132,6 +1379,12 @@
                         mobile: $('#EditMobile').val(),
                         package: $('#EditPackage').val(),
                         file_att: $('#EditFile').val(),
+                        rdid: rid,
+                        rdes: rdes,
+                        rqty: rqty,
+                        runit: runit,
+                        runitp: runitp,
+                        rdis: rdis,
                     },
 
                     success: function(result) {
@@ -1170,6 +1423,40 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
 
+                let rrid = [];
+                let rrdes = [];
+                let rrqty = [];
+                let rrunit = [];
+                let rrunitp = [];
+                let rrdis = [];
+
+                // Initializing array values
+                $("input[name='rrid[]']").each(function() {
+                    rrid.push(this.value);
+                });
+
+
+                $("input[name='rrdes[]']").each(function() {
+                    rrdes.push(this.value);
+                });
+
+                $("input[name='rrqty[]']").each(function() {
+                    rrqty.push(this.value);
+                });
+
+                $("input[name='rrunit[]']").each(function() {
+                    rrunit.push(this.value);
+                });
+
+                $("input[name='rrunitp[]']").each(function() {
+                    rrunitp.push(this.value);
+                });
+
+                $("input[name='rrdis[]']").each(function() {
+                    rrdis.push(this.value);
+                });
+
+
                 $.ajax({
                     url: "{{ route('receipts.conv') }}",
                     method: 'post',
@@ -1181,7 +1468,7 @@
                         first_name: $('#ConvFirstname').val(),
                         last_name: $('#ConvLastname').val(),
                         grade: $('#ConvGrade').val(),
-                        description: $('#ConvDes').val(),
+                        //description: $('#ConvDes').val(),
                         street_address: $('#ConvAddress').val(),
                         //street_address2: $('#AddAddress2').val(),
                         //city: $('#AddCity').val(),
@@ -1189,9 +1476,15 @@
                         postcode: $('#ConvPostcode').val(),
                         name_parent: $('#ConvParent').val(),
                         mobile: $('#ConvMobile').val(),
-                        package: $('#ConvPackage').val(),
+                        //package: $('#ConvPackage').val(),
                         //file_att: $('#AddFile').val(),
                         sfield: $('#Sfield').val(),
+                        rrdid: rrid,
+                        rrdes: rrdes,
+                        rrqty: rrqty,
+                        rrunit: rrunit,
+                        rrunitp: rrunitp,
+                        rrdis: rrdis,
                         _token: token,
                     },
                     success: function(result) {
@@ -1254,5 +1547,76 @@
                 }); //end ajax
             })
         })
+
+        $(function() {
+
+            $("#addRow").click(function() {
+                // ส่วนของการ clone ข้อมูลด้วย jquery clone() ค่า true คือ
+                // การกำหนดให้ ไม่ต้องมีการ ดึงข้อมูลจากค่าเดิมมาใช้งาน
+                // รีเซ้ตเป็นค่าว่าง ถ้ามีข้อมูลอยู่แล้ว ทั้ง select หรือ input
+                $(".firstTr:eq(0)").clone(true)
+                    .find("input").attr("value", "").end()
+                    .find("select").attr("value", "").end()
+                    .appendTo($("#myTbl"));
+            });
+            $("#removeRow").click(function() {
+                // // ส่วนสำหรับการลบ
+                if ($("#myTbl tr").length > 2) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
+                    $("#myTbl tr:last").remove(); // ลบรายการสุดท้าย
+                } else {
+                    // เหลือ 1 รายการลบไม่ได้
+                    if ($("#myTbl tr").length > 1) {
+                        alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                    }
+                }
+            });
+            $(".btnRemoveg").click(function() {
+                // // ส่วนสำหรับการลบ
+                if ($("#myTbl tr").length > 2) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
+                    //$("#myTbl tr:last").remove(); // ลบรายการสุดท้าย
+                    $(this).closest("tr").remove();
+                } else {
+                    // เหลือ 1 รายการลบไม่ได้
+                    if ($("#myTbl tr").length > 1) {
+                        alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                    }
+                }
+            });
+
+            $("#addRow2").click(function() {
+                // ส่วนของการ clone ข้อมูลด้วย jquery clone() ค่า true คือ
+                // การกำหนดให้ ไม่ต้องมีการ ดึงข้อมูลจากค่าเดิมมาใช้งาน
+                // รีเซ้ตเป็นค่าว่าง ถ้ามีข้อมูลอยู่แล้ว ทั้ง select หรือ input
+                $(".firstTr:eq(0)").clone(true)
+                    .find("input").attr("value", "").end()
+                    .find("select").attr("value", "").end()
+                    .appendTo($("#myTbl2"));
+            });
+            $("#removeRow2").click(function() {
+                // // ส่วนสำหรับการลบ
+                if ($("#myTbl2 tr").length > 2) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
+                    $("#myTbl2 tr:last").remove(); // ลบรายการสุดท้าย
+                } else {
+                    // เหลือ 1 รายการลบไม่ได้
+                    if ($("#myTbl2 tr").length > 1) {
+                        alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                    }
+                }
+            });
+            $(".btnRemoveg2").click(function() {
+                // // ส่วนสำหรับการลบ
+                if ($("#myTbl2 tr").length > 2) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
+                    //$("#myTbl tr:last").remove(); // ลบรายการสุดท้าย
+                    $(this).closest("tr").remove();
+                } else {
+                    // เหลือ 1 รายการลบไม่ได้
+                    if ($("#myTbl2 tr").length > 1) {
+                        alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                    }
+                }
+            });
+
+            $(this).closest(".abcd").remove();
+        });
     </script>
 @endsection

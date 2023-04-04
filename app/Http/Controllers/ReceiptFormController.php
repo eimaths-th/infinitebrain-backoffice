@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ReceiptForm;
+use App\Models\ReceiptDetail;
 use App\Models\FileUpload;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ReceiptController;
@@ -210,6 +211,23 @@ class ReceiptFormController extends Controller
         $form = ReceiptForm::find($id);
         $form->generate =  '1';
         $form->save();
+
+
+        $rid = $receipt->id;
+        $price = preg_replace("/[^0-9.]/", "", $request->get('package'));
+
+            $rdata = new ReceiptDetail([
+                'receipt_id' => $rid,
+                'description' => $request->get('description'),
+                'quantity' => 1,
+                //'unit' => '',
+                'unitprice' => (int)$price,
+                //'discount' => '',
+                //'amount' => $request->get('book_old_price'),
+            ]);
+            $rdata->save();
+
+
         return response()->json(['success' => 'Receive Add successfully']);
     }
 

@@ -36,15 +36,18 @@
 
         .tbr table td.activebottom {
             border-bottom: 2px solid rgb(138, 175, 61);
-        } 
+        }
+
         .tbr table td.activeright {
             border-right: 2px solid rgb(138, 175, 61);
         }
+
         .tbr table td.activeleft {
             border-left: 2px solid rgb(138, 175, 61);
         }
-        .aaa{
-            color:rgb(138, 175, 61);
+
+        .aaa {
+            color: rgb(138, 175, 61);
         }
     </style>
 @endsection
@@ -65,8 +68,8 @@
                         <i class="pe-7s-note2 icon-gradient bg-tempting-azure"></i>
                     </div>
                     <div>
-                        Receipts
-                        <div class="page-title-subheading">Infinite Brain Receipts Data</div>
+                        {{ $mes }}
+                        <div class="page-title-subheading">Infinite Brain {{ $mes }} Data</div>
                     </div>
                 </div>
                 <div class="page-title-actions">
@@ -77,7 +80,7 @@
                         <a href="{{ route('receipts', ['sfield' => $data->sfield]) }}" class="btn btn-success"
                             data-toggle="modal" data-target=".bd-example-modal-lg" id="CreateButton"><i
                                 class="fa fa-backward"></i> Back
-                            Receipts</a>
+                                {{ $mes }}</a>
 
 
                     </div>
@@ -111,10 +114,10 @@
                 <table align="center" width="85%" cellpadding="0" cellspacing="0">
                     <tr>
                         <td colspan="4" align="center"><b>
-                        {{ $mes }}<br>
-                        {{ $text }}
-                        </b></td>
-                        
+                                {{ $mes }}<br>
+                                {{ $text }}
+                            </b></td>
+
                         <td align="center" class="aaa"><b>ต้นฉบับ <br> Original <br>สำหรับลูกค้า</b></td>
 
                     </tr>
@@ -126,7 +129,9 @@
                         <td> <b> {{ $data->receipt_number }} </b></td>
                     </tr>
                     <tr>
-                        <td><font class="grey">K.</font> <b> {{ $data->name_parent }} </b></td>
+                        <td>
+                            <font class="grey">K.</font> <b> {{ $data->name_parent }} </b>
+                        </td>
                         <td align="right" class="grey">ชื่อนักเรียน/Nickname</td>
                         <td align="left" width="30%"> <b>{{ $data->first_name }} {{ $data->last_name }}</b></td>
                         <td align="right" class="grey">วันที่ / Date</td>
@@ -134,7 +139,7 @@
                     </tr>
                     <tr>
                         <!-- <td colspan="3"><font class="grey">ที่อยู่</font> <b>{{ $data->street_address }} {{ $data->street_address2 }}
-                                {{ $data->city }} {{ $data->province }} {{ $data->postcode }} </b></td> -->
+                                        {{ $data->city }} {{ $data->province }} {{ $data->postcode }} </b></td> -->
                         <td colspan="3"></td>
                         <td align="right" class="grey">เงื่อนไขการชำระเงิน / Credit Term</td>
                         <td>..........................</td>
@@ -146,9 +151,9 @@
                         <td>..........................</td>
                     </tr>
                     <!-- <tr>
-                        <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
+                                <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
 
-                    </tr> -->
+                            </tr> -->
                 </table>
                 <div class="tbr">
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
@@ -160,9 +165,24 @@
                             <td align="center" class="grey">ราคาต่อหน่วย <br>Unit Price</td>
                             <td align="center" class="grey">ส่วนลด <br>Discount</td>
                             <td align="center" class="grey">จำนวนเงิน <br>Amount</td>
-                            
+
                         </tr>
-                        <tr>
+                        @php
+                            //var_dump($receipt_detail_arr);
+                            //exit();
+                        @endphp
+                        @foreach ($receipt_detail_arr as $receipt_detail)
+                            <tr>
+                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
+                                <td align="left">{!! $receipt_detail['description'] !!}</td>
+                                <td align="center">{{ $receipt_detail['quantity'] }}</td>
+                                <td align="center">{{ $receipt_detail['unit'] }}</td>
+                                <td align="center">{{ $receipt_detail['unitprice'] }}</td>
+                                <td align="center">{{ $receipt_detail['discount'] }}</td>
+                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}</td>
+                            </tr>
+                        @endforeach
+                        {{--  <tr>
                             <td align="center" style="vertical-align: top;">1</td>
                             <td align="left">{!! $des_text !!}</td>
                             <td ></td>
@@ -180,7 +200,7 @@
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
 
-                        </tr>
+                        </tr>--}}
                         <tr>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -191,36 +211,38 @@
                             <td>&nbsp;</td>
                         </tr>
                     </table>
-                    <table align="center" width="85%" cellpadding="0" cellspacing="0" >
+                    <table align="center" width="85%" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td width="45%" class="activetop" style="padding-top:20px;padding-bottom:30px; padding-left:40px;">
-                                <table width="100%" cellpadding="0" cellspacing="0" >
+                            <td width="45%" class="activetop"
+                                style="padding-top:20px;padding-bottom:30px; padding-left:40px;">
+                                <table width="100%" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td></td>
-                                        <td colspan="2" style="padding-left:50px;" class="  grey" >การชำระเงิน/Payment</td>
+                                        <td colspan="2" style="padding-left:50px;" class="  grey">การชำระเงิน/Payment
+                                        </td>
 
                                     </tr>
                                     <tr>
                                         <td class="active activebottom activetop" width="10%"></td>
-                                        <td  class="  grey">1.เงินสด/Cash</td>                                        
-                                        <td  class="  grey"></td>
+                                        <td class="  grey">1.เงินสด/Cash</td>
+                                        <td class="  grey"></td>
 
                                     </tr>
                                     <tr>
                                         <td class="active activebottom" width="10%" align="center"><i
                                                 style="font-size: 1.8em; color:red" class="fa fa-close"></i></td>
-                                        <td class=" grey">2.โอนเงิน/Transfer</td>                                       
-                                        <td  class="  grey"></td>
+                                        <td class=" grey">2.โอนเงิน/Transfer</td>
+                                        <td class="  grey"></td>
 
                                     </tr>
                                     <tr>
                                         <td class="active activebottom" width="10%"></td>
-                                        <td class=" grey" >3.บัตรเครดิต/Credit Card</td>                                      
-                                        <td  class="  grey"></td>
+                                        <td class=" grey">3.บัตรเครดิต/Credit Card</td>
+                                        <td class="  grey"></td>
 
                                     </tr>
-                                </table >
-                            </td >
+                                </table>
+                            </td>
                             <td colspan="3" class="activetop activeleft">
                                 <table width="100%" cellpadding="0" cellspacing="0">
                                     <tr>
@@ -257,20 +279,20 @@
                         </tr>
                         <tr class="active">
                             <td align="center" class="grey">รวมทั้งสิ้น<br>Grand Total</td>
-                            <td align="center"><b>{{ $price_text }}</b><br><b>{{$price_texten}}</b></td>
-                            <td align="center"><b>{{ $price_val }}</b></td> 
+                            <td align="center"><b>{{ $price_text }}</b><br><b>{{ $price_texten }}</b></td>
+                            <td align="center"><b>{{ $price_val }}</b></td>
 
                             <td align="right" class="grey">บาท<br>Baht</td>
                         </tr>
-                        
+
                     </table>
 
                     <!-- <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
-                            <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
-                        </tr>
-                    </table> -->
+                                <tr>
+                                    <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
+                                    <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
+                                </tr>
+                            </table> -->
 
                     <table align="center" width="85%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
                         <tr>
@@ -305,7 +327,7 @@
                             <td align="center">Received by</td>
                             <td align="center">Manager</td>
                         </tr>
-                      
+
                     </table>
                     <center>{!! $file_att !!}</center>
                 </div>
