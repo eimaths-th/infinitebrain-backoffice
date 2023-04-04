@@ -1,7 +1,7 @@
 @extends('layouts.form')
 
 @section('style')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
     <script src="http://malsup.github.io/jquery.blockUI.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -144,10 +144,12 @@
 
 @section('content')
     <div id="loader"></div>
+    
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="card bg-light2 mb-3 ">
+                    
                     <div class="card-header card-header-custom" style="background-color: #fff;">
                         <div class="div_center avatar mx-auto white">
                             <img class="rounded-circle img-responsive bg-white p-3 image"
@@ -165,7 +167,7 @@
                         </div>
                         <div style="float: right"><a href="{{ route('parent.logout') }}"><i class="fa fa-power-off"></i> ออกจากระบบ</a></div>
                         <br>
-
+                       
                         <div class="row">
                             <div class="col-md-12 col-sm-12">
                                 <div class="card card-primary card-outline card-tabs">
@@ -215,12 +217,22 @@
                                         <div class="tab-content" id="custom-tabs-three-tabContent">
                                             <div class="tab-pane fade " id="custom-tabs-three-home" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-home-tab">
+                                                <form method="POST" action="{{ route('parent.saveparent') }}" >
+                                                @csrf
                                                 {!! $parent_html !!}
+                                                </form>
+
                                             </div>
+                                        
+
+                               
+
                                             <div class="tab-pane fade show active" id="custom-tabs-three-profile"
                                                 role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
+                                                <form method="POST" action="{{ route('parent.save') }}" >
+                                                @csrf
                                                 {!! $student_html !!}
-
+                                                </form>
                                             </div>
                                             <div class="tab-pane fade" id="custom-tabs-three-messages" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-messages-tab">
@@ -589,14 +601,20 @@
                 </div>
             </div>
             <script>
+               
+     
                 $(document).ready(function() {
+                    $(".AddDate").datepicker({
+                        dateFormat: "yy-mm-dd"
+                    });
                     $(".nav-tabs a").click(function() {
                         $(this).tab('show');
                     });
 
-                    $(".AddDate").datepicker({
-                        dateFormat: "yy-mm-dd"
-                    });
+                
+                    
+                    
                 });
+                
             </script>
         @endsection

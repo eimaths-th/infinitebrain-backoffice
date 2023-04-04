@@ -211,9 +211,9 @@ class ParentRegisterController extends Controller
 
             $data2[] = $data;
             
-            Student::upsert($data, [
-                'code', 'first_name', 'last_name', 'nick_name', 'birth_data', 'school_name', 'grade', 'photo_att', 'sex', 'pid'
-            ]);
+                Student::upsert($data, [
+                    'code', 'first_name', 'last_name', 'nick_name', 'birth_data', 'school_name', 'grade', 'photo_att', 'sex', 'pid'
+                ]);
             // 
         }
         // print_r($data2);
