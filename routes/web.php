@@ -142,7 +142,7 @@ Route::get('/receipts/create', [ReceiptController::class, 'create'])->name('rece
 Route::match(array('GET', 'POST'), '/receipts/print_day', [ReceiptController::class, 'print_day'])->name('receipts.print_day');
 Route::match(array('GET', 'POST'), '/receipts/print_month', [ReceiptController::class, 'print_month'])->name('receipts.print_month');
 Route::get('/receipts/show/{type}/{id}', [ReceiptController::class, 'show'])->name('receipts.show');
-Route::get('/receipts/edit/{id}', [ReceiptController::class, 'edit'])->name('receipts.edit');
+Route::get('/receipts/edit/{id}/{type}', [ReceiptController::class, 'edit'])->name('receipts.edit');
 Route::get('/receipts/migrate/{id}', [ReceiptController::class, 'migrateReceipt'])->name('receipts.migrate');
 Route::put('/receipts/save/{id}', [ReceiptController::class, 'update'])->name('receipts.save');
 Route::post('/receipts/store', [ReceiptController::class, 'store'])->name('receipts.store');
