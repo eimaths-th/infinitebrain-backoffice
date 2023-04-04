@@ -1076,7 +1076,7 @@ class ReceiptController extends Controller
      * @param  \App\Models\Receipt  $receipt
      * @return \Illuminate\Http\Response
      */
-    public function edit($id,$type)
+    public function edit($id, $type)
     {
         //
         $this->check_permission();

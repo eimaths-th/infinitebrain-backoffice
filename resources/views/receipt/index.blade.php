@@ -4,7 +4,7 @@
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <script src="http://malsup.github.io/jquery.blockUI.js"></script>
+    <script src="https://malsup.github.io/jquery.blockUI.js"></script>
     <script src="https://rawgit.com/RobinHerbots/Inputmask/5.x/dist/jquery.inputmask.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
@@ -16,8 +16,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                <p>{{ $message }}</p>
-                                    </div>-->
+                                                <p>{{ $message }}</p>
+                                                    </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -27,8 +27,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                    <p>{{ $message }}</p>
-                                        </div>-->
+                                                    <p>{{ $message }}</p>
+                                                        </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -423,21 +423,21 @@
                         </div>
 
                         <!--<div class="form-row">
-                                                <div class="col-md-6">
-                                                    <div class="position-relative form-group">
-                                                        <label for="City">City:</label>
-                                                        <input type="text" class="form-control" name="city" id="AddCity"
-                                                            value="">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="position-relative form-group">
-                                                        <label for="Province">Province:</label>
-                                                        <input type="text" class="form-control" name="province" id="AddProvince"
-                                                            value="">
-                                                    </div>
-                                                </div>
-                                            </div>-->
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="City">City:</label>
+                                    <input type="text" class="form-control" name="city" id="AddCity"
+                                        value="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="Province">Province:</label>
+                                    <input type="text" class="form-control" name="province" id="AddProvince"
+                                        value="">
+                                </div>
+                            </div>
+                        </div>-->
                         <div class="form-row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -464,9 +464,9 @@
                             <textarea class="form-control" name="address" id="AddAddress"></textarea>
                         </div>
                         <!--<div class="form-group">
-                                                <label for="Name">Street Address 2:</label>
-                                                <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
-                                            </div>-->
+                                <label for="Name">Street Address 2:</label>
+                                <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                            </div>-->
 
                         <div class="form-group">
                             <label for="File">File:</label>
@@ -609,21 +609,21 @@
                                     </div>
 
                                     <!--<div class="form-row">
-                                                                <div class="col-md-6">
-                                                                    <div class="position-relative form-group">
-                                                                        <label for="City">City:</label>
-                                                                        <input type="text" class="form-control" name="city" id="EditCity"
-                                                                            value="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="position-relative form-group">
-                                                                        <label for="Province">Province:</label>
-                                                                        <input type="text" class="form-control" name="province" id="EditProvince"
-                                                                            value="">
-                                                                    </div>
-                                                                </div>
-                                                            </div>-->
+                                                                                <div class="col-md-6">
+                                                                                    <div class="position-relative form-group">
+                                                                                        <label for="City">City:</label>
+                                                                                        <input type="text" class="form-control" name="city" id="EditCity"
+                                                                                            value="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="position-relative form-group">
+                                                                                        <label for="Province">Province:</label>
+                                                                                        <input type="text" class="form-control" name="province" id="EditProvince"
+                                                                                            value="">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>-->
 
 
 
@@ -639,9 +639,9 @@
                                         <textarea class="form-control" name="address" id="EditAddress"></textarea>
                                     </div>
                                     <!--<div class="form-group">
-                                                                                                                                                                                            <label for="Name">Street Address 2:</label>
-                                                                                                                                                                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                                                                                                                                                        </div>-->
+                                                                                                                                                                                                            <label for="Name">Street Address 2:</label>
+                                                                                                                                                                                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                                                                                                                                                                        </div>-->
 
                                     {{-- <div class="form-group">
                                   <label for="File">File:</label>
@@ -819,7 +819,7 @@
                                                     id="ConvGrade" value="">
                                             </div>
                                         </div>
-                                       {{--  <div class="col-md-6">
+                                        {{--  <div class="col-md-6">
                                             <div class="position-relative  form-group">
                                                 <label for="Package">Package:</label>
                                                 <input type="text" class="form-control" name="conv_package"
@@ -862,11 +862,11 @@
                                     <div class="form-row">
 
                                         <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="Postcode">Postcode:</label>
-                                            <input type="text" class="form-control" name="conv_postcode"
-                                                id="ConvPostcode" value="">
-                                        </div>
+                                            <div class="form-group">
+                                                <label for="Postcode">Postcode:</label>
+                                                <input type="text" class="form-control" name="conv_postcode"
+                                                    id="ConvPostcode" value="">
+                                            </div>
                                         </div>
                                     </div>
 
@@ -964,8 +964,8 @@
 
                                         <button type="button" id="addRow2" class="btn btn-sm btn-primary btnAddg2"><i
                                                 class="fa fa-plus"></i></button>
-                                        <button type="button" id="removeRow2" class="btn btn-sm btn-danger btnRemoveg2"><i
-                                                class="fa fa-minus"></i></button>
+                                        <button type="button" id="removeRow2"
+                                            class="btn btn-sm btn-danger btnRemoveg2"><i class="fa fa-minus"></i></button>
                                     </div>
 
                                 </div>
@@ -1186,7 +1186,7 @@
 
                 id = $(this).data('id');
                 $.ajax({
-                    url: "receipts/edit/" + id+ "/0",
+                    url: "receipts/edit/" + id + "/0",
                     method: 'GET',
                     success: function(res) {
                         //console.log(res);
@@ -1566,7 +1566,10 @@
                 } else {
                     // เหลือ 1 รายการลบไม่ได้
                     if ($("#myTbl tr").length > 1) {
-                        alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        //alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        toastr.success('ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ', {
+                            timeOut: 5000
+                        });
                     }
                 }
             });
@@ -1578,7 +1581,10 @@
                 } else {
                     // เหลือ 1 รายการลบไม่ได้
                     if ($("#myTbl tr").length > 1) {
-                        alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        //alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        toastr.success('ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ', {
+                            timeOut: 5000
+                        });
                     }
                 }
             });
@@ -1599,7 +1605,10 @@
                 } else {
                     // เหลือ 1 รายการลบไม่ได้
                     if ($("#myTbl2 tr").length > 1) {
-                        alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        //alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        toastr.success('ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ', {
+                            timeOut: 5000
+                        });
                     }
                 }
             });
@@ -1611,7 +1620,10 @@
                 } else {
                     // เหลือ 1 รายการลบไม่ได้
                     if ($("#myTbl2 tr").length > 1) {
-                        alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        //alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        toastr.success('ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ', {
+                            timeOut: 5000
+                        });
                     }
                 }
             });
