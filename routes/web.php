@@ -191,4 +191,6 @@ Route::get('/login/parent/logout', [LoginController::class, 'ParentsignOut'])->n
 // Route::view('/home', 'home')->middleware('auth');
 ////Route::view('/parent', 'parent')->middleware('auth');
 Route::get('/parent', [SchoolController::class, 'index'])->name('parent');
+Route::post('/parent/save', [SchoolController::class, 'update'])->name('parent.save');
+// Route::put('/students/save/{id}', [StudentController::class, 'update'])->name('students.save');
 

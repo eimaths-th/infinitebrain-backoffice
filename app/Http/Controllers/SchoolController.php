@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Validator;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CourseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 use App\Models\Course;
 use App\Models\Level;
@@ -164,7 +166,7 @@ class SchoolController extends Controller
                         </div>
                         <div class="col-md-6"><label
                                 class="labels">เพศ</label>
-                                <select class="form-control" id="EditLevel" name="level">' .
+                                <select class="form-control" id="sex[]" name="sex[]">' .
                                  $select_sex . '
                                 </select>
                         </div>
@@ -172,22 +174,25 @@ class SchoolController extends Controller
                     <div class="row mt-2">
                         <div class="col-md-6"><label
                                 class="labels">ชื่อ </label><input type="text"
-                                class="form-control" placeholder="ชื่อ"
-                                value="' . $stu_result->first_name . '"></div>
+                                class="form-control" placeholder="ชื่อ" id="first_name[]" name="first_name[]"
+                                value="' . $stu_result->first_name . '">
+                                <input type="text"
+                                class="form-control" placeholder="ชื่อ" id="id[]" name="id[]"
+                                value="' . $stu_result->id . '" hidden></div>
                                 <div class="col-md-6"><label
                                 class="labels">นามสกุล </label><input type="text"
-                                class="form-control" placeholder="นามสกุล"
+                                class="form-control" placeholder="นามสกุล" id="last_name[]" name="last_name[]"
                                 value="' . $stu_result->last_name . '"></div>
                     </div>
                     <div class="row mt-3">
                                 <div class="col-md-6">
                                 <label
                                 class="labels">ชื่อเล่น </label><input type="text"
-                                class="form-control" placeholder="ชื่อ"
+                                class="form-control" placeholder="ชื่อ" id="nick_name[]" name="nick_name[]"
                                 value="' . $stu_result->nick_name . '"></div>
                                 <div class="col-md-6"><label
                                 class="labels">วันเกิด </label><input type="text"
-                                class="form-control AddDate" placeholder="นามสกุล"
+                                class="form-control AddDate" placeholder="วันเกิด" id="birth_date[]" name="birth_date[]"
                                 value="' . $stu_result->birth_date . '"></div>
                 
                     </div>
@@ -195,11 +200,11 @@ class SchoolController extends Controller
                                 <div class="col-md-6">
                                 <label
                                 class="labels">ชื่อโรงเรียน </label><input type="text"
-                                class="form-control" placeholder="ชื่อ"
+                                class="form-control" placeholder="ชื่อ" id="school_name[]" name="school_name[]"
                                 value="' . $stu_result->school_name . '"></div>
                                 <div class="col-md-6"><label
                                 class="labels">ระดับชั้น</label>
-                                <select class="form-control" id="EditGrade" name="grade">' .
+                                <select class="form-control" id="grade[]" name="grade[]">' .
                                   $select_grade . '
                                 </select>
                         </div>
@@ -241,4 +246,66 @@ class SchoolController extends Controller
             ->with(['student_html' =>  $student_html])
             ->with(['student_chart' =>  $course_html]);
     }
+
+    public function update(Request $request)
+    {
+        // $validator =  Validator::make($request->all(),[
+        //     'sex' => 'required|string',
+        //     'first_name' => 'required|string',
+        //     'last_name' => 'required|string',
+        //     'nick_name' => 'required|string',
+        //     'birth_date' => 'required|string',
+        //     'school_name' => 'required|string',
+        //     'grade' => 'required|string',
+
+        // ]); 
+        // print_r($request);
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => $validator->errors()->all()]);
+        // }
+        for ($x = 0; $x < count($request->get('id')); $x++) {
+            // $rnumber1 = RunningNumber::generate(new Student,'code',4,"");
+            // $data = [];
+            // $data[$x] = [
+            //     'first_name' => $request->get('first_name')[$x],
+            //     'last_name' => $request->get('last_name')[$x],
+            //     'nick_name' => $request->get('nick_name')[$x],
+            //     'birth_date' => $request->get('birth_date')[$x],
+            //     'school_name' => $request->get('school_name')[$x],
+            //     'grade' => $request->get('grade')[$x],
+            //     'sex' => $request->get('sex')[$x],
+                
+            // ];
+            $id=[];
+            $id[$x] = $request->get('id')[$x];
+            
+            print_r($request['birth_date']);
+            exit();
+            Student::find($id[$x])
+            ->update([
+                'first_name'=>$request['first_name'][$x],
+                'last_name'=>$request['last_name'][$x],
+                'nick_name'=>$request['nick_name'][$x],
+                'birth_date'=>$request['birth_date'][$x],
+                'school_name'=>$request['school_name'][$x],
+                'grade'=>$request['grade'][$x],
+                'sex'=>$request['sex'][$x],
+
+            ]);
+        }
+
+        // print_r($id);
+        // exit();
+        // Student::upsert($data, [
+        //     'code', 'first_name', 'last_name', 'nick_name', 'birth_data', 'school_name', 'grade', 'photo_att', 'sex', 'pid'
+        // ]);
+
+        // $id[] = $request->get('id');
+        // Student::find($id)->update($request->all());
+        
+        // return response()->json(['success' => 'Parent updated successfully']);
+        return redirect('/parent');
+
+    
+}
 }

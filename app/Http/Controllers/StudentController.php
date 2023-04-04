@@ -182,6 +182,7 @@ class StudentController extends Controller
     public function update(Request $request, $id)
     {
         //
+       
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'code' => 'required|string|max:4|unique:students,code,' . $id,
@@ -194,7 +195,7 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-
+        
         Student::find($id)->update($request->all());
 
         return response()->json(['success' => 'Student updated successfully']);

@@ -144,10 +144,12 @@
 
 @section('content')
     <div id="loader"></div>
+    
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="card bg-light2 mb-3 ">
+                    
                     <div class="card-header card-header-custom" style="background-color: #fff;">
                         <div class="div_center avatar mx-auto white">
                             <img class="rounded-circle img-responsive bg-white p-3 image"
@@ -165,7 +167,7 @@
                         </div>
                         <div style="float: right"><a href="{{ route('parent.logout') }}"><i class="fa fa-power-off"></i> ออกจากระบบ</a></div>
                         <br>
-
+                       
                         <div class="row">
                             <div class="col-md-12 col-sm-12">
                                 <div class="card card-primary card-outline card-tabs">
@@ -219,8 +221,10 @@
                                             </div>
                                             <div class="tab-pane fade show active" id="custom-tabs-three-profile"
                                                 role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
+                                                <form method="POST" action="{{ route('parent.save') }}" >
+                                                @csrf
                                                 {!! $student_html !!}
-
+                                                </form>
                                             </div>
                                             <div class="tab-pane fade" id="custom-tabs-three-messages" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-messages-tab">
