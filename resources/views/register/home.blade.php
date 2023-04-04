@@ -1,7 +1,7 @@
 @extends('layouts.form')
 
 @section('style')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
     <script src="http://malsup.github.io/jquery.blockUI.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -217,8 +217,16 @@
                                         <div class="tab-content" id="custom-tabs-three-tabContent">
                                             <div class="tab-pane fade " id="custom-tabs-three-home" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-home-tab">
+                                                <form method="POST" action="{{ route('parent.saveparent') }}" >
+                                                @csrf
                                                 {!! $parent_html !!}
+                                                </form>
+
                                             </div>
+                                        
+
+                               
+
                                             <div class="tab-pane fade show active" id="custom-tabs-three-profile"
                                                 role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
                                                 <form method="POST" action="{{ route('parent.save') }}" >
@@ -593,14 +601,20 @@
                 </div>
             </div>
             <script>
+               
+     
                 $(document).ready(function() {
+                    $(".AddDate").datepicker({
+                        dateFormat: "yy-mm-dd"
+                    });
                     $(".nav-tabs a").click(function() {
                         $(this).tab('show');
                     });
 
-                    $(".AddDate").datepicker({
-                        dateFormat: "yy-mm-dd"
-                    });
+                
+                    
+                    
                 });
+                
             </script>
         @endsection

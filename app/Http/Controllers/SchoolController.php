@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\CourseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 
 use App\Models\Course;
@@ -57,46 +58,51 @@ class SchoolController extends Controller
                     <div class="row mt-2">
                         <div class="col-md-12"><label
                                 class="labels">รหัสผู้ปกครอง</label><input type="text"
-                                class="form-control"
+                                class="form-control" name="code"
                                 value="' . $parent->code . '" readonly></div>
                     </div>
+                 
                     <div class="row mt-2">
                         <div class="col-md-12"><label
                                 class="labels">ชื่อ - นามสกุล</label><input type="text"
-                                class="form-control" placeholder="ชื่อ - นามสกุล"
-                                value="' . $parent->name_parent . '"></div>
+                                class="form-control" placeholder="ชื่อ - นามสกุล" name="name_parent"
+                                value="' . $parent->name_parent . '">
+                                <input type="text"
+                                class="form-control" placeholder="ชื่อ" id="id" name="id"
+                                value="' . $parent->id . '" hidden>
+                                </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-12"><label class="labels">เบอร์มือถือ
                                </label><input type="text"
                                 class="form-control"
-                                placeholder="เบอร์มือถือ"
+                                placeholder="เบอร์มือถือ" name="mobile"
                                 value="' . $parent->mobile . '"></div>
                         <div class="col-md-12"><label class="labels">ที่อยู่
                                 </label><input type="text"
                                 class="form-control"
-                                placeholder="ที่อยู่"
+                                placeholder="ที่อยู่" name="street_address"
                                 value="' . $parent->street_address . '"></div>
                         <div class="col-md-12"><label
                                 class="labels">รหัสไปรษณีย์</label><input
                                 type="text" class="form-control"
-                                placeholder="รหัสไปรษณีย์"
+                                placeholder="รหัสไปรษณีย์" name="postcode"
                                 value="' . $parent->postcode . '"></div>
                         <div class="col-md-12"><label class="labels">Email
                                 </label><input type="text"
-                                class="form-control"
+                                class="form-control" name="email"
                                 placeholder="enter email id" value="' . $parent->email . '" readonly>
                         </div>
                         <div class="col-md-12"><label class="labels">Password
                         </label><input type="password"
-                        class="form-control"
+                        class="form-control"  name="password"
                         placeholder="enter password" value="">
                          </div>
                 
                     </div>
                     <div class="mt-5"><button
                             class="btn btn-primary profile-button"
-                            type="button">บันทึกข้อมูล</button></div>
+                            type="submit">บันทึกข้อมูล</button></div>
                 </div>
             </div>
         </div>
@@ -108,6 +114,7 @@ class SchoolController extends Controller
             ->orderBy("id", "asc")
             ->get();
 
+            $i = 1;
 
         foreach ($student as $stu_result) {
 
@@ -156,11 +163,11 @@ class SchoolController extends Controller
                 <div class="p-3 py-5">
                     <div
                         class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="text-right">ข้อมูลนักเรียน</h4>
+                        <h4 class="text-right">ข้อมูลนักเรียน'.$i.'</h4>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6"><label
-                                class="labels">รหัสนักเรียน</label><input type="text"
+                                class="labels">รหัสนักเรียน </label><input type="text"
                                 class="form-control"
                                 value="' . $stu_result->code . '" readonly>
                         </div>
@@ -192,8 +199,9 @@ class SchoolController extends Controller
                                 value="' . $stu_result->nick_name . '"></div>
                                 <div class="col-md-6"><label
                                 class="labels">วันเกิด </label><input type="text"
-                                class="form-control AddDate" placeholder="วันเกิด" id="birth_date[]" name="birth_date[]"
+                                class="form-control AddDate" placeholder="วันเกิด" name="birth_date[]"
                                 value="' . $stu_result->birth_date . '"></div>
+                                
                 
                     </div>
                     <div class="row mt-3">
@@ -218,7 +226,7 @@ class SchoolController extends Controller
         </div>
     </div>
             ';
-
+            
             if ($student) {
                 $course[] = Course::where([['student_id', $stu_result->id]])
                     ->orderBy("id", "asc")
@@ -237,6 +245,8 @@ class SchoolController extends Controller
                     }
                 }
             }
+            $i++;
+
         }
 
         //print_r($course_html);
@@ -264,7 +274,6 @@ class SchoolController extends Controller
         //     return response()->json(['errors' => $validator->errors()->all()]);
         // }
         for ($x = 0; $x < count($request->get('id')); $x++) {
-            // $rnumber1 = RunningNumber::generate(new Student,'code',4,"");
             // $data = [];
             // $data[$x] = [
             //     'first_name' => $request->get('first_name')[$x],
@@ -279,8 +288,14 @@ class SchoolController extends Controller
             $id=[];
             $id[$x] = $request->get('id')[$x];
             
-            print_r($request['birth_date']);
-            exit();
+            // print_r($request['birth_date']);
+            // exit();
+
+            // echo "<pre>";
+            // print_r($request->all());
+            // echo "</pre>";
+            // exit();
+
             Student::find($id[$x])
             ->update([
                 'first_name'=>$request['first_name'][$x],
@@ -308,4 +323,69 @@ class SchoolController extends Controller
 
     
 }
+function updateParent(Request $request){
+    // $validator =  Validator::make($request->all(),[
+    //         'name_parent' => 'required|string',
+    //         'mobile' => 'required|string',
+    //         'street_address' => 'required|string',
+    //         'postcode' => 'required|string',
+    //         // 'password' => [
+    //         //     'required',
+    //         //     'string',
+    //         //     'regex:/^[a-zA-Z0-9 ]+$/',
+    //         //     'min:8',            
+
+    //         // ],
+    //     ]); 
+        $password =  Hash::make($request->get('password'));
+
+        // print_r($request);
+
+        
+        $id=$request->get('id');
+
+        if($request->get('password')== ""){
+            ParentRegister::find($id)
+            ->update([
+                'name_parent'=>$request['name_parent'],
+                'mobile'=>$request['mobile'],
+                'street_address'=>$request['street_address'],
+                'postcode'=>$request['postcode'],
+       
+    
+            ]);
+        }else{
+            $validator =  Validator::make($request->all(),[
+                'password' => [
+                        'string',
+                        'regex:/^[a-zA-Z0-9 ]+$/',
+                        'min:8',            
+        
+            ],
+        ]); 
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+        ParentRegister::find($id)
+            ->update([
+                'name_parent'=>$request['name_parent'],
+                'mobile'=>$request['mobile'],
+                'street_address'=>$request['street_address'],
+                'postcode'=>$request['postcode'],
+                'password'=>$password,
+       
+    
+            ]);
+        }
+   
+
+//                 echo "<pre>";
+// print_r($request->all());
+// echo "</pre>";
+// exit();
+        // ParentRegister::find($id)->update($request->all());
+        
+        return redirect('/parent');
+
+} 
 }
