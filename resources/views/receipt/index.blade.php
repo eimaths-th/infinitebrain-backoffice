@@ -16,8 +16,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                    <p>{{ $message }}</p>
-                                        </div>-->
+                                <p>{{ $message }}</p>
+                                    </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -423,6 +423,21 @@
                         </div>
 
                         <!--<div class="form-row">
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="City">City:</label>
+                                    <input type="text" class="form-control" name="city" id="AddCity"
+                                        value="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="Province">Province:</label>
+                                    <input type="text" class="form-control" name="province" id="AddProvince"
+                                        value="">
+                                </div>
+                            </div>
+                        </div>-->
                                                     <div class="col-md-6">
                                                         <div class="position-relative form-group">
                                                             <label for="City">City:</label>
@@ -464,6 +479,9 @@
                             <textarea class="form-control" name="address" id="AddAddress"></textarea>
                         </div>
                         <!--<div class="form-group">
+                                <label for="Name">Street Address 2:</label>
+                                <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                            </div>-->
                                                     <label for="Name">Street Address 2:</label>
                                                     <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
                                                 </div>-->
@@ -609,6 +627,21 @@
                                     </div>
 
                                     <!--<div class="form-row">
+                                                                                <div class="col-md-6">
+                                                                                    <div class="position-relative form-group">
+                                                                                        <label for="City">City:</label>
+                                                                                        <input type="text" class="form-control" name="city" id="EditCity"
+                                                                                            value="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="position-relative form-group">
+                                                                                        <label for="Province">Province:</label>
+                                                                                        <input type="text" class="form-control" name="province" id="EditProvince"
+                                                                                            value="">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>-->
                                                                     <div class="col-md-6">
                                                                         <div class="position-relative form-group">
                                                                             <label for="City">City:</label>
@@ -639,6 +672,9 @@
                                         <textarea class="form-control" name="address" id="EditAddress"></textarea>
                                     </div>
                                     <!--<div class="form-group">
+                                                                                                                                                                                                            <label for="Name">Street Address 2:</label>
+                                                                                                                                                                                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                                                                                                                                                                        </div>-->
                                                                                                                                                                                                 <label for="Name">Street Address 2:</label>
                                                                                                                                                                                                 <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
                                                                                                                                                                                             </div>-->
@@ -1186,7 +1222,7 @@
 
                 id = $(this).data('id');
                 $.ajax({
-                    url: "receipts/edit/" + id + "/0",
+                    url: "receipts/edit/" + id+ "/0",
                     method: 'GET',
                     success: function(res) {
                         //console.log(res);
@@ -1572,7 +1608,10 @@
                 } else {
                     // เหลือ 1 รายการลบไม่ได้
                     if ($("#myTbl tr").length > 1) {
-                        alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        //alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        toastr.success('ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ', {
+                            timeOut: 5000
+                        });
                     }
                 }
             });
@@ -1584,7 +1623,10 @@
                 } else {
                     // เหลือ 1 รายการลบไม่ได้
                     if ($("#myTbl tr").length > 1) {
-                        alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        //alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        toastr.success('ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ', {
+                            timeOut: 5000
+                        });
                     }
                 }
             });
@@ -1605,7 +1647,10 @@
                 } else {
                     // เหลือ 1 รายการลบไม่ได้
                     if ($("#myTbl2 tr").length > 1) {
-                        alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        //alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        toastr.success('ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ', {
+                            timeOut: 5000
+                        });
                     }
                 }
             });
@@ -1617,7 +1662,10 @@
                 } else {
                     // เหลือ 1 รายการลบไม่ได้
                     if ($("#myTbl2 tr").length > 1) {
-                        alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        //alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
+                        toastr.success('ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ', {
+                            timeOut: 5000
+                        });
                     }
                 }
             });
