@@ -1229,7 +1229,7 @@ class ReceiptController extends Controller
         $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {
-            Receipt::find($arr_del[$xx])->delete();
+           Receipt::find($arr_del[$xx])->delete();
         }
         //$ids = $request->get('table_records');
         //User::whereIn('id',explode(",",$ids))->delete();

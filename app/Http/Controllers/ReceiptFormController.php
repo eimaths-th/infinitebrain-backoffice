@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportForm;
 use App\Models\ReceiptForm;
 use App\Models\ReceiptDetail;
 use App\Models\FileUpload;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\ReceiptController;
+//use App\Http\Controllers\ReceiptController;
 use App\Models\Receipt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -17,6 +18,8 @@ use App\Models\Receipt_RunningNumber;
 use App\Models\Receipt_Customer_RunningNumber;
 use Mail;
 use App\Mail\ContactMail;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ExportUser;
 
 class ReceiptFormController extends Controller
 {
@@ -424,6 +427,11 @@ class ReceiptFormController extends Controller
     public function update(Request $request, ReceiptForm $receiptForm)
     {
         //
+    }
+
+
+    public function exportForm(Request $request){
+        return Excel::download(new ExportForm($request->get('sfield'),$request->get('table_records')), 'form.xlsx');
     }
 
     /**
