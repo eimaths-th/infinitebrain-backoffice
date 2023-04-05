@@ -627,39 +627,21 @@
                                     </div>
 
                                     <!--<div class="form-row">
-                                                                                <div class="col-md-6">
-                                                                                    <div class="position-relative form-group">
-                                                                                        <label for="City">City:</label>
-                                                                                        <input type="text" class="form-control" name="city" id="EditCity"
-                                                                                            value="">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <div class="position-relative form-group">
-                                                                                        <label for="Province">Province:</label>
-                                                                                        <input type="text" class="form-control" name="province" id="EditProvince"
-                                                                                            value="">
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>-->
-                                                                    <div class="col-md-6">
-                                                                        <div class="position-relative form-group">
-                                                                            <label for="City">City:</label>
-                                                                            <input type="text" class="form-control" name="city" id="EditCity"
-                                                                                value="">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="position-relative form-group">
-                                                                            <label for="Province">Province:</label>
-                                                                            <input type="text" class="form-control" name="province" id="EditProvince"
-                                                                                value="">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>-->
-
-
-
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <label for="City">City:</label>
+                                            <input type="text" class="form-control" name="city" id="EditCity"
+                                                value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="position-relative form-group">
+                                            <label for="Province">Province:</label>
+                                            <input type="text" class="form-control" name="province" id="EditProvince"
+                                                value="">
+                                        </div>
+                                    </div>
+                                    </div>-->
                                     {{--  <div class="col-md-6">
                                   <div class="position-relative form-group">
                                     <label for="Des">Description:</label>
@@ -672,12 +654,10 @@
                                         <textarea class="form-control" name="address" id="EditAddress"></textarea>
                                     </div>
                                     <!--<div class="form-group">
-                                                                                                                                                                                                            <label for="Name">Street Address 2:</label>
-                                                                                                                                                                                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                                                                                                                                                                        </div>-->
-                                                                                                                                                                                                <label for="Name">Street Address 2:</label>
-                                                                                                                                                                                                <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                                                                                                                                                            </div>-->
+                                        <label for="Name">Street Address 2:</label>
+                                        <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                    </div>-->
+
 
                                     {{-- <div class="form-group">
                                   <label for="File">File:</label>
