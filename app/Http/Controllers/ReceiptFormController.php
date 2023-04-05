@@ -31,6 +31,7 @@ class ReceiptFormController extends Controller
     {
         return view("receipt_form.olpcs");
     }
+
     public function fileStore(Request $request)
     {
         $filecount = count($request->file('file'));
@@ -78,7 +79,18 @@ class ReceiptFormController extends Controller
     }
 
 
+    public function delete_all_between($beginning, $end, $string)
+    {
+        $beginningPos = strpos($string, $beginning);
+        $endPos = strpos($string, $end);
+        if ($beginningPos === false || $endPos === false) {
+            return $string;
+        }
 
+        $textToDelete = substr($string, $beginningPos, ($endPos + strlen($end)) - $beginningPos);
+
+        return $this->delete_all_between($beginning, $end, str_replace($textToDelete, '', $string));
+    }
 
     public function check_permission()
     {
@@ -214,18 +226,21 @@ class ReceiptFormController extends Controller
 
 
         $rid = $receipt->id;
-        $price = preg_replace("/[^0-9.]/", "", $request->get('package'));
 
-            $rdata = new ReceiptDetail([
-                'receipt_id' => $rid,
-                'description' => $request->get('description'),
-                'quantity' => 1,
-                //'unit' => '',
-                'unitprice' => (int)$price,
-                //'discount' => '',
-                //'amount' => $request->get('book_old_price'),
-            ]);
-            $rdata->save();
+        $out_price = $this->delete_all_between('(', ')', $request->get('package'));
+
+        $price = preg_replace("/[^0-9.]/", "", $out_price);
+
+        $rdata = new ReceiptDetail([
+            'receipt_id' => $rid,
+            'description' => $request->get('description'),
+            'quantity' => 1,
+            //'unit' => '',
+            'unitprice' => (int)$price,
+            //'discount' => '',
+            //'amount' => $request->get('book_old_price'),
+        ]);
+        $rdata->save();
 
 
         return response()->json(['success' => 'Receive Add successfully']);
