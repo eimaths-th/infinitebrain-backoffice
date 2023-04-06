@@ -161,7 +161,7 @@
                         @foreach ($data as $receipt)
                         <tr class="activeda" height="30">
                             <td align="center" width="15%" class="actived"><font size="{{ $fontsize }}"><b>{{ $receipt['receipt_submission_date'] }}</b></font></td>
-                            <td align="left" width="40%" class="actived">&nbsp; <font size="{{ $fontsize }}"><b>{{ $receipt['receipt_firstname'] }} {{ $receipt['receipt_lastname'] }} {{ $receipt['receipt_type'] }} </b></font></td>
+                            <td align="left" width="40%" class="actived">&nbsp; <font size="{{ $fontsize }}"><b>{{ $receipt['receipt_firstname'] }} {{ $receipt['receipt_lastname'] }} </b></font></td>
                             <td align="center" width="15%" class="actived"><font size="{{ $fontsize }}"><b>{{ $receipt['receipt_number'] }}</b></font></td>
                             <td align="center" width="15%" class="actived"><font size="{{ $fontsize }}"><b>{{ $receipt['receipt_price'] }}</b></font></td>
                             <td align="center" width="15%" class="actived grey"><font size="{{ $fontsize }}"><b>{{ $receipt['receipt_price_label'] }}</b></font></td>

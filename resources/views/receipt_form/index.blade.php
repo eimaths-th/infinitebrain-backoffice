@@ -47,11 +47,13 @@
                     </div>
                 </div>
                 <div class="page-title-actions">
-                    
+
 
 
                     <div class="d-inline-block dropdown">
-                        
+                        <a class="btn btn-info export_button" href="#"><i class="fa-solid fa-file-export"></i> Export
+                            Excel </a>
+
                         <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
                             All</a>
 
@@ -61,7 +63,7 @@
         </div>
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-                <form method="post" action="{{ route('receipts_form.destroy_all') }}" name="delete_all" id="delete_all">
+                <form method="post" action="" name="delete_all" id="delete_all">
                     @csrf
                     @method('DELETE')
                     <input type="hidden" name="sfield" value="{{ request()->get('sfield') }}">
@@ -110,7 +112,7 @@
 
 
 
-    
+
 
     <!-- Edit  Modal -->
     <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
@@ -208,10 +210,10 @@
                                             value="" >
                                     </div>
                                 </div>
-                           
+
                             </div>
 
-                        
+
                             <div class="form-row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -244,7 +246,7 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
 
                             <div class="form-group">
                                 <label for="Name">Street Address:</label>
@@ -256,19 +258,19 @@
                                 <input type="text" class="form-control" name="postcode" id="AddPostcode"
                                     value="" >
                             </div>
-   
+
 
                             <div class="form-row text-center">
                                 <div class="col-md-6">
                                     <label for="รูปภาพผู้สมัคร">รูปภาพผู้สมัคร</label>
                                     <div class="form-group" id="sphoto">
-                                      
+
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="หลักฐานการชำระเงิน">หลักฐานการชำระเงิน:</label>
                                     <div class="form-group" id="satt">
-                                      
+
                                     </div>
                                     <input type="hidden" id="AddFile" name="file">
                                 </div>
@@ -308,10 +310,24 @@
                 var len = $('input[name="table_records[]"]:checked').length;
                 if (len > 0) {
                     if (confirm("Click OK to Delete?")) {
+                        $('form#delete_all').attr('action', '{{ route('receipts_form.destroy_all') }}'); //this fails silently
                         $('form#delete_all').submit();
                     }
                 } else {
                     alert("Please Select Record For Delete");
+                }
+
+            });
+
+            $(".export_button").click(function() {
+                var len = $('input[name="table_records[]"]:checked').length;
+                if (len > 0) {
+                    if (confirm("Click OK to Export?")) {
+                        $('form#delete_all').attr('action', '{{ route('receipts_form.export') }}'); //this fails silently
+                        $('form#delete_all').submit();
+                    }
+                } else {
+                    alert("Please Select Record For Export");
                 }
 
             });
@@ -396,7 +412,7 @@
 
 
 
-           
+
 
             let id;
             $(document).on('click', '#getEditData', function(e) {
@@ -450,7 +466,7 @@
             })
 
 
-            
+
 
             $('#SubmitEditForm').click(function(e) {
                 //if (!confirm("Are you sure?")) return;

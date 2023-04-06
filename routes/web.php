@@ -50,7 +50,7 @@ Auth::routes([
     'verify' => false, // Email Verification Routes...
 ]);
 
-//Route::get('dashboard', [CustomAuthController::class, 'dashboard']); 
+//Route::get('dashboard', [CustomAuthController::class, 'dashboard']);
 Route::get('login', [CustomAuthController::class, 'index'])->name('login');
 Route::post('custom-login', [CustomAuthController::class, 'customLogin'])->name('login.custom');
 Route::get('registration', [CustomAuthController::class, 'registration'])->name('register-user');
@@ -142,7 +142,8 @@ Route::get('/receipts/create', [ReceiptController::class, 'create'])->name('rece
 Route::match(array('GET', 'POST'), '/receipts/print_day', [ReceiptController::class, 'print_day'])->name('receipts.print_day');
 Route::match(array('GET', 'POST'), '/receipts/print_month', [ReceiptController::class, 'print_month'])->name('receipts.print_month');
 Route::get('/receipts/show/{type}/{id}', [ReceiptController::class, 'show'])->name('receipts.show');
-Route::get('/receipts/edit/{id}', [ReceiptController::class, 'edit'])->name('receipts.edit');
+Route::get('/receipts/edit/{id}/{type}', [ReceiptController::class, 'edit'])->name('receipts.edit');
+Route::get('/receipts/migrate/{id}', [ReceiptController::class, 'migrateReceipt'])->name('receipts.migrate');
 Route::put('/receipts/save/{id}', [ReceiptController::class, 'update'])->name('receipts.save');
 Route::post('/receipts/store', [ReceiptController::class, 'store'])->name('receipts.store');
 Route::post('/receipts/conv', [ReceiptController::class, 'conv'])->name('receipts.conv');
@@ -173,6 +174,7 @@ Route::get('/receipts_form', [ReceiptFormController::class, 'index'])->name('rec
 Route::get('/receipts_form/edit/{id}', [ReceiptFormController::class, 'edit'])->name('receipts_form.edit');
 Route::delete('/receipts_form/destroy/{id}', [ReceiptFormController::class, 'destroy'])->name('receipts_form.destroy');
 Route::delete('/receipts_form/destroy_all', [ReceiptFormController::class, 'destroy_all'])->name('receipts_form.destroy_all');
+Route::delete('/receipts_form/export', [ReceiptFormController::class, 'exportForm'])->name('receipts_form.export');
 Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->name('receipts_form.store');
 
 // Route::prefix('google')->name('google.')->group( function(){

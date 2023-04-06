@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Receipt;
+use App\Models\ReceiptDetail;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -73,7 +74,7 @@ class ReceiptController extends Controller
 
     /**
      * convert group of number scale.
-     * 
+     *
      * @param integer $index
      * @return string
      */
@@ -109,7 +110,7 @@ class ReceiptController extends Controller
 
     /**
      * convert the number (and with dot).
-     * 
+     *
      * @param number $num number integer or decimal. negative or positive.
      * @return string translated number to text in Thai language.
      */
@@ -163,7 +164,7 @@ class ReceiptController extends Controller
             for ($i = 0; $i < strlen($dec); $i++) {
                 $output .= ' ' . $this->convertDigit($dec[$i]);
             } // endfor;
-             
+
         } // endif;
         else {
             $output .= ' Bath only ';
@@ -175,7 +176,7 @@ class ReceiptController extends Controller
 
     /**
      * convert three digit.
-     * 
+     *
      * @param integer $dig1
      * @param integer $dig2
      * @param integer $dig3
@@ -208,7 +209,7 @@ class ReceiptController extends Controller
 
     /**
      * convert two digits
-     * 
+     *
      * @param integer $dig1
      * @param integer $dig2
      * @return string
@@ -395,6 +396,70 @@ class ReceiptController extends Controller
             //exit();
         }
     }
+
+    public function migrateReceipt($id)
+    {
+        $receipts = Receipt::select(
+            "receipts.id as receipt_id",
+            "receipts.type as receipt_type",
+            "receipts.submission_date as receipt_submission_date",
+            "receipts.receipt_number as receipt_number",
+            "receipts.receipt_customer_number as receipt_customer_number",
+            "receipts.first_name as receipt_firstname",
+            "receipts.last_name as receipt_lastname",
+            "receipts.name_parent as receipt_parent_name",
+            "receipts.mobile as receipt_mobile",
+            "receipts.description as receipt_des",
+            "receipts.package as package",
+        )
+            //->join("students", "students.id", "=", "receipts.student_id")
+            //->join("subjects", "subjects.id", "=", "receipts.subject_id")
+            //->join("levels", "levels.id", "=", "receipts.level_id")
+
+            ->where('receipts.sfield', $id)
+            ->orderBy("receipts.id", "desc")
+            ->get();
+
+        foreach ($receipts as $result) {
+            echo $result->receipt_id . "vv";
+
+            if ($result->package) {
+                $res = preg_replace("/[^0-9.]/", "", $result->package);
+            }
+
+
+
+            $price = (int)$res;
+
+
+            echo $price . "vv";
+            $des = explode("\n", $result->receipt_des);
+            $i = 0;
+            for ($i = 0; $i <= count($des) - 1; $i++) {
+                echo $des[$i] . "vv";
+                if ($i == 0) {
+                    $qty = 1;
+                    $uprice = $price;
+                } else {
+                    $qty = NULL;
+                    $uprice = NULL;
+                }
+                $level = new ReceiptDetail([
+                    'receipt_id' => $result->receipt_id,
+                    'description' => $des[$i],
+                    'quantity' => $qty,
+                    //'unit' => '',
+                    'unitprice' => $uprice,
+                    //'discount' => $request->get('book'),
+                    //'amount' => $request->get('book_old_price'),
+                ]);
+                $level->save();
+            }
+            echo "<br><br>";
+        }
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -436,7 +501,7 @@ class ReceiptController extends Controller
                         $mes = "ใบลดหนี้";
                         $text = "Credit Note";
                     } else {
-            
+
                         $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
                         $text = "Tax Invoice/Receipt";
                     }
@@ -537,9 +602,9 @@ class ReceiptController extends Controller
             'postcode' => 'required|string',
             'name_parent' => 'required|string',
             'mobile' => 'required|string',
-            'package' => 'required|string',
+            //'package' => 'required|string',
             // 'file_att' => 'required|string
-            'description' => 'required|string',
+            //'description' => 'required|string',
             'grade' => 'required|string',
 
         ]);
@@ -554,6 +619,30 @@ class ReceiptController extends Controller
 
         $conv = new Receipt($request->all());
         $conv->save();
+        $rid = $conv->id;
+
+
+        $rdes  = $request->get('rrdes');
+        $rqty  = $request->get('rrqty');
+        $runit  = $request->get('rrunit');
+        $runitp  = $request->get('rrunitp');
+        $rdis  = $request->get('rrdis');
+
+        $rdata = array();
+        //ReceiptDetail::where('receipt_id', $id)->delete();
+        for ($xx = 0; $xx < count($rdes); $xx++) {
+            $rdata = new ReceiptDetail([
+                'receipt_id' => $rid,
+                'description' => $rdes[$xx],
+                'quantity' => $rqty[$xx],
+                'unit' => $runit[$xx],
+                'unitprice' => $runitp[$xx],
+                'discount' => $rdis[$xx],
+                //'amount' => $request->get('book_old_price'),
+            ]);
+            $rdata->save();
+        }
+
         return response()->json(['success' => 'Credit Note Add successfully']);
     }
 
@@ -592,15 +681,60 @@ class ReceiptController extends Controller
         }
 
 
+        //price detail
+        $receipts_detail = ReceiptDetail::where('receipt_details.receipt_id', $data->id)
+            ->orderBy("receipt_details.id", "asc")
+            ->get();
 
-        $price = (int)$res;
+
+        $all_price = 0;
+        $receipt_detail_arr = array();
+        $no = 1;
+        $x = 0;
+        foreach ($receipts_detail as $dresult) {
+            $price = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
+            if ($price == 0) {
+                $receipt_detail_arr[$x]['no'] = '';
+                $receipt_detail_arr[$x]['price'] = '';
+                $receipt_detail_arr[$x]['unit'] = '';
+                $receipt_detail_arr[$x]['unitprice'] = '';
+                $receipt_detail_arr[$x]['quantity'] = '';
+                $receipt_detail_arr[$x]['discount'] = '';
+            } else {
+                $receipt_detail_arr[$x]['no'] = $no;
+                $receipt_detail_arr[$x]['price'] = number_format($price, 2);
+                $receipt_detail_arr[$x]['unit'] = $dresult['unit'];
+                $receipt_detail_arr[$x]['unitprice'] = number_format($dresult['unitprice'], 2);
+                $receipt_detail_arr[$x]['quantity'] = $dresult['quantity'];
+                $receipt_detail_arr[$x]['discount'] = number_format($dresult['discount'], 2);
+            }
+
+            $receipt_detail_arr[$x]['description'] = $dresult['description'];
+            $all_price = $all_price + $price;
+            $no++;
+            $x++;
+        }
+
+        //print_r($receipt_detail_arr);
+        //exit();
+
+        $price_val = number_format($all_price, 2);
+        $price_text = $this->baht_text($all_price);
+        $price_texten = $this->convertNumber($all_price);
+        $vat_price = ($all_price * 100) / 107;
+        $vat_total = $all_price - $vat_price;
+        $vat_price_val = number_format($vat_price, 2);
+        $vat_val = number_format($vat_total, 2);
+
+
+        /* $price = (int)$res;
         $price_val = number_format($price, 2);
         $price_text = $this->baht_text($price);
         $price_texten = $this->convertNumber($price);
         $vat_price = ($price * 100) / 107;
         $vat_total = $price - $vat_price;
         $vat_price_val = number_format($vat_price, 2);
-        $vat_val = number_format($vat_total, 2);
+        $vat_val = number_format($vat_total, 2); */
         //exit();
 
         $file_att = '';
@@ -630,18 +764,21 @@ class ReceiptController extends Controller
         }
 
 
-        $des_text = nl2br($data->description);
+        //$des_text = nl2br($data->description);
 
 
 
-        return view($viewr)->with(['id' => $id])->with(['data' => $data])->with(['price_val' => $price_val])
+        return view($viewr)->with(['id' => $id])
+            ->with(['data' => $data])
+            ->with(['receipt_detail_arr' => $receipt_detail_arr])
+            ->with(['price_val' => $price_val])
             ->with(['mes' => $mes])
             ->with(['text' => $text])
             ->with(['price_texten' => $price_texten])
             ->with(['price_text' => $price_text])
             ->with(['vat_price_val' => $vat_price_val])
-            ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att])
-            ->with(['des_text' => $des_text]);
+            ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att]);
+        //->with(['des_text' => $des_text]);
     }
 
     public function print_day(Request $request)
@@ -678,6 +815,7 @@ class ReceiptController extends Controller
         $thai_month = self::thmonth[(int)$a_date[1]];
 
         $receipts = Receipt::select(
+            "receipts.id as receipt_id",
             "receipts.submission_date as receipt_submission_date",
             "receipts.receipt_number as receipt_number",
             "receipts.first_name as receipt_firstname",
@@ -706,8 +844,20 @@ class ReceiptController extends Controller
             $ret_receipt[$i]['receipt_lastname'] = $result->receipt_lastname;
             $ret_receipt[$i]['receipt_type'] = $result->receipt_type;
 
-            $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
-            $price = (int)$res;
+            /* $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
+            $price = (int)$res; */
+            //get price from item
+            $receipts_detail = ReceiptDetail::where('receipt_details.receipt_id', $result->receipt_id)
+                ->orderBy("receipt_details.id", "asc")
+                ->get();
+
+            $price = 0;
+            foreach ($receipts_detail as $dresult) {
+                $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
+                $price = $price + $rprice;
+            }
+
+
             if ($ret_receipt[$i]['receipt_type'] == 2) {
                 $ret_receipt[$i]['receipt_type'] = "ใบลดหนี้";
                 $price = $price * -1;
@@ -796,6 +946,7 @@ class ReceiptController extends Controller
         $thai_month = self::thmonth[(int)$a_month[1]];
 
         $receipts = Receipt::select(
+            "receipts.id as receipt_id",
             "receipts.submission_date as receipt_submission_date",
             "receipts.receipt_number as receipt_number",
             "receipts.first_name as receipt_firstname",
@@ -834,8 +985,19 @@ class ReceiptController extends Controller
             $ret_receipt[$result->receipt_submission_date]['receipt_numbers'] = $ret_receipt[$result->receipt_submission_date]['receipt_number'][0] . ' - ' . $ret_receipt[$result->receipt_submission_date]['receipt_number'][$maxdate];
             $ret_receipt[$result->receipt_submission_date]['receipt_type'][$i] = $result->receipt_type;
 
-            $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
-            $price = (int)$res;
+            /* $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
+            $price = (int)$res; */
+            //get price from item
+            $receipts_detail = ReceiptDetail::where('receipt_details.receipt_id', $result->receipt_id)
+                ->orderBy("receipt_details.id", "asc")
+                ->get();
+
+            $price = 0;
+            foreach ($receipts_detail as $dresult) {
+                $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
+                $price = $price + $rprice;
+            }
+
             $price_val = number_format($price, 2);
             if ($result->receipt_type == 2) {
                 $price = $price * -1;
@@ -870,7 +1032,7 @@ class ReceiptController extends Controller
         $chart_date = rtrim($chart_date, ',');;
         $chart_date_price = rtrim($chart_date_price, ',');;
 
-    
+
 
         if ($type !== "report_view") {
 
@@ -914,14 +1076,76 @@ class ReceiptController extends Controller
      * @param  \App\Models\Receipt  $receipt
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, $type)
     {
         //
         $this->check_permission();
         $data = Receipt::find($id);
 
+        $receipts_detail = ReceiptDetail::where('receipt_details.receipt_id', $id)
+            ->orderBy("receipt_details.id", "asc")
+            ->get();
+
+        $x = 1;
+        $data_html = '';
+        $input_name = '';
+        if ($type == 2) {
+            $input_name = 'r';
+        }
+        foreach ($receipts_detail as $dresult) {
+
+            $data_html .= '<tr class="firstTr">
+            <td width="10%">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="text" id="rno[]" name="rno[]"
+                        class="form-control has-feedback-left" value="' . $x . '">
+                        <!--<input name="rid[]"  id="rid[]" type="hidden" value="' . $dresult['id'] . '" />-->
+                </div>
+            </td>
+            <td width="35%">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="text" id="' . $input_name . 'rdes[]" name="' . $input_name . 'rdes[]"
+                    class="form-control has-feedback-left" value="' . $dresult['description'] . '">
+                </div>
+            </td>
+            <td width="10%">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="text" id="' . $input_name . 'rqty[]" name="' . $input_name . 'rqty[]"
+                    class="form-control has-feedback-left" value="' . $dresult['quantity'] . '">
+                </div>
+            </td>
+
+            <td width="15%">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="text" id="' . $input_name . 'runit[]" name="' . $input_name . 'runit[]"
+                    class="form-control has-feedback-left" value="' . $dresult['unit'] . '">
+                </div>
+            </td>
+            <td width="15%">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+            <input type="text" id="' . $input_name . 'runitp[]" name="' . $input_name . 'runitp[]"
+            class="form-control has-feedback-left" value="' . $dresult['unitprice'] . '">
+        </div>
+            </td>
+
+            <td width="15%">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="text" id="' . $input_name . 'rdis[]" name="' . $input_name . 'rdis[]"
+                    class="form-control has-feedback-left" value="' . $dresult['discount'] . '">
+                </div>
+            </td>
+
+            <!--<td><button type="button" id="removeRowt"
+                    class="btn btn-sm btn-danger btnRemoveg"><i
+                        class="fa fa-minus"></i></button></td>-->
+
+        </tr>';
+            $x++;
+        }
+
         return response()->json([
-            'data' =>  $data
+            'data' =>  $data,
+            'data_html' => $data_html
         ]);
     }
 
@@ -946,17 +1170,40 @@ class ReceiptController extends Controller
             'postcode' => 'required|string',
             'name_parent' => 'required|string',
             'mobile' => 'required|string',
-            'package' => 'required|string',
-            'file_att' => 'required|string',
-            'description' => 'required|string',
+            //'package' => 'required|string',
+            //'file_att' => 'required|string',
+            //'description' => 'required|string',
             'grade' => 'required|string',
         ]);
+
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
+        //$rid  = $request->get('rid');
+        $rdes  = $request->get('rdes');
+        $rqty  = $request->get('rqty');
+        $runit  = $request->get('runit');
+        $runitp  = $request->get('runitp');
+        $rdis  = $request->get('rdis');
+
         Receipt::find($id)->update($request->all());
+
+        $rdata = array();
+        ReceiptDetail::where('receipt_id', $id)->delete();
+        for ($xx = 0; $xx < count($rdes); $xx++) {
+            $rdata = new ReceiptDetail([
+                'receipt_id' => $id,
+                'description' => $rdes[$xx],
+                'quantity' => $rqty[$xx],
+                'unit' => $runit[$xx],
+                'unitprice' => $runitp[$xx],
+                'discount' => $rdis[$xx],
+                //'amount' => $request->get('book_old_price'),
+            ]);
+            $rdata->save();
+        }
 
         return response()->json(['success' => 'Receipt updated successfully']);
     }
@@ -982,7 +1229,7 @@ class ReceiptController extends Controller
         $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {
-            Receipt::find($arr_del[$xx])->delete();
+           Receipt::find($arr_del[$xx])->delete();
         }
         //$ids = $request->get('table_records');
         //User::whereIn('id',explode(",",$ids))->delete();

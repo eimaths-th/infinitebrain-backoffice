@@ -20,8 +20,8 @@
         }
 
         .tbr table tr.active td {
-            border-top: 2px solid rgb(138, 175, 61);
-            border-bottom: 2px solid rgb(138, 175, 61);
+            border-top: 1px solid rgb(138, 175, 61);
+            border-bottom: 1px solid rgb(138, 175, 61);
         }
 
         .tbr table tr.activebg td {
@@ -39,12 +39,12 @@
         }
 
         .tbr table td.activetop {
-            border-top: 2px solid rgb(138, 175, 61);
+            border-top: 1px solid rgb(138, 175, 61);
         }
 
         .tbr table td.active {
-            border-left: 2px solid rgb(138, 175, 61);
-            border-right: 2px solid rgb(138, 175, 61);
+            border-left: 1px solid rgb(138, 175, 61);
+            border-right: 1px solid rgb(138, 175, 61);
         }
 
         .tbr table td.actived {
@@ -53,15 +53,15 @@
         }
 
         .tbr table td.active_left {
-            border-left: 2px solid rgb(138, 175, 61);
+            border-left: 1px solid rgb(138, 175, 61);
         }
 
         .tbr table td.active_right {
-            border-right: 2px solid rgb(138, 175, 61);
+            border-right: 1px solid rgb(138, 175, 61);
         }
 
         .tbr table td.activebottom {
-            border-bottom: 2px solid rgb(138, 175, 61);
+            border-bottom: 1px solid rgb(138, 175, 61);
         }
 
         .tbr table td.activebottomd {
