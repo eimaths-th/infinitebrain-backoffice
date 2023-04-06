@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+use App\Models\Comment;
 
 use App\Models\Course;
 use App\Models\Level;
@@ -34,9 +35,8 @@ class SchoolController extends Controller
         $id = $users->id;
         $parent = ParentRegister::find($id);
 
-
-
-
+        
+        
         $parent_html = '<div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
             <div class="col-md-4 border-right">
@@ -251,9 +251,68 @@ class SchoolController extends Controller
 
         //print_r($course_html);
         //exit();
+        $comment_html = "";
+        $comment = Comment::orderBy("id", "desc")
+        ->get();
 
+        $i = 1;
+        foreach ($comment as $comment_result) {
+            // <div class="col-md-4 border-right">
+            //     <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+            //         <span class="time"><i class="fas fa-clock"></i>   ' .date_format($comment_result->created_at,"d M Y  H:i:s "). '</span>
+            //         <h3 class="timeline-header"><a href="#">'.$comment_result->user.'</a>
+            //            </h3>
+            //         <div class="timeline-body">
+            //         '.$comment_result->comment.'
+            //         </div>
+            //     </div>
+            // </div>
+            $comment_html2="";
+            $pic = explode('|',$comment_result->photo);
+            foreach($pic as $pics){
+                $comment_html2 .= '
+     
+            
+    <img src="'.url('/').'/comments_images/'. $pics .'" height="100" width="100">
+   
+                ';
+            }
+
+            $comment_html .= '
+
+    <div class="container rounded bg-white mt-5 mb-5">
+        <div class="row">
+            <div class="col-3 text-center">
+            <img class="rounded-circle" width="100px"
+                        src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+            </div>
+           <div class="col-9" style="padding: 50px 0;">
+                <p style="font-weight:bolder; font-size:30px;">'.$comment_result->user.'     <span style="font-size:20px; color:green;">' .date_format($comment_result->created_at,"d M Y  H:i:s "). '</span></p> 
+           </div>
+        </div>
+        <div class="row">
+        <div class="col-3">
+                   
+             </div>
+            <div class="col-9">
+                   '.$comment_result->comment.'
+             </div>
+        </div>
+        <div class="row">
+        <div class="col-12">
+        '.$comment_html2.'
+        </div>
+        </div>
+    </div>
+              
+   
+                '; 
+               
+
+        }
         return view('register.home')->with(['parent_html' =>  $parent_html])
             ->with(['student_html' =>  $student_html])
+            ->with(['comment_html' =>  $comment_html])
             ->with(['student_chart' =>  $course_html]);
     }
 

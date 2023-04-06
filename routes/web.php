@@ -16,7 +16,7 @@ use App\Http\Controllers\SubjectPriceController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\GoogleController;
 use App\Models\ParentRegister;
-
+use App\Http\Controllers\CommentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -196,3 +196,11 @@ Route::post('/parent/saveparent', [SchoolController::class, 'updateParent'])->na
 
 // Route::put('/students/save/{id}', [StudentController::class, 'update'])->name('students.save');
 
+Route::get('/comment', [CommentController::class, 'index'])->name('comment');
+Route::get('/comment/edit/{id}', [CommentController::class, 'edit'])->name('comment.edit');
+Route::post('/comment/store1', [CommentController::class, 'store1'])->name('comment.store1');
+Route::put('/comment/save/{id}', [CommentController::class, 'update'])->name('comment.save');
+Route::post('/comment/upload', [CommentController::class, 'fileStore'])->name('comment.upload');
+Route::post('/comment/upload/delete', [CommentController::class, 'fileDestroy'])->name('comment.delete');
+Route::delete('/comment/destroy/{id}', [CommentController::class, 'destroy'])->name('comment.destroy');
+Route::delete('/comment/destroy_all', [CommentController::class, 'destroy_all'])->name('comment.destroy_all');

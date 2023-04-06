@@ -296,7 +296,14 @@
 
 
                                             </div>
-                                            <div class="tab-pane fade" id="custom-tabs-three-settings" role="tabpanel"
+                                            <div class="tab-pane fade show active" id="custom-tabs-three-settings"
+                                                role="tabpanel" aria-labelledby="custom-tabs-three-settings-tab">
+                                                <form method="POST" action="#" >
+                                                @csrf
+                                                {!! $comment_html !!}
+                                                </form>
+                                            </div> 
+                                            <!-- <div class="tab-pane fade" id="custom-tabs-three-settings" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-settings-tab">
                                                 <div class="timeline">
 
@@ -314,42 +321,15 @@
                                                             <div class="timeline-body">
                                                                 เข้าใจเนื้อหาได้ดี
                                                             </div>
-                                                            {{-- <div class="timeline-footer">
-                                                                <a class="btn btn-primary btn-sm">Read more</a>
-                                                                <a class="btn btn-danger btn-sm">Delete</a>
-                                                            </div> --}}
+                                                            
                                                         </div>
                                                     </div>
 
 
-                                                  {{--   <div>
-                                                        <i class="fas fa-user bg-green"></i>
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fas fa-clock"></i> 5 mins
-                                                                ago</span>
-                                                            <h3 class="timeline-header no-border"><a href="#">Sarah
-                                                                    Young</a> accepted your friend request</h3>
-                                                        </div>
-                                                    </div> --}}
+                                                  
 
 
-                                                    {{-- <div>
-                                                        <i class="fas fa-comments bg-yellow"></i>
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fas fa-clock"></i> 27 mins
-                                                                ago</span>
-                                                            <h3 class="timeline-header"><a href="#">Jay White</a>
-                                                                commented on your post</h3>
-                                                            <div class="timeline-body">
-                                                                Take me to your leader!
-                                                                Switzerland is small and neutral!
-                                                                We are more like Germany, ambitious and misunderstood!
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-warning btn-sm">View comment</a>
-                                                            </div>
-                                                        </div>
-                                                    </div> --}}
+                                                    
 
                                                     <div>
                                                         <i class="fas fa-comments bg-yellow"></i>
@@ -357,13 +337,11 @@
                                                             <span class="time"><i class="fas fa-clock"></i> 27 mins
                                                                 ago</span>
                                                             <h3 class="timeline-header"><a href="#">ครู ป้อ</a>
-                                                                {{-- commented on your post --}}</h3>
+                                                                </h3>
                                                             <div class="timeline-body">
                                                                มีความร่าเริง สนใจเนื้อหาที่เรียน
                                                             </div>
-                                                            {{-- <div class="timeline-footer">
-                                                                <a class="btn btn-warning btn-sm">View comment</a>
-                                                            </div> --}}
+                                                   
                                                         </div>
                                                     </div>
 
@@ -405,14 +383,11 @@
                                                                         allowfullscreen></iframe>
                                                                 </div>
                                                             </div>
-                                                           {{--  <div class="timeline-footer">
-                                                                <a href="#" class="btn btn-sm bg-maroon">See
-                                                                    comments</a>
-                                                            </div> --}}
+                                                       
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="tab-pane fade div_center" id="custom-tabs-three-promotion" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-promotion-tab">
                                                 <img src="{{ asset('images/promotion1.jpg') }}" width="90%">
