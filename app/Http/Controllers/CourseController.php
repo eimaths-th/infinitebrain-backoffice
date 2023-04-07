@@ -62,8 +62,7 @@ class CourseController extends Controller
                 //->where('levels.subject', $request->id)
                 ->orderBy("courses.id", "desc")
                 ->get();
-            //print_r($levels);
-            //exit();
+           
             return datatables()->of($course)
                 ->editColumn('student_name', function (Course $course) {
                     return $course->student_name . ' ' . $course->student_lastname;

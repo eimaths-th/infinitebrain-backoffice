@@ -214,6 +214,24 @@
                         </ul>
 
                     </li>
+                    <li>
+                        <a href="#">
+                            <i class="metismenu-icon pe-7s-comment"></i>
+                            Comment
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
+
+                        <ul>
+                            
+                            <li>
+                                <a href="{{ route('comment') }}">
+                                    <i class="metismenu-icon"></i>
+                                    Comment
+                                </a>
+                            </li>
+                        </ul>
+
+                    </li>
                 @endif
 
                 @if (Auth::user()->level == 3 || Auth::user()->level == 1)

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Support\Facades\Validator;
 
 use App\Http\Controllers\Controller;
@@ -10,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+use App\Models\Comment;
 
 use App\Models\Course;
 use App\Models\Level;
@@ -33,11 +33,11 @@ class SchoolController extends Controller
         }
         $users = Auth::guard('parent')->user();
         $id = $users->id;
+       
         $parent = ParentRegister::find($id);
-
-
-
-
+        
+        
+        
         $parent_html = '<div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
             <div class="col-md-4 border-right">
@@ -62,7 +62,7 @@ class SchoolController extends Controller
                                 class="form-control" name="code"
                                 value="' . $parent->code . '" readonly></div>
                     </div>
-
+                 
                     <div class="row mt-2">
                         <div class="col-md-12"><label
                                 class="labels">ชื่อ - นามสกุล</label><input type="text"
@@ -99,7 +99,7 @@ class SchoolController extends Controller
                         class="form-control"  name="password"
                         placeholder="enter password" value="">
                          </div>
-
+                
                     </div>
                     <div class="mt-5"><button
                             class="btn btn-primary profile-button"
@@ -114,12 +114,12 @@ class SchoolController extends Controller
         $student = Student::where([['pid', $id]])
             ->orderBy("id", "asc")
             ->get();
-
-        $i = 1;
+          
+            $i = 1;
 
         foreach ($student as $stu_result) {
 
-
+          
 
             $select_grade = "";
             $grade = array(
@@ -164,7 +164,7 @@ class SchoolController extends Controller
                 <div class="p-3 py-5">
                     <div
                         class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="text-right">ข้อมูลนักเรียน' . $i . '</h4>
+                        <h4 class="text-right">ข้อมูลนักเรียน'.$i.'</h4>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6"><label
@@ -175,7 +175,7 @@ class SchoolController extends Controller
                         <div class="col-md-6"><label
                                 class="labels">เพศ</label>
                                 <select class="form-control" id="sex[]" name="sex[]">' .
-                $select_sex . '
+                                 $select_sex . '
                                 </select>
                         </div>
                     </div>
@@ -202,8 +202,8 @@ class SchoolController extends Controller
                                 class="labels">วันเกิด </label><input type="text"
                                 class="form-control AddDate" placeholder="วันเกิด" name="birth_date[]"
                                 value="' . $stu_result->birth_date . '"></div>
-
-
+                                
+                
                     </div>
                     <div class="row mt-3">
                                 <div class="col-md-6">
@@ -214,10 +214,10 @@ class SchoolController extends Controller
                                 <div class="col-md-6"><label
                                 class="labels">ระดับชั้น</label>
                                 <select class="form-control" id="grade[]" name="grade[]">' .
-                $select_grade . '
+                                  $select_grade . '
                                 </select>
                         </div>
-
+                
                     </div>
                     <div class="mt-5 "><button
                             class="btn btn-primary profile-button"
@@ -227,7 +227,7 @@ class SchoolController extends Controller
         </div>
     </div>
             ';
-
+            
             if ($student) {
                 $course[] = Course::where([['student_id', $stu_result->id]])
                     ->orderBy("id", "asc")
@@ -247,13 +247,106 @@ class SchoolController extends Controller
                 }
             }
             $i++;
+
         }
+     $comment_html = "";
+        foreach ($student as $stu_result) {
 
-        //print_r($course_html);
-        //exit();
+   
+        // echo $stu_result;
+        
+        $comment = Comment::where([['sid', $stu_result->id]])
+            ->orderBy("created_at", "desc")
+            ->get();
+        // $comment = Comment::orderBy("id", "desc")
+        // ->get();
+        
 
+        
+        foreach ($comment as $comment_result) {
+            // <div class="col-md-4 border-right">
+            //     <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+            //         <span class="time"><i class="fas fa-clock"></i>   ' .date_format($comment_result->created_at,"d M Y  H:i:s "). '</span>
+            //         <h3 class="timeline-header"><a href="#">'.$comment_result->user.'</a>
+            //            </h3>
+            //         <div class="timeline-body">
+            //         '.$comment_result->comment.'
+            //         </div>
+            //     </div>
+            // </div>
+            $comment_html2="";
+            $pic = explode('|',$comment_result->photo);
+            foreach($pic as $pics){
+                $comment_html2 .= '
+     
+            
+    <img src="'.url('/').'/comments_images/'. $pics .'" height="100" width="100">
+   
+                ';
+            }
+            $img = "";
+            $cm ="";
+
+            if($comment_result->photo != ""){
+                $img.='
+                <div>
+                <i class="fa fa-camera bg-purple"></i>
+                <div class="timeline-item">
+                    <span class="time"><i class="fas fa-clock"></i>' .date_format($comment_result->created_at,"H:i "). '</span>
+                    <h3 class="timeline-header"><a href="#">'.$comment_result->user.'</a>        รูปน้องตอนเรียน
+                        </h3>
+                    <div class="timeline-body">
+                    <h3 style="color:green">'.$stu_result->nick_name.'</h3> '.$comment_html2.'
+                    </div>
+                </div>
+            </div>
+                ';
+            }else{
+                $img = '';
+            }
+            if($comment_result->comment != ""){
+                $cm .= '
+                <div>
+                    <i class="fas fa-envelope bg-blue"></i>
+                    <div class="timeline-item">
+                        <span class="time"><i class="fas fa-clock"></i>' .date_format($comment_result->created_at,"H:i "). '</span>
+                        <h3 class="timeline-header"><a href="#">'.$comment_result->user.'</a>
+                            </h3>
+                        <div class="timeline-body">
+                        <h3 style="color:green">'.$stu_result->nick_name.'    <span style="color:black; font-size:16px;">'.$comment_result->comment.'</span></h3> 
+                        </div>
+                        
+                    </div>
+                </div>
+                ';
+            }
+            $comment_html .= '
+
+            <div class="tab-pane " id="custom-tabs-three-settings" role="tabpanel"
+            aria-labelledby="custom-tabs-three-settings-tab">
+            <div class="timeline">
+
+                <div class="time-label">
+                    <span class="bg-green">' .date_format($comment_result->created_at,"d M Y "). '</span>
+                </div>
+
+                '.$cm.'
+                
+
+               '.$img.'
+
+
+                </div>
+                </div>
+                '; 
+               
+
+        }
+        
+    }
         return view('register.home')->with(['parent_html' =>  $parent_html])
             ->with(['student_html' =>  $student_html])
+            ->with(['comment_html' =>  $comment_html])
             ->with(['student_chart' =>  $course_html]);
     }
 
@@ -268,7 +361,7 @@ class SchoolController extends Controller
         //     'school_name' => 'required|string',
         //     'grade' => 'required|string',
 
-        // ]);
+        // ]); 
         // print_r($request);
         // if ($validator->fails()) {
         //     return response()->json(['errors' => $validator->errors()->all()]);
@@ -283,11 +376,11 @@ class SchoolController extends Controller
             //     'school_name' => $request->get('school_name')[$x],
             //     'grade' => $request->get('grade')[$x],
             //     'sex' => $request->get('sex')[$x],
-
+                
             // ];
-            $id = [];
+            $id=[];
             $id[$x] = $request->get('id')[$x];
-
+            
             // print_r($request['birth_date']);
             // exit();
 
@@ -297,16 +390,16 @@ class SchoolController extends Controller
             // exit();
 
             Student::find($id[$x])
-                ->update([
-                    'first_name' => $request['first_name'][$x],
-                    'last_name' => $request['last_name'][$x],
-                    'nick_name' => $request['nick_name'][$x],
-                    'birth_date' => $request['birth_date'][$x],
-                    'school_name' => $request['school_name'][$x],
-                    'grade' => $request['grade'][$x],
-                    'sex' => $request['sex'][$x],
+            ->update([
+                'first_name'=>$request['first_name'][$x],
+                'last_name'=>$request['last_name'][$x],
+                'nick_name'=>$request['nick_name'][$x],
+                'birth_date'=>$request['birth_date'][$x],
+                'school_name'=>$request['school_name'][$x],
+                'grade'=>$request['grade'][$x],
+                'sex'=>$request['sex'][$x],
 
-                ]);
+            ]);
         }
 
         // print_r($id);
@@ -317,73 +410,75 @@ class SchoolController extends Controller
 
         // $id[] = $request->get('id');
         // Student::find($id)->update($request->all());
-
+        
         // return response()->json(['success' => 'Parent updated successfully']);
         return redirect('/parent');
-    }
-    function updateParent(Request $request)
-    {
-        // $validator =  Validator::make($request->all(),[
-        //         'name_parent' => 'required|string',
-        //         'mobile' => 'required|string',
-        //         'street_address' => 'required|string',
-        //         'postcode' => 'required|string',
-        //         // 'password' => [
-        //         //     'required',
-        //         //     'string',
-        //         //     'regex:/^[a-zA-Z0-9 ]+$/',
-        //         //     'min:8',
 
-        //         // ],
-        //     ]);
+    
+}
+function updateParent(Request $request){
+    // $validator =  Validator::make($request->all(),[
+    //         'name_parent' => 'required|string',
+    //         'mobile' => 'required|string',
+    //         'street_address' => 'required|string',
+    //         'postcode' => 'required|string',
+    //         // 'password' => [
+    //         //     'required',
+    //         //     'string',
+    //         //     'regex:/^[a-zA-Z0-9 ]+$/',
+    //         //     'min:8',            
+
+    //         // ],
+    //     ]); 
         $password =  Hash::make($request->get('password'));
 
         // print_r($request);
 
+        
+        $id=$request->get('id');
 
-        $id = $request->get('id');
-
-        if ($request->get('password') == "") {
+        if($request->get('password')== ""){
             ParentRegister::find($id)
-                ->update([
-                    'name_parent' => $request['name_parent'],
-                    'mobile' => $request['mobile'],
-                    'street_address' => $request['street_address'],
-                    'postcode' => $request['postcode'],
-
-
-                ]);
-        } else {
-            $validator =  Validator::make($request->all(), [
-                'password' => [
-                    'string',
-                    'regex:/^[a-zA-Z0-9 ]+$/',
-                    'min:8',
-
-                ],
+            ->update([
+                'name_parent'=>$request['name_parent'],
+                'mobile'=>$request['mobile'],
+                'street_address'=>$request['street_address'],
+                'postcode'=>$request['postcode'],
+       
+    
             ]);
-            if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()->all()]);
-            }
-            ParentRegister::find($id)
-                ->update([
-                    'name_parent' => $request['name_parent'],
-                    'mobile' => $request['mobile'],
-                    'street_address' => $request['street_address'],
-                    'postcode' => $request['postcode'],
-                    'password' => $password,
-
-
-                ]);
+        }else{
+            $validator =  Validator::make($request->all(),[
+                'password' => [
+                        'string',
+                        'regex:/^[a-zA-Z0-9 ]+$/',
+                        'min:8',            
+        
+            ],
+        ]); 
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
         }
+        ParentRegister::find($id)
+            ->update([
+                'name_parent'=>$request['name_parent'],
+                'mobile'=>$request['mobile'],
+                'street_address'=>$request['street_address'],
+                'postcode'=>$request['postcode'],
+                'password'=>$password,
+       
+    
+            ]);
+        }
+   
 
-
-        //                 echo "<pre>";
-        // print_r($request->all());
-        // echo "</pre>";
-        // exit();
+//                 echo "<pre>";
+// print_r($request->all());
+// echo "</pre>";
+// exit();
         // ParentRegister::find($id)->update($request->all());
-
+        
         return redirect('/parent');
-    }
+
+} 
 }
