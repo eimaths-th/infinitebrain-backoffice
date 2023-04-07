@@ -141,18 +141,20 @@
 
 
 @section('content')
-<div id="loader"></div>
+    <div id="loader"></div>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card bg-light2 mb-3 ">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card bg-light2 mb-3 ">
 
-                <div class="card-header card-header-custom" style="background-color: #fff;">
-                    <div class="div_center avatar mx-auto white">
-                        <img class="rounded-circle img-responsive bg-white p-3 image" style="margin-top: 300px; border:solid #eeeded 1px ;" src="{{ asset('images/infinite.jpg') }}" alt="..." height="200">
+                    <div class="card-header card-header-custom" style="background-color: #fff;">
+                        <div class="div_center avatar mx-auto white">
+                            <img class="rounded-circle img-responsive bg-white p-3 image"
+                                style="margin-top: 300px; border:solid #eeeded 1px ;"
+                                src="{{ asset('images/infinite.jpg') }}" alt="..." height="200">
+                        </div>
                     </div>
-                </div>
 
 
                 <div class="card-body">
@@ -224,7 +226,7 @@
                                                 
                                             </form>
 
-                                        </div>
+                                            </div>
 
 
 
@@ -295,9 +297,9 @@
 
                                         </div>
                                         <div class="tab-pane fade " id="custom-tabs-three-settings" role="tabpanel" aria-labelledby="custom-tabs-three-settings-tab">
-                                            
+
                                                 {!! $comment_html !!}
-                                      
+
                                         </div>
                                         <!-- <div class="tab-pane fade" id="custom-tabs-three-settings" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-settings-tab">
@@ -317,15 +319,15 @@
                                                             <div class="timeline-body">
                                                                 เข้าใจเนื้อหาได้ดี
                                                             </div>
-                                                            
+
                                                         </div>
                                                     </div>
 
 
-                                                  
 
 
-                                                    
+
+
 
                                                     <div>
                                                         <i class="fas fa-comments bg-yellow"></i>
@@ -337,7 +339,7 @@
                                                             <div class="timeline-body">
                                                                มีความร่าเริง สนใจเนื้อหาที่เรียน
                                                             </div>
-                                                   
+
                                                         </div>
                                                     </div>
 
@@ -379,7 +381,7 @@
                                                                         allowfullscreen></iframe>
                                                                 </div>
                                                             </div>
-                                                       
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -446,9 +448,9 @@
                                                     <div class="timeline-item">
                                                         {{-- <span class="time"><i class="fas fa-clock"></i> 5 mins
                                                                 ago</span> --}}
-                                                        <h3 class="timeline-header no-border"> วันสงกรานต์</h3>
+                                                            <h3 class="timeline-header no-border"> วันสงกรานต์</h3>
+                                                        </div>
                                                     </div>
-                                                </div>
 
 
 
@@ -552,10 +554,10 @@
                                                 </div>
 
 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
                             </div>
 
@@ -566,21 +568,32 @@
                     </div>
 
 
+                    </div>
                 </div>
             </div>
-        </div>
-        <script>
-            $(document).ready(function() {
-                $(".AddDate").datepicker({
-                    dateFormat: "yy-mm-dd"
+            <script>
+
+
+                $(document).ready(function() {
+                    $(".AddDate").datepicker({
+                        dateFormat: "yy-mm-dd"
+                    });
+                    $(".nav-tabs a").click(function() {
+                        $(this).tab('show');
+                    });
+
+
+
+
                 });
-                $(".nav-tabs a").click(function() {
-                    $(this).tab('show');
-                });
 
+            </script>
+            <script type="text/javascript">
+                const warningTitleCSS = 'color:red; font-size:60px; font-weight: bold; -webkit-text-stroke: 1px black;';
+                const warningDescCSS = 'font-size: 18px;';
 
-
-
-            });
-        </script>
+                console.log('%cหยุด!', warningTitleCSS);
+                console.log("%cนี่เป็นคุณสมบัติการทำงานของเบราว์เซอร์ที่มีจุดมุ่งหมายให้ใช้สำหรับผู้พัฒนา หากผู้ใดบอกให้คุณคัดลอกแล้ววางข้อความบางอย่างที่นี่เพื่อเปิดใช้งานคุณสมบัติการทำงานของ ระบบ หรือเพื่อเข้าถึงบัญชีของบุคคลใดบุคคลหนึ่ง โดยมิชอบ คำบอกกล่าวเช่นนี้เป็นกลลวงและจะทำให้ผู้นั้นมีสิทธิ์เข้าถึงบัญชี ของคุณ", warningDescCSS);
+                //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
+              </script>
         @endsection
