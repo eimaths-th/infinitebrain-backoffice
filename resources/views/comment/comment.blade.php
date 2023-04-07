@@ -3,6 +3,9 @@
 @section('style')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="https://code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
     <script src="https://rawgit.com/RobinHerbots/Inputmask/5.x/dist/jquery.inputmask.js"></script>
 	<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
@@ -20,6 +23,9 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     @yield('style')
     <style>
         :root {
@@ -592,6 +598,8 @@
                         <thead>
                             <tr>
                                 <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
+                                <th>Code</th>
+                                <th>Student</th>
                                 <th>User</th>
                                 <th>Comment</th>
                                 <th>Photo</th>
@@ -638,6 +646,19 @@
                             <label for="Name">Code:</label>
                             <input type="text" class="form-control" name="code" id="AddCode" value="">
                         </div> -->
+                        <div class="form-group">
+                            <label for="Student">Student:</label><br>
+                            <select style="width: 100%;" class="select2 select2_single form-control" id="student"
+                                name="student" required>
+                                <option value="" selected>Select Student</option>
+                                @foreach ($data2 as $key2)
+                                    <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->first_name }} {{ $key2->last_name }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+                        </div>
+
                         <div class="form-group">
                             <label for="Name">User:</label>
                             <input type="text" class="form-control" name="user" id="user" value="{{ Str::upper(Auth::user()->name) }}" disabled>
@@ -764,6 +785,7 @@
                 }
             });
 
+           
             var table = $('#Listview').DataTable({
                 /*"aoColumnDefs": [
                 {
@@ -798,6 +820,14 @@
                         name: 'checkbox',
                         orderable: false,
                         searchable: false
+                    },
+                    {
+                        data: 'student_code',
+                        name: 'student_code'
+                    },
+                    {
+                        data: 'student_name',
+                        name: 'student_name'
                     },
                     {
                         data: 'user',
@@ -842,7 +872,6 @@
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
-
                 id = $(this).data('id');
                 $.ajax({
                     url: "comment/edit/" + id,
@@ -850,6 +879,7 @@
                     success: function(res) {
                         $('#EditModalBody').html(res.html);
                         $('#EditModal').modal('show');
+
                     }
                 });
 
@@ -862,7 +892,7 @@
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
-                // console.log($('#AddPhoto').val());
+                
 
                 $.ajax({
                     url: "{{ route('comment.store1') }}",
@@ -903,6 +933,7 @@
                     }
                 });
             });
+            
 
             $('#SubmitEditForm').click(function(e) {
                 //if (!confirm("Are you sure?")) return;
@@ -913,19 +944,22 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
 
-
+                
                 $.ajax({
                     url: "comment/save/" + id,
                     method: 'PUT',
                     data: {
                         user: $('#user').val(),
                         comment: $('#comment').val(),
+                        student: $('#student').val(),
+                        
                         // photo: $('#EditPhoto').val(),
                        
                         // grade: $('#EditGrade').val(),
                     },
-
+                    
                     success: function(result) {
+                        // console.log($('#student').val());
                         //console.log(result);
                         if (result.errors) {
                             $('.alert-danger').html('');
@@ -1017,8 +1051,9 @@
                     //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
                     $('#infinite').append("<input type='text' id='" + file.newName +
                        "' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
-                    //    console.log($('#infinite').val());
                     file.previewElement.id = file.newName;
+                    
+
                 }).on("removedfile", function(file) {
                     //alert(file.id);
                     //var name = file.name;

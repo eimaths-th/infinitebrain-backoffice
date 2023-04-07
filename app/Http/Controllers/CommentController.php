@@ -10,6 +10,7 @@ use File;
 use Illuminate\Support\Str;
 use App\Models\FileUpload;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Student;
 
 class CommentController extends Controller
 {
@@ -20,9 +21,25 @@ class CommentController extends Controller
         // $this->check_permission();
         if ($request->ajax()) {
             //sleep(2);
-            $comment = Comment::orderBy("id", "desc")
-                ->get();
-            return datatables()->of($comment)
+            $comment = Comment::select(
+                "comment.id as id",
+                "comment.comment as comment",
+                "comment.photo as photo",
+                "students.code as student_code",
+                "students.first_name as student_name",
+                "students.last_name as student_lastname",
+                "students.nick_name as student_nickname",
+                "comment.pid as pid",
+                "comment.user as user",
+
+            )
+                ->join("students", "students.id", "=", "comment.pid")
+
+
+                //->where('levels.subject', $request->id)
+                ->orderBy("comment.id", "desc")
+                ->get();           
+                 return datatables()->of($comment)
                 /*->editColumn('subject', function (Student $Student) {
                     if ($Student->subject == 1) {
                         $ltext = "Math";
@@ -32,17 +49,29 @@ class CommentController extends Controller
 
                     return $ltext;
                 })*/
+             
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
+                ->editColumn('student_name', function (Comment $comment) {
+                    return $comment->student_name . ' ' . $comment->student_lastname;
+                })
+             
                 ->editColumn('photo', function ($row) {
                     $html = "";
                     $pic = explode('|',$row->photo);
+                    if($row->photo!=""){
+
+                    
                     foreach($pic as $pics){
                         $html .= '<img src="'.url('/').'/comments_images/'.$pics.'" class="me-2" height="50" width="50">';
                     }
+                }else{
+                    $html = "";
+                }
                     return $html;
                 })
+              
                 ->addColumn('action', function ($row) {
                     
                     $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
@@ -50,8 +79,9 @@ class CommentController extends Controller
                     return $html;
                 })->rawColumns(['checkbox', 'photo', 'action'])->toJson();
         }
+        $student = Student::orderBy("first_name", "asc")->get();
 
-        return view('comment.comment');
+        return view('comment.comment')->with(['data2' => $student]);
     }
     public function edit($id)
     {
@@ -60,7 +90,29 @@ class CommentController extends Controller
         // $this->check_permission();
         
         $data = Comment::find($id);
+        $select_list_student = "";
+        
+        $student = Student::orderBy("id", "asc")->get();
+        foreach ($student as $keys) {
+            if ($data->pid == $keys->id) {
+                
+                $select_list_student .= '<option value="' . $keys->id . '" disabled selected>' . $keys->code . ' ' . $keys->first_name . ' ' . $keys->last_name . '</option>';
+
+            } else {
+                $select_list_student .= '<option value="' . $keys->id . '" disabled>' . $keys->code . ' ' . $keys->first_name . ' ' . $keys->last_name . '</option>';
+
+            }
+        }
         $html = '
+        <div class="form-group">
+                                <label for="Student">Student:</label><br>
+                                <select style="width: 100%;" class="select2 select2_single form-control" id="student"
+                                    name="student" value="'.$select_list_student.' " >
+                                    
+
+                                </select>
+                            </div>
+       
         <div class="form-group">
             <label for="Name">User:</label>
             <input type="text" class="form-control" name="user" id="user" value="' . $data->user . '" disabled>
@@ -97,13 +149,19 @@ class CommentController extends Controller
         //         // 'photo' => 'required|string',
         //     ]);
   
-        
+        // $validator =  Validator::make($request->all(), [
+        //     'pid' => 'required',
+            
+        // ]);
        
         // if ($validator->fails()) {
         //     //return response()->json(['errors' => $validator->errors()->all()]);
         //     return back()->withErrors(['errors' => $validator->errors()->all()]);
         // }
-      
+        
+
+        if($request->get('imgFiles')!=""){
+
         $filesa = $request->get('imgFiles');
         $fileas = "";
         foreach ($filesa as $filea) {
@@ -120,12 +178,22 @@ class CommentController extends Controller
             'user' => Auth::user()->name,
             'comment' => $request->get('comment'),
             'photo' => $fileas,
-            
+            'pid' => $request->get('student'),
+
         ]);
        
-        $comment->save();
-        
-        return redirect('/comment');
+    }else{
+        $comment = new Comment([
+            'user' => Auth::user()->name,
+            'comment' => $request->get('comment'),
+            'pid' => $request->get('student'),
+
+        ]);
+       
+    }
+    $comment->save();
+
+        return redirect('/comment')->with(['pid' => $request->get('student')]) ;
     }
     public function update(Request $request, $id)
     {
@@ -134,6 +202,7 @@ class CommentController extends Controller
             // 'code' => 'required|string|max:4|unique:parent,code,' . $id,
             'user' => 'required|string|max:255',
             'comment' => 'required|string|max:255',
+
             // 'mobile' => 'required|string|max:10',
             // 'photo' => 'max:255',
         ]);
