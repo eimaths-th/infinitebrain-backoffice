@@ -17,6 +17,8 @@ use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\GoogleController;
 use App\Models\ParentRegister;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -206,3 +208,11 @@ Route::post('/comment/upload', [CommentController::class, 'fileStore'])->name('c
 Route::post('/comment/upload/delete', [CommentController::class, 'fileDestroy'])->name('comment.delete');
 Route::delete('/comment/destroy/{id}', [CommentController::class, 'destroy'])->name('comment.destroy');
 Route::delete('/comment/destroy_all', [CommentController::class, 'destroy_all'])->name('comment.destroy_all');
+
+
+
+
+Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
+Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post'); 
+Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');

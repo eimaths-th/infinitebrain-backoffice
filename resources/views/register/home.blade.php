@@ -163,8 +163,31 @@
                     </div>
                     <div style="float: right"><a href="{{ route('parent.logout') }}"><i class="fa fa-power-off"></i> ออกจากระบบ</a></div>
                     <br>
-
+                    
                     <div class="row">
+                    
+                    <div class="col-md-12 div_center">
+
+
+                        <div class="row mb-3 ">
+                            <label for="success" class="col-md-4 col-form-label text-md-end"></label>
+
+                            <div class="col-md-6">
+
+                                @if ($message = Session::get('success'))
+                                <div class="alert alert-success">
+                                    <p>{{ $message }}</p>
+                                </div>
+                                @endif
+
+                                @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <p>{{ $errors->first() }}</p>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        </div>
                         <div class="col-md-12 col-sm-12">
                             <div class="card card-primary card-outline card-tabs">
                                 <div class="card-header p-0 pt-1 border-bottom-0">
@@ -198,6 +221,7 @@
                                             <form method="POST" action="{{ route('parent.saveparent') }}">
                                                 @csrf
                                                 {!! $parent_html !!}
+                                                
                                             </form>
 
                                         </div>

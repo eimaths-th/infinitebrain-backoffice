@@ -649,8 +649,8 @@
                         <div class="form-group">
                             <label for="Student">Student:</label><br>
                             <select style="width: 100%;" class="select2 select2_single form-control" id="student"
-                                name="student" required>
-                                <option value="" selected>Select Student</option>
+                                name="student" multiple="multiple">
+                                <!-- <option value="" selected>Select Student</option> -->
                                 @foreach ($data2 as $key2)
                                     <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->first_name }} {{ $key2->last_name }}
                                     </option>
@@ -772,7 +772,16 @@
                 }
 
             });
-
+            $(".select2_single").select2({
+                maximumSelectionLength: 1,
+                allowClear: true
+            });
+            $(".select2_multiple").select2({
+                maximumSelectionLength: 1,
+                //placeholder: "With Max Selection limit 4",
+                allowClear: true
+            });
+            
             $('#check-all').click(function() {
                 $(':checkbox.flat').prop('checked', this.checked);
             });

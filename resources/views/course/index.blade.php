@@ -103,7 +103,7 @@
 
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true"></span>
-                            </button>
+                            </button>   
                         </div>
                         <div class="form-group">
                             <label for="Student">Student Name:</label><br>

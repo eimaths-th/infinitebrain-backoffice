@@ -112,7 +112,15 @@
                                                 </label>
                                             </div>
                                         </div>
-
+                                        
+                              <div class="col-md-5 ">
+                                  <div class="checkbox">
+                                      <label>
+                                          <a href="{{ route('forget.password.get') }}">Reset Password</a>
+                                      </label>
+                                  </div>
+                              </div>
+                          
 
                                     </div>
 

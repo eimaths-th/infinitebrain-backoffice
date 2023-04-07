@@ -293,10 +293,10 @@ class SchoolController extends Controller
                 <i class="fa fa-camera bg-purple"></i>
                 <div class="timeline-item">
                     <span class="time"><i class="fas fa-clock"></i>' .date_format($comment_result->created_at,"H:i "). '</span>
-                    <h3 class="timeline-header"><a href="#">'.$comment_result->user.'</a>        รูปน้องตอนเรียน
+                    <h3 class="timeline-header"><a href="#">'.$comment_result->user.'</a>        
                         </h3>
                     <div class="timeline-body">
-                    <h3 style="color:green">'.$stu_result->nick_name.'</h3> '.$comment_html2.'
+                    '.$comment_html2.'
                     </div>
                 </div>
             </div>
@@ -313,7 +313,7 @@ class SchoolController extends Controller
                         <h3 class="timeline-header"><a href="#">'.$comment_result->user.'</a>
                             </h3>
                         <div class="timeline-body">
-                        <h3 style="color:green">'.$stu_result->nick_name.'    <span style="color:black; font-size:16px;">'.$comment_result->comment.'</span></h3> 
+                        <span style="color:black; font-size:16px;">'.$comment_result->comment.'</span>
                         </div>
                         
                     </div>
@@ -326,8 +326,12 @@ class SchoolController extends Controller
             aria-labelledby="custom-tabs-three-settings-tab">
             <div class="timeline">
 
+            <div class="time-label">
+            <span  style="background-color:black;color:gold !important; font-size:20px;             box-shadow: 5px 5px 5px grey;
+            ">            '.$stu_result->first_name.'  '.$stu_result->last_name.'            </span>
+        </div>
                 <div class="time-label">
-                    <span class="bg-green">' .date_format($comment_result->created_at,"d M Y "). '</span>
+                    <span class="bg-green" style=" box-shadow: 5px 5px 5px grey;">' .date_format($comment_result->created_at,"d M Y "). '</span>
                 </div>
 
                 '.$cm.'
@@ -344,6 +348,7 @@ class SchoolController extends Controller
         }
         
     }
+
         return view('register.home')->with(['parent_html' =>  $parent_html])
             ->with(['student_html' =>  $student_html])
             ->with(['comment_html' =>  $comment_html])
@@ -412,7 +417,10 @@ class SchoolController extends Controller
         // Student::find($id)->update($request->all());
         
         // return response()->json(['success' => 'Parent updated successfully']);
-        return redirect('/parent');
+        // return redirect('/parent');
+        return back()->with(['success' => 'Student updated successfully']);
+
+        // return redirect('/parent')->with('success', 'Student updated successfully.');
 
     
 }
@@ -478,7 +486,7 @@ function updateParent(Request $request){
 // exit();
         // ParentRegister::find($id)->update($request->all());
         
-        return redirect('/parent');
+        return back()->with(['success' => 'Parent updated successfully']);
 
 } 
 }
