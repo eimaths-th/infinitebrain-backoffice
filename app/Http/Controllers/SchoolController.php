@@ -255,8 +255,8 @@ class SchoolController extends Controller
    
         // echo $stu_result;
         
-        $comment = Comment::where([['pid', $stu_result->id]])
-            ->orderBy("created_at", "asc")
+        $comment = Comment::where([['sid', $stu_result->id]])
+            ->orderBy("created_at", "desc")
             ->get();
         // $comment = Comment::orderBy("id", "desc")
         // ->get();

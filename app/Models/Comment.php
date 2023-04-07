@@ -13,7 +13,7 @@ class Comment extends Model
         'user',
         'comment',
         'photo',
-        'pid',
+        'sid',
     ];
   
 }

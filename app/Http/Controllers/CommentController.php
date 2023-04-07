@@ -29,11 +29,11 @@ class CommentController extends Controller
                 "students.first_name as student_name",
                 "students.last_name as student_lastname",
                 "students.nick_name as student_nickname",
-                "comment.pid as pid",
+                "comment.sid as sid",
                 "comment.user as user",
 
             )
-                ->join("students", "students.id", "=", "comment.pid")
+                ->join("students", "students.id", "=", "comment.sid")
 
 
                 //->where('levels.subject', $request->id)
@@ -94,7 +94,7 @@ class CommentController extends Controller
         
         $student = Student::orderBy("id", "asc")->get();
         foreach ($student as $keys) {
-            if ($data->pid == $keys->id) {
+            if ($data->sid == $keys->id) {
                 
                 $select_list_student .= '<option value="' . $keys->id . '" disabled selected>' . $keys->code . ' ' . $keys->first_name . ' ' . $keys->last_name . '</option>';
 
@@ -178,7 +178,7 @@ class CommentController extends Controller
             'user' => Auth::user()->name,
             'comment' => $request->get('comment'),
             'photo' => $fileas,
-            'pid' => $request->get('student'),
+            'sid' => $request->get('student'),
 
         ]);
        
@@ -186,14 +186,14 @@ class CommentController extends Controller
         $comment = new Comment([
             'user' => Auth::user()->name,
             'comment' => $request->get('comment'),
-            'pid' => $request->get('student'),
+            'sid' => $request->get('student'),
 
         ]);
        
     }
     $comment->save();
 
-        return redirect('/comment')->with(['pid' => $request->get('student')]) ;
+        return redirect('/comment')->with(['sid' => $request->get('student')]) ;
     }
     public function update(Request $request, $id)
     {
