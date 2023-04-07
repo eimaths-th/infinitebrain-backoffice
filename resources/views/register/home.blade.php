@@ -569,7 +569,7 @@
                 const warningDescCSS = 'font-size: 18px;';
 
                 console.log('%cหยุด!', warningTitleCSS);
-                console.log("%cThis is a browser feature intended for developers. If someone told you to copy and paste something here to enable a web feature or \"hack\" someone's account, it is a scam and will give them access to your account.", warningDescCSS);
+                console.log("%cนี่เป็นคุณสมบัติการทำงานของเบราว์เซอร์ที่มีจุดมุ่งหมายให้ใช้สำหรับผู้พัฒนา หากผู้ใดบอกให้คุณคัดลอกแล้ววางข้อความบางอย่างที่นี่เพื่อเปิดใช้งานคุณสมบัติการทำงานของ ระบบ หรือเพื่อเข้าถึงบัญชีของบุคคลใดบุคคลหนึ่ง "โดยมิชอบ" คำบอกกล่าวเช่นนี้เป็นกลลวงและจะทำให้ผู้นั้นมีสิทธิ์เข้าถึงบัญชี ของคุณ", warningDescCSS);
                 //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
               </script>
         @endsection

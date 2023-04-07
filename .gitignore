@@ -2,6 +2,7 @@
 /public/build
 /public/hot
 /public/form_images
+/public/comment_images
 /public/receipt_form_images
 /public/storage
 /storage/*.key

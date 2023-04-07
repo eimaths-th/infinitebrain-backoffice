@@ -199,7 +199,7 @@
         }
 
         .form_none {
-             display: none; 
+             display: none;
         }
 
         .dropzone {
@@ -765,7 +765,7 @@
                                                 <option value="">Please Select</option>
                                                 <option value="Test: 1350 baht">Test: 1350 baht </option>
                                                 <option value="Test+ tutoring course: 1790 bath (1 class 2 hours)">Test+ tutoring course: 1790 bath (1 class 2 hours)</option>
-                                                
+
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Packages</label>
@@ -1191,7 +1191,7 @@
             },
             dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
             dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
-            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด		
+            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
             acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
 
             // The setting up of the dropzone
@@ -1261,17 +1261,17 @@
                     // do stuff with file.id ...
                 });
                 /*this.on("addedfile", function(file) {
-                	
+
                 }).on("removedfile", function(file) {
-                	
+
                 }).on("thumbnail", function(file) {
-                	
+
                 }).on("error", function(file) {
-                	
+
                 }).on("processing", function(file) {
-                	
+
                 }).on("uploadprogress", function(file) {
-                	
+
                 });*/
 
             }
@@ -1303,7 +1303,7 @@
             dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
             dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
             dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
-            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด		
+            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
             acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
             // The setting up of the dropzone
             init: function() {
@@ -1374,17 +1374,17 @@
                     // do stuff with file.id ...
                 });
                 /*this.on("addedfile", function(file) {
-                	
+
                 }).on("removedfile", function(file) {
-                	
+
                 }).on("thumbnail", function(file) {
-                	
+
                 }).on("error", function(file) {
-                	
+
                 }).on("processing", function(file) {
-                	
+
                 }).on("uploadprogress", function(file) {
-                	
+
                 });*/
 
             }
@@ -1413,7 +1413,7 @@
                 }
                 this.defaultShowErrors();
             }
-            /*  submitHandler: function() { 
+            /*  submitHandler: function() {
                 var spinner = $('#loader');
                 spinner.show();
                 return true;
@@ -1489,4 +1489,12 @@
             }
         });
     </script>
+    <script type="text/javascript">
+        const warningTitleCSS = 'color:red; font-size:60px; font-weight: bold; -webkit-text-stroke: 1px black;';
+        const warningDescCSS = 'font-size: 18px;';
+
+        console.log('%cหยุด!', warningTitleCSS);
+        console.log("%cนี่เป็นคุณสมบัติการทำงานของเบราว์เซอร์ที่มีจุดมุ่งหมายให้ใช้สำหรับผู้พัฒนา หากผู้ใดบอกให้คุณคัดลอกแล้ววางข้อความบางอย่างที่นี่เพื่อเปิดใช้งานคุณสมบัติการทำงานของ ระบบ หรือเพื่อเข้าถึงบัญชีของบุคคลใดบุคคลหนึ่ง "โดยมิชอบ" คำบอกกล่าวเช่นนี้เป็นกลลวงและจะทำให้ผู้นั้นมีสิทธิ์เข้าถึงบัญชี ของคุณ", warningDescCSS);
+        //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
+      </script>
 @endsection
