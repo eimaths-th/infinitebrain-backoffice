@@ -3,7 +3,7 @@
 @section('style')
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-    <script src="http://malsup.github.io/jquery.blockUI.js"></script>
+    <script src="https://malsup.github.io/jquery.blockUI.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://rawgit.com/RobinHerbots/Inputmask/5.x/dist/jquery.inputmask.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
@@ -144,12 +144,12 @@
 
 @section('content')
     <div id="loader"></div>
-    
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="card bg-light2 mb-3 ">
-                    
+
                     <div class="card-header card-header-custom" style="background-color: #fff;">
                         <div class="div_center avatar mx-auto white">
                             <img class="rounded-circle img-responsive bg-white p-3 image"
@@ -167,7 +167,7 @@
                         </div>
                         <div style="float: right"><a href="{{ route('parent.logout') }}"><i class="fa fa-power-off"></i> ออกจากระบบ</a></div>
                         <br>
-                       
+
                         <div class="row">
                             <div class="col-md-12 col-sm-12">
                                 <div class="card card-primary card-outline card-tabs">
@@ -223,9 +223,9 @@
                                                 </form>
 
                                             </div>
-                                        
 
-                               
+
+
 
                                             <div class="tab-pane fade show active" id="custom-tabs-three-profile"
                                                 role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
@@ -480,8 +480,8 @@
                                                             <h3 class="timeline-header no-border"> วันสงกรานต์</h3>
                                                         </div>
                                                     </div>
-                                                    
-                                                   
+
+
 
                                                     <div class="time-label">
                                                         <span class="bg-green">1 พฤษภาคม 2566</span>
@@ -582,7 +582,7 @@
                                                         </div>
                                                     </div>
 
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>
@@ -601,8 +601,8 @@
                 </div>
             </div>
             <script>
-               
-     
+
+
                 $(document).ready(function() {
                     $(".AddDate").datepicker({
                         dateFormat: "yy-mm-dd"
@@ -611,10 +611,10 @@
                         $(this).tab('show');
                     });
 
-                
-                    
-                    
+
+
+
                 });
-                
+
             </script>
         @endsection
