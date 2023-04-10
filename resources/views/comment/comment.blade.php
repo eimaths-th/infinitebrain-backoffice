@@ -1086,7 +1086,7 @@
                                 $('#dropzone_preview').css("display", "none");
                                 $('#dropzone-photo').addClass('form-focus-error');
                                 $('#dropzone-photo')
-                                    .find('.form-error-message').css("display", "block");
+                                    // .find('.form-error-message').css("display", "block");
                                 $('#dropzone-photo').css('border', 'solid 1px red');
                             }
                         }
