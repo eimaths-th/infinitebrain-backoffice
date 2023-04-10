@@ -18,5 +18,6 @@ class SubjectPrice extends Model
         'book',
         'book_old_price',
         'book_price',
+        'type',
     ];
 }

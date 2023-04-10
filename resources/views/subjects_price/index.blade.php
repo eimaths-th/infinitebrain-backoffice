@@ -53,6 +53,12 @@
                                 <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>Subject</th>
                                 <th>Level</th>
+                                <?php
+                        if(request()->get('id')==3){?>
+                                <th>Type</th>
+
+                        <?php }  
+                        ?>
                                 <th>Week</th>
                                 <th>Price</th>
                                 <th width="280px">Action</th>
@@ -93,6 +99,7 @@
                                 <span aria-hidden="true"></span>
                             </button>
                         </div>
+                       
                         <div class="form-group">
                             <label for="Subject">Subject:</label>
                             <select class="form-control" id="AddSubject" name="subject" disabled>
@@ -112,7 +119,20 @@
 
                             </select>
                         </div>
-                        
+                        <?php
+                        if(request()->get('id')==3){?>
+                        <div class="form-group">
+                            <label for="Type">Type:</label>
+                            <select class="form-control" id="AddType" name="type">
+                                <option value="" selected>Select Type</option>
+                                <option value="1">One Type แบบเดี่ยว</option>
+                                <option value="2">Couple แบบคู่</option>
+                               
+                            </select>
+                        </div>
+
+                        <?php }  
+                        ?>
                         <div class="form-group">
                             <label for="Title">Week:</label>
                             <select class="form-control" id="AddWeek" name="week">
@@ -262,21 +282,8 @@
 
             //$.noConflict();
             
-
-            var table = $('#Listview').DataTable({
-                /*"aoColumnDefs": [
-                {
-                'bSortable': true,
-                'aTargets': [0]
-                } //disables sorting for column one
-                ],
-                "searching": false,
-                "lengthChange": false,
-                "paging": false,
-                'iDisplayLength': 10,
-                "sPaginationType": "full_numbers",
-                "dom": 'T<"clear">lfrtip',
-                    */
+if(subject_id==3){
+    var table = $('#Listview').DataTable({
                 ajax: '',
                 serverSide: true,
                 processing: true,
@@ -307,9 +314,14 @@
                         name: 'level'
                     },
                     {
+                        data: 'type',
+                        name: 'type'
+                    },
+                    {
                         data: 'week',
                         name: 'week'
                     },
+                    
                     {
                         data: 'price',
                         name: 'price'
@@ -320,6 +332,55 @@
                     },
                 ]
             });
+}else{
+    var table = $('#Listview').DataTable({
+                ajax: '',
+                serverSide: true,
+                processing: true,
+                language: {
+                    loadingRecords: '&nbsp;',
+                    processing: '<div class="spinner"></div>'
+                },
+                aaSorting: [
+                    [0, "desc"]
+                ],
+                iDisplayLength: 10,
+                lengthMenu: [10, 20, 50, 75, 100],
+                stateSave: true,
+                sPaginationType: "full_numbers",
+                dom: 'T<"clear">lfrtip',
+                columns: [{
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'subject',
+                        name: 'subject'
+                    },
+                    {
+                        data: 'level',
+                        name: 'level'
+                    },
+                    
+                    {
+                        data: 'week',
+                        name: 'week'
+                    },
+                    
+                    {
+                        data: 'price',
+                        name: 'price'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
+                    },
+                ]
+            });
+}
+            
 
 
 
@@ -375,6 +436,8 @@
                         book: $('#AddBook').val(),
                         book_old_price: $('#AddBoprice').val(),
                         book_price: $('#AddBprice').val(),
+                        type: $('#AddType').val(),
+
                         _token: token,
                     },
                     success: function(result) {
@@ -429,6 +492,8 @@
                         book: $('#EditBook').val(),
                         book_old_price: $('#EditBoprice').val(),
                         book_price: $('#EditBprice').val(),
+                        type: $('#EditType').val(),
+
                     },
 
                     success: function(result) {
