@@ -218,8 +218,7 @@ Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPa
 Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
 Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
-Route::get('/receipt_school', [ReceiptSchoolController::class, 'index'])->name('receipt_school');
-Route::post('/receipt_school', [ReceiptSchoolController::class, 'index'])->name('receipt_school');
+Route::match(array('GET', 'POST'),'/receipt_school', [ReceiptSchoolController::class, 'index'])->name('receipt_school');
 Route::get('/receipt_school/{sub_id}', [ReceiptSchoolController::class, 'search'])->name('receipt_school.search');
 Route::get('/receipt_school/{sub_id}/{level_id}/{week}/{price}/{qty}/{discount}/{book_price}/{type}', [ReceiptSchoolController::class, 'searchs'])->name('receipt_school.searchs');
 Route::get('/receipt_school/{sub_id}/{level_id}/{book}/', [ReceiptSchoolController::class, 'sumbook'])->name('receipt_school.sumbook');
