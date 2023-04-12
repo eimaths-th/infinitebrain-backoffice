@@ -1,12 +1,40 @@
 @extends('layout')
-  
+<style>
+    .card-header-custom {
+        background-image: url("{{ asset('images/school_309241295.jpg') }}");
+        height: 420px;
+        background-repeat: no-repeat;
+    }
+
+    .div_center {
+        margin: auto;
+        text-align: center;
+
+    }
+
+    .aaa {
+        color: #d8e8b0;
+        font-weight: 1000;
+        font-size: 35px;
+
+    }
+</style>
 @section('content')
+<body style="background-color: #d8e8b0;">
+
 <main class="login-form">
   <div class="cotainer">
       <div class="row justify-content-center">
-          <div class="col-md-8">
-              <div class="card">
-                  <div class="card-header">Reset Password</div>
+          <div class="col-md-6">
+              <div class="card" style="-webkit-box-shadow: 0 30px 50px rgba(0,0,0,.2);box-shadow: 0 30px 50px rgba(0,0,0,.2);">
+                             <div class="card-header card-header-custom" style="background-color: #fff;margin-bottom:100px;">
+                                <div class="div_center avatar mx-auto white">
+                                    <img class="rounded-circle img-responsive bg-white p-3 image"
+                                        style="margin-top: 300px; border:solid #eeeded 1px ;"
+                                        src="{{ asset('images/infinite.jpg') }}" alt="..." height="200">
+                                </div>
+                            </div>
+                            <div class="card-header text-center aaa" style="text-shadow: 2px 2px 4px black;">Reset Password</div>
                   <div class="card-body">
   
                       <form action="{{ route('reset.password.post') }}" method="POST">
@@ -43,8 +71,8 @@
                               </div>
                           </div>
   
-                          <div class="col-md-6 offset-md-4">
-                              <button type="submit" class="btn btn-primary">
+                          <div class="col-md-6 offset-md-4" style="margin-bottom:25px">
+                              <button type="submit" class="btn btn-primary" style="    box-shadow: 5px 5px 10px gray; text-shadow: 2px 2px 4px #000000;width:50%; border-radius: 100px;">
                                   Reset Password
                               </button>
                           </div>
@@ -56,4 +84,5 @@
       </div>
   </div>
 </main>
+</body>
 @endsection
