@@ -189,6 +189,7 @@ class ReceiptSchoolController extends Controller
     }
     public function store(Request $request)
     {
+
         //
         $validator =  Validator::make($request->all(), [
             // 'type' => 'required|string',
@@ -200,15 +201,15 @@ class ReceiptSchoolController extends Controller
             'postcode' => 'required|string',
             'name_parent' => 'required|string',
             'mobile' => 'required|string',
-            'subject' => 'required|string',
-            'level' => 'required|string',
-            'week' => 'required|string',
-            'qty' => 'required|string',
-            'book' => 'required|string',
-            'bookprice' => 'required|string',
-            'discount' => 'required|string',
-            'price' => 'required|string',
-            'total' => 'required|string',
+            // 'subject' => 'required|string',
+            // 'level' => 'required|string',
+            // 'week' => 'required|string',
+            // 'qty' => 'required|string',
+            // 'book' => 'required|string',
+            // 'bookprice' => 'required|string',
+            // 'discount' => 'required|string',
+            // 'price' => 'required|string',
+            // 'total' => 'required|string',
 
             // 'file_att' => 'required|string
 
@@ -219,6 +220,7 @@ class ReceiptSchoolController extends Controller
         }
 
         
+
         $st = $request->get('student');
 
         $stu = "";
@@ -228,7 +230,6 @@ class ReceiptSchoolController extends Controller
         }
        
         $stu = rtrim($stu, "|");
-        $rnumber = Receipt_School_RunningNumber::generate($request->get('subject'));
 
         $data = new Receipt_School([
             'submission_date' => $request->get('submission_date'),
@@ -238,7 +239,6 @@ class ReceiptSchoolController extends Controller
             'pid' => $stu,
             'name_parent' => $request->get('name_parent'),
             'type'=>0,
-            'receipt_number'=>$rnumber,
             // 'sid' => $request->get('student'),
 
         ]);
@@ -246,21 +246,30 @@ class ReceiptSchoolController extends Controller
 
         $data->save();
         $rid = $data->id;
+        // print_r($request->get('receipt'));
 
-        $data2 = new SchoolPrice([
-            'subject' => $request->get('subject'),
-            'level' => $request->get('level'),
-            'week' => $request->get('week'),
-            'qty' => $request->get('qty'),
-            'book' => $request->get('book'),
-            'bookprice' => $request->get('bookprice'),
-            'discount' => $request->get('discount'),
-            'price' => $request->get('price'),
-            'total' => $request->get('total'),
-            'rid' => $rid,
-            'type'=> $request->get('type'),
-        ]);
-        $data2->save();
+        foreach ($request->get('receipt') as $value) {
+            $rnumber = Receipt_School_RunningNumber::generate($value['subject']);
+
+            $data2 = new SchoolPrice([
+                'subject' => $value['subject'],
+                'level' => $value['level'],
+                'week' => $value['week'],
+                'qty' => $value['qty'],
+                'book' => $value['book'],
+                'bookprice' => $value['book_price'],
+                'discount' => $value['discount'],
+                'price' => $value['price'],
+                'total' => $value['pp'],
+                'rid' => $rid,
+                'type'=> $value['type'],
+                'receipt_number'=>$rnumber,
+
+            ]);
+            $data2->save();
+        
+        }
+        
 
         return response()->json(['success' => 'Receive Add successfully']);
 

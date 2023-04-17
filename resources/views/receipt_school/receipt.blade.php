@@ -300,7 +300,7 @@
 
 <!-- Create Modal -->
 
-<div class="fade modal bd-example-modal-xl"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="CreateModal">
+<div class="fade modal bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="CreateModal">
     <div class="modal-dialog modal-xl" role="document">
         <form class="form" action="" method="POST">
             <div class="modal-content">
@@ -309,7 +309,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     </button>
 
-                </div>  
+                </div>
                 <!-- Modal body -->
                 <div class="modal-body">
 
@@ -395,7 +395,7 @@
                                     <input type="text" class="form-control" name="postcode" id="AddPostcode" value="">
                                 </div>
 
-                               
+
 
                                 <div class="form-group">
                                     <label for="Student">Student:</label><br>
@@ -423,7 +423,7 @@
 
                                             <th class="column-title"> NO.</th>
                                             <th class="column-title"> Subject</th>
-                                            <th class="column-title abc" >Type</th>
+                                            <th class="column-title abc">Type</th>
                                             <th class="column-title"> Start Level</th>
                                             <th class="column-title"> Week</th>
                                             <th class="column-title"> Qty</th>
@@ -438,7 +438,7 @@
                                     </thead>
 
                                     <tbody>
-                                        <tr class="firstTr">
+                                        <tr class="firstTr" style="display:none" id="tr1">
                                             <td width="5%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <input type="text" id="flown[]" name="flown[]" class="form-control has-feedback-left" value="1" required="required">
@@ -447,80 +447,85 @@
                                             </td>
                                             <td width="15%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <select style="width: 100%;" class="aaa form-control" id="subject_id" name="subject_id" required>
-                                        <option value="" selected>Select Subject</option>
+                                                    <select style="width: 100%;" class="aaa form-control" id="subject_id" name="subject_id" required>
+                                                        <option value="" selected>Select Subject</option>
 
-                                        @foreach ($data3 as $key2)
-                                        <option value="{{ $key2->id }}">{{ $key2->title }}
-                                        </option>
-                                        @endforeach
-                                        
+                                                        @foreach ($data3 as $key2)
+                                                        <option value="{{ $key2->id }}">{{ $key2->title }}
+                                                        </option>
+                                                        @endforeach
 
-                                    </select>                                                </div>
+
+                                                    </select>
+                                                </div>
                                             </td>
 
                                             <td width="10%" class="aabbcc">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 pm">
-                                    <select style="width: 100%;" class=" form-control" id="type" name="type"  >
-                                        <option value="0" selected >Select Type</option>
+                                                    <select style="width: 100%;" class=" form-control" id="type" name="type">
+                                                        <option value="0" selected>Select Type</option>
 
-                                        <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
+                                                        <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
                                         </option> -->
-                                        <option value="1">One Tpye แบบเดี่ยว
-                                        </option>
-                                        <option value="2">Couple แบบคู่
-                                        </option>
-                                        
+                                                        <option value="1">One Tpye แบบเดี่ยว
+                                                        </option>
+                                                        <option value="2">Couple แบบคู่
+                                                        </option>
 
-                                    </select>                                                </div>
+
+                                                    </select>
+                                                </div>
                                             </td>
 
                                             <td width="15%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <select style="width: 100%;" class=" form-control" id="level_id" name="level_id" >
-                                       
-                                        
+                                                    <select style="width: 100%;" class=" form-control" id="level_id" name="level_id">
 
-                                    </select>                                                            </div>
+
+
+                                                    </select>
+                                                </div>
                                             </td>
 
                                             <td width="7%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <select style="width: 100%;" class=" form-control" id="week" name="week" required>
-                                        <option value="" selected></option>
+                                                    <select style="width: 100%;" class=" form-control" id="week" name="week" required>
+                                                        <option value="" selected></option>
 
-                                        <option value="1">1 week
-                                        </option>
-                                        <option value="2">2 week
-                                        </option>
-                                        <option value="3">3 week
-                                        </option>
-                                        <option value="4">4 week
-                                        </option>
+                                                        <option value="1">1 week
+                                                        </option>
+                                                        <option value="2">2 week
+                                                        </option>
+                                                        <option value="3">3 week
+                                                        </option>
+                                                        <option value="4">4 week
+                                                        </option>
 
-                                    </select>                                                     </div>
+                                                    </select>
+                                                </div>
                                             </td>
                                             <td width="7%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <select style="width: 100%;" class=" form-control" id="qty" name="qty" required>
-                                        <option value="" selected></option>
+                                                    <select style="width: 100%;" class=" form-control" id="qty" name="qty" required>
+                                                        <option value="" selected></option>
 
-                                        <option value="1">1
-                                        </option>
-                                        <option value="2">2
-                                        </option>
-                                        <option value="3">3
-                                        </option>
-                                        <option value="4">4
-                                        </option>
-                                        <option value="5">5
-                                        </option>
+                                                        <option value="1">1
+                                                        </option>
+                                                        <option value="2">2
+                                                        </option>
+                                                        <option value="3">3
+                                                        </option>
+                                                        <option value="4">4
+                                                        </option>
+                                                        <option value="5">5
+                                                        </option>
 
-                                    </select>                                                     </div>
+                                                    </select>
+                                                </div>
                                             </td>
                                             <td width="7%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 ">
-                                                <input type="text" class="form-control" name="book" id="book" value="" >
+                                                    <input type="text" class="form-control" name="book" id="book" value="">
 
                                                 </div>
                                             </td>
@@ -532,29 +537,159 @@
 
                                             <td width="7%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 ">
-                                                <input type="text" class="form-control" name="discount" id="discount" value="" >
+                                                    <input type="text" class="form-control" name="discount" id="discount" value="">
 
                                                 </div>
                                             </td>
                                             <td width="10%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <select style="width: 100%;" class="bbb form-control" id="price" name="price" required>
-                                        <option value="" selected>Select Price</option>
+                                                    <select style="width: 100%;" class="bbb form-control" id="price" name="price" required>
+                                                        <option value="" selected>Select Price</option>
 
-                                        <option value="1">Old Price
-                                        </option>
-                                        <option value="2">New Price
-                                        </option>
-                                       
-                                    </select>                                                                            </div>
+                                                        <option value="1">Old Price
+                                                        </option>
+                                                        <option value="2">New Price
+                                                        </option>
+
+                                                    </select>
+                                                </div>
                                             </td>
-                                            
+
 
                                             <td width="15%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 pp">
                                                 </div>
                                             </td>
-                                            
+
+
+                                            {{-- <td><button type="button" id="removeRowt"
+                                                        class="btn btn-sm btn-danger btnRemoveg"><i
+                                                            class="fa fa-minus"></i></button></td> --}}
+
+                                        </tr>
+                                        <tr class="firstTr">
+                                            <td width="5%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <input type="text" id="flown[]" name="flown[]" class="form-control has-feedback-left" value="1" required="required">
+
+                                                </div>
+                                            </td>
+                                            <td width="15%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <select style="width: 100%;" class="aaa form-control" id="subject_id" name="subject_id" required>
+                                                        <option value="" selected>Select Subject</option>
+
+                                                        @foreach ($data3 as $key2)
+                                                        <option value="{{ $key2->id }}">{{ $key2->title }}
+                                                        </option>
+                                                        @endforeach
+
+
+                                                    </select>
+                                                </div>
+                                            </td>
+
+                                            <td width="10%" class="aabbcc">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 pm">
+                                                    <select style="width: 100%;" class=" form-control" id="type" name="type">
+                                                        <option value="0" selected>Select Type</option>
+
+                                                        <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
+                                        </option> -->
+                                                        <option value="1">One Tpye แบบเดี่ยว
+                                                        </option>
+                                                        <option value="2">Couple แบบคู่
+                                                        </option>
+
+
+                                                    </select>
+                                                </div>
+                                            </td>
+
+                                            <td width="15%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <select style="width: 100%;" class=" form-control" id="level_id" name="level_id">
+
+
+
+                                                    </select>
+                                                </div>
+                                            </td>
+
+                                            <td width="7%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <select style="width: 100%;" class=" form-control" id="week" name="week" required>
+                                                        <option value="" selected></option>
+
+                                                        <option value="1">1 week
+                                                        </option>
+                                                        <option value="2">2 week
+                                                        </option>
+                                                        <option value="3">3 week
+                                                        </option>
+                                                        <option value="4">4 week
+                                                        </option>
+
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td width="7%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <select style="width: 100%;" class=" form-control" id="qty" name="qty" required>
+                                                        <option value="" selected></option>
+
+                                                        <option value="1">1
+                                                        </option>
+                                                        <option value="2">2
+                                                        </option>
+                                                        <option value="3">3
+                                                        </option>
+                                                        <option value="4">4
+                                                        </option>
+                                                        <option value="5">5
+                                                        </option>
+
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td width="7%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 ">
+                                                    <input type="text" class="form-control" name="book" id="book" value="">
+
+                                                </div>
+                                            </td>
+                                            <td width="7%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 cc">
+
+                                                </div>
+                                            </td>
+
+                                            <td width="7%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 ">
+                                                    <input type="text" class="form-control" name="discount" id="discount" value="">
+
+                                                </div>
+                                            </td>
+                                            <td width="10%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <select style="width: 100%;" class="bbb form-control" id="price" name="price" required>
+                                                        <option value="" selected>Select Price</option>
+
+                                                        <option value="1">Old Price
+                                                        </option>
+                                                        <option value="2">New Price
+                                                        </option>
+
+                                                    </select>
+                                                </div>
+                                            </td>
+
+
+                                            <td width="15%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 pp">
+                                                </div>
+                                            </td>
+
 
                                             {{-- <td><button type="button" id="removeRowt"
                                                         class="btn btn-sm btn-danger btnRemoveg"><i
@@ -738,7 +873,7 @@
                                     </thead>
 
                                     <tbody>
-                                        <tr class="firstTr">
+                                        <tr class="?????">
                                             <td width="10%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <input type="text" id="flown[]" name="flown[]" class="form-control has-feedback-left" value="1" required="required">
@@ -800,7 +935,7 @@
                     <button type="button" class="btn btn-success" id="SubmitEditForm">Update</button>
                     <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                 </div>
-               
+
             </div>
         </form>
     </div>
@@ -943,7 +1078,7 @@
                                     </thead>
 
                                     <tbody>
-                                        <tr class="firstTr">
+                                        <tr class="?????">
                                             <td width="10%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <input type="text" id="flown[]" name="flown[]" class="form-control has-feedback-left" value="1" required="required">
@@ -1017,9 +1152,9 @@
 @section('script')
 <script>
     $(document).ready(function() {
-        $('.abc').hide();
-        $('.aabbcc').hide();
-
+        // $('.abc').prop( "disabled", true );
+        $('#type').prop("disabled", true);
+        // $("input").attr('disabled','disabled');
         $(".nav-tabs a").click(function() {
             $(this).tab('show');
         });
@@ -1291,119 +1426,165 @@
             });
 
         })
+        /////////
         let sub_id;
-    
-        $(document).on('change', '.aaa', function(e) {
-            e.preventDefault();
-            sub_id = $('#subject_id').val();
-            
-            if(sub_id==3){
-                $('.abc').show();
-                $('.aabbcc').show();
-                
-            }else{
-                $('.abc').hide();
-                $('.aabbcc').hide();
+
+        $(".aaa").change(function() {
+            // console.log($(this).parent().parent().parent().html())
+            // console.log($(this).parent().parent().parent().find('#type').html())
+            // $(this).parent().parent().parent().find('#discount').val(new Date().toDateString())
+            // $('#discount').val(new Date().toDateString())
+            var parent = $(this).parent().parent().parent();
+            sub_id = $(this).parent().parent().parent().find('#subject_id').val();
+            if (sub_id == 3) {
+                // parent.find('.abc').prop( "disabled", false );
+                parent.find('#type').prop("disabled", false);
+
+            } else {
+                // parent.find('.abc').prop( "disabled", true );
+                parent.find('#type').prop("disabled", true);
             }
-            // console.log(sub_id);
+
+
             $.ajax({
                 method: "GET",
-                url: "receipt_school/" + sub_id ,
+                url: "receipt_school/" + sub_id,
                 success: function(res) {
-                        $('#level_id').html(res.html);
-                        // console.log(res);
-                    
+                    parent.find('#level_id').html(res.html);
+                    // console.log(res);
+
                 }
-            }); //end ajax
+            });
         })
+
+        ////////
+
+
+        // $(document).on('change', '.aaa', function(e) {
+        //     e.preventDefault();
+        //     sub_id = $('#subject_id').val();
+
+        //     if(sub_id==3){
+        //         $('.abc').show();
+        //         $('.aabbcc').show();
+
+        //     }else{
+        //         $('.abc').hide();
+        //         $('.aabbcc').hide();
+        //     }
+        //     // console.log(sub_id);
+        //     $.ajax({
+        //         method: "GET",
+        //         url: "receipt_school/" + sub_id ,
+        //         success: function(res) {
+        //                 $('#level_id').html(res.html);
+        //                 // console.log(res);
+
+        //         }
+        //     }); //end ajax
+        // })
 
 
         $(document).on('change', '#book', function(e) {
-            
-            var sub_id = $('#subject_id').val();
-            var level_id = $('#level_id').val();
-            var book = $('#book').val();
+            var parent = $(this).parent().parent().parent();
 
-           
+            var sub_id = parent.find('#subject_id').val();
+            var level_id = parent.find('#level_id').val();
+            var book = parent.find('#book').val();
+
+            // var sub_id = $('#subject_id').val();
+            // var level_id = $('#level_id').val();
+            // var book = $('#book').val();
+
+
             $.ajax({
-            type: "GET",
-            dataType: 'JSON',
-            url: "receipt_school/" + sub_id +"/"+ level_id+"/"+book ,
-            success: function(res) {
-                $('.cc').html(res.html);
+                type: "GET",
+                dataType: 'JSON',
+                url: "receipt_school/" + sub_id + "/" + level_id + "/" + book,
+                success: function(res) {
+                    parent.find('.cc').html(res.html);
 
-                // $('.pp').html(res.html);
-                //console.log(result);
-                // $("#AddLevel").html(result.html);
-                // $("#AddBook").html(result.html2);
-            }
-        });
+                    // $('.pp').html(res.html);
+                    //console.log(result);
+                    // $("#AddLevel").html(result.html);
+                    // $("#AddBook").html(result.html2);
+                }
+            });
 
         })
-        function sum(){
-        var sub_id = $('#subject_id').val();
-        var level_id = $('#level_id').val();
-        var week = $('#week').val();
-        var price = $('#price').val();
-        var qty = $('#qty').val();
-        var discount = $('#discount').val();
-        var book_price = $('#book_price').val();
-        var type = $('#type').val();
-        // console.log(subject_id);
-        // console.log(level_id);
-        // console.log(week);
-        // console.log(price);
+        $(document).on('change', '.firstTr', function(e) {
+            var parent = $(this);
 
-        $.ajax({
-            type: "GET",
-            dataType: 'JSON',
-            url: "receipt_school/" + sub_id +"/"+ level_id +"/"+ week +"/"+ price+"/"+qty+"/"+discount+"/"+book_price+"/"+type,
-            success: function(res) {
-                $('.pp').html(res.html);
-                //console.log(result);
-                // $("#AddLevel").html(result.html);
-                // $("#AddBook").html(result.html2);
+            var sub_id = parent.find('#subject_id').val();
+            var level_id = parent.find('#level_id').val();
+            var week = parent.find('#week').val();
+            var price = parent.find('#price').val();
+            var qty = parent.find('#qty').val();
+            var discount = parent.find('#discount').val();
+            var book_price = parent.find('#book_price').val();
+            var type = parent.find('#type').val();
+            // console.log(subject_id);
+            // console.log(level_id);
+            // console.log(week);
+            // console.log(price);
+            // console.log(qty);
+            // console.log(discount);
+            // console.log(book_price);
+            // console.log(type);
+
+            if (sub_id != "" && level_id != "" && week != "" && price != "" && price != "" && qty != "" && discount != "" && book_price != "" && type != "") {
+                $.ajax({
+                    type: "GET",
+                    dataType: 'JSON',
+                    url: "receipt_school/" + sub_id + "/" + level_id + "/" + week + "/" + price + "/" + qty + "/" + discount + "/" + book_price + "/" + type,
+                    success: function(res) {
+                        parent.find('.pp').html(res.html);
+                        //console.log(result);
+                        // $("#AddLevel").html(result.html);
+                        // $("#AddBook").html(result.html2);
+                    }
+                });
             }
-        });
-        }
-        $(document).on('change', '#type', function(e) {
-        sum()
-       
 
-        });
-        $(document).on('change', '#discount', function(e) {
-        sum()
-       
+        })
+        // $(document).on('change', '#type', function(e) {
+        // sum()
 
-        });
-        $(document).on('change', '#book', function(e) {
-        sum()
-       
 
-        });$(document).on('change', '#qty', function(e) {
-        sum()
-       
+        // });
+        // $(document).on('change', '#discount', function(e) {
+        // sum()
 
-        });$(document).on('change', '#level_id', function(e) {
-        sum()
-       
 
-        });
-        $(document).on('change', '#subject_id', function(e) {
-        sum()
-       
+        // });
+        // $(document).on('change', '#book', function(e) {
+        // sum()
 
-        });
-        $(document).on('change', '#week', function(e) {
-        sum()
-       
 
-        });
-        $(document).on('change', '.bbb', function(e) {
-        sum()
-       
+        // });$(document).on('change', '#qty', function(e) {
+        // sum()
 
-        });
+
+        // });$(document).on('change', '#level_id', function(e) {
+        // sum()
+
+
+        // });
+        // $(document).on('change', '#subject_id', function(e) {
+        // sum()
+
+
+        // });
+        // $(document).on('change', '#week', function(e) {
+        // sum()
+
+
+        // });
+        // $(document).on('change', '.bbb', function(e) {
+        // sum()
+
+
+        // });
 
         // Create product Ajax request.
         $('#SubmitCreateForm').click(function(e) {
@@ -1412,7 +1593,26 @@
             $('.alert-danger').hide();
             $('.alert-success').html('');
             $('.alert-success').hide();
-
+            var arr = new Array();
+            $('.firstTr').each(function(i, obj) {
+                if (i > 0) {
+                    // console.log($(obj).find('#price').val());
+                    var receiptData = {
+                        subject: $(obj).find('#subject_id').val(),
+                        level: $(obj).find('#level_id').val(),
+                        week: $(obj).find('#week').val(),
+                        qty: $(obj).find('#qty').val(),
+                        book: $(obj).find('#book').val(),
+                        book_price: $(obj).find('#book_price').val(),
+                        discount: $(obj).find('#discount').val(),
+                        price: $(obj).find('#price').val(),
+                        pp: $(obj).find('#pp').val(),
+                        type: $(obj).find('#type').val(),
+                    }
+                    arr.push(receiptData)
+                }
+                //test
+            });
             $.ajax({
                 url: "{{ route('receipt_school.store') }}",
                 method: 'post',
@@ -1431,17 +1631,18 @@
                     postcode: $('#AddPostcode').val(),
                     name_parent: $('#AddParent').val(),
                     mobile: $('#AddMobile').val(),
-                    subject:$('#subject_id').val(),
-                    level:$('#level_id').val(),
-                    week:$('#week').val(),
-                    qty:$('#qty').val(),
-                    book:$('#book').val(),
-                    bookprice:$('#book_price').val(),
-                    discount:$('#discount').val(),
-                    price:$('#price').val(),
-                    total:$('#pp').val(),
-                    type:$('#type').val(),
-                 
+                    receipt: arr ,
+                    // subject:$('#subject_id').val(),
+                    // level:$('#level_id').val(),
+                    // week:$('#week').val(),
+                    // qty:$('#qty').val(),
+                    // book:$('#book').val(),
+                    // bookprice:$('#book_price').val(),
+                    // discount:$('#discount').val(),
+                    // price:$('#price').val(),
+                    // total:$('#pp').val(),
+                    // type:$('#type').val(),
+
                     // package: $('#AddPackage').val(),
                     // file_att: $('#AddFile').val(),
                     // sfield: $('#Sfield').val(),
@@ -1719,10 +1920,13 @@
             // ส่วนของการ clone ข้อมูลด้วย jquery clone() ค่า true คือ
             // การกำหนดให้ ไม่ต้องมีการ ดึงข้อมูลจากค่าเดิมมาใช้งาน
             // รีเซ้ตเป็นค่าว่าง ถ้ามีข้อมูลอยู่แล้ว ทั้ง select หรือ input
-            $(".firstTr:eq(0)").clone(true)
-                .find("input").attr("value", "").end()
-                .find("select").attr("value", "").end()
-                .appendTo($("#myTbl"));
+            // $(".firstTr1:eq(0)").clone(true)
+            //     .find("input").attr("value", "").end()
+            //     .find("select").attr("value", "").end()
+            //     .appendTo($("#myTbl"));
+            var newrow = $("#tr1").clone(true);
+            newrow.show();
+            $("#myTbl").append(newrow);
         });
         $("#removeRow").click(function() {
             // // ส่วนสำหรับการลบ
@@ -1758,7 +1962,7 @@
             // ส่วนของการ clone ข้อมูลด้วย jquery clone() ค่า true คือ
             // การกำหนดให้ ไม่ต้องมีการ ดึงข้อมูลจากค่าเดิมมาใช้งาน
             // รีเซ้ตเป็นค่าว่าง ถ้ามีข้อมูลอยู่แล้ว ทั้ง select หรือ input
-            $(".firstTr:eq(0)").clone(true)
+            $(".firstTr1:eq(0)").clone(true)
                 .find("input").attr("value", "").end()
                 .find("select").attr("value", "").end()
                 .appendTo($("#myTbl2"));
@@ -1794,8 +1998,7 @@
         });
 
         $(this).closest(".abcd").remove();
-        
+
     });
-    
 </script>
 @endsection
