@@ -570,9 +570,9 @@ class ReceiptSchoolController extends Controller
                 $messageprice = "New Price";
             }
 
-            
-    
-           
+
+
+
             $data_html .= '<tr class="firstTr3">
         <td width="5%">
             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -642,7 +642,7 @@ class ReceiptSchoolController extends Controller
 
         <td width="7%">
             <div class="col-md-12 col-sm-12 col-xs-12 ffff">
-                <input type="text" id="rrbook" name="rrbook[]"
+                <input type="number" id="rrbook" name="rrbook[]"
                 class="form-control has-feedback-left" value="' . $dresult['book'] . '">
             </div>
         </td>
@@ -668,7 +668,7 @@ class ReceiptSchoolController extends Controller
         </td>
         <td width="7%">
             <div class="col-md-12 col-sm-12 col-xs-12">
-                <input type="text" id="rrdiscount" name="rrdiscount[]"
+                <input type="number" id="rrdiscount" name="rrdiscount[]"
                 class="form-control has-feedback-left" value="' . $dresult['discount'] . '">
             </div>
         </td>
@@ -884,15 +884,15 @@ class ReceiptSchoolController extends Controller
                 $select_list .= $key->price;
             }
         }
-        
-        
+
+
         $output = "";
         $outputsum = "";
         $output .= '<input type="text" id="pp" name="pp" class="form-control has-feedback-left" value="' . (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount . '" >
         ';
         $outputsum .= '' . (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount . '';
         return response()->json([
-            'html' =>  $output , 'outputsum' => $outputsum
+            'html' =>  $output, 'outputsum' => $outputsum
         ]);
     }
     public function sumbook($sub_id, $level_id, $book)
@@ -909,24 +909,44 @@ class ReceiptSchoolController extends Controller
         $sum = "";
         $sum = '' . (int)$select_list * (int)$book . ' ';
         return response()->json([
-            'html' =>  $output , 'sum' => $sum
+            'html' =>  $output, 'sum' => $sum
         ]);
     }
     public function store(Request $request)
     {
 
+
         //
+        // foreach ($request->receipt as $value) {
+        //     // print_r($value);
+        //     // exit();
+        //     // if($value['subject']!="" )
+        //     $validator = Validator::make($value, [
+        //         $value['subject'] => 'required',
+        //     ]);
+        //     if ($validator->fails()) {
+        //         return response()->json(['errors' => $validator->errors()->all()]);
+        //     }
+        // }
+
+            // print_r($request->receipt);
+            // exit();
         $validator =  Validator::make($request->all(), [
             // 'type' => 'required|string',
             'submission_date' => 'required|string',
-
             'street_address' => 'required|string',
             //'city' => 'required|string',
             //'province' => 'required|string',
             'postcode' => 'required|string',
             'name_parent' => 'required|string',
             'mobile' => 'required|string',
-            // 'subject' => 'required|string',
+            'receipt.*.subject' => 'required',
+            'receipt.*.level' => 'required',
+            'receipt.*.week' => 'required',
+            'receipt.*.qty' => 'required',
+            'receipt.*.price' => 'required',
+            'receipt.*.pp' => 'required',
+
             // 'level' => 'required|string',
             // 'week' => 'required|string',
             // 'qty' => 'required|string',
@@ -943,6 +963,8 @@ class ReceiptSchoolController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
+
+
 
 
 
@@ -993,6 +1015,8 @@ class ReceiptSchoolController extends Controller
                 'receipt_number' => 0,
 
             ]);
+            // print_r($data2['subject']);
+            // exit();
             $data2->save();
         }
 
@@ -1032,100 +1056,98 @@ class ReceiptSchoolController extends Controller
         $rrdiscount  = $request->get('rrdiscount');
         $rrprice  = $request->get('rrprice');
         $rrtotal  = $request->get('rrtotal');
-    // echo $book_price;
-    // print_r($request->all()) ;
-    // exit();
-    // ParentRegister::find($request->parentID)->update($request->name_parent);
-    ParentRegister::where('id',$request->get('name_parent'))->update(['name_parent'=> $request->get('name_parent2')]);
-    Receipt_School::find($id)->update($request->all());
-// echo $id;
-$rdata = array();
+        // echo $book_price;
+        // print_r($request->all()) ;
+        // exit();
+        // ParentRegister::find($request->parentID)->update($request->name_parent);
+        ParentRegister::where('id', $request->get('name_parent'))->update(['name_parent' => $request->get('name_parent2')]);
+        Receipt_School::find($id)->update($request->all());
+        // echo $id;
+        $rdata = array();
 
-SchoolPrice::where('rid', $id)->delete();
-for ($xx = 0; $xx < count($rrsub); $xx++) {
-    if($rrtype!=""){
-        $rdata = new SchoolPrice([
-            'rid' => $id,
-            'subject' => $rrsub[$xx],
-            'level' => $rrlevel[$xx],
-            'week' => $rrweek[$xx],
-            'qty' => $rrqty[$xx],
-            'book' => $rrbook[$xx],
-            'bookprice' => $rrbookprice[$xx],
-            'type' => $rrtype[$xx],
-            'discount' => $rrdiscount[$xx],
-            'price' => $rrprice[$xx],
-            'total' => $rrtotal[$xx],
-            'receipt_number'=>0,
-            //'amount' => $request->get('book_old_price'),
-        ]);
-    }else{
-        $rdata = new SchoolPrice([
-            'rid' => $id,
-            'subject' => $rrsub[$xx],
-            'level' => $rrlevel[$xx],
-            'week' => $rrweek[$xx],
-            'qty' => $rrqty[$xx],
-            'book' => $rrbook[$xx],
-            'bookprice' => $rrbookprice[$xx],
-            'type' => 0,
-            'discount' => $rrdiscount[$xx],
-            'price' => $rrprice[$xx],
-            'total' => $rrtotal[$xx],
-            'receipt_number'=>0,
-            //'amount' => $request->get('book_old_price'),
-        ]);
+        SchoolPrice::where('rid', $id)->delete();
+        for ($xx = 0; $xx < count($rrsub); $xx++) {
+            if ($rrtype != "") {
+                $rdata = new SchoolPrice([
+                    'rid' => $id,
+                    'subject' => $rrsub[$xx],
+                    'level' => $rrlevel[$xx],
+                    'week' => $rrweek[$xx],
+                    'qty' => $rrqty[$xx],
+                    'book' => $rrbook[$xx],
+                    'bookprice' => $rrbookprice[$xx],
+                    'type' => $rrtype[$xx],
+                    'discount' => $rrdiscount[$xx],
+                    'price' => $rrprice[$xx],
+                    'total' => $rrtotal[$xx],
+                    'receipt_number' => 0,
+                    //'amount' => $request->get('book_old_price'),
+                ]);
+            } else {
+                $rdata = new SchoolPrice([
+                    'rid' => $id,
+                    'subject' => $rrsub[$xx],
+                    'level' => $rrlevel[$xx],
+                    'week' => $rrweek[$xx],
+                    'qty' => $rrqty[$xx],
+                    'book' => $rrbook[$xx],
+                    'bookprice' => $rrbookprice[$xx],
+                    'type' => 0,
+                    'discount' => $rrdiscount[$xx],
+                    'price' => $rrprice[$xx],
+                    'total' => $rrtotal[$xx],
+                    'receipt_number' => 0,
+                    //'amount' => $request->get('book_old_price'),
+                ]);
+            }
+
+            // print_r($rdata);
+            $rdata->save();
+        }
+
+        // print_r ($rrid[1]);
+        // for ($x = 0; $x < count($request->get('rrsub')); $x++) {
+
+
+        //     if($rrid != null){
+        //         SchoolPrice::find($rrid[$x])
+        //         ->update([
+        //             'subject' => $rrsub[$x],
+        //             'level' => $rrlevel[$x],
+        //             'week' => $rrweek[$x],
+        //             'qty' => $rrqty[$x],
+        //             'book' => $rrbook[$x],
+        //             'bookprice' => $rrbookprice[$x],
+        //             'type' => $rrtype[$x],
+        //             'discount' => $rrdiscount[$x],
+        //             'price' => $rrprice[$x],
+        //             'total' => $rrtotal[$x],
+
+        //         ]);
+        //     }else{
+        //         $rdata = array();
+        //         $rdata = new SchoolPrice([
+        //             'subject' => $rrsub[$x],
+        //             'level' => $rrlevel[$x],
+        //             'week' => $rrweek[$x],
+        //             'qty' => $rrqty[$x],
+        //             'book' => $rrbook[$x],
+        //             'bookprice' => $rrbookprice[$x],
+        //             'type' => $rrtype[$x],
+        //             'discount' => $rrdiscount[$x],
+        //             'price' => $rrprice[$x],
+        //             'total' => $rrtotal[$x],
+        //             'rid'=> 0,
+        //             //'amount' => $request->get('book_old_price'),
+        //         ]);
+        //         $rdata->save();
+
+        //     }
+
+
+
+
+        // }
+        return response()->json(['success' => 'Receipt updated successfully']);
     }
-    
-    // print_r($rdata);
-    $rdata->save();
-}
-
-// print_r ($rrid[1]);
-// for ($x = 0; $x < count($request->get('rrsub')); $x++) {
-
- 
-//     if($rrid != null){
-//         SchoolPrice::find($rrid[$x])
-//         ->update([
-//             'subject' => $rrsub[$x],
-//             'level' => $rrlevel[$x],
-//             'week' => $rrweek[$x],
-//             'qty' => $rrqty[$x],
-//             'book' => $rrbook[$x],
-//             'bookprice' => $rrbookprice[$x],
-//             'type' => $rrtype[$x],
-//             'discount' => $rrdiscount[$x],
-//             'price' => $rrprice[$x],
-//             'total' => $rrtotal[$x],
-            
-//         ]);
-//     }else{
-//         $rdata = array();
-//         $rdata = new SchoolPrice([
-//             'subject' => $rrsub[$x],
-//             'level' => $rrlevel[$x],
-//             'week' => $rrweek[$x],
-//             'qty' => $rrqty[$x],
-//             'book' => $rrbook[$x],
-//             'bookprice' => $rrbookprice[$x],
-//             'type' => $rrtype[$x],
-//             'discount' => $rrdiscount[$x],
-//             'price' => $rrprice[$x],
-//             'total' => $rrtotal[$x],
-//             'rid'=> 0,
-//             //'amount' => $request->get('book_old_price'),
-//         ]);
-//         $rdata->save();
-
-//     }
-
-
-    
-    
-// }
-return response()->json(['success' => 'Receipt updated successfully']);
-    }
-
-
 }

@@ -547,7 +547,7 @@
 
                                             <td width="7%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 ">
-                                                    <input type="text" class="form-control" name="discount" id="discount" value="">
+                                                    <input type="text" class="form-control" name="discount" id="discount" value="0">
 
                                                 </div>
                                             </td>
@@ -649,7 +649,7 @@
                                             </td>
                                             <td width="7%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 ">
-                                                    <input type="text" class="form-control" name="book" id="book" value="">
+                                                    <input type="number" class="form-control" name="book" id="book" value="">
 
                                                 </div>
                                             </td>
@@ -677,7 +677,7 @@
                                             </td>
                                             <td width="7%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 ">
-                                                    <input type="text" class="form-control" name="discount" id="discount" value="">
+                                                    <input type="number" class="form-control" name="discount" id="discount" value="0">
 
                                                 </div>
                                             </td>
@@ -1629,10 +1629,10 @@
                 async : false,
                 url: "receipt_school/" + sub_id + "/" + level_id + "/" + book,
                 success: function(res) {
-                    parent.find('#book_price').val(res.sum);
+                    parseInt(parent.find('#book_price').val(res.sum));
 
                     // $('.pp').html(res.html);
-                    //console.log(result);
+                    console.log($('#book_price').val(res.sum));
                     // $("#AddLevel").html(result.html);
                     // $("#AddBook").html(result.html2);
                 }
@@ -2045,7 +2045,7 @@
         });
         $("#removeRow").click(function() {
             // // ส่วนสำหรับการลบ
-            if ($("#myTbl tr").length > 2) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
+            if ($("#myTbl tr").length > 3) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
                 $("#myTbl tr:last").remove(); // ลบรายการสุดท้าย
             } else {
                 // เหลือ 1 รายการลบไม่ได้
