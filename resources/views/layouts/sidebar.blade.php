@@ -232,6 +232,21 @@
                         </ul>
 
                     </li>
+                    <li>
+                        <a href="{{ route('receipt_school') }}">
+                            <i class="metismenu-icon pe-7s-note2"></i>
+                            Receipt
+                        </a>
+
+                        <!-- <ul>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '2']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    GMEC
+                                </a>
+                            </li>
+                        </ul> -->
+                            </li>
                 @endif
 
                 @if (Auth::user()->level == 3 || Auth::user()->level == 1)

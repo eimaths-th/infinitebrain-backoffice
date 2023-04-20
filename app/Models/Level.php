@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Level extends Model
 {
     use HasFactory;
+    protected $table = 'levels';
 
     protected $fillable = [
         'title',

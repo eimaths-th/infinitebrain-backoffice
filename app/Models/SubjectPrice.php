@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SubjectPrice extends Model
 {
     use HasFactory;
+    protected $table="subject_prices";
 
     protected $fillable = [
         'subject_id',
