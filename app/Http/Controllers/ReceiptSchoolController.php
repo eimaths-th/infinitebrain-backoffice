@@ -885,6 +885,8 @@ class ReceiptSchoolController extends Controller
             }
         }
 
+
+
         $output = "";
         $outputsum = "";
         $output .= '<input type="text" id="pp" name="pp" class="form-control has-feedback-left" value="' . (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount . '" >
@@ -1008,7 +1010,6 @@ class ReceiptSchoolController extends Controller
             //'city' => 'required|string',
             //'province' => 'required|string',
             'postcode' => 'required|string',
-            'name_parent' => 'required|string',
             'mobile' => 'required|string',
             //'package' => 'required|string',
             //'file_att' => 'required|string',
@@ -1018,6 +1019,9 @@ class ReceiptSchoolController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
+
+        // echo $request->get('name_parent2');
+        // exit();
         $rrid  = $request->get('rrid');
         $rrsub  = $request->get('rrsub');
         $rrlevel  = $request->get('rrlevel');
@@ -1029,10 +1033,14 @@ class ReceiptSchoolController extends Controller
         $rrdiscount  = $request->get('rrdiscount');
         $rrprice  = $request->get('rrprice');
         $rrtotal  = $request->get('rrtotal');
-        // echo $book_price;
-        Receipt_School::find($id)->update($request->all());
-        // echo $id;
-        $rdata = array();
+    // echo $book_price;
+    // print_r($request->all()) ;
+    // exit();
+    // ParentRegister::find($request->parentID)->update($request->name_parent);
+    ParentRegister::where('id',$request->get('name_parent'))->update(['name_parent'=> $request->get('name_parent2')]);
+    Receipt_School::find($id)->update($request->all());
+// echo $id;
+$rdata = array();
 
         SchoolPrice::where('rid', $id)->delete();
         for ($xx = 0; $xx < count($rrsub); $xx++) {

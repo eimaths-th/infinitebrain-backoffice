@@ -77,7 +77,7 @@
 
                         <a class="btn btn-warning " href="#" onclick="export_report();"><i class="fa fa-print"></i>
                             Print</a>
-                        <a href="{{ route('receipts', ['sfield' => $data->sfield]) }}" class="btn btn-success"
+                        <a href="{{ route('receipt_school') }}" class="btn btn-success"
                             data-toggle="modal" data-target=".bd-example-modal-lg" id="CreateButton"><i
                                 class="fa fa-backward"></i> Back
                                 {{ $mes }}</a>

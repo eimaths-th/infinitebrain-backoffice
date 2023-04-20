@@ -54,8 +54,8 @@
                 <div class="d-inline-block dropdown">
                     <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg" id="CreateButton"><i class="fa fa-plus"></i> Create New
                         Receipt</a>
-                    <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
-                        All</a>
+                    <!-- <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
+                        All</a> -->
 
                 </div>
                 <!-- <div class="d-inline-block dropdown">
@@ -357,22 +357,22 @@
     </div>
 </div> -->
                                 </div>
-                                
+
                                 <div class="form-row">
                                     <div class="col-md-6">
-                                    <div class="form-group">
-                                    <label for="Parent">Name Parent:</label><br>
-                                    <select style="width: 100%;" class="parent select2 select2_single form-control" id="AddParent" name="name_parent" >
-                                        <!-- <option value="" selected>Select Student</option> -->
-                                        <option value="" selected>Select Parent</option>
-                                        @foreach ($data4 as $key2)
-                                        <option value="{{ $key2->id }}">{{ $key2->code }}     {{ $key2->name_parent }} 
-                                        </option>
-                                        @endforeach
+                                        <div class="form-group">
+                                            <label for="Parent">Name Parent:</label><br>
+                                            <select style="width: 100%;" class="parent select2 select2_single form-control" id="AddParent" name="name_parent">
+                                                <!-- <option value="" selected>Select Student</option> -->
+                                                <option value="" selected>Select Parent</option>
+                                                @foreach ($data4 as $key2)
+                                                <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->name_parent }}
+                                                </option>
+                                                @endforeach
 
-                                    </select>
-                                </div>
-                                        
+                                            </select>
+                                        </div>
+
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -418,7 +418,7 @@
 
                                     </select>
                                 </div>
-                        
+
 
 
 
@@ -450,7 +450,7 @@
                                         <tr class="firstTr" style="display:none" id="tr1">
                                             <td width="5%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
-                                                    <input type="text" id="flown[]" name="flown[]" class="form-control has-feedback-left" value="1" required="required">
+                                                    <input type="text" id="flown" name="flown" class="form-control has-feedback-left" value="1" required="required">
 
                                                 </div>
                                             </td>
@@ -469,7 +469,7 @@
                                                 </div>
                                             </td>
 
-                                            
+
                                             <td width="15%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <select style="width: 100%;" class=" form-control" id="level_id" name="level_id">
@@ -524,6 +524,7 @@
                                             </td>
                                             <td width="7%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 cc">
+                                                <input type="text" id="book_price" name="book_price" class="form-control has-feedback-left" value=""readonly >
 
                                                 </div>
                                             </td>
@@ -598,7 +599,7 @@
                                                 </div>
                                             </td>
 
-                                          
+
 
                                             <td width="15%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
@@ -654,6 +655,7 @@
                                             </td>
                                             <td width="7%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 cc">
+                                                <input type="text" id="book_price" name="book_price" class="form-control has-feedback-left" value=""readonly >
 
                                                 </div>
                                             </td>
@@ -788,7 +790,7 @@
                                     </div>
 
                                 </div>
-                                
+
                                 <div class="form-row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -813,9 +815,15 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="Parent_id">Parent ID:</label>
+                                        <input type="text" class="form-control" name="parentID" id="EditParentID" value="" hidden>
+                                    </div>
+                                </div>
 
-                                
-                        
+
+
                                 <!--<div class="form-row">
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
@@ -842,10 +850,10 @@
                                         <label for="Name">Street Address 2:</label>
                                         <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
                                     </div>-->
-                                    <div class="form-group">
+                                <div class="form-group">
                                     <label for="Student">Student:</label><br>
                                     <select style="width: 100%;" class="select2 select2_single form-control" name="student" id="EditStudent" name="EditStudent[]" multiple="multiple">
-                                       
+
 
                                     </select>
                                 </div>
@@ -859,7 +867,7 @@
 
                                         <tr class="headings">
 
-                                        <th class="column-title"> NO.</th>
+                                            <th class="column-title"> NO.</th>
                                             <th class="column-title"> Subject</th>
                                             <th class="column-title"> Start Level</th>
                                             <th class="column-title"> Week</th>
@@ -879,7 +887,7 @@
                                         <tr class="firstTr3">
                                             <td width="10%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
-                                                    <input type="text" id="flown[]" name="flown[]" class="form-control has-feedback-left" value="1" required="required">
+                                                    <input type="text" id="flown" name="flown" class="form-control has-feedback-left" value="1" required="required">
 
                                                 </div>
                                             </td>
@@ -1157,7 +1165,7 @@
     $(document).ready(function() {
         // $('.abc').prop( "disabled", true );
         $('#type').prop("disabled", true);
-        
+
         // $("input").attr('disabled','disabled');
         $(".nav-tabs a").click(function() {
             $(this).tab('show');
@@ -1375,8 +1383,9 @@
                     //$('#EditCity').val(res.data.city);
                     //$('#EditProvince').val(res.data.province);
                     $('#EditPostcode').val(res.data.postcode);
-                    $('#EditParent').val(res.data2.id);
+                    $('#EditParent').val(res.data2.name_parent);
                     $('#EditMobile').val(res.data.mobile);
+                    $('#EditParentID').val(res.data2.id);
                     $('#EditStudent').html(res.student)
                     $('#myTbl3 tbody').html(res.data_html);
                     //append
@@ -1488,7 +1497,7 @@
             });
         })
 
-        
+
         $(".aaa").change(function() {
             // console.log($(this).parent().parent().parent().html())
             // console.log($(this).parent().parent().parent().find('#type').html())
@@ -1543,54 +1552,28 @@
         //         }
         //     }); //end ajax
         // })
-        
-                $(document).on('change', '#rrbook', function(e) {
-                    var parent = $(this).parent().parent().parent();
-                    var sub_id = parent.find('#rrsub').val();
-                    var level_id = parent.find('#rrlevel').val();
-                    var book = parent.find('#rrbook').val();
-                    // console.log(book);
-                    $.ajax({
+
+        $(document).on('change', '#rrbook', function(e) {
+            var parent = $(this).parent().parent().parent();
+            var sub_id = parent.find('#rrsub').val();
+            var level_id = parent.find('#rrlevel').val();
+            var book = parent.find('#rrbook').val();
+            // console.log(book);
+            $.ajax({
                 type: "GET",
+                async : false,
                 dataType: 'JSON',
                 url: "receipt_school/" + sub_id + "/" + level_id + "/" + book,
                 success: function(res) {
                     parent.find('#rrbookprice').val(res.sum);
-
                     // $('.pp').html(res.html);
                     //console.log(result);
                     // $("#AddLevel").html(result.html);
                     // $("#AddBook").html(result.html2);
                 }
             });
-                })
-        $(document).on('change', '#book', function(e) {
-            var parent = $(this).parent().parent().parent();
-
-            var sub_id = parent.find('#subject_id').val();
-            var level_id = parent.find('#level_id').val();
-            var book = parent.find('#book').val();
-
-            // var sub_id = $('#subject_id').val();
-            // var level_id = $('#level_id').val();
-            // var book = $('#book').val();
-
-
-            $.ajax({
-                type: "GET",
-                dataType: 'JSON',
-                url: "receipt_school/" + sub_id + "/" + level_id + "/" + book,
-                success: function(res) {
-                    parent.find('.cc').html(res.html);
-
-                    // $('.pp').html(res.html);
-                    //console.log(result);
-                    // $("#AddLevel").html(result.html);
-                    // $("#AddBook").html(result.html2);
-                }
-            });
-
         })
+
         $(document).on('change', '.firstTr3', function(e) {
             var parent = $(this);
 
@@ -1603,6 +1586,8 @@
             var discount = parent.find('#rrdiscount').val();
             var book_price = parent.find('#rrbookprice').val();
             var type = parent.find('#rrtype').val();
+            // console.log($('#rrbookprice').val());
+
             // console.log(sub_id);
             // console.log(level_id);
             // console.log(week);
@@ -1627,10 +1612,35 @@
             }
 
         })
+        $(document).on('change', '#book', function(e) {
+            var parent = $(this).parent().parent().parent();
 
+            var sub_id = parent.find('#subject_id').val();
+            var level_id = parent.find('#level_id').val();
+            var book = parent.find('#book').val();
+            // var sub_id = $('#subject_id').val();
+            // var level_id = $('#level_id').val();
+            // var book = $('#book').val();
+
+
+            $.ajax({
+                type: "GET",
+                dataType: 'JSON',
+                async : false,
+                url: "receipt_school/" + sub_id + "/" + level_id + "/" + book,
+                success: function(res) {
+                    parent.find('#book_price').val(res.sum);
+
+                    // $('.pp').html(res.html);
+                    //console.log(result);
+                    // $("#AddLevel").html(result.html);
+                    // $("#AddBook").html(result.html2);
+                }
+            });
+        })
         $(document).on('change', '.firstTr', function(e) {
             var parent = $(this);
-
+            // var book = parent.find('#book').val();
             var sub_id = parent.find('#subject_id').val();
             var level_id = parent.find('#level_id').val();
             var week = parent.find('#week').val();
@@ -1639,6 +1649,7 @@
             var discount = parent.find('#discount').val();
             var book_price = parent.find('#book_price').val();
             var type = parent.find('#type').val();
+            // console.log(book_price);
             // console.log(subject_id);
             // console.log(level_id);
             // console.log(week);
@@ -1663,7 +1674,7 @@
             }
 
         })
-        
+
 
         // Create product Ajax request.
         $('#SubmitCreateForm').click(function(e) {
@@ -1710,7 +1721,7 @@
                     postcode: $('#AddPostcode').val(),
                     name_parent: $('#AddParent').val(),
                     mobile: $('#AddMobile').val(),
-                    receipt: arr ,
+                    receipt: arr,
                     // subject:$('#subject_id').val(),
                     // level:$('#level_id').val(),
                     // week:$('#week').val(),
@@ -1772,11 +1783,11 @@
             let rrweek = [];
             let rrqty = [];
             let rrbook = [];
-            let rrbookprice = []; 
-            let rrtype = []; 
-            let rrdiscount = []; 
-            let rrprice = []; 
-            let rrtotal = [];        
+            let rrbookprice = [];
+            let rrtype = [];
+            let rrdiscount = [];
+            let rrprice = [];
+            let rrtotal = [];
             // Initializing array values
             $("input[name='rrid[]']").each(function() {
                 rrid.push(this.value);
@@ -1801,18 +1812,17 @@
 
             $("input[name='rrbook[]']").each(function() {
                 rrbook.push(this.value);
-            }); 
+            });
             $("input[name='rrbookprice[]']").each(function() {
                 rrbookprice.push(this.value);
             });
             $("select[name='rrtype[]']").each(function() {
                 rrtype.push(this.value);
-            })
-            ;
+            });
             $("input[name='rrdiscount[]']").each(function() {
                 rrdiscount.push(this.value);
             });
-            
+
             $("select[name='rrprice[]']").each(function() {
                 rrprice.push(this.value);
             });
@@ -1825,14 +1835,14 @@
                 method: 'PUT',
                 data: {
                     submission_date: $('#EditSubmissiondate').val(),
-                    
+                    name_parent: $('#EditParentID').val(),
                     description: $('#EditDes').val(),
                     street_address: $('#EditAddress').val(),
                     //street_address2: $('#EditAddress2').val(),
                     //city: $('#EditCity').val(),
                     //province: $('#EditProvince').val(),
                     postcode: $('#EditPostcode').val(),
-                    name_parent: $('#EditParent').val(),
+                    name_parent2: $('#EditParent').val(),
                     mobile: $('#EditMobile').val(),
                     // package: $('#EditPackage').val(),
                     // file_att: $('#EditFile').val(),
@@ -1842,11 +1852,11 @@
                     rrweek: rrweek,
                     rrqty: rrqty,
                     rrbook: rrbook,
-                    rrbookprice:rrbookprice,
-                    rrtype:rrtype,
-                    rrdiscount:rrdiscount,
-                    rrprice:rrprice,
-                    rrtotal:rrtotal
+                    rrbookprice: rrbookprice,
+                    rrtype: rrtype,
+                    rrdiscount: rrdiscount,
+                    rrprice: rrprice,
+                    rrtotal: rrtotal
                 },
 
                 success: function(result) {
@@ -2026,6 +2036,9 @@
             //     .find("input").attr("value", "").end()
             //     .find("select").attr("value", "").end()
             //     .appendTo($("#myTbl"));
+
+            var flown = parseInt($('#flown').val()) + 1;
+            $('#flown').val(flown)
             var newrow = $("#tr1").clone(true);
             newrow.show();
             $("#myTbl").append(newrow);
@@ -2065,17 +2078,18 @@
             // การกำหนดให้ ไม่ต้องมีการ ดึงข้อมูลจากค่าเดิมมาใช้งาน
             // รีเซ้ตเป็นค่าว่าง ถ้ามีข้อมูลอยู่แล้ว ทั้ง select หรือ input
             $(".firstTr3:eq(0)").clone(true)
+
                 .find("input").attr("value", "").end()
                 .find("select").attr("value", "").end()
                 .appendTo($("#myTbl3"));
         });
         $("#removeRow2").click(function() {
             // // ส่วนสำหรับการลบ
-            if ($("#myTbl2 tr").length > 2) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
-                $("#myTbl2 tr:last").remove(); // ลบรายการสุดท้าย
+            if ($("#myTbl3 tr").length > 2) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
+                $("#myTbl3 tr:last").remove(); // ลบรายการสุดท้าย
             } else {
                 // เหลือ 1 รายการลบไม่ได้
-                if ($("#myTbl2 tr").length > 1) {
+                if ($("#myTbl3 tr").length > 1) {
                     //alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
                     toastr.success('ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ', {
                         timeOut: 5000
@@ -2085,12 +2099,12 @@
         });
         $(".btnRemoveg2").click(function() {
             // // ส่วนสำหรับการลบ
-            if ($("#myTbl2 tr").length > 2) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
+            if ($("#myTbl3 tr").length > 2) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
                 //$("#myTbl tr:last").remove(); // ลบรายการสุดท้าย
                 $(this).closest("tr").remove();
             } else {
                 // เหลือ 1 รายการลบไม่ได้
-                if ($("#myTbl2 tr").length > 1) {
+                if ($("#myTbl3 tr").length > 1) {
                     //alert("ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ");
                     toastr.success('ต้องมีรายการข้อมูลอย่างน้อย 1 รายการ', {
                         timeOut: 5000
