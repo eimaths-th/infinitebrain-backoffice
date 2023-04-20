@@ -425,7 +425,7 @@ class ReceiptSchoolController extends Controller
 
                 //->join("students", "students.id", "=", "receipts.student_id")
                 //->join("subjects", "subjects.id", "=", "receipts.subject_id")
-                //->join("levels", "levels.id", "=", "receipts.level_id") 
+                //->join("levels", "levels.id", "=", "receipts.level_id")
 
                 ->orderBy("receipt_school.id", "desc")
                 ->get();
@@ -435,7 +435,7 @@ class ReceiptSchoolController extends Controller
             // echo "</pre>";
             // exit();
             //print_r($levels);
-            //exit(); 
+            //exit();
 
 
             return datatables()->of($receipt)
@@ -583,7 +583,7 @@ class ReceiptSchoolController extends Controller
         </td>
         <td width="15%">
             <div class="col-md-12 col-sm-12 col-xs-12 ">
-                
+
                 <select style="width: 100%;" class=" form-control" id="rrsub" name="rrsub[]" value="' . $subject[0]->id . '" >
                 <option value="'  . $subject[0]->id . '" selected> ' . $subject[0]->title  . ' </option>
                 ' . $subject_list . '
@@ -591,7 +591,7 @@ class ReceiptSchoolController extends Controller
 
             </div>
         </td>
-        
+
         <td width="15%">
         <div class="col-md-12 col-sm-12 col-xs-12">
             <select style="width: 100%;" class=" form-control" id="rrlevel" name="rrlevel[]" value="' . $level[0]->id . '">
@@ -616,7 +616,7 @@ class ReceiptSchoolController extends Controller
                                                         <option value="4">4 week
                                                         </option>
                                                     </select>
-              
+
             </div>
         </td>
         <td width="7%">
@@ -636,7 +636,7 @@ class ReceiptSchoolController extends Controller
                                                         </option>
 
                                                     </select>
-       
+
     </div>
         </td>
 
@@ -663,7 +663,7 @@ class ReceiptSchoolController extends Controller
 
 
         </select>
-                
+
             </div>
         </td>
         <td width="7%">
@@ -683,7 +683,7 @@ class ReceiptSchoolController extends Controller
                                                         </option>
 
                                                     </select>
-                
+
             </div>
         </td>
         <td width="15%">
@@ -884,8 +884,8 @@ class ReceiptSchoolController extends Controller
                 $select_list .= $key->price;
             }
         }
-
-
+        
+        
         $output = "";
         $outputsum = "";
         $output .= '<input type="text" id="pp" name="pp" class="form-control has-feedback-left" value="' . (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount . '" >
