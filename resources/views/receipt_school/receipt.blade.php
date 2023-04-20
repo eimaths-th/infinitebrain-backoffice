@@ -58,7 +58,7 @@
                         All</a>
 
                 </div>
-                <div class="d-inline-block dropdown">
+                <!-- <div class="d-inline-block dropdown">
                     <div class="dropdown show">
                         <button class="btn btn-shadow btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" autoClose="true" aria-haspopup="true" aria-expanded="false">
                             <span class="btn-icon-wrapper pr-2 opacity-7">
@@ -72,7 +72,7 @@
                         </ul>
                     </div>
 
-                </div>
+                </div> -->
 
 
 
@@ -357,17 +357,27 @@
     </div>
 </div> -->
                                 </div>
+                                
                                 <div class="form-row">
                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="Parent">Name Parent:</label>
-                                            <input type="text" class="form-control" name="name_parent" id="AddParent" value="">
-                                        </div>
+                                    <div class="form-group">
+                                    <label for="Parent">Name Parent:</label><br>
+                                    <select style="width: 100%;" class="parent select2 select2_single form-control" id="AddParent" name="name_parent" >
+                                        <!-- <option value="" selected>Select Student</option> -->
+                                        <option value="" selected>Select Parent</option>
+                                        @foreach ($data4 as $key2)
+                                        <option value="{{ $key2->id }}">{{ $key2->code }}     {{ $key2->name_parent }} 
+                                        </option>
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                                        
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="Mobile">Mobile:</label>
-                                            <input type="text" class="AddPhone form-control" name="mobile" id="AddMobile" value="">
+                                            <input type="text" class=" form-control" name="mobile" id="AddMobile" value="" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -388,11 +398,11 @@
 
                                 <div class="form-group">
                                     <label for="Name">Address:</label>
-                                    <textarea class="form-control" name="address" id="AddAddress"></textarea>
+                                    <textarea class="form-control" name="address" id="AddAddress" value="" disabled></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="Postcode">Postcode:</label>
-                                    <input type="text" class="form-control" name="postcode" id="AddPostcode" value="">
+                                    <input type="text" class="form-control" name="postcode" id="AddPostcode" value="" disabled>
                                 </div>
 
 
@@ -401,15 +411,14 @@
                                     <label for="Student">Student:</label><br>
                                     <select style="width: 100%;" class="select2 select2_single form-control" id="AddStudent" name="student[]" multiple="multiple">
                                         <!-- <option value="" selected>Select Student</option> -->
-                                        @foreach ($data2 as $key2)
+                                        <!-- @foreach ($data2 as $key2)
                                         <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->first_name }} {{ $key2->last_name }}
                                         </option>
-                                        @endforeach
+                                        @endforeach -->
 
                                     </select>
                                 </div>
-
-
+                        
 
 
 
@@ -423,12 +432,12 @@
 
                                             <th class="column-title"> NO.</th>
                                             <th class="column-title"> Subject</th>
-                                            <th class="column-title abc">Type</th>
                                             <th class="column-title"> Start Level</th>
                                             <th class="column-title"> Week</th>
                                             <th class="column-title"> Qty</th>
                                             <th class="column-title"> Book</th>
                                             <th class="column-title"> Book Price</th>
+                                            <th class="column-title abc">Type</th>
                                             <th class="column-title"> Discount</th>
                                             <th class="column-title"> Price</th>
                                             <th class="column-title"> Total</th>
@@ -460,23 +469,7 @@
                                                 </div>
                                             </td>
 
-                                            <td width="10%" class="aabbcc">
-                                                <div class="col-md-12 col-sm-12 col-xs-12 pm">
-                                                    <select style="width: 100%;" class=" form-control" id="type" name="type">
-                                                        <option value="0" selected>Select Type</option>
-
-                                                        <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
-                                        </option> -->
-                                                        <option value="1">One Tpye แบบเดี่ยว
-                                                        </option>
-                                                        <option value="2">Couple แบบคู่
-                                                        </option>
-
-
-                                                    </select>
-                                                </div>
-                                            </td>
-
+                                            
                                             <td width="15%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <select style="width: 100%;" class=" form-control" id="level_id" name="level_id">
@@ -532,6 +525,22 @@
                                             <td width="7%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 cc">
 
+                                                </div>
+                                            </td>
+                                            <td width="10%" class="aabbcc">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 pm">
+                                                    <select style="width: 100%;" class=" form-control" id="type" name="type">
+                                                        <option value="0" selected>Select Type</option>
+
+                                                        <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
+                                        </option> -->
+                                                        <option value="1">One Tpye แบบเดี่ยว
+                                                        </option>
+                                                        <option value="2">Couple แบบคู่
+                                                        </option>
+
+
+                                                    </select>
                                                 </div>
                                             </td>
 
@@ -589,22 +598,7 @@
                                                 </div>
                                             </td>
 
-                                            <td width="10%" class="aabbcc">
-                                                <div class="col-md-12 col-sm-12 col-xs-12 pm">
-                                                    <select style="width: 100%;" class=" form-control" id="type" name="type">
-                                                        <option value="0" selected>Select Type</option>
-
-                                                        <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
-                                        </option> -->
-                                                        <option value="1">One Tpye แบบเดี่ยว
-                                                        </option>
-                                                        <option value="2">Couple แบบคู่
-                                                        </option>
-
-
-                                                    </select>
-                                                </div>
-                                            </td>
+                                          
 
                                             <td width="15%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
@@ -663,7 +657,22 @@
 
                                                 </div>
                                             </td>
+                                            <td width="10%" class="aabbcc">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 pm">
+                                                    <select style="width: 100%;" class=" form-control" id="type" name="type">
+                                                        <option value="0" selected>Select Type</option>
 
+                                                        <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
+                                        </option> -->
+                                                        <option value="1">One Tpye แบบเดี่ยว
+                                                        </option>
+                                                        <option value="2">Couple แบบคู่
+                                                        </option>
+
+
+                                                    </select>
+                                                </div>
+                                            </td>
                                             <td width="7%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 ">
                                                     <input type="text" class="form-control" name="discount" id="discount" value="">
@@ -724,7 +733,7 @@
 </div>
 <!-- Edit  Modal -->
 <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="EditModal">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <form class="form" action="" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
@@ -750,12 +759,12 @@
 
                     <div id="EditModalBody">
                         <ul class="nav nav-tabs">
-                            <li class="nav-item"><a data-toggle="tab" href="#tab-eg10-0" class="active nav-link">ข้อมูลลูกค้า</a></li>
-                            <li class="nav-item"><a data-toggle="tab" href="#tab-eg10-1" class="nav-link">รายการในใบเสร็จ</a></li>
+                            <li class="nav-item"><a data-toggle="tab" href="#tab-eg20-0" class="active nav-link">ข้อมูลลูกค้า</a></li>
+                            <li class="nav-item"><a data-toggle="tab" href="#tab-eg20-1" class="nav-link">รายการในใบเสร็จ</a></li>
 
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane active" id="tab-eg10-0" role="tabpanel">
+                            <div class="tab-pane active" id="tab-eg20-0" role="tabpanel">
                                 <div class="form-row">
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
@@ -778,27 +787,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label for="Grade">Grade:</label>
-                                            <input type="text" class="form-control" name="grade" id="EditGrade" value="">
-                                        </div>
-                                    </div>
                                 </div>
-                                <div class="form-row">
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label for="firstname">First Name:</label>
-                                            <input type="text" class="form-control" name="firstname" id="EditFirstname" value="">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label for="lastname">Last Name:</label>
-                                            <input type="text" class="form-control" name="lastname" id="EditLastname" value="">
-                                        </div>
-                                    </div>
-                                </div>
+                                
                                 <div class="form-row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -824,6 +814,8 @@
                                     </div>
                                 </div>
 
+                                
+                        
                                 <!--<div class="form-row">
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
@@ -850,30 +842,41 @@
                                         <label for="Name">Street Address 2:</label>
                                         <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
                                     </div>-->
+                                    <div class="form-group">
+                                    <label for="Student">Student:</label><br>
+                                    <select style="width: 100%;" class="select2 select2_single form-control" name="student" id="EditStudent" name="EditStudent[]" multiple="multiple">
+                                       
 
+                                    </select>
+                                </div>
 
 
                             </div>
-                            <div class="tab-pane" id="tab-eg10-1" role="tabpanel">
+                            <div class="tab-pane" id="tab-eg20-1" role="tabpanel">
 
-                                <table id="myTbl" class="table table-striped table-bordered responsive-utilities jambo_table " width="90%" align="center">
+                                <table id="myTbl3" class="table table-striped table-bordered responsive-utilities jambo_table " width="90%" align="center">
                                     <thead>
 
                                         <tr class="headings">
 
-                                            <th class="column-title"> NO.</th>
-                                            <th class="column-title"> Detail</th>
+                                        <th class="column-title"> NO.</th>
+                                            <th class="column-title"> Subject</th>
+                                            <th class="column-title"> Start Level</th>
+                                            <th class="column-title"> Week</th>
                                             <th class="column-title"> Qty</th>
-                                            <th class="column-title"> Unit</th>
-                                            <th class="column-title"> Unit Price</th>
+                                            <th class="column-title"> Book</th>
+                                            <th class="column-title"> Book Price</th>
+                                            <th class="column-title ">Type</th>
                                             <th class="column-title"> Discount</th>
+                                            <th class="column-title"> Price</th>
+                                            <th class="column-title"> Total</th>
                                             {{-- <th class="column-title"> </th> --}}
                                         </tr>
 
                                     </thead>
 
                                     <tbody>
-                                        <tr class="?????">
+                                        <tr class="firstTr3">
                                             <td width="10%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <input type="text" id="flown[]" name="flown[]" class="form-control has-feedback-left" value="1" required="required">
@@ -919,8 +922,8 @@
                                 </table>
                                 <div class="col-md-12" align="right">
 
-                                    <button type="button" id="addRow" class="btn btn-sm btn-primary btnAddg"><i class="fa fa-plus"></i></button>
-                                    <button type="button" id="removeRow" class="btn btn-sm btn-danger btnRemoveg"><i class="fa fa-minus"></i></button>
+                                    <button type="button" id="addRow2" class="btn btn-sm btn-primary btnAddg"><i class="fa fa-plus"></i></button>
+                                    <button type="button" id="removeRow2" class="btn btn-sm btn-danger btnRemoveg"><i class="fa fa-minus"></i></button>
                                 </div>
 
                             </div>
@@ -1124,7 +1127,7 @@
                                 </table>
                                 <div class="col-md-12" align="right">
 
-                                    <button type="button" id="addRow2" class="btn btn-sm btn-primary btnAddg2"><i class="fa fa-plus"></i></button>
+                                    <button type="button" id="" class="btn btn-sm btn-primary btnAddg2"><i class="fa fa-plus"></i></button>
                                     <button type="button" id="removeRow2" class="btn btn-sm btn-danger btnRemoveg2"><i class="fa fa-minus"></i></button>
                                 </div>
 
@@ -1154,6 +1157,7 @@
     $(document).ready(function() {
         // $('.abc').prop( "disabled", true );
         $('#type').prop("disabled", true);
+        
         // $("input").attr('disabled','disabled');
         $(".nav-tabs a").click(function() {
             $(this).tab('show');
@@ -1356,28 +1360,25 @@
 
             id = $(this).data('id');
             $.ajax({
-                url: "receipts/edit/" + id + "/0",
+                url: "receipt_school/" + id + "/0",
                 method: 'GET',
                 success: function(res) {
                     //console.log(res);
                     //$('#EditModalBody').html(res.html);
                     //console.log(res.data_html);
                     $('#receipt_number').val(res.data.receipt_number);
-                    $('#customer_code').val(res.data.receipt_customer_number);
+                    $('#customer_code').val(res.data2.code);
                     $('#EditSubmissiondate').val(res.data.submission_date);
                     //$('#EditPackage').val(res.data.package);
-                    $('#EditFirstname').val(res.data.first_name);
-                    $('#EditLastname').val(res.data.last_name);
-                    $('#EditDes').val(res.data.description);
-                    $('#EditGrade').val(res.data.grade);
                     $('#EditAddress').val(res.data.street_address);
                     //$('#EditAddress2').val(res.data.street_address2);
                     //$('#EditCity').val(res.data.city);
                     //$('#EditProvince').val(res.data.province);
                     $('#EditPostcode').val(res.data.postcode);
-                    $('#EditParent').val(res.data.name_parent);
+                    $('#EditParent').val(res.data2.id);
                     $('#EditMobile').val(res.data.mobile);
-                    $('#myTbl tbody').html(res.data_html);
+                    $('#EditStudent').html(res.student)
+                    $('#myTbl3 tbody').html(res.data_html);
                     //append
                     //$('#EditFile').val(res.data.file_att);
                     $('#EditModal').modal('show');
@@ -1426,9 +1427,68 @@
             });
 
         })
+
         /////////
         let sub_id;
+        $(".parent").change(function() {
+            parent = $('#AddParent').val();
+            console.log(parent);
+            $.ajax({
+                method: "GET",
+                url: "receipt_school/find/" + parent,
+                success: function(res) {
+                    $('#AddStudent').html(res.html);
+                    $('#AddMobile').val(res.html2);
+                    $('#AddAddress').val(res.html3);
+                    $('#AddPostcode').val(res.html4);
 
+                    // console.log(res);
+
+                }
+            });
+        })
+        $(document).on('change', '#rrsub', function(e) {
+            // console.log($(this).parent().parent().parent().html())
+            // console.log($(this).parent().parent().parent().find('#type').html())
+            // $(this).parent().parent().parent().find('#discount').val(new Date().toDateString())
+            // $('#discount').val(new Date().toDateString())
+            var parent = $(this).parent().parent().parent();
+            sub_id = $(this).parent().parent().parent().find('#rrsub').val();
+            total = $(this).parent().parent().parent().find('#rrtotal').val("");
+            book = $(this).parent().parent().parent().find('#rrbook').val("");
+            bookprice = $(this).parent().parent().parent().find('#rrbookprice').val("");
+            type = $(this).parent().parent().parent().find('#rrtype').val("");
+            qty = $(this).parent().parent().parent().find('#rrqty').val("");
+            price = $(this).parent().parent().parent().find('#rrprice').val("");
+            week = $(this).parent().parent().parent().find('#rrweek').val("");
+            discount = $(this).parent().parent().parent().find('#rrdiscount').val("");
+            weekh = $(this).parent().parent().parent().find('.weekh').hide();
+            qtyh = $(this).parent().parent().parent().find('.qtyh').hide();
+            priceh = $(this).parent().parent().parent().find('.priceh').hide();
+
+            // console.log(sub_id);
+            if (sub_id == 3) {
+                // parent.find('.abc').prop( "disabled", false );
+                parent.find('#rrtype').prop("disabled", false);
+
+            } else {
+                // parent.find('.abc').prop( "disabled", true );
+                parent.find('#rrtype').prop("disabled", true);
+            }
+
+
+            $.ajax({
+                method: "GET",
+                url: "receipt_school/" + sub_id,
+                success: function(res) {
+                    parent.find('#rrlevel').html(res.html);
+                    // console.log(res);
+
+                }
+            });
+        })
+
+        
         $(".aaa").change(function() {
             // console.log($(this).parent().parent().parent().html())
             // console.log($(this).parent().parent().parent().find('#type').html())
@@ -1483,8 +1543,27 @@
         //         }
         //     }); //end ajax
         // })
+        
+                $(document).on('change', '#rrbook', function(e) {
+                    var parent = $(this).parent().parent().parent();
+                    var sub_id = parent.find('#rrsub').val();
+                    var level_id = parent.find('#rrlevel').val();
+                    var book = parent.find('#rrbook').val();
+                    // console.log(book);
+                    $.ajax({
+                type: "GET",
+                dataType: 'JSON',
+                url: "receipt_school/" + sub_id + "/" + level_id + "/" + book,
+                success: function(res) {
+                    parent.find('#rrbookprice').val(res.sum);
 
-
+                    // $('.pp').html(res.html);
+                    //console.log(result);
+                    // $("#AddLevel").html(result.html);
+                    // $("#AddBook").html(result.html2);
+                }
+            });
+                })
         $(document).on('change', '#book', function(e) {
             var parent = $(this).parent().parent().parent();
 
@@ -1512,6 +1591,43 @@
             });
 
         })
+        $(document).on('change', '.firstTr3', function(e) {
+            var parent = $(this);
+
+            var sub_id = parent.find('#rrsub').val();
+            // var sub_id = parent.find('#rrsub').val();
+            var level_id = parent.find('#rrlevel').val();
+            var week = parent.find('#rrweek').val();
+            var price = parent.find('#rrprice').val();
+            var qty = parent.find('#rrqty').val();
+            var discount = parent.find('#rrdiscount').val();
+            var book_price = parent.find('#rrbookprice').val();
+            var type = parent.find('#rrtype').val();
+            // console.log(sub_id);
+            // console.log(level_id);
+            // console.log(week);
+            // console.log(price);
+            // console.log(qty);
+            // console.log(discount);
+            // console.log(book_price);
+            // console.log(type);
+
+            if (sub_id != "" && level_id != "" && week != "" && price != "" && price != "" && qty != "" && discount != "" && book_price != "" && type != "") {
+                $.ajax({
+                    type: "GET",
+                    dataType: 'JSON',
+                    url: "receipt_school/" + sub_id + "/" + level_id + "/" + week + "/" + price + "/" + qty + "/" + discount + "/" + book_price + "/" + type,
+                    success: function(res) {
+                        parent.find('#rrtotal').val(res.outputsum);
+                        //console.log(result);
+                        // $("#AddLevel").html(result.html);
+                        // $("#AddBook").html(result.html2);
+                    }
+                });
+            }
+
+        })
+
         $(document).on('change', '.firstTr', function(e) {
             var parent = $(this);
 
@@ -1547,44 +1663,7 @@
             }
 
         })
-        // $(document).on('change', '#type', function(e) {
-        // sum()
-
-
-        // });
-        // $(document).on('change', '#discount', function(e) {
-        // sum()
-
-
-        // });
-        // $(document).on('change', '#book', function(e) {
-        // sum()
-
-
-        // });$(document).on('change', '#qty', function(e) {
-        // sum()
-
-
-        // });$(document).on('change', '#level_id', function(e) {
-        // sum()
-
-
-        // });
-        // $(document).on('change', '#subject_id', function(e) {
-        // sum()
-
-
-        // });
-        // $(document).on('change', '#week', function(e) {
-        // sum()
-
-
-        // });
-        // $(document).on('change', '.bbb', function(e) {
-        // sum()
-
-
-        // });
+        
 
         // Create product Ajax request.
         $('#SubmitCreateForm').click(function(e) {
@@ -1687,48 +1766,66 @@
             $('.alert-success').html('');
             $('.alert-success').hide();
 
-            let rid = [];
-            let rdes = [];
-            let rqty = [];
-            let runit = [];
-            let runitp = [];
-            let rdis = [];
-
+            let rrid = [];
+            let rrsub = [];
+            let rrlevel = [];
+            let rrweek = [];
+            let rrqty = [];
+            let rrbook = [];
+            let rrbookprice = []; 
+            let rrtype = []; 
+            let rrdiscount = []; 
+            let rrprice = []; 
+            let rrtotal = [];        
             // Initializing array values
-            $("input[name='rid[]']").each(function() {
-                rid.push(this.value);
+            $("input[name='rrid[]']").each(function() {
+                rrid.push(this.value);
             });
 
 
-            $("input[name='rdes[]']").each(function() {
-                rdes.push(this.value);
+            $("select[name='rrsub[]']").each(function() {
+                rrsub.push(this.value);
             });
 
-            $("input[name='rqty[]']").each(function() {
-                rqty.push(this.value);
+            $("select[name='rrlevel[]']").each(function() {
+                rrlevel.push(this.value);
             });
 
-            $("input[name='runit[]']").each(function() {
-                runit.push(this.value);
+            $("select[name='rrweek[]']").each(function() {
+                rrweek.push(this.value);
             });
 
-            $("input[name='runitp[]']").each(function() {
-                runitp.push(this.value);
+            $("select[name='rrqty[]']").each(function() {
+                rrqty.push(this.value);
             });
 
-            $("input[name='rdis[]']").each(function() {
-                rdis.push(this.value);
+            $("input[name='rrbook[]']").each(function() {
+                rrbook.push(this.value);
+            }); 
+            $("input[name='rrbookprice[]']").each(function() {
+                rrbookprice.push(this.value);
             });
-
+            $("select[name='rrtype[]']").each(function() {
+                rrtype.push(this.value);
+            })
+            ;
+            $("input[name='rrdiscount[]']").each(function() {
+                rrdiscount.push(this.value);
+            });
+            
+            $("select[name='rrprice[]']").each(function() {
+                rrprice.push(this.value);
+            });
+            $("input[name='rrtotal[]']").each(function() {
+                rrtotal.push(this.value);
+            });
 
             $.ajax({
-                url: "receipts/save/" + id,
+                url: "receipt_school/save/" + id,
                 method: 'PUT',
                 data: {
                     submission_date: $('#EditSubmissiondate').val(),
-                    first_name: $('#EditFirstname').val(),
-                    last_name: $('#EditLastname').val(),
-                    grade: $('#EditGrade').val(),
+                    
                     description: $('#EditDes').val(),
                     street_address: $('#EditAddress').val(),
                     //street_address2: $('#EditAddress2').val(),
@@ -1737,14 +1834,19 @@
                     postcode: $('#EditPostcode').val(),
                     name_parent: $('#EditParent').val(),
                     mobile: $('#EditMobile').val(),
-                    package: $('#EditPackage').val(),
-                    file_att: $('#EditFile').val(),
-                    rdid: rid,
-                    rdes: rdes,
-                    rqty: rqty,
-                    runit: runit,
-                    runitp: runitp,
-                    rdis: rdis,
+                    // package: $('#EditPackage').val(),
+                    // file_att: $('#EditFile').val(),
+                    rrid: rrid,
+                    rrsub: rrsub,
+                    rrlevel: rrlevel,
+                    rrweek: rrweek,
+                    rrqty: rrqty,
+                    rrbook: rrbook,
+                    rrbookprice:rrbookprice,
+                    rrtype:rrtype,
+                    rrdiscount:rrdiscount,
+                    rrprice:rrprice,
+                    rrtotal:rrtotal
                 },
 
                 success: function(result) {
@@ -1962,10 +2064,10 @@
             // ส่วนของการ clone ข้อมูลด้วย jquery clone() ค่า true คือ
             // การกำหนดให้ ไม่ต้องมีการ ดึงข้อมูลจากค่าเดิมมาใช้งาน
             // รีเซ้ตเป็นค่าว่าง ถ้ามีข้อมูลอยู่แล้ว ทั้ง select หรือ input
-            $(".firstTr1:eq(0)").clone(true)
+            $(".firstTr3:eq(0)").clone(true)
                 .find("input").attr("value", "").end()
                 .find("select").attr("value", "").end()
-                .appendTo($("#myTbl2"));
+                .appendTo($("#myTbl3"));
         });
         $("#removeRow2").click(function() {
             // // ส่วนสำหรับการลบ

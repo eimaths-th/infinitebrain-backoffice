@@ -23,5 +23,6 @@ class SchoolPrice extends Model
         'total',
         'rid',
         'type',
+        'receipt_number',
     ];
 }

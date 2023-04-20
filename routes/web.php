@@ -222,5 +222,9 @@ Route::match(array('GET', 'POST'),'/receipt_school', [ReceiptSchoolController::c
 Route::get('/receipt_school/{sub_id}', [ReceiptSchoolController::class, 'search'])->name('receipt_school.search');
 Route::get('/receipt_school/{sub_id}/{level_id}/{week}/{price}/{qty}/{discount}/{book_price}/{type}', [ReceiptSchoolController::class, 'searchs'])->name('receipt_school.searchs');
 Route::get('/receipt_school/{sub_id}/{level_id}/{book}/', [ReceiptSchoolController::class, 'sumbook'])->name('receipt_school.sumbook');
+Route::get('/receipt_school/find/{parent}', [ReceiptSchoolController::class, 'find'])->name('receipt_school.find');
 
 Route::post('/receipt_school/store', [ReceiptSchoolController::class, 'store'])->name('receipt_school.store');
+Route::get('/receipt_school/receipt/show/{type}/{id}', [ReceiptSchoolController::class, 'show'])->name('receipt_school.show');
+Route::get('/receipt_school/{id}/{type}', [ReceiptSchoolController::class, 'edit'])->name('receipt_school.edit');
+Route::put('/receipt_school/save/{id}', [ReceiptSchoolController::class, 'update'])->name('receipt_school.save');
