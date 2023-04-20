@@ -1067,7 +1067,8 @@ class ReceiptSchoolController extends Controller
 
         SchoolPrice::where('rid', $id)->delete();
         for ($xx = 0; $xx < count($rrsub); $xx++) {
-            if ($rrtype != "") {
+            if ($rrtype[$xx] != "" && $rrtype != NULL) {
+               
                 $rdata = new SchoolPrice([
                     'rid' => $id,
                     'subject' => $rrsub[$xx],
@@ -1084,6 +1085,7 @@ class ReceiptSchoolController extends Controller
                     //'amount' => $request->get('book_old_price'),
                 ]);
             } else {
+                
                 $rdata = new SchoolPrice([
                     'rid' => $id,
                     'subject' => $rrsub[$xx],
