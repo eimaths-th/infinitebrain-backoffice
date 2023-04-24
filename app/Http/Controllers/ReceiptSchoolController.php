@@ -747,16 +747,16 @@ class ReceiptSchoolController extends Controller
             $x++;
         }
         // $viewr = "receipt_school.receipt";
-        // $html = "";
-        // $pic = explode('|',$data->file_att);
+        $html = "";
+        $pic = explode('|',$data->file_att);
 
-        // foreach($pic as $pics){
-        //     $html .= '<img src="'.url('/').'/receipts_form_school/'.$pics.'" class="me-3 mt-5 mb-5" height="400" >';
-        // }
+        foreach($pic as $pics){
+            $html .= '<img src="'.url('/').'/receipts_form_school/'.$pics.'" class="me-3 mt-5 mb-5" height="400" >';
+        }
         // print_r($pic);
         // exit();
         return response()->json([
-            'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html 
+            'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html  , 'imgs' => $html
         ]);
         // return view($viewr)->with(['pic' => $pic]);
 
@@ -1093,6 +1093,7 @@ class ReceiptSchoolController extends Controller
     }
     public function update(Request $request, $id)
     {
+       
         $validator =  Validator::make($request->all(), [
             'submission_date' => 'required|string',
             // 'first_name' => 'required|string',
@@ -1102,6 +1103,7 @@ class ReceiptSchoolController extends Controller
             //'province' => 'required|string',
             'postcode' => 'required|string',
             'mobile' => 'required|string',
+            
             //'package' => 'required|string',
             //'file_att' => 'required|string',
             //'description' => 'required|string',
@@ -1110,6 +1112,33 @@ class ReceiptSchoolController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
+        // print_r($request->get('img'));
+        // exit();
+        $img = $request->get('img');
+        $stu = "";
+        foreach ($img as $sss) {
+            //echo $filea;
+            $stu .= $sss . "|";
+        }
+
+        $dataimg = Receipt_School::find($id);
+        // echo($dataimg->file_att);
+        // exit();
+        $stu = $dataimg->file_att ."|". $stu;
+
+        $stu = rtrim($stu, "|");
+        // Receipt_School::find($id)->save('file_att' => $stu);
+        $data = new Receipt_School([
+            
+            'file_att' => $stu,
+
+        ]);
+        // print_r($data);
+        // exit();
+        
+        Receipt_School::find($id)->update(['file_att' => $stu]);
+
+        $data->update();
 
         // echo $request->get('name_parent2');
         // exit();
@@ -1124,6 +1153,7 @@ class ReceiptSchoolController extends Controller
         $rrdiscount  = $request->get('rrdiscount');
         $rrprice  = $request->get('rrprice');
         $rrtotal  = $request->get('rrtotal');
+        
         // echo $book_price;
         // print_r($request->all()) ;
         // exit();
@@ -1135,7 +1165,8 @@ class ReceiptSchoolController extends Controller
 
         SchoolPrice::where('rid', $id)->delete();
         for ($xx = 0; $xx < count($rrsub); $xx++) {
-            if ($rrtype[$xx] != "" && $rrtype != NULL) {
+           
+            if ($rrtype[$xx] != "" && $rrtype[$xx] != NULL) {
                
                 $rdata = new SchoolPrice([
                     'rid' => $id,
@@ -1171,7 +1202,8 @@ class ReceiptSchoolController extends Controller
                 ]);
             }
 
-            // print_r($rdata);
+            // print_r($rrtype);
+            // exit();
             $rdata->save();
         }
 

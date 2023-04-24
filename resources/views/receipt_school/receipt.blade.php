@@ -1088,7 +1088,7 @@
 <!-- Edit  Modal -->
 <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="EditModal">
     <div class="modal-dialog modal-xl" role="document">
-        <form class="form" action="" method="POST">
+        <form id="infiniteEdit" class="form" action="" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Edit </h5>
@@ -1209,8 +1209,45 @@
 
                                     </select>
                                 </div>
-                                
-                                
+                                <div class="form-group">
+                                    <div class="imgs">
+
+                                    </div> 
+                                </div>
+                                <div class="form-row form-focus" id="dropzone-attEdit">
+                                    <div class="col-md-12 col-sm-12">
+                                        <a id="datt"></a>
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="att">อัพโหลดหลักฐานการชำระเงิน<span
+                                                    class="form-required">*</span>
+                                                <div style="width: 280px"></div>
+                                            </label>
+                                            <input type="text" id="drop2" name="drop2"
+                                                class="form-control form_none" value="" required>
+                                            <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
+                                                <div class="fallback">
+                                                   
+                                                </div>
+                                            </div>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Receipt Photo</label>
+                                            <div id="dropzone-att-error" class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10">
+                                                <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropzonex dz-default dz-message" id="dropzone_previewEdit2"
+                                    style="font-size: 1.5em;">
+                                    <h3 class="dropzone-previews ui"></h3>
+                                    </div>
                           
 
                             </div>
@@ -1741,6 +1778,7 @@
                     $('#EditMobile').val(res.data.mobile);
                     $('#EditParentID').val(res.data2.id);
                     $('#EditStudent').html(res.student)
+                    $('.imgs').html(res.imgs);
                     $('#myTbl3 tbody').html(res.data_html);
                     //append
                     //$('#EditFile').val(res.data.file_att);
@@ -2151,10 +2189,16 @@
                 rrtotal.push(this.value);
             });
 
+            var values = $("input[name='imgFiles2[]']")
+              .map(function(){return $(this).val();}).get();
+                // console.log(values);
+        //  console.log(rrtype);
+
             $.ajax({
                 url: "receipt_school/save/" + id,
                 method: 'PUT',
                 data: {
+                    img : values,
                     submission_date: $('#EditSubmissiondate').val(),
                     name_parent: $('#EditParentID').val(),
                     description: $('#EditDes').val(),
@@ -2471,7 +2515,12 @@
             acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
             // The setting up of the dropzone
             init: function() {  
-                myDropzone = this;
+                var myDropzone = this;
+                // var mockFile = { name: 'public/images/infinite.jpg', size: 12345, type: 'image/jpeg' };
+                // myDropzone.emit("addedfile", mockFile);
+                // myDropzone.emit("success", mockFile);
+                // myDropzone.emit("thumbnail", mockFile, "https://example.com")
+                // myDropzone = this;
                 this.on("addedfile", function(file) {
                     //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.name + "'/>");
                     $('#infinite').append("<input type='text' id='" + file.newName +
@@ -2553,5 +2602,124 @@
 
             }
         }
+
+        Dropzone.options.myAwesomeDropzone2 = {
+            url: '{{ route('receipt_school.upload') }}',
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            paramName: "file", // ชื่อไฟล์ปลายทางเมื่อ upload แบบ mutiple จะเป็น array
+            autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
+            uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
+            parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
+            maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+            maxfilesexceeded: function(file) {
+            this.removeAllFiles();
+            this.addFile(file);
+            },
+            addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
+            maxFilesize: 10, // MB
+            renameFile: function(file) {
+                let newName = new Date().getTime() + '_' + file.name;
+                file.newName = newName;
+                return newName;
+            },
+            previewsContainer: "#dropzone_previewEdit2", // ระบุ element เป้าหลาย
+            //previewTemplate: $('#template-preview').html(),
+            dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
+            dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
+            dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
+            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
+            acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
+            // The setting up of the dropzone
+            init: function() {  
+                var myDropzone = this;
+                // var mockFile = { name: 'public/images/infinite.jpg', size: 12345, type: 'image/jpeg' };
+                // myDropzone.emit("addedfile", mockFile);
+                // myDropzone.emit("success", mockFile);
+                // myDropzone.emit("thumbnail", mockFile, "https://example.com")
+                // myDropzone = this;
+                this.on("addedfile", function(file) {
+                    //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.name + "'/>");
+                    $('#infiniteEdit').append("<input type='text' id='" + file.newName +
+                        "' class='form_none' name='imgFiles2[]' value='" + file.newName + "'/>");
+                    file.previewElement.id = file.newName;
+                }).on("removedfile", function(file) {
+                    //alert(file.id);
+                    //var name = file.name;
+                    var name = file.previewElement.id;
+
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        type: 'POST',
+                        url: '{{ route('receipt_school.delete') }}',
+                        data: {
+                            name: name,
+                        },
+                        success: function(data) {
+                            console.log('success: ' + data);
+                            var element = document.getElementById("infiniteEdit");
+                            var child = document.getElementById(name);
+                            element.removeChild(child);
+                            if (!document.getElementsByName('imgFiles2[]').length) {
+                                //alert();
+                                $('#dropzone_previewEdit2').css("display", "none");
+                                $('#dropzone-attEdit').addClass('form-focus-error');
+                                $('#dropzone-attEdit')
+                                    .find('.form-error-message').css("display", "block");
+                                $('#dropzone-attEdit').css('border', 'solid 1px red');
+                            }
+                        }
+                    });
+
+                    //var _ref;
+                    //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+
+                }).on("maxfilesexceeded", function(file) {
+                    alert('allow maximum 2 file');
+                    this.removeFile(file);
+                }).on('complete', function(file) {
+                    let val = file.accepted;
+                    if (file.accepted == true) {
+                        obj = JSON.parse(file.xhr.response);
+                        //file.previewElement.id = obj.success;
+                        // console.log(obj.success);
+                        //alert(obj.success);
+                        //$('#infinite').append("<input type='text' id='" + obj.success +
+                        //   "' class='form_none' name='imgFiles2[]' value='" + obj.success + "'/>");
+                    }
+                    let val1 = file.name;
+                    $('#dropzone_previewEdit2').css("display", "block");
+                    $('#dropzone-attEdit').removeClass('form-focus-error');
+                    $('#dropzone-attEdit')
+                        .find('.form-error-message').css("display", "none");
+                    $('#dropzone-attEdit').css('border', 'solid 1px green');
+                    if (document.getElementsByName('imgFiles2[]').length) {
+                        //$('#error_div').css('display', 'none');
+                    }
+                }).on("success", function(file) {
+                    //var responseText = file.id // or however you would point to your assigned file ID here;
+                    //console.log(response); // console should show the ID you pointed to
+                    // do stuff with file.id ...
+                });
+                /*this.on("addedfile", function(file) {
+
+                }).on("removedfile", function(file) {
+
+                }).on("thumbnail", function(file) {
+
+                }).on("error", function(file) {
+
+                }).on("processing", function(file) {
+
+                }).on("uploadprogress", function(file) {
+
+                });*/
+
+            }
+        }
+
 </script>
 @endsection
