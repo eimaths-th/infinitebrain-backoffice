@@ -290,7 +290,7 @@ class ReceiptFormController extends Controller
             $oldfile = FileUpload::where('oldname', $filea)->get();
             $fileas .= $oldfile[0]->filename . "|";
 
-            File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_school/' . $oldfile[0]->filename);
+            File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
             FileUpload::where('filename', $oldfile[0]->filename)->delete();
         }
         $filebs = "";
@@ -299,7 +299,7 @@ class ReceiptFormController extends Controller
 
             $oldfile = FileUpload::where('oldname', $fileb)->get();
             $filebs .= $oldfile[0]->filename . "|";
-            File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_school/' . $oldfile[0]->filename);
+            File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
             FileUpload::where('filename', $oldfile[0]->filename)->delete();
         }
 

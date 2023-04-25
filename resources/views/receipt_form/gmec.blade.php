@@ -901,8 +901,7 @@
                                                 class="form-control form_none" value="" required>
                                             <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
                                                 <div class="fallback">
-                                                    {{-- <input name="file" id="file" type="file" multiple
-                                                        class="form-control" /> --}}
+                                                    
                                                 </div>
                                             </div>
                                             <label class="form-sub-label" style="min-height:13px"

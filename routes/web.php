@@ -230,3 +230,4 @@ Route::get('/receipt_school/{id}/{type}', [ReceiptSchoolController::class, 'edit
 Route::put('/receipt_school/save/{id}', [ReceiptSchoolController::class, 'update'])->name('receipt_school.save');
 Route::post('/receipt_school/upload', [ReceiptSchoolController::class, 'fileStore'])->name('receipt_school.upload');
 Route::post('/receipt_school/upload/delete', [ReceiptSchoolController::class, 'fileDestroy'])->name('receipt_school.delete');
+Route::put('/receipt_school/delete/{id}/{id2}', [ReceiptSchoolController::class, 'deleteImg'])->name('receipt_school.deleteImg');

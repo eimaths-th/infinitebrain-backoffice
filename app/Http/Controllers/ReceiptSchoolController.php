@@ -746,12 +746,27 @@ class ReceiptSchoolController extends Controller
     </tr>';
             $x++;
         }
+
+        
         // $viewr = "receipt_school.receipt";
         $html = "";
-        $pic = explode('|',$data->file_att);
+        
 
+        $pic = explode('|',$data->file_att);
+        $x=0;
         foreach($pic as $pics){
-            $html .= '<img src="'.url('/').'/receipts_form_school/'.$pics.'" class="me-3 mt-5 mb-5" height="400" >';
+            if($pics!=Null && $pics != ""){
+                $html .= '
+                <div class="col-md-4 text-center mb-3 ">
+                <img src="'.url('/').'/receipts_form_school/'.$pics.'" class=" mt-5 mb-3" height="400" width="300">
+                <a href="#" class="btn btn-xs btn-danger btn-edit" id="getDeleteData" data-id2="'.$data->id.'" data-id="'.$pics.'">delete </a> 
+                </div>
+                ';   
+            }else{
+                $html = "";
+            }
+         
+
         }
         // print_r($pic);
         // exit();
@@ -985,6 +1000,7 @@ class ReceiptSchoolController extends Controller
         // print_r($request->get('img'));
         // exit();
         $filesb = $request->get('img');
+       
         $filebs = "";
         foreach ($filesb as $fileb) {
             //echo $fileb;
@@ -1091,6 +1107,54 @@ class ReceiptSchoolController extends Controller
 
         return response()->json(['success' => 'Receive Add successfully']);
     }
+    public function deleteImg($id,$id2)
+    {
+        $dataimg = Receipt_School::find($id2);
+        $img = $dataimg->file_att;
+        $img = explode("|",$img);
+       
+        if (($key = array_search($id, $img)) !== false) {
+            unset($img[$key]);
+        }
+        $dataNew = "";
+        foreach($img as $fileb){
+            $dataNew .= $fileb . "|";
+        }
+        $dataNew = rtrim($dataNew, "|");
+
+        // $data = new Receipt_School([
+            
+        //     'file_att' => $dataNew,
+
+        // ]);
+        // print_r($data);
+        // exit();
+        Receipt_School::find($id2)->update(['file_att' => $dataNew]);
+        // $data->update(); 
+        
+        $link = (url('/').'/receipts_form_school/'.$id ) ;
+        // unlink(public_path("/receipts_form_school/".$id));
+        
+        $html = "";
+        $pic = explode('|',$dataNew);
+            foreach($pic as $pics){
+                if($pics!=NULL && $pics != ""){
+                $html .= '
+                <div class="col-md-4 text-center mb-3 ">
+                <img src="'.url('/').'/receipts_form_school/'.$pics.'" class=" mt-5 mb-3" height="400" width="300">
+                <a href="#" class="btn btn-xs btn-danger btn-edit" id="getDeleteData" data-id2="'.$id2.'" data-id="'.$pics.'">delete </a> 
+                </div>
+                ';   
+                }else{
+                    $html = "";
+                }
+            }
+        
+        
+        
+        return response()->json(['imgs' => $html]);
+
+    }
     public function update(Request $request, $id)
     {
        
@@ -1114,16 +1178,45 @@ class ReceiptSchoolController extends Controller
         }
         // print_r($request->get('img'));
         // exit();
+       
         $img = $request->get('img');
+        // print_r($id);
+        // exit();
         $stu = "";
-        foreach ($img as $sss) {
+        foreach ($img as $fileb) {
             //echo $filea;
-            $stu .= $sss . "|";
+            // $stu .= $sss . "|";
+            $oldfile = FileUpload::where('oldname', $fileb)->get();
+            $stu .= $oldfile[0]->filename . "|";
+            File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
+            FileUpload::where('filename', $oldfile[0]->filename)->delete();
         }
-
+        // $image = Receipt_School::where('id',$id)->get();
+        // $imageNew = "";
+        // foreach($image as $images){
+        //     $imageNew = $images->file_att;
+        // }
+        // if($imageNew!=Null && $imageNew!=""){
+            
+        // }
         $dataimg = Receipt_School::find($id);
+        
         // echo($dataimg->file_att);
         // exit();
+        // $filesb = $request->get('img');
+       
+        // $filebs = "";
+        // foreach ($dataimg as $fileb) {
+        //     //echo $fileb;
+
+        //     $oldfile = FileUpload::where('oldname', $fileb)->get();
+        //     $filebs .= $oldfile[0]->filename . "|";
+        //     File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
+        //     FileUpload::where('filename', $oldfile[0]->filename)->delete();
+        // }
+
+        // $filebs = rtrim($filebs, "|");
+        
         $stu = $dataimg->file_att ."|". $stu;
 
         $stu = rtrim($stu, "|");
