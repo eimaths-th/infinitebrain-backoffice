@@ -37,6 +37,14 @@ class ReceiptFormController extends Controller
 
     public function fileStore(Request $request)
     {
+        $validator =  Validator::make($request->all(), [
+            'file.*' => 'required|image',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
         $filecount = count($request->file('file'));
         //return response()->json(['success'=>$x]);
         //print_r($request->file('file'));
