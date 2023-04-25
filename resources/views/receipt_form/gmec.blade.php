@@ -901,7 +901,7 @@
                                                 class="form-control form_none" value="" required>
                                             <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
                                                 <div class="fallback">
-                                                    
+
                                                 </div>
                                             </div>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -1269,6 +1269,9 @@
                     //var responseText = file.id // or however you would point to your assigned file ID here;
                     //console.log(response); // console should show the ID you pointed to
                     // do stuff with file.id ...
+                }).on("error", function(file) {
+                    this.removeFile(file);
+                    alert("please check file format or file size");
                 });
                 /*this.on("addedfile", function(file) {
 
@@ -1382,6 +1385,12 @@
                     //var responseText = file.id // or however you would point to your assigned file ID here;
                     //console.log(response); // console should show the ID you pointed to
                     // do stuff with file.id ...
+                    .on("error", function(file) {
+                    this.removeFile(file);
+                    alert("please check file format or file size");
+                }).on("error", function(file) {
+                    this.removeFile(file);
+                    alert("please check file format or file size");
                 });
                 /*this.on("addedfile", function(file) {
 

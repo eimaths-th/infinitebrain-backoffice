@@ -1263,6 +1263,7 @@
                     // do stuff with file.id ...
                 }).on("error", function(file) {
                     this.removeFile(file);
+                    alert("please check file format or file size");
                 });
                 /*this.on("addedfile", function(file) {
 
@@ -1378,6 +1379,7 @@
                     // do stuff with file.id ...
                 }).on("error", function(file) {
                     this.removeFile(file);
+                    alert("please check file format or file size");
                 });
                 /*this.on("addedfile", function(file) {
 
