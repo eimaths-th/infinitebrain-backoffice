@@ -385,6 +385,52 @@ class ReceiptSchoolController extends Controller
 
         return $text;
     }
+    public function fileStore(Request $request)
+    {
+        $filecount = count($request->file('file'));
+        //return response()->json(['success'=>$x]);
+        //print_r($request->file('file'));
+        //exit();
+        $newname = "";
+        for ($i = 0; $i <= ($filecount - 1); $i++) {
+            $image = $request->file('file')[$i];
+            //print_r($image);
+            //exit();
+            $imageName = $image->getClientOriginalName();
+            $oldfile = FileUpload::where('oldname', $imageName)->get();
+
+
+            if (!is_array($oldfile)) {
+
+                $newname = Str::random(40) . "_" . $imageName;
+                $image->move(public_path('receipt_form_school'), $newname);
+
+                $imageUpload = new FileUpload();
+                $imageUpload->filename = $newname;
+                $imageUpload->oldname = $imageName;
+                $imageUpload->save();
+            }
+
+            //return response()->json(['success' => $newname]);
+
+            //$newnamea[$i] = $newname;
+        }
+        return response()->json(['success' => $newname]);
+    }
+    public function fileDestroy(Request $request)
+    {
+
+        $filename =  $request->get('name');
+        $oldfile = FileUpload::where('oldname', $filename)->get();
+        $path = public_path() . '/receipt_form_school/' . $oldfile[0]->filename;
+        if (file_exists($path)) {
+            unlink($path);
+            FileUpload::where('oldname', $filename)->delete();
+        }
+        return $filename;
+    }
+   
+
     public function index(Request $request)
     {
 
@@ -700,15 +746,40 @@ class ReceiptSchoolController extends Controller
     </tr>';
             $x++;
         }
-        return response()->json([
-            'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html
 
+        
+        // $viewr = "receipt_school.receipt";
+        $html = "";
+        
+
+        $pic = explode('|',$data->file_att);
+        $x=0;
+        foreach($pic as $pics){
+            if($pics!=Null && $pics != ""){
+                $html .= '
+                <div class="col-md-4 text-center mb-3 ">
+                <img src="'.url('/').'/receipts_form_school/'.$pics.'" class=" mt-5 mb-3" height="400" width="300">
+                <a href="#" class="btn btn-xs btn-danger btn-edit" id="getDeleteData" data-id2="'.$data->id.'" data-id="'.$pics.'">delete </a> 
+                </div>
+                ';   
+            }else{
+                $html = "";
+            }
+         
+
+        }
+        // print_r($pic);
+        // exit();
+        return response()->json([
+            'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html  , 'imgs' => $html
         ]);
+        // return view($viewr)->with(['pic' => $pic]);
+
     }
     public function show($type, $id)
     {
         $data = Receipt_School::find($id);
-
+        
         if ($type == "view") {
             $viewr = "receipt.view1";
         } else if ($type == "print") {
@@ -808,9 +879,19 @@ class ReceiptSchoolController extends Controller
 
         //$des_text = nl2br($data->description);
         $data2 = ParentRegister::find($data->name_parent);
+        $html = "";
+        $pic = explode('|',$data->file_att);
+
+        
+        foreach($pic as $pics){
+            $html .= '<img src="'.url('/').'/receipts_form_school/'.$pics.'" class="me-3 mt-5 mb-5" height="400" >';
+        }
+       
+   
         // print_r($data2->name_parent);
         // exit();
         return view($viewr)->with(['id' => $id])
+            ->with(['html'=>$html])
             ->with(['data' => $data])
             ->with(['data2' => $data2])
             ->with(['student' => $student])
@@ -915,19 +996,22 @@ class ReceiptSchoolController extends Controller
     public function store(Request $request)
     {
 
+        // $filesb = $request->get('imgFiles2');
+        // print_r($request->get('img'));
+        // exit();
+        $filesb = $request->get('img');
+       
+        $filebs = "";
+        foreach ($filesb as $fileb) {
+            //echo $fileb;
 
-        //
-        // foreach ($request->receipt as $value) {
-        //     // print_r($value);
-        //     // exit();
-        //     // if($value['subject']!="" )
-        //     $validator = Validator::make($value, [
-        //         $value['subject'] => 'required',
-        //     ]);
-        //     if ($validator->fails()) {
-        //         return response()->json(['errors' => $validator->errors()->all()]);
-        //     }
-        // }
+            $oldfile = FileUpload::where('oldname', $fileb)->get();
+            $filebs .= $oldfile[0]->filename . "|";
+            File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
+            FileUpload::where('filename', $oldfile[0]->filename)->delete();
+        }
+
+        $filebs = rtrim($filebs, "|");
 
             // print_r($request->receipt);
             // exit();
@@ -989,7 +1073,7 @@ class ReceiptSchoolController extends Controller
             'type' => 0,
             // 'sid' => $request->get('student'),
             'receipt_number' => $rnumber,
-
+            'file_att' => $filebs,
 
         ]);
 
@@ -1023,8 +1107,57 @@ class ReceiptSchoolController extends Controller
 
         return response()->json(['success' => 'Receive Add successfully']);
     }
+    public function deleteImg($id,$id2)
+    {
+        $dataimg = Receipt_School::find($id2);
+        $img = $dataimg->file_att;
+        $img = explode("|",$img);
+       
+        if (($key = array_search($id, $img)) !== false) {
+            unset($img[$key]);
+        }
+        $dataNew = "";
+        foreach($img as $fileb){
+            $dataNew .= $fileb . "|";
+        }
+        $dataNew = rtrim($dataNew, "|");
+
+        // $data = new Receipt_School([
+            
+        //     'file_att' => $dataNew,
+
+        // ]);
+        // print_r($data);
+        // exit();
+        Receipt_School::find($id2)->update(['file_att' => $dataNew]);
+        // $data->update(); 
+        
+        $link = (url('/').'/receipts_form_school/'.$id ) ;
+        // unlink(public_path("/receipts_form_school/".$id));
+        
+        $html = "";
+        $pic = explode('|',$dataNew);
+            foreach($pic as $pics){
+                if($pics!=NULL && $pics != ""){
+                $html .= '
+                <div class="col-md-4 text-center mb-3 ">
+                <img src="'.url('/').'/receipts_form_school/'.$pics.'" class=" mt-5 mb-3" height="400" width="300">
+                <a href="#" class="btn btn-xs btn-danger btn-edit" id="getDeleteData" data-id2="'.$id2.'" data-id="'.$pics.'">delete </a> 
+                </div>
+                ';   
+                }else{
+                    $html = "";
+                }
+            }
+        
+        
+        
+        return response()->json(['imgs' => $html]);
+
+    }
     public function update(Request $request, $id)
     {
+       
         $validator =  Validator::make($request->all(), [
             'submission_date' => 'required|string',
             // 'first_name' => 'required|string',
@@ -1034,6 +1167,7 @@ class ReceiptSchoolController extends Controller
             //'province' => 'required|string',
             'postcode' => 'required|string',
             'mobile' => 'required|string',
+            
             //'package' => 'required|string',
             //'file_att' => 'required|string',
             //'description' => 'required|string',
@@ -1042,6 +1176,62 @@ class ReceiptSchoolController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
+        // print_r($request->get('img'));
+        // exit();
+       
+        $img = $request->get('img');
+        // print_r($id);
+        // exit();
+        $stu = "";
+        foreach ($img as $fileb) {
+            //echo $filea;
+            // $stu .= $sss . "|";
+            $oldfile = FileUpload::where('oldname', $fileb)->get();
+            $stu .= $oldfile[0]->filename . "|";
+            File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
+            FileUpload::where('filename', $oldfile[0]->filename)->delete();
+        }
+        // $image = Receipt_School::where('id',$id)->get();
+        // $imageNew = "";
+        // foreach($image as $images){
+        //     $imageNew = $images->file_att;
+        // }
+        // if($imageNew!=Null && $imageNew!=""){
+            
+        // }
+        $dataimg = Receipt_School::find($id);
+        
+        // echo($dataimg->file_att);
+        // exit();
+        // $filesb = $request->get('img');
+       
+        // $filebs = "";
+        // foreach ($dataimg as $fileb) {
+        //     //echo $fileb;
+
+        //     $oldfile = FileUpload::where('oldname', $fileb)->get();
+        //     $filebs .= $oldfile[0]->filename . "|";
+        //     File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
+        //     FileUpload::where('filename', $oldfile[0]->filename)->delete();
+        // }
+
+        // $filebs = rtrim($filebs, "|");
+        
+        $stu = $dataimg->file_att ."|". $stu;
+
+        $stu = rtrim($stu, "|");
+        // Receipt_School::find($id)->save('file_att' => $stu);
+        $data = new Receipt_School([
+            
+            'file_att' => $stu,
+
+        ]);
+        // print_r($data);
+        // exit();
+        
+        Receipt_School::find($id)->update(['file_att' => $stu]);
+
+        $data->update();
 
         // echo $request->get('name_parent2');
         // exit();
@@ -1056,6 +1246,7 @@ class ReceiptSchoolController extends Controller
         $rrdiscount  = $request->get('rrdiscount');
         $rrprice  = $request->get('rrprice');
         $rrtotal  = $request->get('rrtotal');
+        
         // echo $book_price;
         // print_r($request->all()) ;
         // exit();
@@ -1067,7 +1258,8 @@ class ReceiptSchoolController extends Controller
 
         SchoolPrice::where('rid', $id)->delete();
         for ($xx = 0; $xx < count($rrsub); $xx++) {
-            if ($rrtype[$xx] != "" && $rrtype != NULL) {
+           
+            if ($rrtype[$xx] != "" && $rrtype[$xx] != NULL) {
                
                 $rdata = new SchoolPrice([
                     'rid' => $id,
@@ -1103,7 +1295,8 @@ class ReceiptSchoolController extends Controller
                 ]);
             }
 
-            // print_r($rdata);
+            // print_r($rrtype);
+            // exit();
             $rdata->save();
         }
 

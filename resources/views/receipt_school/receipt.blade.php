@@ -11,8 +11,321 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .dropzone {
+            width: 100%;
+            height: 180px;
+            min-height: 0px !important;
+        }
 
+
+
+        .dropzonex,
+        .dropzonex * {
+            box-sizing: border-box;
+        }
+
+        .dropzonex {
+            min-height: 150px;
+            background: #e4efff;
+            padding: 20px 20px;
+            display: none;
+        }
+
+        .dropzonex.dz-clickable {
+            cursor: pointer;
+        }
+
+        .dropzonex.dz-clickable * {
+            cursor: default;
+        }
+
+        .dropzonex.dz-clickable .dz-message,
+        .dropzonex.dz-clickable .dz-message * {
+            cursor: pointer;
+        }
+
+        .dropzonex.dz-started .dz-message {
+            display: none;
+        }
+
+        .dropzonex.dz-drag-hover {
+            border-style: solid;
+        }
+
+        .dropzonex.dz-drag-hover .dz-message {
+            opacity: 0.5;
+        }
+
+        .dropzonex .dz-message {
+            text-align: center;
+            margin: 2em 0;
+        }
+
+        .dropzonex .dz-preview {
+            position: relative;
+            display: inline-block;
+            vertical-align: top;
+            margin: 16px;
+            min-height: 100px;
+        }
+
+        .dropzonex .dz-preview:hover {
+            z-index: 1000;
+        }
+
+        .dropzonex .dz-preview:hover .dz-details {
+            opacity: 1;
+        }
+
+        .dropzonex .dz-preview.dz-file-preview .dz-image {
+            border-radius: 20px;
+            background: #999;
+            background: linear-gradient(to bottom, #eee, #ddd);
+        }
+
+        .dropzonex .dz-preview.dz-file-preview .dz-details {
+            opacity: 1;
+        }
+
+        .dropzonex .dz-preview.dz-image-preview {
+            background: #e4efff;
+        }
+
+        .dropzonex .dz-preview.dz-image-preview .dz-details {
+            -webkit-transition: opacity 0.2s linear;
+            -moz-transition: opacity 0.2s linear;
+            -ms-transition: opacity 0.2s linear;
+            -o-transition: opacity 0.2s linear;
+            transition: opacity 0.2s linear;
+        }
+
+        .dropzonex .dz-preview .dz-remove {
+            font-size: 14px;
+            text-align: center;
+            display: block;
+            cursor: pointer;
+            border: none;
+        }
+
+        .dropzonex .dz-preview .dz-remove:hover {
+            text-decoration: underline;
+        }
+
+        .dropzonex .dz-preview:hover .dz-details {
+            opacity: 1;
+        }
+
+        .dropzonex .dz-preview .dz-details {
+            z-index: 20;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            font-size: 13px;
+            min-width: 100%;
+            max-width: 100%;
+            padding: 2em 1em;
+            text-align: center;
+            color: rgba(0, 0, 0, 0.9);
+            line-height: 150%;
+        }
+
+        .dropzonex .dz-preview .dz-details .dz-size {
+            margin-bottom: 1em;
+            font-size: 16px;
+        }
+
+        .dropzonex .dz-preview .dz-details .dz-filename {
+            white-space: nowrap;
+        }
+
+        .dropzonex .dz-preview .dz-details .dz-filename:hover span {
+            border: 1px solid rgba(200, 200, 200, 0.8);
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .dropzonex .dz-preview .dz-details .dz-filename:not(:hover) {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropzonex .dz-preview .dz-details .dz-filename:not(:hover) span {
+            border: 1px solid transparent;
+        }
+
+        .dropzonex .dz-preview .dz-details .dz-filename span,
+        .dropzonex .dz-preview .dz-details .dz-size span {
+            background-color: rgba(255, 255, 255, 0.4);
+            padding: 0 0.4em;
+            border-radius: 3px;
+        }
+        .form_none {
+             display: none !important;
+        }
+        .dropzonex .dz-preview:hover .dz-image img {
+            -webkit-transform: scale(1.05, 1.05);
+            -moz-transform: scale(1.05, 1.05);
+            -ms-transform: scale(1.05, 1.05);
+            -o-transform: scale(1.05, 1.05);
+            transform: scale(1.05, 1.05);
+            -webkit-filter: blur(8px);
+            filter: blur(8px);
+        }
+
+        .dropzonex .dz-preview .dz-image {
+            border-radius: 20px;
+            overflow: hidden;
+            width: 120px;
+            height: 120px;
+            position: relative;
+            display: block;
+            z-index: 10;
+        }
+
+        .dropzonex .dz-preview .dz-image img {
+            display: block;
+        }
+
+        .dropzonex .dz-preview.dz-success .dz-success-mark {
+            -webkit-animation: passing-through 3s cubic-bezier(0.77, 0, 0.175, 1);
+            -moz-animation: passing-through 3s cubic-bezier(0.77, 0, 0.175, 1);
+            -ms-animation: passing-through 3s cubic-bezier(0.77, 0, 0.175, 1);
+            -o-animation: passing-through 3s cubic-bezier(0.77, 0, 0.175, 1);
+            animation: passing-through 3s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .dropzonex .dz-preview.dz-error .dz-error-mark {
+            opacity: 1;
+            -webkit-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+            -moz-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+            -ms-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+            -o-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+            animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .dropzonex .dz-preview .dz-success-mark,
+        .dropzonex .dz-preview .dz-error-mark {
+            pointer-events: none;
+            opacity: 0;
+            z-index: 500;
+            position: absolute;
+            display: block;
+            top: 50%;
+            left: 50%;
+            margin-left: -27px;
+            margin-top: -27px;
+        }
+
+  
+        
+
+        .dropzonex .dz-preview.dz-processing .dz-progress {
+            opacity: 1;
+            -webkit-transition: all 0.2s linear;
+            -moz-transition: all 0.2s linear;
+            -ms-transition: all 0.2s linear;
+            -o-transition: all 0.2s linear;
+            transition: all 0.2s linear;
+        }
+
+        .dropzonex .dz-preview.dz-complete .dz-progress {
+            opacity: 0;
+            -webkit-transition: opacity 0.4s ease-in;
+            -moz-transition: opacity 0.4s ease-in;
+            -ms-transition: opacity 0.4s ease-in;
+            -o-transition: opacity 0.4s ease-in;
+            transition: opacity 0.4s ease-in;
+        }
+
+        .dropzonex .dz-preview:not(.dz-processing) .dz-progress {
+            -webkit-animation: pulse 6s ease infinite;
+            -moz-animation: pulse 6s ease infinite;
+            -ms-animation: pulse 6s ease infinite;
+            -o-animation: pulse 6s ease infinite;
+            animation: pulse 6s ease infinite;
+        }
+
+        .dropzonex .dz-preview .dz-progress {
+            opacity: 1;
+            z-index: 1000;
+            pointer-events: none;
+            position: absolute;
+            height: 16px;
+            left: 50%;
+            top: 50%;
+            margin-top: -8px;
+            width: 80px;
+            margin-left: -40px;
+            background: rgba(255, 255, 255, 0.9);
+            -webkit-transform: scale(1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .dropzonex .dz-preview .dz-progress .dz-upload {
+            background: #333;
+            background: linear-gradient(to bottom, #666, #444);
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            -webkit-transition: width 300ms ease-in-out;
+            -moz-transition: width 300ms ease-in-out;
+            -ms-transition: width 300ms ease-in-out;
+            -o-transition: width 300ms ease-in-out;
+            transition: width 300ms ease-in-out;
+        }
+
+        .dropzonex .dz-preview.dz-error .dz-error-message {
+            display: block;
+        }
+
+        .dropzonex .dz-preview.dz-error:hover .dz-error-message {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .dropzonex .dz-preview .dz-error-message {
+            pointer-events: none;
+            z-index: 1000;
+            position: absolute;
+            display: block;
+            display: none;
+            opacity: 0;
+            -webkit-transition: opacity 0.3s ease;
+            -moz-transition: opacity 0.3s ease;
+            -ms-transition: opacity 0.3s ease;
+            -o-transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease;
+            border-radius: 8px;
+            font-size: 13px;
+            top: 130px;
+            left: -10px;
+            width: 140px;
+            background: #be2626;
+            background: linear-gradient(to bottom, #be2626, #a92222);
+            padding: 0.5em 1.2em;
+            color: white;
+        }
+
+        .dropzonex .dz-preview .dz-error-message:after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 64px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid #be2626;
+        }
+        </style>
 @endsection
+
+
+
 
 @section('content')
 <div class="row">
@@ -302,7 +615,7 @@
 
 <div class="fade modal bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="CreateModal">
     <div class="modal-dialog modal-xl" role="document">
-        <form class="form" action="" method="POST">
+        <form id="infinite" class="form" action="" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Add </h5>
@@ -418,6 +731,45 @@
 
                                     </select>
                                 </div>
+                           
+                                <br>
+
+                                <div class="form-row form-focus" id="dropzone-att">
+                                    <div class="col-md-12 col-sm-12">
+                                        <a id="datt"></a>
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="att">อัพโหลดหลักฐานการชำระเงิน<span
+                                                    class="form-required">*</span>
+                                                <div style="width: 280px"></div>
+                                            </label>
+                                            <input type="text" id="drop2" name="drop2"
+                                                class="form-control form_none" value="" required>
+                                            <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
+                                                <div class="fallback">
+                                                   
+                                                </div>
+                                            </div>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Receipt Photo</label>
+                                            <div id="dropzone-att-error" class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10">
+                                                <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropzonex dz-default dz-message" id="dropzone_preview2"
+                                    style="font-size: 1.5em;">
+                                    <h3 class="dropzone-previews ui"></h3>
+                                    </div>
+
+
 
 
 
@@ -736,7 +1088,7 @@
 <!-- Edit  Modal -->
 <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="EditModal">
     <div class="modal-dialog modal-xl" role="document">
-        <form class="form" action="" method="POST">
+        <form id="infiniteEdit" class="form" action="" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Edit </h5>
@@ -857,7 +1209,49 @@
 
                                     </select>
                                 </div>
+                                <div class="row imgs">
+                               
+                                </div>
+                                <!-- <div class="form-group">
+                                    <div class="imgs">
 
+                                    </div> 
+                                </div> -->
+                                <div class="form-row form-focus" id="dropzone-photo">
+                                    <div class="col-md-12 col-sm-12">
+                                        <a id="dphoto"></a>
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="att">อัพโหลดหลักฐานการชำระเงิน<span
+                                                    class="form-required">*</span>
+                                                <div style="width: 280px"></div>
+                                            </label>
+                                            <input type="text" id="drop1" name="drop1"
+                                                class="form-control form_none" value="" required>
+                                            <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
+                                                <div class="fallback">
+                                                    
+                                                </div>
+                                            </div>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Receipt Photo</label>
+                                            <div id="dropzone-att-error" class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10">
+                                                <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropzonex dz-default dz-message" id="dropzone_preview"
+                                    style="font-size: 1.5em;">
+                                    <h3 class="dropzone-previews ui"></h3>
+                                    </div>
+                          
 
                             </div>
                             <div class="tab-pane" id="tab-eg20-1" role="tabpanel">
@@ -1357,6 +1751,25 @@
         });
 
         let id;
+        let id2;
+        $(document).on('click', '#getDeleteData', function(e) {
+            e.preventDefault();
+            $('.alert-danger').html('');
+            $('.alert-danger').hide();
+            $('.alert-success').html('');
+            $('.alert-success').hide();
+            id = $(this).data('id');
+            id2 = $(this).data('id2');
+            $.ajax({
+                url: "receipt_school/delete/" + id +"/"+ id2 ,
+                method: 'PUT',
+                async : false,
+                success: function(res) {
+                    $('.imgs').html(res.imgs);
+
+                }
+        })
+        })
         $(document).on('click', '#getEditData', function(e) {
             e.preventDefault();
 
@@ -1387,6 +1800,7 @@
                     $('#EditMobile').val(res.data.mobile);
                     $('#EditParentID').val(res.data2.id);
                     $('#EditStudent').html(res.student)
+                    $('.imgs').html(res.imgs);
                     $('#myTbl3 tbody').html(res.data_html);
                     //append
                     //$('#EditFile').val(res.data.file_att);
@@ -1397,45 +1811,6 @@
 
         });
 
-
-        $(document).on('click', '#getConvData', function(e) {
-            e.preventDefault();
-
-
-            $('.alert-danger').html('');
-            $('.alert-danger').hide();
-            $('.alert-success').html('');
-            $('.alert-success').hide();
-
-            id = $(this).data('id');
-            $.ajax({
-                url: "receipts/edit/" + id + "/2",
-                method: 'GET',
-                success: function(res) {
-                    //console.log(res.data_html);
-                    //$('#conv_receipt_number').val(res.data.receipt_number);
-                    $('#conv_customer_code').val(res.data.receipt_customer_number);
-                    //$('#ConvSubmissiondate').val(res.data.submission_date);
-                    $('#ConvPackage').val(res.data.package);
-                    $('#ConvFirstname').val(res.data.first_name);
-                    $('#ConvLastname').val(res.data.last_name);
-                    $('#ConvDes').val(res.data.description);
-                    $('#ConvGrade').val(res.data.grade);
-                    $('#ConvAddress').val(res.data.street_address);
-                    //$('#EditAddress2').val(res.data.street_address2);
-                    //$('#EditCity').val(res.data.city);
-                    //$('#EditProvince').val(res.data.province);
-                    $('#ConvPostcode').val(res.data.postcode);
-                    $('#ConvParent').val(res.data.name_parent);
-                    $('#ConvMobile').val(res.data.mobile);
-                    $('#ConvFile').val(res.data.file_att);
-                    $('#myTbl2 tbody').html(res.data_html);
-                    $('#ConvModal').modal('show');
-
-                }
-            });
-
-        })
 
         /////////
         let sub_id;
@@ -1684,6 +2059,7 @@
             $('.alert-success').html('');
             $('.alert-success').hide();
             var arr = new Array();
+            
             $('.firstTr').each(function(i, obj) {
                 if (i > 0) {
                     // console.log($(obj).find('#price').val());
@@ -1702,12 +2078,17 @@
                     arr.push(receiptData)
                 }
                 //test
+
             });
+            var values = $("input[name='imgFiles2[]']")
+              .map(function(){return $(this).val();}).get();
+                // console.log(values);
             $.ajax({
                 url: "{{ route('receipt_school.store') }}",
                 method: 'post',
                 data: {
                     // type: $('#type').val(),
+                    img : values,
                     student: $('#AddStudent').val(),
                     submission_date: $('#AddSubmissiondate').val(),
                     // first_name: $('#AddFirstname').val(),
@@ -1830,10 +2211,16 @@
                 rrtotal.push(this.value);
             });
 
+            var values = $("input[name='imgFiles[]']")
+              .map(function(){return $(this).val();}).get();
+        //  console.log(rrtype);
+            // console.log(id);
             $.ajax({
                 url: "receipt_school/save/" + id,
                 method: 'PUT',
+                async : false,
                 data: {
+                    img : values,
                     submission_date: $('#EditSubmissiondate').val(),
                     name_parent: $('#EditParentID').val(),
                     description: $('#EditDes').val(),
@@ -2112,9 +2499,361 @@
                 }
             }
         });
-
+       
         $(this).closest(".abcd").remove();
 
-    });
+    }); 
+
+    var myDropzone = {};
+        
+
+        Dropzone.options.myAwesomeDropzone2 = {
+            url: '{{ route('receipt_school.upload') }}',
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            paramName: "file", // ชื่อไฟล์ปลายทางเมื่อ upload แบบ mutiple จะเป็น array
+            autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
+            uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
+            parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
+            maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+            maxfilesexceeded: function(file) {
+            this.removeAllFiles();
+            this.addFile(file);
+            },
+            addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
+            maxFilesize: 10, // MB
+            renameFile: function(file) {
+                let newName = new Date().getTime() + '_' + file.name;
+                file.newName = newName;
+                return newName;
+            },
+            previewsContainer: "#dropzone_preview2", // ระบุ element เป้าหลาย
+            //previewTemplate: $('#template-preview').html(),
+            dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
+            dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
+            dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
+            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
+            acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
+            // The setting up of the dropzone
+            init: function() {  
+                var myDropzone = this;
+                // var mockFile = { name: 'public/images/infinite.jpg', size: 12345, type: 'image/jpeg' };
+                // myDropzone.emit("addedfile", mockFile);
+                // myDropzone.emit("success", mockFile);
+                // myDropzone.emit("thumbnail", mockFile, "https://example.com")
+                // myDropzone = this;
+                this.on("addedfile", function(file) {
+                    //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.name + "'/>");
+                    $('#infinite').append("<input type='text' id='" + file.newName +
+                        "' class='form_none' name='imgFiles2[]' value='" + file.newName + "'/>");
+                    file.previewElement.id = file.newName;
+                }).on("removedfile", function(file) {
+                    //alert(file.id);
+                    //var name = file.name;
+                    var name = file.previewElement.id;
+
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        type: 'POST',
+                        url: '{{ route('receipt_school.delete') }}',
+                        data: {
+                            name: name,
+                        },
+                        success: function(data) {
+                            console.log('success: ' + data);
+                            var element = document.getElementById("infinite");
+                            var child = document.getElementById(name);
+                            element.removeChild(child);
+                            if (!document.getElementsByName('imgFiles2[]').length) {
+                                //alert();
+                                $('#dropzone_preview2').css("display", "none");
+                                $('#dropzone-att').addClass('form-focus-error');
+                                $('#dropzone-att')
+                                    .find('.form-error-message').css("display", "block");
+                                $('#dropzone-att').css('border', 'solid 1px red');
+                            }
+                        }
+                    });
+
+                    //var _ref;
+                    //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+
+                }).on("maxfilesexceeded", function(file) {
+                    alert('allow maximum 2 file');
+                    this.removeFile(file);
+                }).on('complete', function(file) {
+                    let val = file.accepted;
+                    if (file.accepted == true) {
+                        obj = JSON.parse(file.xhr.response);
+                        //file.previewElement.id = obj.success;
+                        // console.log(obj.success);
+                        //alert(obj.success);
+                        //$('#infinite').append("<input type='text' id='" + obj.success +
+                        //   "' class='form_none' name='imgFiles2[]' value='" + obj.success + "'/>");
+                    }
+                    let val1 = file.name;
+                    $('#dropzone_preview2').css("display", "block");
+                    $('#dropzone-att').removeClass('form-focus-error');
+                    $('#dropzone-att')
+                        .find('.form-error-message').css("display", "none");
+                    $('#dropzone-att').css('border', 'solid 1px green');
+                    if (document.getElementsByName('imgFiles2[]').length) {
+                        //$('#error_div').css('display', 'none');
+                    }
+                }).on("success", function(file) {
+                    //var responseText = file.id // or however you would point to your assigned file ID here;
+                    //console.log(response); // console should show the ID you pointed to
+                    // do stuff with file.id ...
+                });
+                /*this.on("addedfile", function(file) {
+
+                }).on("removedfile", function(file) {
+
+                }).on("thumbnail", function(file) {
+
+                }).on("error", function(file) {
+
+                }).on("processing", function(file) {
+
+                }).on("uploadprogress", function(file) {
+
+                });*/
+
+            }
+        }
+
+        Dropzone.options.myAwesomeDropzone = {
+            url: '{{ route('receipt_school.upload') }}',
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            paramName: "file", // ชื่อไฟล์ปลายทางเมื่อ upload แบบ mutiple จะเป็น array
+            autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
+            uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
+            parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
+            maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+            maxfilesexceeded: function(file) {
+            this.removeAllFiles();
+            this.addFile(file);
+            },
+            addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
+            maxFilesize: 10, // MB
+            previewsContainer: "#dropzone_preview", // ระบุ element เป้าหลาย
+            //previewTemplate: $('#template-preview').html(),
+            dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
+            renameFile: function(file) {
+                let newName = new Date().getTime() + '_' + file.name;
+                file.newName = newName;
+                return newName;
+            },
+            dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
+            dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
+            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
+            acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
+
+            // The setting up of the dropzone
+            init: function() {
+                myDropzone = this;
+                this.on("addedfile", function(file) {
+                    //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
+                    $('#infiniteEdit').append("<input type='text' id='" + file.newName +
+                       "' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
+                    file.previewElement.id = file.newName;
+                }).on("removedfile", function(file) {
+                    //alert(file.id);
+                    //var name = file.name;
+                    var name = file.previewElement.id;
+
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        type: 'POST',
+                        url: '{{ route('receipt_school.delete') }}',
+                        data: {
+                            name: name,
+                        },
+                        success: function(data) {
+                            console.log('success: ' + data);
+                            var element = document.getElementById("infinite");
+                            var child = document.getElementById(name);
+                            element.removeChild(child);
+                            if (!document.getElementsByName('imgFiles[]').length) {
+                                $('#dropzone_preview').css("display", "none");
+                                $('#dropzone-photo').addClass('form-focus-error');
+                                $('#dropzone-photo')
+                                    .find('.form-error-message').css("display", "block");
+                                $('#dropzone-photo').css('border', 'solid 1px red');
+                            }
+                        }
+                    });
+
+                    //var _ref;
+                    //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+
+                }).on("maxfilesexceeded", function(file, response) {
+                    alert('allow maximum 2 file');
+                    this.removeFile(file);
+                }).on('complete', function(file) {
+                    let val = file.accepted;
+                    if (file.accepted == true) {
+                        obj = JSON.parse(file.xhr.response);
+                        //file.previewElement.id = obj.success;
+                        console.log(obj.success);
+                        //$('#infinite').append("<input type='text' id='" + obj.success +
+                        //    "' class='form_none' name='imgFiles[]' value='" + obj.success + "'/>");
+                    }
+                    let val1 = file.name;
+                    $('#dropzone_preview').css("display", "block");
+                    $('#dropzone-photo').removeClass('form-focus-error');
+                    $('#dropzone-photo')
+                        .find('.form-error-message').css("display", "none");
+                    $('#dropzone-photo').css('border', 'solid 1px green');
+                    if (document.getElementsByName('imgFiles[]').length) {
+                        //$('#error_div').css('display', 'none');
+                    }
+                }).on("success", function(file) {
+                    //var responseText = file.id // or however you would point to your assigned file ID here;
+                    //console.log(response); // console should show the ID you pointed to
+                    // do stuff with file.id ...
+                });
+                /*this.on("addedfile", function(file) {
+
+                }).on("removedfile", function(file) {
+
+                }).on("thumbnail", function(file) {
+
+                }).on("error", function(file) {
+
+                }).on("processing", function(file) {
+
+                }).on("uploadprogress", function(file) {
+
+                });*/
+
+            }
+        }
+
+        // Dropzone.options.myAwesomeDropzone2 = {
+        //     url: '{{ route('receipt_school.upload') }}',
+        //     headers: {
+        //         'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        //     },
+        //     paramName: "file", // ชื่อไฟล์ปลายทางเมื่อ upload แบบ mutiple จะเป็น array
+        //     autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
+        //     uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
+        //     parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
+        //     maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+        //     maxfilesexceeded: function(file) {
+        //     this.removeAllFiles();
+        //     this.addFile(file);
+        //     },
+        //     addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
+        //     maxFilesize: 10, // MB
+        //     renameFile: function(file) {
+        //         let newName = new Date().getTime() + '_' + file.name;
+        //         file.newName = newName;
+        //         return newName;
+        //     },
+        //     previewsContainer: "#dropzone_previewEdit2", // ระบุ element เป้าหลาย
+        //     //previewTemplate: $('#template-preview').html(),
+        //     dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
+        //     dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
+        //     dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
+        //     dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
+        //     acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
+        //     // The setting up of the dropzone
+        //     init: function() {  
+        //         var myDropzone = this;
+        //         // var mockFile = { name: 'public/images/infinite.jpg', size: 12345, type: 'image/jpeg' };
+        //         // myDropzone.emit("addedfile", mockFile);
+        //         // myDropzone.emit("success", mockFile);
+        //         // myDropzone.emit("thumbnail", mockFile, "https://example.com")
+        //         // myDropzone = this;
+        //         this.on("addedfile", function(file) {
+        //             //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.name + "'/>");
+        //             $('#infiniteEdit').append("<input type='text' id='" + file.newName +
+        //                 "' class='form_none' name='imgFiles2[]' value='" + file.newName + "'/>");
+        //             file.previewElement.id = file.newName;
+        //         }).on("removedfile", function(file) {
+        //             //alert(file.id);
+        //             //var name = file.name;
+        //             var name = file.previewElement.id;
+
+        //             $.ajax({
+        //                 headers: {
+        //                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        //                 },
+        //                 type: 'POST',
+        //                 url: '{{ route('receipt_school.delete') }}',
+        //                 data: {
+        //                     name: name,
+        //                 },
+        //                 success: function(data) {
+        //                     console.log('success: ' + data);
+        //                     var element = document.getElementById("infiniteEdit");
+        //                     var child = document.getElementById(name);
+        //                     element.removeChild(child);
+        //                     if (!document.getElementsByName('imgFiles2[]').length) {
+        //                         //alert();
+        //                         $('#dropzone_previewEdit2').css("display", "none");
+        //                         $('#dropzone-attEdit').addClass('form-focus-error');
+        //                         $('#dropzone-attEdit')
+        //                             .find('.form-error-message').css("display", "block");
+        //                         $('#dropzone-attEdit').css('border', 'solid 1px red');
+        //                     }
+        //                 }
+        //             });
+
+        //             //var _ref;
+        //             //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+
+        //         }).on("maxfilesexceeded", function(file) {
+        //             alert('allow maximum 2 file');
+        //             this.removeFile(file);
+        //         }).on('complete', function(file) {
+        //             let val = file.accepted;
+        //             if (file.accepted == true) {
+        //                 obj = JSON.parse(file.xhr.response);
+        //                 //file.previewElement.id = obj.success;
+        //                 // console.log(obj.success);
+        //                 //alert(obj.success);
+        //                 //$('#infinite').append("<input type='text' id='" + obj.success +
+        //                 //   "' class='form_none' name='imgFiles2[]' value='" + obj.success + "'/>");
+        //             }
+        //             let val1 = file.name;
+        //             $('#dropzone_previewEdit2').css("display", "block");
+        //             $('#dropzone-attEdit').removeClass('form-focus-error');
+        //             $('#dropzone-attEdit')
+        //                 .find('.form-error-message').css("display", "none");
+        //             $('#dropzone-attEdit').css('border', 'solid 1px green');
+        //             if (document.getElementsByName('imgFiles2[]').length) {
+        //                 //$('#error_div').css('display', 'none');
+        //             }
+        //         }).on("success", function(file) {
+        //             //var responseText = file.id // or however you would point to your assigned file ID here;
+        //             //console.log(response); // console should show the ID you pointed to
+        //             // do stuff with file.id ...
+        //         });
+        //         /*this.on("addedfile", function(file) {
+
+        //         }).on("removedfile", function(file) {
+
+        //         }).on("thumbnail", function(file) {
+
+        //         }).on("error", function(file) {
+
+        //         }).on("processing", function(file) {
+
+        //         }).on("uploadprogress", function(file) {
+
+        //         });*/
+
+        //     }
+        // }
+
 </script>
 @endsection

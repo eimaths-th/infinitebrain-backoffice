@@ -43,10 +43,12 @@
     <script defer src="{{ asset('architectui/assets/scripts/fullcalendar.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/maps.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/chart_js.js') }}"></script>
+	<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 
     <!-- Scripts
       @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     -->
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('css/infinite.css') }}">
