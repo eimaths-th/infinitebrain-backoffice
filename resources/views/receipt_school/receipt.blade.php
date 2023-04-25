@@ -1119,6 +1119,8 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="tab-eg20-0" role="tabpanel">
+                            <input type="text" class="form-control" name="id_parent" id="id_parent" value="" readonly hidden>
+
                                 <div class="form-row">
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
@@ -1227,7 +1229,7 @@
                                                 <div style="width: 280px"></div>
                                             </label>
                                             <input type="text" id="drop1" name="drop1"
-                                                class="form-control form_none" value="" required>
+                                                class="form-control form_none" value="" >
                                             <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
                                                 <div class="fallback">
                                                     
@@ -1763,7 +1765,7 @@
             $.ajax({
                 url: "receipt_school/delete/" + id +"/"+ id2 ,
                 method: 'PUT',
-                async : false,
+                // async : false,
                 success: function(res) {
                     $('.imgs').html(res.imgs);
 
@@ -1787,6 +1789,7 @@
                     //console.log(res);
                     //$('#EditModalBody').html(res.html);
                     //console.log(res.data_html);
+                    $('#id_parent').val(res.data.id);
                     $('#receipt_number').val(res.data.receipt_number);
                     $('#customer_code').val(res.data2.code);
                     $('#EditSubmissiondate').val(res.data.submission_date);
@@ -2218,9 +2221,10 @@
             $.ajax({
                 url: "receipt_school/save/" + id,
                 method: 'PUT',
-                async : false,
+                // async : false,
                 data: {
                     img : values,
+                    id_parent : $('#id_parent').val(),
                     submission_date: $('#EditSubmissiondate').val(),
                     name_parent: $('#EditParentID').val(),
                     description: $('#EditDes').val(),

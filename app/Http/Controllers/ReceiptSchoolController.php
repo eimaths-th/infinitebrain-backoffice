@@ -755,20 +755,24 @@ class ReceiptSchoolController extends Controller
         $pic = explode('|',$data->file_att);
         $x=0;
         foreach($pic as $pics){
+            if($pic!=Null && $pic != ""){
             if($pics!=Null && $pics != ""){
+                // echo("1");
                 $html .= '
                 <div class="col-md-4 text-center mb-3 ">
                 <img src="'.url('/').'/receipts_form_school/'.$pics.'" class=" mt-5 mb-3" height="400" width="300">
                 <a href="#" class="btn btn-xs btn-danger btn-edit" id="getDeleteData" data-id2="'.$data->id.'" data-id="'.$pics.'">delete </a> 
                 </div>
                 ';   
-            }else{
+                
+            }}else{
+                // echo("2");
                 $html = "";
             }
          
 
         }
-        // print_r($pic);
+        // print_r($data->id);
         // exit();
         return response()->json([
             'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html  , 'imgs' => $html
@@ -1176,8 +1180,7 @@ class ReceiptSchoolController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-        // print_r($request->get('img'));
-        // exit();
+        
        
         $img = $request->get('img');
         // print_r($id);
@@ -1199,7 +1202,8 @@ class ReceiptSchoolController extends Controller
         // if($imageNew!=Null && $imageNew!=""){
             
         // }
-        $dataimg = Receipt_School::find($id);
+        $id_parent = $request->get('id_parent');
+        $dataimg = Receipt_School::find($id_parent);
         
         // echo($dataimg->file_att);
         // exit();
@@ -1216,22 +1220,27 @@ class ReceiptSchoolController extends Controller
         // }
 
         // $filebs = rtrim($filebs, "|");
-        
-        $stu = $dataimg->file_att ."|". $stu;
+        // $id_parent = Receipt_School::find($id_parent);
+        if($dataimg->file_att != Null && $dataimg->file_att!=""){
+            $stu = $dataimg->file_att ."|". $stu;
 
-        $stu = rtrim($stu, "|");
+            $stu = rtrim($stu, "|");
         // Receipt_School::find($id)->save('file_att' => $stu);
-        $data = new Receipt_School([
+        // $data = new Receipt_School([
             
-            'file_att' => $stu,
+        //     'file_att' => $stu,
 
-        ]);
+        // ]);
         // print_r($data);
         // exit();
-        
-        Receipt_School::find($id)->update(['file_att' => $stu]);
+            Receipt_School::find($id_parent)->update(['file_att' => $stu]);
 
-        $data->update();
+        // $data->update();
+        }else{
+            Receipt_School::find($id_parent)->update(['file_att' => $stu]);
+            return response()->json(['success' => 'Receipt updated successfully']);
+        }
+        
 
         // echo $request->get('name_parent2');
         // exit();
