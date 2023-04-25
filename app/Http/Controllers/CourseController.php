@@ -62,7 +62,7 @@ class CourseController extends Controller
                 //->where('levels.subject', $request->id)
                 ->orderBy("courses.id", "desc")
                 ->get();
-           
+
             return datatables()->of($course)
                 ->editColumn('student_name', function (Course $course) {
                     return $course->student_name . ' ' . $course->student_lastname;
@@ -145,7 +145,7 @@ class CourseController extends Controller
         if ($type !== "html") {
             $this->check_permission();
         }
-        
+
         $course = Course::select(
             "courses.id as course_id",
             "levels.title as student_level",
@@ -467,6 +467,12 @@ class CourseController extends Controller
             } else {
                 $level_sort = $key->level_sort;
             }
+
+            //play math
+            //if ($course[0]->id == 2) {
+                //$course[0]->book_per_month = $key->book_per_level;
+                ///$course[0]->book_per_month = $levels_start[0]->book_per_level;
+            //}
 
 
             $tdhtml[$key->level_sort] = "";
