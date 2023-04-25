@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                    background-size: 15px;
-                                }*/
+                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                        background-size: 15px;
+                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                input:not(:focus):not(:placeholder-shown):invalid {
-                                    border-color: var(--color-invalid);
-                                }*/
+                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                        border-color: var(--color-invalid);
+                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                    display: block;
-                                }*/
+                                        display: block;
+                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -78,7 +78,7 @@
 
         body {
             background-color: #27408B;
-;
+            ;
         }
 
         .form_header {
@@ -199,7 +199,7 @@
         }
 
         .form_none {
-             display: none;
+            display: none;
         }
 
         .dropzone {
@@ -541,8 +541,8 @@
             <div class="col-md-9">
                 <div class="card bg-light2 mb-3 ">
                     {{-- <div class="card-header">{{ __('Login') }}</div> --}}
-                    <div align="center"><img class="card-img" src="{{ asset('images/88.png  ') }}"
-                            alt="..." height="360"></div>
+                    <div align="center"><img class="card-img" src="{{ asset('images/88.png  ') }}" alt="..."
+                            height="360"></div>
                     <form id="infinite" method="POST" action="{{ route('form.store') }}" onsubmit="return check_input();">
                         @csrf
                         <div class="card-body">
@@ -557,15 +557,16 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;font-size:20px;">OLPCS 2023 Registration
+                                                    style="text-decoration: underline;font-size:20px;">OLPCS 2023
+                                                    Registration
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
                                                 Date:</strong> 1 April - 2 June 2023</span></p>
                                     <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;24 June 2023</span>
                                     </p>
                                     <!-- <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
-                                            2023</span>
-                                    </p> -->
+                                                2023</span>
+                                        </p> -->
                                     <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
                                     </p>
                                     <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
@@ -764,7 +765,8 @@
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test: 1350 baht">Test: 1350 baht </option>
-                                                <option value="Test+ tutoring course: 1790 bath (1 class 2 hours)">Test+ tutoring course: 1790 bath (1 class 2 hours)</option>
+                                                <option value="Test+ tutoring course: 1790 bath (1 class 2 hours)">Test+
+                                                    tutoring course: 1790 bath (1 class 2 hours)</option>
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -917,8 +919,8 @@
                                 </div>
 
                                 <br>
-                                <div align="center"><img src="{{ asset('images/PayMent.png') }}"
-                                        alt="..." height="300"></div>
+                                <div align="center"><img src="{{ asset('images/PayMent.png') }}" alt="..."
+                                        height="300"></div>
                                 <br>
 
                                 <div class="form-row form-focus" id="dropzone-att">
@@ -1176,8 +1178,8 @@
             parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
             maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
             maxfilesexceeded: function(file) {
-            this.removeAllFiles();
-            this.addFile(file);
+                this.removeAllFiles();
+                this.addFile(file);
             },
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
             maxFilesize: 10, // MB
@@ -1200,7 +1202,7 @@
                 this.on("addedfile", function(file) {
                     //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
                     $('#infinite').append("<input type='text' id='" + file.newName +
-                       "' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
+                        "' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
                     file.previewElement.id = file.newName;
                 }).on("removedfile", function(file) {
                     //alert(file.id);
@@ -1259,6 +1261,8 @@
                     //var responseText = file.id // or however you would point to your assigned file ID here;
                     //console.log(response); // console should show the ID you pointed to
                     // do stuff with file.id ...
+                }).on("error", function(file) {
+                    this.removeFile(file);
                 });
                 /*this.on("addedfile", function(file) {
 
@@ -1288,8 +1292,8 @@
             parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
             maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
             maxfilesexceeded: function(file) {
-            this.removeAllFiles();
-            this.addFile(file);
+                this.removeAllFiles();
+                this.addFile(file);
             },
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
             maxFilesize: 10, // MB
@@ -1372,6 +1376,8 @@
                     //var responseText = file.id // or however you would point to your assigned file ID here;
                     //console.log(response); // console should show the ID you pointed to
                     // do stuff with file.id ...
+                }).on("error", function(file) {
+                    this.removeFile(file);
                 });
                 /*this.on("addedfile", function(file) {
 
@@ -1494,7 +1500,9 @@
         const warningDescCSS = 'font-size: 18px;';
 
         console.log('%cหยุด!', warningTitleCSS);
-        console.log("%cนี่เป็นคุณสมบัติการทำงานของเบราว์เซอร์ที่มีจุดมุ่งหมายให้ใช้สำหรับผู้พัฒนา หากผู้ใดบอกให้คุณคัดลอกแล้ววางข้อความบางอย่างที่นี่เพื่อเปิดใช้งานคุณสมบัติการทำงานของ ระบบ หรือเพื่อเข้าถึงบัญชีของบุคคลใดบุคคลหนึ่ง โดยมิชอบ คำบอกกล่าวเช่นนี้เป็นกลลวงและจะทำให้ผู้นั้นมีสิทธิ์เข้าถึงบัญชี ของคุณ", warningDescCSS);
+        console.log(
+            "%cนี่เป็นคุณสมบัติการทำงานของเบราว์เซอร์ที่มีจุดมุ่งหมายให้ใช้สำหรับผู้พัฒนา หากผู้ใดบอกให้คุณคัดลอกแล้ววางข้อความบางอย่างที่นี่เพื่อเปิดใช้งานคุณสมบัติการทำงานของ ระบบ หรือเพื่อเข้าถึงบัญชีของบุคคลใดบุคคลหนึ่ง โดยมิชอบ คำบอกกล่าวเช่นนี้เป็นกลลวงและจะทำให้ผู้นั้นมีสิทธิ์เข้าถึงบัญชี ของคุณ",
+            warningDescCSS);
         //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
-      </script>
+    </script>
 @endsection
