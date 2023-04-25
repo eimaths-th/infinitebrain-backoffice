@@ -12,6 +12,23 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
+    input:required:focus:invalid~.form-error-message {
+            display: block;
+        }
+        .form-error-message {
+            color: #fff;
+            background-color: #f23a3c;
+            background-image: url(data:image/svg+xml;charset=utf-8,%3Csvg width='14' height='15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M7 14.515a7 7 0 110-14 7 7 0 010 14zm-.814-5.86h1.628v-5.21H6.186v5.21zM7 11.259a.82.82 0 00.814-.824A.816.816 0 007 9.631a.813.813 0 100 1.628z' fill='%23fff'/%3E%3C/svg%3E);
+            font-size: .75em;
+            margin-top: 8px;
+            border-radius: 4px;
+            background-size: 0.875em;
+            background-position: 0.375em;
+            background-repeat: no-repeat;
+            display: none;
+            width: 200px;
+            padding: 0.25em 0.5em 0.25em 1.625em;
+        }
     .dropzone {
             width: 100%;
             height: 180px;
@@ -752,10 +769,10 @@
                                             </div>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Receipt Photo</label>
-                                            <div id="dropzone-att-error" class="form-error-message" role="alert"><img
+                                            <div id="dropzone-att-error"  class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10">
-                                                <span class="error-navigation-message">This field is
+                                                    height="10" >
+                                                <span class="error-navigation-message" >This field is
                                                     required.</span>
                                                 <div class="form-error-arrow">
                                                     <div class="form-error-arrow-inner"></div>
@@ -1239,8 +1256,8 @@
                                                 aria-hidden="false">Receipt Photo</label>
                                             <div id="dropzone-att-error" class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10">
-                                                <span class="error-navigation-message">This field is
+                                                    height="10" >
+                                                <span class="error-navigation-message" >This field is
                                                     required.</span>
                                                 <div class="form-error-arrow">
                                                     <div class="form-error-arrow-inner"></div>
@@ -2520,7 +2537,7 @@
             autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
             uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
             parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
-            maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+            maxFiles: 5, // ไฟล์สูงสุด 5 ไฟล์
             maxfilesexceeded: function(file) {
             this.removeAllFiles();
             this.addFile(file);
@@ -2586,7 +2603,7 @@
                     //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
 
                 }).on("maxfilesexceeded", function(file) {
-                    alert('allow maximum 2 file');
+                    alert('allow maximum 5 file');
                     this.removeFile(file);
                 }).on('complete', function(file) {
                     let val = file.accepted;
@@ -2638,7 +2655,7 @@
             autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
             uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
             parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
-            maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+            maxFiles: 5, // ไฟล์สูงสุด 5 ไฟล์
             maxfilesexceeded: function(file) {
             this.removeAllFiles();
             this.addFile(file);
@@ -2699,7 +2716,7 @@
                     //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
 
                 }).on("maxfilesexceeded", function(file, response) {
-                    alert('allow maximum 2 file');
+                    alert('allow maximum 5 file');
                     this.removeFile(file);
                 }).on('complete', function(file) {
                     let val = file.accepted;

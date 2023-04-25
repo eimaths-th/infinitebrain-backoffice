@@ -1005,22 +1005,11 @@ class ReceiptSchoolController extends Controller
         // $filesb = $request->get('imgFiles2');
         // print_r($request->get('img'));
         // exit();
-        $filesb = $request->get('img');
-
-        $filebs = "";
-        foreach ($filesb as $fileb) {
-            //echo $fileb;
-
-            $oldfile = FileUpload::where('oldname', $fileb)->get();
-            $filebs .= $oldfile[0]->filename . "|";
-            File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
-            FileUpload::where('filename', $oldfile[0]->filename)->delete();
-        }
-
-        $filebs = rtrim($filebs, "|");
+        
 
             // print_r($request->receipt);
             // exit();
+           
         $validator =  Validator::make($request->all(), [
             // 'type' => 'required|string',
             'submission_date' => 'required|string',
@@ -1048,6 +1037,15 @@ class ReceiptSchoolController extends Controller
 
             // 'file_att' => 'required|string
 
+        ],
+        [
+            'receipt.*.subject.required' => 'The Subject field is required.  !',
+            'receipt.*.level.required' => 'The Start Level field is required.  !',
+            'receipt.*.week.required' => 'The Week field is required.  !',
+            'receipt.*.qty.required' => 'The QTY field is required. !',
+            'receipt.*.price.required' => 'The Price field is required.  !',
+            'receipt.*.pp.required' => 'The Book field is required.  !',
+
         ]);
 
         if ($validator->fails()) {
@@ -1055,7 +1053,19 @@ class ReceiptSchoolController extends Controller
         }
 
 
+        $filesb = $request->get('img');
 
+        $filebs = "";
+        foreach ($filesb as $fileb) {
+            //echo $fileb;
+
+            $oldfile = FileUpload::where('oldname', $fileb)->get();
+            $filebs .= $oldfile[0]->filename . "|";
+            File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
+            FileUpload::where('filename', $oldfile[0]->filename)->delete();
+        }
+
+        $filebs = rtrim($filebs, "|");
 
 
         $st = $request->get('student');
