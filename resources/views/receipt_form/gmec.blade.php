@@ -1385,9 +1385,6 @@
                     //var responseText = file.id // or however you would point to your assigned file ID here;
                     //console.log(response); // console should show the ID you pointed to
                     // do stuff with file.id ...
-                    .on("error", function(file) {
-                    this.removeFile(file);
-                    alert("please check file format or file size");
                 }).on("error", function(file) {
                     this.removeFile(file);
                     alert("please check file format or file size");
