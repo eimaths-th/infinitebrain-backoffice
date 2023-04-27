@@ -35,5 +35,6 @@ class Receipt extends Model
         'grade',
         'description',
         'description2',
+        'contest',
     ];
 }

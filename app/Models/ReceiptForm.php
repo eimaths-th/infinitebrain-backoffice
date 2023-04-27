@@ -37,5 +37,6 @@ class ReceiptForm extends Model
         'grade',
         'description',
         'description2',
+        'contest',
     ];
 }

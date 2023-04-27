@@ -42,6 +42,7 @@ class ExportForm implements FromCollection, WithHeadings
             "name_parent",
             "mobile",
             "package",
+            "contest",
             DB::raw("CONCAT('" . url('/') . "/receipt_form_images/',photo_att) AS photo"),
             DB::raw("CONCAT('" . url('/') . "/receipt_form_images/',file_att) AS slip"),
             "news_form"
@@ -64,6 +65,7 @@ class ExportForm implements FromCollection, WithHeadings
             'Name Parent',
             'Mobile',
             'Package',
+            'Contest',
             'Photo',
             'Slip',
             'News From',

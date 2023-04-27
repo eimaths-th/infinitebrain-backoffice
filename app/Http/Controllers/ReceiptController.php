@@ -28,8 +28,8 @@ class ReceiptController extends Controller
     const BAHT_TEXT_BAHT = 'บาท';
     const BAHT_TEXT_SATANG = 'สตางค์';
     const BAHT_TEXT_POINT = 'จุด';
-    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS');
-    const sfieldas = array('2' => 'G', '4' => 'J', '5' => 'I', '6' => 'L', '7' => 'M', '8' => 'N', '9' => 'O');
+    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE');
+    const sfieldas = array('2' => 'G', '4' => 'J', '5' => 'I', '6' => 'L', '7' => 'M', '8' => 'N', '9' => 'O', '10' => 'P');
     const thmonth = array(
         "",
         "มกราคม",
@@ -411,6 +411,7 @@ class ReceiptController extends Controller
             "receipts.mobile as receipt_mobile",
             "receipts.description as receipt_des",
             "receipts.package as package",
+            "receipts.contest as contest",
         )
             //->join("students", "students.id", "=", "receipts.student_id")
             //->join("subjects", "subjects.id", "=", "receipts.subject_id")
@@ -421,7 +422,7 @@ class ReceiptController extends Controller
             ->get();
 
         foreach ($receipts as $result) {
-            echo $result->receipt_id . "vv";
+            //echo $result->receipt_id . "vv";
 
             if ($result->package) {
                 $res = preg_replace("/[^0-9.]/", "", $result->package);
@@ -432,7 +433,7 @@ class ReceiptController extends Controller
             $price = (int)$res;
 
 
-            echo $price . "vv";
+            //echo $price . "vv";
             $des = explode("\n", $result->receipt_des);
             $i = 0;
             for ($i = 0; $i <= count($des) - 1; $i++) {
@@ -455,7 +456,7 @@ class ReceiptController extends Controller
                 ]);
                 $level->save();
             }
-            echo "<br><br>";
+            //echo "<br><br>";
         }
     }
 
