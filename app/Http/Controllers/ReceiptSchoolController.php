@@ -616,7 +616,19 @@ class ReceiptSchoolController extends Controller
                 $messageprice = "New Price";
             }
 
+            $onoff = "";
+            if($subject[0]->id==3){
+                $onoff = "";
+            }else{
+                $onoff = "disabled";
+            }
 
+            $weekstaus = "";
+            if($dresult['week']==4){
+                $weekstaus="";
+            }else{
+                $weekstaus="disabled";
+            }
 
 
             $data_html .= '<tr class="firstTr3">
@@ -650,7 +662,7 @@ class ReceiptSchoolController extends Controller
 
         <td width="7%">
             <div class="col-md-12 col-sm-12 col-xs-12">
-            <select style="width: 100%;" class=" form-control" id="rrweek" name="rrweek[]">
+            <select style="width: 100%;" class=" form-control" id="rrweek" name="rrweek[]" >
                                                         <option class="weekh" value="' . $dresult['week'] . '" selected>' . $dresult['week'] . " " . "week" . '</option>
 
                                                         <option value="1">1 week
@@ -659,7 +671,7 @@ class ReceiptSchoolController extends Controller
                                                         </option>
                                                         <option value="3">3 week
                                                         </option>
-                                                        <option value="4">4 week
+                                                        <option value="4">Month
                                                         </option>
                                                     </select>
 
@@ -667,7 +679,7 @@ class ReceiptSchoolController extends Controller
         </td>
         <td width="7%">
         <div class="col-md-12 col-sm-12 col-xs-12">
-        <select style="width: 100%;" class=" form-control" id="rrqty" name="rrqty[]">
+        <select style="width: 100%;" class=" form-control" id="rrqty" name="rrqty[]" '.$weekstaus.'>
                                                         <option class="qtyh" value="' . $dresult['qty'] . '" selected>' . $dresult['qty'] . '</option>
 
                                                         <option value="1">1
@@ -679,6 +691,20 @@ class ReceiptSchoolController extends Controller
                                                         <option value="4">4
                                                         </option>
                                                         <option value="5">5
+                                                        </option>
+                                                        <option value="6">6
+                                                        </option>
+                                                        <option value="7">7
+                                                        </option>
+                                                        <option value="8">8
+                                                        </option>
+                                                        <option value="9">9
+                                                        </option>
+                                                        <option value="10">10
+                                                        </option>
+                                                        <option value="11">11
+                                                        </option>
+                                                        <option value="12">12
                                                         </option>
 
                                                     </select>
@@ -700,7 +726,7 @@ class ReceiptSchoolController extends Controller
     </td>
     <td width="10%">
             <div class="col-md-12 col-sm-12 col-xs-12 ">
-            <select style="width: 100%;" class=" form-control" id="rrtype" name="rrtype[]" disabled>
+            <select style="width: 100%;" class=" form-control" id="rrtype" name="rrtype[]" '.$onoff.'>
             <option value="' . $dresult['type'] . '" selected>' . $message . '</option>
             <option value="1">One Tpye แบบเดี่ยว
             </option>

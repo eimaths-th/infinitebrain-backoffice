@@ -1940,7 +1940,6 @@
         $(document).on('change', '#week', function(e) {
             // console.log($(this).parent().parent().parent().html())
             // console.log($(this).parent().parent().parent().find('#type').html())
-            // $(this).parent().parent().parent().find('#discount').val(new Date().toDateString())
             // $('#discount').val(new Date().toDateString())
             var parent = $(this).parent().parent().parent();
             week = $(this).parent().parent().parent().find('#week').val();
@@ -1954,7 +1953,8 @@
                 parent.find('#qty').prop("disabled", true);
                 parent.find('#qty').val(1);
             }
-        })
+        })     // $(this).parent().parent().parent().find('#discount').val(new Date().toDateString())
+       
         $(".aaa").change(function() {
             // console.log($(this).parent().parent().parent().html())
             // console.log($(this).parent().parent().parent().find('#type').html())
@@ -2009,7 +2009,24 @@
         //         }
         //     }); //end ajax
         // })
+        $(document).on('change', '#rrweek', function(e) {
+            // console.log($(this).parent().parent().parent().html())
+            // console.log($(this).parent().parent().parent().find('#type').html())
+            // $('#discount').val(new Date().toDateString())
+            var parent = $(this).parent().parent().parent();
+            week = $(this).parent().parent().parent().find('#rrweek').val();
+            if (week == 4) {
+                // parent.find('.abc').prop( "disabled", false );
+                parent.find('#rrqty').prop("disabled", false);
+                parent.find('#rrqty').val(1);
 
+
+            } else {
+                // parent.find('.abc').prop( "disabled", true );
+                parent.find('#rrqty').prop("disabled", true);
+                parent.find('#rrqty').val(1);
+            }
+        })   
         $(document).on('change', '#rrbook', function(e) {
             var parent = $(this).parent().parent().parent();
             var sub_id = parent.find('#rrsub').val();
