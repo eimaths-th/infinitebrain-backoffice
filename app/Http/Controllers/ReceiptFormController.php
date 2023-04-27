@@ -345,7 +345,7 @@ class ReceiptFormController extends Controller
         // exit();
 
         $adminEmail = $request->get('email');
-        //Mail::to($adminEmail)->send(new ContactMail($receiptForm));
+        Mail::to($adminEmail)->send(new ContactMail($receiptForm));
         $receiptForm->save();
         //  print_r (['sfield' => $request->sfield]);
         // exit();

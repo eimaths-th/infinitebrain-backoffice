@@ -786,7 +786,7 @@
                                                     <select class="form-control" id="contest" name="contest"
                                                     aria-label="Choose Contest Category" required>
                                                     <option value="">Please Select</option>
-                                                    <option value="Science Category 1 (Kindergarten ,Grades 1)">Science Category 1 </option>
+                                                    <option value="Science Category 1 (Kindergarten ,Grades 1)">Science Category 1 (Kindergarten ,Grades 1) </option>
                                                     <option value="Science Category 2 (Grades 2-3)">Science Category 2 (Grades 2-3)</option>
                                                     <option value="Science Category 3 (Grades 4-5)">Science Category 3 (Grades 4-5)</option>
                                                     <option value="Science Category 4 (Grades 6-7)">Science Category 4 (Grades6-7)</option>
