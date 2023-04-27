@@ -1100,7 +1100,7 @@
                                             </td>
                                             <td width="10%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 ">
-                                                    <input type="text" class="form-control" name="period" id="period" value="">
+                                                    <input type="text" class="form-control" name="period" id="period" value="" required>
 
                                                 </div>
                                             </td>
@@ -2181,6 +2181,7 @@
                 //test
 
             });
+            
             var values = $("input[name='imgFiles2[]']")
               .map(function(){return $(this).val();}).get();
                 // console.log(values);
