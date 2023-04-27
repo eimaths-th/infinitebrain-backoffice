@@ -258,7 +258,16 @@
                                 <input type="text" class="form-control" name="postcode" id="AddPostcode"
                                     value="" >
                             </div>
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="Parent">Contest:</label>
+                                        <input type="text" class="form-control" name="contest" id="AddContest"
+                                            value="" >
+                                    </div>
+                                </div>
 
+                            </div>
 
                             <div class="form-row text-center">
                                 <div class="col-md-6">
@@ -433,6 +442,7 @@
                         //$('#EditModalBody').html(res.html);
                         $('#AddSubmissiondate').val(res.data.submission_date);
                         $('#AddPackage').val(res.data.package);
+                        $('#AddContest').val(res.data.contest);
                         $('#AddFirstname').val(res.data.first_name);
                         $('#AddLastname').val(res.data.last_name);
                         $('#AddNickname').val(res.data.nick_name);
@@ -495,6 +505,7 @@
                         name_parent: $('#AddParent').val(),
                         mobile: $('#AddMobile').val(),
                         package: $('#AddPackage').val(),
+                        contest: $('#AddContest').val(),
                         file_att: $('#AddFile').val(),
                         sfield: $('#Sfield').val(),
                         fid: $('#fid').val(),

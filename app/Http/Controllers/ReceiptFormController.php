@@ -23,7 +23,7 @@ use App\Exports\ExportUser;
 
 class ReceiptFormController extends Controller
 {
-    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS');
+    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE');
 
     public function gmec()
     {
@@ -33,6 +33,11 @@ class ReceiptFormController extends Controller
     public function olpcs()
     {
         return view("receipt_form.olpcs");
+    }
+
+    public function asiarope()
+    {
+        return view("receipt_form.asiarope");
     }
 
     public function fileStore(Request $request)
@@ -324,6 +329,7 @@ class ReceiptFormController extends Controller
             'school_name' => $request->get('schoolname'),
             'grade' => $request->get('grade'),
             'package' => $request->get('package'),
+            'contest' => $request->get('contest'),
             'name_parent' => $request->get('parent'),
             'street_address' => $request->get('address'),
             'postcode' => $request->get('postcode'),
@@ -339,7 +345,7 @@ class ReceiptFormController extends Controller
         // exit();
 
         $adminEmail = $request->get('email');
-        Mail::to($adminEmail)->send(new ContactMail($receiptForm));
+        //Mail::to($adminEmail)->send(new ContactMail($receiptForm));
         $receiptForm->save();
         //  print_r (['sfield' => $request->sfield]);
         // exit();

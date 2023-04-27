@@ -16,8 +16,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                <p>{{ $message }}</p>
-                                    </div>-->
+                                    <p>{{ $message }}</p>
+                                        </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -27,8 +27,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                        <p>{{ $message }}</p>
-                                            </div>-->
+                                            <p>{{ $message }}</p>
+                                                </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -423,85 +423,84 @@
                         </div>
 
                         <!--<div class="form-row">
-                            <div class="col-md-6">
-                                <div class="position-relative form-group">
-                                    <label for="City">City:</label>
-                                    <input type="text" class="form-control" name="city" id="AddCity"
-                                        value="">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="City">City:</label>
+                                        <input type="text" class="form-control" name="city" id="AddCity"
+                                            value="">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="position-relative form-group">
-                                    <label for="Province">Province:</label>
-                                    <input type="text" class="form-control" name="province" id="AddProvince"
-                                        value="">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="Province">Province:</label>
+                                        <input type="text" class="form-control" name="province" id="AddProvince"
+                                            value="">
+                                    </div>
                                 </div>
-                            </div>
-                        </div>-->
-                                                    <div class="col-md-6">
-                                                        <div class="position-relative form-group">
-                                                            <label for="City">City:</label>
-                                                            <input type="text" class="form-control" name="city" id="AddCity"
-                                                                value="">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="position-relative form-group">
-                                                            <label for="Province">Province:</label>
-                                                            <input type="text" class="form-control" name="province" id="AddProvince"
-                                                                value="">
-                                                        </div>
-                                                    </div>
-                                                </div>-->
-                        <div class="form-row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="Parent">Name Parent:</label>
-                                    <input type="text" class="form-control" name="name_parent" id="AddParent"
-                                        value="">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="Mobile">Mobile:</label>
-                                    <input type="text" class="AddPhone form-control" name="mobile" id="AddMobile"
-                                        value="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="Postcode">Postcode:</label>
-                            <input type="text" class="form-control" name="postcode" id="AddPostcode" value="">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="Name">Street Address:</label>
-                            <textarea class="form-control" name="address" id="AddAddress"></textarea>
-                        </div>
-                        <!--<div class="form-group">
-                                <label for="Name">Street Address 2:</label>
-                                <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
                             </div>-->
-                                                    <label for="Name">Street Address 2:</label>
-                                                    <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
-                                                </div>-->
-
-                        <div class="form-group">
-                            <label for="File">File:</label>
-                            <input type="text" class="form-control" id="AddFile" name="file" value=""
-                                disabled>
+                        <div class="col-md-6">
+                            <div class="position-relative form-group">
+                                <label for="City">City:</label>
+                                <input type="text" class="form-control" name="city" id="AddCity"
+                                    value="">
+                            </div>
                         </div>
-
-
+                        <div class="col-md-6">
+                            <div class="position-relative form-group">
+                                <label for="Province">Province:</label>
+                                <input type="text" class="form-control" name="province" id="AddProvince"
+                                    value="">
+                            </div>
+                        </div>
+                    </div>-->
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Parent">Name Parent:</label>
+                                <input type="text" class="form-control" name="name_parent" id="AddParent"
+                                    value="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Mobile">Mobile:</label>
+                                <input type="text" class="AddPhone form-control" name="mobile" id="AddMobile"
+                                    value="">
+                            </div>
+                        </div>
                     </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="SubmitCreateForm">Save</button>
-                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    <div class="form-group">
+                        <label for="Postcode">Postcode:</label>
+                        <input type="text" class="form-control" name="postcode" id="AddPostcode" value="">
                     </div>
+
+                    <div class="form-group">
+                        <label for="Name">Street Address:</label>
+                        <textarea class="form-control" name="address" id="AddAddress"></textarea>
+                    </div>
+                    <!--<div class="form-group">
+                                    <label for="Name">Street Address 2:</label>
+                                    <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                                </div>-->
+                    <label for="Name">Street Address 2:</label>
+                    <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                </div>-->
+
+                <div class="form-group">
+                    <label for="File">File:</label>
+                    <input type="text" class="form-control" id="AddFile" name="file" value="" disabled>
                 </div>
-            </form>
+
+
         </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="SubmitCreateForm">Save</button>
+            <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </form>
+    </div>
     </div>
 
     <!-- Edit  Modal -->
@@ -624,24 +623,31 @@
                                                     id="EditPostcode" value="">
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Contest">Contest:</label>
+                                                <input type="text" class="form-control" name="contest"
+                                                    id="EditContest" value="">
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!--<div class="form-row">
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label for="City">City:</label>
-                                            <input type="text" class="form-control" name="city" id="EditCity"
-                                                value="">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="City">City:</label>
+                                                <input type="text" class="form-control" name="city" id="EditCity"
+                                                    value="">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label for="Province">Province:</label>
-                                            <input type="text" class="form-control" name="province" id="EditProvince"
-                                                value="">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="Province">Province:</label>
+                                                <input type="text" class="form-control" name="province" id="EditProvince"
+                                                    value="">
+                                            </div>
                                         </div>
-                                    </div>
-                                    </div>-->
+                                        </div>-->
                                     {{--  <div class="col-md-6">
                                   <div class="position-relative form-group">
                                     <label for="Des">Description:</label>
@@ -654,9 +660,9 @@
                                         <textarea class="form-control" name="address" id="EditAddress"></textarea>
                                     </div>
                                     <!--<div class="form-group">
-                                        <label for="Name">Street Address 2:</label>
-                                        <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                    </div>-->
+                                            <label for="Name">Street Address 2:</label>
+                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                        </div>-->
 
 
                                     {{-- <div class="form-group">
@@ -882,6 +888,13 @@
                                                 <label for="Postcode">Postcode:</label>
                                                 <input type="text" class="form-control" name="conv_postcode"
                                                     id="ConvPostcode" value="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Contest">Contest:</label>
+                                                <input type="text" class="form-control" name="conv_contest"
+                                                    id="ConvContest" value="">
                                             </div>
                                         </div>
                                     </div>
@@ -1202,7 +1215,7 @@
 
                 id = $(this).data('id');
                 $.ajax({
-                    url: "receipts/edit/" + id+ "/0",
+                    url: "receipts/edit/" + id + "/0",
                     method: 'GET',
                     success: function(res) {
                         //console.log(res);
@@ -1221,6 +1234,7 @@
                         //$('#EditCity').val(res.data.city);
                         //$('#EditProvince').val(res.data.province);
                         $('#EditPostcode').val(res.data.postcode);
+                        $('#EditContest').val(res.data.contest);
                         $('#EditParent').val(res.data.name_parent);
                         $('#EditMobile').val(res.data.mobile);
                         $('#myTbl tbody').html(res.data_html);
@@ -1257,6 +1271,7 @@
                         $('#ConvLastname').val(res.data.last_name);
                         $('#ConvDes').val(res.data.description);
                         $('#ConvGrade').val(res.data.grade);
+                        $('#ConvContest').val(res.data.contest);
                         $('#ConvAddress').val(res.data.street_address);
                         //$('#EditAddress2').val(res.data.street_address2);
                         //$('#EditCity').val(res.data.city);
@@ -1391,6 +1406,7 @@
                         //city: $('#EditCity').val(),
                         //province: $('#EditProvince').val(),
                         postcode: $('#EditPostcode').val(),
+                        contest: $('#EditContest').val(),
                         name_parent: $('#EditParent').val(),
                         mobile: $('#EditMobile').val(),
                         package: $('#EditPackage').val(),
@@ -1490,6 +1506,7 @@
                         //city: $('#AddCity').val(),
                         //province: $('#AddProvince').val(),
                         postcode: $('#ConvPostcode').val(),
+                        contest: $('#ConvContest').val(),
                         name_parent: $('#ConvParent').val(),
                         mobile: $('#ConvMobile').val(),
                         //package: $('#ConvPackage').val(),

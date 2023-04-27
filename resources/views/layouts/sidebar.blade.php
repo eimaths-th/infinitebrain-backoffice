@@ -39,7 +39,7 @@
                         Dashboard
                     </a>
                 </li> --}}
-                
+
 
                 @if (Auth::user()->level == 2 || Auth::user()->level == 1)
                     <li class="app-sidebar__heading">โรงเรียน</li>
@@ -57,10 +57,10 @@
                                     รายวิชา
                                 </a>
                             </li>
-                            
-                            
+
+
                         </ul>
-                        
+
 
                     </li>
 
@@ -72,7 +72,7 @@
                         </a>
 
                         <ul>
-                          
+
                             <li>
                                 <a href="{{ route('subjects_price', ['id' => '1']) }}">
                                     <i class="metismenu-icon"></i>
@@ -109,9 +109,9 @@
                                     English Spark
                                 </a>
                             </li>
-                            
+
                         </ul>
-                        
+
 
                     </li>
 
@@ -191,7 +191,7 @@
                                     รายชื่อผู้ปกครอง
                                 </a>
                             </li>
-                            
+
                         </ul>
 
                     </li>
@@ -204,7 +204,7 @@
                         </a>
 
                         <ul>
-                            
+
                             <li>
                                 <a href="{{ route('course') }}">
                                     <i class="metismenu-icon"></i>
@@ -222,7 +222,7 @@
                         </a>
 
                         <ul>
-                            
+
                             <li>
                                 <a href="{{ route('comment') }}">
                                     <i class="metismenu-icon"></i>
@@ -307,6 +307,13 @@
                                     OLPCS
                                 </a>
                             </li>
+
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '10']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    ASIAROPE
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -365,22 +372,28 @@
                                     OLPCS
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '10']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    ASIAROPE
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
-                        @php 
-                        {{ 
-                            $ymonth =date("Y-m"); 
+                        @php
+                        {{
+                            $ymonth =date("Y-m");
                             $pmd = date("Y");
-                        }} 
+                        }}
                         @endphp
                         <a href="#">
                             <i class="metismenu-icon pe-7s-graph2"></i>
                             Receipt Report
-                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i> 
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
                         <ul>
-                            
+
                             <li>
                                 <a href="{{ route('receipts.print_month', ['pmsfield' => '2','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร GMEC รอบแรก '. $pmd]) }}">
                                     <i class="metismenu-icon"></i>

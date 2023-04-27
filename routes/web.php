@@ -163,6 +163,7 @@ Route::get('/school', [SchoolController::class, 'index'])->name('school');
 
 Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
 Route::get('/olpcs', [ReceiptFormController::class, 'olpcs'])->name('olpcs');
+Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
 Route::post('/form/upload/delete', [ReceiptFormController::class, 'fileDestroy'])->name('form.delete');
 Route::post('/form/store', [ReceiptFormController::class, 'store'])->name('form.store');
@@ -214,7 +215,7 @@ Route::delete('/comment/destroy_all', [CommentController::class, 'destroy_all'])
 
 
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
-Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post'); 
+Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
 Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
 Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
