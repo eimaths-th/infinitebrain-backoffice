@@ -161,6 +161,7 @@
                         <tr class="active">
                             <td align="center" width="10%" class="grey">ลำดับที่<br> NO.</td>
                             <td align="center" class="grey">รายการ <br>Description</td>
+                            <td align="center" class="grey"> <br></td>
                             <td align="center" class="grey">จำนวน <br>Quantity</td>
                             <td align="center" class="grey">หน่วย <br>Unit</td>
                             <td align="center" class="grey">ราคาต่อหน่วย <br>Unit Price</td>
@@ -173,9 +174,11 @@
                             //exit();
                         @endphp
                         @foreach ($receipt_detail_arr as $receipt_detail)
+                        
                             <tr>
                                 <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
                                 <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
+                                <td align="left"> {{ $receipt_detail['period'] }}</td>
                                 <td align="center">{{ $receipt_detail['quantity'] }}</td>
                                 <td align="center">{{ $receipt_detail['unit'] }}</td>
                                 <td align="center">{{ $receipt_detail['unitprice'] }}</td>
@@ -185,8 +188,9 @@
                             <tr>
                                 <td align="center" style="vertical-align: top;"></td>
                                 <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
+                                <td align="left"></td>
                                 <td align="center">{{ $receipt_detail['book'] }}</td>
-                                <td align="center">{{ $receipt_detail['unit'] }}</td>
+                                <td align="center">เล่ม</td>
                                 <td align="center">{{ $receipt_detail['books'] }}</td>
                                 <td align="center"></td>
                                 <td align="center" style="vertical-align: top;">{{ $receipt_detail['bookprice'] }}</td>
@@ -259,14 +263,14 @@
                                         <td width="40%"></td>
                                         <td width="40%" class="grey">มูลค่าที่ยกเว้นภาษี/Non-Vat Amount</td>
                                         <!-- <td width="20%"></td> -->
-                                        <td width="20%"> <b> {{ $vat_price_val }} </b></td>
+                                        <td width="20%"> <b> {{ $booksum }} </b></td>
                                         <!-- <td width="10%"></td> -->
 
 
                                     </tr>
                                     <tr>
                                         <td width="40%"></td>
-                                        <td width="40%" class="grey">มูลค่าที่ยกเว้นภาษี/Non-Vat Amount</td>
+                                        <td width="40%" class="grey">มูลค่าที่ยกเว้นภาษี/Pre-Vat Amount</td>
                                         <!-- <td width="10%"></td> -->
                                         <td width="20%"> <b> {{ $vat_price_val }} </b></td>
                                         <!-- <td width="10%"></td> -->
@@ -275,7 +279,7 @@
                                         <td width="40%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="40%" class="grey">ส่วนลด/Discout</td>
-                                        <td width="20%"><b>00.00</b></td>
+                                        <td width="20%"><b>{{ $discount }}</b></td>
                                     </tr>
                                     <tr>
                                         <td width="40%"></td>
