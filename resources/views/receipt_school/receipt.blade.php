@@ -147,7 +147,7 @@
             color: rgba(0, 0, 0, 0.9);
             line-height: 150%;
         }
-
+      
         .dropzonex .dz-preview .dz-details .dz-size {
             margin-bottom: 1em;
             font-size: 16px;
@@ -338,6 +338,9 @@
             border-right: 6px solid transparent;
             border-bottom: 6px solid #be2626;
         }
+        .modal-xxl {
+  max-width: 1300px !important;
+}
         </style>
 @endsection
 
@@ -630,8 +633,8 @@
 
 <!-- Create Modal -->
 
-<div class="fade modal bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="CreateModal">
-    <div class="modal-dialog modal-xl" role="document">
+<div class="fade modal " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="CreateModal">
+    <div class="modal-dialog modal-xxl" style="width:100%;" role="document">
         <form id="infinite" class="form" action="" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
@@ -802,13 +805,14 @@
                                             <th class="column-title"> NO.</th>
                                             <th class="column-title"> Subject</th>
                                             <th class="column-title"> Start Level</th>
-                                            <th class="column-title"> Week</th>
+                                            <th class="column-title"> Time</th>
                                             <th class="column-title"> Qty</th>
                                             <th class="column-title"> Book</th>
                                             <th class="column-title"> Book Price</th>
                                             <th class="column-title abc">Type</th>
                                             <th class="column-title"> Discount</th>
                                             <th class="column-title"> Price</th>
+                                            <th class="column-title"> Period</th>
                                             <th class="column-title"> Total</th>
                                             {{-- <th class="column-title"> </th> --}}
                                         </tr>
@@ -823,7 +827,7 @@
 
                                                 </div>
                                             </td>
-                                            <td width="15%">
+                                            <td width="10%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <select style="width: 100%;" class="aaa form-control" id="subject_id" name="subject_id" required>
                                                         <option value="" selected>Select Subject</option>
@@ -839,7 +843,7 @@
                                             </td>
 
 
-                                            <td width="15%">
+                                            <td width="10%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <select style="width: 100%;" class=" form-control" id="level_id" name="level_id">
 
@@ -850,9 +854,9 @@
                                             </td>
 
                                             <td width="7%">
-                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 ">
                                                     <select style="width: 100%;" class=" form-control" id="week" name="week" required>
-                                                        <option value="" selected></option>
+                                                        <option value="1" selected></option>
 
                                                         <option value="1">1 week
                                                         </option>
@@ -860,9 +864,9 @@
                                                         </option>
                                                         <option value="3">3 week
                                                         </option>
-                                                        <option value="4">4 week
+                                                        
+                                                        <option value="4">Month
                                                         </option>
-
                                                     </select>
                                                 </div>
                                             </td>
@@ -881,7 +885,20 @@
                                                         </option>
                                                         <option value="5">5
                                                         </option>
-
+                                                        <option value="6">6
+                                                        </option>
+                                                        <option value="7">7
+                                                        </option>
+                                                        <option value="8">8
+                                                        </option>
+                                                        <option value="9">9
+                                                        </option>
+                                                        <option value="10">10
+                                                        </option>
+                                                        <option value="11">11
+                                                        </option>
+                                                        <option value="12">12
+                                                        </option>
                                                     </select>
                                                 </div>
                                             </td>
@@ -933,8 +950,13 @@
                                                     </select>
                                                 </div>
                                             </td>
+                                            <td width="10%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 ">
+                                                    <input type="text" class="form-control" name="period" id="period" value="">
 
-
+                                                </div>
+                                            </td>
+                                            
                                             <td width="15%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 pp">
                                                 </div>
@@ -953,7 +975,7 @@
 
                                                 </div>
                                             </td>
-                                            <td width="15%">
+                                            <td width="10%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <select style="width: 100%;" class="aaa form-control" id="subject_id" name="subject_id" required>
                                                         <option value="" selected>Select Subject</option>
@@ -970,7 +992,7 @@
 
 
 
-                                            <td width="15%">
+                                            <td width="10%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <select style="width: 100%;" class=" form-control" id="level_id" name="level_id">
 
@@ -983,7 +1005,7 @@
                                             <td width="7%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <select style="width: 100%;" class=" form-control" id="week" name="week" required>
-                                                        <option value="" selected></option>
+                                                        <option value="1" selected></option>
 
                                                         <option value="1">1 week
                                                         </option>
@@ -991,9 +1013,9 @@
                                                         </option>
                                                         <option value="3">3 week
                                                         </option>
-                                                        <option value="4">4 week
+                                                        
+                                                        <option value="4">Month
                                                         </option>
-
                                                     </select>
                                                 </div>
                                             </td>
@@ -1001,7 +1023,6 @@
                                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <select style="width: 100%;" class=" form-control" id="qty" name="qty" required>
                                                         <option value="" selected></option>
-
                                                         <option value="1">1
                                                         </option>
                                                         <option value="2">2
@@ -1011,6 +1032,20 @@
                                                         <option value="4">4
                                                         </option>
                                                         <option value="5">5
+                                                        </option>
+                                                        <option value="6">6
+                                                        </option>
+                                                        <option value="7">7
+                                                        </option>
+                                                        <option value="8">8
+                                                        </option>
+                                                        <option value="9">9
+                                                        </option>
+                                                        <option value="10">10
+                                                        </option>
+                                                        <option value="11">11
+                                                        </option>
+                                                        <option value="12">12
                                                         </option>
 
                                                     </select>
@@ -1063,7 +1098,12 @@
                                                     </select>
                                                 </div>
                                             </td>
+                                            <td width="10%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 ">
+                                                    <input type="text" class="form-control" name="period" id="period" value="">
 
+                                                </div>
+                                            </td>
 
                                             <td width="15%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 pp">
@@ -1104,7 +1144,7 @@
 </div>
 <!-- Edit  Modal -->
 <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="EditModal">
-    <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-dialog modal-xxl" role="document">
         <form id="infiniteEdit" class="form" action="" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1290,6 +1330,7 @@
                                             <th class="column-title ">Type</th>
                                             <th class="column-title"> Discount</th>
                                             <th class="column-title"> Price</th>
+                                            <th class="column-title"> Period</th>
                                             <th class="column-title"> Total</th>
                                             {{-- <th class="column-title"> </th> --}}
                                         </tr>
@@ -1331,7 +1372,11 @@
                                                     <input type="text" id="flown[]" name="flown[]" class="form-control has-feedback-left" value="" required="required">
                                                 </div>
                                             </td>
-
+                                            <td width="15%">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <input type="text" id="flown[]" name="flown[]" class="form-control has-feedback-left" value="" required="required">
+                                                </div>
+                                            </td>
                                             {{-- <td><button type="button" id="removeRowt"
                                                         class="btn btn-sm btn-danger btnRemoveg"><i
                                                             class="fa fa-minus"></i></button></td> --}}
@@ -1892,7 +1937,24 @@
             });
         })
 
+        $(document).on('change', '#week', function(e) {
+            // console.log($(this).parent().parent().parent().html())
+            // console.log($(this).parent().parent().parent().find('#type').html())
+            // $(this).parent().parent().parent().find('#discount').val(new Date().toDateString())
+            // $('#discount').val(new Date().toDateString())
+            var parent = $(this).parent().parent().parent();
+            week = $(this).parent().parent().parent().find('#week').val();
+            if (week == 4) {
+                // parent.find('.abc').prop( "disabled", false );
+                parent.find('#qty').prop("disabled", false);
 
+
+            } else {
+                // parent.find('.abc').prop( "disabled", true );
+                parent.find('#qty').prop("disabled", true);
+                parent.find('#qty').val(1);
+            }
+        })
         $(".aaa").change(function() {
             // console.log($(this).parent().parent().parent().html())
             // console.log($(this).parent().parent().parent().find('#type').html())
@@ -2007,6 +2069,7 @@
             }
 
         })
+      
         $(document).on('change', '#book', function(e) {
             var parent = $(this).parent().parent().parent();
 
@@ -2092,6 +2155,7 @@
                         book_price: $(obj).find('#book_price').val(),
                         discount: $(obj).find('#discount').val(),
                         price: $(obj).find('#price').val(),
+                        period: $(obj).find('#period').val(),
                         pp: $(obj).find('#pp').val(),
                         type: $(obj).find('#type').val(),
                     }
@@ -2189,6 +2253,7 @@
             let rrdiscount = [];
             let rrprice = [];
             let rrtotal = [];
+            let rrperiod = [];
             // Initializing array values
             $("input[name='rrid[]']").each(function() {
                 rrid.push(this.value);
@@ -2230,10 +2295,14 @@
             $("input[name='rrtotal[]']").each(function() {
                 rrtotal.push(this.value);
             });
+            // console.log($("input[name='rrperiod[]']"));
+            $("input[name='rrperiod[]']").each(function() {
+                rrperiod.push(this.value);
+            });
 
             var values = $("input[name='imgFiles[]']")
               .map(function(){return $(this).val();}).get();
-        //  console.log(rrtype);
+        //  console.log(rrperiod);
             // console.log(id);
             $.ajax({
                 url: "receipt_school/save/" + id,
@@ -2264,7 +2333,8 @@
                     rrtype: rrtype,
                     rrdiscount: rrdiscount,
                     rrprice: rrprice,
-                    rrtotal: rrtotal
+                    rrtotal: rrtotal,
+                    rrperiod: rrperiod,
                 },
 
                 success: function(result) {

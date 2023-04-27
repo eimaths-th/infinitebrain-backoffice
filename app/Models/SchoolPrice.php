@@ -24,5 +24,6 @@ class SchoolPrice extends Model
         'rid',
         'type',
         'receipt_number',
+        'period',
     ];
 }

@@ -627,7 +627,7 @@ class ReceiptSchoolController extends Controller
                     <input name="rrid[]"  id="rrid[]" type="hidden" value="' . $dresult['id'] . '" />
             </div>
         </td>
-        <td width="15%">
+        <td width="10%">
             <div class="col-md-12 col-sm-12 col-xs-12 ">
 
                 <select style="width: 100%;" class=" form-control" id="rrsub" name="rrsub[]" value="' . $subject[0]->id . '" >
@@ -638,7 +638,7 @@ class ReceiptSchoolController extends Controller
             </div>
         </td>
 
-        <td width="15%">
+        <td width="10%">
         <div class="col-md-12 col-sm-12 col-xs-12">
             <select style="width: 100%;" class=" form-control" id="rrlevel" name="rrlevel[]" value="' . $level[0]->id . '">
             <option value="' . $level[0]->id .  '" selected> (' . $level[0]->level_sort . ')' . $level[0]->title  . ' </option>
@@ -732,6 +732,12 @@ class ReceiptSchoolController extends Controller
 
             </div>
         </td>
+        <td width="10%">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <input type="text" id="rrperiod" name="rrperiod[]"
+                class="form-control has-feedback-left" value="' . $dresult['period'] . '">
+            </div>
+        </td>
         <td width="15%">
             <div class="col-md-12 col-sm-12 col-xs-12 acdc">
             <input type="text" id="rrtotal" name="rrtotal[]"
@@ -755,9 +761,9 @@ class ReceiptSchoolController extends Controller
         $pic = explode('|',$data->file_att);
         $x=0;
         foreach($pic as $pics){
-            if($pic!=Null && $pic != ""){
+            if($pic!=Null || $pic != ""){
                 // echo("3");
-            if($pics!=Null && $pics != ""){
+            if($pics!=Null || $pics != ""){
                 // echo("1");
                 $html .= '
                 <div class="col-md-4 text-center mb-3 ">
@@ -799,8 +805,22 @@ class ReceiptSchoolController extends Controller
         $receipt_detail_arr = array();
         $no = 1;
         $x = 0;
+        $booksum = 0;
+        $pricesub = 0;
+        $discount = 0;
         foreach ($receipts_detail as $dresult) {
             $price = ($dresult['total'] - $dresult['bookprice']);
+            $message="";
+            if($dresult['week']== 1 || $dresult['week'] == 2 || $dresult['week'] == 3){
+                $message="สัปดาห์";
+
+            }else{
+                $message="เดือน";
+
+            }
+            // echo($dresult['week']);
+
+            // exit();
             if ($price == 0) {
                 $receipt_detail_arr[$x]['no'] = '';
                 $receipt_detail_arr[$x]['price'] = '';
@@ -810,18 +830,24 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['discount'] = '';
                 $receipt_detail_arr[$x]['book'] = '';
                 $receipt_detail_arr[$x]['bookprice'] = '';
+                $receipt_detail_arr[$x]['receipt_number'] = '';
+                $receipt_detail_arr[$x]['period'] = '';
+
             } else {
                 $receipt_detail_arr[$x]['no'] = $no;
                 $receipt_detail_arr[$x]['price'] = number_format($price, 2);
-                $receipt_detail_arr[$x]['unit'] = "";
-                $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] + $dresult['discount'] - $dresult['bookprice']) / +$dresult['qty'], 2);
+                $receipt_detail_arr[$x]['unit'] = $message;
+                $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] + $dresult['discount'] - $dresult['bookprice']) / $dresult['qty'], 2);
                 $receipt_detail_arr[$x]['quantity'] = $dresult['qty'];
                 $receipt_detail_arr[$x]['discount'] = number_format($dresult['discount'], 2);
                 $receipt_detail_arr[$x]['book'] = ($dresult['book']);
                 $receipt_detail_arr[$x]['bookprice'] = number_format($dresult['bookprice'], 2);
                 $receipt_detail_arr[$x]['receipt_number'] = ($dresult['receipt_number']);
-            }
+                $receipt_detail_arr[$x]['period'] = $dresult['period'];
 
+            }
+           
+            
             $subject = Subject::where('id', $dresult['subject'])
                 ->get();
 
@@ -841,17 +867,25 @@ class ReceiptSchoolController extends Controller
             foreach ($data0 as $bookp) {
                 $booktotal = $bookp;
             }
+            $pricesub = $pricesub + (($dresult['total'] + $dresult['discount'] - $dresult['bookprice']) );
             $receipt_detail_arr[$x]['books'] = $bookp->book_price;
-            $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort . "    " . $dresult['week'] . "   Week";
-            $all_price = $all_price + $price + $dresult['bookprice'];
+            $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort ;
+            $booksum = $booksum + $dresult['bookprice'];
+            $discount = $discount + $dresult['discount'];
+            $all_price =  $booksum + $pricesub - $discount;
             $no++;
             $x++;
+           
         }
+        // echo($pricesub);
+        // echo($all_price);
+        // exit();
         $price_val = number_format($all_price, 2);
         $price_text = $this->baht_text($all_price);
         $price_texten = $this->convertNumber($all_price);
-        $vat_price = ($all_price * 100) / 107;
-        $vat_total = $all_price - $vat_price;
+        $vat_price = ($pricesub * 100) / 107;
+        $vat_total = $pricesub - $vat_price;
+        // $vat_price_val = number_format($vat_price, 2);
         $vat_price_val = number_format($vat_price, 2);
         $vat_val = number_format($vat_total, 2);
 
@@ -897,6 +931,9 @@ class ReceiptSchoolController extends Controller
         // print_r($data2->name_parent);
         // exit();
         return view($viewr)->with(['id' => $id])
+            ->with(['discount'=>$discount])
+            ->with(['vat_price'=>$vat_price])
+            ->with(['booksum'=>$booksum])
             ->with(['html'=>$html])
             ->with(['data' => $data])
             ->with(['data2' => $data2])
@@ -1113,6 +1150,7 @@ class ReceiptSchoolController extends Controller
                 'rid' => $rid,
                 'type' => $value['type'],
                 'receipt_number' => 0,
+                'period' => $value['period'],
 
             ]);
             // print_r($data2['subject']);
@@ -1199,6 +1237,9 @@ class ReceiptSchoolController extends Controller
         // print_r($id);
         // exit();
         $stu = "";
+        if($img != Null || $img !=""){
+
+     
         foreach ($img as $fileb) {
             //echo $filea;
             // $stu .= $sss . "|";
@@ -1207,6 +1248,7 @@ class ReceiptSchoolController extends Controller
             File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
             FileUpload::where('filename', $oldfile[0]->filename)->delete();
         }
+           }
         // $image = Receipt_School::where('id',$id)->get();
         // $imageNew = "";
         // foreach($image as $images){
@@ -1271,7 +1313,7 @@ class ReceiptSchoolController extends Controller
         $rrdiscount  = $request->get('rrdiscount');
         $rrprice  = $request->get('rrprice');
         $rrtotal  = $request->get('rrtotal');
-
+        $rrperiod = $request->get('rrperiod');
         // echo $book_price;
         // print_r($request->all()) ;
         // exit();
@@ -1299,6 +1341,7 @@ class ReceiptSchoolController extends Controller
                     'price' => $rrprice[$xx],
                     'total' => $rrtotal[$xx],
                     'receipt_number' => 0,
+                    'period' => $rrperiod[$xx],
                     //'amount' => $request->get('book_old_price'),
                 ]);
             } else {
@@ -1316,6 +1359,8 @@ class ReceiptSchoolController extends Controller
                     'price' => $rrprice[$xx],
                     'total' => $rrtotal[$xx],
                     'receipt_number' => 0,
+                    'period' => $rrperiod[$xx],
+
                     //'amount' => $request->get('book_old_price'),
                 ]);
             }
