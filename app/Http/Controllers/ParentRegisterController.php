@@ -86,20 +86,20 @@ class ParentRegisterController extends Controller
                 'required',
                 'string',
                 'regex:/^[a-zA-Z0-9 ]+$/',
-                'min:8',            
-               
+                'min:8',
+
             ],
             'parent' => 'required|string',
             'mobile' => 'required|string',
-            'address' => 'required|string',
+            //'address' => 'required|string',
         ]);
         if ($validator->fails()) {
             //return response()->json(['errors' => $validator->errors()->all()]);
             return back()->withErrors(['errors' => $validator->errors()->all()]);
         }
-      
-        $rpnumber1 = Parent_RunningNumber::generate();
-        
+
+        //$rpnumber1 = Parent_RunningNumber::generate();
+
         $registerForm1 = new ParentRegister([
             'code'=>$request->get('code'),
             'email' => $request->get('email'),
@@ -112,7 +112,7 @@ class ParentRegisterController extends Controller
 
         ]);
         $registerForm1->save();
-        
+
     }
     public function store(Request $request)
     {
@@ -125,7 +125,7 @@ class ParentRegisterController extends Controller
             //     'required',
             //     'string',
             //     'regex:/^[a-zA-Z0-9 ]+$/',
-            //     'min:8',            
+            //     'min:8',
 
             // ],
             'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
@@ -141,7 +141,7 @@ class ParentRegisterController extends Controller
             'schoolname' => 'required',
             'grade' => 'required',
             'sex' => 'required',
-        ]); 
+        ]);
 
         // if ($request->fails()) {
         //     //return response()->json(['errors' => $validator->errors()->all()]);
@@ -187,7 +187,7 @@ class ParentRegisterController extends Controller
 
         $registerForm->save();
         $pid = $registerForm->id;
-       
+
         // echo $request->get('val');
         // exit();
         // $error = 1 ;
@@ -211,11 +211,11 @@ class ParentRegisterController extends Controller
             // $data = [];
 
             $data2[] = $data;
-            
+
                 Student::upsert($data, [
                     'code', 'first_name', 'last_name', 'nick_name', 'birth_data', 'school_name', 'grade', 'photo_att', 'sex', 'pid'
                 ]);
-            // 
+            //
         }
         // print_r($data2);
         // exit();
@@ -290,8 +290,8 @@ class ParentRegisterController extends Controller
                     <label for="Name">street_address:</label>
                     <input type="text" class="form-control" name="street_address" id="EditAddress" value="' . $data->street_address . '">
                 </div>
-               
-          
+
+
             ';
 
         return response()->json(['html' => $html]);
