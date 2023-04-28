@@ -95,6 +95,10 @@
                             <input type="text" class="form-control" name="code" id="AddCode" value="">
                         </div> -->
                         <div class="form-group">
+                            <label for="Name">Code:</label>
+                            <input type="text" class="form-control" name="code" id="AddCode" value="">
+                        </div>
+                        <div class="form-group">
                             <label for="Name">Email:</label>
                             <input type="text" class="form-control" name="email" id="AddEmail" value="">
                         </div>
@@ -303,6 +307,7 @@
                     method: 'post',
                     data: {
                         // code: $('#AddCode').val(),
+                        code:$('#AddCode').val(),
                         email: $('#AddEmail').val(),
                         password: $('#AddPassword').val(),
                         parent: $('#AddParent').val(),
