@@ -147,7 +147,7 @@
             color: rgba(0, 0, 0, 0.9);
             line-height: 150%;
         }
-      
+
         .dropzonex .dz-preview .dz-details .dz-size {
             margin-bottom: 1em;
             font-size: 16px;
@@ -234,8 +234,8 @@
             margin-top: -27px;
         }
 
-  
-        
+
+
 
         .dropzonex .dz-preview.dz-processing .dz-progress {
             opacity: 1;
@@ -751,7 +751,7 @@
 
                                     </select>
                                 </div>
-                           
+
                                 <br>
 
                                 <div class="form-row form-focus" id="dropzone-att">
@@ -767,7 +767,7 @@
                                                 class="form-control form_none" value="" required>
                                             <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
                                                 <div class="fallback">
-                                                   
+
                                                 </div>
                                             </div>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -864,7 +864,7 @@
                                                         </option>
                                                         <option value="3">3 week
                                                         </option>
-                                                        
+
                                                         <option value="4">Month
                                                         </option>
                                                     </select>
@@ -956,7 +956,7 @@
 
                                                 </div>
                                             </td>
-                                            
+
                                             <td width="15%">
                                                 <div class="col-md-12 col-sm-12 col-xs-12 pp">
                                                 </div>
@@ -1013,7 +1013,7 @@
                                                         </option>
                                                         <option value="3">3 week
                                                         </option>
-                                                        
+
                                                         <option value="4">Month
                                                         </option>
                                                     </select>
@@ -1269,12 +1269,12 @@
                                     </select>
                                 </div>
                                 <div class="row imgs">
-                               
+
                                 </div>
                                 <!-- <div class="form-group">
                                     <div class="imgs">
 
-                                    </div> 
+                                    </div>
                                 </div> -->
                                 <div class="form-row form-focus" id="dropzone-photo">
                                     <div class="col-md-12 col-sm-12">
@@ -1289,7 +1289,7 @@
                                                 class="form-control form_none" value="" >
                                             <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
                                                 <div class="fallback">
-                                                    
+
                                                 </div>
                                             </div>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -1310,7 +1310,7 @@
                                     style="font-size: 1.5em;">
                                     <h3 class="dropzone-previews ui"></h3>
                                     </div>
-                          
+
 
                             </div>
                             <div class="tab-pane" id="tab-eg20-1" role="tabpanel">
@@ -1954,7 +1954,7 @@
                 parent.find('#qty').val(1);
             }
         })     // $(this).parent().parent().parent().find('#discount').val(new Date().toDateString())
-       
+
         $(".aaa").change(function() {
             // console.log($(this).parent().parent().parent().html())
             // console.log($(this).parent().parent().parent().find('#type').html())
@@ -2026,7 +2026,7 @@
                 parent.find('#rrqty').prop("disabled", true);
                 parent.find('#rrqty').val(1);
             }
-        })   
+        })
         $(document).on('change', '#rrbook', function(e) {
             var parent = $(this).parent().parent().parent();
             var sub_id = parent.find('#rrsub').val();
@@ -2086,7 +2086,7 @@
             }
 
         })
-      
+
         $(document).on('change', '#book', function(e) {
             var parent = $(this).parent().parent().parent();
 
@@ -2159,7 +2159,7 @@
             $('.alert-success').html('');
             $('.alert-success').hide();
             var arr = new Array();
-            
+
             $('.firstTr').each(function(i, obj) {
                 if (i > 0) {
                     // console.log($(obj).find('#price').val());
@@ -2181,7 +2181,7 @@
                 //test
 
             });
-            
+
             var values = $("input[name='imgFiles2[]']")
               .map(function(){return $(this).val();}).get();
                 // console.log(values);
@@ -2608,13 +2608,13 @@
                 }
             }
         });
-       
+
         $(this).closest(".abcd").remove();
 
-    }); 
+    });
 
     var myDropzone = {};
-        
+
 
         Dropzone.options.myAwesomeDropzone2 = {
             url: '{{ route('receipt_school.upload') }}',
@@ -2645,7 +2645,7 @@
             dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
             acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
             // The setting up of the dropzone
-            init: function() {  
+            init: function() {
                 var myDropzone = this;
                 // var mockFile = { name: 'public/images/infinite.jpg', size: 12345, type: 'image/jpeg' };
                 // myDropzone.emit("addedfile", mockFile);
@@ -2875,7 +2875,7 @@
         //     dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
         //     acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
         //     // The setting up of the dropzone
-        //     init: function() {  
+        //     init: function() {
         //         var myDropzone = this;
         //         // var mockFile = { name: 'public/images/infinite.jpg', size: 12345, type: 'image/jpeg' };
         //         // myDropzone.emit("addedfile", mockFile);

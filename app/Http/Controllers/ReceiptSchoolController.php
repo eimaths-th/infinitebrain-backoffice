@@ -617,17 +617,17 @@ class ReceiptSchoolController extends Controller
             }
 
             $onoff = "";
-            if($subject[0]->id==3){
+            if ($subject[0]->id == 3) {
                 $onoff = "";
-            }else{
+            } else {
                 $onoff = "disabled";
             }
 
             $weekstaus = "";
-            if($dresult['week']==4){
-                $weekstaus="";
-            }else{
-                $weekstaus="disabled";
+            if ($dresult['week'] == 4) {
+                $weekstaus = "";
+            } else {
+                $weekstaus = "disabled";
             }
 
 
@@ -679,7 +679,7 @@ class ReceiptSchoolController extends Controller
         </td>
         <td width="7%">
         <div class="col-md-12 col-sm-12 col-xs-12">
-        <select style="width: 100%;" class=" form-control" id="rrqty" name="rrqty[]" '.$weekstaus.'>
+        <select style="width: 100%;" class=" form-control" id="rrqty" name="rrqty[]" ' . $weekstaus . '>
                                                         <option class="qtyh" value="' . $dresult['qty'] . '" selected>' . $dresult['qty'] . '</option>
 
                                                         <option value="1">1
@@ -726,7 +726,7 @@ class ReceiptSchoolController extends Controller
     </td>
     <td width="10%">
             <div class="col-md-12 col-sm-12 col-xs-12 ">
-            <select style="width: 100%;" class=" form-control" id="rrtype" name="rrtype[]" '.$onoff.'>
+            <select style="width: 100%;" class=" form-control" id="rrtype" name="rrtype[]" ' . $onoff . '>
             <option value="' . $dresult['type'] . '" selected>' . $message . '</option>
             <option value="1">One Tpye แบบเดี่ยว
             </option>
@@ -784,31 +784,29 @@ class ReceiptSchoolController extends Controller
         $html = "";
 
 
-        $pic = explode('|',$data->file_att);
-        $x=0;
-        foreach($pic as $pics){
-            if($pic!=Null || $pic != ""){
+        $pic = explode('|', $data->file_att);
+        $x = 0;
+        foreach ($pic as $pics) {
+            if ($pic != Null || $pic != "") {
                 // echo("3");
-            if($pics!=Null || $pics != ""){
-                // echo("1");
-                $html .= '
+                if ($pics != Null || $pics != "") {
+                    // echo("1");
+                    $html .= '
                 <div class="col-md-4 text-center mb-3 ">
-                <img src="'.url('/').'/receipts_form_school/'.$pics.'" class=" mt-5 mb-3" height="400" width="300">
-                <a href="#" class="btn btn-xs btn-danger btn-edit" id="getDeleteData" data-id2="'.$data->id.'" data-id="'.$pics.'">delete </a>
+                <img src="' . url('/') . '/receipts_form_school/' . $pics . '" class=" mt-5 mb-3" height="400" width="300">
+                <a href="#" class="btn btn-xs btn-danger btn-edit" id="getDeleteData" data-id2="' . $data->id . '" data-id="' . $pics . '">delete </a>
                 </div>
-                ';   
-            }
-            }else{
+                ';
+                }
+            } else {
                 // echo("2");
                 $html = "";
             }
-
-
         }
         // print_r($data->id);
         // exit();
         return response()->json([
-            'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html  , 'imgs' => $html
+            'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html, 'imgs' => $html
         ]);
         // return view($viewr)->with(['pic' => $pic]);
 
@@ -836,13 +834,11 @@ class ReceiptSchoolController extends Controller
         $discount = 0;
         foreach ($receipts_detail as $dresult) {
             $price = ($dresult['total'] - $dresult['bookprice']);
-            $message="";
-            if($dresult['week']== 1 || $dresult['week'] == 2 || $dresult['week'] == 3){
-                $message="สัปดาห์";
-
-            }else{
-                $message="เดือน";
-
+            $message = "";
+            if ($dresult['week'] == 1 || $dresult['week'] == 2 || $dresult['week'] == 3) {
+                $message = "สัปดาห์";
+            } else {
+                $message = "เดือน";
             }
             // echo($dresult['week']);
 
@@ -858,7 +854,6 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['bookprice'] = '';
                 $receipt_detail_arr[$x]['receipt_number'] = '';
                 $receipt_detail_arr[$x]['period'] = '';
-
             } else {
                 $receipt_detail_arr[$x]['no'] = $no;
                 $receipt_detail_arr[$x]['price'] = number_format($price, 2);
@@ -870,10 +865,9 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['bookprice'] = number_format($dresult['bookprice'], 2);
                 $receipt_detail_arr[$x]['receipt_number'] = ($dresult['receipt_number']);
                 $receipt_detail_arr[$x]['period'] = $dresult['period'];
-
             }
-           
-            
+
+
             $subject = Subject::where('id', $dresult['subject'])
                 ->get();
 
@@ -893,15 +887,14 @@ class ReceiptSchoolController extends Controller
             foreach ($data0 as $bookp) {
                 $booktotal = $bookp;
             }
-            $pricesub = $pricesub + (($dresult['total'] + $dresult['discount'] - $dresult['bookprice']) );
+            $pricesub = $pricesub + (($dresult['total'] + $dresult['discount'] - $dresult['bookprice']));
             $receipt_detail_arr[$x]['books'] = $bookp->book_price;
-            $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort ;
+            $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort;
             $booksum = $booksum + $dresult['bookprice'];
             $discount = $discount + $dresult['discount'];
             $all_price =  $booksum + $pricesub - $discount;
             $no++;
             $x++;
-           
         }
         // echo($pricesub);
         // echo($all_price);
@@ -946,21 +939,21 @@ class ReceiptSchoolController extends Controller
         //$des_text = nl2br($data->description);
         $data2 = ParentRegister::find($data->name_parent);
         $html = "";
-        $pic = explode('|',$data->file_att);
+        $pic = explode('|', $data->file_att);
 
 
-        foreach($pic as $pics){
-            $html .= '<img src="'.url('/').'/receipts_form_school/'.$pics.'" class="me-3 mt-5 mb-5" height="400" >';
+        foreach ($pic as $pics) {
+            $html .= '<img src="' . url('/') . '/receipts_form_school/' . $pics . '" class="me-3 mt-5 mb-5" height="400" >';
         }
 
 
         // print_r($data2->name_parent);
         // exit();
         return view($viewr)->with(['id' => $id])
-            ->with(['discount'=>$discount])
-            ->with(['vat_price'=>$vat_price])
-            ->with(['booksum'=>$booksum])
-            ->with(['html'=>$html])
+            ->with(['discount' => $discount])
+            ->with(['vat_price' => $vat_price])
+            ->with(['booksum' => $booksum])
+            ->with(['html' => $html])
             ->with(['data' => $data])
             ->with(['data2' => $data2])
             ->with(['student' => $student])
@@ -1068,51 +1061,54 @@ class ReceiptSchoolController extends Controller
         // $filesb = $request->get('imgFiles2');
         // print_r($request->get('img'));
         // exit();
-        
 
-            // print_r($request->receipt);
-            // exit();
-           
-        $validator =  Validator::make($request->all(), [
-            // 'type' => 'required|string',
-            'submission_date' => 'required|string',
-            'street_address' => 'required|string',
-            //'city' => 'required|string',
-            //'province' => 'required|string',
-            'postcode' => 'required|string',
-            'name_parent' => 'required|string',
-            'mobile' => 'required|string',
-            'receipt.*.subject' => 'required',
-            'receipt.*.level' => 'required',
-            'receipt.*.week' => 'required',
-            'receipt.*.qty' => 'required',
-            'receipt.*.price' => 'required',
-            'receipt.*.pp' => 'required',
-            'receipt.*.period' => 'required',
 
-            // 'level' => 'required|string',
-            // 'week' => 'required|string',
-            // 'qty' => 'required|string',
-            // 'book' => 'required|string',
-            // 'bookprice' => 'required|string',
-            // 'discount' => 'required|string',
-            // 'price' => 'required|string',
-            // 'total' => 'required|string',
+        // print_r($request->receipt);
+        // exit();
 
-            // 'file_att' => 'required|string
+        $validator =  Validator::make(
+            $request->all(),
+            [
+                // 'type' => 'required|string',
+                'submission_date' => 'required|string',
+                'street_address' => 'required|string',
+                //'city' => 'required|string',
+                //'province' => 'required|string',
+                'postcode' => 'required|string',
+                'name_parent' => 'required|string',
+                'mobile' => 'required|string',
+                'receipt.*.subject' => 'required',
+                'receipt.*.level' => 'required',
+                'receipt.*.week' => 'required',
+                'receipt.*.qty' => 'required',
+                'receipt.*.price' => 'required',
+                'receipt.*.pp' => 'required',
+                'receipt.*.period' => 'required',
 
-        ],
-        [
-            'receipt.*.subject.required' => 'The Subject field is required.  !',
-            'receipt.*.level.required' => 'The Start Level field is required.  !',
-            'receipt.*.week.required' => 'The Week field is required.  !',
-            'receipt.*.qty.required' => 'The QTY field is required. !',
-            'receipt.*.price.required' => 'The Price field is required.  !',
-            'receipt.*.pp.required' => 'The Book field is required.  !',
-            'receipt.*.period.required' => 'The Period field is required.  !',
+                // 'level' => 'required|string',
+                // 'week' => 'required|string',
+                // 'qty' => 'required|string',
+                // 'book' => 'required|string',
+                // 'bookprice' => 'required|string',
+                // 'discount' => 'required|string',
+                // 'price' => 'required|string',
+                // 'total' => 'required|string',
 
-        ]);
-        
+                // 'file_att' => 'required|string
+
+            ],
+            [
+                'receipt.*.subject.required' => 'The Subject field is required.  !',
+                'receipt.*.level.required' => 'The Start Level field is required.  !',
+                'receipt.*.week.required' => 'The Week field is required.  !',
+                'receipt.*.qty.required' => 'The QTY field is required. !',
+                'receipt.*.price.required' => 'The Price field is required.  !',
+                'receipt.*.pp.required' => 'The Book field is required.  !',
+                'receipt.*.period.required' => 'The Period field is required.  !',
+
+            ]
+        );
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
@@ -1189,17 +1185,17 @@ class ReceiptSchoolController extends Controller
 
         return response()->json(['success' => 'Receive Add successfully']);
     }
-    public function deleteImg($id,$id2)
+    public function deleteImg($id, $id2)
     {
         $dataimg = Receipt_School::find($id2);
         $img = $dataimg->file_att;
-        $img = explode("|",$img);
+        $img = explode("|", $img);
 
         if (($key = array_search($id, $img)) !== false) {
             unset($img[$key]);
         }
         $dataNew = "";
-        foreach($img as $fileb){
+        foreach ($img as $fileb) {
             $dataNew .= $fileb . "|";
         }
         $dataNew = rtrim($dataNew, "|");
@@ -1214,28 +1210,27 @@ class ReceiptSchoolController extends Controller
         Receipt_School::find($id2)->update(['file_att' => $dataNew]);
         // $data->update();
 
-        $link = (url('/').'/receipts_form_school/'.$id ) ;
+        $link = (url('/') . '/receipts_form_school/' . $id);
         // unlink(public_path("/receipts_form_school/".$id));
 
         $html = "";
-        $pic = explode('|',$dataNew);
-            foreach($pic as $pics){
-                if($pics!=NULL && $pics != ""){
+        $pic = explode('|', $dataNew);
+        foreach ($pic as $pics) {
+            if ($pics != NULL && $pics != "") {
                 $html .= '
                 <div class="col-md-4 text-center mb-3 ">
-                <img src="'.url('/').'/receipts_form_school/'.$pics.'" class=" mt-5 mb-3" height="400" width="300">
-                <a href="#" class="btn btn-xs btn-danger btn-edit" id="getDeleteData" data-id2="'.$id2.'" data-id="'.$pics.'">delete </a>
+                <img src="' . url('/') . '/receipts_form_school/' . $pics . '" class=" mt-5 mb-3" height="400" width="300">
+                <a href="#" class="btn btn-xs btn-danger btn-edit" id="getDeleteData" data-id2="' . $id2 . '" data-id="' . $pics . '">delete </a>
                 </div>
                 ';
-                }else{
-                    $html = "";
-                }
+            } else {
+                $html = "";
             }
+        }
 
 
 
         return response()->json(['imgs' => $html]);
-
     }
     public function update(Request $request, $id)
     {
@@ -1260,23 +1255,23 @@ class ReceiptSchoolController extends Controller
         }
         // print_r($request->get('img'));
         // exit();
-       
+
         $img = $request->get('img');
         // print_r($id);
         // exit();
         $stu = "";
-        if($img != Null || $img !=""){
+        if ($img != Null || $img != "") {
 
-     
-        foreach ($img as $fileb) {
-            //echo $filea;
-            // $stu .= $sss . "|";
-            $oldfile = FileUpload::where('oldname', $fileb)->get();
-            $stu .= $oldfile[0]->filename . "|";
-            File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
-            FileUpload::where('filename', $oldfile[0]->filename)->delete();
+
+            foreach ($img as $fileb) {
+                //echo $filea;
+                // $stu .= $sss . "|";
+                $oldfile = FileUpload::where('oldname', $fileb)->get();
+                $stu .= $oldfile[0]->filename . "|";
+                File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
+                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            }
         }
-           }
         // $image = Receipt_School::where('id',$id)->get();
         // $imageNew = "";
         // foreach($image as $images){
@@ -1286,18 +1281,16 @@ class ReceiptSchoolController extends Controller
 
         // }
         $id_parent = $request->get('id_parent');
-        
+
         $dataimg = Receipt_School::find($id_parent);
-        if($dataimg->file_att!=Null && $dataimg->file_att!=""){
-            $stu = $dataimg->file_att ."|". $stu;
+        if ($dataimg->file_att != Null && $dataimg->file_att != "") {
+            $stu = $dataimg->file_att . "|" . $stu;
 
             $stu = rtrim($stu, "|");
             Receipt_School::find($id_parent)->update(['file_att' => $stu]);
-
-        }else{
+        } else {
             Receipt_School::find($id_parent)->update(['file_att' => $stu]);
             return response()->json(['success' => 'Receipt updated successfully']);
-
         }
         // echo($dataimg->file_att);
         // exit();
@@ -1314,17 +1307,17 @@ class ReceiptSchoolController extends Controller
         // }
 
         // $filebs = rtrim($filebs, "|");
-        
-       
+
+
         // Receipt_School::find($id)->save('file_att' => $stu);
         // $data = new Receipt_School([
-            
+
         //     'file_att' => $stu,
 
         // ]);
         // print_r($data);
         // exit();
-        
+
 
         // $data->update();
 

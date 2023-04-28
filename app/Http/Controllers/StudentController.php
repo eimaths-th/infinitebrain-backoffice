@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\ParentRegister;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -49,13 +50,13 @@ class StudentController extends Controller
                 })*/
                 ->editColumn('photo', function (Student $Student) {
 
-                    if ($Student->photo_att!=="") {
-                        $urla = url('/') . '/receipt_form_images/'.$Student->photo_att;
+                    if ($Student->photo_att !== "") {
+                        $urla = url('/') . '/receipt_form_images/' . $Student->photo_att;
                     } else {
                         $urla = url('/') . '/images/user2.png';
                     }
 
-                    $ltext = "<img src='".$urla."' width='34' height='34' class='rounded-circle'>";
+                    $ltext = "<img src='" . $urla . "' width='34' height='34' class='rounded-circle'>";
                     return $ltext;
                 })
                 ->editColumn('checkbox', function ($row) {
@@ -67,8 +68,8 @@ class StudentController extends Controller
                     return $html;
                 })->rawColumns(['checkbox', 'photo', 'action'])->toJson();
         }
-
-        return view('students.index');
+        $parent = ParentRegister::orderBy("id", "asc")->get();
+        return view('students.index')->with(['data4' => $parent]);
     }
 
     /**
@@ -99,6 +100,7 @@ class StudentController extends Controller
             'lastname' => 'required|string|max:255',
             'nickname' => 'required|string|max:255',
             'mobile' => 'required|string|max:10',
+            'parent' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -112,6 +114,7 @@ class StudentController extends Controller
             'nick_name' => $request->get('nickname'),
             'mobile' => $request->get('mobile'),
             'grade' => $request->get('grade'),
+            'pid' => $request->get('parent'),
         ]);
         $student->save();
         return response()->json(['success' => 'Student Add successfully']);
@@ -139,9 +142,30 @@ class StudentController extends Controller
         //
         $this->check_permission();
         $data = Student::find($id);
+        $parent = ParentRegister::orderBy("id", "asc")->get();
+
+        $select_html = '';
+        foreach ($parent as $key2) {
+            if ($data->pid==$key2->id) {
+                $select_html.= '<option value="'.$key2->id.'" selected>'.$key2->code.' '.$key2->name_parent.'</option>';
+            } else {
+                $select_html.= '<option value="'.$key2->id.'">'.$key2->code.' '.$key2->name_parent.'</option>';
+            }
+
+        }
+
+
 
 
         $html = '<div class="form-group">
+                    <label for="Parent">Name Parent:</label><br>
+                    <select style="width: 100%;" class="parent select2 select2_single form-control" id="EditParent"
+                        name="name_parent">
+                        <option value="" selected>Select Parent</option>
+                        '.$select_html.'
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="Name">Code:</label>
                     <input type="text" class="form-control" name="code" id="EditCode" value="' . $data->code . '">
                 </div>
@@ -182,7 +206,7 @@ class StudentController extends Controller
     public function update(Request $request, $id)
     {
         //
-       
+
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'code' => 'required|string|max:4|unique:students,code,' . $id,
@@ -190,12 +214,13 @@ class StudentController extends Controller
             'last_name' => 'required|string|max:255',
             'nick_name' => 'required|string|max:255',
             'mobile' => 'required|string|max:10',
+            'pid' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-        
+
         Student::find($id)->update($request->all());
 
         return response()->json(['success' => 'Student updated successfully']);

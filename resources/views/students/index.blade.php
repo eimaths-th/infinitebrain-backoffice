@@ -1,9 +1,11 @@
 @extends('layouts.main_template')
 
 @section('style')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -91,6 +93,20 @@
                                 <span aria-hidden="true"></span>
                             </button>
                         </div>
+
+                        <div class="form-group">
+                            <label for="Parent">Name Parent:</label><br>
+                            <select style="width: 100%;" class="parent select2 select2_single form-control" id="AddParent"
+                                name="name_parent">
+                                <!-- <option value="" selected>Select Student</option> -->
+                                <option value="" selected>Select Parent</option>
+                                @foreach ($data4 as $key2)
+                                    <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->name_parent }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label for="Name">Code:</label>
                             <input type="text" class="form-control" name="code" id="AddCode" value="">
@@ -115,7 +131,7 @@
                             <label for="Name">Grade:</label>
                             <input type="text" class="form-control" name="grade" id="AddGrade" value="">
                         </div>
-                        
+
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
@@ -180,6 +196,16 @@
                     alert("Please Select Record For Delete");
                 }
 
+            });
+
+            $(".select2_single").select2({
+                maximumSelectionLength: 2,
+                allowClear: true
+            });
+            $(".select2_multiple").select2({
+                maximumSelectionLength: 2,
+                //placeholder: "With Max Selection limit 4",
+                allowClear: true
             });
 
             $('#check-all').click(function() {
@@ -312,6 +338,7 @@
                         nickname: $('#AddNickname').val(),
                         mobile: $('#AddMobile').val(),
                         grade: $('#AddGrade').val(),
+                        parent: $('#AddParent').val(),
                         _token: token,
                     },
                     success: function(result) {
@@ -327,7 +354,7 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
-                                toastr.success(result.success, {
+                            toastr.success(result.success, {
                                 timeOut: 5000
                             });
                             $('#Listview').DataTable().ajax.reload();
@@ -363,6 +390,7 @@
                         nick_name: $('#EditNickname').val(),
                         mobile: $('#EditMobile').val(),
                         grade: $('#EditGrade').val(),
+                        pid: $('#EditParent').val(),
                     },
 
                     success: function(result) {
@@ -379,7 +407,7 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
-                                toastr.success(result.success, {
+                            toastr.success(result.success, {
                                 timeOut: 5000
                             });
                             $('#Listview').DataTable().ajax.reload();
