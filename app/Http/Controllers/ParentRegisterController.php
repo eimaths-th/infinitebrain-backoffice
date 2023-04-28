@@ -101,7 +101,7 @@ class ParentRegisterController extends Controller
         //$rpnumber1 = Parent_RunningNumber::generate();
 
         $registerForm1 = new ParentRegister([
-            'code'=>$request->get('code'),
+            'code' => $request->get('code'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
             'name_parent' => $request->get('parent'),
@@ -112,14 +112,13 @@ class ParentRegisterController extends Controller
 
         ]);
         $registerForm1->save();
-
     }
     public function store(Request $request)
     {
 
         //
         // $validator =  Validator::make($request->all(), [
-            $request->validate([
+        $request->validate([
             'email' => 'required|email|unique:parent',
             // 'password' => [
             //     'required',
@@ -212,15 +211,15 @@ class ParentRegisterController extends Controller
 
             $data2[] = $data;
 
-                Student::upsert($data, [
-                    'code', 'first_name', 'last_name', 'nick_name', 'birth_data', 'school_name', 'grade', 'photo_att', 'sex', 'pid'
-                ]);
+            Student::upsert($data, [
+                'code', 'first_name', 'last_name', 'nick_name', 'birth_data', 'school_name', 'grade', 'photo_att', 'sex', 'pid'
+            ]);
             //
         }
         // print_r($data2);
         // exit();
         $adminEmail = $request->get('email');
-        Mail::to($adminEmail)->send(new ContactMail2($registerForm,$data2));
+        Mail::to($adminEmail)->send(new ContactMail2($registerForm, $data2));
         // if(count($data)>0){
         //     $error = '';
         // }
@@ -314,7 +313,7 @@ class ParentRegisterController extends Controller
             'email' => 'required|string|max:255',
             'name_parent' => 'required|string|max:255',
             // 'mobile' => 'required|string|max:10',
-            'street_address' => 'required|string|max:255',
+            //'street_address' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
