@@ -94,8 +94,8 @@ class ParentRegisterController extends Controller
             //'address' => 'required|string',
         ]);
         if ($validator->fails()) {
-            //return response()->json(['errors' => $validator->errors()->all()]);
-            return back()->withErrors(['errors' => $validator->errors()->all()]);
+            return response()->json(['errors' => $validator->errors()->all()]);
+            //return back()->withErrors(['errors' => $validator->errors()->all()]);
         }
 
         //$rpnumber1 = Parent_RunningNumber::generate();
