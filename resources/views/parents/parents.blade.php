@@ -118,7 +118,10 @@
                             <label for="Name">Address:</label>
                             <input type="text" class="form-control" name="address" id="AddAddress" value="">
                         </div>
-                        
+                        <div class="form-group">
+                            <label for="Name">PostCode:</label>
+                            <input type="text" class="form-control" name="postcode" id="AddPostcode" value="">
+                        </div>
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
@@ -313,6 +316,7 @@
                         parent: $('#AddParent').val(),
                         mobile: $('#AddMobile').val(),
                         address: $('#AddAddress').val(),
+                        postcode:$('#AddPostcode').val(),
                         _token: token,
                     },
                     success: function(result) {

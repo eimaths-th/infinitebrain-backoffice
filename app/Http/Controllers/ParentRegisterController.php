@@ -99,7 +99,7 @@ class ParentRegisterController extends Controller
         }
 
         //$rpnumber1 = Parent_RunningNumber::generate();
-
+        
         $registerForm1 = new ParentRegister([
             'code' => $request->get('code'),
             'email' => $request->get('email'),
@@ -107,6 +107,7 @@ class ParentRegisterController extends Controller
             'name_parent' => $request->get('parent'),
             'mobile' => $request->get('mobile'),
             'street_address' => $request->get('address'),
+            'postcode'=>$request->get('postcode'),
             // 'postcode' => $request->get('postcode'),
             // 'code' => "$rpnumber1",
 

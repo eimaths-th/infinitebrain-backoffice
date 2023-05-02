@@ -1071,10 +1071,10 @@ class ReceiptSchoolController extends Controller
             [
                 // 'type' => 'required|string',
                 'submission_date' => 'required|string',
-                'street_address' => 'required|string',
+                
                 //'city' => 'required|string',
                 //'province' => 'required|string',
-                'postcode' => 'required|string',
+                
                 'name_parent' => 'required|string',
                 'mobile' => 'required|string',
                 'receipt.*.subject' => 'required',
