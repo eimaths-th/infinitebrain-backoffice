@@ -39,7 +39,7 @@
         </div>
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-                <form method="post" action="#" name="delete_all" id="delete_all">
+                <form method="post" action="{{ route('parents.destroy_all') }}" name="delete_all" id="delete_all">
                     @csrf
                     @method('DELETE')
                     <table style="width: 100%;" id="Listview"
@@ -367,6 +367,7 @@
                         name_parent: $('#EditParentName').val(),
                         mobile: $('#EditMobile').val(),
                         street_address: $('#EditAddress').val(),
+                        postcode:$('#EditPostcode').val(),
                         // grade: $('#EditGrade').val(),
                     },
 

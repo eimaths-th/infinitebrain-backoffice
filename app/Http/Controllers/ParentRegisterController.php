@@ -99,7 +99,7 @@ class ParentRegisterController extends Controller
         }
 
         //$rpnumber1 = Parent_RunningNumber::generate();
-        
+
         $registerForm1 = new ParentRegister([
             'code' => $request->get('code'),
             'email' => $request->get('email'),
@@ -275,6 +275,10 @@ class ParentRegisterController extends Controller
 
         $html = '
                 <div class="form-group">
+                    <label for="Name">Code:</label>
+                    <input type="number" class="form-control" name="code" id="EditCode" value="' . $data->code . '">
+                </div>
+                <div class="form-group">
                     <label for="Name">Email:</label>
                     <input type="email" class="form-control" name="email" id="EditEmail" value="' . $data->email . '">
                 </div>
@@ -290,7 +294,10 @@ class ParentRegisterController extends Controller
                     <label for="Name">street_address:</label>
                     <input type="text" class="form-control" name="street_address" id="EditAddress" value="' . $data->street_address . '">
                 </div>
-
+                <div class="form-group">
+                <label for="Name">postcode:</label>
+                <input type="text" class="form-control" name="postcode" id="EditPostcode" value="' . $data->postcode . '">
+            </div>
 
             ';
 
