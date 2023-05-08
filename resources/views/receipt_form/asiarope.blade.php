@@ -1020,7 +1020,7 @@
                         <div class="card-footer text-center">
                             <br>
                             <br>
-                            <input type="submit" class="btn btn-lg btn-primary" value="Submit Application">
+                            <input type="submit" id="send_data" class="btn btn-lg btn-primary" value="Submit Application">
                             <button type="reset" class="btn btn-lg btn-primary">Clear Form</button><br><br><br>
                         </div>
                 </div>
@@ -1474,7 +1474,7 @@
                 .length) {
                 //$('#error_div').css('display', 'none');
 
-
+                $('#send_data').attr('disabled',true);
                 return true;
             } else {
                 if (!document.getElementsByName('imgFiles[]').length) {
