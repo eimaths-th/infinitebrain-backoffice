@@ -1190,7 +1190,6 @@
         });
     </script>
     <script type="text/javascript">
-        Dropzone.autoDiscover = false;
         var myDropzone = {};
         Dropzone.options.myAwesomeDropzone = {
             url: '{{ route('form.upload') }}',
@@ -1446,12 +1445,11 @@
                 }
                 this.defaultShowErrors();
             }
-              submitHandler: function() {
-                //var spinner = $('#loader');
-                //spinner.show();
-                $('#send_data').attr('disabled',true);
+            /*  submitHandler: function() {
+                var spinner = $('#loader');
+                spinner.show();
                 return true;
-             }
+             }  */
         }
 
         $(document).ready(function() {
