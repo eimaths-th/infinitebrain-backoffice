@@ -1190,6 +1190,7 @@
         });
     </script>
     <script type="text/javascript">
+        Dropzone.autoDiscover = false;
         var myDropzone = {};
         Dropzone.options.myAwesomeDropzone = {
             url: '{{ route('form.upload') }}',
