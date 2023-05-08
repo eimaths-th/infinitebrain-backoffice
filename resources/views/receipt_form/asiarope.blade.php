@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                        background-size: 15px;
-                                    }*/
+                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                background-size: 15px;
+                                            }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                        border-color: var(--color-invalid);
-                                    }*/
+                                            input:not(:focus):not(:placeholder-shown):invalid {
+                                                border-color: var(--color-invalid);
+                                            }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                        display: block;
-                                    }*/
+                                                display: block;
+                                            }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -562,7 +562,7 @@
                                                 Date:</strong> 1 May - 7 July 2023</span></p>
                                     <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;23 July 2023</span>
                                     </p>
-                                   {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
+                                    {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
                                     </p> --}}
                                     {{-- <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
@@ -655,8 +655,7 @@
                                             </label>
                                             <input type="text" class="form-control" name="nickname" id="nickname"
                                                 value="" maxlength="50" minlength="1" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Nick
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Nick
                                                 Name</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -763,7 +762,8 @@
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test: 850 baht">Test: 850 baht</option>
-                                                <option value="Test + tutoring class: 1250 bath (1 class 2 hours)">Test + tutoring class: 1250 bath (1 class 2 hours)</option>
+                                                <option value="Test + tutoring class: 1250 bath (1 class 2 hours)">Test +
+                                                    tutoring class: 1250 bath (1 class 2 hours)</option>
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -780,19 +780,24 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="contest">Choose Contest Category<span
-                                                    class="form-required">*</span></label>
-                                                    <select class="form-control" id="contest" name="contest"
-                                                    aria-label="Choose Contest Category" required>
-                                                    <option value="">Please Select</option>
-                                                    <option value="Science Category 1 (Kindergarten ,Grades 1)">Science Category 1 (Kindergarten ,Grades 1) </option>
-                                                    <option value="Science Category 2 (Grades 2-3)">Science Category 2 (Grades 2-3)</option>
-                                                    <option value="Science Category 3 (Grades 4-5)">Science Category 3 (Grades 4-5)</option>
-                                                    <option value="Science Category 4 (Grades 6-7)">Science Category 4 (Grades6-7)</option>
-                                                    <option value="Science Category 5 (Grades 8-9)">Science Category 5 (Grades 8-9)</option>
-                                                    <option value="Science Category 6 (Grades 10-12)">Science Category 6 (Grades 10-12)</option>
-                                                </select>
+                                            <label class="form-label form-label-top form-label-auto" for="contest">Choose
+                                                Contest Category<span class="form-required">*</span></label>
+                                            <select class="form-control" id="contest" name="contest"
+                                                aria-label="Choose Contest Category" required>
+                                                <option value="">Please Select</option>
+                                                <option value="Science Category 1 (Kindergarten ,Grades 1)">Science
+                                                    Category 1 (Kindergarten ,Grades 1) </option>
+                                                <option value="Science Category 2 (Grades 2-3)">Science Category 2 (Grades
+                                                    2-3)</option>
+                                                <option value="Science Category 3 (Grades 4-5)">Science Category 3 (Grades
+                                                    4-5)</option>
+                                                <option value="Science Category 4 (Grades 6-7)">Science Category 4
+                                                    (Grades6-7)</option>
+                                                <option value="Science Category 5 (Grades 8-9)">Science Category 5 (Grades
+                                                    8-9)</option>
+                                                <option value="Science Category 6 (Grades 10-12)">Science Category 6
+                                                    (Grades 10-12)</option>
+                                            </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Contest Category</label>
                                             <div class="form-error-message" role="alert"><img
@@ -944,7 +949,7 @@
 
                                 <br>
                                 <div align="center"><img src="{{ asset('images/PayMent.png') }}" alt="..."
-                                    height="300"></div>
+                                        height="300"></div>
                                 <br>
 
                                 <div class="form-row form-focus" id="dropzone-att">
@@ -1020,7 +1025,8 @@
                         <div class="card-footer text-center">
                             <br>
                             <br>
-                            <input type="submit" id="send_data" class="btn btn-lg btn-primary" value="Submit Application">
+                            <input type="submit" id="send_data" class="btn btn-lg btn-primary"
+                                value="Submit Application">
                             <button type="reset" class="btn btn-lg btn-primary">Clear Form</button><br><br><br>
                         </div>
                 </div>
@@ -1444,12 +1450,18 @@
 
                 }
                 this.defaultShowErrors();
+            },
+            submitHandler: function() {
+                //var spinner = $('#loader');
+                //spinner.show();
+                if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]')
+                    .length) {
+                    $('#send_data').attr('disabled', true);
+                    $(form).submit();
+                    return true;
+                }
+
             }
-            /*  submitHandler: function() {
-                var spinner = $('#loader');
-                spinner.show();
-                return true;
-             }  */
         }
 
         $(document).ready(function() {
