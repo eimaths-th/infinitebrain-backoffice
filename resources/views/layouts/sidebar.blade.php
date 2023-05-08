@@ -436,6 +436,12 @@
                                     OLPCS
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts.print_month', ['pmsfield' => '10','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร ASIAROPE รอบแรก '. $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    ASIAROPE
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endif
