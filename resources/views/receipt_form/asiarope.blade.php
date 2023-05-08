@@ -1445,11 +1445,12 @@
                 }
                 this.defaultShowErrors();
             }
-            /*  submitHandler: function() {
-                var spinner = $('#loader');
-                spinner.show();
+              submitHandler: function() {
+                //var spinner = $('#loader');
+                //spinner.show();
+                $('#send_data').attr('disabled',true);
                 return true;
-             }  */
+             }
         }
 
         $(document).ready(function() {
@@ -1474,7 +1475,7 @@
                 .length) {
                 //$('#error_div').css('display', 'none');
 
-                $('#send_data').attr('disabled',true);
+
                 return true;
             } else {
                 if (!document.getElementsByName('imgFiles[]').length) {
