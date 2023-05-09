@@ -246,7 +246,7 @@
                                         <td width="10%"></td>
                                         <td width="67%" class="grey">มูลค่าที่ยกเว้นภาษี/Non-Vat Amount</td>
                                         <!-- <td width="20%"></td> -->
-                                        <td width="15%" align="right"> <b> {{ $vat_price_val }} </b></td>
+                                        <td width="15%" align="right" > <b> 00.00 </b></td>
                                         <td width="8%"></td>
 
 
@@ -255,7 +255,7 @@
                                         <td width="10%"></td>
                                         <td width="67%" class="grey">มูลค่าที่คำนวนภาษี/Pre-Vat Amount</td>
                                         <!-- <td width="10%"></td> -->
-                                        <td width="15%" align="right"> <b> {{-- {{ $vat_price_val }} --}} 00.00 </b></td>
+                                        <td width="15%" align="right" > <b> {{ $vat_price_val }}{{-- {{ $vat_price_val }} --}}  </b></td>
                                         <td width="8%"></td>
 
                                     </tr>
@@ -263,7 +263,7 @@
                                         <td width="10%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="67%" class="grey">ส่วนลด/Discout</td>
-                                        <td width="15%" align="right"><b>00.00</b></td>
+                                        <td width="15%" align="right" ><b>00.00</b></td>
                                         <td width="8%"></td>
 
                                     </tr>
@@ -271,7 +271,7 @@
                                         <td width="10%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="67%" class="grey">ภาษีมูลค่าเพิ่ม 7% / Vat 7%</td>
-                                        <td width="15%" align="right"><b>{{ $vat_val }}</b></td>
+                                        <td width="15%" align="right" ><b>{{ $vat_val }}</b></td>
                                         <td width="8%"></td>
 
                                     </tr>

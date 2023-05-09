@@ -243,13 +243,13 @@
                                     </tr>
                                 </table>
                             </td>
-                            <td colspan="3" class="activetop active">
+                            <td colspan="3" class="activetop activeleft">
                                 <table width="100%" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td width="40%"></td>
                                         <td width="40%" class="grey">มูลค่าที่ยกเว้นภาษี/Non-Vat Amount</td>
                                         <!-- <td width="20%"></td> -->
-                                        <td width="20%" align="right"> <b> {{-- {{ $vat_price_val }} --}} 00.00</b></td>
+                                        <td width="20%" align="right" style="padding-right: 35px"> <b> {{-- {{ $vat_price_val }} --}} 00.00</b></td>
                                         <!-- <td width="10%"></td> -->
 
 
@@ -258,20 +258,20 @@
                                         <td width="40%"></td>
                                         <td width="40%" class="grey">มูลค่าที่คำนวนภาษี/Pre-Vat Amount</td>
                                         <!-- <td width="10%"></td> -->
-                                        <td width="20%" align="right"> <b>{{ $vat_price_val }}</b></td>
+                                        <td width="20%" align="right" style="padding-right: 35px"> <b>{{ $vat_price_val }}</b></td>
                                         <!-- <td width="10%"></td> -->
                                     </tr>
                                     <tr>
                                         <td width="40%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="40%" class="grey">ส่วนลด/Discout</td>
-                                        <td width="20%" align="right"><b>00.00</b></td>
+                                        <td width="20%" align="right" style="padding-right: 35px"><b>00.00</b></td>
                                     </tr>
                                     <tr>
                                         <td width="40%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="40%" class="grey">ภาษีมูลค่าเพิ่ม 7% / Vat 7%</td>
-                                        <td width="20%" align="right"><b>{{ $vat_val }}</b></td>
+                                        <td width="20%" align="right" style="padding-right: 35px"><b>{{ $vat_val }}</b></td>
                                     </tr>
                                 </table>
                             </td>
