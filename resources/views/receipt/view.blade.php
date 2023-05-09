@@ -243,7 +243,7 @@
                                     </tr>
                                 </table>
                             </td>
-                            <td colspan="3" class="activetop activeleft">
+                            <td colspan="3" class="activetop activeright">
                                 <table width="100%" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td width="40%"></td>
