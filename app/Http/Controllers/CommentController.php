@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Comment;
-use Illuminate\Support\Facades\Validator;
+use Illuinate\Support\Facades\Validator;
 use File;
 use Illuminate\Support\Str;
-use App\Models\FileUpload;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Student;
+use App\Models\Comment;
+use App\Models\FileUpload;
 
 class CommentController extends Controller
 {
@@ -38,7 +38,7 @@ class CommentController extends Controller
 
                 //->where('levels.subject', $request->id)
                 ->orderBy("comment.id", "desc")
-                ->get();           
+                ->get();
                  return datatables()->of($comment)
                 /*->editColumn('subject', function (Student $Student) {
                     if ($Student->subject == 1) {
@@ -49,20 +49,20 @@ class CommentController extends Controller
 
                     return $ltext;
                 })*/
-             
+
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
                 ->editColumn('student_name', function (Comment $comment) {
                     return $comment->student_name . ' ' . $comment->student_lastname;
                 })
-             
+
                 ->editColumn('photo', function ($row) {
                     $html = "";
                     $pic = explode('|',$row->photo);
                     if($row->photo!=""){
 
-                    
+
                     foreach($pic as $pics){
                         $html .= '<img src="'.url('/').'/comments_images/'.$pics.'" class="me-2" height="50" width="50">';
                     }
@@ -71,9 +71,9 @@ class CommentController extends Controller
                 }
                     return $html;
                 })
-              
+
                 ->addColumn('action', function ($row) {
-                    
+
                     $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
@@ -88,14 +88,14 @@ class CommentController extends Controller
         $html ="";
         //
         // $this->check_permission();
-        
+
         $data = Comment::find($id);
         $select_list_student = "";
-        
+
         $student = Student::orderBy("id", "asc")->get();
         foreach ($student as $keys) {
             if ($data->sid == $keys->id) {
-                
+
                 $select_list_student .= '<option value="' . $keys->id . '" disabled selected>' . $keys->code . ' ' . $keys->first_name . ' ' . $keys->last_name . '</option>';
 
             } else {
@@ -108,11 +108,11 @@ class CommentController extends Controller
                                 <label for="Student">Student:</label><br>
                                 <select style="width: 100%;" class="select2 select2_single form-control" id="student"
                                     name="student" value="'.$select_list_student.' " >
-                                    
+
 
                                 </select>
                             </div>
-       
+
         <div class="form-group">
             <label for="Name">User:</label>
             <input type="text" class="form-control" name="user" id="user" value="' . $data->user . '" disabled>
@@ -125,40 +125,40 @@ class CommentController extends Controller
         <label for="Name">Photo:</label>
         </div>
 
-  
+
     ';
         $pic = explode('|',$data->photo);
         foreach($pic as $pics){
-         
+
            $html .= '
-         
+
            <img src="'.url('/').'/comments_images/'. $pics .'" class="me-2"  name="photo" id="user" height="100" width="100">
            ';
         }
-        
+
 
         return response()->json(['html' => $html]);
     }
     public function store1(Request $request)
     {
-        
+
 
         //     $validator =  Validator::make($request->all(), [
         //         'user' => 'required|string',
         //         'comment' => 'required|string',
         //         // 'photo' => 'required|string',
         //     ]);
-  
+
         // $validator =  Validator::make($request->all(), [
         //     'pid' => 'required',
-            
+
         // ]);
-       
+
         // if ($validator->fails()) {
         //     //return response()->json(['errors' => $validator->errors()->all()]);
         //     return back()->withErrors(['errors' => $validator->errors()->all()]);
         // }
-        
+
 
         if($request->get('imgFiles')!=""){
 
@@ -172,7 +172,7 @@ class CommentController extends Controller
             File::move(public_path() . '/comment_images/' . $oldfile[0]->filename, public_path() . '/comments_images/' . $oldfile[0]->filename);
             FileUpload::where('filename', $oldfile[0]->filename)->delete();
         }
-       
+
         $fileas = rtrim($fileas, "|");
         $comment = new Comment([
             'user' => Auth::user()->name,
@@ -181,7 +181,7 @@ class CommentController extends Controller
             'sid' => $request->get('student'),
 
         ]);
-       
+
     }else{
         $comment = new Comment([
             'user' => Auth::user()->name,
@@ -189,7 +189,7 @@ class CommentController extends Controller
             'sid' => $request->get('student'),
 
         ]);
-       
+
     }
     $comment->save();
 

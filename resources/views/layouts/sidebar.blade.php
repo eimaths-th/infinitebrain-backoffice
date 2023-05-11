@@ -216,6 +216,24 @@
                     </li>
                     <li>
                         <a href="#">
+                            <i class="metismenu-icon pe-7s-diskette"></i>
+                            ประวัติการเรียน
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
+
+                        <ul>
+
+                            <li>
+                                <a href="{{ route('histories') }}">
+                                    <i class="metismenu-icon"></i>
+                                    ประวัติการเข้าเรียน
+                                </a>
+                            </li>
+                        </ul>
+
+                    </li>
+                    <li>
+                        <a href="#">
                             <i class="metismenu-icon pe-7s-comment"></i>
                             Comment
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>

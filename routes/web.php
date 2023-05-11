@@ -15,10 +15,10 @@ use App\Http\Controllers\ParentRegisterController;
 use App\Http\Controllers\SubjectPriceController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\GoogleController;
-use App\Models\ParentRegister;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\ReceiptSchoolController;
+use App\Http\Controllers\HistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ Route::group(array('domain' => 'form.infinitebrain.co.th'), function()
 
 Route::group(array('domain' => 'school.infinitebrain.co.th'), function()
 {
-    Route::get('/', [SchoolController::class, 'index']);
+    Route::get('/', [App\Http\Controllers\SchoolController::class, 'index']);
 
 });
 
@@ -212,7 +212,12 @@ Route::delete('/comment/destroy/{id}', [CommentController::class, 'destroy'])->n
 Route::delete('/comment/destroy_all', [CommentController::class, 'destroy_all'])->name('comment.destroy_all');
 
 
-
+Route::get('/histories', [HistoryController::class, 'index'])->name('histories');
+Route::get('/histories/edit/{id}', [HistoryController::class, 'edit'])->name('histories.edit');
+Route::put('/histories/save/{id}', [HistoryController::class, 'update'])->name('histories.save');
+Route::post('/histories/store', [HistoryController::class, 'store'])->name('histories.store');
+Route::delete('/histories/destroy/{id}', [HistoryController::class, 'destroy'])->name('histories.destroy');
+Route::delete('/histories/destroy_all', [HistoryController::class, 'destroy_all'])->name('histories.destroy_all');
 
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
 Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
