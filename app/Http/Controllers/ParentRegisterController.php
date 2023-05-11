@@ -81,14 +81,14 @@ class ParentRegisterController extends Controller
     public function store1(Request $request)
     {
         $validator =  Validator::make($request->all(), [
-            'email' => 'required|email|unique:parent',
+           /*  'email' => 'required|email|unique:parent',
             'password' => [
                 'required',
                 'string',
                 'regex:/^[a-zA-Z0-9 ]+$/',
                 'min:8',
 
-            ],
+            ], */
             'parent' => 'required|string',
             'mobile' => 'required|string',
             //'address' => 'required|string',
