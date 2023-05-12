@@ -13,6 +13,7 @@ class Receipt_School extends Model
     protected $fillable = [
         'type',
         'submission_date',
+        'payment_type',
         'first_name',
         'last_name',
         'street_address',

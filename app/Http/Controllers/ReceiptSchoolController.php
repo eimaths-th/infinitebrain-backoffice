@@ -49,6 +49,12 @@ class ReceiptSchoolController extends Controller
         "พฤศจิกายน",
         "ธันวาคม"
     );
+
+    //payment
+    const datap = array(array("id" => "1", "name" => "เงินสด/Cash"), array("id" => "2", "name" => "โอนเงิน/Transfer"), array("id" => "3", "name" => "บัตรเครดิต/Credit Card"));
+
+
+
     private function convertDigit($digit)
     {
         switch ($digit) {
@@ -549,11 +555,14 @@ class ReceiptSchoolController extends Controller
         // print_r($level) ;
 
 
+
+
         $student = Student::orderBy("first_name", "asc")->get();
         $subject = Subject::orderBy("id", "asc")->get();
         $parent = ParentRegister::orderBy("id", "asc")->get();
 
-        return view('receipt_school.receipt')->with(['data2' => $student])->with(['data3' => $subject])->with(['data4' => $parent]);
+        return view('receipt_school.receipt')->with(['data2' => $student])->with(['data3' => $subject])->with(['data4' => $parent])
+            ->with(['datap' => self::datap]);
     }
     public function edit($id, $type)
     {
@@ -573,6 +582,21 @@ class ReceiptSchoolController extends Controller
                 $student .= '<option value="' . $stus[0]->id . '" selected> ' . $stus[0]->first_name . " " . $stus[0]->last_name . ' </option>';
             }
         }
+
+        $payment = '';
+
+        foreach (self::datap as $pay) {
+
+            if ($pay['id'] == $data->payment_type) {
+                $selected_pay = 'selected';
+            } else {
+                $selected_pay = '';
+            }
+
+            $payment .= '<option value="' . $pay['id'] . '" ' . $selected_pay . '> ' . $pay['name'] . ' </option>';
+        }
+
+
         $receipts_detail = SchoolPrice::where('rid', $id)
             ->orderBy("id", "asc")
             ->get();
@@ -806,7 +830,7 @@ class ReceiptSchoolController extends Controller
         // print_r($data->id);
         // exit();
         return response()->json([
-            'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html, 'imgs' => $html
+            'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html, 'imgs' => $html, 'payment' => $payment
         ]);
         // return view($viewr)->with(['pic' => $pic]);
 
@@ -946,6 +970,30 @@ class ReceiptSchoolController extends Controller
             $html .= '<img src="' . url('/') . '/receipts_form_school/' . $pics . '" class="me-3 mt-5 mb-5" height="400" >';
         }
 
+        $payment = '';
+        $i = 1;
+        foreach (self::datap as $pay) {
+
+            if ($pay['id'] == $data->payment_type) {
+                $selected_pay = '<i
+                style="font-size: 1.8em; color:red" class="fa fa-close"></i>';
+            } else {
+                $selected_pay = '';
+            }
+
+            if ($i == 1) {
+                $tc = 'activetop activebottom';
+            } else {
+                $tc = 'activebottom';
+            }
+            $payment .= ' <tr>
+            <td class="active ' . $tc . '" width="10%" align="center">' . $selected_pay . '</td>
+            <td class=" grey">' . $i . '.' . $pay['name'] . '</td>
+            <td class="  grey"></td>
+
+        </tr>';
+            $i++;
+        }
 
         // print_r($data2->name_parent);
         // exit();
@@ -967,6 +1015,7 @@ class ReceiptSchoolController extends Controller
             ->with(['price_text' => $price_text])
             ->with(['vat_price_val' => $vat_price_val])
             ->with(['vat_val' => $vat_val])
+            ->with(['payment' => $payment])
             ->with(['file_att' => $file_att]);
         //->with(['des_text' => $des_text]);
     }
@@ -1031,7 +1080,11 @@ class ReceiptSchoolController extends Controller
 
         $output = "";
         $outputsum = "";
-        $output .= '<input type="text" id="pp" name="pp" class="form-control has-feedback-left" value="' . (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount . '" >
+        $output .= '<input type="text" id="pp" n
+
+
+
+        ame="pp" class="form-control has-feedback-left" value="' . (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount . '" >
         ';
         $outputsum .= '' . (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount . '';
         return response()->json([
@@ -1071,10 +1124,10 @@ class ReceiptSchoolController extends Controller
             [
                 // 'type' => 'required|string',
                 'submission_date' => 'required|string',
-                
+                'payment_type' => 'required|string',
                 //'city' => 'required|string',
                 //'province' => 'required|string',
-                
+
                 'name_parent' => 'required|string',
                 'mobile' => 'required|string',
                 'receipt.*.subject' => 'required',
@@ -1142,6 +1195,7 @@ class ReceiptSchoolController extends Controller
 
         $data = new Receipt_School([
             'submission_date' => $request->get('submission_date'),
+            'payment_type' => $request->get('payment_type'),
             'street_address' => $request->get('street_address'),
             'postcode' => $request->get('postcode'),
             'mobile' => $request->get('mobile'),
@@ -1237,6 +1291,7 @@ class ReceiptSchoolController extends Controller
 
         $validator =  Validator::make($request->all(), [
             'submission_date' => 'required|string',
+            'payment_type' => 'required|string',
             // 'first_name' => 'required|string',
             // 'last_name' => 'required|string',
             'street_address' => 'required|string',

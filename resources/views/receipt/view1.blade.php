@@ -121,7 +121,7 @@
                         <td align="center" class="aaa"><b>ต้นฉบับ <br> Original <br>สำหรับลูกค้า</b></td>
 
                     </tr>
-                    
+
                     <tr>
                         <td class="grey">นามลูกค้า,ที่อยู่/Client,Address</td>
                         <td align="right" class="grey">รหัสลูกค้า/Customer's Code</td>
@@ -174,7 +174,7 @@
                             //exit();
                         @endphp
                         @foreach ($receipt_detail_arr as $receipt_detail)
-                        
+
                             <tr>
                                 <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
                                 <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
@@ -236,25 +236,7 @@
                                         </td>
 
                                     </tr>
-                                    <tr>
-                                        <td class="active activebottom activetop" width="10%"></td>
-                                        <td class="  grey">1.เงินสด/Cash</td>
-                                        <td class="  grey"></td>
-
-                                    </tr>
-                                    <tr>
-                                        <td class="active activebottom" width="10%" align="center"><i
-                                                style="font-size: 1.8em; color:red" class="fa fa-close"></i></td>
-                                        <td class=" grey">2.โอนเงิน/Transfer</td>
-                                        <td class="  grey"></td>
-
-                                    </tr>
-                                    <tr>
-                                        <td class="active activebottom" width="10%"></td>
-                                        <td class=" grey">3.บัตรเครดิต/Credit Card</td>
-                                        <td class="  grey"></td>
-
-                                    </tr>
+                                    {!! $payment !!}
                                 </table>
                             </td>
                             <td colspan="3" class="activetop activeleft">
