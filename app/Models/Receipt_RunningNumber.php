@@ -71,7 +71,7 @@ class Receipt_RunningNumber extends Model
         $number = str_pad($number, 3, '0', STR_PAD_LEFT);
 
         // A-21-00001
-        return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . date('m') . '' . $number;
+        return "0".Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . date('m') . '' . $number;
         //return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '01' . $number;
     }
 }

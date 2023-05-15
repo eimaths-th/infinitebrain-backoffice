@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class RunningNumber extends Model
 {
-  
-    
+
+
     // public static function generate($model, $trow, $length = 4 , $prefix)
     // {
     //     $data = $model::orderBy('code','desc')->first();
@@ -34,9 +34,9 @@ class RunningNumber extends Model
     protected $table = 'students_running_numbers';
 
     protected $fillable = [
-        
+
         'number',
-        
+
     ];
 
 
@@ -44,13 +44,13 @@ class RunningNumber extends Model
 
     public static function generate()
     {
-      
+
         $number = 1;
 
             // RunningNumber::create([
             //     'number' => $number,
             // ]);
-        
+
         $running_number = RunningNumber::first();
         // print_r($running_number);
         // exit();
@@ -58,19 +58,19 @@ class RunningNumber extends Model
             $running_number->number++;
             $running_number->save();
             $number = $running_number->number;
-            $number = str_pad($number, 4, '0', STR_PAD_LEFT);
+            $number = "0".str_pad($number, 3, '0', STR_PAD_LEFT);
             return  $number;
 
         }else{
             RunningNumber::create([
                 'number' => $number,
                         ]);
-            $number = str_pad($number, 4, '0', STR_PAD_LEFT);
+            $number = "0".str_pad($number, 3, '0', STR_PAD_LEFT);
 
         }
         //print_r($running_number);
         //exit();
-        
+
         return  $number;
 
         // A-21-00001
