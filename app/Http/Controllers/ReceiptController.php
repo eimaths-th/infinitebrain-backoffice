@@ -853,16 +853,20 @@ class ReceiptController extends Controller
                 ->get();
 
             $price = 0;
+            $desresult = '';
             foreach ($receipts_detail as $dresult) {
                 $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
                 $price = $price + $rprice;
+                $desresult .= $dresult['description'];
             }
 
-
+            $ret_receipt[$i]['receipt_des'] = '';
             if ($ret_receipt[$i]['receipt_type'] == 2) {
                 $ret_receipt[$i]['receipt_type'] = "ใบลดหนี้";
                 $price = $price * -1;
+                $ret_receipt[$i]['receipt_des'] = $desresult;
             }
+
             $price_val = number_format($price, 2);
 
             $ret_receipt[$i]['receipt_price'] = $price_val;
@@ -888,13 +892,14 @@ class ReceiptController extends Controller
                 $ret_receipt[$x]['receipt_firstname'] = "";
                 $ret_receipt[$x]['receipt_lastname'] = "";
                 $ret_receipt[$x]['receipt_price'] = "";
+                $ret_receipt[$x]['receipt_des'] = "";
                 $ret_receipt[$x]['receipt_price_label'] = "";
                 $ret_receipt[$x]['receipt_type'] = "";
             }
         }
         //echo $start;
-        // print_r($ret_receipt);
-        // exit();
+        //print_r($ret_receipt);
+        //exit();
 
 
 
@@ -1230,7 +1235,7 @@ class ReceiptController extends Controller
         $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {
-           Receipt::find($arr_del[$xx])->delete();
+            Receipt::find($arr_del[$xx])->delete();
         }
         //$ids = $request->get('table_records');
         //User::whereIn('id',explode(",",$ids))->delete();
