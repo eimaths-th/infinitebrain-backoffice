@@ -857,7 +857,7 @@ class ReceiptController extends Controller
             foreach ($receipts_detail as $dresult) {
                 $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
                 $price = $price + $rprice;
-                $desresult .= $dresult['description'];
+                $desresult .= $dresult['description']." ";
             }
 
             $ret_receipt[$i]['receipt_des'] = '';
