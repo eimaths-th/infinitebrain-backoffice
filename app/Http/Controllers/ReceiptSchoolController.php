@@ -946,7 +946,8 @@ class ReceiptSchoolController extends Controller
 
             foreach ($stu as $stus) {
                 $stus = Student::where('id', $stus)->get();
-                $student .= $stus[0]->first_name . "  " . $stus[0]->last_name . " , ";
+                //$student .= $stus[0]->first_name . "  " . $stus[0]->last_name . " , ";
+                $student .= $stus[0]->nick_name . " , ";
             }
         }
 

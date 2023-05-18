@@ -125,7 +125,7 @@
                     <tr>
                         <td class="grey">นามลูกค้า,ที่อยู่/Client,Address</td>
                         <td align="right" class="grey">รหัสลูกค้า/Customer's Code</td>
-                        <td> <b> {{ $data2->code }} </b></td>
+                        <td> <b>  {{ $data2->code }} </b></td>
                         <td align="right" class="grey">เลขที่ / Document No.</td>
                         <td> <b> {{ $data->receipt_number }} </b></td>
                     </tr>
@@ -134,7 +134,7 @@
                             <font class="grey">K.</font> <b> {{ $data2->name_parent }} </b>
                         </td>
                         <td align="right" class="grey">ชื่อนักเรียน/Nickname</td>
-                        <td align="left" width="30%"> <b>{{ $student }} </b></td>
+                        <td align="left" width="30%"> <b> {{ $student }} </b></td>
                         <td align="right" class="grey">วันที่ / Date</td>
                         <td> <b>{{ $data->submission_date }}</b></td>
                     </tr>
