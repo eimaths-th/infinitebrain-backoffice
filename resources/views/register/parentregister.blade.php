@@ -1062,7 +1062,7 @@
                             <div class="col-md-12 col-sm-12">
                                 <a id="dphoto"></a>
                                 <div class="position-relative form-group">
-                                    <label class="form-label form-label-top form-label-auto" for="photo">อัพโหลดรูปภาพผู้สมัคร <span class="form-required">*</span>
+                                    <label class="form-label form-label-top form-label-auto" for="photo">อัพโหลดรูปภาพนักเรียน <span class="form-required">*</span>
                                         <div style="width: 280px"></div>
                                     </label>
                                     <input type="text" id="drop1" name="drop1" class="form-control form_none" value="" required>
@@ -1532,7 +1532,7 @@
         },
         dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
         dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
-        dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด		
+        dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
         acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
 
         // The setting up of the dropzone
@@ -1602,17 +1602,17 @@
                 // do stuff with file.id ...
             });
             /*this.on("addedfile", function(file) {
-            	
+
             }).on("removedfile", function(file) {
-            	
+
             }).on("thumbnail", function(file) {
-            	
+
             }).on("error", function(file) {
-            	
+
             }).on("processing", function(file) {
-            	
+
             }).on("uploadprogress", function(file) {
-            	
+
             });*/
 
         }
@@ -1644,7 +1644,7 @@
         dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
         dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
         dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
-        dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด		
+        dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
         acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
         // The setting up of the dropzone
         init: function() {
@@ -1715,17 +1715,17 @@
                 // do stuff with file.id ...
             });
             /*this.on("addedfile", function(file) {
-            	
+
             }).on("removedfile", function(file) {
-            	
+
             }).on("thumbnail", function(file) {
-            	
+
             }).on("error", function(file) {
-            	
+
             }).on("processing", function(file) {
-            	
+
             }).on("uploadprogress", function(file) {
-            	
+
             });*/
 
         }
@@ -1756,7 +1756,7 @@
         dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
         dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
         dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
-        dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด		
+        dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
         acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
         // The setting up of the dropzone
         init: function() {
@@ -1827,17 +1827,17 @@
                 // do stuff with file.id ...
             });
             /*this.on("addedfile", function(file) {
-            	
+
             }).on("removedfile", function(file) {
-            	
+
             }).on("thumbnail", function(file) {
-            	
+
             }).on("error", function(file) {
-            	
+
             }).on("processing", function(file) {
-            	
+
             }).on("uploadprogress", function(file) {
-            	
+
             });*/
 
         }
@@ -1865,7 +1865,7 @@
             }
             this.defaultShowErrors();
         }
-        /*  submitHandler: function() { 
+        /*  submitHandler: function() {
             var spinner = $('#loader');
             spinner.show();
             return true;

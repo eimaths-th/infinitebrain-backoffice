@@ -165,9 +165,9 @@
                     </div>
                     <div style="float: right"><a href="{{ route('parent.logout') }}"><i class="fa fa-power-off"></i> ออกจากระบบ</a></div>
                     <br>
-                    
+
                     <div class="row">
-                    
+
                     <div class="col-md-12 div_center">
 
 
@@ -223,7 +223,7 @@
                                             <form method="POST" action="{{ route('parent.saveparent') }}">
                                                 @csrf
                                                 {!! $parent_html !!}
-                                                
+
                                             </form>
 
                                             </div>
@@ -469,7 +469,7 @@
                                                 </div>
 
                                                 <div class="time-label">
-                                                    <span class="bg-yellow">5 พฤษภาคม 2566</span>
+                                                    <span class="bg-yellow">5 มิถุนายน 2566</span>
                                                 </div>
 
 
