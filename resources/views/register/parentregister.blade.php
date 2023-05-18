@@ -872,7 +872,7 @@
                             <div class="col-md-12 col-sm-12">
                                 <a id="dphoto"></a>
                                 <div class="position-relative form-group">
-                                    <label class="form-label form-label-top form-label-auto" for="photo">อัพโหลดรูปภาพผู้สมัคร <span class="form-required">*</span>
+                                    <label class="form-label form-label-top form-label-auto" for="photo">อัพโหลดรูปภาพนักเรียน <span class="form-required">*</span>
                                         <div style="width: 280px"></div>
                                     </label>
                                     <input type="text" id="drop1" name="drop1" class="form-control form_none" value="" required>
