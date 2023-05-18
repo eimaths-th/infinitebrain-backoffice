@@ -725,6 +725,8 @@
                                                 required>
                                                 <option value="">Please Select</option>
                                                 <option value="Kindergarten">Kindergarten</option>
+
+
                                                 <option value="Grade 1">Grade 1</option>
                                                 <option value="Grade 2">Grade 2</option>
                                                 <option value="Grade 3">Grade 3</option>
