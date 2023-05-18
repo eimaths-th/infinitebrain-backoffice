@@ -1291,8 +1291,8 @@
                     <div class="text-center">
 
 
-                        <input type="submit" style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:20%;" class="btn btn-lg btn-primary me-3" value="Register">
-                        <button type="reset" style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:20%;" class="btn btn-lg btn-danger">Clear Form</button><br><br><br>
+                        <input type="submit" style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:200px;" class="btn btn-lg btn-primary me-3" value="Register">
+                        <button type="reset" style="box-shadow: 5px 5px 10px gray; color:#fff;border-radius: 100px;  text-shadow: 2px 2px 4px #000000; width:200px;" class="btn btn-lg btn-danger">Clear Form</button><br><br><br>
                     </div>
 
                 </div>
