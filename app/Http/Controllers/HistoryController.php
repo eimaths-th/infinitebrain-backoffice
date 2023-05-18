@@ -48,7 +48,7 @@ class HistoryController extends Controller
             //sleep(2);
             $course = History::select(
                 "histories.id as histories_id",
-                "levels.title as student_level",
+                //"levels.title as student_level",
                 "subjects.title as student_subject",
                 "students.code as student_code",
                 "students.first_name as student_name",
@@ -56,10 +56,12 @@ class HistoryController extends Controller
                 "students.nick_name as student_nickname",
                 "histories.description as description",
                 "histories.datetime as datetime",
+                "histories.stime as stime",
+                "histories.etime as etime",
             )
                 ->join("students", "students.id", "=", "histories.student_id")
                 ->join("subjects", "subjects.id", "=", "histories.subject_id")
-                ->join("levels", "levels.id", "=", "histories.level_id")
+                //->join("levels", "levels.id", "=", "histories.level_id")
 
                 //->where('levels.subject', $request->id)
                 ->orderBy("histories.id", "desc")
@@ -110,9 +112,10 @@ class HistoryController extends Controller
         $validator =  Validator::make($request->all(), [
             'student' => 'required',
             'subject' => 'required',
-            'level' => 'required',
+            //'level' => 'required',
             'date' => 'required',
             'stime' => 'required',
+            'etime' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -122,9 +125,10 @@ class HistoryController extends Controller
         $course = new History([
             'student_id' => $request->get('student'),
             'subject_id' => $request->get('subject'),
-            'level_id' => $request->get('level'),
+            //'level_id' => $request->get('level'),
             'datetime' => $request->get('date'),
             'stime' => $request->get('stime'),
+            'etime' => $request->get('etime'),
             'description' => $request->get('des'),
         ]);
         $course->save();
@@ -228,9 +232,10 @@ class HistoryController extends Controller
         $validator =  Validator::make($request->all(), [
             'student' => 'required',
             'subject' => 'required',
-            'level' => 'required',
+            //'level' => 'required',
             'date' => 'required',
             'stime' => 'required',
+            'etime' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -240,9 +245,10 @@ class HistoryController extends Controller
         $course = [
             'student_id' => $request->get('student'),
             'subject_id' => $request->get('subject'),
-            'level_id' => $request->get('level'),
+            //'level_id' => $request->get('level'),
             'datetime' => $request->get('date'),
             'stime' => $request->get('stime'),
+            'etime' => $request->get('etime'),
             'description' => $request->get('des'),
         ];
         //echo $id;

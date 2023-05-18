@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 use App\Models\Comment;
-
 use App\Models\Course;
 use App\Models\History;
 use App\Models\Level;
@@ -350,6 +349,7 @@ class SchoolController extends Controller
                 "students.nick_name as student_nickname",
                 "histories.datetime as datetime",
                 "histories.stime as stime",
+                "histories.etime as etime",
                 "histories.description as note",
             )->join("students", "students.id", "=", "histories.student_id")
                 ->join("subjects", "subjects.id", "=", "histories.subject_id")
@@ -359,19 +359,45 @@ class SchoolController extends Controller
                 ->get();
 
             foreach ($histories as $histories_result) {
+
+                $start_date = $histories_result->datetime . ' ' . $histories_result->stime;
+                $end_date = $histories_result->datetime . ' ' . $histories_result->etime;
+
+                $datetime_1 = $start_date;
+                $datetime_2 = $end_date;
+
+                $start_datetime = new \DateTime($datetime_1);
+                $diff = $start_datetime->diff(new \DateTime($datetime_2));
+
+                //duration
+                $total_minutes = ($diff->days * 24 * 60);
+                $total_minutes += ($diff->h * 60 * 60);
+                $total_minutes += ($diff->i * 60);
+                $total_minutes += $diff->s;
+
+                $hour = ($total_minutes) / 60 / 60;
+
+                if ($hour >= 2) {
+                    $bgt = 'bg-red';
+                    $bgti = 'bg-red';
+                } else {
+                    $bgt = 'bg-yellow';
+                    $bgti = '';
+                }
+
                 $histories_html .= '
 
                 <div class="time-label">
-                <span class="bg-red">' . $histories_result->datetime . '</span>
+                <span class="' . $bgt . '">' . $histories_result->datetime . '</span>
                 </div><div>
-                <i class="fas fa-calendar bg-blue"></i>
+                <i class="fas fa-calendar fa-beat bg-blue"></i>
                 <div class="timeline-item">
-                <span class="time"><i class="fas fa-clock"></i> ' . $histories_result->stime . '</span>
+                <span class="time ' . $bgti . '"><i class="fas fa-clock "></i> ' . $histories_result->stime . ' - ' . $histories_result->etime . ' : ( ' . $hour . ' ชั่วโมง )</span>
                 <h3 class="timeline-header"><a href="#">' . $histories_result->student_name . ' ' . $histories_result->student_lastname . '</a> เข้าเรียน</h3>
                 <div class="timeline-body">
 
                 <div> วิชา: ' . $histories_result->student_subject . '</div>
-                <div> Level: ' . $histories_result->student_level . '</div>
+                <!--<div> Level: ' . $histories_result->student_level . '</div>-->
                 <div> Note: ' . $histories_result->note . '</div>
                 </div>
                 <div class="timeline-footer">

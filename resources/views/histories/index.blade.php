@@ -69,8 +69,10 @@
                                 <th>Student Code</th>
                                 <th>Student Name</th>
                                 <th>Subject</th>
-                                <th>Level</th>
-                                <th>History Date</th>
+                                {{-- <th>Level</th> --}}
+                                <th>Date</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
                                 <th width="280px">Action</th>
                             </tr>
                         </thead>
@@ -138,13 +140,13 @@
 
                             </select>
                         </div>
-                        <div class="form-group">
+                     {{--    <div class="form-group">
                             <label for="Level">Level:</label>
                             <select class="form-control" id="AddLevel" name="level">
                                 <option value="" selected>Select Level</option>
 
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label for="Des">Description:</label>
                             <input type="text" class="form-control" name="des" id="AddDes" value="">
@@ -155,8 +157,13 @@
                                 value="">
                         </div>
                         <div class="form-group">
-                            <label for="Time">Time Studies (HH-mm-ss):</label>
+                            <label for="Time">Time Studies Start (HH-mm-ss):</label>
                             <input type="text" class="AddTime form-control" id="AddTime" name="time" required
+                                value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="ETime">Time Studies End (HH-mm-ss):</label>
+                            <input type="text" class="AddTime form-control" id="AddETime" name="etime" required
                                 value="">
                         </div>
                     </div>
@@ -214,13 +221,13 @@
 
                                 </select>
                             </div>
-                            <div class="form-group">
+                         {{--    <div class="form-group">
                                 <label for="Level">Level:</label>
                                 <select class="form-control" id="EditLevel" name="level">
                                     <option value="" selected>Select Level</option>
 
                                 </select>
-                            </div>
+                            </div> --}}
                             <div class="form-group">
                                 <label for="Des">Description:</label>
                                 <input type="text" class="form-control" name="des" id="EditDes"
@@ -232,11 +239,17 @@
                                     required>
                             </div>
                             <div class="form-group">
-                                <label for="Time">Time Studies (HH-mm-ss):</label>
+                                <label for="Time">Time Studies Start (HH-mm-ss):</label>
                                 <input type="text" class="AddTime form-control" id="EditTime" name="time" required
                                     value="">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="ETime">Time Studies End (HH-mm-ss):</label>
+                            <input type="text" class="AddTime form-control" id="EditETime" name="time" required
+                                value="">
+                        </div>
+
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
@@ -276,7 +289,7 @@
                 allowClear: true
             });
 
-            $("#SSubject").change(function() {
+           /*  $("#SSubject").change(function() {
 
                 var subject_id = $(this).val();
                 $.ajax({
@@ -293,9 +306,9 @@
                     }
                 });
 
-            });
+            }); */
 
-            $("#AddSubject").change(function() {
+           /*  $("#AddSubject").change(function() {
 
                 var subject_id = $(this).val();
                 $.ajax({
@@ -312,9 +325,9 @@
                     }
                 });
 
-            });
+            }); */
 
-            $("#EditSubject").change(function() {
+           /*  $("#EditSubject").change(function() {
 
                 var subject_id = $(this).val();
                 $.ajax({
@@ -331,7 +344,7 @@
                     }
                 });
 
-            });
+            }); */
 
             $(".delete_all_button").click(function() {
                 var len = $('input[name="table_records[]"]:checked').length;
@@ -404,13 +417,21 @@
                         data: 'student_subject',
                         name: 'student_subject'
                     },
-                    {
+                  /*   {
                         data: 'student_level',
                         name: 'student_level'
-                    },
+                    }, */
                     {
                         data: 'datetime',
                         name: 'datetime'
+                    },
+                    {
+                        data: 'stime',
+                        name: 'stime'
+                    },
+                    {
+                        data: 'etime',
+                        name: 'etime'
                     },
                     {
                         data: 'action',
@@ -450,9 +471,10 @@
 
                         $('#EditStudent').html(res.student);
                         $('#EditSubject').html(res.subject);
-                        $('#EditLevel').html(res.html);
+                        //$('#EditLevel').html(res.html);
                         $('#EditDate').val(res.date);
                         $('#EditTime').val(res.stime);
+                        $('#EditETime').val(res.etime);
                         $('#EditDes').val(res.des);
                         $('#EditModal').modal('show');
                     }
@@ -476,10 +498,11 @@
                     data: {
                         student: $('#AddStudent').val()[0],
                         subject: $('#AddSubject').val(),
-                        level: $('#AddLevel').val(),
+                        //level: $('#AddLevel').val(),
                         date: $('#AddDate').val(),
                         des: $('#AddDes').val(),
                         stime: $('#AddTime').val(),
+                        etime: $('#AddETime').val(),
                         _token: token,
                     },
                     success: function(result) {
@@ -502,7 +525,7 @@
                             $('#Listview').DataTable().ajax.reload();
                             $('#AddStudent').val('').select2();
                             $('#AddSubject').val('');
-                            $('#AddLevel').val('');
+                            //$('#AddLevel').val('');
                             $('#AddBook').val('');
                             $('#AddDate').val('');
 
@@ -530,9 +553,10 @@
                     data: {
                         student: $('#EditStudent').val()[0],
                         subject: $('#EditSubject').val(),
-                        level: $('#EditLevel').val(),
+                        //level: $('#EditLevel').val(),
                         date: $('#EditDate').val(),
                         stime: $('#EditTime').val(),
+                        etime: $('#EditETime').val(),
                         des: $('#EditDes').val(),
                         _token: token,
                     },

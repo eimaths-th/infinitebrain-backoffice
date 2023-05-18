@@ -15,5 +15,6 @@ class History extends Model
         'description',
         'datetime',
         'stime',
+        'etime',
     ];
 }
