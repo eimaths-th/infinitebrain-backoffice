@@ -976,16 +976,16 @@ class ReceiptSchoolController extends Controller
         foreach (self::datap as $pay) {
 
             if ($pay['id'] == $data->payment_type) {
-                $selected_pay = '<i
-                style="font-size: 1.8em; color:red" class="fa fa-close"></i>';
+                $selected_pay = '<img src="'.asset('images/close.png').'" alt="..."
+                height="14" style="padding-bottom: 1px">';
             } else {
                 $selected_pay = '';
             }
 
             if ($i == 1) {
-                $tc = 'activetop activebottom';
+                $tc = 'activeleft activetop activebottom';
             } else {
-                $tc = 'activebottom';
+                $tc = 'activeleft activebottom';
             }
             $payment .= ' <tr>
             <td class="active ' . $tc . '" width="10%" align="center">' . $selected_pay . '</td>
