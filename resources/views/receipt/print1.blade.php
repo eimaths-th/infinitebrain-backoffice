@@ -341,7 +341,7 @@
                         </tr>
 
                     </table>
-                    <center>{!! $file_att !!}</center>
+                    <center>{!! $html !!}</center>
                 </div>
             </div>
 
