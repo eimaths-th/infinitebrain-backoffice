@@ -224,29 +224,7 @@
                                             การชำระเงิน/Payment</td>
 
                                     </tr>
-                                    <tr>
-                                        <td class="active activebottom activetop activeleft" width="10%"></td>
-                                        <td style="padding-left:30px;" class="  grey">1.เงินสด/Cash</td>
-                                        <td class="  grey"></td>
-
-                                    </tr>
-                                    <tr>
-                                        <td class="active_twin activebottom activeleft" width="10%"
-                                            align="center"><img src="{{ asset('images/close.png') }}" alt="..."
-                                                height="14" style="padding-bottom: 1px"></td>
-
-                                        <!-- <td class="active activebottom activeleft" width="10%" align="center"><i
-                                                style="font-size: 1.8em; color:red" class="fa fa-close"></i></td> -->
-                                        <td style="padding-left:30px;" class=" grey">2.โอนเงิน/Transfer</td>
-                                        <td class="  grey"></td>
-
-                                    </tr>
-                                    <tr>
-                                        <td class="active activebottom activeleft" width="10%"></td>
-                                        <td style="padding-left:30px;" class=" grey">3.บัตรเครดิต/Credit Card</td>
-                                        <td class="  grey"></td>
-
-                                    </tr>
+                                    {!! $payment !!}
                                 </table>
                             </td>
                             <td colspan="6" class="activetop activeleft">
