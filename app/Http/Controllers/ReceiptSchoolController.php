@@ -860,7 +860,7 @@ class ReceiptSchoolController extends Controller
             $price = ($dresult['total'] - $dresult['bookprice']);
             $message = "";
             if ($dresult['week'] == 1 || $dresult['week'] == 2 || $dresult['week'] == 3) {
-                $message = "สัปดาห์";
+                $message = $dresult['week']." สัปดาห์";
             } else {
                 $message = "เดือน";
             }
