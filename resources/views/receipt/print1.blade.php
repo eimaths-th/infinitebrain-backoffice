@@ -231,7 +231,7 @@
                                 <table width="100%" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td width="10%"></td>
-                                        <td width="67%" class="grey">มูลค่าที่คำนวนภาษี/Non-Vat Amount</td>
+                                        <td width="67%" class="grey">มูลค่าที่ยกเว้นภาษี/Non-Vat Amount</td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="15%" align="right"> <b> {{ $booksum }}  </b></td>
                                         <td width="8%"></td>
@@ -240,7 +240,7 @@
                                     </tr>
                                     <tr>
                                         <td width="10%"></td>
-                                        <td width="67%" class="grey">มูลค่าที่ยกเว้นภาษี/Pre-Vat Amount</td>
+                                        <td width="67%" class="grey">มูลค่าที่คำนวนภาษี/Pre-Vat Amount</td>
                                         <!-- <td width="10%"></td> -->
                                         <td width="15%" align="right"> <b> {{ $vat_price_val }} </b></td>
                                         <td width="8%"></td>
