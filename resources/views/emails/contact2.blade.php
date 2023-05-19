@@ -222,7 +222,7 @@
                                                                 <div align="center" class="alignment"
                                                                     style="line-height:10px">
                                                                     <!-- <a href="https://www.example.com" style="outline:none" tabindex="-1" target="_blank"><img alt="your-logo" class="big" src="images/Your-logo.png" style="display: block; height: auto; border: 0; width: 304px; max-width: 100%;" title="your-logo" width="304"/></a> -->
-                                                                    <img src="{{ asset('images/Logo_Mata-knowledfe_final_PNG.png') }}"
+                                                                    <img src="{{ asset('images/infinite.jpg') }}"
                                                                         alt="..." srcset=""
                                                                         style="vertical-align:middle;  height:200px;">
                                                                 </div>
@@ -245,7 +245,7 @@
                                 <td>
                                     <table align="center" border="0" cellpadding="0" cellspacing="0"
                                         class="row-content stack" role="presentation"
-                                        style=" border-radius: 20px; border-top:15px solid ; border-color:orange;mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 700px;"
+                                        style=" border-radius: 20px; border-top:15px solid ; border-color:rgb(165, 212, 144);mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; color: #000000; width: 700px;"
                                         width="700">
                                         <tbody>
                                             <tr>
@@ -432,14 +432,14 @@
                             </tr>
                         </tbody>
                     </table>
-                   
+
                     <?php
                                                                     $i=0;
                                                                     // echo ($aaa[0]['code']);
                                                                     // echo count($aaa);
                                                                     // for ($x = 0; $x <= 10; $x++) {
                                                                             foreach ($aaa as $aaa_result){?>
-                                                           
+
                                                            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4"
                         role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                         <tbody>
@@ -447,7 +447,7 @@
                                 <td>
                                     <table align="center" border="0" cellpadding="0" cellspacing="0"
                                         class="row-content stack" role="presentation"
-                                        style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: orange; border-bottom: 0 solid #EFEEF4; border-left: 0 solid #EFEEF4; border-right: 0px solid #EFEEF4; border-top: 0 solid #EFEEF4; color: #000000; width: 700px;"
+                                        style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: rgb(165, 212, 144); border-bottom: 0 solid #EFEEF4; border-left: 0 solid #EFEEF4; border-right: 0px solid #EFEEF4; border-top: 0 solid #EFEEF4; color: #000000; width: 700px;"
                                         width="700">
                                         <tbody>
                                             <tr>
@@ -468,7 +468,7 @@
                                                         </tr>
                                                     </table>
                                                 </td>
-                                               
+
                                             </tr>
                                         </tbody>
                                     </table>
@@ -530,7 +530,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    
+
                     <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-5"
                         role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                         <tbody>
@@ -624,7 +624,7 @@
                                                             <td class="pad">
                                                                 <div
                                                                     style="direction:ltr;font-family:Inter, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
-                                                                    <p style="margin: 0;">{{ $aaa_result[$i]['birth_date'] }} 
+                                                                    <p style="margin: 0;">{{ $aaa_result[$i]['birth_date'] }}
                                                                        </p>
                                                                 </div>
                                                             </td>
@@ -731,7 +731,7 @@
                                                             <td class="pad">
                                                                 <div
                                                                     style="direction:ltr;font-family:Inter, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
-                                                                    <p style="margin: 0;">{{ $aaa_result[$i]['grade'] }} 
+                                                                    <p style="margin: 0;">{{ $aaa_result[$i]['grade'] }}
                                                                        </p>
                                                                 </div>
                                                             </td>
@@ -858,7 +858,7 @@
                     </table>
 
 
-                                                                           
+
                                                                            <?php $i++; }   ?>
                   <!--  <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                         role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
@@ -1320,7 +1320,7 @@
                                                             <td class="pad" style="text-align:left;width:100%;">
                                                                 <h2
                                                                     style="margin: 0;  font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 50px;">
-                                                                    <span class="tinyMce-placeholder"><?php 
+                                                                    <span class="tinyMce-placeholder"><?php
                                                                     if($data->sfield==9){
                                                                         $message1 = "OLPCS";
                                                                     }else{
