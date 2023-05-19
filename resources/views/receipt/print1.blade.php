@@ -157,6 +157,7 @@
                         <tr class="active">
                             <td align="center" width="10%" class="grey">ลำดับที่<br> NO.</td>
                             <td align="center" class="grey">รายการ <br>Description</td>
+                            <td align="center" class="grey"></td></td>
                             <td align="center" class="grey">จำนวน <br>Quantity</td>
                             <td align="center" class="grey">หน่วย <br>Unit</td>
                             <td align="center" class="grey">ราคาต่อหน่วย <br>Unit Price</td>
