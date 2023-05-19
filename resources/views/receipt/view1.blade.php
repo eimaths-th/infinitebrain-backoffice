@@ -252,7 +252,7 @@
                                     </tr>
                                     <tr>
                                         <td width="40%"></td>
-                                        <td width="40%" class="grey">มูลค่าที่ยกเว้นภาษี/Pre-Vat Amount</td>
+                                        <td width="40%" class="grey">มูลค่าที่คำนวนภาษี/Pre-Vat Amount</td>
                                         <!-- <td width="10%"></td> -->
                                         <td width="20%"> <b> {{ $vat_price_val }} </b></td>
                                         <!-- <td width="10%"></td> -->
