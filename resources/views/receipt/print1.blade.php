@@ -165,7 +165,7 @@
 
                         </tr>
                         @foreach ($receipt_detail_arr as $receipt_detail)
-                        <tr>
+                        {{-- <tr>
                                 <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
                                 <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
                                 <td align="center">{{ $receipt_detail['quantity'] }}</td>
@@ -174,7 +174,7 @@
                                 <td align="center">{{ $receipt_detail['discount'] }}</td>
                                 <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}</td>
                             </tr>
-                           {{--  <tr>
+                            <tr>
                                 <td align="center" style="vertical-align: top;"></td>
                                 <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
                                 <td align="center">{{ $receipt_detail['book'] }}</td>
@@ -183,6 +183,16 @@
                                 <td align="center"></td>
                                 <td align="center" style="vertical-align: top;">{{ $receipt_detail['bookprice'] }}</td>
                             </tr> --}}
+                            <tr>
+                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
+                                <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
+                                <td align="left"> {{ $receipt_detail['period'] }}</td>
+                                <td align="center">{{ $receipt_detail['quantity'] }}</td>
+                                <td align="center">{{ $receipt_detail['unit'] }}</td>
+                                <td align="center">{{ $receipt_detail['unitprice'] }}</td>
+                                <td align="center">{{ $receipt_detail['discount'] }}</td>
+                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}</td>
+                            </tr>
                             <tr>
                                 <td align="center" style="vertical-align: top;"></td>
                                 <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
