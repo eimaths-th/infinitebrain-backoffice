@@ -860,9 +860,11 @@ class ReceiptSchoolController extends Controller
             $price = ($dresult['total'] - $dresult['bookprice']);
             $message = "";
             if ($dresult['week'] == 1 || $dresult['week'] == 2 || $dresult['week'] == 3) {
-                $message = $dresult['week']." สัปดาห์";
+                $message = " สัปดาห์";
+                $qty = $dresult['week'];
             } else {
                 $message = "เดือน";
+                $qty = $dresult['qty'];
             }
             // echo($dresult['week']);
 
@@ -883,7 +885,7 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['price'] = number_format($price, 2);
                 $receipt_detail_arr[$x]['unit'] = $message;
                 $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] + $dresult['discount'] - $dresult['bookprice']) / $dresult['qty'], 2);
-                $receipt_detail_arr[$x]['quantity'] = $dresult['qty'];
+                $receipt_detail_arr[$x]['quantity'] =  $qty; //$dresult['qty'];
                 $receipt_detail_arr[$x]['discount'] = number_format($dresult['discount'], 2);
                 $receipt_detail_arr[$x]['book'] = ($dresult['book']);
                 $receipt_detail_arr[$x]['bookprice'] = number_format($dresult['bookprice'], 2);
