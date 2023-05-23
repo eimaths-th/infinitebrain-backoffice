@@ -1242,6 +1242,7 @@ class ReceiptSchoolController extends Controller
 
         return response()->json(['success' => 'Receive Add successfully']);
     }
+    
     public function deleteImg($id, $id2)
     {
         $dataimg = Receipt_School::find($id2);
@@ -1289,6 +1290,7 @@ class ReceiptSchoolController extends Controller
 
         return response()->json(['imgs' => $html]);
     }
+
     public function update(Request $request, $id)
     {
 

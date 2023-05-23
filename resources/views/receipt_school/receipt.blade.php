@@ -344,7 +344,7 @@
         }
 
         .modal-xxl {
-            max-width: 1300px !important;
+            max-width: 1500px !important;
         }
     </style>
 @endsection
@@ -357,8 +357,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                            <p>{{ $message }}</p>
-                                                </div>-->
+                                                <p>{{ $message }}</p>
+                                                    </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -368,8 +368,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                                    <p>{{ $message }}</p>
-                                                        </div>-->
+                                                        <p>{{ $message }}</p>
+                                                            </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -394,24 +394,24 @@
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
                             Receipt</a>
                         <!-- <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
-                                    All</a> -->
+                                        All</a> -->
 
                     </div>
                     <!-- <div class="d-inline-block dropdown">
-                                <div class="dropdown show">
-                                    <button class="btn btn-shadow btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" autoClose="true" aria-haspopup="true" aria-expanded="false">
-                                        <span class="btn-icon-wrapper pr-2 opacity-7">
-                                            <i class="fa fa-print fa-w-20"></i>
-                                        </span>
-                                        Print ใบปะหน้า
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                        <li><a class="dropdown-item" href="#" id="printr1">ใบปะหน้ารายวัน</a></li>
-                                        <li><a class="dropdown-item" href="#" id="printr2">ใบปะหน้ารายเดือน</a></li>
-                                    </ul>
-                                </div>
+                                    <div class="dropdown show">
+                                        <button class="btn btn-shadow btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" autoClose="true" aria-haspopup="true" aria-expanded="false">
+                                            <span class="btn-icon-wrapper pr-2 opacity-7">
+                                                <i class="fa fa-print fa-w-20"></i>
+                                            </span>
+                                            Print ใบปะหน้า
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                            <li><a class="dropdown-item" href="#" id="printr1">ใบปะหน้ารายวัน</a></li>
+                                            <li><a class="dropdown-item" href="#" id="printr2">ใบปะหน้ารายเดือน</a></li>
+                                        </ul>
+                                    </div>
 
-                            </div> -->
+                                </div> -->
 
 
 
@@ -693,13 +693,13 @@
                                     <div class="form-row">
 
                                         <!-- <div class="col-md-12 ">
-                <select class="form-select" name="type" id="type" style="width:300px">
+                    <select class="form-select" name="type" id="type" style="width:300px">
 
-                    <option value="1" hidden disabled>ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
-                    <option value="2">ใบลดหนี้</option>
+                        <option value="1" hidden disabled>ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
+                        <option value="2">ใบลดหนี้</option>
 
-                </select>
-            </div> -->
+                    </select>
+                </div> -->
 
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
@@ -709,12 +709,12 @@
                                             </div>
                                         </div>
                                         <!-- <div class="col-md-6">
-                <div class="position-relative  form-group">
-                    <label for="Package">Package:</label>
-                    <input type="text" class="form-control" name="package" id="AddPackage"
-                        value="">
-                </div>
-            </div> -->
+                    <div class="position-relative  form-group">
+                        <label for="Package">Package:</label>
+                        <input type="text" class="form-control" name="package" id="AddPackage"
+                            value="">
+                    </div>
+                </div> -->
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
                                                 <label for="Payment">Payment Type:</label>
@@ -760,19 +760,19 @@
                                         </div>
                                     </div>
                                     <!-- <div class="form-row">
-                                                <div class="col-md-6">
-                                                    <div class="position-relative form-group">
-                                                        <label for="City">City:</label>
-                                                        <input type="text" class="form-control" name="city" id="AddCity" value="">
+                                                    <div class="col-md-6">
+                                                        <div class="position-relative form-group">
+                                                            <label for="City">City:</label>
+                                                            <input type="text" class="form-control" name="city" id="AddCity" value="">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="position-relative form-group">
-                                                        <label for="Province">Province:</label>
-                                                        <input type="text" class="form-control" name="province" id="AddProvince" value="">
+                                                    <div class="col-md-6">
+                                                        <div class="position-relative form-group">
+                                                            <label for="Province">Province:</label>
+                                                            <input type="text" class="form-control" name="province" id="AddProvince" value="">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div> -->
+                                                </div> -->
 
                                     <div class="form-group">
                                         <label for="Name">Address:</label>
@@ -794,7 +794,7 @@
                                             <!-- <option value="" selected>Select Student</option> -->
                                             <!-- @foreach ($data2 as $key2)
     <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->first_name }} {{ $key2->last_name }}
-                                                    </option>
+                                                        </option>
     @endforeach -->
 
                                         </select>
@@ -854,6 +854,7 @@
                                             <tr class="headings">
 
                                                 <th class="column-title"> NO.</th>
+                                                <th class="column-title"> Course Type</th>
                                                 <th class="column-title"> Subject</th>
                                                 <th class="column-title"> Start Level</th>
                                                 <th class="column-title"> Time</th>
@@ -880,6 +881,20 @@
 
                                                     </div>
                                                 </td>
+                                                <td width="10%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <select style="width: 100%;" class="ctype form-control"
+                                                            id="course_type" name="course_type" required>
+                                                            <option value="" selected
+                                                            >Course Type</option>
+                                                                <option value="1">Course+Book
+                                                                </option>
+                                                                <option value="2">Book
+                                                                </option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+
                                                 <td width="10%">
                                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                                         <select style="width: 100%;" class="aaa form-control"
@@ -926,7 +941,7 @@
                                                         </select>
                                                     </div>
                                                 </td>
-                                                <td width="7%">
+                                                <td width="5%">
                                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                                         <select style="width: 100%;" class=" form-control" id="qty"
                                                             name="qty" required>
@@ -973,14 +988,14 @@
 
                                                     </div>
                                                 </td>
-                                                <td width="10%" class="aabbcc">
+                                                <td width="7%" class="aabbcc">
                                                     <div class="col-md-12 col-sm-12 col-xs-12 pm">
                                                         <select style="width: 100%;" class=" form-control" id="type"
                                                             name="type">
                                                             <option value="0" selected>Select Type</option>
 
                                                             <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
-                                                    </option> -->
+                                                        </option> -->
                                                             <option value="1">One Tpye แบบเดี่ยว
                                                             </option>
                                                             <option value="2">Couple แบบคู่
@@ -998,7 +1013,7 @@
 
                                                     </div>
                                                 </td>
-                                                <td width="10%">
+                                                <td width="7%">
                                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                                         <select style="width: 100%;" class="bbb form-control"
                                                             id="price" name="price" required>
@@ -1020,7 +1035,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td width="15%">
+                                                <td width="20%">
                                                     <div class="col-md-12 col-sm-12 col-xs-12 pp">
                                                     </div>
                                                 </td>
@@ -1038,6 +1053,19 @@
                                                             class="form-control has-feedback-left" value="1"
                                                             required="required">
 
+                                                    </div>
+                                                </td>
+                                                <td width="10%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <select style="width: 100%;" class="ctype form-control"
+                                                            id="course_type" name="course_type" required>
+                                                            <option value="" selected
+                                                            >Course Type</option>
+                                                                <option value="1">Course+Book
+                                                                </option>
+                                                                <option value="2">Book
+                                                                </option>
+                                                        </select>
                                                     </div>
                                                 </td>
                                                 <td width="10%">
@@ -1087,7 +1115,7 @@
                                                         </select>
                                                     </div>
                                                 </td>
-                                                <td width="7%">
+                                                <td width="5%">
                                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                                         <select style="width: 100%;" class=" form-control" id="qty"
                                                             name="qty" required>
@@ -1141,7 +1169,7 @@
                                                             <option value="0" selected>Select Type</option>
 
                                                             <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
-                                                    </option> -->
+                                                        </option> -->
                                                             <option value="1">One Tpye แบบเดี่ยว
                                                             </option>
                                                             <option value="2">Couple แบบคู่
@@ -1158,7 +1186,7 @@
 
                                                     </div>
                                                 </td>
-                                                <td width="10%">
+                                                <td width="7%">
                                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                                         <select style="width: 100%;" class="bbb form-control"
                                                             id="price" name="price" required>
@@ -1172,7 +1200,7 @@
                                                         </select>
                                                     </div>
                                                 </td>
-                                                <td width="10%">
+                                                <td width="7%">
                                                     <div class="col-md-12 col-sm-12 col-xs-12 ">
                                                         <input type="text" class="form-control" name="period"
                                                             id="period" value="" required>
@@ -1180,7 +1208,7 @@
                                                     </div>
                                                 </td>
 
-                                                <td width="15%">
+                                                <td width="20%">
                                                     <div class="col-md-12 col-sm-12 col-xs-12 pp">
                                                     </div>
                                                 </td>
@@ -1338,21 +1366,21 @@
 
 
                                     <!--<div class="form-row">
-                                                <div class="col-md-6">
-                                                    <div class="position-relative form-group">
-                                                        <label for="City">City:</label>
-                                                        <input type="text" class="form-control" name="city" id="EditCity"
-                                                            value="">
+                                                    <div class="col-md-6">
+                                                        <div class="position-relative form-group">
+                                                            <label for="City">City:</label>
+                                                            <input type="text" class="form-control" name="city" id="EditCity"
+                                                                value="">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="position-relative form-group">
-                                                        <label for="Province">Province:</label>
-                                                        <input type="text" class="form-control" name="province" id="EditProvince"
-                                                            value="">
+                                                    <div class="col-md-6">
+                                                        <div class="position-relative form-group">
+                                                            <label for="Province">Province:</label>
+                                                            <input type="text" class="form-control" name="province" id="EditProvince"
+                                                                value="">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                </div>-->
+                                                    </div>-->
 
 
                                     <div class="form-group">
@@ -1360,9 +1388,9 @@
                                         <textarea class="form-control" name="address" id="EditAddress"></textarea>
                                     </div>
                                     <!--<div class="form-group">
-                                                    <label for="Name">Street Address 2:</label>
-                                                    <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                </div>-->
+                                                        <label for="Name">Street Address 2:</label>
+                                                        <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                    </div>-->
                                     <div class="form-group">
                                         <label for="Student">Student:</label><br>
                                         <select style="width: 100%;" class="select2 select2_single form-control"
@@ -1375,10 +1403,10 @@
 
                                     </div>
                                     <!-- <div class="form-group">
-                                                <div class="imgs">
+                                                    <div class="imgs">
 
-                                                </div>
-                                            </div> -->
+                                                    </div>
+                                                </div> -->
                                     <div class="form-row form-focus" id="dropzone-photo">
                                         <div class="col-md-12 col-sm-12">
                                             <a id="dphoto"></a>
@@ -1426,6 +1454,7 @@
                                             <tr class="headings">
 
                                                 <th class="column-title"> NO.</th>
+                                                <th class="column-title"> Course Type</th>
                                                 <th class="column-title"> Subject</th>
                                                 <th class="column-title"> Start Level</th>
                                                 <th class="column-title"> Week</th>
@@ -1450,6 +1479,13 @@
                                                             class="form-control has-feedback-left" value="1"
                                                             required="required">
 
+                                                    </div>
+                                                </td>
+                                                <td width="35%">
+                                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                                        <input type="text" id="flown[]" name="flown[]"
+                                                            class="form-control has-feedback-left" value=""
+                                                            required="required">
                                                     </div>
                                                 </td>
                                                 <td width="35%">
@@ -1935,6 +1971,9 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
                 $('#CreateModal').modal('show');
+
+                //resize size bar
+                $('.app-container').addClass('closed-sidebar-mobile closed-sidebar');
             });
 
             $(document).on('click', '#SubmitPrintDayForm', function(e) {
@@ -1988,6 +2027,7 @@
                     }
                 })
             })
+
             $(document).on('click', '#getEditData', function(e) {
                 e.preventDefault();
 
@@ -2273,6 +2313,7 @@
             $(document).on('change', '.firstTr', function(e) {
                 var parent = $(this);
                 // var book = parent.find('#book').val();
+                var course_type = parent.find('#course_type').val();
                 var sub_id = parent.find('#subject_id').val();
                 var level_id = parent.find('#level_id').val();
                 var week = parent.find('#week').val();

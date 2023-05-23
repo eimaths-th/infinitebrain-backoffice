@@ -47,7 +47,7 @@ class Receipt_School_RunningNumber extends Model
         $number = str_pad($number, 3, '0', STR_PAD_LEFT);
         // echo(date('y') . '' . date('m') . '' . $number);
         // exit();
-        $result = "0".date('y') . '' . date('m') . '' . $number;
+        $result = "00".date('y') . '' . date('m') . '' . $number;
         // A-21-00001
         return  $result;
         //return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '01' . $number;

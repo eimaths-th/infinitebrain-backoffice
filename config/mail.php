@@ -51,6 +51,16 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
+        'smtp-status' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+            'port' => env('MAIL_PORT', 587),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_STATUS_USERNAME'), // Different value here
+            'password' => env('MAIL_PASSWORD'), // Different value here
+            'timeout' => null,
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],
