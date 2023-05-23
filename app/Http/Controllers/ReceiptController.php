@@ -283,9 +283,9 @@ class ReceiptController extends Controller
         }
     } // convertTwoDigit
 
-    public function textWatermark($image,$text)
+    public function textWatermark($image, $text)
     {
-        $img = Image::make(public_path('receipt_form_images/'.$image));
+        $img = Image::make(public_path('receipt_form_images/' . $image));
 
         $img->text($text, 610, 670, function ($font) {
             $font->file(public_path('font/amandasignature.ttf'));
@@ -296,7 +296,7 @@ class ReceiptController extends Controller
             $font->angle(80);
         });
 
-        $img->save(public_path('receipt_form_watermark_images/'.$image));
+        $img->save(public_path('receipt_form_watermark_images/' . $image));
 
         $img->encode('png');
         $type = 'png';
@@ -767,9 +767,7 @@ class ReceiptController extends Controller
 
         if ($data->file_att) {
 
-            //watermark
-            $fileex = explode("/",$data->file_att);
-            $this->textWatermark(end($fileex),'Receipt Number : '.$data->receipt_number);
+
 
             $ck_url = parse_url($data->file_att);
             if ($ck_url['scheme'] == 'https') {
@@ -785,7 +783,11 @@ class ReceiptController extends Controller
                 if (strpos($urla, "jotform")) {
                     $retu = $this->get_img_url($urla);
                 } else {
-                    $retu = str_replace('receipt_form_images','receipt_form_watermark_images',$urla);
+                    //watermark
+                    $fileex = explode("/", $data->file_att);
+                    $this->textWatermark(end($fileex), 'Receipt Number : ' . $data->receipt_number);
+
+                    $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
                 }
 
 
@@ -889,7 +891,7 @@ class ReceiptController extends Controller
             foreach ($receipts_detail as $dresult) {
                 $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
                 $price = $price + $rprice;
-                $desresult .= $dresult['description']." ";
+                $desresult .= $dresult['description'] . " ";
             }
 
             $ret_receipt[$i]['receipt_des'] = '';
