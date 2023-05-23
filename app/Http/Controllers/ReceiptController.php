@@ -287,13 +287,13 @@ class ReceiptController extends Controller
     {
         $img = Image::make(public_path('receipt_form_images/'.$image));
 
-        $img->text($text, 710, 370, function ($font) {
+        $img->text($text, 610, 570, function ($font) {
             $font->file(public_path('font/amandasignature.ttf'));
-            $font->size(70);
+            $font->size(60);
             $font->color('#ff0000');
             $font->align('center');
-            $font->valign('top');
-            $font->angle(20);
+            $font->valign('bottom');
+            $font->angle(40);
         });
 
         $img->save(public_path('receipt_form_watermark_images/'.$image));
