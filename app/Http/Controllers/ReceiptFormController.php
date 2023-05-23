@@ -441,11 +441,11 @@ class ReceiptFormController extends Controller
                 //watermark
                 $fileex = explode("/", $urlb);
                 $this->textWatermark(end($fileex), 'Date Register : ' . $data->submission_date);
-                $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urlb);
+                $urlb = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urlb);
 
                 //$retu = $this->get_img_url($urla);
                 //if ($this->URL_exists($retu)) {
-                $file_att .= "<div><a href=\"" . urldecode($retu) . "\" target=\"blank\"><img src=\"" . $retu . "\" height=\"80\">click to view</a></div>&nbsp;&nbsp;";
+                $file_att .= "<div><a href=\"" . urldecode($urlb) . "\" target=\"blank\"><img src=\"" . $urlb . "\" height=\"80\">click to view</a></div>&nbsp;&nbsp;";
                 //}
                 $furl .= $urlb;
             }
