@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use File;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Receipt_RunningNumber;
 use App\Models\Receipt_Customer_RunningNumber;
@@ -106,6 +107,29 @@ class ReceiptFormController extends Controller
         $textToDelete = substr($string, $beginningPos, ($endPos + strlen($end)) - $beginningPos);
 
         return $this->delete_all_between($beginning, $end, str_replace($textToDelete, '', $string));
+    }
+
+    public function textWatermark($image, $text)
+    {
+        $img = Image::make(public_path('receipt_form_images/' . $image));
+
+        $img->text($text, 610, 670, function ($font) {
+            $font->file(public_path('font/amandasignature.ttf'));
+            $font->size(60);
+            $font->color('#ff0000');
+            $font->align('center');
+            $font->valign('bottom');
+            $font->angle(80);
+        });
+
+        $img->save(public_path('receipt_form_watermark_images/' . $image));
+
+        $img->encode('png');
+        $type = 'png';
+        $new_image = 'data:image/' . $type . ';base64,' . base64_encode($img);
+
+        //return view('show_watermark', compact('new_image'));
+        return  $new_image;
     }
 
     public function check_permission()
@@ -413,9 +437,15 @@ class ReceiptFormController extends Controller
             for ($j = 0; $j <= count($arrf) - 1; $j++) {
                 //$urla = "https://" . $arrl[$i];
                 $urlb = url('/') . '/receipt_form_images/' . $arrf[$j];
+
+                //watermark
+                $fileex = explode("/", $urlb);
+                $this->textWatermark(end($fileex), 'Date Register : ' . $data->submission_date);
+                $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
+
                 //$retu = $this->get_img_url($urla);
                 //if ($this->URL_exists($retu)) {
-                $file_att .= "<div><a href=\"" . urldecode($urlb) . "\" target=\"blank\"><img src=\"" . $urlb . "\" height=\"80\">click to view</a></div>&nbsp;&nbsp;";
+                $file_att .= "<div><a href=\"" . urldecode($retu) . "\" target=\"blank\"><img src=\"" . $retu . "\" height=\"80\">click to view</a></div>&nbsp;&nbsp;";
                 //}
                 $furl .= $urlb;
             }
