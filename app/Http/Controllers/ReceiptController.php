@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 //use Auth;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use Intervention\Image\Facades\Image;
 use App\Imports\ReceiptImport;
 use App\Exports\UsersExport;
 use App\Models\Receipt_RunningNumber;
@@ -45,6 +46,7 @@ class ReceiptController extends Controller
         "พฤศจิกายน",
         "ธันวาคม"
     );
+
     private function convertDigit($digit)
     {
         switch ($digit) {
@@ -280,6 +282,29 @@ class ReceiptController extends Controller
             }
         }
     } // convertTwoDigit
+
+    public function textWatermark($image,$text)
+    {
+        $img = Image::make(public_path('receipt_form_images/'.$image));
+
+        $img->text($text, 710, 370, function ($font) {
+            $font->file(public_path('font/amandasignature.ttf'));
+            $font->size(70);
+            $font->color('#ff0000');
+            $font->align('center');
+            $font->valign('top');
+            $font->angle(20);
+        });
+
+        $img->save(public_path('receipt_form_watermark_images/'.$image));
+
+        $img->encode('png');
+        $type = 'png';
+        $new_image = 'data:image/' . $type . ';base64,' . base64_encode($img);
+
+        //return view('show_watermark', compact('new_image'));
+        return  $new_image;
+    }
 
     public function URL_exists($url)
     {
@@ -739,7 +764,12 @@ class ReceiptController extends Controller
         //exit();
 
         $file_att = '';
+
         if ($data->file_att) {
+
+            //watermark
+            $fileex = explode("/",$data->file_att);
+            $this->textWatermark(end($fileex),'Receipt Number : '.$data->receipt_number);
 
             $ck_url = parse_url($data->file_att);
             if ($ck_url['scheme'] == 'https') {
@@ -755,8 +785,10 @@ class ReceiptController extends Controller
                 if (strpos($urla, "jotform")) {
                     $retu = $this->get_img_url($urla);
                 } else {
-                    $retu = $urla;
+                    $retu = str_replace('receipt_form_images','receipt_form_watermark_images',$urla);
                 }
+
+
 
                 //if ($this->URL_exists($retu)) {
                 $file_att .= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
