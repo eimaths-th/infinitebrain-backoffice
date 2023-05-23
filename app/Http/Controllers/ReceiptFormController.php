@@ -441,7 +441,7 @@ class ReceiptFormController extends Controller
                 //watermark
                 $fileex = explode("/", $urlb);
                 $this->textWatermark(end($fileex), 'Date Register : ' . $data->submission_date);
-                $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
+                $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urlb);
 
                 //$retu = $this->get_img_url($urla);
                 //if ($this->URL_exists($retu)) {
