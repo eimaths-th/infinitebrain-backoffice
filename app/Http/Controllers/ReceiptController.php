@@ -289,7 +289,7 @@ class ReceiptController extends Controller
 
         $img->text($text, 610, 570, function ($font) {
             $font->file(public_path('font/amandasignature.ttf'));
-            $font->size(60);
+            $font->size(80);
             $font->color('#ff0000');
             $font->align('center');
             $font->valign('bottom');
