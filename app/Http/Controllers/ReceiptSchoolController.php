@@ -1063,7 +1063,7 @@ class ReceiptSchoolController extends Controller
             'html' =>  $select_list
         ]);
     }
-    public function searchs($sub_id, $level_id, $week, $price, $qty, $discount, $book_price, $type)
+    public function searchs($sub_id, $level_id, $week, $price, $qty, $discount, $book_price, $type, $course_type)
     {
         $select_list = "";
         if ($price == 1) {
@@ -1083,13 +1083,14 @@ class ReceiptSchoolController extends Controller
 
         $output = "";
         $outputsum = "";
-        $output .= '<input type="text" id="pp" n
-
-
-
-        ame="pp" class="form-control has-feedback-left" value="' . (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount . '" >
+        if ($course_type==2) {
+            $pricet = (int)$book_price - (int)$discount;
+        } else {
+            $pricet = (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount;
+        }
+        $output .= '<input type="text" id="pp" name="pp" class="form-control has-feedback-left" value="' . $pricet . '" >
         ';
-        $outputsum .= '' . (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount . '';
+        $outputsum .= '' . $pricet . '';
         return response()->json([
             'html' =>  $output, 'outputsum' => $outputsum
         ]);
@@ -1136,10 +1137,10 @@ class ReceiptSchoolController extends Controller
                 'receipt.*.subject' => 'required',
                 'receipt.*.level' => 'required',
                 'receipt.*.week' => 'required',
-                'receipt.*.qty' => 'required',
+                //'receipt.*.qty' => 'required',
                 'receipt.*.price' => 'required',
                 'receipt.*.pp' => 'required',
-                'receipt.*.period' => 'required',
+                //'receipt.*.period' => 'required',
 
                 // 'level' => 'required|string',
                 // 'week' => 'required|string',
@@ -1157,10 +1158,10 @@ class ReceiptSchoolController extends Controller
                 'receipt.*.subject.required' => 'The Subject field is required.  !',
                 'receipt.*.level.required' => 'The Start Level field is required.  !',
                 'receipt.*.week.required' => 'The Week field is required.  !',
-                'receipt.*.qty.required' => 'The QTY field is required. !',
+                //'receipt.*.qty.required' => 'The QTY field is required. !',
                 'receipt.*.price.required' => 'The Price field is required.  !',
                 'receipt.*.pp.required' => 'The Book field is required.  !',
-                'receipt.*.period.required' => 'The Period field is required.  !',
+                //'receipt.*.period.required' => 'The Period field is required.  !',
 
             ]
         );
@@ -1242,7 +1243,7 @@ class ReceiptSchoolController extends Controller
 
         return response()->json(['success' => 'Receive Add successfully']);
     }
-    
+
     public function deleteImg($id, $id2)
     {
         $dataimg = Receipt_School::find($id2);

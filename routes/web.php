@@ -227,7 +227,7 @@ Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPass
 
 Route::match(array('GET', 'POST'),'/receipt_school', [ReceiptSchoolController::class, 'index'])->name('receipt_school');
 Route::get('/receipt_school/{sub_id}', [ReceiptSchoolController::class, 'search'])->name('receipt_school.search');
-Route::get('/receipt_school/{sub_id}/{level_id}/{week}/{price}/{qty}/{discount}/{book_price}/{type}', [ReceiptSchoolController::class, 'searchs'])->name('receipt_school.searchs');
+Route::get('/receipt_school/{sub_id}/{level_id}/{week}/{price}/{qty}/{discount}/{book_price}/{type}/{course_type}', [ReceiptSchoolController::class, 'searchs'])->name('receipt_school.searchs');
 Route::get('/receipt_school/{sub_id}/{level_id}/{book}/', [ReceiptSchoolController::class, 'sumbook'])->name('receipt_school.sumbook');
 Route::get('/receipt_school/find/{parent}', [ReceiptSchoolController::class, 'find'])->name('receipt_school.find');
 
