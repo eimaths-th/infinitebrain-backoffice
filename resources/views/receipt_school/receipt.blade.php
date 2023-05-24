@@ -2389,8 +2389,6 @@
                     //price = 0;
                 }
 
-
-
                 if (sub_id != "" && level_id != "" && price != "" && discount != "" && book_price != "" && type != "" && course_type != "") {
 
                     $.ajax({
