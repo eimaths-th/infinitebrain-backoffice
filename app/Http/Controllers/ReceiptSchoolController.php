@@ -857,7 +857,7 @@ class ReceiptSchoolController extends Controller
         $pricesub = 0;
         $discount = 0;
         foreach ($receipts_detail as $dresult) {
-            if ($data->course_type == 2) {
+            if ($dresult['course_type'] == 2) {
                 $price = $dresult['bookprice'];
             } else {
                 $price = ($dresult['total'] - $dresult['bookprice']);
@@ -885,12 +885,15 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['bookprice'] = '';
                 $receipt_detail_arr[$x]['receipt_number'] = '';
                 $receipt_detail_arr[$x]['period'] = '';
+                $receipt_detail_arr[$x]['course_type'] = $dresult['course_type'];
+
             } else {
 
                 $receipt_detail_arr[$x]['no'] = $no;
                 $receipt_detail_arr[$x]['price'] = number_format($price, 2);
                 $receipt_detail_arr[$x]['unit'] = $message;
-                if ($data->course_type == 2) {
+                $receipt_detail_arr[$x]['course_type'] = $dresult['course_type'];
+                if ($dresult['course_type'] == 2) {
                     $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] - $dresult['discount']) / $dresult['book'], 2);
                 } else {
                     $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] + $dresult['discount'] - $dresult['bookprice']) / $dresult['qty'], 2);
@@ -1232,6 +1235,7 @@ class ReceiptSchoolController extends Controller
 
             $data2 = new SchoolPrice([
                 'subject' => $value['subject'],
+                'course_type' => $value['course_type'],
                 'level' => $value['level'],
                 'week' => $value['week'],
                 'qty' => $value['qty'],

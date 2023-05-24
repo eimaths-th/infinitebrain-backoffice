@@ -10,9 +10,10 @@ class SchoolPrice extends Model
     use HasFactory;
     protected $table="school_price";
 
-   
+
     protected $fillable = [
         'subject',
+        'course_type',
         'level',
         'week',
         'qty',

@@ -2423,6 +2423,7 @@
                     if (i > 0) {
                         // console.log($(obj).find('#price').val());
                         var receiptData = {
+                            course_type: $(obj).find('#course_type').val(),
                             subject: $(obj).find('#subject_id').val(),
                             level: $(obj).find('#level_id').val(),
                             week: $(obj).find('#week').val(),

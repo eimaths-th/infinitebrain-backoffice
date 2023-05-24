@@ -185,7 +185,7 @@
                                 <td align="center"></td>
                                 <td align="center" style="vertical-align: top;">{{ $receipt_detail['bookprice'] }}</td>
                             </tr> --}}
-                            @if ($course_type !== 2)
+                            @if ($receipt_detail['course_type'] !== 2)
                                 <tr>
                                     <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
                                     <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
@@ -202,7 +202,7 @@
 
                             <tr>
                                 <td align="center" style="vertical-align: top;">
-                                    @if ($course_type == 2)
+                                    @if ($receipt_detail['course_type'] == 2)
                                         {{ $receipt_detail['no'] }}
                                     @endif
                                 </td>
@@ -212,7 +212,7 @@
                                 <td align="center">เล่ม</td>
                                 <td align="center">{{ $receipt_detail['books'] }}</td>
                                 <td align="center">
-                                    @if ($course_type == 2)
+                                    @if ($receipt_detail['course_type'] == 2)
                                         {{ $receipt_detail['discount'] }}
                                     @endif
                                 </td>
