@@ -623,6 +623,21 @@ class ReceiptSchoolController extends Controller
 
                 $select_list .= '<option value="' . $key->id . '" > (' . $key->level_sort . ') ' . $key->title . '</option>';
             }
+
+            $course_type_1 = '';
+            if ($dresult['course_type'] == 1) {
+                $course_type_1 = 'selected';
+            }
+            $course_type_2 = '';
+            if ($dresult['course_type'] == 2) {
+                $course_type_2 = 'selected';
+            }
+            $course_type_select = '<option value="" selected>Course Type</option>
+            <option value="1" ' . $course_type_1 . '>Course+Book
+            </option>
+            <option value="2" ' . $course_type_2 . '>Book
+            </option>';
+
             // <input type="text" id="rrsub[]" name="rrsub[]"
             // class="form-control has-feedback-left" value="' . $subject[0]->title . '">
             $message = "";
@@ -654,6 +669,10 @@ class ReceiptSchoolController extends Controller
                 $weekstaus = "disabled";
             }
 
+            if ($dresult['course_type'] == 2) {
+                $weekstaus = "disabled";
+            }
+
 
             $data_html .= '<tr class="firstTr3">
         <td width="5%">
@@ -663,6 +682,14 @@ class ReceiptSchoolController extends Controller
                     <input name="rrid[]"  id="rrid[]" type="hidden" value="' . $dresult['id'] . '" />
             </div>
         </td>
+        <td width="10%">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <select style="width: 100%;" class="ctype form-control"
+                id="course_type" name="course_type" required>
+                ' . $course_type_select . '
+            </select>
+        </div>
+    </td>
         <td width="10%">
             <div class="col-md-12 col-sm-12 col-xs-12 ">
 
@@ -686,7 +713,7 @@ class ReceiptSchoolController extends Controller
 
         <td width="7%">
             <div class="col-md-12 col-sm-12 col-xs-12">
-            <select style="width: 100%;" class=" form-control" id="rrweek" name="rrweek[]" >
+            <select style="width: 100%;" class=" form-control" id="rrweek" name="rrweek[]" '. $weekstaus . '>
                                                         <option class="weekh" value="' . $dresult['week'] . '" selected>' . $dresult['week'] . " " . "week" . '</option>
 
                                                         <option value="1">1 week
@@ -701,7 +728,7 @@ class ReceiptSchoolController extends Controller
 
             </div>
         </td>
-        <td width="7%">
+        <td width="5%">
         <div class="col-md-12 col-sm-12 col-xs-12">
         <select style="width: 100%;" class=" form-control" id="rrqty" name="rrqty[]" ' . $weekstaus . '>
                                                         <option class="qtyh" value="' . $dresult['qty'] . '" selected>' . $dresult['qty'] . '</option>
@@ -768,7 +795,7 @@ class ReceiptSchoolController extends Controller
                 class="form-control has-feedback-left" value="' . $dresult['discount'] . '">
             </div>
         </td>
-        <td width="10%">
+        <td width="7%">
             <div class="col-md-12 col-sm-12 col-xs-12">
             <select style="width: 100%;" class="bbb form-control" id="rrprice" name="rrprice[]">
                                                         <option class="priceh" value="' . $dresult['price'] . '" selected>' . $messageprice . '</option>
@@ -782,13 +809,13 @@ class ReceiptSchoolController extends Controller
 
             </div>
         </td>
-        <td width="10%">
+        <td width="7%">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <input type="text" id="rrperiod" name="rrperiod[]"
                 class="form-control has-feedback-left" value="' . $dresult['period'] . '">
             </div>
         </td>
-        <td width="15%">
+        <td width="20%">
             <div class="col-md-12 col-sm-12 col-xs-12 acdc">
             <input type="text" id="rrtotal" name="rrtotal[]"
             class="form-control has-feedback-left" value="' . $dresult['total'] . '">
@@ -886,7 +913,6 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['receipt_number'] = '';
                 $receipt_detail_arr[$x]['period'] = '';
                 $receipt_detail_arr[$x]['course_type'] = $dresult['course_type'];
-
             } else {
 
                 $receipt_detail_arr[$x]['no'] = $no;
