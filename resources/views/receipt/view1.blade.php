@@ -77,10 +77,9 @@
 
                         <a class="btn btn-warning " href="#" onclick="export_report();"><i class="fa fa-print"></i>
                             Print</a>
-                        <a href="{{ route('receipt_school') }}" class="btn btn-success"
-                            data-toggle="modal" data-target=".bd-example-modal-lg" id="CreateButton"><i
-                                class="fa fa-backward"></i> Back
-                                {{ $mes }}</a>
+                        <a href="{{ route('receipt_school') }}" class="btn btn-success" data-toggle="modal"
+                            data-target=".bd-example-modal-lg" id="CreateButton"><i class="fa fa-backward"></i> Back
+                            {{ $mes }}</a>
 
 
                     </div>
@@ -125,7 +124,7 @@
                     <tr>
                         <td class="grey">นามลูกค้า,ที่อยู่/Client,Address</td>
                         <td align="right" class="grey">รหัสลูกค้า/Customer's Code</td>
-                        <td> <b>  {{ $data2->code }} </b></td>
+                        <td> <b> {{ $data2->code }} </b></td>
                         <td align="right" class="grey">เลขที่ / Document No.</td>
                         <td> <b> {{ $data->receipt_number }} </b></td>
                     </tr>
@@ -140,7 +139,7 @@
                     </tr>
                     <tr>
                         <!-- <td colspan="3"><font class="grey">ที่อยู่</font> <b>{{ $data->street_address }} {{ $data->street_address2 }}
-                                        {{ $data->city }} {{ $data->province }} {{ $data->postcode }} </b></td> -->
+                                                {{ $data->city }} {{ $data->province }} {{ $data->postcode }} </b></td> -->
                         <td colspan="3"></td>
                         <td align="right" class="grey">เงื่อนไขการชำระเงิน / Credit Term</td>
                         <td>..........................</td>
@@ -152,9 +151,9 @@
                         <td>..........................</td>
                     </tr>
                     <!-- <tr>
-                                <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
+                                        <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
 
-                            </tr> -->
+                                    </tr> -->
                 </table>
                 <div class="tbr">
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
@@ -174,25 +173,36 @@
                             //exit();
                         @endphp
                         @foreach ($receipt_detail_arr as $receipt_detail)
+                            @if ($course_type !== 2)
+                                <tr>
+                                    <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
+                                    <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
+                                    <td align="left"> {{ $receipt_detail['period'] }}</td>
+                                    <td align="center">{{ $receipt_detail['quantity'] }}</td>
+                                    <td align="center">{{ $receipt_detail['unit'] }}</td>
+                                    <td align="center">{{ $receipt_detail['unitprice'] }}</td>
+                                    <td align="center">{{ $receipt_detail['discount'] }}</td>
+                                    <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}</td>
+                                </tr>
+                            @else
+                            @endif
 
                             <tr>
-                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
-                                <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
-                                <td align="left"> {{ $receipt_detail['period'] }}</td>
-                                <td align="center">{{ $receipt_detail['quantity'] }}</td>
-                                <td align="center">{{ $receipt_detail['unit'] }}</td>
-                                <td align="center">{{ $receipt_detail['unitprice'] }}</td>
-                                <td align="center">{{ $receipt_detail['discount'] }}</td>
-                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}</td>
-                            </tr>
-                            <tr>
-                                <td align="center" style="vertical-align: top;"></td>
+                                <td align="center" style="vertical-align: top;">
+                                    @if ($course_type == 2)
+                                        {{ $receipt_detail['no'] }}
+                                    @endif
+                                </td>
                                 <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
                                 <td align="left"></td>
                                 <td align="center">{{ $receipt_detail['book'] }}</td>
                                 <td align="center">เล่ม</td>
                                 <td align="center">{{ $receipt_detail['books'] }}</td>
-                                <td align="center"></td>
+                                <td align="center">
+                                    @if ($course_type == 2)
+                                        {{ $receipt_detail['discount'] }}
+                                    @endif
+                                </td>
                                 <td align="center" style="vertical-align: top;">{{ $receipt_detail['bookprice'] }}</td>
                             </tr>
                         @endforeach
@@ -214,7 +224,7 @@
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
 
-                        </tr>--}}
+                        </tr> --}}
                         <tr>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -284,11 +294,11 @@
                     </table>
 
                     <!-- <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
-                                    <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
-                                </tr>
-                            </table> -->
+                                        <tr>
+                                            <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
+                                            <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
+                                        </tr>
+                                    </table> -->
 
                     <table align="center" width="85%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
                         <tr>

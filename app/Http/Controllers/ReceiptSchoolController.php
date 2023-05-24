@@ -857,7 +857,12 @@ class ReceiptSchoolController extends Controller
         $pricesub = 0;
         $discount = 0;
         foreach ($receipts_detail as $dresult) {
-            $price = ($dresult['total'] - $dresult['bookprice']);
+            if ($data->course_type == 2) {
+                $price = $dresult['bookprice'];
+            } else {
+                $price = ($dresult['total'] - $dresult['bookprice']);
+            }
+
             $message = "";
             if ($dresult['week'] == 1 || $dresult['week'] == 2 || $dresult['week'] == 3) {
                 $message = " สัปดาห์";
@@ -881,10 +886,15 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['receipt_number'] = '';
                 $receipt_detail_arr[$x]['period'] = '';
             } else {
+
                 $receipt_detail_arr[$x]['no'] = $no;
                 $receipt_detail_arr[$x]['price'] = number_format($price, 2);
                 $receipt_detail_arr[$x]['unit'] = $message;
-                $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] + $dresult['discount'] - $dresult['bookprice']) / $dresult['qty'], 2);
+                if ($data->course_type == 2) {
+                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] - $dresult['discount']) / $dresult['book'], 2);
+                } else {
+                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] + $dresult['discount'] - $dresult['bookprice']) / $dresult['qty'], 2);
+                }
                 $receipt_detail_arr[$x]['quantity'] =  $qty; //$dresult['qty'];
                 $receipt_detail_arr[$x]['discount'] = number_format($dresult['discount'], 2);
                 $receipt_detail_arr[$x]['book'] = ($dresult['book']);
@@ -978,7 +988,7 @@ class ReceiptSchoolController extends Controller
         foreach (self::datap as $pay) {
 
             if ($pay['id'] == $data->payment_type) {
-                $selected_pay = '<img src="'.asset('images/close.png').'" alt="..."
+                $selected_pay = '<img src="' . asset('images/close.png') . '" alt="..."
                 height="14" style="padding-bottom: 1px">';
             } else {
                 $selected_pay = '';
@@ -1019,6 +1029,7 @@ class ReceiptSchoolController extends Controller
             ->with(['vat_price_val' => $vat_price_val])
             ->with(['vat_val' => $vat_val])
             ->with(['payment' => $payment])
+            ->with(['course_type' => $data->course_type])
             ->with(['file_att' => $file_att]);
         //->with(['des_text' => $des_text]);
     }
@@ -1083,7 +1094,7 @@ class ReceiptSchoolController extends Controller
 
         $output = "";
         $outputsum = "";
-        if ($course_type==2) {
+        if ($course_type == 2) {
             $pricet = (int)$book_price - (int)$discount;
         } else {
             $pricet = (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount;

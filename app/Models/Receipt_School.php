@@ -14,6 +14,7 @@ class Receipt_School extends Model
         'type',
         'submission_date',
         'payment_type',
+        'course_type',
         'first_name',
         'last_name',
         'street_address',
