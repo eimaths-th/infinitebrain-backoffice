@@ -4,8 +4,11 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://malsup.github.io/jquery.blockUI.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 @endsection
 
 @section('content')
@@ -29,6 +32,9 @@
                 </div>
                 <div class="page-title-actions">
                     <div class="d-inline-block dropdown">
+                        <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="ImportButton"><i
+                                class="fa fa-file-excel"></i> Import Excel
+                        </a>
                         <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
                             Student</a>
@@ -69,14 +75,32 @@
 
     </div>
 
-    <!-- Create Modal -->
+    <div class="body-block-example-2" style="display:none" id="loder_bar">
+        <br>
+        <div class="loader" id="loder_bar_div">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-border text-danger" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-border text-warning" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <br>
+    </div>
+
+    <!-- Import Modal -->
     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true" id="CreateModal">
+        aria-hidden="true" id="ImportModal">
         <div class="modal-dialog modal-lg" role="document">
-            <form class="form" action="" method="POST">
+            <form id="importForm" class="form" action="{{ route('students.import') }}" method="POST"
+                enctype="multipart/form-data">
+                @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Add Student</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Import Students</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
@@ -95,9 +119,52 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="File">Import File:</label>
+                            <input type="file" name="import_file" id="import_file" required />
+                        </div>
+
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="SubmitImportForm">import</button>
+                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Modal -->
+    <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" id="CreateModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <form class="form" action="" method="POST">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add Student</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
+
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+
+                        <div class="form-group">
                             <label for="Parent">Name Parent:</label><br>
-                            <select style="width: 100%;" class="parent select2 select2_single form-control" id="AddParent"
-                                name="name_parent">
+                            <select style="width: 100%;" class="parent select2 select2_single form-control"
+                                id="AddParent" name="name_parent">
                                 <!-- <option value="" selected>Select Student</option> -->
                                 <option value="" selected>Select Parent</option>
                                 @foreach ($data4 as $key2)
@@ -286,7 +353,24 @@
                 ]
             });
 
+            $(document).on('click', '#SubmitImportForm', function(e) {
+                e.preventDefault();
+                //$('#loder_bar').show();
+                $.blockUI({
+                    message: $("#loder_bar")
+                });
+                $("#importForm").submit();
 
+            });
+
+            $(document).on('click', '#ImportButton', function(e) {
+                e.preventDefault();
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+                $('#ImportModal').modal('show');
+            });
 
             $(document).on('click', '#CreateButton', function(e) {
                 e.preventDefault();

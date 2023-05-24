@@ -117,6 +117,7 @@ Route::get('/students/show', [StudentController::class, 'show'])->name('students
 Route::get('/students/edit/{id}', [StudentController::class, 'edit'])->name('students.edit');
 Route::put('/students/save/{id}', [StudentController::class, 'update'])->name('students.save');
 Route::post('/students/store', [StudentController::class, 'store'])->name('students.store');
+Route::post('/students/import', [StudentController::class, 'importExcel'])->name('students.import');
 Route::delete('/students/destroy/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
 Route::delete('/students/destroy_all', [StudentController::class, 'destroy_all'])->name('students.destroy_all');
 

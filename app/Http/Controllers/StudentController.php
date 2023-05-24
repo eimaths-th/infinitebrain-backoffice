@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 //use Auth;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ImportCustomer;
 
 class StudentController extends Controller
 {
@@ -224,6 +226,23 @@ class StudentController extends Controller
         Student::find($id)->update($request->all());
 
         return response()->json(['success' => 'Student updated successfully']);
+    }
+
+    public function importExcel(Request $request)
+    {
+        if ($request->hasFile('import_file')) {
+            //$path = $request->file('import_file')->getRealPath();
+
+            $path = $request->file('import_file');
+
+            //$request->file('file')->store('files')
+            Excel::import(new ImportCustomer(), $path);
+            return redirect()->back()->with('success', 'Import Data Complete');
+        } else {
+            return back()->with(['error' => 'Please Check your file, Something is wrong there.']);
+        }
+
+        return back()->with('error', 'Please Check your file, Something is wrong there.');
     }
 
     /**
