@@ -1035,8 +1035,10 @@ class ReceiptSchoolController extends Controller
 
 
         foreach ($pic as $pics) {
-            $fileex = explode("/", $pics);
-            $this->textWatermark(end($fileex), 'Receipt Number : ' . $data->receipt_number);
+
+            echo $pic;
+            exit();
+            $this->textWatermark($pics, 'Receipt Number : ' . $data->receipt_number);
 
             //$retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
             $html .= '<img src="' . url('/') . '/receipt_form_watermark_images/' . $pics . '" class="me-3 mt-5 mb-5" height="400" >';
