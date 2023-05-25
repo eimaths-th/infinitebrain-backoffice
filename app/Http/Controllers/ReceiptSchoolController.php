@@ -685,7 +685,7 @@ class ReceiptSchoolController extends Controller
         <td width="10%">
         <div class="col-md-12 col-sm-12 col-xs-12">
             <select style="width: 100%;" class="ctype form-control"
-                id="course_type" name="course_type" required>
+                id="course_type[]" name="course_type[]" required>
                 ' . $course_type_select . '
             </select>
         </div>
@@ -713,7 +713,7 @@ class ReceiptSchoolController extends Controller
 
         <td width="7%">
             <div class="col-md-12 col-sm-12 col-xs-12">
-            <select style="width: 100%;" class=" form-control" id="rrweek" name="rrweek[]" '. $weekstaus . '>
+            <select style="width: 100%;" class=" form-control" id="rrweek" name="rrweek[]" ' . $weekstaus . '>
                                                         <option class="weekh" value="' . $dresult['week'] . '" selected>' . $dresult['week'] . " " . "week" . '</option>
 
                                                         <option value="1">1 week

@@ -97,7 +97,7 @@ class StudentController extends Controller
         //exit();
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
-            'code' => 'required|string|max:4|unique:students',
+            'code' => 'required|string|max:5|unique:students',
             'name' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'nickname' => 'required|string|max:255',
@@ -211,7 +211,7 @@ class StudentController extends Controller
 
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
-            'code' => 'required|string|max:4|unique:students,code,' . $id,
+            'code' => 'required|string|max:5|unique:students,code,' . $id,
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'nick_name' => 'required|string|max:255',
