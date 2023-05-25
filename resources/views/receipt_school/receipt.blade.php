@@ -1820,7 +1820,7 @@
             });
 
             $(".select2_single").select2({
-                maximumSelectionLength: 2,
+                maximumSelectionLength: 1,
                 allowClear: true
             });
             $(".select2_multiple").select2({
@@ -2468,7 +2468,7 @@
                         //city: $('#AddCity').val(),
                         //province: $('#AddProvince').val(),
                         postcode: $('#AddPostcode').val(),
-                        name_parent: $('#AddParent').val(),
+                        name_parent: $('#AddParent').val()[0],
                         mobile: $('#AddMobile').val(),
                         receipt: arr,
                         // subject:$('#subject_id').val(),
