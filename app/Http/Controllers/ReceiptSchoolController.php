@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Facades\Image;
 use File;
 use Illuminate\Support\Str;
 use App\Models\FileUpload;
@@ -434,6 +435,29 @@ class ReceiptSchoolController extends Controller
             FileUpload::where('oldname', $filename)->delete();
         }
         return $filename;
+    }
+
+    public function textWatermark($image, $text)
+    {
+        $img = Image::make(public_path('receipt_form_school/' . $image));
+
+        $img->text($text, 610, 670, function ($font) {
+            $font->file(public_path('font/amandasignature.ttf'));
+            $font->size(60);
+            $font->color('#ff0000');
+            $font->align('center');
+            $font->valign('bottom');
+            $font->angle(80);
+        });
+
+        $img->save(public_path('receipt_form_watermark_images/' . $image));
+
+        $img->encode('png');
+        $type = 'png';
+        $new_image = 'data:image/' . $type . ';base64,' . base64_encode($img);
+
+        //return view('show_watermark', compact('new_image'));
+        return  $new_image;
     }
 
 
@@ -1011,7 +1035,11 @@ class ReceiptSchoolController extends Controller
 
 
         foreach ($pic as $pics) {
-            $html .= '<img src="' . url('/') . '/receipts_form_school/' . $pics . '" class="me-3 mt-5 mb-5" height="400" >';
+            $fileex = explode("/", $pics);
+            $this->textWatermark(end($fileex), 'Receipt Number : ' . $data->receipt_number);
+
+            //$retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
+            $html .= '<img src="' . url('/') . '/receipt_form_watermark_images/' . $pics . '" class="me-3 mt-5 mb-5" height="400" >';
         }
 
         $payment = '';
