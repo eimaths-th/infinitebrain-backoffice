@@ -866,7 +866,7 @@ class ReceiptSchoolController extends Controller
                 // echo("3");
                 if ($pics != Null || $pics != "") {
                     // echo("1");
-                    ///$this->textWatermark($pics, 'Receipt Number : ' . $data->receipt_number);
+                    //$this->textWatermark($pics, 'Receipt Number : ' . $data->receipt_number);
 
                     //$retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
                     //$html .= '<img src="' . url('/') . '/receipt_form_watermark_images/' . $pics . '" class="me-3 mt-5 mb-5" height="400" >';
