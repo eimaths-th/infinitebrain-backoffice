@@ -866,13 +866,13 @@ class ReceiptSchoolController extends Controller
                 // echo("3");
                 if ($pics != Null || $pics != "") {
                     // echo("1");
-                    $this->textWatermark($pics, 'Receipt Number : ' . $data->receipt_number);
+                    //$this->textWatermark($pics, 'Receipt Number : ' . $data->receipt_number);
 
                     //$retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
                     //$html .= '<img src="' . url('/') . '/receipt_form_watermark_images/' . $pics . '" class="me-3 mt-5 mb-5" height="400" >';
                     $html .= '
                 <div class="col-md-4 text-center mb-3 ">
-                <img src="' . url('/') . '/receipt_form_watermark_images/' . $pics . '" class=" mt-5 mb-3" height="400" width="300">
+                <img src="' . url('/') . '/receipts_form_school/' . $pics . '" class=" mt-5 mb-3" height="400" width="300">
                 <a href="#" class="btn btn-xs btn-danger btn-edit" id="getDeleteData" data-id2="' . $data->id . '" data-id="' . $pics . '">delete </a>
                 </div>
                 ';
@@ -1040,10 +1040,10 @@ class ReceiptSchoolController extends Controller
 
         foreach ($pic as $pics) {
 
-            $this->textWatermark($pics, 'Receipt Number : ' . $data->receipt_number);
+            //$this->textWatermark($pics, 'Receipt Number : ' . $data->receipt_number);
 
             //$retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
-            $html .= '<img src="' . url('/') . '/receipt_form_watermark_images/' . $pics . '" class="me-3 mt-5 mb-5" height="400" >';
+            $html .= '<img src="' . url('/') . '/receipts_form_school/' . $pics . '" class="me-3 mt-5 mb-5" height="400" >';
         }
 
         $payment = '';
