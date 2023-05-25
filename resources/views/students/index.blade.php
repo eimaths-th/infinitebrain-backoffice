@@ -164,9 +164,9 @@
                         <div class="form-group">
                             <label for="Parent">Name Parent:</label><br>
                             <select style="width: 100%;" class="parent select2 select2_single form-control"
-                                id="AddParent" name="name_parent">
-                                <!-- <option value="" selected>Select Student</option> -->
-                                <option value="" selected>Select Parent</option>
+                                id="AddParent" name="name_parent" multiple="multiple">
+                                <!-- <option value="" selected>Select Student</option>
+                                <option value="" selected>Select Parent</option>-->
                                 @foreach ($data4 as $key2)
                                     <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->name_parent }}
                                     </option>
@@ -266,7 +266,7 @@
             });
 
             $(".select2_single").select2({
-                maximumSelectionLength: 2,
+                maximumSelectionLength: 1,
                 allowClear: true
             });
             $(".select2_multiple").select2({
