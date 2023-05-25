@@ -952,7 +952,7 @@ class ReceiptSchoolController extends Controller
             foreach ($data0 as $bookp) {
                 $booktotal = $bookp;
             }
-            $pricesub = $pricesub + (($dresult['total'] - $dresult['discount'] + $dresult['bookprice']));
+            $pricesub = $pricesub + (($dresult['total'] - $dresult['discount'])- $dresult['bookprice']);
             $receipt_detail_arr[$x]['books'] = $bookp->book_price;
             $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort;
             $booksum = $booksum + $dresult['bookprice'];
@@ -964,7 +964,7 @@ class ReceiptSchoolController extends Controller
         // echo($pricesub);
         // echo($all_price);
         // exit();
-        $price_val = number_format($all_price, 2);
+
         $price_text = $this->baht_text($all_price);
         $price_texten = $this->convertNumber($all_price);
         $vat_price = ($pricesub * 100) / 107;
@@ -972,6 +972,8 @@ class ReceiptSchoolController extends Controller
         // $vat_price_val = number_format($vat_price, 2);
         $vat_price_val = number_format($vat_price, 2);
         $vat_val = number_format($vat_total, 2);
+
+        $price_val = number_format(($vat_price+$vat_total)+$booksum, 2);
 
 
 
