@@ -1036,7 +1036,7 @@ class ReceiptSchoolController extends Controller
 
         foreach ($pic as $pics) {
 
-            echo $pic;
+            echo $pics;
             exit();
             $this->textWatermark($pics, 'Receipt Number : ' . $data->receipt_number);
 
