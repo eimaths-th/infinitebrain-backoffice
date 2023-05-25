@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('receipt_school', function (Blueprint $table) {
-            //
+            ////
             $table->string('pid')->change();
         });
     }
