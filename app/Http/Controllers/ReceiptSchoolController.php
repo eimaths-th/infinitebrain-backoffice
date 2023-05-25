@@ -922,7 +922,7 @@ class ReceiptSchoolController extends Controller
                 if ($dresult['course_type'] == 2) {
                     $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] - $dresult['discount']) / $dresult['book'], 2);
                 } else {
-                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] + $dresult['discount'] - $dresult['bookprice']) / $dresult['qty'], 2);
+                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] - $dresult['discount'] - $dresult['bookprice']) / $dresult['qty'], 2);
                 }
                 $receipt_detail_arr[$x]['quantity'] =  $qty; //$dresult['qty'];
                 $receipt_detail_arr[$x]['discount'] = number_format($dresult['discount'], 2);
@@ -952,7 +952,7 @@ class ReceiptSchoolController extends Controller
             foreach ($data0 as $bookp) {
                 $booktotal = $bookp;
             }
-            $pricesub = $pricesub + (($dresult['total'] + $dresult['discount'] - $dresult['bookprice']));
+            $pricesub = $pricesub + (($dresult['total'] - $dresult['discount'] - $dresult['bookprice']));
             $receipt_detail_arr[$x]['books'] = $bookp->book_price;
             $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort;
             $booksum = $booksum + $dresult['bookprice'];
