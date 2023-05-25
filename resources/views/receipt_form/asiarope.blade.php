@@ -573,7 +573,15 @@
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1250 bath (1 class 2 hours)</span><br></p>
                                     <p>&nbsp;</p>
-                                    <p><span style="color: #6351a2;">&nbsp;</span></p>
+                                    <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร ASIAROPE</b> <br>
+
+                                        รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน (นับจากวันเปิดเทอมจนถึงวันที่สอบ 23 ก.ค.) <br>
+                                        ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน ให้ใช้ระดับชั้นปัจจุบัน <br>
+
+                                        รร.นานาชาติใช้ระดับชั้นตามปีการศึกษาปัจจุบัน <br>
+
+                                        ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
+                                        เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p>
                                 </div>
                             </div>
 
@@ -736,7 +744,7 @@
                                                 <option value="Grade 12">Grade 12</option>
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Grade as per Academic Year 2022</label>
+                                                aria-hidden="false">{{-- Grade as per Academic Year 2022 --}}</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
                                                     height="10"> <span class="error-navigation-message">This field is

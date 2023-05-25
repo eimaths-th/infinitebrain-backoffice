@@ -789,7 +789,7 @@
 
                                     <div class="form-group">
                                         <label for="Student">Student:</label><br>
-                                        <select style="width: 100%;" class="select2 select2_single form-control"
+                                        <select style="width: 100%;" class="select2 select2_multiple form-control"
                                             id="AddStudent" name="student[]" multiple="multiple">
                                             <!-- <option value="" selected>Select Student</option> -->
                                             <!-- @foreach ($data2 as $key2)
