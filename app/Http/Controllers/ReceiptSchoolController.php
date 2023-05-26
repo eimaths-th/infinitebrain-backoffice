@@ -958,7 +958,8 @@ class ReceiptSchoolController extends Controller
             $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort;
             $booksum = $booksum + $dresult['bookprice'];
             $discount = $discount + $dresult['discount'];
-            $all_price =  $booksum + $pricesub - $discount;
+            $all_price =  $booksum + $pricesub ;
+            //- $discount
             $no++;
             $x++;
         }
