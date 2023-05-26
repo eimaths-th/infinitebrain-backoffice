@@ -565,7 +565,7 @@ class ReceiptSchoolController extends Controller
 
                 $select_list_parent .= '<option value="' . $keys->id . '" selected>' . $keys->code . ' ' . $keys->name_parent . '</option>';
             } else {
-                $select_list_parent .= '<option value="' . $keys->id . '" >' . $keys->code . ' ' . $keys->name_parent. '</option>';
+                $select_list_parent .= '<option value="' . $keys->id . '" >' . $keys->code . ' ' . $keys->name_parent . '</option>';
             }
         }
 
@@ -856,10 +856,8 @@ class ReceiptSchoolController extends Controller
 
         return response()->json([
             'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html, 'imgs' => $html, 'payment' => $payment,
-            'select_list_parent'=> $select_list_parent
+            'select_list_parent' => $select_list_parent
         ]);
-
-
     }
 
     public function show($type, $id)
@@ -951,14 +949,14 @@ class ReceiptSchoolController extends Controller
             }
 
 
-            $pricesub = $pricesub + (($dresult['total'])- $dresult['bookprice']);
+            $pricesub = $pricesub + (($dresult['total']) - $dresult['bookprice']);
             //- $dresult['discount']
 
             $receipt_detail_arr[$x]['books'] = $bookp->book_price;
             $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort;
             $booksum = $booksum + $dresult['bookprice'];
             $discount = $discount + $dresult['discount'];
-            $all_price =  $booksum + $pricesub ;
+            $all_price =  $booksum + $pricesub;
             //- $discount
             $no++;
             $x++;
@@ -973,7 +971,7 @@ class ReceiptSchoolController extends Controller
         $vat_price_val = number_format($vat_price, 2);
         $vat_val = number_format($vat_total, 2);
 
-        $price_val = number_format(($vat_price+$vat_total)+$booksum, 2);
+        $price_val = number_format(($vat_price + $vat_total) + $booksum, 2);
 
 
 
@@ -1074,7 +1072,6 @@ class ReceiptSchoolController extends Controller
         foreach ($data as $key) {
 
             $select_list .= '<option value="' . $key->id . '" > ' . $key->first_name . ' ' . $key->last_name . '</option>';
-
         }
 
         return response()->json([
