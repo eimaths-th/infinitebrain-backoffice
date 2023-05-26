@@ -885,7 +885,6 @@
                                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                                         <select style="width: 100%;" class="ctype form-control"
                                                             id="course_type" name="course_type" required>
-                                                            <option value="" selected>Course Type</option>
                                                             <option value="1">Course+Book
                                                             </option>
                                                             <option value="2">Book
