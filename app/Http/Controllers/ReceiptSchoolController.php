@@ -395,18 +395,12 @@ class ReceiptSchoolController extends Controller
     public function fileStore(Request $request)
     {
         $filecount = count($request->file('file'));
-        //return response()->json(['success'=>$x]);
-        //print_r($request->file('file'));
-        //exit();
         $newname = "";
         for ($i = 0; $i <= ($filecount - 1); $i++) {
             $image = $request->file('file')[$i];
-            //print_r($image);
-            //exit();
+
             $imageName = $image->getClientOriginalName();
             $oldfile = FileUpload::where('oldname', $imageName)->get();
-
-
             if (!is_array($oldfile)) {
 
                 $newname = Str::random(40) . "_" . $imageName;
@@ -417,10 +411,6 @@ class ReceiptSchoolController extends Controller
                 $imageUpload->oldname = $imageName;
                 $imageUpload->save();
             }
-
-            //return response()->json(['success' => $newname]);
-
-            //$newnamea[$i] = $newname;
         }
         return response()->json(['success' => $newname]);
     }
@@ -464,27 +454,9 @@ class ReceiptSchoolController extends Controller
     public function index(Request $request)
     {
 
-        //
 
-        // $sss ="";
-
-        // foreach ($student as $keys) {
-        //     $sss = $keys;
-        // }
-        // $stu = Student::where('students.id',$sss)->orderBy("id", "asc")->get();
-
-        //    echo "<pre>";
-        //    print_r($stu);
-        //    echo "</pre>";
-        //    exit();
 
         if ($request->ajax()) {
-            //sleep(2);
-            // $pid = Receipt_School::select(
-            //     "receipt_school.pid as pid",
-
-            //     )->get();
-            //     $student = explode('|',$pid);
 
 
             $receipt = Receipt_School::select(
@@ -571,14 +543,6 @@ class ReceiptSchoolController extends Controller
                 })->toJson();
         }
 
-        //get subject
-        //$subject = Subject::orderBy("id", "asc")->get();
-
-        //get student
-        //$student = Student::orderBy("name", "asc")->get();
-        // print_r($level) ;
-
-
 
 
         $student = Student::orderBy("first_name", "asc")->get();
@@ -592,17 +556,26 @@ class ReceiptSchoolController extends Controller
     {
         $data = Receipt_School::find($id);
         $data2 = ParentRegister::find($data->name_parent);
+
+        //parent list
+        $select_list_parent = "";
+        $parent = ParentRegister::orderBy("id", "asc")->get();
+        foreach ($parent as $keys) {
+            if ($data->name_parent == $keys->id) {
+
+                $select_list_parent .= '<option value="' . $keys->id . '" selected>' . $keys->code . ' ' . $keys->name_parent . '</option>';
+            } else {
+                $select_list_parent .= '<option value="' . $keys->id . '" >' . $keys->code . ' ' . $keys->name_parent. '</option>';
+            }
+        }
+
+
+        //student list
         $student = "";
         $stu = explode('|', $data->pid);
         if ($data->pid != "") {
-
-            // print_r ($stu);
-            // exit();
             foreach ($stu as $stus) {
                 $stus = Student::where('id', $stus)->get();
-                // print_r($stus);
-                // exit();
-                // $student .= $stus[0]->first_name."  ".$stus[0]->last_name." , ";
                 $student .= '<option value="' . $stus[0]->id . '" selected> ' . $stus[0]->first_name . " " . $stus[0]->last_name . ' </option>';
             }
         }
@@ -631,8 +604,6 @@ class ReceiptSchoolController extends Controller
         foreach ($receipts_detail as $dresult) {
             $subject = Subject::where('id', $dresult['subject'])->orderBy("id", "asc")->get();
             $level = Level::where('subject', $dresult['subject'])->where('id', $dresult['level'])->orderBy("id", "asc")->get();
-            // print_r($subject[0]->title);
-            // exit();
             $datalevel = Level::where('levels.subject', $dresult['subject'])
                 ->orderBy("subject", "asc")->get();
             $subjectall = Subject::orderBy("id", "asc")->get();
@@ -641,7 +612,7 @@ class ReceiptSchoolController extends Controller
             foreach ($subjectall as $key) {
                 $subject_list .= '<option value="' . $key->id . '" >  ' . $key->title . '</option>';
             }
-            // print_r($subject);
+
 
             foreach ($datalevel as $key) {
 
@@ -655,15 +626,16 @@ class ReceiptSchoolController extends Controller
             $course_type_2 = '';
             if ($dresult['course_type'] == 2) {
                 $course_type_2 = 'selected';
+            } else {
+                $course_type_1 = 'selected';
             }
-            $course_type_select = '<option value="" selected>Course Type</option>
+            $course_type_select = '
             <option value="1" ' . $course_type_1 . '>Course+Book
             </option>
             <option value="2" ' . $course_type_2 . '>Book
             </option>';
 
-            // <input type="text" id="rrsub[]" name="rrsub[]"
-            // class="form-control has-feedback-left" value="' . $subject[0]->title . '">
+
             $message = "";
             if ($dresult['type'] == 1) {
                 $message = "One Tpye แบบเดี่ยว";
@@ -672,6 +644,7 @@ class ReceiptSchoolController extends Controller
             } else {
                 $message = "No type";
             }
+
             $messageprice = "";
             if ($dresult['price'] == 1) {
                 $messageprice = "Old Price";
@@ -703,13 +676,13 @@ class ReceiptSchoolController extends Controller
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <input type="text" id="rno[]" name="rno[]"
                     class="form-control has-feedback-left" value="' . $x . '">
-                    <input name="rrid[]"  id="rrid[]" type="hidden" value="' . $dresult['id'] . '" />
+                    <input name="rrid[]"  id="rrid" type="hidden" value="' . $dresult['id'] . '" />
             </div>
         </td>
         <td width="10%">
         <div class="col-md-12 col-sm-12 col-xs-12">
             <select style="width: 100%;" class="ctype form-control"
-                id="course_type[]" name="course_type[]" required>
+                id="course_type" name="course_type[]" required>
                 ' . $course_type_select . '
             </select>
         </div>
@@ -737,7 +710,7 @@ class ReceiptSchoolController extends Controller
 
         <td width="7%">
             <div class="col-md-12 col-sm-12 col-xs-12">
-            <select style="width: 100%;" class=" form-control" id="rrweek" name="rrweek[]" ' . $weekstaus . '>
+            <select style="width: 100%;" class=" form-control" id="rrweek" name="rrweek[]" >
                                                         <option class="weekh" value="' . $dresult['week'] . '" selected>' . $dresult['week'] . " " . "week" . '</option>
 
                                                         <option value="1">1 week
@@ -855,7 +828,6 @@ class ReceiptSchoolController extends Controller
         }
 
 
-        // $viewr = "receipt_school.receipt";
         $html = "";
 
 
@@ -863,7 +835,6 @@ class ReceiptSchoolController extends Controller
         $x = 0;
         foreach ($pic as $pics) {
             if ($pic != Null || $pic != "") {
-                // echo("3");
                 if ($pics != Null || $pics != "") {
                     // echo("1");
                     ///$this->textWatermark($pics, 'Receipt Number : ' . $data->receipt_number);
@@ -882,12 +853,12 @@ class ReceiptSchoolController extends Controller
                 $html = "";
             }
         }
-        // print_r($data->id);
-        // exit();
+
         return response()->json([
-            'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html, 'imgs' => $html, 'payment' => $payment
+            'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html, 'imgs' => $html, 'payment' => $payment,
+            'select_list_parent'=> $select_list_parent
         ]);
-        // return view($viewr)->with(['pic' => $pic]);
+
 
     }
 
@@ -926,9 +897,7 @@ class ReceiptSchoolController extends Controller
                 $message = "เดือน";
                 $qty = $dresult['qty'];
             }
-            // echo($dresult['week']);
 
-            // exit();
             if ($price == 0) {
                 $receipt_detail_arr[$x]['no'] = '';
                 $receipt_detail_arr[$x]['price'] = '';
@@ -989,15 +958,12 @@ class ReceiptSchoolController extends Controller
             $no++;
             $x++;
         }
-        // echo($pricesub);
-        // echo($all_price);
-        // exit();
+
 
         $price_text = $this->baht_text($all_price);
         $price_texten = $this->convertNumber($all_price);
         $vat_price = ($pricesub * 100) / 107;
         $vat_total = $pricesub - $vat_price;
-        // $vat_price_val = number_format($vat_price, 2);
         $vat_price_val = number_format($vat_price, 2);
         $vat_val = number_format($vat_total, 2);
 
@@ -1017,22 +983,11 @@ class ReceiptSchoolController extends Controller
 
             foreach ($stu as $stus) {
                 $stus = Student::where('id', $stus)->get();
-                //$student .= $stus[0]->first_name . "  " . $stus[0]->last_name . " , ";
                 $student .= $stus[0]->nick_name . " , ";
             }
         }
 
 
-        // $select_list = "";
-        // foreach ($data0 as $key) {
-
-        //     $select_list = $key[0]->book_price;
-        // }
-        // $data = SubjectPrice::Where('subject_prices.subject_id',$receipts_detail[0]['subject'])->Where('subject_prices.level_id',$receipts_detail[0]['level'])->get();
-
-        // $data2 = SchoolPrice::where('rid', $id);
-
-        //$des_text = nl2br($data->description);
         $data2 = ParentRegister::find($data->name_parent);
         $html = "";
         $pic = explode('|', $data->file_att);
@@ -1071,8 +1026,7 @@ class ReceiptSchoolController extends Controller
             $i++;
         }
 
-        // print_r($data2->name_parent);
-        // exit();
+
         return view($viewr)->with(['id' => $id])
             ->with(['discount' => $discount])
             ->with(['vat_price' => $vat_price])
@@ -1082,7 +1036,6 @@ class ReceiptSchoolController extends Controller
             ->with(['data2' => $data2])
             ->with(['student' => $student])
             ->with(['bookprice' => $booktotal->book_price])
-            // ->with(['bookprice'=>number_format($data0[0]['book_price'],2)])
             ->with(['receipt_detail_arr' => $receipt_detail_arr])
             ->with(['price_val' => $price_val])
             ->with(['mes' => $mes])
@@ -1094,7 +1047,6 @@ class ReceiptSchoolController extends Controller
             ->with(['payment' => $payment])
             ->with(['course_type' => $data->course_type])
             ->with(['file_att' => $file_att]);
-        //->with(['des_text' => $des_text]);
     }
 
     public function find($parent)
@@ -1113,17 +1065,17 @@ class ReceiptSchoolController extends Controller
         foreach ($data as $key) {
 
             $select_list .= '<option value="' . $key->id . '" > ' . $key->first_name . ' ' . $key->last_name . '</option>';
-            // $mobile = $key->mobile;
+
         }
-        // echo ($mobile);
-        // exit();
+
         return response()->json([
             'html' =>  $select_list, 'html2' => $mobile, 'html3' => $address, 'html4' => $postcode
         ]);
     }
+
     public function search($sub_id)
     {
-        // echo $sub_id;
+
         $data = Level::where('levels.subject', $sub_id)
             ->orderBy("subject", "asc")->get();
         $select_list = "";
@@ -1137,6 +1089,7 @@ class ReceiptSchoolController extends Controller
             'html' =>  $select_list
         ]);
     }
+
     public function searchs($sub_id, $level_id, $week, $price, $qty, $discount, $book_price, $type, $course_type)
     {
         $select_list = "";
@@ -1169,6 +1122,7 @@ class ReceiptSchoolController extends Controller
             'html' =>  $output, 'outputsum' => $outputsum
         ]);
     }
+
     public function sumbook($sub_id, $level_id, $book)
     {
         $data = SubjectPrice::Where('subject_prices.subject_id', $sub_id)->Where('subject_prices.level_id', $level_id)->get();
@@ -1186,16 +1140,11 @@ class ReceiptSchoolController extends Controller
             'html' =>  $output, 'sum' => $sum
         ]);
     }
+
     public function store(Request $request)
     {
 
-        // $filesb = $request->get('imgFiles2');
-        // print_r($request->get('img'));
-        // exit();
 
-
-        // print_r($request->receipt);
-        // exit();
 
         $validator =  Validator::make(
             $request->all(),
@@ -1334,18 +1283,12 @@ class ReceiptSchoolController extends Controller
         }
         $dataNew = rtrim($dataNew, "|");
 
-        // $data = new Receipt_School([
 
-        //     'file_att' => $dataNew,
-
-        // ]);
-        // print_r($data);
-        // exit();
         Receipt_School::find($id2)->update(['file_att' => $dataNew]);
-        // $data->update();
+
 
         $link = (url('/') . '/receipts_form_school/' . $id);
-        // unlink(public_path("/receipts_form_school/".$id));
+
 
         $html = "";
         $pic = explode('|', $dataNew);
@@ -1375,11 +1318,11 @@ class ReceiptSchoolController extends Controller
             'payment_type' => 'required|string',
             // 'first_name' => 'required|string',
             // 'last_name' => 'required|string',
-            'street_address' => 'required|string',
+            //'street_address' => 'required|string',
             //'city' => 'required|string',
             //'province' => 'required|string',
-            'postcode' => 'required|string',
-            'mobile' => 'required|string',
+            //'postcode' => 'required|string',
+            //'mobile' => 'required|string',
 
             //'package' => 'required|string',
             //'file_att' => 'required|string',
@@ -1389,12 +1332,9 @@ class ReceiptSchoolController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-        // print_r($request->get('img'));
-        // exit();
+
 
         $img = $request->get('img');
-        // print_r($id);
-        // exit();
         $stu = "";
         if ($img != Null || $img != "") {
 
@@ -1408,15 +1348,18 @@ class ReceiptSchoolController extends Controller
                 FileUpload::where('filename', $oldfile[0]->filename)->delete();
             }
         }
-        // $image = Receipt_School::where('id',$id)->get();
-        // $imageNew = "";
-        // foreach($image as $images){
-        //     $imageNew = $images->file_att;
-        // }
-        // if($imageNew!=Null && $imageNew!=""){
 
-        // }
+        //parent //student
         $id_parent = $request->get('id_parent');
+        $st = $request->get('student');
+
+        $stud = "";
+        foreach ($st as $sss) {
+            $stud .= $sss . "|";
+        }
+
+        $stud = rtrim($stud, "|");
+        //$id_parent = $request->get('name_parent');
 
         $dataimg = Receipt_School::find($id_parent);
         if ($dataimg->file_att != Null && $dataimg->file_att != "") {
@@ -1461,6 +1404,7 @@ class ReceiptSchoolController extends Controller
         // exit();
         $rrid  = $request->get('rrid');
         $rrsub  = $request->get('rrsub');
+        $rrcourse  = $request->get('rrcourse');
         $rrlevel  = $request->get('rrlevel');
         $rrweek  = $request->get('rrweek');
         $rrqty  = $request->get('rrqty');
@@ -1471,13 +1415,11 @@ class ReceiptSchoolController extends Controller
         $rrprice  = $request->get('rrprice');
         $rrtotal  = $request->get('rrtotal');
         $rrperiod = $request->get('rrperiod');
-        // echo $book_price;
-        // print_r($request->all()) ;
-        // exit();
-        // ParentRegister::find($request->parentID)->update($request->name_parent);
-        ParentRegister::where('id', $request->get('name_parent'))->update(['name_parent' => $request->get('name_parent2')]);
+
+        //add student to request
+        $request->request->add(['pid' => $stud]);
+
         Receipt_School::find($id)->update($request->all());
-        // echo $id;
         $rdata = array();
 
         SchoolPrice::where('rid', $id)->delete();
@@ -1488,6 +1430,7 @@ class ReceiptSchoolController extends Controller
                 $rdata = new SchoolPrice([
                     'rid' => $id,
                     'subject' => $rrsub[$xx],
+                    'course_type' => $rrcourse[$xx],
                     'level' => $rrlevel[$xx],
                     'week' => $rrweek[$xx],
                     'qty' => $rrqty[$xx],
@@ -1506,6 +1449,7 @@ class ReceiptSchoolController extends Controller
                 $rdata = new SchoolPrice([
                     'rid' => $id,
                     'subject' => $rrsub[$xx],
+                    'course_type' => $rrcourse[$xx],
                     'level' => $rrlevel[$xx],
                     'week' => $rrweek[$xx],
                     'qty' => $rrqty[$xx],

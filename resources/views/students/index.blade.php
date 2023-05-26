@@ -235,6 +235,14 @@
                                 <span aria-hidden="true"></span>
                             </button>
                         </div>
+
+                        <div class="form-group">
+                            <label for="Parent">Name Parent:</label><br>
+                            <select style="width: 100%;" class="parent select2 select2_single form-control" id="EditParent"
+                                name="name_parent" multiple="multiple">
+
+                            </select>
+                        </div>
                         <div id="EditModalBody">
 
                         </div>
@@ -269,6 +277,8 @@
                 maximumSelectionLength: 1,
                 allowClear: true
             });
+
+
             $(".select2_multiple").select2({
                 maximumSelectionLength: 2,
                 //placeholder: "With Max Selection limit 4",
@@ -397,6 +407,7 @@
                     method: 'GET',
                     success: function(res) {
                         $('#EditModalBody').html(res.html);
+                        $('#EditParent').html(res.parent);
                         $('#EditModal').modal('show');
                     }
                 });
@@ -474,7 +485,7 @@
                         nick_name: $('#EditNickname').val(),
                         mobile: $('#EditMobile').val(),
                         grade: $('#EditGrade').val(),
-                        pid: $('#EditParent').val(),
+                        pid: $('#EditParent').val()[0],
                     },
 
                     success: function(result) {

@@ -159,14 +159,7 @@ class StudentController extends Controller
 
 
 
-        $html = '<div class="form-group">
-                    <label for="Parent">Name Parent:</label><br>
-                    <select style="width: 100%;" class="parent select2 select2_single form-control" id="EditParent"
-                        name="name_parent">
-                        <option value="" selected>Select Parent</option>
-                        '.$select_html.'
-                    </select>
-                </div>
+        $html = '
                 <div class="form-group">
                     <label for="Name">Code:</label>
                     <input type="text" class="form-control" name="code" id="EditCode" value="' . $data->code . '">
@@ -193,7 +186,7 @@ class StudentController extends Controller
             </div>
             ';
 
-        return response()->json(['html' => $html]);
+        return response()->json(['html' => $html,'parent'=>$select_html]);
     }
 
 
