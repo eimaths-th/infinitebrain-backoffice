@@ -119,7 +119,7 @@
                         <td width="25%" class="grey">นามลูกค้า,ที่อยู่/Client,Address</td>
                         <td width="25%" style="padding-left:20px;" align="right" class="grey">
                             รหัสลูกค้า/Customer's Code</td>
-                        <td width="20%" style="padding-left:15px;"> <b> {{ $data2->code }} </b>
+                        <td width="20%" style="padding-left:15px;"> <b>{{--  {{ $data2->code }}  --}} {{ $student_code }}</b>
                         </td>
                         <td width="20%" align="right" class="grey">เลขที่ / Document No.</td>
                         <td width="10%" style="padding-left:10px;"> <b> {{ $data->receipt_number }} </b></td>

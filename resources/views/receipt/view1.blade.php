@@ -124,7 +124,7 @@
                     <tr>
                         <td class="grey">นามลูกค้า,ที่อยู่/Client,Address</td>
                         <td align="right" class="grey">รหัสลูกค้า/Customer's Code</td>
-                        <td> <b> {{ $data2->code }} </b></td>
+                        <td> <b> {{-- {{ $data2->code }} --}} {{ $student_code }}</b></td>
                         <td align="right" class="grey">เลขที่ / Document No.</td>
                         <td> <b> {{ $data->receipt_number }} </b></td>
                     </tr>

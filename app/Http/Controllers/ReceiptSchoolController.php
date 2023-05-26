@@ -982,13 +982,13 @@ class ReceiptSchoolController extends Controller
         $file_att = "";
 
         $student = "";
+        $student_code = "";
         $stu = explode('|', $data->pid);
         if ($data->pid != "") {
-
-
             foreach ($stu as $stus) {
                 $stus = Student::where('id', $stus)->get();
                 $student .= $stus[0]->nick_name . " , ";
+                $student_code .= $stus[0]->code . " , ";
             }
         }
 
@@ -1040,6 +1040,7 @@ class ReceiptSchoolController extends Controller
             ->with(['data' => $data])
             ->with(['data2' => $data2])
             ->with(['student' => $student])
+            ->with(['student_code' => $student_code])
             ->with(['bookprice' => $booktotal->book_price])
             ->with(['receipt_detail_arr' => $receipt_detail_arr])
             ->with(['price_val' => $price_val])
