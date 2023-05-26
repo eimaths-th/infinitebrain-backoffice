@@ -475,7 +475,7 @@ class ReceiptSchoolController extends Controller
                 //->join("subjects", "subjects.id", "=", "receipts.subject_id")
                 //->join("levels", "levels.id", "=", "receipts.level_id")
 
-                ->orderBy("receipt_school.id", "desc")
+                ->orderBy("receipt_school.submission_date", "desc")
                 ->get();
 
             // echo "<pre>";
