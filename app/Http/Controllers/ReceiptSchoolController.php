@@ -987,9 +987,11 @@ class ReceiptSchoolController extends Controller
         if ($data->pid != "") {
             foreach ($stu as $stus) {
                 $stus = Student::where('id', $stus)->get();
-                $student .= $stus[0]->nick_name . " , ";
-                $student_code .= $stus[0]->code . " , ";
+                $student .= $stus[0]->nick_name . "/";
+                $student_code .= $stus[0]->code . "-";
             }
+            $student = rtrim($student, "/");
+            $student_code = rtrim($student_code, "-");
         }
 
 
