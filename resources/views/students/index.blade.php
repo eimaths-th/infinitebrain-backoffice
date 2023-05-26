@@ -433,7 +433,7 @@
                         nickname: $('#AddNickname').val(),
                         mobile: $('#AddMobile').val(),
                         grade: $('#AddGrade').val(),
-                        parent: $('#AddParent').val(),
+                        parent: $('#AddParent').val()[0],
                         _token: token,
                     },
                     success: function(result) {
