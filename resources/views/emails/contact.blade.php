@@ -263,6 +263,8 @@
                                                                     <span class="tinyMce-placeholder"><?php
                                                                     if($data->sfield==10){
                                                                         $message = "ASIAROPE 2023 Registration Form";
+                                                                    }elseif($data->sfield==6){
+                                                                        $message = "GELOSEA 2023 Registration Form";
                                                                     }elseif($data->sfield==9){
                                                                         $message = "OLPCS 2023 Registration Form";
                                                                     }else{
