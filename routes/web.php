@@ -165,6 +165,7 @@ Route::get('/school', [SchoolController::class, 'index'])->name('school');
 Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
 Route::get('/olpcs', [ReceiptFormController::class, 'olpcs'])->name('olpcs');
 Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
+Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
 Route::post('/form/upload/delete', [ReceiptFormController::class, 'fileDestroy'])->name('form.delete');
 Route::post('/form/store', [ReceiptFormController::class, 'store'])->name('form.store');

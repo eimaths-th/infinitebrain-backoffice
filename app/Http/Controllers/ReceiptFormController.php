@@ -41,6 +41,11 @@ class ReceiptFormController extends Controller
         return view("receipt_form.asiarope");
     }
 
+    public function gelosea()
+    {
+        return view("receipt_form.gelosea");
+    }
+
     public function fileStore(Request $request)
     {
         $validator =  Validator::make($request->all(), [
