@@ -376,18 +376,8 @@ class ReceiptFormController extends Controller
         $adminEmail = $request->get('email');
         Mail::to($adminEmail)->send(new ContactMail($receiptForm));
         $receiptForm->save();
-        //  print_r (['sfield' => $request->sfield]);
-        // exit();
 
-        if ($request->get('sfield') == 9) {
-            return redirect('/form/complete1');
-            // echo ("1111");
-        } else {
-            return redirect('/form/complete');
-            // echo("2222");
-        }
-        // ->with(['sfielda' =>  self::sfielda])
-
+        return redirect('/form/complete/'.strtolower(self::sfielda[$request->get('sfield')]));
 
     }
 
@@ -397,10 +387,11 @@ class ReceiptFormController extends Controller
      * @param  \App\Models\ReceiptForm  $receiptForm
      * @return \Illuminate\Http\Response
      */
-    public function show(ReceiptForm $receiptForm)
+    public function show(Request $request)
     {
         //
-        return view("receipt_form.complete");
+
+        return view("receipt_form.complete")->with(['sfield'=>$request->sfield]);
     }
     public function show1(ReceiptForm $receiptForm)
     {

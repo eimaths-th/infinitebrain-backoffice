@@ -22,7 +22,7 @@
             border-top: 1px solid #112d53;
         }
 
-        
+
         .div_center {
             margin: auto;
 
@@ -40,7 +40,7 @@
             word-break: break-word;
         }
 
-        
+
 
         .bg-light2 {
             background-color: #e4efff;
@@ -55,7 +55,7 @@
         <div class="row justify-content-center">
             <div class="col-md-9">
                 <div class="card bg-light2 mb-3 ">
-            
+
                         <div class="card-body">
                             <br>
                             <div align="center"><img src="{{ asset('images/Thankyou-iconV2.png') }}"
@@ -65,13 +65,13 @@
                                 <p class="card-text form_sub_header"><b>Your submission has been received.</b></p>
                             </div>
                             <br>
-                            
-                            
+
+
 
                         </div>
                         <div class="card-footer text-center">
                            <br><br>
-                           <a class="btn btn-lg btn-primary" href="{{ route('gmec') }}">Go Back To Form</a><br><br>
+                           <a class="btn btn-lg btn-primary" href="{{ route($sfield) }}">Go Back To Form</a><br><br>
                         </div>
                 </div>
 

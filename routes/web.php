@@ -169,7 +169,7 @@ Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
 Route::post('/form/upload/delete', [ReceiptFormController::class, 'fileDestroy'])->name('form.delete');
 Route::post('/form/store', [ReceiptFormController::class, 'store'])->name('form.store');
-Route::get('/form/complete', [ReceiptFormController::class, 'show'])->name('form.complete');
+Route::get('/form/complete/{sfield}', [ReceiptFormController::class, 'show'])->name('form.complete');
 Route::get('/form/complete1', [ReceiptFormController::class, 'show1'])->name('form.complete1');
 
 Route::post('/form/store1', [ReceiptFormController::class, 'store1'])->name('form.store1');
