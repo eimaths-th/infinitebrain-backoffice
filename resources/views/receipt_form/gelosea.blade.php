@@ -540,7 +540,7 @@
             <div class="col-md-9">
                 <div class="card bg-light2 mb-3 ">
                     {{-- <div class="card-header">{{ __('Login') }}</div> --}}
-                    <div align="center"><img class="card-img" src="{{ asset('images/GLOW_ASIAROPE_Logo-NoBG-1536x427.png') }}"
+                    <div align="center"><img class="card-img" src="{{ asset('images/Banner-01.jpg') }}"
                             alt="..." height="360"></div>
                     <form id="infinite" method="POST" action="{{ route('form.store') }}" onsubmit="return check_input();">
                         @csrf
@@ -817,8 +817,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div> --}}
+                                    </div> --}}
+                                </div>
 
                                 <div class="form-row form-focus">
                                     <div class="col-md-12 col-sm-12">
