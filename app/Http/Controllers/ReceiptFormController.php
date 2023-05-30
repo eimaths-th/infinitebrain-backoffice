@@ -20,7 +20,7 @@ use App\Models\Receipt_Customer_RunningNumber;
 use Mail;
 use App\Mail\ContactMail;
 use Maatwebsite\Excel\Facades\Excel;
-//use App\Exports\ExportUser;
+use App\Exports\ExportUser;
 
 class ReceiptFormController extends Controller
 {
@@ -86,6 +86,19 @@ class ReceiptFormController extends Controller
         }
         return response()->json(['success' => $newname]);
     }
+
+    public function fileStoreAPI(Request $request)
+    {
+
+        $image = $request->file('file');
+        $imageName = $image->getClientOriginalName();
+
+        $newname = Str::random(40) . "_" . $imageName;
+        $image->move(public_path('form_images'), $newname);
+
+        return response()->json(['success' => $newname]);
+    }
+
 
     public function fileDestroy(Request $request)
     {
@@ -377,8 +390,7 @@ class ReceiptFormController extends Controller
         Mail::to($adminEmail)->send(new ContactMail($receiptForm));
         $receiptForm->save();
 
-        return redirect('/form/complete/'.strtolower(self::sfielda[$request->get('sfield')]));
-
+        return redirect('/form/complete/' . strtolower(self::sfielda[$request->get('sfield')]));
     }
 
     /**
@@ -391,7 +403,7 @@ class ReceiptFormController extends Controller
     {
         //
 
-        return view("receipt_form.complete")->with(['sfield'=>$request->sfield]);
+        return view("receipt_form.complete")->with(['sfield' => $request->sfield]);
     }
     public function show1(ReceiptForm $receiptForm)
     {
@@ -470,8 +482,9 @@ class ReceiptFormController extends Controller
     }
 
 
-    public function exportForm(Request $request){
-        return Excel::download(new ExportForm($request->get('sfield'),$request->get('table_records')), 'form.xlsx');
+    public function exportForm(Request $request)
+    {
+        return Excel::download(new ExportForm($request->get('sfield'), $request->get('table_records')), 'form.xlsx');
     }
 
     /**
