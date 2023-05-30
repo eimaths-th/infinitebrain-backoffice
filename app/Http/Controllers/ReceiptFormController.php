@@ -20,7 +20,7 @@ use App\Models\Receipt_Customer_RunningNumber;
 use Mail;
 use App\Mail\ContactMail;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ExportUser;
+//use App\Exports\ExportUser;
 
 class ReceiptFormController extends Controller
 {
