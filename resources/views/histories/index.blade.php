@@ -140,7 +140,7 @@
 
                             </select>
                         </div>
-                     {{--    <div class="form-group">
+                        {{--    <div class="form-group">
                             <label for="Level">Level:</label>
                             <select class="form-control" id="AddLevel" name="level">
                                 <option value="" selected>Select Level</option>
@@ -221,7 +221,7 @@
 
                                 </select>
                             </div>
-                         {{--    <div class="form-group">
+                            {{--    <div class="form-group">
                                 <label for="Level">Level:</label>
                                 <select class="form-control" id="EditLevel" name="level">
                                     <option value="" selected>Select Level</option>
@@ -240,14 +240,18 @@
                             </div>
                             <div class="form-group">
                                 <label for="Time">Time Studies Start (HH-mm-ss):</label>
-                                <input type="text" class="AddTime form-control" id="EditTime" name="time" required
-                                    value="">
+                                <input type="text" class="AddTime form-control" id="EditTime" name="time"
+                                    required value="">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="ETime">Time Studies End (HH-mm-ss):</label>
                             <input type="text" class="AddTime form-control" id="EditETime" name="time" required
                                 value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="Signature">ลายเซ็นต์ผู้ปกครอง:</label>
+                            <div id='Signature'></div>
                         </div>
 
                     </div>
@@ -289,62 +293,62 @@
                 allowClear: true
             });
 
-           /*  $("#SSubject").change(function() {
+            /*  $("#SSubject").change(function() {
 
-                var subject_id = $(this).val();
-                $.ajax({
-                    type: "POST",
-                    dataType: 'JSON',
-                    url: "levels/select_list/" + subject_id,
-                    data: {
-                        _token: token
-                    },
-                    success: function(result) {
-                        //console.log(result);
-                        $("#SLevel").html(result.html);
+                 var subject_id = $(this).val();
+                 $.ajax({
+                     type: "POST",
+                     dataType: 'JSON',
+                     url: "levels/select_list/" + subject_id,
+                     data: {
+                         _token: token
+                     },
+                     success: function(result) {
+                         //console.log(result);
+                         $("#SLevel").html(result.html);
 
-                    }
-                });
+                     }
+                 });
 
-            }); */
+             }); */
 
-           /*  $("#AddSubject").change(function() {
+            /*  $("#AddSubject").change(function() {
 
-                var subject_id = $(this).val();
-                $.ajax({
-                    type: "POST",
-                    dataType: 'JSON',
-                    url: "levels/select_list/" + subject_id,
-                    data: {
-                        _token: token
-                    },
-                    success: function(result) {
-                        //console.log(result);
-                        $("#AddLevel").html(result.html);
+                 var subject_id = $(this).val();
+                 $.ajax({
+                     type: "POST",
+                     dataType: 'JSON',
+                     url: "levels/select_list/" + subject_id,
+                     data: {
+                         _token: token
+                     },
+                     success: function(result) {
+                         //console.log(result);
+                         $("#AddLevel").html(result.html);
 
-                    }
-                });
+                     }
+                 });
 
-            }); */
+             }); */
 
-           /*  $("#EditSubject").change(function() {
+            /*  $("#EditSubject").change(function() {
 
-                var subject_id = $(this).val();
-                $.ajax({
-                    type: "POST",
-                    dataType: 'JSON',
-                    url: "levels/select_list/" + subject_id,
-                    data: {
-                        _token: token
-                    },
-                    success: function(result) {
-                        //console.log(result);
-                        $("#EditLevel").html(result.html);
+                 var subject_id = $(this).val();
+                 $.ajax({
+                     type: "POST",
+                     dataType: 'JSON',
+                     url: "levels/select_list/" + subject_id,
+                     data: {
+                         _token: token
+                     },
+                     success: function(result) {
+                         //console.log(result);
+                         $("#EditLevel").html(result.html);
 
-                    }
-                });
+                     }
+                 });
 
-            }); */
+             }); */
 
             $(".delete_all_button").click(function() {
                 var len = $('input[name="table_records[]"]:checked').length;
@@ -417,10 +421,10 @@
                         data: 'student_subject',
                         name: 'student_subject'
                     },
-                  /*   {
-                        data: 'student_level',
-                        name: 'student_level'
-                    }, */
+                    /*   {
+                          data: 'student_level',
+                          name: 'student_level'
+                      }, */
                     {
                         data: 'datetime',
                         name: 'datetime'
@@ -476,6 +480,7 @@
                         $('#EditTime').val(res.stime);
                         $('#EditETime').val(res.etime);
                         $('#EditDes').val(res.des);
+                        $('#Signature').html(res.signature);
                         $('#EditModal').modal('show');
                     }
                 });

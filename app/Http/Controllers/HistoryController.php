@@ -211,11 +211,16 @@ class HistoryController extends Controller
                 $select_list2 .= '<option value="' . $i . '" >' . $i . '</option>';
             }
         }
+        $photo_att = '';
+        $urla = url('/') . '/form_images/' .$data->signature;
+                //$retu = $this->get_img_url($urla);
+                //if ($this->URL_exists($retu)) {
+                $photo_att .= "<div><a href=\"" . urldecode($urla) . "\" target=\"blank\"><img src=\"" . $urla . "\" height=\"100\">click to view</a></div>&nbsp;&nbsp;";
 
 
         return response()->json([
             'html' => $select_list, 'html2' => $select_list2, 'date' => $date_start, 'student' => $select_list_student, 'subject' => $select_list_subject, 'des' => $data->description
-            , 'stime' => $data->stime,
+            , 'stime' => $data->stime, 'etime' => $data->etime,'signature' => $photo_att
         ]);
     }
 
