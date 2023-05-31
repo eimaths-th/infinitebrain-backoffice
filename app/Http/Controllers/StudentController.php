@@ -27,15 +27,7 @@ class StudentController extends Controller
         }
     }
 
-    public function searchStudent(Request $request)
-    {
-        //$query = $request->query('query');
 
-        $results = Student::orderBy("code", "asc")
-        ->get();
-
-        return response()->json($results);
-    }
     /**
      * Display a listing of the resource.
      *

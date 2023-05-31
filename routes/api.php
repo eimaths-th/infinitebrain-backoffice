@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\StudentController;
+use App\Http\Controllers\APIController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,5 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::middleware('auth.apikey')->group(function () {
-    Route::get('/searchstudent', [StudentController::class, 'searchStudent']);
+    Route::get('/searchstudent', [APIController::class, 'searchStudent']);
+    Route::get('/searchsubject', [APIController::class, 'searchSubject']);
 });
