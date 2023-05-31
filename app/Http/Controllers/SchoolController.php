@@ -406,7 +406,7 @@ class SchoolController extends Controller
                 <div> วิชา: ' . $histories_result->student_subject . '</div>
                 <!--<div> Level: ' . $histories_result->student_level . '</div>-->
                 <div> Note: ' . $histories_result->note . '</div>
-                <div> Note: ' . $photo_att . '</div>
+                <div> ลายเซ็นต์: ' . $photo_att . '</div>
                 </div>
                 <div class="timeline-footer">
                 </div>
