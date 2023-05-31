@@ -90,13 +90,13 @@ class ReceiptFormController extends Controller
     public function fileStoreAPI(Request $request)
     {
 
-        $image = $request->file('file');
-        $imageName = $image->getClientOriginalName();
+        //$image = $request->file('file');
+        //$imageName = $image->getClientOriginalName();
 
-        $newname = Str::random(40) . "_" . $imageName;
-        $image->move(public_path('form_images'), $newname);
+        //$newname = Str::random(40) . "_" . $imageName;
+        //$image->move(public_path('form_images'), $newname);
 
-        return response()->json(['success' => $newname]);
+        //return response()->json(['success' => $newname]);
     }
 
 

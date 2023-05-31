@@ -16,5 +16,6 @@ class History extends Model
         'datetime',
         'stime',
         'etime',
+        'signature',
     ];
 }
