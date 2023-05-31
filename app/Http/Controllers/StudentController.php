@@ -26,6 +26,16 @@ class StudentController extends Controller
             abort(403, 'Unauthorized action.');
         }
     }
+
+    public function searchStudent(Request $request)
+    {
+        //$query = $request->query('query');
+
+        $results = Student::orderBy("code", "asc")
+        ->get();
+
+        return response()->json($results);
+    }
     /**
      * Display a listing of the resource.
      *
