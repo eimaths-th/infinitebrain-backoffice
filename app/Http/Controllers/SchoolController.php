@@ -341,7 +341,7 @@ class SchoolController extends Controller
 
             $histories = History::select(
                 "histories.id as histories_id",
-                "levels.title as student_level",
+                //"levels.title as student_level",
                 "subjects.title as student_subject",
                 "students.code as student_code",
                 "students.first_name as student_name",
@@ -351,9 +351,10 @@ class SchoolController extends Controller
                 "histories.stime as stime",
                 "histories.etime as etime",
                 "histories.description as note",
+                "histories.signature as signature",
             )->join("students", "students.id", "=", "histories.student_id")
                 ->join("subjects", "subjects.id", "=", "histories.subject_id")
-                ->join("levels", "levels.id", "=", "histories.level_id")
+                //->join("levels", "levels.id", "=", "histories.level_id")
                 ->where([['student_id', $stu_result->id]])
                 ->orderBy("datetime", "desc")
                 ->get();
@@ -385,6 +386,12 @@ class SchoolController extends Controller
                     $bgti = '';
                 }
 
+                $photo_att = '';
+                $urla = url('/') . '/form_images/' . $histories_result->signature;
+                //$retu = $this->get_img_url($urla);
+                //if ($this->URL_exists($retu)) {
+                $photo_att .= "<div><a href=\"" . urldecode($urla) . "\" target=\"blank\"><img src=\"" . $urla . "\" height=\"100\">view</a></div>&nbsp;&nbsp;";
+
                 $histories_html .= '
 
                 <div class="time-label">
@@ -399,6 +406,7 @@ class SchoolController extends Controller
                 <div> วิชา: ' . $histories_result->student_subject . '</div>
                 <!--<div> Level: ' . $histories_result->student_level . '</div>-->
                 <div> Note: ' . $histories_result->note . '</div>
+                <div> Note: ' . $photo_att . '</div>
                 </div>
                 <div class="timeline-footer">
                 </div>
