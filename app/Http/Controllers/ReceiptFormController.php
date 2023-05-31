@@ -219,7 +219,7 @@ class ReceiptFormController extends Controller
                         $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Generate Receipt</a> ';
                         $html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     } else {
-                        $html = '<a href="#" class="btn btn-xs btn-info btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-search"></i> View</a> ';
+                        $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Edit</a> ';
                         $html .= '<a href="#" onclick="toastr.success(\'ออก Receive แล้วไม่สามารถลบได้\', {
                             timeOut: 5000
                         });" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</a>';
@@ -476,9 +476,37 @@ class ReceiptFormController extends Controller
      * @param  \App\Models\ReceiptForm  $receiptForm
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ReceiptForm $receiptForm)
+    public function update(Request $request)
     {
         //
+
+
+        $this->check_permission();
+        $validator =  Validator::make($request->all(), [
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'nick_name' => 'required|string',
+            'birth_date' => 'required|string',
+            'school_name' => 'required|string',
+            'grade' => 'required|string',
+            'package' => 'required|string',
+            'name_parent' => 'required|string',
+            'street_address' => 'required|string',
+            'postcode' => 'required|string',
+            'mobile' => 'required|string',
+            'email' => 'required|email',
+            'news_form' => 'required|string',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+
+
+        ReceiptForm::find($request->get('fid'))->update($request->all());
+        return response()->json(['success' => 'Receipt Form updated successfully']);
     }
 
 

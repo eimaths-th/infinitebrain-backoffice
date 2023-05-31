@@ -288,7 +288,8 @@
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="SubmitEditForm">Generate</button>
+                        <button type="button" class="btn btn-success" id="SubmitEditForm">Generate Receipt</button>
+                        <button type="button" class="btn btn-warning" id="SubmitEditOForm">Edit</button>
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -302,6 +303,7 @@
         $(document).ready(function() {
 
             $('.dropdown-toggle').dropdown();
+
 
             $(".AddDate").datepicker({
                 dateFormat: "yy-mm-dd"
@@ -426,7 +428,7 @@
             let id;
             $(document).on('click', '#getEditData', function(e) {
                 e.preventDefault();
-
+                $('#SubmitEditForm').css('display','block');
 
                 $('.alert-danger').html('');
                 $('.alert-danger').hide();
@@ -530,7 +532,79 @@
                                 timeOut: 5000
                             });
                             $('#EditModal').modal('hide');
-                            $('#Listview').DataTable().ajax.reload();
+                            $('#Listview').DataTable().ajax.reload(null, false );
+
+                            //setTimeout(function() {
+                            //$('.alert-success').hide();
+                            //   $('#EditModal').modal('hide');
+                            //}, 10000);
+
+                        }
+                    }
+                });
+            });
+
+
+            $('#SubmitEditOForm').click(function(e) {
+                //if (!confirm("Are you sure?")) return;
+                e.preventDefault();
+
+
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+                //alert($('#AddFile').val());
+
+                $.ajax({
+                    url: "{{ route('receipts_form.update') }}",
+                    method: 'post',
+                    data: {
+                        submission_date: $('#AddSubmissiondate').val(),
+                        first_name: $('#AddFirstname').val(),
+                        last_name: $('#AddLastname').val(),
+                        nick_name: $('#AddNickname').val(),
+                        birth_date: $('#AddBirthdate').val(),
+                        grade: $('#AddGrade').val(),
+                        //description: $('#AddPackage').val(),
+                        street_address: $('#AddAddress').val(),
+                        //street_address2: $('#AddAddress2').val(),
+                        //city: $('#AddCity').val(),
+                        //province: $('#AddProvince').val(),
+                        postcode: $('#AddPostcode').val(),
+                        school_name: $('#AddSchoolname').val(),
+                        name_parent: $('#AddParent').val(),
+                        mobile: $('#AddMobile').val(),
+                        email: $('#AddEmail').val(),
+                        package: $('#AddPackage').val(),
+                        contest: $('#AddContest').val(),
+                        news_form: $('#AddNewsf').val(),
+                        //file_att: $('#AddFile').val(),
+                        sfield: $('#Sfield').val(),
+                        fid: $('#fid').val(),
+                        _token: token,
+                    },
+
+                    success: function(result) {
+                        console.log(result);
+                        if (result.errors) {
+                            $('.alert-danger').html('');
+                            $.each(result.errors, function(key, value) {
+                                $('.alert-danger').show();
+                                $('.alert-danger').append('<strong><li>' + value +
+                                    '</li></strong>');
+                            });
+                        } else {
+                            $('.alert-danger').hide();
+                            $('.alert-success').show();
+                            $('.alert-success').append('<strong><li>' + result.success +
+                                '</li></strong>');
+                            toastr.success(result.success, {
+                                timeOut: 5000
+                            });
+                            $('#EditModal').modal('hide');
+                            $('#Listview').DataTable().ajax.reload(null, false );
+
                             //setTimeout(function() {
                             //$('.alert-success').hide();
                             //   $('#EditModal').modal('hide');

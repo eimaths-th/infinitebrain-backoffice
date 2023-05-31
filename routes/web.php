@@ -183,6 +183,7 @@ Route::delete('/receipts_form/destroy/{id}', [ReceiptFormController::class, 'des
 Route::delete('/receipts_form/destroy_all', [ReceiptFormController::class, 'destroy_all'])->name('receipts_form.destroy_all');
 Route::delete('/receipts_form/export', [ReceiptFormController::class, 'exportForm'])->name('receipts_form.export');
 Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->name('receipts_form.store');
+Route::post('/receipts_form/update', [ReceiptFormController::class, 'update'])->name('receipts_form.update');
 
 // Route::prefix('google')->name('google.')->group( function(){
 //     Route::get('login', [GoogleController::class, 'loginWithGoogle'])->name('login');
