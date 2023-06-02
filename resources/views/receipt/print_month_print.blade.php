@@ -116,7 +116,7 @@
                     </table>
 
                     <table align="center" width="95%" cellpadding="0" cellspacing="0">
-                        <tr class="actived activebg" height="30">
+                        <tr class="actived activebg" height="25">
                             <td align="center" width="15%" class="actived grey"><font size="{{ $fontsize }}">วัน / เดือน / ปี</font></td>
                             <td align="center" width="30%">
                                 <font class="actived grey"><font size="{{ $fontsize }}">รายการ</font>
@@ -128,7 +128,7 @@
                             <td align="center" width="15%" class="actived gray"><font size="{{ $fontsize }}">หน่วย</td>
                         </tr>
                         @foreach ($data as $receipt)
-                        <tr class="activeda" height="25">
+                        <tr class="activeda" height="18">
                             <td align="center" width="15%" class="actived"><b><font size="{{ $fontsize }}">{{ $receipt['receipt_submission_date'] }}</font></b></td>
                             <td align="left" width="40%" class="actived">&nbsp; <b><font size="{{ $fontsize }}">{{ $receipt['description'] }}</font></b></td>
                             <td align="center" width="15%" class="actived"><b><font size="{{ $fontsize }}">{{ $receipt['receipt_numbers'] }}</font></b></td>
@@ -136,7 +136,7 @@
                             <td align="center" width="15%" class="actived grey"><b><font size="{{ $fontsize }}">{{ $receipt['receipt_price_label'] }}</font></b></td>
                         </tr>
                         @endforeach
-                        <tr class="activebg" height="45">
+                        <tr class="activebg" height="40">
                             <td align="center" colspan="3" width="15%" class="actived activebottomd grey"><font size="{{ $fontsize }}"><b>รวมทั้งสิ้น</b></font></td>
                             <td align="center" width="15%" class="actived activebottomd"><b><font size="{{ $fontsize }}">{{ $total_price }}</font></b></td>
                             <td align="center" width="15%" class="actived activebottomd grey"><font size="{{ $fontsize }}"><b>บาท</b></font></td>
