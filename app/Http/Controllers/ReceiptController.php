@@ -1019,6 +1019,7 @@ class ReceiptController extends Controller
                 $lastprice = 0;
             }
 
+
             $ret_receipt[$result->receipt_submission_date]['receipt_submission_date'] = $result->receipt_submission_date;
             $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i] = $result->receipt_number;
             $maxdate = max(array_keys($ret_receipt[$result->receipt_submission_date]['receipt_number']));
@@ -1041,9 +1042,12 @@ class ReceiptController extends Controller
             $price_val = number_format($price, 2);
             if ($result->receipt_type == 2) {
                 $price = $price * -1;
+                $rtype2 = '(Include ใบลดหนี้)';
+            } else {
+                $rtype2 = '';
             }
 
-            $ret_receipt[$result->receipt_submission_date]['description'] = $request->get('Pmdescription');
+            $ret_receipt[$result->receipt_submission_date]['description'] = $request->get('Pmdescription').' '.$rtype2;
             $ret_receipt[$result->receipt_submission_date]['receipt_price'] = $price;
             $ret_receipt[$result->receipt_submission_date]['receipt_price_label'] = "บาท";
             $lastprice = $lastprice + $ret_receipt[$result->receipt_submission_date]['receipt_price'];
