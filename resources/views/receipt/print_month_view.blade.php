@@ -173,9 +173,9 @@
                             <td align="center" width="15%" class="actived activebottomd grey"><font size="3"><b>บาท</b></font></td>
                         </tr>
                     </table>
-                    
-                
-              
+
+
+
 
                     <br><br><br>
 
@@ -204,7 +204,7 @@
 @section('script')
     <script>
         function export_report() {
-           url = '{{ route('receipts.print_month', ['type' => 'print', 'pmsfield' => $pmsfield, 'print_month' => $print_month, 'Pmdescription' => $pmdes]) }}';
+           url = '{{ route('receipts.print_month', ['type' => 'print', 'pmsfield' => $pmsfield, 'fontsize' => $fontsize, 'print_month' => $print_month, 'Pmdescription' => $pmdes]) }}';
            console.log(url.replace(/&amp;/g, "&"));
            window.open(
                 url.replace(/&amp;/g, "&")

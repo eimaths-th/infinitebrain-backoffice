@@ -259,11 +259,16 @@
                                         value="ค่าสมัคร {{ $sfielda[request()->get('sfield')] }} รอบแรก {{-- @php {{ echo date("Y"); }} @endphp --}}">
                                 </div>
                             </div>
-                            {{-- <div class="form-group">
-                             <label for="Submission Date">รหัสเอกสาร:</label>
-                             <input type="number" class="form-control" name="print_number" id="PrintDayNumber"
-                                 value="" required>
-                         </div> --}}
+                            <div class="form-group">
+                                <label for="font">ขนาดตัวอักษร:</label>
+                                <select class="form-control" id="PrintDaysFont" name="fontsize" required>
+                                    <option value="1"> เล็กมาก </option>
+                                    <option value="2" selected> เล็ก </option>
+                                    <option value="3"> ปานกลาง </option>
+                                    <option value="4"> ใหญ่ </option>
+
+                                </select>
+                         </div>
                         </div>
 
 

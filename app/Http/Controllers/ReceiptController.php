@@ -1012,11 +1012,14 @@ class ReceiptController extends Controller
         $lastprice = 0;
         $chart_date = "";
         $chart_date_price = "";
+        $rtype2 = '';
         foreach ($receipts as $result) {
 
+            //check last date
             if ($result->receipt_submission_date !== $lastdate) {
                 $i = 0;
                 $lastprice = 0;
+                $rtype2 = '';
             }
 
 
@@ -1034,20 +1037,27 @@ class ReceiptController extends Controller
                 ->get();
 
             $price = 0;
+            $desresult = '';
+
             foreach ($receipts_detail as $dresult) {
                 $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
                 $price = $price + $rprice;
+
+              /*   if ($result->receipt_type == 2) {
+
+                    $desresult = $dresult['description'] . " ";
+                } */
+
             }
 
             $price_val = number_format($price, 2);
             if ($result->receipt_type == 2) {
                 $price = $price * -1;
-                $rtype2 = '(Include ใบลดหนี้)';
-            } else {
-                $rtype2 = '';
+                  $rtype2.= $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i].' ';
             }
 
-            $ret_receipt[$result->receipt_submission_date]['description'] = $request->get('Pmdescription').' '.$rtype2;
+
+            $ret_receipt[$result->receipt_submission_date]['description'] = $request->get('Pmdescription') . ' ' . $rtype2;
             $ret_receipt[$result->receipt_submission_date]['receipt_price'] = $price;
             $ret_receipt[$result->receipt_submission_date]['receipt_price_label'] = "บาท";
             $lastprice = $lastprice + $ret_receipt[$result->receipt_submission_date]['receipt_price'];
@@ -1056,15 +1066,16 @@ class ReceiptController extends Controller
 
             $lastdate = $ret_receipt[$result->receipt_submission_date]['receipt_submission_date'];
             $i++;
-
+            //$rtype2='';
             $total_price = ($total_price + $price);
+
         }
         $numrec = count($ret_receipt);
         $pagen = 0;
         if ($numrec < 19) {
             $pagen = 22;
         } elseif ($numrec > 19 and $numrec < 38) {
-            $pagen = 44;
+            $pagen = 22;
         }
 
         foreach ($ret_receipt as $receipt) {
@@ -1096,7 +1107,8 @@ class ReceiptController extends Controller
             }
         }
 
-
+        //print_r($ret_receipt);
+        //exit();
 
         return view($viewr)->with(['sfield' => $sfield])->with(['sfielda' =>  self::sfielda])
             ->with(['sfieldas' =>  self::sfieldas])
@@ -1106,6 +1118,7 @@ class ReceiptController extends Controller
             ->with(['chart_date' =>  $chart_date])
             ->with(['chart_date_price' => $chart_date_price])
             ->with(['data' => $ret_receipt])
+            ->with(['fontsize' => $request->get('fontsize')])
             ->with(['pmsfield' => $request->get('pmsfield')])
             ->with(['pmdes' => $request->get('Pmdescription')])
             ->with(['print_month' => $request->get('print_month')])

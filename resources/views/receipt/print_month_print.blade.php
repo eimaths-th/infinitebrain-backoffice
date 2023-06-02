@@ -76,7 +76,7 @@
 
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-                
+
 
 
                 <table align="center" width="95%" cellpadding="0" cellspacing="0">
@@ -84,16 +84,16 @@
                         <tr>
                             <td width="15%" rowspan="4"><img src="{{ asset('images/infinite.jpg') }}" alt="..."
                                     height="106" style="padding-bottom: 5px"></td>
-                            <td>บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่) </td>
+                            <td><font size="{{ $fontsize }}">บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่) </font></td>
                         </tr>
                         <tr>
-                            <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                            <td><font size="{{ $fontsize }}">555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</font></td>
                         </tr>
                         <tr>
-                            <td>เลขประจำตัวผู้เสียภาษี: 0125563031038</td>
+                            <td><font size="{{ $fontsize }}">เลขประจำตัวผู้เสียภาษี: 0125563031038</font></td>
                         </tr>
                         <tr>
-                            <td>โทร 098 509 8554</td>
+                            <td><font size="{{ $fontsize }}">โทร 098 509 8554</font></td>
                         </tr>
                     </thead>
                 </table>
@@ -104,47 +104,47 @@
                         <tr class="active" height="30">
                             <td align="center" width="15%" class="active_left grey"></td>
                             <td align="center" width="40%">
-                                <font class="grey">รวมรายรับ </font> <b>{{ $sfielda[$sfield] }}</b> <b>{{ $thaimonth }} {{ $thaiyear }} </b>
+                                <font size="{{ $fontsize }}" class="grey">รวมรายรับ  <b>{{ $sfielda[$sfield] }}</b> <b>{{ $thaimonth }} {{ $thaiyear }} </b></font>
                             </td>
                             <td align="center" width="15%"></td>
                             <td align="center" width="15%">
-                                <font class="grey">รหัสเอกสาร</font>
+                                <font  size="{{ $fontsize }}" class="grey">รหัสเอกสาร</font>
                             </td>
-                            <td align="center" width="15%" class="active_right"><b>{{ $sfieldas[$sfield] }}{{ $ymcode }}</b></td>
+                            <td align="center" width="15%" class="active_right"><b><font size="{{ $fontsize }}">{{ $sfieldas[$sfield] }}{{ $ymcode }}</font></b></td>
                         </tr>
 
                     </table>
 
                     <table align="center" width="95%" cellpadding="0" cellspacing="0">
                         <tr class="actived activebg" height="30">
-                            <td align="center" width="15%" class="actived grey">วัน / เดือน / ปี</td>
+                            <td align="center" width="15%" class="actived grey"><font size="{{ $fontsize }}">วัน / เดือน / ปี</font></td>
                             <td align="center" width="30%">
-                                <font class="actived grey">รายการ</font>
+                                <font class="actived grey"><font size="{{ $fontsize }}">รายการ</font>
                             </td>
-                            <td align="center" width="20%" class="grey actived">เอกสารอ้างอิง</td>
+                            <td align="center" width="20%" class="grey actived"><font size="{{ $fontsize }}">เอกสารอ้างอิง</td>
                             <td align="center" width="15%">
-                                <font class="grey actived">รายรับ</font>
+                                <font class="grey actived"><font size="{{ $fontsize }}">รายรับ</font>
                             </td>
-                            <td align="center" width="15%" class="actived gray">หน่วย</td>
+                            <td align="center" width="15%" class="actived gray"><font size="{{ $fontsize }}">หน่วย</td>
                         </tr>
                         @foreach ($data as $receipt)
                         <tr class="activeda" height="25">
-                            <td align="center" width="15%" class="actived"><b><font size="2">{{ $receipt['receipt_submission_date'] }}</font></b></td>
-                            <td align="left" width="40%" class="actived">&nbsp; <b><font size="2">{{ $receipt['description'] }}</font></b></td>
-                            <td align="center" width="15%" class="actived"><b><font size="2">{{ $receipt['receipt_numbers'] }}</font></b></td>
-                            <td align="center" width="15%" class="actived"><b><font size="2">{{ $receipt['total_price'] }}</font></b></td>
-                            <td align="center" width="15%" class="actived grey"><b><font size="2">{{ $receipt['receipt_price_label'] }}</font></b></td>
+                            <td align="center" width="15%" class="actived"><b><font size="{{ $fontsize }}">{{ $receipt['receipt_submission_date'] }}</font></b></td>
+                            <td align="left" width="40%" class="actived">&nbsp; <b><font size="{{ $fontsize }}">{{ $receipt['description'] }}</font></b></td>
+                            <td align="center" width="15%" class="actived"><b><font size="{{ $fontsize }}">{{ $receipt['receipt_numbers'] }}</font></b></td>
+                            <td align="center" width="15%" class="actived"><b><font size="{{ $fontsize }}">{{ $receipt['total_price'] }}</font></b></td>
+                            <td align="center" width="15%" class="actived grey"><b><font size="{{ $fontsize }}">{{ $receipt['receipt_price_label'] }}</font></b></td>
                         </tr>
                         @endforeach
                         <tr class="activebg" height="45">
-                            <td align="center" colspan="3" width="15%" class="actived activebottomd grey"><font size="3"><b>รวมทั้งสิ้น</b></font></td>
-                            <td align="center" width="15%" class="actived activebottomd"><b>{{ $total_price }}</b></td>
-                            <td align="center" width="15%" class="actived activebottomd grey"><font size="3"><b>บาท</b></font></td>
+                            <td align="center" colspan="3" width="15%" class="actived activebottomd grey"><font size="{{ $fontsize }}"><b>รวมทั้งสิ้น</b></font></td>
+                            <td align="center" width="15%" class="actived activebottomd"><b><font size="{{ $fontsize }}">{{ $total_price }}</font></b></td>
+                            <td align="center" width="15%" class="actived activebottomd grey"><font size="{{ $fontsize }}"><b>บาท</b></font></td>
                         </tr>
                     </table>
-                    
-                
-              
+
+
+
 
                     <br><br><br>
 
