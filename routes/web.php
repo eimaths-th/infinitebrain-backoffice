@@ -222,6 +222,7 @@ Route::put('/histories/save/{id}', [HistoryController::class, 'update'])->name('
 Route::post('/histories/store', [HistoryController::class, 'store'])->name('histories.store');
 Route::delete('/histories/destroy/{id}', [HistoryController::class, 'destroy'])->name('histories.destroy');
 Route::delete('/histories/destroy_all', [HistoryController::class, 'destroy_all'])->name('histories.destroy_all');
+Route::match(array('GET', 'POST'), '/histories/print_day', [HistoryController::class, 'print_day'])->name('histories.print_day');
 
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
 Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');

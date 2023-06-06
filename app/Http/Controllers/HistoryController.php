@@ -14,6 +14,21 @@ use Illuminate\Support\Facades\Auth;
 class HistoryController extends Controller
 {
 
+    const thmonth = array(
+        "",
+        "มกราคม",
+        "กุมภาพันธ์",
+        "มีนาคม",
+        "เมษายน",
+        "พฤษภาคม",
+        "มิถุนายน",
+        "กรกฎาคม",
+        "สิงหาคม",
+        "กันยายน",
+        "ตุลาคม",
+        "พฤศจิกายน",
+        "ธันวาคม"
+    );
 
     public function check_permission()
     {
@@ -133,6 +148,115 @@ class HistoryController extends Controller
         ]);
         $course->save();
         return response()->json(['success' => 'Histories Add successfully']);
+    }
+
+
+
+
+    public function print_day(Request $request)
+    {
+        //
+
+        $this->check_permission();
+        $validator =  Validator::make($request->all(), [
+            'print_date' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            //return response()->json(['errors' => $validator->errors()->all()]);
+            return back()->with(['error' => 'Please input date']);
+        }
+
+        $type = $request->get('type');
+
+        if ($type == "view") {
+            $viewr = "histories.print_day_view";
+        } else if ($type == "print") {
+            $viewr = "histories.print_day_print";
+        }
+
+
+
+        $a_date = explode("-", $request->get('print_date'));
+
+        $ymcode = (($a_date[0] - 2000) + 43) . $a_date[1];
+        $thai_date = $a_date[2];
+        $thai_year = $a_date[0] + 543;
+        $thai_month = self::thmonth[(int)$a_date[1]];
+
+        $histories = History::select(
+            "histories.id as histories_id",
+            //"levels.title as student_level",
+            "subjects.title as student_subject",
+            "students.code as student_code",
+            "students.first_name as student_name",
+            "students.last_name as student_lastname",
+            "students.nick_name as student_nickname",
+            "histories.datetime as datetime",
+            "histories.stime as stime",
+            "histories.etime as etime",
+            "histories.description as note",
+            "histories.signature as signature",
+        )->join("students", "students.id", "=", "histories.student_id")
+            ->join("subjects", "subjects.id", "=", "histories.subject_id")
+            //->join("levels", "levels.id", "=", "histories.level_id")
+            ->where([['histories.datetime', $request->get('print_date')]])
+            ->orderBy("stime", "asc")
+            ->get();
+
+        $ret_histories = array();
+        $i = 0;
+        $total_hour = 0;
+        foreach ($histories as $histories_result) {
+
+
+
+            $start_date = $histories_result->datetime . ' ' . $histories_result->stime;
+            $end_date = $histories_result->datetime . ' ' . $histories_result->etime;
+
+            $datetime_1 = $start_date;
+            $datetime_2 = $end_date;
+
+            $start_datetime = new \DateTime($datetime_1);
+            $diff = $start_datetime->diff(new \DateTime($datetime_2));
+
+            //duration
+            $total_minutes = ($diff->days * 24 * 60);
+            $total_minutes += ($diff->h * 60 * 60);
+            $total_minutes += ($diff->i * 60);
+            $total_minutes += $diff->s;
+
+            $hour = ($total_minutes) / 60 / 60;
+
+            $ret_histories[$i]['datetime'] = $histories_result->datetime;
+            $ret_histories[$i]['duration'] = $hour;
+            $ret_histories[$i]['firstname'] = $histories_result->student_name;
+            $ret_histories[$i]['lastname'] = $histories_result->student_lastname;
+            $ret_histories[$i]['nickname'] = $histories_result->student_nickname;
+            $ret_histories[$i]['stime'] = $histories_result->stime;
+            $ret_histories[$i]['etime'] = $histories_result->etime;
+            $ret_histories[$i]['subject'] = $histories_result->student_subject;
+
+            /*             if ($hour >= 2) {
+                $bgt = 'bg-red';
+                $bgti = 'bg-red';
+            } else {
+                $bgt = 'bg-yellow';
+                $bgti = '';
+            } */
+            $total_hour = $total_hour + $hour;
+            $i++;
+        }
+
+        return view($viewr)
+            ->with(['ymcode' =>  $ymcode])
+            ->with(['total_hour' =>  $total_hour])
+            ->with(['thaiyear' =>  $thai_year])
+            ->with(['fontsize' =>  1])
+            ->with(['thaimonth' =>  $thai_month])
+            ->with(['thaidate' =>  $thai_date])
+            ->with(['data' => $ret_histories])
+            ->with(['print_date' => $request->get('print_date')]);
     }
 
     /**

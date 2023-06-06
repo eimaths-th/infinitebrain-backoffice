@@ -44,6 +44,23 @@
                 </div>
                 <div class="page-title-actions">
                     <div class="d-inline-block dropdown">
+                        <div class="dropdown show">
+                            <button class="btn btn-shadow btn-secondary dropdown-toggle" href="#" role="button"
+                                id="dropdownMenuLink" data-toggle="dropdown" autoClose="true" aria-haspopup="true"
+                                aria-expanded="false">
+                                <span class="btn-icon-wrapper pr-2 opacity-7">
+                                    <i class="fa fa-print fa-w-20"></i>
+                                </span>
+                                ดูประวัติการเรียน
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <li><a class="dropdown-item" href="#" id="printr1">ดูประวัติการเรียนรายวัน</a></li>
+                                {{-- <li><a class="dropdown-item" href="#" id="printr2">ใบปะหน้ารายเดือน</a></li> --}}
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="d-inline-block dropdown">
 
                         <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
@@ -88,7 +105,54 @@
     </div>
 
 
+  <!-- PrintDay Modal -->
+  <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true" id="PrintDayModal">
+  <div class="modal-dialog modal-lg" role="document">
+      <form id="PrintDayForm" class="form" action="{{ route('histories.print_day') }}" method="POST">
+          @csrf
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">ดูประวัติการเรียน</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  </button>
+              </div>
+              <!-- Modal body -->
+              <div class="modal-body">
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                      <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
 
+                      <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true"></span>
+                      </button>
+                  </div>
+                  <div class="col-md-4">
+
+                      <div class="form-group">
+                          <label for="Submission Date"> Date:</label>
+                          <input type="text" class="AddDate form-control" name="print_date"
+                              id="PrintDaySubmissiondate" value="" required>
+                              <input type="hidden" name="type" value="view">
+                      </div>
+
+
+                  </div>
+
+
+              </div>
+              <!-- Modal footer id="SubmitPrintDayForm"-->
+              <div class="modal-footer">
+                  <button type="submit" class="btn btn-success">View</button>
+                  <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+              </div>
+          </div>
+      </form>
+  </div>
+</div>
 
     <!-- Create Modal -->
 
@@ -274,6 +338,8 @@
                 dateFormat: "yy-mm-dd"
             });
 
+            $('.dropdown-toggle').dropdown();
+
             /* $('.AddTime').datetimepicker({
                 format: 'hh:mm:ss '
             }); */
@@ -291,6 +357,17 @@
                 maximumSelectionLength: 1,
                 //placeholder: "With Max Selection limit 4",
                 allowClear: true
+            });
+
+            $('.dropdown-menu li #printr1').on('click', function(e) {
+                //console.log("TEST");
+                e.preventDefault();
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+                $('.dropdown-toggle').dropdown('hide');
+                $('#PrintDayModal').modal('show');
             });
 
             /*  $("#SSubject").change(function() {
