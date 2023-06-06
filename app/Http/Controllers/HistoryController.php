@@ -69,7 +69,7 @@ class HistoryController extends Controller
 
             return datatables()->of($course)
                 ->editColumn('student_name', function (History $course) {
-                    return $course->student_name . ' ' . $course->student_lastname;
+                    return $course->student_name . ' ' . $course->student_lastname . ' (' . $course->student_nickname . ') ';
                 })
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->histories_id . '" class="flat" name="table_records[]" value="' . $row->histories_id . '" >';
@@ -212,15 +212,14 @@ class HistoryController extends Controller
             }
         }
         $photo_att = '';
-        $urla = url('/') . '/form_images/' .$data->signature;
-                //$retu = $this->get_img_url($urla);
-                //if ($this->URL_exists($retu)) {
-                $photo_att .= "<div><a href=\"" . urldecode($urla) . "\" target=\"blank\"><img src=\"" . $urla . "\" height=\"100\">click to view</a></div>&nbsp;&nbsp;";
+        $urla = url('/') . '/form_images/' . $data->signature;
+        //$retu = $this->get_img_url($urla);
+        //if ($this->URL_exists($retu)) {
+        $photo_att .= "<div><a href=\"" . urldecode($urla) . "\" target=\"blank\"><img src=\"" . $urla . "\" height=\"100\">click to view</a></div>&nbsp;&nbsp;";
 
 
         return response()->json([
-            'html' => $select_list, 'html2' => $select_list2, 'date' => $date_start, 'student' => $select_list_student, 'subject' => $select_list_subject, 'des' => $data->description
-            , 'stime' => $data->stime, 'etime' => $data->etime,'signature' => $photo_att
+            'html' => $select_list, 'html2' => $select_list2, 'date' => $date_start, 'student' => $select_list_student, 'subject' => $select_list_subject, 'des' => $data->description, 'stime' => $data->stime, 'etime' => $data->etime, 'signature' => $photo_att
         ]);
     }
 
