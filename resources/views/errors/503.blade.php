@@ -130,7 +130,7 @@ body {
 	<div id="notfound">
 		<div class="notfound">
 			<div class="notfound-404">
-				<h3>Oops! Page not found</h3>
+				<h3>Oops! Service Maintennance</h3>
 				<h1><span>5</span><span>0</span><span>3</span></h1>
 			</div>
 			<h2>ระบบยังไม่พร้อมให้บริการ</h2>

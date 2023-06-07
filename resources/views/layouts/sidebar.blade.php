@@ -72,7 +72,7 @@
                     <li>
                         <a href="{{ route('receipt_school') }}">
                             <i class="metismenu-icon pe-7s-note2"></i>
-                            Receipt (ใบเสร็จรับเงิน)
+                            Receipt (ค่าสมัครเรียน)
                         </a>
 
                         <!-- <ul>
@@ -342,7 +342,7 @@
                     <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-note2"></i>
-                            Receipt (ใบเสร็จค่าสมัคร)
+                            Receipt (ค่าสมัครสอบ)
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
 
