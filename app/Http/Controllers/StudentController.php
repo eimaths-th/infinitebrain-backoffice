@@ -54,7 +54,7 @@ class StudentController extends Controller
                 })*/
                 ->editColumn('photo', function (Student $Student) {
 
-                    if ($Student->photo_att !== "") {
+                    if ($Student->photo_att !== "" || !is_null($Student->photo_att)) {
                         $urla = url('/') . '/receipt_form_images/' . $Student->photo_att;
                     } else {
                         $urla = url('/') . '/images/user2.png';

@@ -51,10 +51,10 @@
                                 <span class="btn-icon-wrapper pr-2 opacity-7">
                                     <i class="fa fa-print fa-w-20"></i>
                                 </span>
-                                ดูประวัติการเรียน
+                                ดูรายงานประวัติการเรียน
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                <li><a class="dropdown-item" href="#" id="printr1">ดูประวัติการเรียนรายวัน</a></li>
+                                <li><a class="dropdown-item" href="#" id="printr1">รายงานประวัติการเรียนรายวัน</a></li>
                                 {{-- <li><a class="dropdown-item" href="#" id="printr2">ใบปะหน้ารายเดือน</a></li> --}}
                             </ul>
                         </div>

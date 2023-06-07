@@ -42,134 +42,7 @@
 
 
                 @if (Auth::user()->level == 2 || Auth::user()->level == 1)
-                    <li class="app-sidebar__heading">โรงเรียน</li>
-                    <li>
-                        <a href="#">
-                            <i class="metismenu-icon pe-7s-study"></i>
-                            รายวิชา ( Subject )
-                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                        </a>
-
-                        <ul>
-                            <li>
-                                <a href="{{ route('subjects') }}">
-                                    <i class="metismenu-icon"></i>
-                                    รายวิชา
-                                </a>
-                            </li>
-
-
-                        </ul>
-
-
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            <i class="metismenu-icon pe-7s-cash"></i>
-                              ค่าเล่าเรียน ( Cost )
-                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                        </a>
-
-                        <ul>
-
-                            <li>
-                                <a href="{{ route('subjects_price', ['id' => '1']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    Math
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('subjects_price', ['id' => '2']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    Play Math
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('subjects_price', ['id' => '3']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    Private Math
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('subjects_price', ['id' => '4']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    English A-I
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('subjects_price', ['id' => '5']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    English 5-8
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('subjects_price', ['id' => '6']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    English Spark
-                                </a>
-                            </li>
-
-                        </ul>
-
-
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            <i class="metismenu-icon pe-7s-network"></i>
-                            ระดับ ( Level )
-                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                        </a>
-
-                        <ul>
-                            {{-- @foreach ($data as $key)
-                                <li>
-                                    <a href="{{ route('levels', ['id' => $key->id]) }}">
-                                        <i class="metismenu-icon"></i>
-                                        {{ $key->title }}
-                                    </a>
-                                </li>
-                            @endforeach --}}
-                            <li>
-                                <a href="{{ route('levels', ['id' => '1']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    Math
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('levels', ['id' => '2']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    Play Math
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('levels', ['id' => '3']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    Private Math
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('levels', ['id' => '4']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    English A-I
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('levels', ['id' => '5']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    English 5-8
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('levels', ['id' => '6']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    English Spark
-                                </a>
-                            </li>
-                        </ul>
-
-                    </li>
+                    <li class="app-sidebar__heading">โรงเรียน </li>
 
                     <li>
                         <a href="#">
@@ -195,6 +68,22 @@
                         </ul>
 
                     </li>
+
+                    <li>
+                        <a href="{{ route('receipt_school') }}">
+                            <i class="metismenu-icon pe-7s-note2"></i>
+                            Receipt (ใบเสร็จรับเงิน)
+                        </a>
+
+                        <!-- <ul>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '2']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    GMEC
+                                </a>
+                            </li>
+                        </ul> -->
+                            </li>
 
                     <li>
                         <a href="#">
@@ -235,7 +124,7 @@
                     <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-comment"></i>
-                            Comment
+                            Comment ครู
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
 
@@ -250,21 +139,136 @@
                         </ul>
 
                     </li>
-                    <li>
-                        <a href="{{ route('receipt_school') }}">
-                            <i class="metismenu-icon pe-7s-note2"></i>
-                            Receipt
-                        </a>
 
-                        <!-- <ul>
                             <li>
-                                <a href="{{ route('receipts', ['sfield' => '2']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    GMEC
+                                <a href="#">
+                                    <i class="metismenu-icon pe-7s-study"></i>
+                                    รายวิชา ( Subject )
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                                 </a>
+
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('subjects') }}">
+                                            <i class="metismenu-icon"></i>
+                                            รายวิชาที่เปิดสอน
+                                        </a>
+                                    </li>
+
+
+                                </ul>
+
+
                             </li>
-                        </ul> -->
+
+
+
+                            <li>
+                                <a href="#">
+                                    <i class="metismenu-icon pe-7s-network"></i>
+                                    ระดับ ( Level )
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+
+                                <ul>
+                                    {{-- @foreach ($data as $key)
+                                        <li>
+                                            <a href="{{ route('levels', ['id' => $key->id]) }}">
+                                                <i class="metismenu-icon"></i>
+                                                {{ $key->title }}
+                                            </a>
+                                        </li>
+                                    @endforeach --}}
+                                    <li>
+                                        <a href="{{ route('levels', ['id' => '1']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            Math
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('levels', ['id' => '2']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            Play Math
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('levels', ['id' => '3']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            Private Math
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('levels', ['id' => '4']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            English A-I
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('levels', ['id' => '5']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            English 5-8
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('levels', ['id' => '6']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            English Spark
+                                        </a>
+                                    </li>
+                                </ul>
+
                             </li>
+                            <li>
+                                <a href="#">
+                                    <i class="metismenu-icon pe-7s-cash"></i>
+                                      ฐานข้อมูลค่าเล่าเรียน
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+
+                                <ul>
+
+                                    <li>
+                                        <a href="{{ route('subjects_price', ['id' => '1']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            Math
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('subjects_price', ['id' => '2']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            Play Math
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('subjects_price', ['id' => '3']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            Private Math
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('subjects_price', ['id' => '4']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            English A-I
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('subjects_price', ['id' => '5']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            English 5-8
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('subjects_price', ['id' => '6']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            English Spark
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+
+                            </li>
+
                 @endif
 
                 @if (Auth::user()->level == 3 || Auth::user()->level == 1)
@@ -272,7 +276,7 @@
                     <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-note2"></i>
-                            Online Form
+                            ข้อมูลจาก Online Form
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
 
@@ -283,6 +287,19 @@
                                     Tax invoice / Receipt
                                 </a>
                             </li>-->
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '9']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    OLPCS
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '10']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    ASIAROPE
+                                </a>
+                            </li>
                             <li>
                                 <a href="{{ route('receipts_form', ['sfield' => '2']) }}">
                                     <i class="metismenu-icon"></i>
@@ -319,25 +336,13 @@
                                     STEM
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ route('receipts_form', ['sfield' => '9']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    OLPCS
-                                </a>
-                            </li>
 
-                            <li>
-                                <a href="{{ route('receipts_form', ['sfield' => '10']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    ASIAROPE
-                                </a>
-                            </li>
                         </ul>
                     </li>
                     <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-note2"></i>
-                            Receipt
+                            Receipt (ใบเสร็จค่าสมัคร)
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
 
@@ -348,6 +353,18 @@
                                     Tax invoice / Receipt
                                 </a>
                             </li>-->
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '9']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    OLPCS
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '10']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    ASIAROPE
+                                </a>
+                            </li>
                             <li>
                                 <a href="{{ route('receipts', ['sfield' => '2']) }}">
                                     <i class="metismenu-icon"></i>
@@ -384,18 +401,7 @@
                                     STEM
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ route('receipts', ['sfield' => '9']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    OLPCS
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('receipts', ['sfield' => '10']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    ASIAROPE
-                                </a>
-                            </li>
+
                         </ul>
                     </li>
                     <li>
@@ -411,7 +417,18 @@
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
                         <ul>
-
+                            <li>
+                                <a href="{{ route('receipts.print_month', ['pmsfield' => '9','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร OLPCS รอบแรก '. $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    OLPCS
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts.print_month', ['pmsfield' => '10','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร ASIAROPE รอบแรก '. $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    ASIAROPE
+                                </a>
+                            </li>
                             <li>
                                 <a href="{{ route('receipts.print_month', ['pmsfield' => '2','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร GMEC รอบแรก '. $pmd]) }}">
                                     <i class="metismenu-icon"></i>
@@ -448,18 +465,7 @@
                                     STEM
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ route('receipts.print_month', ['pmsfield' => '9','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร OLPCS รอบแรก '. $pmd]) }}">
-                                    <i class="metismenu-icon"></i>
-                                    OLPCS
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('receipts.print_month', ['pmsfield' => '10','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร ASIAROPE รอบแรก '. $pmd]) }}">
-                                    <i class="metismenu-icon"></i>
-                                    ASIAROPE
-                                </a>
-                            </li>
+
                         </ul>
                     </li>
                 @endif
