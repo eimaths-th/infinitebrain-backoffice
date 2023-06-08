@@ -68,6 +68,11 @@ class Receipt_Customer_RunningNumber extends Model
         $number = str_pad($number, 3, '0', STR_PAD_LEFT);
 
         // A-21-00001
-        return "0".Receipt_Customer_RunningNumber::TYPE_PREFIX[$type] . '' . $number;
+        if (strlen(Receipt_Customer_RunningNumber::TYPE_PREFIX[$type]) > 1) {
+            return Receipt_Customer_RunningNumber::TYPE_PREFIX[$type] . '' . $number;
+        } else {
+            return "0".Receipt_Customer_RunningNumber::TYPE_PREFIX[$type] . '' . $number;
+        }
+
     }
 }
