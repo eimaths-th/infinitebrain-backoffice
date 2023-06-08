@@ -495,7 +495,11 @@ class ReceiptSchoolController extends Controller
 
                         foreach ($stu as $stus) {
                             $stus = Student::where('id', $stus)->get();
-                            $student .= $stus[0]->first_name . " " . $stus[0]->last_name . ' ';
+                            if ($stus) {
+                                $student .= $stus[0]->first_name . " " . $stus[0]->last_name . ' ';
+                            } else {
+                                $student = ' ';
+                            }
                         }
                     }
                     return $student;
@@ -504,10 +508,11 @@ class ReceiptSchoolController extends Controller
                     //$parent = ParentRegister::where('id', $row->name_parent)->get();
                     //$parents = "";
                     //foreach ($parent as $value) {
-                        //$parents .= $value->name_parent . ",";
+                    //$parents .= $value->name_parent . ",";
                     //}
 
                     //return $parents;
+                    return $row->name_parent;
                 })
                 // ->editColumn('receipt_number', function ($row) {
 
