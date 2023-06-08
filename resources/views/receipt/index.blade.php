@@ -1442,7 +1442,7 @@
                                 timeOut: 5000
                             });
                             $('#EditModal').modal('hide');
-                            $('#Listview').DataTable().ajax.reload();
+                            $('#Listview').DataTable().ajax.reload(null, false );
                             //setTimeout(function() {
                             //$('.alert-success').hide();
                             //   $('#EditModal').modal('hide');
