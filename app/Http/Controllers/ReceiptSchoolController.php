@@ -482,25 +482,23 @@ class ReceiptSchoolController extends Controller
             // print_r($receipt);
             // echo "</pre>";
             // exit();
-            print_r($receipt);
-            exit();
-
 
             return datatables()->of($receipt)
                 ->editColumn('pid', function ($row) {
                     $student = "";
                     $stu = explode('|', $row->pid);
-                    if ($row->pid != "") {
-
-
+                    if ($row->pid !== "") {
                         foreach ($stu as $stus) {
-                            $stus = Student::where('id', $stus)->get();
-                            if ($stus) {
-                                $student .= $stus[0]->first_name . " " . $stus[0]->last_name . ' ';
+                            if (Student::where('id', $stus)->exists()) {
+                                $stusq = Student::where('id', $stus)->get();
+                                //$student .= $stusq[0]->nick_name . " ," . $stusq[0]->last_name . ' ';
+                                $student .= $stusq[0]->nick_name . " ,";
                             } else {
-                                $student = ' ';
+                                $student .= '-';
                             }
                         }
+                    } else {
+                        $student = '-';
                     }
                     return $student;
                 })
