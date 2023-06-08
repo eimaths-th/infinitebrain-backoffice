@@ -482,8 +482,8 @@ class ReceiptSchoolController extends Controller
             // print_r($receipt);
             // echo "</pre>";
             // exit();
-            //print_r($levels);
-            //exit();
+            print_r($receipt);
+            exit();
 
 
             return datatables()->of($receipt)
