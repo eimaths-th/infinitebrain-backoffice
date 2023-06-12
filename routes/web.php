@@ -114,6 +114,7 @@ Route::delete('/levels/destroy/{id}', [LevelController::class, 'destroy'])->name
 Route::get('/students', [StudentController::class, 'index'])->name('students');
 Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
 Route::get('/students/show', [StudentController::class, 'show'])->name('students.show');
+Route::get('/students/view/{id}', [StudentController::class, 'view'])->name('students.view');
 Route::get('/students/edit/{id}', [StudentController::class, 'edit'])->name('students.edit');
 Route::put('/students/save/{id}', [StudentController::class, 'update'])->name('students.save');
 Route::post('/students/store', [StudentController::class, 'store'])->name('students.store');
@@ -219,9 +220,11 @@ Route::delete('/comment/destroy_all', [CommentController::class, 'destroy_all'])
 Route::get('/histories', [HistoryController::class, 'index'])->name('histories');
 Route::get('/histories/edit/{id}', [HistoryController::class, 'edit'])->name('histories.edit');
 Route::put('/histories/save/{id}', [HistoryController::class, 'update'])->name('histories.save');
+Route::post('/histories/show', [HistoryController::class, 'show'])->name('histories.show');
 Route::post('/histories/store', [HistoryController::class, 'store'])->name('histories.store');
 Route::delete('/histories/destroy/{id}', [HistoryController::class, 'destroy'])->name('histories.destroy');
 Route::delete('/histories/destroy_all', [HistoryController::class, 'destroy_all'])->name('histories.destroy_all');
+Route::match(array('GET', 'POST'), '/histories/print_std', [HistoryController::class, 'print_std'])->name('histories.print_std');
 Route::match(array('GET', 'POST'), '/histories/print_day', [HistoryController::class, 'print_day'])->name('histories.print_day');
 
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');

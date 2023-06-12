@@ -32,4 +32,11 @@ class ParentRegister extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+
+    public function rec_school()
+    {
+        return $this->hasOne(Receipt_School::class, 'pid', 'id');
+    }
+
 }
