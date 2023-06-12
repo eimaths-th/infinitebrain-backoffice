@@ -27,4 +27,10 @@ class SchoolPrice extends Model
         'receipt_number',
         'period',
     ];
+
+    public function rec_school()
+    {
+        return $this->belongsTo(Receipt_School::class, 'rid', 'id');
+    }
+
 }

@@ -54,7 +54,10 @@
                                 ดูรายงานประวัติการเรียน
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                <li><a class="dropdown-item" href="#" id="printr1">รายงานประวัติการเรียนรายวัน</a></li>
+                                <li><a class="dropdown-item" href="#" id="printr1">รายงานประวัติการเรียนรายวัน</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#" id="printstd">รายงานประวัติการเรียนรายบุคคล</a>
+                                </li>
                                 {{-- <li><a class="dropdown-item" href="#" id="printr2">ใบปะหน้ารายเดือน</a></li> --}}
                             </ul>
                         </div>
@@ -105,54 +108,118 @@
     </div>
 
 
-  <!-- PrintDay Modal -->
-  <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-  aria-hidden="true" id="PrintDayModal">
-  <div class="modal-dialog modal-lg" role="document">
-      <form id="PrintDayForm" class="form" action="{{ route('histories.print_day') }}" method="POST">
-          @csrf
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">ดูประวัติการเรียน</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                  </button>
-              </div>
-              <!-- Modal body -->
-              <div class="modal-body">
-                  <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
-                      <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                  </div>
-                  <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+    <!-- PrintDay Modal -->
+    <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" id="PrintDayModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <form id="PrintDayForm" class="form" action="{{ route('histories.print_day') }}" method="POST">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">ดูประวัติการเรียน</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
 
-                      <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true"></span>
-                      </button>
-                  </div>
-                  <div class="col-md-4">
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
 
-                      <div class="form-group">
-                          <label for="Submission Date"> Date:</label>
-                          <input type="text" class="AddDate form-control" name="print_date"
-                              id="PrintDaySubmissiondate" value="" required>
-                              <input type="hidden" name="type" value="view">
-                      </div>
-
-
-                  </div>
+                            <div class="form-group">
+                                <label for="Submission Date"> Date:</label>
+                                <input type="text" class="AddDate form-control" name="print_date"
+                                    id="PrintDaySubmissiondate" value="" required>
+                                <input type="hidden" name="type" value="view">
+                            </div>
 
 
-              </div>
-              <!-- Modal footer id="SubmitPrintDayForm"-->
-              <div class="modal-footer">
-                  <button type="submit" class="btn btn-success">View</button>
-                  <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
-              </div>
-          </div>
-      </form>
-  </div>
-</div>
+                        </div>
+
+
+                    </div>
+                    <!-- Modal footer id="SubmitPrintDayForm"-->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">View</button>
+                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Printstd Modal -->
+    <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" id="PrintStdModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <form id="PrintDayForm" class="form" action="{{ route('histories.print_std') }}" method="POST">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">ดูประวัติการเรียนรายบุคคล
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
+
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Student">Student:</label><br>
+                                    <select style="width: 100%;" class="select2 select2_single form-control"
+                                        id="viewStudent" name="student" multiple="multiple" required>
+
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+
+                                <div class="form-group">
+                                    <label for="Submission Date"> Date:</label>
+                                    <input type="text" class="AddDate form-control" name="std_date"
+                                        id="PrintStdSubmissiondate" value="" autocomplete="off">
+                                    <input type="hidden" name="type" value="view">
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!-- Modal footer id="SubmitPrintDayForm"-->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">View</button>
+                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Create Modal -->
 
@@ -168,12 +235,14 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
 
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true"></span>
@@ -328,6 +397,8 @@
             </form>
         </div>
     </div>
+
+    
 @endsection
 
 @section('script')
@@ -368,6 +439,24 @@
                 $('.alert-success').hide();
                 $('.dropdown-toggle').dropdown('hide');
                 $('#PrintDayModal').modal('show');
+            });
+
+            $('.dropdown-menu li #printstd').on('click', function(e) {
+                //console.log("TEST");
+                e.preventDefault();
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+                $('.dropdown-toggle').dropdown('hide');
+                $('#PrintStdModal').modal('show');
+                $.ajax({
+                    url: "histories/show",
+                    method: 'POST',
+                    success: function(res) {
+                        $('#viewStudent').html(res.student);
+                    }
+                });
             });
 
             /*  $("#SSubject").change(function() {
@@ -564,6 +653,37 @@
 
             });
 
+
+            // view
+
+            // $(document).on('click', '#getViewData', function(e) {
+            //     e.preventDefault();
+
+            //     $('.alert-danger').html('');
+            //     $('.alert-danger').hide();
+            //     $('.alert-success').html('');
+            //     $('.alert-success').hide();
+
+            //     id = $(this).data('id');
+            //     $.ajax({
+            //         url: "histories/view/" + id,
+            //         method: 'GET',
+            //         success: function(res) {
+
+            //             $('#ViewStudent').html(res.student);
+            //             $('#ViewSubject').html(res.subject);
+            //             //$('#EditLevel').html(res.html);
+            //             $('#ViewDate').val(res.date);
+            //             $('#ViewTime').val(res.stime);
+            //             $('#ViewETime').val(res.etime);
+            //             $('#ViewDes').val(res.des);
+            //             $('#toa').val(res.toa);
+            //             // $('#Signature1').html(res.signature);
+            //             $('#ViewModal').modal('show');
+            //         }
+            //     });
+
+            // });
 
             // Create product Ajax request.
             $('#SubmitCreateForm').click(function(e) {

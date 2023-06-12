@@ -141,11 +141,8 @@
                         </tr>
                         @foreach ($data as $histories)
                             <tr class="activeda" height="15">
-                                <td align="center" width="15%" class="actived">
-                                    <b><font size="{{ $fontsize }}">{{ $histories['datetime'] }}</font></b>
-                                </td>
-                                <td align="left" width="40%" class="actived">&nbsp;
-                                    <b><font size="{{ $fontsize }}">{{ $histories['firstname'] }} {{ $histories['lastname'] }}  ({{ $histories['nickname'] }})</font></b>
+                                <td align="center" width="15%" class="actived"><b><font size="{{ $fontsize }}">{{ $histories['datetime'] }}</font></b></td>
+                                <td align="left" width="40%" class="actived">&nbsp;<b><font size="{{ $fontsize }}">{{ $histories['firstname'] }} {{ $histories['lastname'] }}  ({{ $histories['nickname'] }})</font></b>
                                 </td>
                                 <td align="center" width="15%" class="actived">
                                     <b><font size="{{ $fontsize }}">{{ $histories['stime'] }} - {{ $histories['etime'] }}</font></b>

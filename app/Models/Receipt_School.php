@@ -26,4 +26,16 @@ class Receipt_School extends Model
         'receipt_number',
         'pid',
     ];
+
+    public function parentRegister()
+    {
+        return $this->belongsTo(ParentRegister::class, 'name_parent', 'id');
+    }
+
+    public function school_pice()
+    {
+        return $this->hasOne(SchoolPrice::class, 'rid', 'id');
+    }
+
+
 }

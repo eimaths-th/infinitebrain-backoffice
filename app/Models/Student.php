@@ -23,4 +23,22 @@ class Student extends Model
         'sex',
         'pid'
     ];
+    public function parent()
+    {
+        return $this->hasOne(ParentRegister::class, 'id', 'pid');
+    }
+
+
+    public function rec_school()
+    {
+        return $this->hasOne(Receipt_School::class, 'pid','id');
+    }
+
+
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
+
 }
