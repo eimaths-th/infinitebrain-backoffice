@@ -154,43 +154,57 @@ class StudentController extends Controller
                 $select_html .= '<option value="' . $key2->id . '">' . $key2->code . ' ' . $key2->name_parent . '</option>';
             }
         }
-
         $all = 0;
         $remain = 0;
         $stdId = $data->id;
-        // $stdId = 168;
-
         $hissss = History::all();
         $success = History::where('student_id', $stdId)->get();
 
-
-        // $subj = History::where('subject_id',1)
-        // ->whereMonth('datetime',06)
-        // ->whereYear('datetime',2023)
-        // ->get();
-        // dd($subj->first()->subject->title,$subj);
         $his_succsss = count($success);
 
         $rec = Receipt_School::where('pid', 'LIKE', '%' . $stdId . '%')->get();
 
-        $qty = $data->rec_school->school_pice->qty ?? null;
+        if (!empty($rec->first()->id)) {
+            $school_pice = SchoolPrice::where('rid', $rec->first()->id)->get();
+            $qty = 0;
+            foreach ($school_pice as $school_pice) {
+                $school = (int)($school_pice->qty);
+                $qty += $school;
+            }
+        } else {
+            $qty = (int) ($data->rec_school->school_pice->qty ?? null);
+        }
+
         $book = $data->rec_school->school_pice->book ?? null;
         $qty1 = [];
-        $ii = 0 ;
-
+        $ii = 0;
+        $bonus = 0;
         if (!empty($qty)) {
 
-            $week = $data->rec_school->school_pice->week;
-            $all = $qty *  $week ?? 'school_pice';
-            $remain = $all - $his_succsss;
-        }elseif ($qty == null && $book !== null && $success !== null) {
+            if ($qty > 11) {
+                $bonus = 12;
+                $all = ($qty *  8) + $bonus ?? 'school_pice';
+                $remain = $all - $his_succsss;
+            } elseif ($qty > 5) {
+                $bonus = 5;
+                $all = ($qty *  8) + $bonus ?? 'school_pice';
+                $remain = $all - $his_succsss;
+            } elseif ($qty > 3) {
+                $bonus = 3;
+                $all = ($qty *  8) + $bonus ?? 'school_pice';
+                $remain = $all - $his_succsss;
+            } else {
+                $all = $qty *  8 ?? 'school_pice';
+                $remain = $all - $his_succsss;
+            }
+        } elseif ($qty == null && $book !== null && $success !== null) {
             # code...
             $all = -1;
-        }
-        else {
+        } else {
 
             $all = '0';
         }
+
         if ($all > 0) {
             # code...
             $html = '
@@ -219,61 +233,38 @@ class StudentController extends Controller
                     <input type="text" class="form-control" name="mobile" id="EditMobile" value="' . $data->mobile . '">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mb-2">
                     <label for="Name">Grade:</label>
                     <input type="text" class="form-control" name="grade" id="Editgrade" value="' . $data->grade . '">
                 </div>
 
-                <div class="row">
-                            <div class="col-lg-4">
+                <div class="row ">
+                            <div class="col-lg-4 text-center">
                                 <div class="form-group">
-                                    <label for="ETime">จำนวนเข้าเรียนทั้งหมด :</label>
+                                    <label for="ETime">จำนวนเข้าเรียนทั้งหมด : ' . $all . ' ครั้ง</label>
                                     <div class="row">
-                                        <div class="col-lg-6">
-                                            <input type="text" class="form-control" id="ViewETime" name=""
-                                                required value="' . $all . '">
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <label for="ETime">ครั้ง </label>
 
+                                        <div class="col-lg-12">
+                                                <label for="ETime">' . 'สมัคร : ' . $qty . ' เดือน โบนัส : ' . $bonus . '</label>
                                         </div>
+
                                     </div>
 
                                 </div>
                             </div>
                             <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label for="ETime">เข้าเรียนแล้ว :</label>
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <input type="text" class="form-control" id="toa" name=""
-                                                required value="' . $his_succsss . '">
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <label for="ETime">ครั้ง </label>
-
-                                        </div>
-                                    </div>
-
+                                <div class="form-group text-center">
+                                    <label for="ETime">เข้าเรียนแล้ว : ' . $his_succsss . ' ครั้ง</label>
                                 </div>
                             </div>
+
                             <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label for="ETime">คงเหลือ :</label>
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <input type="text" class="form-control" id="Remain" name=""
-                                                required value=" ' . $remain . '">
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <label for="ETime">ครั้ง</label>
-
-                                        </div>
-                                    </div>
-
+                                <div class="form-group text-center">
+                                    <label for="ETime">คงเหลือ :  ' . $remain . ' ครั้ง</label>
                                 </div>
                             </div>
-                        </div>
+
+                </div>
 
 
             ';
@@ -293,7 +284,7 @@ class StudentController extends Controller
 
                         <div class="col-lg-12">
                             <div class="form-group">
-                                <label for="ETime">' . $num . '. วิชา ' . $success->subject->title . ' เมื่อวันที่วันที่ : ' . $success->datetime . ' เวลา  : '.$success->full_time.'</label>
+                                <label for="ETime">' . $num . '. วิชา ' . $success->subject->title . ' เมื่อวันที่วันที่ : ' . $success->datetime . ' เวลา  : ' . $success->full_time . '</label>
 
                             </div>
                         </div>
@@ -303,13 +294,13 @@ class StudentController extends Controller
                 }
             } else {
                 $html .= '
-                    <div class="form-group mt-3 ">
+                    <div class="form-group mt-2 ">
                     <label for="ETime" class="text-danger"> ยังไม่มีการเรียน</label>
                     </div>
                     <div class="row">
                     ';
             }
-        }elseif ($all == -1) {
+        } elseif ($all == -1) {
             $html = '
                 <div class="form-group">
                     <label for="Name">รหัส:</label>
@@ -423,9 +414,7 @@ class StudentController extends Controller
                     <div class="row">
                     ';
             }
-        }
-
-         else {
+        } else {
             # code...
             $all = 'ไม่พบใบเสร้จ';
 
@@ -466,10 +455,6 @@ class StudentController extends Controller
 
             ';
         }
-
-
-
-
 
         return response()->json(['html' => $html, 'parent' => $select_html]);
     }

@@ -185,6 +185,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
 
 
+
         /*
          * Package Service Providers...
          */
@@ -221,7 +222,7 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Image' => Intervention\Image\Facades\Image::class,
-
+       
 
     ])->toArray(),
 
