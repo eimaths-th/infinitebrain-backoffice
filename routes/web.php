@@ -87,12 +87,15 @@ Route::delete('/users/destroy/{id}', [EmployeeController::class, 'destroy'])->na
 Route::delete('/users/destroy_all', [EmployeeController::class, 'destroy_all'])->name('users.destroy_all');
 
 Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects');
+Route::get('/subjects/view/{id}', [SubjectController::class, 'view'])->name('subjects.view');
 Route::get('/subjects/edit/{id}', [SubjectController::class, 'edit'])->name('subjects.edit');
 Route::post('/subjects/select_list/{id}', [SubjectController::class, 'select_list'])->name('subjects.select_list');
 Route::put('/subjects/save/{id}', [SubjectController::class, 'update'])->name('subjects.save');
 Route::post('/subjects/store', [SubjectController::class, 'store'])->name('subjects.store');
 Route::delete('/subjects/destroy_all', [SubjectController::class, 'destroy_all'])->name('subjects.destroy_all');
 Route::delete('/subjects/destroy/{id}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
+Route::get('/subjects/viewstudent/', [SubjectController::class, 'overview'])->name('subjects.overview');
+Route::get('/subjects/viewstudent/searchsubSTD', [SubjectController::class, 'searchsubSTD'])->name('searchsubSTD');
 
 Route::get('/subjects_price', [SubjectPriceController::class, 'index'])->name('subjects_price');
 Route::get('/subjects_price/edit/{id}', [SubjectPriceController::class, 'edit'])->name('subjects_price.edit');

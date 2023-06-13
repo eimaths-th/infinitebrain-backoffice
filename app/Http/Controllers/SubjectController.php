@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Subject;
 use App\Http\Controllers\Controller;
+use App\Models\History;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+
 use Illuminate\Support\Facades\Auth;
+
 
 
 class SubjectController extends Controller
@@ -67,7 +70,8 @@ class SubjectController extends Controller
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
+                    $html = '<a href="#" class="btn btn-xs btn-primary btn-view" id="getViewData" data-id="' . $row->id . '"><i class="fa fa-eye"></i> View</a> ';
+                    $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
                 })->toJson();
@@ -127,6 +131,84 @@ class SubjectController extends Controller
     public function show(Subject $subject)
     {
         //
+    }
+
+    function overview(Request $request)
+    {
+
+        $this->check_permission();
+
+        $sub = Subject::all();
+
+        return view('subjects.view_std', [
+            'subj' => $sub
+        ]);
+    }
+
+    public function searchsubSTD(Request $request)
+    {
+
+        $this->check_permission();
+        $subj = Subject::all();
+        $id = $request->subject;
+        $month = $request->month;
+        $year = $request->year;
+        $std = History::where('subject_id', $id)
+            ->whereMonth('datetime', $month)
+            ->whereYear('datetime', $year)
+            ->get();
+        // dd($request, $std);
+
+        return view('subjects.view_std', [
+            'subj' => $subj,
+            'std'  => $std
+        ]);
+    }
+
+    function view($id)
+    {
+
+
+
+        $this->check_permission();
+        $month = date('m');
+        $year = date('Y');
+        $data = Subject::find($id);
+
+        $subj = History::where('subject_id', $id)
+            ->whereMonth('datetime', $month)
+            ->whereYear('datetime', $year)
+            ->get();
+
+        $count_subj = count($subj);
+        // dd($count_subj);
+        // $date = thaiDate('D F Y');
+        $html = '
+                <div class="form-group">
+                    <label for="Title">Title:</label>
+                    <input type="text" class="form-control" name="title" id="EditTitle" value="' . $data->title . '">
+                </div>
+                <div class="form-group">
+                    <label for="Title">Title Thai:</label>
+                    <input type="text" class="form-control" name="title_th" id="EditTitleTh" value="' . $data->title_th . '">
+                </div>
+                <div class="form-group">
+                   <label for="Book">Book:</label>
+                <input type="number" class="form-control" id="EditBook" name="book" value="' . $data->book . '" min="1" max="99">
+                </div>
+                <div class="form-group">
+                    <label for="BookP">Book Per Month:</label>
+                    <input type="number" class="form-control" id="EditBookP" name="bookp" value="' . $data->book_per_month . '" min="1" max="99">
+                </div>
+                <div class="form-group mt-3">
+                    <label for="BookP">จำนวนนักเรียนในคลาส ' .  $month . '/' . $year . ' :</label>
+                    <label for="BookP"> ' . $count_subj . ' คน </label>
+                </div>
+
+
+
+                ';
+        return response()->json(['html' => $html]);
     }
 
     /**

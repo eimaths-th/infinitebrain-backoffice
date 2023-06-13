@@ -154,6 +154,12 @@
                                             รายวิชาที่เปิดสอน
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('subjects.overview') }}">
+                                            <i class="metismenu-icon"></i>
+                                            รายชื่อนักเรียนในรายวิชา
+                                        </a>
+                                    </li>
 
 
                                 </ul>
