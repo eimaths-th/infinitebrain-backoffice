@@ -24,7 +24,8 @@ use App\Exports\ExportUser;
 
 class ReceiptFormController extends Controller
 {
-    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE');
+    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE'
+    , '11' => 'Cambridge');
 
     public function gmec()
     {
@@ -44,6 +45,11 @@ class ReceiptFormController extends Controller
     public function gelosea()
     {
         return view("receipt_form.gelosea");
+    }
+
+    public function cambridge()
+    {
+        return view("receipt_form.cambridge");
     }
 
     public function fileStore(Request $request)
