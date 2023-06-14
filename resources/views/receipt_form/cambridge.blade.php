@@ -1023,7 +1023,7 @@
                                                     class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="newsf" id="newsf"
                                                 value="" maxlength="50" required>
-                                            <input type="hidden" name="sfield" id="sfield" value="6">
+                                            <input type="hidden" name="sfield" id="sfield" value="11">
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false"></label>
                                             <div class="form-error-message" role="alert"><img

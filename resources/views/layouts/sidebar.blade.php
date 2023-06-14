@@ -454,6 +454,8 @@
                                 </a>
                             </li>
                             <li>
+
+
                                 <a href="{{ route('receipts.print_month', ['pmsfield' => '2','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร GMEC รอบแรก '. $pmd]) }}">
                                     <i class="metismenu-icon"></i>
                                     GMEC
