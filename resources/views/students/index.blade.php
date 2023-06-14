@@ -166,7 +166,7 @@
                             <select style="width: 100%;" class="parent select2 select2_single form-control"
                                 id="AddParent" name="name_parent" multiple="multiple">
                                 <!-- <option value="" selected>Select Student</option>
-                                    <option value="" selected>Select Parent</option>-->
+                                                        <option value="" selected>Select Parent</option>-->
                                 @foreach ($data4 as $key2)
                                     <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->name_parent }}
                                     </option>
@@ -209,11 +209,11 @@
         </div>
     </div>
 
-    <!-- Edit  Modal -->
-    <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
-        id="EditModal">
+    <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="EditModal">
         <div class="modal-dialog modal-lg" role="document">
             <form class="form" action="" method="POST">
+
+
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Edit Student</h5>
@@ -460,6 +460,7 @@
                     }
                 });
 
+
             });
 
             //view
@@ -543,7 +544,6 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
 
-
                 $.ajax({
                     url: "students/save/" + id,
                     method: 'PUT',
@@ -553,12 +553,12 @@
                         last_name: $('#EditLastname').val(),
                         nick_name: $('#EditNickname').val(),
                         mobile: $('#EditMobile').val(),
-                        grade: $('#EditGrade').val(),
+                        grade: $('#Editgrade').val(),
                         pid: $('#EditParent').val()[0],
                     },
 
                     success: function(result) {
-                        //console.log(result);
+                        console.log(result);
                         if (result.errors) {
                             $('.alert-danger').html('');
                             $.each(result.errors, function(key, value) {
@@ -567,6 +567,7 @@
                                     '</li></strong>');
                             });
                         } else {
+
                             $('.alert-danger').hide();
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +

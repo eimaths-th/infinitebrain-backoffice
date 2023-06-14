@@ -22,7 +22,7 @@
                         <i class="pe-7s-study icon-gradient bg-tempting-azure"></i>
                     </div>
                     <div>
-                       Subject / รายวิชา
+                        Subject / รายวิชา
                         <div class="page-title-subheading">Infinite Brain Subject Data</div>
                     </div>
                 </div>
@@ -122,8 +122,10 @@
     <!-- Edit  Modal -->
     <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
         id="EditModal">
+
         <div class="modal-dialog modal-lg" role="document">
             <form class="form" action="" method="POST">
+
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Edit Subject</h5>
@@ -363,7 +365,7 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
-                                toastr.success(result.success, {
+                            toastr.success(result.success, {
                                 timeOut: 5000
                             });
                             $('#Listview').DataTable().ajax.reload();
@@ -382,13 +384,10 @@
             $('#SubmitEditForm').click(function(e) {
                 //if (!confirm("Are you sure?")) return;
                 e.preventDefault();
-
                 $('.alert-danger').html('');
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
-
-
                 $.ajax({
                     url: "subjects/save/" + id,
                     method: 'PUT',
@@ -413,7 +412,7 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
-                                toastr.success(result.success, {
+                            toastr.success(result.success, {
                                 timeOut: 5000
                             });
                             $('#Listview').DataTable().ajax.reload();
@@ -456,4 +455,3 @@
         })
     </script>
 @endsection
-
