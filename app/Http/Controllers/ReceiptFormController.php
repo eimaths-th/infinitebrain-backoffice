@@ -24,8 +24,9 @@ use App\Exports\ExportUser;
 
 class ReceiptFormController extends Controller
 {
-    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE'
-    , '11' => 'Cambridge');
+    const sfielda = array(
+        '2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE', '11' => 'Cambridge'
+    );
 
     public function gmec()
     {
@@ -295,6 +296,8 @@ class ReceiptFormController extends Controller
 
         $price = preg_replace("/[^0-9.]/", "", $out_price);
 
+
+
         $rdata = new ReceiptDetail([
             'receipt_id' => $rid,
             'description' => $request->get('description'),
@@ -306,6 +309,21 @@ class ReceiptFormController extends Controller
         ]);
         $rdata->save();
 
+        if (str_contains($request->get('description'), 'tutoring')) {
+            $sdes = 'สมัครสอบรวมติว';
+        } else {
+            $sdes = 'สมัครสอบไม่รวมติว';
+        }
+        $rtdata = new ReceiptDetail([
+            'receipt_id' => $rid,
+            'description' => $sdes,
+            //'quantity' => 1,
+            //'unit' => '',
+            //'unitprice' => (int)$price,
+            //'discount' => '',
+            //'amount' => $request->get('book_old_price'),
+        ]);
+        $rtdata->save();
 
         return response()->json(['success' => 'Receive Add successfully']);
     }
