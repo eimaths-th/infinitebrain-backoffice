@@ -245,7 +245,7 @@ class StudentController extends Controller
                                     <div class="row">
 
                                         <div class="col-lg-12">
-                                                <label for="ETime">' . 'สมัคร : ' . $qty . ' เดือน โบนัส : ' . $bonus . '</label>
+                                                <label for="ETime">' . 'สมัคร : ' . $qty . ' เดือน โบนัส : ' . $bonus . ' ครั้ง</label>
                                         </div>
 
                                     </div>
@@ -517,7 +517,6 @@ class StudentController extends Controller
     }
 
 
-
     /**
      * Update the specified resource in storage.
      *
@@ -527,9 +526,7 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-
-        $this->check_permission();
+        // $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'code' => 'required|string|max:5|unique:students,code,' . $id,
             'first_name' => 'required|string|max:255',
@@ -542,8 +539,10 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-
+        $input = $request->all();
+        // dd($input);
         Student::find($id)->update($request->all());
+        // $std;
 
         return response()->json(['success' => 'Student updated successfully']);
     }
