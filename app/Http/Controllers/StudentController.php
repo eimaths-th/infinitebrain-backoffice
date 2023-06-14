@@ -539,11 +539,8 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-        $input = $request->all();
-        // dd($input);
+        
         Student::find($id)->update($request->all());
-        // $std;
-
         return response()->json(['success' => 'Student updated successfully']);
     }
 
