@@ -1139,6 +1139,8 @@ class ReceiptController extends Controller
         $this->check_permission();
         $data = Receipt::find($id);
 
+
+
         $receipts_detail = ReceiptDetail::where('receipt_details.receipt_id', $id)
             ->orderBy("receipt_details.id", "asc")
             ->get();

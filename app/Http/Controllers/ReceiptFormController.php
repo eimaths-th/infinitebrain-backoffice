@@ -308,12 +308,20 @@ class ReceiptFormController extends Controller
             //'amount' => $request->get('book_old_price'),
         ]);
         $rdata->save();
-
-        if (str_contains($request->get('description'), 'tutoring')) {
-            $sdes = 'สมัครสอบรวมติว';
+        if ($request->get('sfield') == 11) {
+            if (str_contains($request->get('description'), 'Primary')) {
+                $sdes = 'ค่าลงทะเบียนระดับประถม';
+            } else {
+                $sdes = 'ค่าลงทะเบียนระดับมัธยม';
+            }
         } else {
-            $sdes = 'สมัครสอบไม่รวมติว';
+            if (str_contains($request->get('description'), 'tutoring')) {
+                $sdes = 'สมัครสอบรวมติว';
+            } else {
+                $sdes = 'สมัครสอบไม่รวมติว';
+            }
         }
+
         $rtdata = new ReceiptDetail([
             'receipt_id' => $rid,
             'description' => $sdes,
