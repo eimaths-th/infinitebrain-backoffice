@@ -46,6 +46,21 @@ class ReceiptController extends Controller
         "พฤศจิกายน",
         "ธันวาคม"
     );
+    const enmonth = array(
+        "",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    );
 
     private function convertDigit($digit)
     {
@@ -1043,17 +1058,16 @@ class ReceiptController extends Controller
                 $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
                 $price = $price + $rprice;
 
-              /*   if ($result->receipt_type == 2) {
+                /*   if ($result->receipt_type == 2) {
 
                     $desresult = $dresult['description'] . " ";
                 } */
-
             }
 
             $price_val = number_format($price, 2);
             if ($result->receipt_type == 2) {
                 $price = $price * -1;
-                  $rtype2.= $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i].' ';
+                $rtype2 .= $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i] . ' ';
             }
 
 
@@ -1068,7 +1082,6 @@ class ReceiptController extends Controller
             $i++;
             //$rtype2='';
             $total_price = ($total_price + $price);
-
         }
         $numrec = count($ret_receipt);
         $pagen = 0;
@@ -1182,11 +1195,11 @@ class ReceiptController extends Controller
         foreach ($receipts as $result) {
 
 
-        $a_month = explode("-", $result->receipt_submission_date);
+            $a_month = explode("-", $result->receipt_submission_date);
 
-        $ymcode = (($a_month[0] - 2000) + 43) . $a_month[1];
-        $thai_year = $a_month[0] + 543;
-        $thai_month = self::thmonth[(int)$a_month[1]];
+            $ymcode = (($a_month[0] - 2000) + 43) . $a_month[1];
+            $thai_year = $a_month[0] + 543;
+            $thai_month = self::thmonth[(int)$a_month[1]];
 
 
             //check last date
@@ -1198,9 +1211,11 @@ class ReceiptController extends Controller
 
 
             $ret_receipt[$ymcode]['receipt_submission_date'] = $ymcode;
+            $ret_receipt[$ymcode]['receipt_submission_month'] = self::enmonth[(int)$a_month[1]];
+            $ret_receipt[$ymcode]['field_code'] = self::sfieldas[$sfield] . " " . $ymcode;
             $ret_receipt[$ymcode]['receipt_number'][$i] = $result->receipt_number;
             $maxdate = max(array_keys($ret_receipt[$ymcode]['receipt_number']));
-            $ret_receipt[$ymcode]['receipt_numbers'] = $ret_receipt[$ymcode]['receipt_number'][0] . ' - ' . $ret_receipt[$result->receipt_submission_date]['receipt_number'][$maxdate];
+            $ret_receipt[$ymcode]['receipt_numbers'] = $ret_receipt[$ymcode]['receipt_number'][0] . ' - ' . $ret_receipt[$ymcode]['receipt_number'][$maxdate];
             $ret_receipt[$ymcode]['receipt_type'][$i] = $result->receipt_type;
 
             /* $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
@@ -1217,21 +1232,20 @@ class ReceiptController extends Controller
                 $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
                 $price = $price + $rprice;
 
-              /*   if ($result->receipt_type == 2) {
+                /*   if ($result->receipt_type == 2) {
 
                     $desresult = $dresult['description'] . " ";
                 } */
-
             }
 
             $price_val = number_format($price, 2);
             if ($result->receipt_type == 2) {
                 $price = $price * -1;
-                  $rtype2.= $ret_receipt[$ymcode]['receipt_number'][$i].' ';
+                $rtype2 .= $ret_receipt[$ymcode]['receipt_number'][$i] . ' ';
             }
 
 
-            $ret_receipt[$ymcode]['description'] = $request->get('Pmdescription') . ' ' . $rtype2;
+            $ret_receipt[$ymcode]['description'] = $request->get('Pmdescription') /* . ' ' . $rtype2 */;
             $ret_receipt[$ymcode]['receipt_price'] = $price;
             $ret_receipt[$ymcode]['receipt_price_label'] = "บาท";
             $lastprice = $lastprice + $ret_receipt[$ymcode]['receipt_price'];
@@ -1242,8 +1256,14 @@ class ReceiptController extends Controller
             $i++;
             //$rtype2='';
             $total_price = ($total_price + $price);
-
         }
+
+
+        //dd($ret_receipt);
+        //echo $total_price;
+        //exit();
+
+
         $numrec = count($ret_receipt);
         $pagen = 0;
         if ($numrec < 19) {
@@ -1262,7 +1282,9 @@ class ReceiptController extends Controller
                 $em = $pagen - count($ret_receipt) + $start;
                 for ($x = $start; $x <= $em; $x++) {
                     $ret_receipt[$x]['receipt_submission_date'] = "";
+                    $ret_receipt[$x]['receipt_submission_month'] = "";
                     $ret_receipt[$x]['receipt_numbers'] = "";
+                    $ret_receipt[$x]['field_code'] = "";
                     $ret_receipt[$x]['total_price'] = "";
                     $ret_receipt[$x]['receipt_firstname'] = "";
                     $ret_receipt[$x]['receipt_lastname'] = "";
@@ -1281,13 +1303,13 @@ class ReceiptController extends Controller
             ->with(['ymcode' =>  $ymcode])
             ->with(['thaiyear' =>  $thai_year])
             ->with(['thaimonth' =>  $thai_month])
-            ->with(['chart_date' =>  $chart_date])
-            ->with(['chart_date_price' => $chart_date_price])
+            //->with(['chart_date' =>  $chart_date])
+            //->with(['chart_date_price' => $chart_date_price])
             ->with(['data' => $ret_receipt])
             ->with(['fontsize' => $request->get('fontsize')])
             ->with(['pmsfield' => $request->get('pmsfield')])
             ->with(['pmdes' => $request->get('Pmdescription')])
-            ->with(['print_month' => $request->get('print_month')])
+            //->with(['print_month' => $request->get('print_month')])
             ->with(['total_price' => number_format($total_price, 2)]);
         //->with(['print_number' =>  $request->get('print_number')])
         //->with(['fprint_number' =>  sprintf("%02d", $request->get('print_number'))]);
