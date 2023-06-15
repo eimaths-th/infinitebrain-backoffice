@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                        background-size: 15px;
-                                                    }*/
+                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                            background-size: 15px;
+                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                        border-color: var(--color-invalid);
-                                                    }*/
+                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                            border-color: var(--color-invalid);
+                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                        display: block;
-                                                    }*/
+                                                            display: block;
+                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -556,17 +556,19 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">Cambridge University Press & Assessment Thailand  2023 Registration
+                                                    style="text-decoration: underline;">Cambridge University Press &
+                                                    Assessment Thailand 2023 Registration
                                                     Form</span></strong></span></p>
 
-                                 {{--    <p><strong><span style="color: #6351a2;">Category&nbsp;</span></strong></p>
+                                    {{--    <p><strong><span style="color: #6351a2;">Category&nbsp;</span></strong></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> Cambridge Primary Insight
                                             (Year 1 - 6)</span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> MidYIS (Year 7 - 9)</span>
                                     </p> --}}
                                     <br>
 
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Early Bird Registration
+                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Early Bird
+                                                Registration
                                                 Date:</strong> 16 - 31 JUNE 2023</span></p>
                                     {{-- <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;26th August 2023</span>
                                     </p> --}}
@@ -577,7 +579,8 @@
                                     </p> --}}
 
 
-                                    <p><strong><span style="color: #6351a2;">Early Bird Registration Fee:&nbsp;</span></strong>
+                                    <p><strong><span style="color: #6351a2;">Early Bird Registration
+                                                Fee:&nbsp;</span></strong>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Cambridge Primary Insight (Year 1 -
                                                 6):</strong> 1790 baht</span>
@@ -595,6 +598,8 @@
                                         ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
                                         เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span>
                                     </p> --}}
+                                    <p style="text-align: center;"><span style="color: #6351a2;"><b><a target="_blank" href="https://cem-th.com/compare-education-system/"><i class="fa fa-paper-plane"></i> วิธีการเทียบระดับชั้น</a>
+                                            </b></span>
                                 </div>
                             </div>
 
@@ -676,8 +681,7 @@
                                             </label>
                                             <input type="text" class="form-control" name="nickname" id="nickname"
                                                 value="" maxlength="50" minlength="1" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Nick
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Nick
                                                 Name</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -743,19 +747,16 @@
                                                 name="grade" data-component="dropdown" aria-label="Grade / ระดับชั้น"
                                                 required>
                                                 <option value="">Please Select</option>
-                                                <option value="Kindergarten">Kindergarten</option>
-                                                <option value="Grade 1">Grade 1</option>
-                                                <option value="Grade 2">Grade 2</option>
-                                                <option value="Grade 3">Grade 3</option>
-                                                <option value="Grade 4">Grade 4</option>
-                                                <option value="Grade 5">Grade 5</option>
-                                                <option value="Grade 6">Grade 6</option>
-                                                <option value="Grade 7">Grade 7</option>
-                                                <option value="Grade 8">Grade 8</option>
-                                                <option value="Grade 9">Grade 9</option>
-                                                <option value="Grade 10">Grade 10</option>
-                                                <option value="Grade 11">Grade 11</option>
-                                                <option value="Grade 12">Grade 12</option>
+                                                <option value="Year 1">Year 1</option>
+                                                <option value="Year 2">Year 2</option>
+                                                <option value="Year 3">Year 3</option>
+                                                <option value="Year 4">Year 4</option>
+                                                <option value="Year 5">Year 5</option>
+                                                <option value="Year 6">Year 6</option>
+                                                <option value="Year 7">Year 7</option>
+                                                <option value="Year 8">Year 8</option>
+                                                <option value="Year 9">Year 9</option>
+
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">{{-- Grade as per Academic Year 2022 --}}</label>
@@ -839,8 +840,7 @@
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="address">Address <span
-                                                    class="form-required">*</span></label>
+                                                for="address">Address <span class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="address" id="address"
                                                 maxlength="150" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px"

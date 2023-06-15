@@ -60,6 +60,7 @@
                             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                 <li><a class="dropdown-item" href="#" id="printr1">ใบปะหน้ารายวัน</a></li>
                                 <li><a class="dropdown-item" href="#" id="printr2">ใบปะหน้ารายเดือน</a></li>
+                                <li><a class="dropdown-item" href="#" id="printr3">ใบปะหน้ารายสนาม</a></li>
                             </ul>
                         </div>
 
@@ -282,6 +283,77 @@
             </form>
         </div>
     </div>
+
+     <!-- PrintField Modal -->
+     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     aria-hidden="true" id="PrintFieldModal">
+     <div class="modal-dialog modal-lg" role="document">
+         <form id="PrintMonthForm" class="form" action="{{ route('receipts.print_field') }}" method="POST">
+             @csrf
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <h5 class="modal-title" id="exampleModalLongTitle">Print ใบปะหน้ารายเดือน</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                     </button>
+                 </div>
+                 <!-- Modal body -->
+                 <div class="modal-body">
+                     <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                         style="display: none;">
+                         <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                             <span aria-hidden="true">&times;</span>
+                         </button>
+                     </div>
+                     <div class="alert alert-success alert-dismissible fade show" role="alert"
+                         style="display: none;">
+
+                         <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                             <span aria-hidden="true"></span>
+                         </button>
+                     </div>
+                     <div class="col-md-4">
+                         <div class="form-group">
+                             <label for="File">สนามสอบ:</label>
+                             <select class="form-control" id="PrintMonthsField" name="pmsfields" required disabled>
+                                 @foreach ($sfielda as $key => $value)
+                                     <option value="{{ $key }}"
+                                         {{ request()->get('sfield') == $key ? 'selected' : '' }}> {{ $value }}
+                                     </option>
+                                 @endforeach
+                             </select>
+                             <input type="hidden" name="type" value="view">
+                             <input type="hidden" name="pmsfield" value="{{ request()->get('sfield') }}">
+                         </div>
+                         <div class="form-group">
+                             <div class="position-relative form-group">
+                                 <label for="Des">รายการ:</label>
+                                 <input type="text" class="form-control" name="Pmdescription" id="PmDes"
+                                     value="ค่าสมัคร {{ $sfielda[request()->get('sfield')] }} รอบแรก {{-- @php {{ echo date("Y"); }} @endphp --}}">
+                             </div>
+                         </div>
+                         <div class="form-group">
+                             <label for="font">ขนาดตัวอักษร:</label>
+                             <select class="form-control" id="PrintDaysFont" name="fontsize" required>
+                                 <option value="1"> เล็กมาก </option>
+                                 <option value="2" selected> เล็ก </option>
+                                 <option value="3"> ปานกลาง </option>
+                                 <option value="4"> ใหญ่ </option>
+
+                             </select>
+                      </div>
+                     </div>
+
+
+                 </div>
+                 <!-- Modal footer id="SubmitPrintDayForm"-->
+                 <div class="modal-footer">
+                     <button type="submit" class="btn btn-success">Print</button>
+                     <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </form>
+     </div>
+ </div>
 
     <!-- Import Modal -->
     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -1167,6 +1239,18 @@
                 $('.dropdown-toggle').dropdown('hide');
                 $('#PrintMonthModal').modal('show');
             });
+
+            $('.dropdown-menu li #printr3').on('click', function(e) {
+                //console.log("TEST");
+                e.preventDefault();
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+                $('.dropdown-toggle').dropdown('hide');
+                $('#PrintFieldModal').modal('show');
+            });
+
 
             $(document).on('click', '#CreateButton', function(e) {
                 e.preventDefault();

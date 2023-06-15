@@ -150,6 +150,7 @@ Route::get('/receipts', [ReceiptController::class, 'index'])->name('receipts');
 Route::get('/receipts/create', [ReceiptController::class, 'create'])->name('receipts.create');
 Route::match(array('GET', 'POST'), '/receipts/print_day', [ReceiptController::class, 'print_day'])->name('receipts.print_day');
 Route::match(array('GET', 'POST'), '/receipts/print_month', [ReceiptController::class, 'print_month'])->name('receipts.print_month');
+Route::match(array('GET', 'POST'), '/receipts/print_field', [ReceiptController::class, 'print_field'])->name('receipts.print_field');
 Route::get('/receipts/show/{type}/{id}', [ReceiptController::class, 'show'])->name('receipts.show');
 Route::get('/receipts/edit/{id}/{type}', [ReceiptController::class, 'edit'])->name('receipts.edit');
 Route::get('/receipts/migrate/{id}', [ReceiptController::class, 'migrateReceipt'])->name('receipts.migrate');
@@ -178,7 +179,6 @@ Route::post('/form/upload/delete', [ReceiptFormController::class, 'fileDestroy']
 Route::post('/form/store', [ReceiptFormController::class, 'store'])->name('form.store');
 Route::get('/form/complete/{sfield}', [ReceiptFormController::class, 'show'])->name('form.complete');
 Route::get('/form/complete1', [ReceiptFormController::class, 'show1'])->name('form.complete1');
-
 Route::post('/form/store1', [ReceiptFormController::class, 'store1'])->name('form.store1');
 
 
