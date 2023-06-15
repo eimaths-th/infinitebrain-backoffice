@@ -160,9 +160,18 @@ class StudentController extends Controller
         $hissss = History::all();
         $success = History::where('student_id', $stdId)->get();
 
+
         $his_succsss = count($success);
 
         $rec = Receipt_School::where('pid', 'LIKE', '%' . $stdId . '%')->get();
+
+        $test = [];
+        foreach ($rec as $key => $rec) {
+            # code...
+            $test = $rec->school_pice->qty;
+            // echo $test ;
+        }
+        // dd($rec);
 
         if (!empty($rec->first()->id)) {
             $school_pice = SchoolPrice::where('rid', $rec->first()->id)->get();
@@ -539,7 +548,7 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-        
+
         Student::find($id)->update($request->all());
         return response()->json(['success' => 'Student updated successfully']);
     }
