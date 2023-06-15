@@ -541,13 +541,13 @@
                 <div class="card bg-light2 mb-3 ">
                     {{-- <div class="card-header">{{ __('Login') }}</div> --}}
                     <div align="center"><img class="card-img" src="{{ asset('images/camb.png') }}" alt="..."
-                            height="360"></div>
+                            width="30%"></div>
                     <form id="infinite" method="POST" action="{{ route('form.store') }}" onsubmit="return check_input();">
                         @csrf
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h2 class="card-title form_header">Cambridge 2023 Registration Form</h2>
+                                <h4 class="card-title form_header">Cambridge 2023 Registration</h4>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
