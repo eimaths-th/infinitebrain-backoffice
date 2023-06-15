@@ -1127,6 +1127,172 @@ class ReceiptController extends Controller
         //->with(['fprint_number' =>  sprintf("%02d", $request->get('print_number'))]);
     }
 
+
+    public function print_field(Request $request)
+    {
+        $this->check_permission();
+        $validator =  Validator::make($request->all(), [
+            'pmsfield' => 'required|string',
+            'Pmdescription' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            //return response()->json(['errors' => $validator->errors()->all()]);
+            return back()->with(['error' => 'Please input all field ']);
+        }
+
+        $type = $request->get('type');
+
+        if ($type == "view") {
+            $viewr = "receipt.print_field_view";
+        } else if ($type == "print") {
+            $viewr = "receipt.print_field_print";
+        }
+
+        $sfield = $request->get('pmsfield');
+
+        $receipts = Receipt::select(
+            "receipts.id as receipt_id",
+            "receipts.submission_date as receipt_submission_date",
+            "receipts.receipt_number as receipt_number",
+            "receipts.first_name as receipt_firstname",
+            "receipts.last_name as receipt_lastname",
+            "receipts.package as receipt_price",
+            "receipts.type as receipt_type",
+
+        )
+            //->join("students", "students.id", "=", "receipts.student_id")
+            //->join("subjects", "subjects.id", "=", "receipts.subject_id")
+            //->join("levels", "levels.id", "=", "receipts.level_id")
+            ->where([['receipts.sfield', $sfield]])
+            ->orderBy("receipts.submission_date", "asc")
+            ->get();
+        // ->toArray();
+
+        // print_r($receipts);
+        // exit();
+        $i = 0;
+        $ret_receipt = array();
+        $total_price = 0;
+        $lastmonth = "";
+        $lastprice = 0;
+        $chart_date = "";
+        $chart_date_price = "";
+        $rtype2 = '';
+        foreach ($receipts as $result) {
+
+
+        $a_month = explode("-", $result->receipt_submission_date);
+
+        $ymcode = (($a_month[0] - 2000) + 43) . $a_month[1];
+        $thai_year = $a_month[0] + 543;
+        $thai_month = self::thmonth[(int)$a_month[1]];
+
+
+            //check last date
+            if ($ymcode !== $lastmonth) {
+                $i = 0;
+                $lastprice = 0;
+                $rtype2 = '';
+            }
+
+
+            $ret_receipt[$ymcode]['receipt_submission_date'] = $ymcode;
+            $ret_receipt[$ymcode]['receipt_number'][$i] = $result->receipt_number;
+            $maxdate = max(array_keys($ret_receipt[$ymcode]['receipt_number']));
+            $ret_receipt[$ymcode]['receipt_numbers'] = $ret_receipt[$ymcode]['receipt_number'][0] . ' - ' . $ret_receipt[$result->receipt_submission_date]['receipt_number'][$maxdate];
+            $ret_receipt[$ymcode]['receipt_type'][$i] = $result->receipt_type;
+
+            /* $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
+            $price = (int)$res; */
+            //get price from item
+            $receipts_detail = ReceiptDetail::where('receipt_details.receipt_id', $result->receipt_id)
+                ->orderBy("receipt_details.id", "asc")
+                ->get();
+
+            $price = 0;
+            $desresult = '';
+
+            foreach ($receipts_detail as $dresult) {
+                $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
+                $price = $price + $rprice;
+
+              /*   if ($result->receipt_type == 2) {
+
+                    $desresult = $dresult['description'] . " ";
+                } */
+
+            }
+
+            $price_val = number_format($price, 2);
+            if ($result->receipt_type == 2) {
+                $price = $price * -1;
+                  $rtype2.= $ret_receipt[$ymcode]['receipt_number'][$i].' ';
+            }
+
+
+            $ret_receipt[$ymcode]['description'] = $request->get('Pmdescription') . ' ' . $rtype2;
+            $ret_receipt[$ymcode]['receipt_price'] = $price;
+            $ret_receipt[$ymcode]['receipt_price_label'] = "บาท";
+            $lastprice = $lastprice + $ret_receipt[$ymcode]['receipt_price'];
+            $ret_receipt[$ymcode]['last_price'] =  $lastprice;
+            $ret_receipt[$ymcode]['total_price'] =  number_format($lastprice, 2);
+
+            $lastmonth = $ret_receipt[$ymcode]['receipt_submission_date'];
+            $i++;
+            //$rtype2='';
+            $total_price = ($total_price + $price);
+
+        }
+        $numrec = count($ret_receipt);
+        $pagen = 0;
+        if ($numrec < 19) {
+            $pagen = 22;
+        } elseif ($numrec > 19 and $numrec < 38) {
+            $pagen = 22;
+        }
+
+
+
+
+        if ($type !== "report_view") {
+
+            if (count($ret_receipt) < $pagen) {
+                $start = $i;
+                $em = $pagen - count($ret_receipt) + $start;
+                for ($x = $start; $x <= $em; $x++) {
+                    $ret_receipt[$x]['receipt_submission_date'] = "";
+                    $ret_receipt[$x]['receipt_numbers'] = "";
+                    $ret_receipt[$x]['total_price'] = "";
+                    $ret_receipt[$x]['receipt_firstname'] = "";
+                    $ret_receipt[$x]['receipt_lastname'] = "";
+                    $ret_receipt[$x]['receipt_price'] = "";
+                    $ret_receipt[$x]['receipt_price_label'] = "";
+                    $ret_receipt[$x]['description'] = "";
+                }
+            }
+        }
+
+        //print_r($ret_receipt);
+        //exit();
+
+        return view($viewr)->with(['sfield' => $sfield])->with(['sfielda' =>  self::sfielda])
+            ->with(['sfieldas' =>  self::sfieldas])
+            ->with(['ymcode' =>  $ymcode])
+            ->with(['thaiyear' =>  $thai_year])
+            ->with(['thaimonth' =>  $thai_month])
+            ->with(['chart_date' =>  $chart_date])
+            ->with(['chart_date_price' => $chart_date_price])
+            ->with(['data' => $ret_receipt])
+            ->with(['fontsize' => $request->get('fontsize')])
+            ->with(['pmsfield' => $request->get('pmsfield')])
+            ->with(['pmdes' => $request->get('Pmdescription')])
+            ->with(['print_month' => $request->get('print_month')])
+            ->with(['total_price' => number_format($total_price, 2)]);
+        //->with(['print_number' =>  $request->get('print_number')])
+        //->with(['fprint_number' =>  sprintf("%02d", $request->get('print_number'))]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

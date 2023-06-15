@@ -556,17 +556,17 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">Cambridge 2023 Registration
+                                                    style="text-decoration: underline;">Cambridge University Press & Assessment Thailand  2023 Registration
                                                     Form</span></strong></span></p>
 
-                                    <p><strong><span style="color: #6351a2;">Category&nbsp;</span></strong></p>
+                                 {{--    <p><strong><span style="color: #6351a2;">Category&nbsp;</span></strong></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> Cambridge Primary Insight
                                             (Year 1 - 6)</span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> MidYIS (Year 7 - 9)</span>
-                                    </p>
+                                    </p> --}}
                                     <br>
 
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Presale Registration
+                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Early Bird Registration
                                                 Date:</strong> 16 - 31 JUNE 2023</span></p>
                                     {{-- <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;26th August 2023</span>
                                     </p> --}}
@@ -577,7 +577,7 @@
                                     </p> --}}
 
 
-                                    <p><strong><span style="color: #6351a2;">Presale Registration Fee:&nbsp;</span></strong>
+                                    <p><strong><span style="color: #6351a2;">Early Bird Registration Fee:&nbsp;</span></strong>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Cambridge Primary Insight (Year 1 -
                                                 6):</strong> 1790 baht</span>
@@ -839,7 +839,7 @@
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="address">Address / ที่อยู่ภาษาไทยสำหรับจัดส่งของรางวัล <span
+                                                for="address">Address <span
                                                     class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="address" id="address"
                                                 maxlength="150" minlength="2" required>
