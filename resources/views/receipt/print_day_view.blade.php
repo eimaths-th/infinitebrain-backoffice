@@ -204,7 +204,7 @@
 @section('script')
     <script>
         function export_report() {
-           url = '{{ route('receipts.print_day', ['type' => 'print', 'pdsfield' => $pdsfield, 'fontsize' => $fontsize, 'print_date' => $print_date, 'print_number' => $print_number])}}';
+           url = '{{ route('receipts.print_rday', ['type' => 'print', 'pdsfield' => $pdsfield, 'fontsize' => $fontsize, 'print_date' => $print_date, 'print_number' => $print_number])}}';
            window.open(
                 url.replace(/&amp;/g, "&")
             );

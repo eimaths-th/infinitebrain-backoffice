@@ -186,7 +186,6 @@
                                     @endforeach
                                 </select>
                                 <input type="hidden" name="type" value="view">
-                                <input type="hidden" name="type" value="view">
                                 <input type="hidden" name="pdsfield" value="{{ request()->get('sfield') }}">
                             </div>
                             <div class="form-group">
@@ -194,7 +193,16 @@
                                 <input type="text" class="AddDate form-control" name="print_date"
                                     id="PrintDaySubmissiondate" value="" required>
                             </div>
+                            <div class="form-group">
+                                <label for="font">ขนาดตัวอักษร:</label>
+                                <select class="form-control" id="PrintDaysFont" name="fontsize" required>
+                                    <option value="1"> เล็กมาก </option>
+                                    <option value="2" selected> เล็ก </option>
+                                    <option value="3"> ปานกลาง </option>
+                                    <option value="4"> ใหญ่ </option>
 
+                                </select>
+                            </div>
 
                         </div>
 
