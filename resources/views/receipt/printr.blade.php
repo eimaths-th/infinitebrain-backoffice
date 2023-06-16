@@ -334,7 +334,6 @@
 
                     </table>
                     <center>{!! $receipt_val['file_att'] !!}</center>
-                    <br><br><br>
                     @endforeach
                 </div>
             </div>
