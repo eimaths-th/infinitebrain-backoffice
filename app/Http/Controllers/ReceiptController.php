@@ -838,7 +838,7 @@ class ReceiptController extends Controller
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'pdsfield' => 'required|string',
-            'print_date' => 'required|string',
+            'print_rdate' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -872,7 +872,7 @@ class ReceiptController extends Controller
             //->join("subjects", "subjects.id", "=", "receipts.subject_id")
             //->join("levels", "levels.id", "=", "receipts.level_id")
 
-            ->where([['receipts.sfield', $sfield], ['submission_date', $request->get('print_date')]])
+            ->where([['receipts.sfield', $sfield], ['submission_date', $request->get('print_rdate')]])
             ->orderBy("receipts.receipt_number", "asc")
             ->get();
         //->toArray();
@@ -999,7 +999,7 @@ class ReceiptController extends Controller
             $ret_receipt[$result->id]['file_att'] = $file_att;
         }
 
-        return view($viewr)->with(['print_date' => $request->get('print_date')])
+        return view($viewr)->with(['print_date' => $request->get('print_rdate')])
             ->with(['data' => $ret_receipt])
             ->with(['receipt_detail_arr' => $receipt_detail_arr])
             ->with(['fontsize' => $request->get('fontsize')])
