@@ -562,7 +562,7 @@
 
                                         <p><strong><span style="color: #6351a2;">Contact Information&nbsp;</span></strong></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> 📩FB: m.me/cambridge.thai</span></p>
-                                    <p style="text-align: left;"><span style="color: #6351a2;"> 💌Line: https://lin.ee/29YE6pZ</span>
+                                    <p style="text-align: left;"><span style="color: #6351a2;"> 💌Line: https://lin.ee/NUrW1nX</span>
                                     </p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> 📞Tel: 093 358 6333</span>
                                     </p>
