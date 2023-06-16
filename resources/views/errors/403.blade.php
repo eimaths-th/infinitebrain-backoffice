@@ -134,8 +134,9 @@ body {
 				<h1><span>4</span><span>0</span><span>3</span></h1>
 			</div>
 			<h2>ไม่ได้รับอนุญาติในส่วนนนี้</h2>
+            <a class="btn btn-lg btn-primary" href="{{ route('login') }}">Go To Login Page</a><br><br>
 		</div>
-        <a class="btn btn-lg btn-primary" href="{{ route('login') }}">Go To Login Page</a><br><br>
+
 	</div>
 
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
