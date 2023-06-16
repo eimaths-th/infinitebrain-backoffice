@@ -560,11 +560,14 @@
                                                     Assessment Thailand 2023 Registration
                                                     Form</span></strong></span></p>
 
-                                    {{--    <p><strong><span style="color: #6351a2;">Category&nbsp;</span></strong></p>
-                                    <p style="text-align: left;"><span style="color: #6351a2;"> Cambridge Primary Insight
-                                            (Year 1 - 6)</span></p>
-                                    <p style="text-align: left;"><span style="color: #6351a2;"> MidYIS (Year 7 - 9)</span>
-                                    </p> --}}
+                                        <p><strong><span style="color: #6351a2;">Contact Information&nbsp;</span></strong></p>
+                                    <p style="text-align: left;"><span style="color: #6351a2;"> 📩FB: m.me/cambridge.thai</span></p>
+                                    <p style="text-align: left;"><span style="color: #6351a2;"> 💌Line: https://lin.ee/29YE6pZ</span>
+                                    </p>
+                                    <p style="text-align: left;"><span style="color: #6351a2;"> 📞Tel: 093 358 6333</span>
+                                    </p>
+
+
                                     <br>
 
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Early Bird

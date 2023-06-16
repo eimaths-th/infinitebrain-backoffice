@@ -482,12 +482,13 @@ class ReceiptFormController extends Controller
 
                 //watermark
                 $fileex = explode("/", $urlb);
-                $this->textWatermark(end($fileex), 'Date Register : ' . $data->submission_date);
+                //$this->textWatermark(end($fileex), 'Date Register : ' . $data->submission_date);
                 $urlb = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urlb);
 
                 //$retu = $this->get_img_url($urla);
                 //if ($this->URL_exists($retu)) {
-                $file_att .= "<div><a href=\"" . urldecode($urlb) . "\" target=\"blank\"><img src=\"" . $urlb . "\" height=\"80\">click to view</a></div>&nbsp;&nbsp;";
+                $file_att .= "<div><a href=\"" . urldecode($urlb) . "\" target=\"blank\"><img src=\"" . $urlb . "\" height=\"80\">click to view</a></div>&nbsp;&nbsp;
+                <br><a href='#' class='btn btn-xs btn-danger btn-edit' id='getDeleteData' data-id2='" . $data->id . "' data-id='" . $arrf[$j] . "'><i class='fa fa-trash'></i> Delete </a>";
                 //}
                 $furl .= $urlb;
             }
@@ -548,6 +549,47 @@ class ReceiptFormController extends Controller
     {
         return Excel::download(new ExportForm($request->get('sfield'), $request->get('table_records')), 'form.xlsx');
     }
+
+
+    public function deleteImg($id, $id2)
+    {
+        $dataimg = ReceiptForm::find($id2);
+        $img = $dataimg->file_att;
+        $img = explode("|", $img);
+
+        if (($key = array_search($id, $img)) !== false) {
+            unset($img[$key]);
+        }
+        $dataNew = "";
+        foreach ($img as $fileb) {
+            $dataNew .= $fileb . "|";
+        }
+        $dataNew = rtrim($dataNew, "|");
+
+
+        ReceiptForm::find($id2)->update(['file_att' => $dataNew]);
+
+
+        $link = (url('/') . '/receipts_form/' . $id);
+
+
+        $html = "";
+        $pic = explode('|', $dataNew);
+        foreach ($pic as $pics) {
+            if ($pics != NULL && $pics != "") {
+                $html .= '
+                <div class="col-md-4 text-center mb-3 ">
+                <img src="' . url('/') . '/receipts_form/' . $pics . '" class=" mt-5 mb-3" height="400" width="300">
+                <a href="#" class="btn btn-xs btn-danger btn-edit" id="getDeleteData" data-id2="' . $id2 . '" data-id="' . $pics . '">delete </a>
+                </div>
+                ';
+            } else {
+                $html = "";
+            }
+        }
+        return response()->json(['imgs' => $html]);
+    }
+
 
     /**
      * Remove the specified resource from storage.
