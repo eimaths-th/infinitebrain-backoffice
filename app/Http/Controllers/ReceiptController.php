@@ -879,6 +879,10 @@ class ReceiptController extends Controller
         // print_r($receipts);
         // exit();
 
+        if ($receipts->isEmpty()) {
+            return back()->with(['error' => 'ไม่พบข้อมูลใบเสร็จ จากวันที่ท่านเลือก']);
+        }
+
         $i = 0;
         $ret_receipt = array();
         $total_price = 0;
