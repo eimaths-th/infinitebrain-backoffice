@@ -22,7 +22,7 @@
                         <i class="pe-7s-study icon-gradient bg-tempting-azure"></i>
                     </div>
                     <div>
-                       Subject / รายวิชา
+                        Subject / รายวิชา
                         <div class="page-title-subheading">Infinite Brain Subject Data</div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                         <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
                             Subject</a>
-                            
+
                         <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
                             All</a>
 
@@ -122,8 +122,10 @@
     <!-- Edit  Modal -->
     <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
         id="EditModal">
+
         <div class="modal-dialog modal-lg" role="document">
             <form class="form" action="" method="POST">
+
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Edit Subject</h5>
@@ -152,6 +154,43 @@
                     <!-- Modal footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="SubmitEditForm">Update</button>
+                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <!-- View  Modal -->
+    <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+        id="ViewModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <form class="form" action="" method="POST">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">View Subject</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <strong>Success!</strong> Level was edit successfully.
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div id="ViewModalBody">
+
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -271,7 +310,26 @@
                         $('#EditModal').modal('show');
                     }
                 });
+            })
 
+            $(document).on('click', '#getViewData', function(e) {
+                e.preventDefault();
+
+
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+
+                id = $(this).data('id');
+                $.ajax({
+                    url: "subjects/view/" + id,
+                    method: 'GET',
+                    success: function(res) {
+                        $('#ViewModalBody').html(res.html);
+                        $('#ViewModal').modal('show');
+                    }
+                });
             })
 
 
@@ -307,7 +365,7 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
-                                toastr.success(result.success, {
+                            toastr.success(result.success, {
                                 timeOut: 5000
                             });
                             $('#Listview').DataTable().ajax.reload();
@@ -326,13 +384,10 @@
             $('#SubmitEditForm').click(function(e) {
                 //if (!confirm("Are you sure?")) return;
                 e.preventDefault();
-
                 $('.alert-danger').html('');
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
-
-
                 $.ajax({
                     url: "subjects/save/" + id,
                     method: 'PUT',
@@ -357,7 +412,7 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
-                                toastr.success(result.success, {
+                            toastr.success(result.success, {
                                 timeOut: 5000
                             });
                             $('#Listview').DataTable().ajax.reload();
@@ -400,4 +455,3 @@
         })
     </script>
 @endsection
-

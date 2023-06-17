@@ -316,6 +316,7 @@ class ParentRegisterController extends Controller
     public function update(Request $request, $id)
     {
         //
+        // dd($id);
         $validator =  Validator::make($request->all(), [
             // 'code' => 'required|string|max:4|unique:parent,code,' . $id,
             'email' => 'required|string|max:255',
@@ -325,9 +326,10 @@ class ParentRegisterController extends Controller
         ]);
 
         if ($validator->fails()) {
+            // $input = $request->all();
+            // dd($input);
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-
         ParentRegister::find($id)->update($request->all());
 
         return response()->json(['success' => 'Parent updated successfully']);

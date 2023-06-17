@@ -166,7 +166,7 @@
                             <select style="width: 100%;" class="parent select2 select2_single form-control"
                                 id="AddParent" name="name_parent" multiple="multiple">
                                 <!-- <option value="" selected>Select Student</option>
-                                <option value="" selected>Select Parent</option>-->
+                                                        <option value="" selected>Select Parent</option>-->
                                 @foreach ($data4 as $key2)
                                     <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->name_parent }}
                                     </option>
@@ -209,11 +209,11 @@
         </div>
     </div>
 
-    <!-- Edit  Modal -->
-    <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
-        id="EditModal">
+    <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="EditModal">
         <div class="modal-dialog modal-lg" role="document">
             <form class="form" action="" method="POST">
+
+
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Edit Student</h5>
@@ -238,8 +238,8 @@
 
                         <div class="form-group">
                             <label for="Parent">Name Parent:</label><br>
-                            <select style="width: 100%;" class="parent select2 select2_single form-control" id="EditParent"
-                                name="name_parent" multiple="multiple">
+                            <select style="width: 100%;" class="parent select2 select2_single form-control"
+                                id="EditParent" name="name_parent" multiple="multiple">
 
                             </select>
                         </div>
@@ -250,6 +250,54 @@
                     <!-- Modal footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="SubmitEditForm">Update</button>
+                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <!-- View  Modal -->
+    <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+        id="ViewModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <form class="form" action="" method="POST">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">View Student</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
+                            <strong>Success!</strong> Student was edit successfully.
+                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Parent">ชื่อผู้ปกครอง:</label><br>
+                            <select style="width: 100%;" class="parent select2 select2_single form-control"
+                                id="ViewParent" name="name_parent" multiple="multiple">
+
+                            </select>
+                        </div>
+                        <div id="ViewModalBody">
+
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        {{-- <button type="button" class="btn btn-success" id="SubmitEditForm">Update</button> --}}
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -412,8 +460,30 @@
                     }
                 });
 
-            })
 
+            });
+
+            //view
+            $(document).on('click', '#getViewData', function(e) {
+                e.preventDefault();
+
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+
+                id = $(this).data('id');
+                $.ajax({
+                    url: "students/view/" + id,
+                    method: 'GET',
+                    success: function(res) {
+                        $('#ViewModalBody').html(res.html);
+                        $('#ViewParent').html(res.parent);
+                        $('#ViewModal').modal('show');
+                    }
+                });
+
+            });
 
             // Create product Ajax request.
             $('#SubmitCreateForm').click(function(e) {
@@ -474,7 +544,6 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
 
-
                 $.ajax({
                     url: "students/save/" + id,
                     method: 'PUT',
@@ -484,12 +553,12 @@
                         last_name: $('#EditLastname').val(),
                         nick_name: $('#EditNickname').val(),
                         mobile: $('#EditMobile').val(),
-                        grade: $('#EditGrade').val(),
+                        grade: $('#Editgrade').val(),
                         pid: $('#EditParent').val()[0],
                     },
 
                     success: function(result) {
-                        //console.log(result);
+                        console.log(result);
                         if (result.errors) {
                             $('.alert-danger').html('');
                             $.each(result.errors, function(key, value) {
@@ -498,6 +567,7 @@
                                     '</li></strong>');
                             });
                         } else {
+
                             $('.alert-danger').hide();
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +

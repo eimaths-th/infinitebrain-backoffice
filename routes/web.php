@@ -87,12 +87,15 @@ Route::delete('/users/destroy/{id}', [EmployeeController::class, 'destroy'])->na
 Route::delete('/users/destroy_all', [EmployeeController::class, 'destroy_all'])->name('users.destroy_all');
 
 Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects');
+Route::get('/subjects/view/{id}', [SubjectController::class, 'view'])->name('subjects.view');
 Route::get('/subjects/edit/{id}', [SubjectController::class, 'edit'])->name('subjects.edit');
 Route::post('/subjects/select_list/{id}', [SubjectController::class, 'select_list'])->name('subjects.select_list');
 Route::put('/subjects/save/{id}', [SubjectController::class, 'update'])->name('subjects.save');
 Route::post('/subjects/store', [SubjectController::class, 'store'])->name('subjects.store');
 Route::delete('/subjects/destroy_all', [SubjectController::class, 'destroy_all'])->name('subjects.destroy_all');
 Route::delete('/subjects/destroy/{id}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
+Route::get('/subjects/viewstudent/', [SubjectController::class, 'overview'])->name('subjects.overview');
+Route::get('/subjects/viewstudent/searchsubSTD', [SubjectController::class, 'searchsubSTD'])->name('searchsubSTD');
 
 Route::get('/subjects_price', [SubjectPriceController::class, 'index'])->name('subjects_price');
 Route::get('/subjects_price/edit/{id}', [SubjectPriceController::class, 'edit'])->name('subjects_price.edit');
@@ -114,8 +117,10 @@ Route::delete('/levels/destroy/{id}', [LevelController::class, 'destroy'])->name
 Route::get('/students', [StudentController::class, 'index'])->name('students');
 Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
 Route::get('/students/show', [StudentController::class, 'show'])->name('students.show');
+Route::get('/students/view/{id}', [StudentController::class, 'view'])->name('students.view');
 Route::get('/students/edit/{id}', [StudentController::class, 'edit'])->name('students.edit');
 Route::put('/students/save/{id}', [StudentController::class, 'update'])->name('students.save');
+
 Route::post('/students/store', [StudentController::class, 'store'])->name('students.store');
 Route::post('/students/import', [StudentController::class, 'importExcel'])->name('students.import');
 Route::delete('/students/destroy/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
@@ -145,7 +150,9 @@ Route::get('/receipts', [ReceiptController::class, 'index'])->name('receipts');
 Route::get('/receipts/create', [ReceiptController::class, 'create'])->name('receipts.create');
 Route::match(array('GET', 'POST'), '/receipts/print_day', [ReceiptController::class, 'print_day'])->name('receipts.print_day');
 Route::match(array('GET', 'POST'), '/receipts/print_month', [ReceiptController::class, 'print_month'])->name('receipts.print_month');
+Route::match(array('GET', 'POST'), '/receipts/print_field', [ReceiptController::class, 'print_field'])->name('receipts.print_field');
 Route::get('/receipts/show/{type}/{id}', [ReceiptController::class, 'show'])->name('receipts.show');
+Route::match(array('GET', 'POST'),'/receipts/show_day', [ReceiptController::class, 'show_day'])->name('receipts.show_day');
 Route::get('/receipts/edit/{id}/{type}', [ReceiptController::class, 'edit'])->name('receipts.edit');
 Route::get('/receipts/migrate/{id}', [ReceiptController::class, 'migrateReceipt'])->name('receipts.migrate');
 Route::put('/receipts/save/{id}', [ReceiptController::class, 'update'])->name('receipts.save');
@@ -166,13 +173,13 @@ Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
 //Route::get('/olpcs', [ReceiptFormController::class, 'olpcs'])->name('olpcs');
 Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
 Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
+Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
 Route::post('/form/upload/api', [ReceiptFormController::class, 'fileStoreAPI'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->name('form.upload.api');
 Route::post('/form/upload/delete', [ReceiptFormController::class, 'fileDestroy'])->name('form.delete');
 Route::post('/form/store', [ReceiptFormController::class, 'store'])->name('form.store');
 Route::get('/form/complete/{sfield}', [ReceiptFormController::class, 'show'])->name('form.complete');
 Route::get('/form/complete1', [ReceiptFormController::class, 'show1'])->name('form.complete1');
-
 Route::post('/form/store1', [ReceiptFormController::class, 'store1'])->name('form.store1');
 
 
@@ -184,6 +191,8 @@ Route::delete('/receipts_form/destroy_all', [ReceiptFormController::class, 'dest
 Route::delete('/receipts_form/export', [ReceiptFormController::class, 'exportForm'])->name('receipts_form.export');
 Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->name('receipts_form.store');
 Route::post('/receipts_form/update', [ReceiptFormController::class, 'update'])->name('receipts_form.update');
+Route::put('/receipt_form/delete_img/{id}/{id2}', [ReceiptFormController::class, 'deleteImg'])->name('receipt_form.delete_img');
+
 
 // Route::prefix('google')->name('google.')->group( function(){
 //     Route::get('login', [GoogleController::class, 'loginWithGoogle'])->name('login');
@@ -219,9 +228,11 @@ Route::delete('/comment/destroy_all', [CommentController::class, 'destroy_all'])
 Route::get('/histories', [HistoryController::class, 'index'])->name('histories');
 Route::get('/histories/edit/{id}', [HistoryController::class, 'edit'])->name('histories.edit');
 Route::put('/histories/save/{id}', [HistoryController::class, 'update'])->name('histories.save');
+Route::post('/histories/show', [HistoryController::class, 'show'])->name('histories.show');
 Route::post('/histories/store', [HistoryController::class, 'store'])->name('histories.store');
 Route::delete('/histories/destroy/{id}', [HistoryController::class, 'destroy'])->name('histories.destroy');
 Route::delete('/histories/destroy_all', [HistoryController::class, 'destroy_all'])->name('histories.destroy_all');
+Route::match(array('GET', 'POST'), '/histories/print_std', [HistoryController::class, 'print_std'])->name('histories.print_std');
 Route::match(array('GET', 'POST'), '/histories/print_day', [HistoryController::class, 'print_day'])->name('histories.print_day');
 
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');

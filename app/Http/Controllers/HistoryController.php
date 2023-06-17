@@ -90,6 +90,7 @@ class HistoryController extends Controller
                     return '<input type="checkbox" id="' . $row->histories_id . '" class="flat" name="table_records[]" value="' . $row->histories_id . '" >';
                 })
                 ->addColumn('action', function ($row) {
+                    // $html = '<a href="#" class="btn btn-xs btn-primary btn-view" id="getViewData" data-id="' . $row->histories_id . '"><i class="fa fa-eye"></i> view</a> ';
                     $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->histories_id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->histories_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
@@ -174,9 +175,6 @@ class HistoryController extends Controller
         } else if ($type == "print") {
             $viewr = "histories.print_day_print";
         }
-
-
-
         $a_date = explode("-", $request->get('print_date'));
 
         $ymcode = (($a_date[0] - 2000) + 43) . $a_date[1];
@@ -203,13 +201,10 @@ class HistoryController extends Controller
             ->where([['histories.datetime', $request->get('print_date')]])
             ->orderBy("stime", "asc")
             ->get();
-
         $ret_histories = array();
         $i = 0;
         $total_hour = 0;
         foreach ($histories as $histories_result) {
-
-
 
             $start_date = $histories_result->datetime . ' ' . $histories_result->stime;
             $end_date = $histories_result->datetime . ' ' . $histories_result->etime;
@@ -247,7 +242,6 @@ class HistoryController extends Controller
             $total_hour = $total_hour + $hour;
             $i++;
         }
-
         return view($viewr)
             ->with(['ymcode' =>  $ymcode])
             ->with(['total_hour' =>  $total_hour])
@@ -259,15 +253,75 @@ class HistoryController extends Controller
             ->with(['print_date' => $request->get('print_date')]);
     }
 
+    public function print_std(Request $request)
+    {
+        # code...
+        $this->check_permission();
+        $std = $request->student;
+
+        $type = $request->get('type');
+
+        $input = $request->all();
+        if ($type == "print") {
+            // dd();
+            if (!empty($input['date'])) {
+                $date = $input['date'];
+            }else {
+                $date = "";
+            }
+
+            $viewr = 'histories.print_std_print';
+        } else {
+            $date = $request->std_date;
+
+            $viewr = 'histories.print_std';
+        }
+        // dd($input,$date);
+
+        if (!empty($date)) {
+            $hist_std = History::where('student_id', $std)->where('datetime', $date)->get();
+        } else {
+            $hist_std = History::where('student_id', $std)->get();
+        }
+        // dd($std);
+        $student = Student::find($std);
+        $name = $student->full_name;
+
+        return view($viewr, [
+            'hist_std' => $hist_std,
+            'fullname' => $name,
+            'fontsize' => 1,
+            'std' => $std,
+            'date' => $date,
+        ]);
+    }
+
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\History  $history
      * @return \Illuminate\Http\Response
      */
-    public function show(History $history)
+    public function show()
     {
         //
+        $this->check_permission();
+
+        // $stdId = $data->student_id;
+        // dd($stdId);
+        $select_list_subject = "";
+        $subject = Subject::orderBy("id", "asc")->get();
+
+        $select_list_student = "";
+        $student = Student::orderBy("id", "asc")->get();
+        // dd($student);
+        foreach ($student as $keys) {
+
+            $select_list_student .= '<option value="' . $keys->id . '" >' . $keys->code . ' ' . $keys->full_name . ' (' . $keys->nick_name . ') ' . '</option>';
+        }
+        return response()->json([
+            'student' => $select_list_student
+        ]);
     }
 
     /**
@@ -276,10 +330,94 @@ class HistoryController extends Controller
      * @param  \App\Models\History  $history
      * @return \Illuminate\Http\Response
      */
+
+    // public function view($id)
+    // {
+    //     //
+
+    //     $this->check_permission();
+    //     $data = History::find($id);
+
+    //     $select_list_subject = "";
+    //     $subject = Subject::orderBy("id", "asc")->get();
+    //     foreach ($subject as $keysu) {
+    //         if ($data->subject_id == $keysu->id) {
+
+    //             $select_list_subject .= '<option value="' . $keysu->id . '" selected>' . $keysu->title . '</option>';
+    //         } else {
+    //             $select_list_subject .= '<option value="' . $keysu->id . '" >' . $keysu->title . '</option>';
+    //         }
+    //     }
+
+    //     $select_list_student = "";
+    //     $student = Student::orderBy("id", "asc")->get();
+    //     foreach ($student as $keys) {
+    //         if ($data->student_id == $keys->id) {
+
+    //             $select_list_student .= '<option value="' . $keys->id . '" selected>' . $keys->code . ' ' . $keys->first_name . ' ' . $keys->last_name . '</option>';
+    //         } else {
+    //             $select_list_student .= '<option value="' . $keys->id . '" >' . $keys->code . ' ' . $keys->first_name . ' ' . $keys->last_name . '</option>';
+    //         }
+    //     }
+
+    //     $date_start = $data->datetime;
+
+
+    //     $data1 = Level::where('subject', $data->subject_id)->orderBy("id", "asc")->get();
+
+    //     $select_list = "";
+
+    //     foreach ($data1 as $key) {
+
+    //         if ($data->level_id == $key->id) {
+
+    //             $select_list .= '<option value="' . $key->id . '" selected> (' . $key->level_sort . ') ' . $key->title . '</option>';
+    //         } else {
+    //             $select_list .= '<option value="' . $key->id . '" > (' . $key->level_sort . ') ' . $key->title . '</option>';
+    //         }
+    //     }
+
+    //     $data2 = Subject::find($data->subject_id);
+
+    //     //print_r($data2);
+
+    //     $select_list2 = "";
+
+    //     for ($i = 1; $i <= $data2->book; $i++) {
+    //         if ($data->book_start == $i) {
+
+    //             $select_list2 .= '<option value="' . $i . '" selected>' . $i . '</option>';
+    //         } else {
+    //             $select_list2 .= '<option value="' . $i . '" >' . $i . '</option>';
+    //         }
+    //     }
+
+    //     $photo_att = '';
+    //     $urla = url('/') . '/form_images/' . $data->signature;
+    //     //$retu = $this->get_img_url($urla);
+    //     //if ($this->URL_exists($retu)) {
+    //     $photo_att .= "<div><a href=\"" . urldecode($urla) . "\" target=\"blank\"><img src=\"" . $urla . "\" height=\"100\">click to view</a></div>&nbsp;&nbsp;";
+
+    //     $all = 0;
+    //     $stdId = $data->student_id;
+    //     $success = History::where('student_id',$stdId)->get();
+    //     $his_succsss = count($success);
+
+    //     $result_ = 0 ;
+    //     // dd($his_succsss);
+
+
+    //     return response()->json([
+    //         'html' => $select_list, 'html2' => $select_list2, 'date' => $date_start, 'student' => $select_list_student, 'subject' => $select_list_subject, 'des' => $data->description, 'stime' => $data->stime, 'etime' => $data->etime, 'signature' => $photo_att, 'toa' => $his_succsss
+    //     ]);
+    // }
+
     public function edit($id)
     {
         $this->check_permission();
         $data = History::find($id);
+        // $stdId = $data->student_id;
+        // dd($stdId);
 
         $select_list_subject = "";
         $subject = Subject::orderBy("id", "asc")->get();
@@ -291,7 +429,6 @@ class HistoryController extends Controller
                 $select_list_subject .= '<option value="' . $keysu->id . '" >' . $keysu->title . '</option>';
             }
         }
-
 
         $select_list_student = "";
         $student = Student::orderBy("id", "asc")->get();
@@ -340,7 +477,6 @@ class HistoryController extends Controller
         //$retu = $this->get_img_url($urla);
         //if ($this->URL_exists($retu)) {
         $photo_att .= "<div><a href=\"" . urldecode($urla) . "\" target=\"blank\"><img src=\"" . $urla . "\" height=\"100\">click to view</a></div>&nbsp;&nbsp;";
-
 
         return response()->json([
             'html' => $select_list, 'html2' => $select_list2, 'date' => $date_start, 'student' => $select_list_student, 'subject' => $select_list_subject, 'des' => $data->description, 'stime' => $data->stime, 'etime' => $data->etime, 'signature' => $photo_att

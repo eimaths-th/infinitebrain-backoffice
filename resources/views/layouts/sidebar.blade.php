@@ -154,6 +154,12 @@
                                             รายวิชาที่เปิดสอน
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('subjects.overview') }}">
+                                            <i class="metismenu-icon"></i>
+                                            รายชื่อนักเรียนในรายวิชา
+                                        </a>
+                                    </li>
 
 
                                 </ul>
@@ -301,6 +307,12 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '11']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Cambridge
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('receipts_form', ['sfield' => '2']) }}">
                                     <i class="metismenu-icon"></i>
                                     GMEC
@@ -363,6 +375,12 @@
                                 <a href="{{ route('receipts', ['sfield' => '10']) }}">
                                     <i class="metismenu-icon"></i>
                                     ASIAROPE
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '11']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Cambridge
                                 </a>
                             </li>
                             <li>
@@ -430,6 +448,14 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('receipts.print_month', ['pmsfield' => '11','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร Cambridge รอบแรก '. $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Cambridge
+                                </a>
+                            </li>
+                            <li>
+
+
                                 <a href="{{ route('receipts.print_month', ['pmsfield' => '2','type' => 'report_view','print_month' => $ymonth,'Pmdescription'=> 'ค่าสมัคร GMEC รอบแรก '. $pmd]) }}">
                                     <i class="metismenu-icon"></i>
                                     GMEC

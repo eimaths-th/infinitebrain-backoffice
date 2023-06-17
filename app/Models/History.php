@@ -18,4 +18,21 @@ class History extends Model
         'etime',
         'signature',
     ];
+
+    public function student()
+    {
+        return $this->hasOne(Student::class, 'id', 'student_id');
+    }
+
+    public function subject()
+    {
+        return $this->hasOne(Subject::class, 'id', 'subject_id');
+    }
+
+    public function getFullTimeAttribute()
+    {
+        return $this->stime . ' - ' . $this->etime;
+    }
+
+
 }
