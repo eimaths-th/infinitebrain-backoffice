@@ -362,7 +362,7 @@
 @section('script')
     <script>
         function export_report() {
-            url = '{{ route('receipts.show_day', ['type' => 'print', 'pdsfield' => $pdsfield, 'print_date' => $print_date]) }}';
+            url = '{{ route('receipts.show_day', ['type' => 'print', 'pdsfield' => $pdsfield, 'print_rdate' => $print_date]) }}';
             window.open(
                 url.replace(/&amp;/g, "&")
             );

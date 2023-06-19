@@ -465,14 +465,14 @@ class ReceiptSchoolController extends Controller
                 "receipt_school.submission_date as submission_date",
                 "receipt_school.street_address as street_address",
                 "receipt_school.postcode as postcode",
-                "receipt_school.name_parent as name_parent",
+                "parent.name_parent as name_parent",
                 "receipt_school.mobile as mobile",
                 "receipt_school.receipt_number as receipt_number",
                 "receipt_school.pid as pid",
             )
 
                 //->join("students", "students.id", "=", "receipts.student_id")
-                //->join("subjects", "subjects.id", "=", "receipts.subject_id")
+                ->join("parent", "parent.id", "=", "receipt_school.name_parent")
                 //->join("levels", "levels.id", "=", "receipts.level_id")
 
                 ->orderBy("receipt_school.receipt_number", "desc")
@@ -482,32 +482,35 @@ class ReceiptSchoolController extends Controller
             // print_r($receipt);
             // echo "</pre>";
             // exit();
-            //print_r($levels);
-            //exit();
-
 
             return datatables()->of($receipt)
                 ->editColumn('pid', function ($row) {
                     $student = "";
                     $stu = explode('|', $row->pid);
-                    if ($row->pid != "") {
-
-
+                    if ($row->pid !== "") {
                         foreach ($stu as $stus) {
-                            $stus = Student::where('id', $stus)->get();
-                            $student .= $stus[0]->first_name . " " . $stus[0]->last_name . ' ';
+                            if (Student::where('id', $stus)->exists()) {
+                                $stusq = Student::where('id', $stus)->get();
+                                //$student .= $stusq[0]->nick_name . " ," . $stusq[0]->last_name . ' ';
+                                $student .= $stusq[0]->nick_name . " ,";
+                            } else {
+                                $student .= '-';
+                            }
                         }
+                    } else {
+                        $student = '-';
                     }
                     return $student;
                 })
                 ->editColumn('name_parent', function ($row) {
-                    $parent = ParentRegister::where('id', $row->name_parent)->get();
-                    $parents = "";
-                    foreach ($parent as $value) {
-                        $parents .= $value->name_parent . ",";
-                    }
+                    //$parent = ParentRegister::where('id', $row->name_parent)->get();
+                    //$parents = "";
+                    //foreach ($parent as $value) {
+                    //$parents .= $value->name_parent . ",";
+                    //}
 
-                    return $parents;
+                    //return $parents;
+                    return $row->name_parent;
                 })
                 // ->editColumn('receipt_number', function ($row) {
 
