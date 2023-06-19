@@ -285,6 +285,51 @@ class ReceiptFormController extends Controller
         $receipt = new Receipt($request->all());
         $receipt->save();
 
+        //add more inages
+        $img = $request->get('img');
+        $stu = "";
+        $urlbr = "";
+        if ($img != Null || $img != "") {
+
+
+            foreach ($img as $fileb) {
+                //echo $filea;
+                // $stu .= $sss . "|";
+                $oldfile = FileUpload::where('oldname', $fileb)->get();
+                $stu .= $oldfile[0]->filename . "|";
+                File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+
+                //watermark
+                $urlb = url('/') . '/receipt_form_images/' . $fileb;
+
+                //watermark
+                $fileex = explode("/", $urlb);
+                $this->textWatermark(end($fileex), 'Date Register : ' . $request->get('submission_date'));
+                $urlbr .= str_replace('receipt_form_images', 'receipt_form_watermark_images', $urlb) . "|";
+                //watermark
+
+                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            }
+        }
+
+        $dataimg = ReceiptForm::find($request->get('fid'));
+        if ($dataimg->file_att != Null && $dataimg->file_att != "") {
+            $stu = $dataimg->file_att . "|" . $stu;
+        }
+
+        $datare = Receipt::find($receipt->id);
+        if ($datare->file_att != Null && $datare->file_att != "") {
+            $urlbr = $datare->file_att . "|" . $urlbr;
+        }
+
+        $stu = rtrim($stu, "|");
+        $urlbr = rtrim($urlbr, "|");
+
+        ReceiptForm::find($request->get('fid'))->update(['file_att' => $stu]);
+        Receipt::find($receipt->id)->update(['file_att' => $urlbr]);
+        //add more images
+
+
         $form = ReceiptForm::find($id);
         $form->generate =  '1';
         $form->save();
@@ -466,7 +511,8 @@ class ReceiptFormController extends Controller
                 $urla = url('/') . '/receipt_form_images/' . $arrl[$i];
                 //$retu = $this->get_img_url($urla);
                 //if ($this->URL_exists($retu)) {
-                $photo_att .= "<div><a href=\"" . urldecode($urla) . "\" target=\"blank\"><img src=\"" . $urla . "\" height=\"80\">click to view</a></div>&nbsp;&nbsp;";
+                $photo_att .= "<div><img src=\"" . $urla . "\" height=\"80\"></div>&nbsp;&nbsp;
+                <a class='btn btn-xs btn-info btn-view' href=\"" . urldecode($urla) . "\" target=\"blank\"><i class='fa fa-search'></i></a>";
                 //}
             }
         }
@@ -487,8 +533,8 @@ class ReceiptFormController extends Controller
 
                 //$retu = $this->get_img_url($urla);
                 //if ($this->URL_exists($retu)) {
-                $file_att .= "<div><a href=\"" . urldecode($urlb) . "\" target=\"blank\"><img src=\"" . $urlb . "\" height=\"80\">click to view</a></div>&nbsp;&nbsp;
-                <br><a href='#' class='btn btn-xs btn-danger btn-edit' id='getDeleteData' data-id2='" . $data->id . "' data-id='" . $arrf[$j] . "'><i class='fa fa-trash'></i> Delete </a>";
+                $file_att .= "<div><img src=\"" . $urlb . "\" height=\"80\"></div>&nbsp;&nbsp;
+                <a class='btn btn-xs btn-info btn-view' href=\"" . urldecode($urlb) . "\" target=\"blank\"><i class='fa fa-search'></i></a><a href='#' class='btn btn-xs btn-danger btn-edit' id='getDeleteData' data-id2='" . $data->id . "' data-id='" . $arrf[$j] . "'><i class='fa fa-trash'></i></a><br><br>";
                 //}
                 $furl .= $urlb;
             }
@@ -517,6 +563,29 @@ class ReceiptFormController extends Controller
 
 
         $this->check_permission();
+
+        $img = $request->get('img');
+        $stu = "";
+        if ($img != Null || $img != "") {
+
+
+            foreach ($img as $fileb) {
+                //echo $filea;
+                // $stu .= $sss . "|";
+                $oldfile = FileUpload::where('oldname', $fileb)->get();
+                $stu .= $oldfile[0]->filename . "|";
+                File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            }
+        }
+
+        $dataimg = ReceiptForm::find($request->get('fid'));
+        if ($dataimg->file_att != Null && $dataimg->file_att != "") {
+            $stu = $dataimg->file_att . "|" . $stu;
+        }
+        $stu = rtrim($stu, "|");
+        ReceiptForm::find($request->get('fid'))->update(['file_att' => $stu]);
+
         $validator =  Validator::make($request->all(), [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
@@ -577,12 +646,18 @@ class ReceiptFormController extends Controller
         $pic = explode('|', $dataNew);
         foreach ($pic as $pics) {
             if ($pics != NULL && $pics != "") {
-                $html .= '
+                /*  $html .= '
                 <div class="col-md-4 text-center mb-3 ">
                 <img src="' . url('/') . '/receipts_form/' . $pics . '" class=" mt-5 mb-3" height="400" width="300">
                 <a href="#" class="btn btn-xs btn-danger btn-edit" id="getDeleteData" data-id2="' . $id2 . '" data-id="' . $pics . '">delete </a>
                 </div>
-                ';
+                '; */
+                $this->textWatermark($pics, 'Date Register : ' . $dataimg->submission_date);
+                //$urlb = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urlb);
+
+
+                $html .= "<div><img src=\"" . url('/') . '/receipt_form_watermark_images/' . $pics . "\" height=\"80\"></div>&nbsp;&nbsp;
+                <a class='btn btn-xs btn-info btn-view' href=\"" . urldecode(url('/') . '/receipt_form_watermark_images/' . $pics) . "\" target=\"blank\"><i class='fa fa-search'></i></a><a href='#' class='btn btn-xs btn-danger btn-edit' id='getDeleteData' data-id2='" . $id2 . "' data-id='" . $pics . "'><i class='fa fa-trash'></i></a><br><br>";
             } else {
                 $html = "";
             }
