@@ -1036,8 +1036,11 @@
                     }
                 }); //end ajax
             })
+        })
 
-            var myDropzone = {};
+
+
+        var myDropzone = {};
             Dropzone.options.myAwesomeDropzone = {
                 url: '{{ route('receipt_school.upload') }}',
                 headers: {
@@ -1151,8 +1154,5 @@
 
                 }
             }
-
-
-        })
     </script>
 @endsection
