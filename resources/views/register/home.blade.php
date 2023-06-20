@@ -430,8 +430,8 @@
                                                 role="tabpanel" aria-labelledby="custom-tabs-three-promotion-tab">
                                                 <img src="{{ asset('images/promotion1.jpg') }}" width="90%">
                                                 <img src="{{ asset('images/promotion2.jpg') }}" width="90%">
-                                                <img src="{{ asset('images/promotion3.png') }}" width="90%">
-                                                <img src="{{ asset('images/promotion4.png') }}" width="90%">
+                                                {{-- <img src="{{ asset('images/promotion3.png') }}" width="90%">
+                                                <img src="{{ asset('images/promotion4.png') }}" width="90%"> --}}
                                             </div>
                                             <div class="tab-pane fade " id="custom-tabs-three-holiday" role="tabpanel"
                                                 aria-labelledby="custom-tabs-three-holiday-tab">
