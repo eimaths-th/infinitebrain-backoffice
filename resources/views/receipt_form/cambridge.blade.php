@@ -559,11 +559,11 @@
                                                     style="text-decoration: underline;">Cambridge University Press &
                                                     Assessment Thailand 2023 Registration
                                                     Form</span></strong></span></p>
-                                    <p><strong><span style="color: #6351a2;"> โค้ดส่วนลดค่ะ ใช้ได้ตั้งแต่วันที่ 1 ก.ค. - 31
+                                   {{--  <p><strong><span style="color: #6351a2;"> โค้ดส่วนลดค่ะ ใช้ได้ตั้งแต่วันที่ 1 ก.ค. - 31
                                                 ก.ค.</span></strong></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;">CEM100 ลด 100 บาท</span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;">META200 ลด 200 บาท</span>
-                                    </p>
+                                    </p> --}}
                                     <p><strong><span style="color: #6351a2;">Contact Information&nbsp;</span></strong></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> 📩FB:
                                             m.me/cambridge.thai</span></p>
