@@ -357,8 +357,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                                                    <p>{{ $message }}</p>
-                                                                        </div>-->
+                                                                                                            <p>{{ $message }}</p>
+                                                                                                                </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -368,8 +368,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                                                            <p>{{ $message }}</p>
-                                                                                </div>-->
+                                                                                                                    <p>{{ $message }}</p>
+                                                                                                                        </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -394,24 +394,24 @@
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
                             Receipt</a>
                         <!-- <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
-                                                            All</a> -->
+                                                                                                    All</a> -->
 
                     </div>
                     <!-- <div class="d-inline-block dropdown">
-                                                        <div class="dropdown show">
-                                                            <button class="btn btn-shadow btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" autoClose="true" aria-haspopup="true" aria-expanded="false">
-                                                                <span class="btn-icon-wrapper pr-2 opacity-7">
-                                                                    <i class="fa fa-print fa-w-20"></i>
-                                                                </span>
-                                                                Print ใบปะหน้า
-                                                            </button>
-                                                            <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                                <li><a class="dropdown-item" href="#" id="printr1">ใบปะหน้ารายวัน</a></li>
-                                                                <li><a class="dropdown-item" href="#" id="printr2">ใบปะหน้ารายเดือน</a></li>
-                                                            </ul>
-                                                        </div>
+                                                                                                <div class="dropdown show">
+                                                                                                    <button class="btn btn-shadow btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" autoClose="true" aria-haspopup="true" aria-expanded="false">
+                                                                                                        <span class="btn-icon-wrapper pr-2 opacity-7">
+                                                                                                            <i class="fa fa-print fa-w-20"></i>
+                                                                                                        </span>
+                                                                                                        Print ใบปะหน้า
+                                                                                                    </button>
+                                                                                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                                                                        <li><a class="dropdown-item" href="#" id="printr1">ใบปะหน้ารายวัน</a></li>
+                                                                                                        <li><a class="dropdown-item" href="#" id="printr2">ใบปะหน้ารายเดือน</a></li>
+                                                                                                    </ul>
+                                                                                                </div>
 
-                                                    </div> -->
+                                                                                            </div> -->
 
 
 
@@ -693,13 +693,13 @@
                                     <div class="form-row">
 
                                         <!-- <div class="col-md-12 ">
-                                        <select class="form-select" name="type" id="type" style="width:300px">
+                                                                                <select class="form-select" name="type" id="type" style="width:300px">
 
-                                            <option value="1" hidden disabled>ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
-                                            <option value="2">ใบลดหนี้</option>
+                                                                                    <option value="1" hidden disabled>ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
+                                                                                    <option value="2">ใบลดหนี้</option>
 
-                                        </select>
-                                    </div> -->
+                                                                                </select>
+                                                                            </div> -->
 
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
@@ -709,12 +709,12 @@
                                             </div>
                                         </div>
                                         <!-- <div class="col-md-6">
-                                        <div class="position-relative  form-group">
-                                            <label for="Package">Package:</label>
-                                            <input type="text" class="form-control" name="package" id="AddPackage"
-                                                value="">
-                                        </div>
-                                    </div> -->
+                                                                                <div class="position-relative  form-group">
+                                                                                    <label for="Package">Package:</label>
+                                                                                    <input type="text" class="form-control" name="package" id="AddPackage"
+                                                                                        value="">
+                                                                                </div>
+                                                                            </div> -->
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
                                                 <label for="Payment">Payment Type:</label>
@@ -740,7 +740,7 @@
                                                     class="parent select2 select2_single form-control" id="AddParent"
                                                     name="name_parent" multiple="multiple">
                                                     <!-- <option value="" selected>Select Student</option>
-                                                        <option value="" selected>Select Parent</option>-->
+                                                                                                <option value="" selected>Select Parent</option>-->
                                                     @foreach ($data4 as $key2)
                                                         <option value="{{ $key2->id }}">{{ $key2->code }}
                                                             {{ $key2->name_parent }}
@@ -760,19 +760,19 @@
                                         </div>
                                     </div>
                                     <!-- <div class="form-row">
-                                                                        <div class="col-md-6">
-                                                                            <div class="position-relative form-group">
-                                                                                <label for="City">City:</label>
-                                                                                <input type="text" class="form-control" name="city" id="AddCity" value="">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="position-relative form-group">
-                                                                                <label for="Province">Province:</label>
-                                                                                <input type="text" class="form-control" name="province" id="AddProvince" value="">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div> -->
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <div class="position-relative form-group">
+                                                                                                                        <label for="City">City:</label>
+                                                                                                                        <input type="text" class="form-control" name="city" id="AddCity" value="">
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <div class="position-relative form-group">
+                                                                                                                        <label for="Province">Province:</label>
+                                                                                                                        <input type="text" class="form-control" name="province" id="AddProvince" value="">
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div> -->
 
                                     <div class="form-group">
                                         <label for="Name">Address:</label>
@@ -794,7 +794,7 @@
                                             <!-- <option value="" selected>Select Student</option> -->
                                             <!-- @foreach ($data2 as $key2)
     <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->first_name }} {{ $key2->last_name }}
-                                                                            </option>
+                                                                                                                    </option>
     @endforeach -->
 
                                         </select>
@@ -859,12 +859,12 @@
                                                 <th class="column-title"> Start Level</th>
                                                 <th class="column-title"> Time</th>
                                                 <th class="column-title"> Qty</th>
-                                                <th class="column-title"> Book</th>
-                                                <th class="column-title"> Book Price</th>
+                                                <th class="column-title"> Book/สื่อ</th>
+                                                <th class="column-title"> Book/สื่อ Price</th>
                                                 <th class="column-title abc">Type</th>
                                                 <th class="column-title"> Discount</th>
                                                 <th class="column-title"> Price</th>
-                                                <th class="column-title"> Period</th>
+                                                <th class="column-title"> Period/รายละเอียดสื่อ</th>
                                                 <th class="column-title"> Total</th>
                                                 {{-- <th class="column-title"> </th> --}}
                                             </tr>
@@ -888,6 +888,8 @@
                                                             <option value="1">Course+Book
                                                             </option>
                                                             <option value="2">Book
+                                                            </option>
+                                                            <option value="3">สื่อการสอน
                                                             </option>
                                                         </select>
                                                     </div>
@@ -974,7 +976,7 @@
                                                 </td>
                                                 <td width="7%">
                                                     <div class="col-md-12 col-sm-12 col-xs-12 ">
-                                                        <input type="text" class="form-control" name="book"
+                                                        <input type="number" class="form-control" name="book"
                                                             id="book" value="">
 
                                                     </div>
@@ -982,7 +984,7 @@
                                                 <td width="7%">
                                                     <div class="col-md-12 col-sm-12 col-xs-12 cc">
                                                         <input type="text" id="book_price" name="book_price"
-                                                            class="form-control has-feedback-left" value=""readonly>
+                                                            class="form-control has-feedback-left" value="">
 
                                                     </div>
                                                 </td>
@@ -993,7 +995,7 @@
                                                             <option value="0" selected>Select Type</option>
 
                                                             <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
-                                                                            </option> -->
+                                                                                                                    </option> -->
                                                             <option value="1">One Tpye แบบเดี่ยว
                                                             </option>
                                                             <option value="2">Couple แบบคู่
@@ -1060,6 +1062,8 @@
                                                             <option value="1">Course+Book
                                                             </option>
                                                             <option value="2">Book
+                                                            </option>
+                                                            <option value="3">สื่อการสอน
                                                             </option>
                                                         </select>
                                                     </div>
@@ -1154,7 +1158,7 @@
                                                 <td width="7%">
                                                     <div class="col-md-12 col-sm-12 col-xs-12 cc">
                                                         <input type="text" id="book_price" name="book_price"
-                                                            class="form-control has-feedback-left" value=""readonly>
+                                                            class="form-control has-feedback-left" value="">
 
                                                     </div>
                                                 </td>
@@ -1165,7 +1169,7 @@
                                                             <option value="0" selected>Select Type</option>
 
                                                             <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
-                                                                            </option> -->
+                                                                                                                    </option> -->
                                                             <option value="1">One Tpye แบบเดี่ยว
                                                             </option>
                                                             <option value="2">Couple แบบคู่
@@ -1331,11 +1335,11 @@
                                                 <label for="Parent">Name Parent:</label>
                                                 {{-- <input type="text" class="form-control" name="name_parent"
                                                     id="EditParent" value=""> --}}
-                                                    <select style="width: 100%;"
+                                                <select style="width: 100%;"
                                                     class="eparent select2 select2_single form-control" id="EditParent"
                                                     name="name_parent" multiple="multiple">
                                                     <!-- <option value="" selected>Select Student</option>
-                                                        <option value="" selected>Select Parent</option>-->
+                                                                                                <option value="" selected>Select Parent</option>-->
 
 
                                                 </select>
@@ -1371,21 +1375,21 @@
 
 
                                     <!--<div class="form-row">
-                                                                        <div class="col-md-6">
-                                                                            <div class="position-relative form-group">
-                                                                                <label for="City">City:</label>
-                                                                                <input type="text" class="form-control" name="city" id="EditCity"
-                                                                                    value="">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="position-relative form-group">
-                                                                                <label for="Province">Province:</label>
-                                                                                <input type="text" class="form-control" name="province" id="EditProvince"
-                                                                                    value="">
-                                                                            </div>
-                                                                        </div>
-                                                                        </div>-->
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <div class="position-relative form-group">
+                                                                                                                        <label for="City">City:</label>
+                                                                                                                        <input type="text" class="form-control" name="city" id="EditCity"
+                                                                                                                            value="">
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <div class="position-relative form-group">
+                                                                                                                        <label for="Province">Province:</label>
+                                                                                                                        <input type="text" class="form-control" name="province" id="EditProvince"
+                                                                                                                            value="">
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                </div>-->
 
 
                                     <div class="form-group">
@@ -1393,9 +1397,9 @@
                                         <textarea class="form-control" name="address" id="EditAddress"></textarea>
                                     </div>
                                     <!--<div class="form-group">
-                                                                            <label for="Name">Street Address 2:</label>
-                                                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                                        </div>-->
+                                                                                                                    <label for="Name">Street Address 2:</label>
+                                                                                                                    <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                                                                                </div>-->
                                     <div class="form-group">
                                         <label for="Student">Student:</label><br>
                                         <select style="width: 100%;" class="select2 select2_multiple form-control"
@@ -1408,10 +1412,10 @@
 
                                     </div>
                                     <!-- <div class="form-group">
-                                                                        <div class="imgs">
+                                                                                                                <div class="imgs">
 
-                                                                        </div>
-                                                                    </div> -->
+                                                                                                                </div>
+                                                                                                            </div> -->
                                     <div class="form-row form-focus" id="dropzone-photo">
                                         <div class="col-md-12 col-sm-12">
                                             <a id="dphoto"></a>
@@ -1466,7 +1470,7 @@
                                                 <th class="column-title"> Qty</th>
                                                 <th class="column-title"> Book</th>
                                                 <th class="column-title"> Book Price</th>
-                                                <th class="column-title ">Type</th>
+                                                <th class="column-title"> Type</th>
                                                 <th class="column-title"> Discount</th>
                                                 <th class="column-title"> Price</th>
                                                 <th class="column-title"> Period</th>
@@ -1820,6 +1824,8 @@
         $(document).ready(function() {
 
             $('#type').prop("disabled", true);
+
+
 
             $(".nav-tabs a").click(function() {
                 $(this).tab('show');
@@ -2190,10 +2196,20 @@
                     parent.find('#qty').prop("disabled", true);
                     parent.find('#week').prop("disabled", true);
                     parent.find('#period').prop("disabled", true);
+                    parent.find('#book_price').prop("disabled", true);
+                    parent.find('#price').prop("disabled", false);
+                } else if (course_type == 3) {
+                    parent.find('#qty').prop("disabled", true);
+                    parent.find('#week').prop("disabled", true);
+                    //parent.find('#price').prop("disabled", true);
+                    parent.find('#period').prop("disabled", false);
+                    parent.find('#book_price').prop("disabled", false);
                 } else {
+                    parent.find('#price').prop("disabled", false);
                     parent.find('#qty').prop("disabled", false);
                     parent.find('#week').prop("disabled", false);
                     parent.find('#period').prop("disabled", false);
+                    parent.find('#book_price').prop("disabled", true);
                 }
 
             });
@@ -2215,9 +2231,19 @@
                     parent.find('#qty').prop("disabled", true);
                     parent.find('#week').prop("disabled", true);
                     parent.find('#period').prop("disabled", true);
+                    parent.find('#price').prop("disabled", false);
+                    parent.find('#book_price').prop("disabled", true);
+                } else if (course_type == 3) {
+                    parent.find('#qty').prop("disabled", true);
+                    parent.find('#week').prop("disabled", true);
+                    //parent.find('#price').prop("disabled", true);
+                    parent.find('#period').prop("disabled", false);
+                    parent.find('#book_price').prop("disabled", false);
                 } else {
 
                     parent.find('#qty').prop("disabled", false);
+                    parent.find('#book_price').prop("disabled", true);
+                    parent.find('#price').prop("disabled", false);
 
                     if (week == 4) {
                         // parent.find('.abc').prop( "disabled", false );
@@ -2293,43 +2319,68 @@
             $(document).on('change', '#rrweek', function(e) {
                 // console.log($(this).parent().parent().parent().html())
                 // console.log($(this).parent().parent().parent().find('#type').html())
-                //// $('#discount').val(new Date().toDateString())
+                // $('#discount').val(new Date().toDateString())
                 var parent = $(this).parent().parent().parent();
-                week = $(this).parent().parent().parent().find('#rrweek').val();
-                if (week == 4) {
-                    // parent.find('.abc').prop( "disabled", false );
-                    parent.find('#rrqty').prop("disabled", false);
-                    parent.find('#rrqty').val(1);
+                var week = $(this).parent().parent().parent().find('#rrweek').val();
+                var course_type = $(this).parent().parent().parent().find('#course_type').val();
+                //alert(course_type);
 
-
-                } else {
-
-                    // parent.find('.abc').prop( "disabled", true );
+                //bookonly
+                if (course_type == 2) {
                     parent.find('#rrqty').prop("disabled", true);
-                    parent.find('#rrqty').val(1);
+                    parent.find('#rrweek').prop("disabled", true);
+                    parent.find('#rrperiod').prop("disabled", true);
+                    parent.find('#rrprice').prop("disabled", false);
+                    parent.find('#rrbook_price').prop("disabled", true);
+                } else if (course_type == 3) {
+                    parent.find('#rrqty').prop("disabled", true);
+                    parent.find('#rrweek').prop("disabled", true);
+                    //parent.find('#price').prop("disabled", true);
+                    parent.find('#rrperiod').prop("disabled", false);
+                    parent.find('#rrbook_price').prop("disabled", false);
+                } else {
+                    parent.find('#rrqty').prop("disabled", false);
+                    parent.find('#rrbook_price').prop("disabled", true);
+                    parent.find('#rrprice').prop("disabled", false);
+                    if (week == 4) {
+                        // parent.find('.abc').prop( "disabled", false );
+                        parent.find('#rrqty').prop("disabled", false);
+                        parent.find('#rrqty').val(1);
+
+
+                    } else {
+
+                        // parent.find('.abc').prop( "disabled", true );
+                        parent.find('#rrqty').prop("disabled", true);
+                        parent.find('#rrqty').val(1);
+                    }
                 }
             })
 
 
             $(document).on('change', '#rrbook', function(e) {
                 var parent = $(this).parent().parent().parent();
+                var course_type = parent.find('#course_type').val();
                 var sub_id = parent.find('#rrsub').val();
                 var level_id = parent.find('#rrlevel').val();
                 var book = parent.find('#rrbook').val();
                 // console.log(book);
-                $.ajax({
-                    type: "GET",
-                    async: false,
-                    dataType: 'JSON',
-                    url: "receipt_school/" + sub_id + "/" + level_id + "/" + book,
-                    success: function(res) {
-                        parent.find('#rrbookprice').val(res.sum);
-                        // $('.pp').html(res.html);
-                        //console.log(result);
-                        // $("#AddLevel").html(result.html);
-                        // $("#AddBook").html(result.html2);
-                    }
-                });
+                if (course_type != 3) {
+                    $.ajax({
+                        type: "GET",
+                        async: false,
+                        dataType: 'JSON',
+                        url: "receipt_school/" + sub_id + "/" + level_id + "/" + book,
+                        success: function(res) {
+                            parent.find('#rrbookprice').val(res.sum);
+                            // $('.pp').html(res.html);
+                            //console.log(result);
+                            // $("#AddLevel").html(result.html);
+                            // $("#AddBook").html(result.html2);
+                        }
+                    });
+                }
+
             })
 
             $(document).on('change', '.firstTr3', function(e) {
@@ -2352,6 +2403,11 @@
                     parent.find('#rrqty').prop("disabled", true);
                     parent.find('#rrweek').prop("disabled", true);
                     parent.find('#rrperiod').prop("disabled", true);
+                } else if (course_type == 3) {
+                    parent.find('#rrqty').prop("disabled", true);
+                    parent.find('#rrweek').prop("disabled", true);
+                    parent.find('#rrperiod').prop("disabled", false);
+                    parent.find('#rrbookprice').prop("disabled", false);
                 } else {
                     if (week == 4) {
                         parent.find('#rrqty').prop("disabled", false);
@@ -2367,22 +2423,28 @@
                     qty = 0;
                     //price = 0;
                 }
-
-                if (sub_id != "" && level_id != "" && price != "" && discount != "" && book_price != "" &&
-                    type != "" && course_type != "") {
-                    $.ajax({
-                        type: "GET",
-                        dataType: 'JSON',
-                        url: "receipt_school/" + sub_id + "/" + level_id + "/" + week + "/" +
-                            price + "/" + qty + "/" + discount + "/" + book_price + "/" + type +
-                            "/" + course_type,
-                        success: function(res) {
-                            parent.find('#rrtotal').val(res.outputsum);
-                            //console.log(result);
-                            // $("#AddLevel").html(result.html);
-                            // $("#AddBook").html(result.html2);
-                        }
-                    });
+                if (course_type == 3) {
+                    let book = parent.find('#rrbook').val();
+                    let ssp = book_price * book;
+                    parent.find('#rrtotal').val(ssp);
+                } else {
+                    if (sub_id != "" && level_id != "" && price != "" && discount != "" && book_price !=
+                        "" &&
+                        type != "" && course_type != "") {
+                        $.ajax({
+                            type: "GET",
+                            dataType: 'JSON',
+                            url: "receipt_school/" + sub_id + "/" + level_id + "/" + week + "/" +
+                                price + "/" + qty + "/" + discount + "/" + book_price + "/" + type +
+                                "/" + course_type,
+                            success: function(res) {
+                                parent.find('#rrtotal').val(res.outputsum);
+                                //console.log(result);
+                                // $("#AddLevel").html(result.html);
+                                // $("#AddBook").html(result.html2);
+                            }
+                        });
+                    }
                 }
 
             })
@@ -2391,31 +2453,36 @@
                 var parent = $(this).parent().parent().parent();
 
                 var sub_id = parent.find('#subject_id').val();
+                var course_type = parent.find('#course_type').val();
                 var level_id = parent.find('#level_id').val();
                 var book = parent.find('#book').val();
                 // var sub_id = $('#subject_id').val();
                 // var level_id = $('#level_id').val();
                 // var book = $('#book').val();
 
+                if (course_type == 3) {
+                    //parseInt(parent.find('#book_price').val(res.sum));
+                } else {
+                    $.ajax({
+                        type: "GET",
+                        dataType: 'JSON',
+                        async: false,
+                        url: "receipt_school/" + sub_id + "/" + level_id + "/" + book,
+                        success: function(res) {
+                            parseInt(parent.find('#book_price').val(res.sum));
 
-                $.ajax({
-                    type: "GET",
-                    dataType: 'JSON',
-                    async: false,
-                    url: "receipt_school/" + sub_id + "/" + level_id + "/" + book,
-                    success: function(res) {
-                        parseInt(parent.find('#book_price').val(res.sum));
-
-                        // $('.pp').html(res.html);
-                        console.log($('#book_price').val(res.sum));
-                        // $("#AddLevel").html(result.html);
-                        // $("#AddBook").html(result.html2);
-                    }
-                });
+                            // $('.pp').html(res.html);
+                            console.log($('#book_price').val(res.sum));
+                            // $("#AddLevel").html(result.html);
+                            // $("#AddBook").html(result.html2);
+                        }
+                    });
+                }
             })
+
             $(document).on('change', '.firstTr', function(e) {
                 var parent = $(this);
-                // var book = parent.find('#book').val();
+                //var book = parent.find('#book').val();
                 var course_type = parent.find('#course_type').val();
                 var sub_id = parent.find('#subject_id').val();
                 var level_id = parent.find('#level_id').val();
@@ -2425,54 +2492,75 @@
                 var discount = parent.find('#discount').val();
                 var book_price = parent.find('#book_price').val();
                 var type = parent.find('#type').val();
-                // console.log(book_price);
-                // console.log(subject_id);
-                // console.log(level_id);
-                // console.log(week);
-                // console.log(price);
-                // console.log(qty);
-                // console.log(discount);
-                // console.log(book_price);
-                // console.log(type);
+                /* console.log(course_type);
+                console.log(sub_id);
+                console.log(level_id);
+                console.log(week);
+                console.log(price);
+                console.log(qty);
+                console.log(discount);
+                console.log(book_price);
+                console.log(type); */
 
                 //bookonly
                 if (course_type == 2) {
                     parent.find('#qty').prop("disabled", true);
                     parent.find('#week').prop("disabled", true);
                     parent.find('#period').prop("disabled", true);
+                    parent.find('#book_price').prop("disabled", true);
+                    parent.find('#price').prop("disabled", false);
+                } else if (course_type == 3) {
+                    parent.find('#qty').prop("disabled", true);
+                    parent.find('#week').prop("disabled", true);
+                    //parent.find('#price').prop("disabled", true);
+                    parent.find('#period').prop("disabled", false);
+                    parent.find('#book_price').prop("disabled", false);
                 } else {
                     parent.find('#qty').prop("disabled", false);
                     parent.find('#week').prop("disabled", false);
+                    parent.find('#price').prop("disabled", false);
                     parent.find('#period').prop("disabled", false);
+                    parent.find('#book_price').prop("disabled", true);
                 }
 
-                if (course_type == 2) {
+                if (course_type == 2 || course_type == 3) {
                     week = 0;
                     qty = 0;
                     //price = 0;
                 }
 
-                if (sub_id != "" && level_id != "" && price != "" && discount != "" && book_price != "" &&
-                    type != "" && course_type != "") {
+                if (course_type == 3) {
+                    let book = parent.find('#book').val();
+                    let ssp = book_price * book;
+                    parent.find('.pp').html(
+                        '<input type="text" id="pp" name="pp" class="form-control has-feedback-left" value="' +
+                        ssp + '" >');
+                } else {
+                    //alert();
+                    if (sub_id != "" && level_id != "" && price != "" && discount != "" && book_price !=
+                        "" &&
+                        type != "" && course_type != "") {
+                        //alert();
+                        $.ajax({
+                            type: "GET",
+                            dataType: 'JSON',
+                            url: "receipt_school/" + sub_id + "/" + level_id + "/" + week + "/" +
+                                price + "/" + qty + "/" + discount + "/" + book_price + "/" + type +
+                                "/" + course_type,
+                            success: function(res) {
 
-                    $.ajax({
-                        type: "GET",
-                        dataType: 'JSON',
-                        url: "receipt_school/" + sub_id + "/" + level_id + "/" + week + "/" +
-                            price + "/" + qty + "/" + discount + "/" + book_price + "/" + type +
-                            "/" + course_type,
-                        success: function(res) {
+                                parent.find('.pp').html(res.html);
+                                //console.log(result);
+                                // $("#AddLevel").html(result.html);
+                                // $("#AddBook").html(result.html2);
+                            }
+                        });
+                    }
 
-                            parent.find('.pp').html(res.html);
-                            //console.log(result);
-                            // $("#AddLevel").html(result.html);
-                            // $("#AddBook").html(result.html2);
-                        }
-                    });
+
+
                 }
-
-            })
-
+            });
 
             // Create product Ajax request.
             $('#SubmitCreateForm').click(function(e) {
@@ -2512,7 +2600,7 @@
                     }).get();
                 // console.log(values);
                 $.ajax({
-                    url: "{{ route('receipt_school.store') }}",
+                    url: "receipt_school/store/",
                     method: 'post',
                     data: {
                         /// type: $('#type').val(),
