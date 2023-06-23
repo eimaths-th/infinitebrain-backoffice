@@ -1162,9 +1162,6 @@ class ReceiptSchoolController extends Controller
 
     public function store(Request $request)
     {
-
-
-
         $validator =  Validator::make(
             $request->all(),
             [
@@ -1194,6 +1191,7 @@ class ReceiptSchoolController extends Controller
                 // 'total' => 'required|string',
 
                 // 'file_att' => 'required|string
+                //
 
             ],
             [

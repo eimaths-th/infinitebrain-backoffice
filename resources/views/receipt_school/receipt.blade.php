@@ -2600,7 +2600,7 @@
                     }).get();
                 // console.log(values);
                 $.ajax({
-                    url: "receipt_school/store/",
+                    url: "receipt_school/store",
                     method: 'post',
                     data: {
                         /// type: $('#type').val(),
