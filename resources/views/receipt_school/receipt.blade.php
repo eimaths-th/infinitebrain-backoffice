@@ -2293,7 +2293,7 @@
             $(document).on('change', '#rrweek', function(e) {
                 // console.log($(this).parent().parent().parent().html())
                 // console.log($(this).parent().parent().parent().find('#type').html())
-                // $('#discount').val(new Date().toDateString())
+                //// $('#discount').val(new Date().toDateString())
                 var parent = $(this).parent().parent().parent();
                 week = $(this).parent().parent().parent().find('#rrweek').val();
                 if (week == 4) {

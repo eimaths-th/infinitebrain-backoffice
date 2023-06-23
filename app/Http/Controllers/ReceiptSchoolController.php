@@ -681,7 +681,7 @@ class ReceiptSchoolController extends Controller
                 $weekstaus = "disabled";
             }
 
-
+            //hide
             $data_html .= '<tr class="firstTr3">
         <td width="5%">
             <div class="col-md-12 col-sm-12 col-xs-12">
