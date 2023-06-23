@@ -632,10 +632,18 @@ class ReceiptSchoolController extends Controller
             } else {
                 $course_type_1 = 'selected';
             }
+            $course_type_3 = '';
+            if ($dresult['course_type'] == 3) {
+                $course_type_3 = 'selected';
+            } else {
+                $course_type_1 = 'selected';
+            }
             $course_type_select = '
             <option value="1" ' . $course_type_1 . '>Course+Book
             </option>
             <option value="2" ' . $course_type_2 . '>Book
+            </option>
+            <option value="3" ' . $course_type_3 . '>สื่อการสอน
             </option>';
 
 
@@ -669,7 +677,7 @@ class ReceiptSchoolController extends Controller
                 $weekstaus = "disabled";
             }
 
-            if ($dresult['course_type'] == 2) {
+            if ($dresult['course_type'] == 2 || $dresult['course_type'] == 3) {
                 $weekstaus = "disabled";
             }
 
@@ -884,7 +892,7 @@ class ReceiptSchoolController extends Controller
         $pricesub = 0;
         $discount = 0;
         foreach ($receipts_detail as $dresult) {
-            if ($dresult['course_type'] == 2) {
+            if ($dresult['course_type'] == 2 || $dresult['course_type'] == 3) {
                 $price = $dresult['bookprice'];
             } else {
                 $price = ($dresult['total'] - $dresult['bookprice']);
@@ -919,6 +927,8 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['course_type'] = $dresult['course_type'];
                 if ($dresult['course_type'] == 2) {
                     $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] - $dresult['discount']) / $dresult['book'], 2);
+                } else if ($dresult['course_type'] == 3) {
+                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] - $dresult['discount']) / $dresult['book'], 2);
                 } else {
                     $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] + $dresult['discount'] - $dresult['bookprice']) / $dresult['qty'], 2);
                 }
@@ -928,7 +938,10 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['bookprice'] = number_format($dresult['bookprice'], 2);
                 $receipt_detail_arr[$x]['receipt_number'] = ($dresult['receipt_number']);
                 $receipt_detail_arr[$x]['period'] = $dresult['period'];
+                $receipt_detail_arr[$x]['total'] = number_format($dresult['total'], 2);
             }
+
+            //dd($receipt_detail_arr);
 
 
             $subject = Subject::where('id', $dresult['subject'])
@@ -975,9 +988,6 @@ class ReceiptSchoolController extends Controller
         $vat_val = number_format($vat_total, 2);
 
         $price_val = number_format(($vat_price + $vat_total) + $booksum, 2);
-
-
-
 
         $mes = "";
         $text = "";
@@ -1037,9 +1047,9 @@ class ReceiptSchoolController extends Controller
 
 
         return view($viewr)->with(['id' => $id])
-            ->with(['discount' => $discount])
+            ->with(['discount' => number_format($discount, 2)])
             ->with(['vat_price' => $vat_price])
-            ->with(['booksum' => $booksum])
+            ->with(['booksum' => number_format($booksum, 2)])
             ->with(['html' => $html])
             ->with(['data' => $data])
             ->with(['data2' => $data2])
