@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                background-size: 15px;
-                                                            }*/
+                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                    background-size: 15px;
+                                                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                                border-color: var(--color-invalid);
-                                                            }*/
+                                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                                    border-color: var(--color-invalid);
+                                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                display: block;
-                                                            }*/
+                                                                    display: block;
+                                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -559,7 +559,7 @@
                                                     style="text-decoration: underline;">Cambridge University Press &
                                                     Assessment Thailand 2023 Registration
                                                     Form</span></strong></span></p>
-                                   {{--  <p><strong><span style="color: #6351a2;"> โค้ดส่วนลดค่ะ ใช้ได้ตั้งแต่วันที่ 1 ก.ค. - 31
+                                    {{--  <p><strong><span style="color: #6351a2;"> โค้ดส่วนลดค่ะ ใช้ได้ตั้งแต่วันที่ 1 ก.ค. - 31
                                                 ก.ค.</span></strong></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;">CEM100 ลด 100 บาท</span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;">META200 ลด 200 บาท</span>
@@ -568,7 +568,7 @@
                                     <p style="text-align: left;"><span style="color: #6351a2;"> 📩FB:
                                             m.me/cambridge.thai</span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> 💌Line:
-                                            https://lin.ee/NUrW1nX</span>
+                                            <a>https://lin.ee/NUrW1nX</a></span>
                                     </p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> 📞Tel: 093 358 6333</span>
                                     </p>
@@ -576,11 +576,14 @@
 
                                     <br>
 
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Early Bird
+
+
+
+                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>
                                                 Registration
-                                                Date:</strong> 16 - 31 JUNE 2023</span></p>
-                                    {{-- <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;26th August 2023</span>
-                                    </p> --}}
+                                                Date:</strong> 1 July - 9 September 2023</span></p>
+                                    <p><span style="color: #6351a2;"><strong>Sitting Date:</strong>&nbsp;30 September and 1 October 2023</span>
+                                    </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
                                     </p> --}}
@@ -588,14 +591,13 @@
                                     </p> --}}
 
 
-                                    <p><strong><span style="color: #6351a2;">Early Bird Registration
+                                    <p><strong><span style="color: #6351a2;">Registration
                                                 Fee:&nbsp;</span></strong>
                                     </p>
-                                    <p><span style="color: #6351a2;"><strong>Cambridge Primary Insight (Year 1 -
-                                                6):</strong> 1790 baht</span>
+                                    <p><span style="color: #6351a2;"><strong>Cambridge Primary Insight (Year 1 - 6) :</strong>2,190  baht</span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>MidYIS (Year 7 - 9):</strong> </span><span
-                                            style="color: #6351a2;">1890 bath</span><br></p>
+                                            style="color: #6351a2;">2,390 bath</span><br></p>
                                     <p>&nbsp;</p>
                                     {{--  <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร GELOSEA</b> <br>
 
@@ -686,8 +688,7 @@
                                     <div class="col-md-6 col-sm-12">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="nickname">Nickname
+                                            <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
                                                 (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
@@ -797,9 +798,9 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Cambridge Primary Insight (Year 1 - 6) 1790 Bath">Cambridge
-                                                    Primary Insight (Year 1 - 6) 1790 Bath</option>
-                                                <option value="MidYIS (Year 7 - 9) 1890 Bath">MidYIS (Year 7 - 9) 1890 Bath
+                                                <option value="Cambridge Primary Insight (Year 1 - 6)  2190 Baht">Cambridge
+                                                    Primary Insight (Year 1 - 6) 2,190 Bath</option>
+                                                <option value="MidYIS (Year 7 - 9) 2390 Baht">MidYIS (Year 7 - 9): 2,390 Baht
                                                 </option>
 
                                             </select>
@@ -815,38 +816,17 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- <div class="col-md-6">
+                                    <div class="col-md-6">
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="contest">Choose
-                                                Contest Category<span class="form-required">*</span></label>
-                                            <select class="form-control" id="contest" name="contest"
-                                                aria-label="Choose Contest Category" required>
-                                                <option value="">Please Select</option>
-                                                <option value="Science Category 1 (Kindergarten ,Grades 1)">Science
-                                                    Category 1 (Kindergarten ,Grades 1) </option>
-                                                <option value="Science Category 2 (Grades 2-3)">Science Category 2 (Grades
-                                                    2-3)</option>
-                                                <option value="Science Category 3 (Grades 4-5)">Science Category 3 (Grades
-                                                    4-5)</option>
-                                                <option value="Science Category 4 (Grades 6-7)">Science Category 4
-                                                    (Grades6-7)</option>
-                                                <option value="Science Category 5 (Grades 8-9)">Science Category 5 (Grades
-                                                    8-9)</option>
-                                                <option value="Science Category 6 (Grades 10-12)">Science Category 6
-                                                    (Grades 10-12)</option>
-                                            </select>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Contest Category</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="dcode">โค้ดส่วนลด</label>
+                                            <input type="text" class="form-control" name="dcode" id="dcode"
+                                                value="" maxlength="100">
+                                            <label class="form-sub-label error" style="min-height:13px"
+                                                aria-hidden="false" id="dcodel"></label>
+
                                         </div>
-                                    </div> --}}
+                                    </div>
                                 </div>
 
                                 <div class="form-row form-focus">
@@ -1076,6 +1056,22 @@
     </div>
     <script>
         $(document).ready(function() {
+            $('#dcode').on('keyup', function(event) {
+                var otherFieldValue = $('#package').val();
+
+                if (otherFieldValue.trim() === '') {
+                    // Other field is empty when the entered key is present
+                    // Perform your desired action or validation here
+                    $('#dcode').val('');
+                    $('#dcodel').html('กรุณาระบุ Package');
+                    $('#package').focus();
+                    //console.log('Other field must not be empty.');
+                } else {
+                    $('#dcodel').html('');
+                }
+            });
+
+
             var inputlist = ["firstname", "lastname", "address", "postcode"];
             $(".form-control").focusout(function() {
                 //$(".form-control").focus();
@@ -1189,7 +1185,8 @@
                         $(this).closest(inputxx).find('.form-error-message').css("display", "none");
                     }
 
-                } else {
+                }
+                if (nameinput == 'dcode') {} else {
                     if ($(this).attr('type') == 'email') {
                         var validRegex =
                             /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
