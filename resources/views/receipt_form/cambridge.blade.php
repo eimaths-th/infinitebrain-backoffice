@@ -566,11 +566,11 @@
                                     </p> --}}
                                     <p><strong><span style="color: #6351a2;">Contact Information&nbsp;</span></strong></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> 📩FB:
-                                            m.me/cambridge.thai</span></p>
+                                        <a href="m.me/cambridge.thai" target="_blank">m.me/cambridge.thai</a> </span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> 💌Line:
-                                            <a>https://lin.ee/NUrW1nX</a></span>
+                                            <a href="https://lin.ee/NUrW1nX" target="_blank">https://lin.ee/NUrW1nX</a></span>
                                     </p>
-                                    <p style="text-align: left;"><span style="color: #6351a2;"> 📞Tel: 093 358 6333</span>
+                                    <p style="text-align: left;"><span style="color: #6351a2;"> 📞<a href="tel:0933586333">Tel: 093 358 6333</a></span>
                                     </p>
 
 
