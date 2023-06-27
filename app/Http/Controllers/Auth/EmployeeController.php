@@ -82,8 +82,6 @@ class EmployeeController extends Controller
         return view('users.index');
     }
 
-
-
     /**
      * Show the form for creating a new resource.
      *
@@ -227,12 +225,12 @@ class EmployeeController extends Controller
         //exit();
         $this->check_permission();
 
-            
+
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
         ];
-        
+
         if ($request->get('password')) {
             $rules['password'] = 'required|string|min:8|confirmed';
         }
@@ -263,12 +261,12 @@ class EmployeeController extends Controller
     public function mupdate(Request $request, $id)
     {
 
-       
+
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
         ];
-        
+
         if ($request->get('password')) {
             $rules['password'] = 'required|string|min:8|confirmed';
         }
@@ -290,7 +288,7 @@ class EmployeeController extends Controller
             $level['password'] = Hash::make($request->get('password'));
         }
 
-       
+
         User::find($id)->update($level);
 
         return response()->json(['success' => 'User updated successfully']);

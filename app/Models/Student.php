@@ -18,9 +18,11 @@ class Student extends Model
         'birth_date',
         'street_address',
         'mobile',
+        'status',
         'photo_att',
         'grade',
         'sex',
+        'reason',
         'pid'
     ];
     public function parent()

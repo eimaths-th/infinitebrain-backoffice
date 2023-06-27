@@ -682,7 +682,7 @@ class ReceiptController extends Controller
     {
 
         //
-        $this->check_permission();
+        $this->check_permission();  
         $data = Receipt::find($id);
 
         //print_r($data);
@@ -711,7 +711,6 @@ class ReceiptController extends Controller
         $receipts_detail = ReceiptDetail::where('receipt_details.receipt_id', $data->id)
             ->orderBy("receipt_details.id", "asc")
             ->get();
-
 
         $all_price = 0;
         $receipt_detail_arr = array();
@@ -763,40 +762,37 @@ class ReceiptController extends Controller
         $vat_val = number_format($vat_total, 2); */
         //exit();
 
-        $file_att = '';
+        // $file_att = '';
 
-        if ($data->file_att) {
+        // if ($data->file_att) {
 
+        //     $ck_url = parse_url($data->file_att);
+        //     if ($ck_url['scheme'] == 'https') {
+        //         $urlf = "https";
+        //     } else {
+        //         $urlf = "http";
+        //     }
 
+        //     $arrl = explode($urlf, $data->file_att);
+        //     for ($i = 1; $i <= count($arrl) - 1; $i++) {
+        //         $urla = $urlf . $arrl[$i];
+        //         if (strpos($urla, "jotform")) {
+        //             $retu = $this->get_img_url($urla);
+        //         } else {
+        //             //watermark
+        //             $fileex = explode("/", $data->file_att);
+        //             $this->textWatermark(end($fileex), 'Receipt Number : ' . $data->receipt_number);
 
-            $ck_url = parse_url($data->file_att);
-            if ($ck_url['scheme'] == 'https') {
-                $urlf = "https";
-            } else {
-                $urlf = "http";
-            }
-
-
-            $arrl = explode($urlf, $data->file_att);
-            for ($i = 1; $i <= count($arrl) - 1; $i++) {
-                $urla = $urlf . $arrl[$i];
-                if (strpos($urla, "jotform")) {
-                    $retu = $this->get_img_url($urla);
-                } else {
-                    //watermark
-                    $fileex = explode("/", $data->file_att);
-                    $this->textWatermark(end($fileex), 'Receipt Number : ' . $data->receipt_number);
-
-                    $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
-                }
+        //             $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
+        //         }
 
 
 
-                //if ($this->URL_exists($retu)) {
-                $file_att .= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
-                //}
-            }
-        }
+        //         //if ($this->URL_exists($retu)) {
+        //         $file_att .= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
+        //         //}
+        //     }
+        // }
 
 
         //$des_text = nl2br($data->description);
@@ -811,9 +807,27 @@ class ReceiptController extends Controller
             ->with(['text' => $text])
             ->with(['price_texten' => $price_texten])
             ->with(['price_text' => $price_text])
-            ->with(['vat_price_val' => $vat_price_val])
-            ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att]);
+            ->with(['vat_price_val' => $vat_price_val]);
+        // ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att]);
         //->with(['des_text' => $des_text]);
+    }
+
+    public function slips(Request $request)
+    {
+
+        $this->check_permission();
+        $input  =   $request->all();
+        $date = $request->print_date;
+
+        $slips = Receipt::where('submission_date',$date)->get();
+        $cslips = count($slips);
+        dd($slips,$date);
+        foreach ($slips as $date) {
+            # code...
+        }
+
+
+        return view('receipt.print_slips');
     }
 
     public function print_day(Request $request)
@@ -1043,17 +1057,16 @@ class ReceiptController extends Controller
                 $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
                 $price = $price + $rprice;
 
-              /*   if ($result->receipt_type == 2) {
+                /*   if ($result->receipt_type == 2) {
 
                     $desresult = $dresult['description'] . " ";
                 } */
-
             }
 
             $price_val = number_format($price, 2);
             if ($result->receipt_type == 2) {
                 $price = $price * -1;
-                  $rtype2.= $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i].' ';
+                $rtype2 .= $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i] . ' ';
             }
 
 
@@ -1068,7 +1081,6 @@ class ReceiptController extends Controller
             $i++;
             //$rtype2='';
             $total_price = ($total_price + $price);
-
         }
         $numrec = count($ret_receipt);
         $pagen = 0;

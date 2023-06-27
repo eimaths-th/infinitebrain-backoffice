@@ -105,7 +105,6 @@ Route::post('/subjects_price/store', [SubjectPriceController::class, 'store'])->
 Route::delete('/subjects_price/destroy_all', [SubjectPriceController::class, 'destroy_all'])->name('subjects_price.destroy_all');
 Route::delete('/subjects_price/destroy/{id}', [SubjectPriceController::class, 'destroy'])->name('subjects_price.destroy');
 
-
 Route::get('/levels', [LevelController::class, 'index'])->name('levels');
 Route::get('/levels/edit/{id}', [LevelController::class, 'edit'])->name('levels.edit');
 Route::post('/levels/select_list/{id}', [LevelController::class, 'select_list'])->name('levels.select_list');
@@ -116,10 +115,11 @@ Route::delete('/levels/destroy/{id}', [LevelController::class, 'destroy'])->name
 
 Route::get('/students', [StudentController::class, 'index'])->name('students');
 Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
-Route::get('/students/show', [StudentController::class, 'show'])->name('students.show');
+Route::get('/students/show/{id}', [StudentController::class, 'show'])->name('students.show');
 Route::get('/students/view/{id}', [StudentController::class, 'view'])->name('students.view');
 Route::get('/students/edit/{id}', [StudentController::class, 'edit'])->name('students.edit');
 Route::put('/students/save/{id}', [StudentController::class, 'update'])->name('students.save');
+Route::get('/students/show/history/{sub_id}/{std_id}', [StudentController::class, 'std_his'])->name('std_his');
 
 Route::post('/students/store', [StudentController::class, 'store'])->name('students.store');
 Route::post('/students/import', [StudentController::class, 'importExcel'])->name('students.import');
@@ -145,11 +145,11 @@ Route::post('/course/store', [CourseController::class, 'store'])->name('course.s
 Route::delete('/course/destroy/{id}', [CourseController::class, 'destroy'])->name('course.destroy');
 Route::delete('/course/destroy_all', [CourseController::class, 'destroy_all'])->name('course.destroy_all');
 
-
 Route::get('/receipts', [ReceiptController::class, 'index'])->name('receipts');
 Route::get('/receipts/create', [ReceiptController::class, 'create'])->name('receipts.create');
 Route::match(array('GET', 'POST'), '/receipts/print_day', [ReceiptController::class, 'print_day'])->name('receipts.print_day');
 Route::match(array('GET', 'POST'), '/receipts/print_month', [ReceiptController::class, 'print_month'])->name('receipts.print_month');
+Route::match(array('GET', 'POST'), '/receipts/print_slips', [ReceiptController::class, 'slips'])->name('receipts.slips');
 Route::get('/receipts/show/{type}/{id}', [ReceiptController::class, 'show'])->name('receipts.show');
 Route::get('/receipts/edit/{id}/{type}', [ReceiptController::class, 'edit'])->name('receipts.edit');
 Route::get('/receipts/migrate/{id}', [ReceiptController::class, 'migrateReceipt'])->name('receipts.migrate');
@@ -160,12 +160,10 @@ Route::post('/receipts/import', [ReceiptController::class, 'importExcel'])->name
 Route::delete('/receipts/destroy/{id}', [ReceiptController::class, 'destroy'])->name('receipts.destroy');
 Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all'])->name('receipts.destroy_all');
 
-
 Route::get('/parent-register', [ParentRegisterController::class, 'register'])->name('parentregister');
 Route::post('/parent-register/store', [ParentRegisterController::class, 'store'])->name('parentregister.store');
 Route::get('/parent-register/complete', [ParentRegisterController::class, 'show'])->name('parentregister.complete');
 Route::get('/school', [SchoolController::class, 'index'])->name('school');
-
 
 Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
 //Route::get('/olpcs', [ReceiptFormController::class, 'olpcs'])->name('olpcs');
@@ -179,8 +177,6 @@ Route::get('/form/complete/{sfield}', [ReceiptFormController::class, 'show'])->n
 Route::get('/form/complete1', [ReceiptFormController::class, 'show1'])->name('form.complete1');
 
 Route::post('/form/store1', [ReceiptFormController::class, 'store1'])->name('form.store1');
-
-
 
 Route::get('/receipts_form', [ReceiptFormController::class, 'index'])->name('receipts_form');
 Route::get('/receipts_form/edit/{id}', [ReceiptFormController::class, 'edit'])->name('receipts_form.edit');
@@ -222,6 +218,7 @@ Route::delete('/comment/destroy_all', [CommentController::class, 'destroy_all'])
 
 
 Route::get('/histories', [HistoryController::class, 'index'])->name('histories');
+Route::get('/histories/stdsub/{id}', [HistoryController::class, 'stdsub'])->name('stdsub');
 Route::get('/histories/edit/{id}', [HistoryController::class, 'edit'])->name('histories.edit');
 Route::put('/histories/save/{id}', [HistoryController::class, 'update'])->name('histories.save');
 Route::post('/histories/show', [HistoryController::class, 'show'])->name('histories.show');

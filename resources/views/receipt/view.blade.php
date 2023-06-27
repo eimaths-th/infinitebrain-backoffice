@@ -271,7 +271,7 @@
                                         <td width="40%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="40%" class="grey">ภาษีมูลค่าเพิ่ม 7% / Vat 7%</td>
-                                        <td width="20%" align="right" style="padding-right: 35px"><b>{{ $vat_val }}</b></td>
+                                        <td width="20%" align="right" style="padding-right: 35px"><b>{{ $vat_val ?? 'null'}}</b></td>
                                     </tr>
                                 </table>
                             </td>
@@ -329,7 +329,7 @@
                         </tr>
 
                     </table>
-                    <center>{!! $file_att !!}</center>
+                    {{-- <center>{!! $file_att !!}</center> --}}
                 </div>
 
 

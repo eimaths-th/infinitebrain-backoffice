@@ -33,4 +33,9 @@ class SchoolPrice extends Model
         return $this->belongsTo(Receipt_School::class, 'rid', 'id');
     }
 
+    public function school_sub()
+    {
+        return $this->hasOne(Subject::class, 'id', 'subject');
+    }
+
 }
