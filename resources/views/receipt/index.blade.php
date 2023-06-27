@@ -17,7 +17,7 @@
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
                                             <p>{{ $message }}</p>
-                                                </div>-->
+                                             </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
