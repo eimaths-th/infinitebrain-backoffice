@@ -334,6 +334,12 @@ class CourseController extends Controller
 
         //print_r($tdhtml);
         //echo $all_level;
+        // dd($type, $lang, $id , $all_level);
+
+        // for ($ret = ($all_level - 1); $ret >= 1; $ret--) {
+        //     $tb_level .= $tdhtml[$ret];
+        // }
+
         for ($ret = ($all_level - 1); $ret >= 1; $ret--) {
             if (isset($tdhtml[$ret])) {
                 $tb_level .= $tdhtml[$ret];
@@ -473,8 +479,8 @@ class CourseController extends Controller
 
             //play math
             //if ($course[0]->id == 2) {
-            //$course[0]->book_per_month = $key->book_per_level;
-            ///$course[0]->book_per_month = $levels_start[0]->book_per_level;
+                //$course[0]->book_per_month = $key->book_per_level;
+                ///$course[0]->book_per_month = $levels_start[0]->book_per_level;
             //}
 
 
@@ -569,9 +575,7 @@ class CourseController extends Controller
         //print_r($tdhtml);
         //echo $all_level;
         for ($ret = ($all_level - 1); $ret >= 1; $ret--) {
-            if (isset($tdhtml[$ret])) {
-                $tb_level .= $tdhtml[$ret];
-            }
+            $tb_level .= $tdhtml[$ret];
         }
 
         if ($type == "view") {
