@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ImportCustomer;
+use App\Models\Receipt;
 use App\Models\Receipt_School;
 use App\Models\SchoolPrice;
 use App\Models\Subject;
@@ -41,7 +42,21 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-        //
+        //test
+
+        // $testStd = Student::all();
+        // $testStd = Student::find(200);
+        // $id = $testStd->id;
+        // $testRcsh = Receipt_School::whereRaw("FIND_IN_SET($id, REPLACE(pid, '|', ','))")->get();
+        // // $testRcsh = Receipt_School::where('pid', 'LIKE', '%' . $id . '%')->get();
+
+        // dd($testStd, $testRcsh, $id);
+
+        // $parts = explode('-', $testStd);
+        // $lastTwoParts = array_slice($parts, -2);
+        // $end_date = implode('-', $lastTwoParts);
+        //endtest
+
 
         $this->check_permission();
 
@@ -60,34 +75,36 @@ class StudentController extends Controller
 
             $success = History::where('student_id', $stdId)->get();
             // $his_succsss = count($success);
-            $rec = Receipt_School::where('pid', 'LIKE', '%' . $stdId . '%')->get();
+
+            // $rec = Receipt_School::where('pid', 'LIKE', '%' . $stdId . '%')->get();
+            $rec = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
 
             $startcourse = null;
 
             // $id_parent = ;
-            foreach ($rec as $parent) {
+            // foreach ($rec as $parent) {
 
-                if ($std->pid == $parent->name_parent) {
+            //     if ($std->pid == $parent->name_parent) {
 
-                    $id_parent = (int)$parent->name_parent;
-                }
-            }
+            //         $id_parent = (int)$parent->name_parent;
+            //     }
+            // }
 
             $crec = count($rec);
 
             if ($crec > 0) {
-                if (!empty($id_parent)) {
+                // if (!empty($id_parent)) {
 
-                    $rec = Receipt_School::where('name_parent', $id_parent)->get();
-                }
+                //     $rec = Receipt_School::where('name_parent', $id_parent)->get();
+                // }
 
-                if ($std->pid == $rec->first()->name_parent) {
+                // if ($std->pid == $rec->first()->name_parent) {
 
                     // dd($stdId, $rec);
 
                     $parentCheck = '';
                     $rec_ids = [];
-                    $rec = Receipt_School::where('name_parent', $id_parent)->get();
+                    // $rec = Receipt_School::where('name_parent', $id_parent)->get();
 
                     foreach ($rec as $record) {
                         if (!empty($record->school_pice->qty)) {
@@ -117,7 +134,6 @@ class StudentController extends Controller
 
 
                         $currentReceiptEndDate = Carbon::parse($end_date);
-
                     } elseif ($count_rec_ids > 0) {
                         # code...
                         // dd($school_pice);
@@ -140,8 +156,6 @@ class StudentController extends Controller
 
 
                         $currentReceiptEndDate = Carbon::parse($end_date);
-
-
                     } else {
                         // dd($rec_ids, $school_pice);
                         $school_pice = [];
@@ -150,11 +164,12 @@ class StudentController extends Controller
                     }
                     // dd($id_parent, $std->pid, $stdId, $std, $rec,$rec_ids,$school_pice);
                     $parentCheck = '';
-                } else {
-                    $school_pice = [];
-                    $end_date = '2999-01';
-                    $parentCheck = 'ผู้ปกครองไม่ตรงกัน';
-                }
+                // }
+                // else {
+                //     $school_pice = [];
+                //     $end_date = '2999-01';
+                //     $parentCheck = 'ผู้ปกครองไม่ตรงกัน';
+                // }
             } else {
                 $school_pice = [];
                 $parentCheck = '';
@@ -181,7 +196,6 @@ class StudentController extends Controller
                 }
             }
             $std->update(['status' => $status]);
-
         }
 
         // dd($i);
@@ -215,25 +229,24 @@ class StudentController extends Controller
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
                 ->editColumn('status', function ($row) {
-                    if ($row->status == 'ไม่พบใบเสร็จ' ||$row->status == 'พ้นสภาพนักเรียน' ) {
+                    if ($row->status == 'ไม่พบใบเสร็จ' || $row->status == 'พ้นสภาพนักเรียน') {
                         # code...
                         $class = 'danger';
-                    }elseif ($row->status == 'กำลังยุติการการเรียน') {
+                    } elseif ($row->status == 'กำลังยุติการการเรียน') {
                         # code...
                         $class = 'warning';
-
-                    }elseif ($row->status == 'กำลังเรียนอยู่') {
+                    } elseif ($row->status == 'กำลังเรียนอยู่') {
                         # code...
                         $class = 'success';
                     }
-                    return '<span class="text-'.$class.'">'. $row->status . '</span>';
+                    return '<span class="text-' . $class . '">' . $row->status . '</span>';
                 })
                 ->addColumn('action', function ($row) {
                     $html = '<a href="' . route("students.show", $row->id) . '" class="btn btn-xs btn-primary btn-edit" data-id=""><i class="fa fa-eye"></i> View </a> ';
                     $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
-                })->rawColumns(['checkbox', 'photo','status' ,'action'])->toJson();
+                })->rawColumns(['checkbox', 'photo', 'status', 'action'])->toJson();
         }
         $parent = ParentRegister::orderBy("id", "asc")->get();
         return view('students.index')->with(['data4' => $parent]);
@@ -694,6 +707,7 @@ class StudentController extends Controller
         //     $parentCheck = '';
         //     $end_date = '2999-01';
         // }
+        // code 2
         $std = Student::find($id);
 
         $stdId = $std->id;
