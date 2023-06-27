@@ -827,6 +827,24 @@ class ReceiptController extends Controller
         //->with(['des_text' => $des_text]);
     }
 
+    public function slips(Request $request)
+    {
+
+        $this->check_permission();
+        $input  =   $request->all();
+        $date = $request->print_date;
+
+        $slips = Receipt::where('submission_date',$date)->get();
+        $cslips = count($slips);
+        // dd($slips,$date);
+        foreach ($slips as $date) {
+            # code...
+        }
+
+
+        return view('receipt.print_slips');
+    }
+
     public function print_day(Request $request)
     {
         //
