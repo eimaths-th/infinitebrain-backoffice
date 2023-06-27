@@ -31,12 +31,16 @@ use App\Http\Controllers\HistoryController;
 |
 */
 
-Route::group(array('domain' => 'form.infinitebrain.co.th'), function () {
+Route::group(array('domain' => 'form.infinitebrain.co.th'), function()
+{
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+
 });
 
-Route::group(array('domain' => 'school.infinitebrain.co.th'), function () {
+Route::group(array('domain' => 'school.infinitebrain.co.th'), function()
+{
     Route::get('/', [App\Http\Controllers\SchoolController::class, 'index']);
+
 });
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
@@ -145,6 +149,7 @@ Route::get('/receipts', [ReceiptController::class, 'index'])->name('receipts');
 Route::get('/receipts/create', [ReceiptController::class, 'create'])->name('receipts.create');
 Route::match(array('GET', 'POST'), '/receipts/print_day', [ReceiptController::class, 'print_day'])->name('receipts.print_day');
 Route::match(array('GET', 'POST'), '/receipts/print_month', [ReceiptController::class, 'print_month'])->name('receipts.print_month');
+// Route::match(array('GET', 'POST'), '/receipts/print_slips', [ReceiptController::class, 'slips'])->name('receipts.slips');
 Route::get('/receipts/show/{type}/{id}', [ReceiptController::class, 'show'])->name('receipts.show');
 Route::get('/receipts/edit/{id}/{type}', [ReceiptController::class, 'edit'])->name('receipts.edit');
 Route::get('/receipts/migrate/{id}', [ReceiptController::class, 'migrateReceipt'])->name('receipts.migrate');
@@ -228,7 +233,7 @@ Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPa
 Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
 Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
-Route::match(array('GET', 'POST'), '/receipt_school', [ReceiptSchoolController::class, 'index'])->name('receipt_school');
+Route::match(array('GET', 'POST'),'/receipt_school', [ReceiptSchoolController::class, 'index'])->name('receipt_school');
 Route::get('/receipt_school/{sub_id}', [ReceiptSchoolController::class, 'search'])->name('receipt_school.search');
 Route::get('/receipt_school/{sub_id}/{level_id}/{week}/{price}/{qty}/{discount}/{book_price}/{type}/{course_type}', [ReceiptSchoolController::class, 'searchs'])->name('receipt_school.searchs');
 Route::get('/receipt_school/{sub_id}/{level_id}/{book}/', [ReceiptSchoolController::class, 'sumbook'])->name('receipt_school.sumbook');

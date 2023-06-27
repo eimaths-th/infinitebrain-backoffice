@@ -682,7 +682,7 @@ class ReceiptController extends Controller
     {
 
         //
-        $this->check_permission();  
+        $this->check_permission();
         $data = Receipt::find($id);
 
         //print_r($data);
@@ -821,7 +821,7 @@ class ReceiptController extends Controller
 
         $slips = Receipt::where('submission_date',$date)->get();
         $cslips = count($slips);
-        dd($slips,$date);
+        // dd($slips,$date);
         foreach ($slips as $date) {
             # code...
         }
