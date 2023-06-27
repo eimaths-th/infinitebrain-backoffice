@@ -827,22 +827,179 @@ class ReceiptController extends Controller
         //->with(['des_text' => $des_text]);
     }
 
-    public function slips(Request $request)
+    public function show_day(Request $request)
     {
 
+        //
         $this->check_permission();
-        $input  =   $request->all();
-        $date = $request->print_date;
+        $validator =  Validator::make($request->all(), [
+            'pdsfield' => 'required|string',
+            'print_rdate' => 'required|string',
+        ]);
 
-        $slips = Receipt::where('submission_date',$date)->get();
-        $cslips = count($slips);
-        // dd($slips,$date);
-        foreach ($slips as $date) {
-            # code...
+        if ($validator->fails()) {
+            //return response()->json(['errors' => $validator->errors()->all()]);
+            return back()->with(['error' => 'Please input print day']);
         }
 
+        $sfield = $request->get('pdsfield');
+        $type = $request->get('type');
 
-        return view('receipt.print_slips');
+
+        if ($type == "view") {
+            $viewr = "receipt.viewr";
+        } else if ($type == "print") {
+            $viewr = "receipt.printr";
+        }
+
+        $receipts = Receipt::select(
+            "receipts.id as id",
+            "receipts.submission_date as receipt_submission_date",
+            "receipts.receipt_number as receipt_number",
+            "receipts.receipt_customer_number as receipt_customer_number",
+            "receipts.first_name as receipt_firstname",
+            "receipts.last_name as receipt_lastname",
+            "receipts.name_parent as receipt_name_parent",
+            "receipts.package as receipt_price",
+            "receipts.type as receipt_type",
+            "receipts.file_att as file_att",
+        )
+            //->join("students", "students.id", "=", "receipts.student_id")
+            //->join("subjects", "subjects.id", "=", "receipts.subject_id")
+            //->join("levels", "levels.id", "=", "receipts.level_id")
+
+            ->where([['receipts.sfield', $sfield], ['submission_date', $request->get('print_rdate')]])
+            ->orderBy("receipts.receipt_number", "asc")
+            ->get();
+        //->toArray();
+        // print_r($receipts);
+        // exit();
+
+        if ($receipts->isEmpty()) {
+            return back()->with(['error' => 'ไม่พบข้อมูลใบเสร็จ จากวันที่ท่านเลือก']);
+        }
+
+        $i = 0;
+        $ret_receipt = array();
+        $total_price = 0;
+        foreach ($receipts as $result) {
+            if ($result->type == 2) {
+                $mes = "ใบลดหนี้";
+                $text = "Credit Note";
+            } else {
+
+                $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+                $text = "Tax Invoice/Receipt";
+            }
+
+            if ($result->receipt_price) {
+                $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
+            }
+
+            //$ret_receipt[$result->id]['data'] = $receipts;
+            $ret_receipt[$result->id]['mes'] = $mes;
+            $ret_receipt[$result->id]['text'] = $text;
+            $ret_receipt[$result->id]['number'] = $result->receipt_number;
+            $ret_receipt[$result->id]['customer_number'] = $result->receipt_customer_number;
+            $ret_receipt[$result->id]['first_name'] = $result->receipt_firstname;
+            $ret_receipt[$result->id]['last_name'] = $result->receipt_lastname;
+            $ret_receipt[$result->id]['name_parent'] = $result->receipt_name_parent;
+            $ret_receipt[$result->id]['submission_date'] = $result->receipt_submission_date;
+
+            //price detail
+            $receipts_detail = ReceiptDetail::where('receipt_details.receipt_id', $result->id)
+                ->orderBy("receipt_details.id", "asc")
+                ->get();
+
+
+            $all_price = 0;
+            $receipt_detail_arr = array();
+            $no = 1;
+            $x = 0;
+            foreach ($receipts_detail as $dresult) {
+                $price = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
+                if ($price == 0) {
+                    $receipt_detail_arr[$x]['no'] = '';
+                    $receipt_detail_arr[$x]['price'] = '';
+                    $receipt_detail_arr[$x]['unit'] = '';
+                    $receipt_detail_arr[$x]['unitprice'] = '';
+                    $receipt_detail_arr[$x]['quantity'] = '';
+                    $receipt_detail_arr[$x]['discount'] = '';
+                } else {
+                    $receipt_detail_arr[$x]['no'] = $no;
+                    $receipt_detail_arr[$x]['price'] = number_format($price, 2);
+                    $receipt_detail_arr[$x]['unit'] = $dresult['unit'];
+                    $receipt_detail_arr[$x]['unitprice'] = number_format($dresult['unitprice'], 2);
+                    $receipt_detail_arr[$x]['quantity'] = $dresult['quantity'];
+                    $receipt_detail_arr[$x]['discount'] = number_format($dresult['discount'], 2);
+                }
+
+                $receipt_detail_arr[$x]['description'] = $dresult['description'];
+                $all_price = $all_price + $price;
+                $no++;
+                $x++;
+            }
+
+            //print_r($receipt_detail_arr);
+            //exit();
+
+            $price_val = number_format($all_price, 2);
+            $price_text = $this->baht_text($all_price);
+            $price_texten = $this->convertNumber($all_price);
+            $vat_price = ($all_price * 100) / 107;
+            $vat_total = $all_price - $vat_price;
+            $vat_price_val = number_format($vat_price, 2);
+            $vat_val = number_format($vat_total, 2);
+
+            $ret_receipt[$result->id]['price_texten'] = $price_texten;
+            $ret_receipt[$result->id]['price_text'] = $price_text;
+            $ret_receipt[$result->id]['price_val'] = $price_val;
+            $ret_receipt[$result->id]['vat_price_val'] = $vat_price_val;
+            $ret_receipt[$result->id]['vat_val'] = $vat_val;
+            $ret_receipt[$result->id]['detail'] = $receipt_detail_arr;
+
+            $file_att = '';
+
+            if ($result->file_att) {
+
+
+
+                $ck_url = parse_url($result->file_att);
+                if ($ck_url['scheme'] == 'https') {
+                    $urlf = "https";
+                } else {
+                    $urlf = "http";
+                }
+
+
+                $arrl = explode($urlf, $result->file_att);
+                for ($i = 1; $i <= count($arrl) - 1; $i++) {
+                    $urla = $urlf . $arrl[$i];
+                    if (strpos($urla, "jotform")) {
+                        $retu = $this->get_img_url($urla);
+                    } else {
+                        //watermark
+                        $fileex = explode("/", $result->file_att);
+                        //$this->textWatermark(end($fileex), 'Receipt Number : ' . $result->receipt_number);
+
+                        $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
+                    }
+
+
+
+                    //if ($this->URL_exists($retu)) {
+                    $file_att .= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
+                    //}
+                }
+            }
+            $ret_receipt[$result->id]['file_att'] = $file_att;
+        }
+
+        return view($viewr)->with(['print_date' => $request->get('print_rdate')])
+            ->with(['data' => $ret_receipt])
+            ->with(['receipt_detail_arr' => $receipt_detail_arr])
+            ->with(['fontsize' => $request->get('fontsize')])
+            ->with(['pdsfield' => $sfield]);
     }
 
     public function print_day(Request $request)
