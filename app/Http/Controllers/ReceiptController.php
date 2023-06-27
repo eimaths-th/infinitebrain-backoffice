@@ -826,6 +826,7 @@ class ReceiptController extends Controller
         // ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att]);
         //->with(['des_text' => $des_text]);
         //
+        //
     }
 
     public function show_day(Request $request)
