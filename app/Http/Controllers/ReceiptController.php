@@ -830,7 +830,7 @@ class ReceiptController extends Controller
     public function show_day(Request $request)
     {
 
-        //
+        ////
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'pdsfield' => 'required|string',
