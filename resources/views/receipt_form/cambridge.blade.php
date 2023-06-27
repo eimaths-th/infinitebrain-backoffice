@@ -566,7 +566,7 @@
                                     </p> --}}
                                     <p><strong><span style="color: #6351a2;">Contact Information&nbsp;</span></strong></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> 📩FB:
-                                        <a href="m.me/cambridge.thai" target="_blank">m.me/cambridge.thai</a> </span></p>
+                                        <a href="https://m.me/cambridge.thai" target="_blank">m.me/cambridge.thai</a> </span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> 💌Line:
                                             <a href="https://lin.ee/NUrW1nX" target="_blank">https://lin.ee/NUrW1nX</a></span>
                                     </p>

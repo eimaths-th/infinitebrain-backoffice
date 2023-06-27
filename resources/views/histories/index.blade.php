@@ -397,8 +397,6 @@
             </form>
         </div>
     </div>
-
-    
 @endsection
 
 @section('script')
@@ -620,8 +618,24 @@
                 $('.alert-success').hide();
 
                 $('#CreateModal').modal('show');
-                //$('#SubmitCreateForm').show();
+
+                $(document).on('change', '#AddStudent', function(e) {
+                    e.preventDefault();
+                    var id = $('#AddStudent').val()[0];
+                    $.ajax({
+                        url: "histories/stdsub/" + id,
+                        method: 'get',
+                        data: {
+                            _token: token,
+                        },
+                        success: function(result) {
+                            console.log(result);
+                            $('#AddSubject').html(result.studentsub);
+                        }
+                    });
+                });
             });
+
 
             let id;
             $(document).on('click', '#getEditData', function(e) {

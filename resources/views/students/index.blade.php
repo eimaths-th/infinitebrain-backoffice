@@ -61,15 +61,12 @@
                                 <th>Lastname</th>
                                 <th>Nickname</th>
                                 <th>Mobile</th>
+                                <th>status</th>
                                 <th width="280px">Action</th>
                             </tr>
                         </thead>
-
                     </table>
                 </form>
-
-
-
             </div>
         </div>
 
@@ -166,7 +163,7 @@
                             <select style="width: 100%;" class="parent select2 select2_single form-control"
                                 id="AddParent" name="name_parent" multiple="multiple">
                                 <!-- <option value="" selected>Select Student</option>
-                                                        <option value="" selected>Select Parent</option>-->
+                                                                                                                                                            <option value="" selected>Select Parent</option>-->
                                 @foreach ($data4 as $key2)
                                     <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->name_parent }}
                                     </option>
@@ -209,7 +206,9 @@
         </div>
     </div>
 
-    <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="EditModal">
+    <!-- Edit Modal -->
+    <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+        id="EditModal">
         <div class="modal-dialog modal-lg" role="document">
             <form class="form" action="" method="POST">
 
@@ -245,6 +244,18 @@
                         </div>
                         <div id="EditModalBody">
 
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="Name">หมายเหตุไม่เรียนต่อ:</label>
+                            <select style="width: 100%;"
+                                class="form-control form-select select2 select3_single mt-2"id="Editreason" name="reason"
+                                multiple="multiple">
+
+                            </select>
+
+
+                            <input type="text" class="form-control mt-2" id="textReason" name="reason"
+                                autocomplete="off" placeholder="กรอกเหตุผลอื่นๆ">
                         </div>
                     </div>
                     <!-- Modal footer -->
@@ -293,7 +304,10 @@
                         <div id="ViewModalBody">
 
                         </div>
+
+
                     </div>
+
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
@@ -326,6 +340,10 @@
                 allowClear: true
             });
 
+            $(".select3_single").select2({
+                maximumSelectionLength: 1,
+                // allowClear: true
+            });
 
             $(".select2_multiple").select2({
                 maximumSelectionLength: 2,
@@ -405,6 +423,10 @@
                         name: 'mobile'
                     },
                     {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
                         data: 'action',
                         name: 'action'
                     },
@@ -442,8 +464,6 @@
             let id;
             $(document).on('click', '#getEditData', function(e) {
                 e.preventDefault();
-
-
                 $('.alert-danger').html('');
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
@@ -456,12 +476,37 @@
                     success: function(res) {
                         $('#EditModalBody').html(res.html);
                         $('#EditParent').html(res.parent);
+                        $('#Editreason').html(res.select_reaon);
                         $('#EditModal').modal('show');
+                        $('#textReason').hide();
+
+                        $(document).ready(function() {
+                            e.preventDefault();
+                            var reasonValue = $('#Editreason').val()[0];
+                            console.log('Editreason : ' + reasonValue);
+
+                            if ($('#Editreason').val()[0] === '') {
+                                $('#textReason').show();
+                            } else {
+                                $('#textReason').hide();
+                            }
+                        });
+
                     }
                 });
-
-
             });
+            $(document).on('change', '#Editreason', function(e) {
+                e.preventDefault();
+                var reasonValue = $('#Editreason').val()[0];
+                console.log('Editreason : ' + reasonValue);
+
+                if ($('#Editreason').val()[0] === '') {
+                    $('#textReason').show();
+                } else {
+                    $('#textReason').hide();
+                }
+            });
+
 
             //view
             $(document).on('click', '#getViewData', function(e) {
@@ -536,14 +581,11 @@
             });
 
             $('#SubmitEditForm').click(function(e) {
-                //if (!confirm("Are you sure?")) return;
                 e.preventDefault();
-
                 $('.alert-danger').html('');
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
-
                 $.ajax({
                     url: "students/save/" + id,
                     method: 'PUT',
@@ -554,11 +596,16 @@
                         nick_name: $('#EditNickname').val(),
                         mobile: $('#EditMobile').val(),
                         grade: $('#Editgrade').val(),
+                        // reason: $('#Editreason').val()[0],
+                        reason: $('#Editreason').val()[0] !== null && $('#Editreason').val()[0] !==
+                            '' ? $('#Editreason').val()[0] : $('#textReason').val(),
+                        // reason: JSON.parse($('#Editreason').val()),
                         pid: $('#EditParent').val()[0],
                     },
-
                     success: function(result) {
                         console.log(result);
+                        console.log($('#Editreason').val());
+
                         if (result.errors) {
                             $('.alert-danger').html('');
                             $.each(result.errors, function(key, value) {
@@ -567,7 +614,6 @@
                                     '</li></strong>');
                             });
                         } else {
-
                             $('.alert-danger').hide();
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
@@ -575,6 +621,7 @@
                             toastr.success(result.success, {
                                 timeOut: 5000
                             });
+
                             $('#Listview').DataTable().ajax.reload();
                             //setTimeout(function() {
                             //$('.alert-success').hide();

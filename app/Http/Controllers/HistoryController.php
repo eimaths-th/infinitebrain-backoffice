@@ -7,6 +7,8 @@ use App\Models\Level;
 use App\Models\Subject;
 use App\Models\Student;
 use App\Http\Controllers\Controller;
+use App\Models\Receipt_School;
+use App\Models\SchoolPrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +61,10 @@ class HistoryController extends Controller
     {
         $this->check_permission();
 
+        $subject = Subject::orderBy("id", "asc")->get();
+
+        $student = Student::orderBy("first_name", "asc")->get();
+
         if ($request->ajax()) {
             //sleep(2);
             $course = History::select(
@@ -98,10 +104,7 @@ class HistoryController extends Controller
         }
 
         //get subject
-        $subject = Subject::orderBy("id", "asc")->get();
 
-        //get student
-        $student = Student::orderBy("first_name", "asc")->get();
 
         return view('histories.index')->with(['data' => $subject])->with(['data2' => $student]);
     }
@@ -111,6 +114,44 @@ class HistoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function stdsub($id)
+    {
+        $studentId = $id;
+
+        if ($studentId == null) {
+            # code...
+        } else {
+            
+            $std = Student::find($studentId);
+            $rc = Receipt_School::where('pid', $std->id)->get();
+            $rcIds = $rc->pluck('id'); // Retrieve all 'id' values from the collection
+            $sch_p = SchoolPrice::whereIn('rid', $rcIds)->get();
+            $sch_p_sub = [];
+
+            foreach ($sch_p as $sch_p1) {
+                # code...
+                if ($sch_p1->qty !== null) {
+                    $sch_p_sub[] = $sch_p1->subject;
+                }
+            }
+
+            $subject = Subject::orderBy("id", "asc")
+                ->whereIn('id', $sch_p_sub)
+                ->get();
+
+
+            $html = '<option value="">Select Subject</option>';
+            foreach ($subject as $subject1) {
+                # code...
+                $html .= '<option value="'.$subject1->id.'"> '.$subject1->title.' </option>';
+
+            }
+            return response()->json([
+                'studentsub' => $html
+            ]);
+        }
+    }
     public function create()
     {
         //
@@ -266,7 +307,7 @@ class HistoryController extends Controller
             // dd();
             if (!empty($input['date'])) {
                 $date = $input['date'];
-            }else {
+            } else {
                 $date = "";
             }
 

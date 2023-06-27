@@ -142,6 +142,7 @@ class CourseController extends Controller
         //
         //echo $type;
         //exit();
+        // dd($type, $lang, $id);
         if ($type !== "html") {
             $this->check_permission();
         }
@@ -333,8 +334,16 @@ class CourseController extends Controller
 
         //print_r($tdhtml);
         //echo $all_level;
+        // dd($type, $lang, $id , $all_level);
+
+        // for ($ret = ($all_level - 1); $ret >= 1; $ret--) {
+        //     $tb_level .= $tdhtml[$ret];
+        // }
+
         for ($ret = ($all_level - 1); $ret >= 1; $ret--) {
-            $tb_level .= $tdhtml[$ret];
+            if (isset($tdhtml[$ret])) {
+                $tb_level .= $tdhtml[$ret];
+            }
         }
 
         if ($type == "view") {

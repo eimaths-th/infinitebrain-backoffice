@@ -16,6 +16,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
+                                        <p>{{ $message }}</p>
+                                            </div>-->
                                             <p>{{ $message }}</p>
                                                 </div>-->
             <script>
@@ -27,6 +29,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
+                                                <p>{{ $message }}</p>
+                                                    </div>-->
                                                     <p>{{ $message }}</p>
                                                         </div>-->
             <script>
@@ -356,6 +360,7 @@
 
                                 </select>
                             </div>
+                            </div>
                         </div>
 
 
@@ -586,21 +591,21 @@
                         </div>
 
                         <!--<div class="form-row">
-                                        <div class="col-md-6">
-                                            <div class="position-relative form-group">
-                                                <label for="City">City:</label>
-                                                <input type="text" class="form-control" name="city" id="AddCity"
-                                                    value="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="position-relative form-group">
-                                                <label for="Province">Province:</label>
-                                                <input type="text" class="form-control" name="province" id="AddProvince"
-                                                    value="">
-                                            </div>
-                                        </div>
-                                    </div>-->
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="City">City:</label>
+                                        <input type="text" class="form-control" name="city" id="AddCity"
+                                            value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="Province">Province:</label>
+                                        <input type="text" class="form-control" name="province" id="AddProvince"
+                                            value="">
+                                    </div>
+                                </div>
+                            </div>-->
                         <div class="col-md-6">
                             <div class="position-relative form-group">
                                 <label for="City">City:</label>
@@ -1156,7 +1161,11 @@
 
                                         <button type="button" id="addRow2"
                                             class="btn btn-sm btn-primary btnAddg2"><i class="fa fa-plus"></i></button>
+                                        <button type="button" id="addRow2"
+                                            class="btn btn-sm btn-primary btnAddg2"><i class="fa fa-plus"></i></button>
                                         <button type="button" id="removeRow2"
+                                            class="btn btn-sm btn-danger btnRemoveg2"><i
+                                                class="fa fa-minus"></i></button>
                                             class="btn btn-sm btn-danger btnRemoveg2"><i
                                                 class="fa fa-minus"></i></button>
                                     </div>
@@ -1174,6 +1183,8 @@
                     <!-- Modal footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="SubmitConvForm">Create</button>
+                        <button type="button" class="btn btn-danger modelClose"
+                            data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-danger modelClose"
                             data-bs-dismiss="modal">Close</button>
                     </div>
@@ -1627,6 +1638,7 @@
                                 timeOut: 5000
                             });
                             $('#EditModal').modal('hide');
+                            $('#Listview').DataTable().ajax.reload(null, false);
                             $('#Listview').DataTable().ajax.reload(null, false);
                             //setTimeout(function() {
                             //$('.alert-success').hide();
