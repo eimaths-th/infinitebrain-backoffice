@@ -6,6 +6,7 @@
 /public/receipt_form_images
 /public/receipt_form_watermark_images
 /public/receipt_form_school
+/public/receipts_form_school
 /public/storage
 /storage/*.key
 /vendor

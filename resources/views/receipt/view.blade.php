@@ -329,7 +329,7 @@
                         </tr>
 
                     </table>
-                    {{-- <center>{!! $file_att !!}</center> --}}
+                     <center>{!! $file_att !!}</center> 
                 </div>
 
 
