@@ -17,9 +17,7 @@
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
                                             <p>{{ $message }}</p>
-                                            </div>-->
-                                            <p>{{ $message }}</p>
-                                                    </div>-->
+                                                </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -29,8 +27,6 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                                <p>{{ $message }}</p>
-                                                    </div>-->
                                                     <p>{{ $message }}</p>
                                                         </div>-->
             <script>
@@ -360,79 +356,6 @@
 
                                 </select>
                             </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <!-- Modal footer id="SubmitPrintDayForm"-->
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Print</button>
-                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- PrintField Modal -->
-    <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true" id="PrintFieldModal">
-        <div class="modal-dialog modal-lg" role="document">
-            <form id="PrintMonthForm" class="form" action="{{ route('receipts.print_field') }}" method="POST">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Print ใบปะหน้ารายสนาม</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        </button>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
-                            style="display: none;">
-                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert"
-                            style="display: none;">
-
-                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true"></span>
-                            </button>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="File">สนามสอบ:</label>
-                                <select class="form-control" id="PrintMonthsField" name="pmsfields" required disabled>
-                                    @foreach ($sfielda as $key => $value)
-                                        <option value="{{ $key }}"
-                                            {{ request()->get('sfield') == $key ? 'selected' : '' }}> {{ $value }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <input type="hidden" name="type" value="view">
-                                <input type="hidden" name="pmsfield" value="{{ request()->get('sfield') }}">
-                            </div>
-                            <div class="form-group">
-                                <div class="position-relative form-group">
-                                    <label for="Des">รายการ:</label>
-                                    <input type="text" class="form-control" name="Pmdescription" id="PmDes"
-                                        value="ค่าสมัคร {{ $sfielda[request()->get('sfield')] }} รอบแรก {{-- @php {{ echo date("Y"); }} @endphp --}}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="font">ขนาดตัวอักษร:</label>
-                                <select class="form-control" id="PrintDaysFont" name="fontsize" required>
-                                    <option value="1"> เล็กมาก </option>
-                                    <option value="2" selected> เล็ก </option>
-                                    <option value="3"> ปานกลาง </option>
-                                    <option value="4"> ใหญ่ </option>
-
-                                </select>
-                            </div>
-                            </div>
                         </div>
 
 
@@ -517,8 +440,6 @@
             </form>
         </div>
     </div>
-
-
 
     <!-- Import Modal -->
     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -665,21 +586,21 @@
                         </div>
 
                         <!--<div class="form-row">
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label for="City">City:</label>
-                                            <input type="text" class="form-control" name="city" id="AddCity"
-                                                value="">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="City">City:</label>
+                                                <input type="text" class="form-control" name="city" id="AddCity"
+                                                    value="">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label for="Province">Province:</label>
-                                            <input type="text" class="form-control" name="province" id="AddProvince"
-                                                value="">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="Province">Province:</label>
+                                                <input type="text" class="form-control" name="province" id="AddProvince"
+                                                    value="">
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>-->
+                                    </div>-->
                         <div class="col-md-6">
                             <div class="position-relative form-group">
                                 <label for="City">City:</label>
@@ -1235,11 +1156,7 @@
 
                                         <button type="button" id="addRow2"
                                             class="btn btn-sm btn-primary btnAddg2"><i class="fa fa-plus"></i></button>
-                                        <button type="button" id="addRow2"
-                                            class="btn btn-sm btn-primary btnAddg2"><i class="fa fa-plus"></i></button>
                                         <button type="button" id="removeRow2"
-                                            class="btn btn-sm btn-danger btnRemoveg2"><i
-                                                class="fa fa-minus"></i></button>
                                             class="btn btn-sm btn-danger btnRemoveg2"><i
                                                 class="fa fa-minus"></i></button>
                                     </div>
@@ -1257,8 +1174,6 @@
                     <!-- Modal footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" id="SubmitConvForm">Create</button>
-                        <button type="button" class="btn btn-danger modelClose"
-                            data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-danger modelClose"
                             data-bs-dismiss="modal">Close</button>
                     </div>
@@ -1712,7 +1627,6 @@
                                 timeOut: 5000
                             });
                             $('#EditModal').modal('hide');
-                            $('#Listview').DataTable().ajax.reload(null, false);
                             $('#Listview').DataTable().ajax.reload(null, false);
                             //setTimeout(function() {
                             //$('.alert-success').hide();

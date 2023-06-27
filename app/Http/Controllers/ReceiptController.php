@@ -727,6 +727,7 @@ class ReceiptController extends Controller
             ->orderBy("receipt_details.id", "asc")
             ->get();
 
+
         $all_price = 0;
         $receipt_detail_arr = array();
         $no = 1;
@@ -777,37 +778,40 @@ class ReceiptController extends Controller
         $vat_val = number_format($vat_total, 2); */
         //exit();
 
-        // $file_att = '';
+        $file_att = '';
 
-        // if ($data->file_att) {
-
-        //     $ck_url = parse_url($data->file_att);
-        //     if ($ck_url['scheme'] == 'https') {
-        //         $urlf = "https";
-        //     } else {
-        //         $urlf = "http";
-        //     }
-
-        //     $arrl = explode($urlf, $data->file_att);
-        //     for ($i = 1; $i <= count($arrl) - 1; $i++) {
-        //         $urla = $urlf . $arrl[$i];
-        //         if (strpos($urla, "jotform")) {
-        //             $retu = $this->get_img_url($urla);
-        //         } else {
-        //             //watermark
-        //             $fileex = explode("/", $data->file_att);
-        //             $this->textWatermark(end($fileex), 'Receipt Number : ' . $data->receipt_number);
-
-        //             $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
-        //         }
+        if ($data->file_att) {
 
 
 
-        //         //if ($this->URL_exists($retu)) {
-        //         $file_att .= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
-        //         //}
-        //     }
-        // }
+            $ck_url = parse_url($data->file_att);
+            if ($ck_url['scheme'] == 'https') {
+                $urlf = "https";
+            } else {
+                $urlf = "http";
+            }
+
+
+            $arrl = explode($urlf, $data->file_att);
+            for ($i = 1; $i <= count($arrl) - 1; $i++) {
+                $urla = $urlf . $arrl[$i];
+                if (strpos($urla, "jotform")) {
+                    $retu = $this->get_img_url($urla);
+                } else {
+                    //watermark
+                    $fileex = explode("/", $data->file_att);
+                    $this->textWatermark(end($fileex), 'Receipt Number : ' . $data->receipt_number);
+
+                    $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
+                }
+
+
+
+                //if ($this->URL_exists($retu)) {
+                $file_att .= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
+                //}
+            }
+        }
 
 
         //$des_text = nl2br($data->description);
@@ -822,15 +826,15 @@ class ReceiptController extends Controller
             ->with(['text' => $text])
             ->with(['price_texten' => $price_texten])
             ->with(['price_text' => $price_text])
-            ->with(['vat_price_val' => $vat_price_val]);
-        // ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att]);
+            ->with(['vat_price_val' => $vat_price_val])
+            ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att]);
         //->with(['des_text' => $des_text]);
     }
 
     public function show_day(Request $request)
     {
 
-        ////
+        //
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'pdsfield' => 'required|string',
@@ -1000,6 +1004,14 @@ class ReceiptController extends Controller
             ->with(['receipt_detail_arr' => $receipt_detail_arr])
             ->with(['fontsize' => $request->get('fontsize')])
             ->with(['pdsfield' => $sfield]);
+            //->with(['price_val' => $price_val])
+            //->with(['mes' => $mes])
+            //->with(['text' => $text])
+            //->with(['price_texten' => $price_texten])
+            //->with(['price_text' => $price_text])
+            //->with(['vat_price_val' => $vat_price_val])
+            //->with(['vat_val' => $vat_val])->with(['file_att' => $file_att]);
+        //->with(['des_text' => $des_text]);
     }
 
     public function print_day(Request $request)
