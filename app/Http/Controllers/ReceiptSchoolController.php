@@ -1169,7 +1169,7 @@ class ReceiptSchoolController extends Controller
                 //'receipt.*.qty' => 'required',
                 'receipt.*.price' => 'required',
                 'receipt.*.pp' => 'required',
-                //'receipt.*.period' => 'required',
+                'receipt.*.period' => 'required',
 
                 // 'level' => 'required|string',
                 // 'week' => 'required|string',
@@ -1190,6 +1190,7 @@ class ReceiptSchoolController extends Controller
                 //'receipt.*.qty.required' => 'The QTY field is required. !',
                 'receipt.*.price.required' => 'The Price field is required.  !',
                 'receipt.*.pp.required' => 'The Book field is required.  !',
+                'receipt.*.period.required' => 'The period field is required.  !',
                 //'receipt.*.period.required' => 'The Period field is required.  !',
 
             ]

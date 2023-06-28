@@ -357,8 +357,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                                                    <p>{{ $message }}</p>
-                                                                        </div>-->
+                                                                            <p>{{ $message }}</p>
+                                                                                </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -368,8 +368,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                                                            <p>{{ $message }}</p>
-                                                                                </div>-->
+                                                                                    <p>{{ $message }}</p>
+                                                                                        </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -394,24 +394,24 @@
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
                             Receipt</a>
                         <!-- <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
-                                                            All</a> -->
+                                                                    All</a> -->
 
                     </div>
                     <!-- <div class="d-inline-block dropdown">
-                                                        <div class="dropdown show">
-                                                            <button class="btn btn-shadow btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" autoClose="true" aria-haspopup="true" aria-expanded="false">
-                                                                <span class="btn-icon-wrapper pr-2 opacity-7">
-                                                                    <i class="fa fa-print fa-w-20"></i>
-                                                                </span>
-                                                                Print ใบปะหน้า
-                                                            </button>
-                                                            <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                                <li><a class="dropdown-item" href="#" id="printr1">ใบปะหน้ารายวัน</a></li>
-                                                                <li><a class="dropdown-item" href="#" id="printr2">ใบปะหน้ารายเดือน</a></li>
-                                                            </ul>
-                                                        </div>
+                                                                <div class="dropdown show">
+                                                                    <button class="btn btn-shadow btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" autoClose="true" aria-haspopup="true" aria-expanded="false">
+                                                                        <span class="btn-icon-wrapper pr-2 opacity-7">
+                                                                            <i class="fa fa-print fa-w-20"></i>
+                                                                        </span>
+                                                                        Print ใบปะหน้า
+                                                                    </button>
+                                                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                                        <li><a class="dropdown-item" href="#" id="printr1">ใบปะหน้ารายวัน</a></li>
+                                                                        <li><a class="dropdown-item" href="#" id="printr2">ใบปะหน้ารายเดือน</a></li>
+                                                                    </ul>
+                                                                </div>
 
-                                                    </div> -->
+                                                            </div> -->
 
 
 
@@ -693,13 +693,13 @@
                                     <div class="form-row">
 
                                         <!-- <div class="col-md-12 ">
-                                        <select class="form-select" name="type" id="type" style="width:300px">
+                                                <select class="form-select" name="type" id="type" style="width:300px">
 
-                                            <option value="1" hidden disabled>ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
-                                            <option value="2">ใบลดหนี้</option>
+                                                    <option value="1" hidden disabled>ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
+                                                    <option value="2">ใบลดหนี้</option>
 
-                                        </select>
-                                    </div> -->
+                                                </select>
+                                            </div> -->
 
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
@@ -709,12 +709,12 @@
                                             </div>
                                         </div>
                                         <!-- <div class="col-md-6">
-                                        <div class="position-relative  form-group">
-                                            <label for="Package">Package:</label>
-                                            <input type="text" class="form-control" name="package" id="AddPackage"
-                                                value="">
-                                        </div>
-                                    </div> -->
+                                                <div class="position-relative  form-group">
+                                                    <label for="Package">Package:</label>
+                                                    <input type="text" class="form-control" name="package" id="AddPackage"
+                                                        value="">
+                                                </div>
+                                            </div> -->
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
                                                 <label for="Payment">Payment Type:</label>
@@ -740,7 +740,7 @@
                                                     class="parent select2 select2_single form-control" id="AddParent"
                                                     name="name_parent" multiple="multiple">
                                                     <!-- <option value="" selected>Select Student</option>
-                                                        <option value="" selected>Select Parent</option>-->
+                                                                <option value="" selected>Select Parent</option>-->
                                                     @foreach ($data4 as $key2)
                                                         <option value="{{ $key2->id }}">{{ $key2->code }}
                                                             {{ $key2->name_parent }}
@@ -760,19 +760,19 @@
                                         </div>
                                     </div>
                                     <!-- <div class="form-row">
-                                                                        <div class="col-md-6">
-                                                                            <div class="position-relative form-group">
-                                                                                <label for="City">City:</label>
-                                                                                <input type="text" class="form-control" name="city" id="AddCity" value="">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="position-relative form-group">
-                                                                                <label for="Province">Province:</label>
-                                                                                <input type="text" class="form-control" name="province" id="AddProvince" value="">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div> -->
+                                                                                <div class="col-md-6">
+                                                                                    <div class="position-relative form-group">
+                                                                                        <label for="City">City:</label>
+                                                                                        <input type="text" class="form-control" name="city" id="AddCity" value="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="position-relative form-group">
+                                                                                        <label for="Province">Province:</label>
+                                                                                        <input type="text" class="form-control" name="province" id="AddProvince" value="">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div> -->
 
                                     <div class="form-group">
                                         <label for="Name">Address:</label>
@@ -792,10 +792,11 @@
                                         <select style="width: 100%;" class="select2 select2_multiple form-control"
                                             id="AddStudent" name="student[]" multiple="multiple">
                                             <!-- <option value="" selected>Select Student</option> -->
-                                            <!-- @foreach ($data2 as $key2)
-    <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->first_name }} {{ $key2->last_name }}
-                                                                            </option>
-    @endforeach -->
+                                            @foreach ($data2 as $key2)
+                                                <option value="{{ $key2->id }}">{{ $key2->code }}
+                                                    {{ $key2->first_name }} {{ $key2->last_name }}
+                                                </option>
+                                            @endforeach
 
                                         </select>
                                     </div>
@@ -993,7 +994,7 @@
                                                             <option value="0" selected>Select Type</option>
 
                                                             <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
-                                                                            </option> -->
+                                                                                    </option> -->
                                                             <option value="1">One Tpye แบบเดี่ยว
                                                             </option>
                                                             <option value="2">Couple แบบคู่
@@ -1028,7 +1029,7 @@
                                                 <td width="10%">
                                                     <div class="col-md-12 col-sm-12 col-xs-12 ">
                                                         <input type="text" class="form-control" name="period"
-                                                            id="period" value="">
+                                                            id="period" value="" required>
 
                                                     </div>
                                                 </td>
@@ -1165,7 +1166,7 @@
                                                             <option value="0" selected>Select Type</option>
 
                                                             <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
-                                                                            </option> -->
+                                                                                    </option> -->
                                                             <option value="1">One Tpye แบบเดี่ยว
                                                             </option>
                                                             <option value="2">Couple แบบคู่
@@ -1331,11 +1332,11 @@
                                                 <label for="Parent">Name Parent:</label>
                                                 {{-- <input type="text" class="form-control" name="name_parent"
                                                     id="EditParent" value=""> --}}
-                                                    <select style="width: 100%;"
+                                                <select style="width: 100%;"
                                                     class="eparent select2 select2_single form-control" id="EditParent"
                                                     name="name_parent" multiple="multiple">
                                                     <!-- <option value="" selected>Select Student</option>
-                                                        <option value="" selected>Select Parent</option>-->
+                                                                <option value="" selected>Select Parent</option>-->
 
 
                                                 </select>
@@ -1371,21 +1372,21 @@
 
 
                                     <!--<div class="form-row">
-                                                                        <div class="col-md-6">
-                                                                            <div class="position-relative form-group">
-                                                                                <label for="City">City:</label>
-                                                                                <input type="text" class="form-control" name="city" id="EditCity"
-                                                                                    value="">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="position-relative form-group">
-                                                                                <label for="Province">Province:</label>
-                                                                                <input type="text" class="form-control" name="province" id="EditProvince"
-                                                                                    value="">
-                                                                            </div>
-                                                                        </div>
-                                                                        </div>-->
+                                                                                <div class="col-md-6">
+                                                                                    <div class="position-relative form-group">
+                                                                                        <label for="City">City:</label>
+                                                                                        <input type="text" class="form-control" name="city" id="EditCity"
+                                                                                            value="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="position-relative form-group">
+                                                                                        <label for="Province">Province:</label>
+                                                                                        <input type="text" class="form-control" name="province" id="EditProvince"
+                                                                                            value="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                </div>-->
 
 
                                     <div class="form-group">
@@ -1393,9 +1394,9 @@
                                         <textarea class="form-control" name="address" id="EditAddress"></textarea>
                                     </div>
                                     <!--<div class="form-group">
-                                                                            <label for="Name">Street Address 2:</label>
-                                                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                                        </div>-->
+                                                                                    <label for="Name">Street Address 2:</label>
+                                                                                    <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                                                </div>-->
                                     <div class="form-group">
                                         <label for="Student">Student:</label><br>
                                         <select style="width: 100%;" class="select2 select2_multiple form-control"
@@ -1408,10 +1409,10 @@
 
                                     </div>
                                     <!-- <div class="form-group">
-                                                                        <div class="imgs">
+                                                                                <div class="imgs">
 
-                                                                        </div>
-                                                                    </div> -->
+                                                                                </div>
+                                                                            </div> -->
                                     <div class="form-row form-focus" id="dropzone-photo">
                                         <div class="col-md-12 col-sm-12">
                                             <a id="dphoto"></a>
