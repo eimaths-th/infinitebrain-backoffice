@@ -147,8 +147,18 @@ class SchoolController extends Controller
                 }
             }
 
-            $photo = url('/') . '/receipt_form_images/' . $stu_result->photo_att;
+            if ($stu_result->status == "ไม่พบใบเสร็จ" || $stu_result->status == "พ้นสภาพนักเรียน") {
+                # code...
+                $class = 'danger';
+            } elseif ($stu_result->status == "กำลังยุติการการเรียน") {
+                # code...
+                $class = 'warning';
+            } elseif ($stu_result->status == "กำลังเรียนอยู่") {
+                # code...success
+                $class = 'success';
+            }
 
+            $photo = url('/') . '/receipt_form_images/' . $stu_result->photo_att;
             $student_html .= '<div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
             <div class="col-md-4 border-right">
@@ -163,10 +173,22 @@ class SchoolController extends Controller
             </div>
             <div class="col-md-7 border-right">
                 <div class="p-3 py-5">
-                    <div
-                        class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="text-right">ข้อมูลนักเรียน' . $i . '</h4>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="text-right">ข้อมูลนักเรียน' . $i . '
+                            </h4>
+                        </div>
                     </div>
+                    <div class="col-lg-6">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="text-right">สถานะ : <span class = "text-' . $class . ' ">' . $stu_result->status . '</span>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+
+
                     <div class="row mt-2">
                         <div class="col-md-6"><label
                                 class="labels">รหัสนักเรียน </label><input type="text"
