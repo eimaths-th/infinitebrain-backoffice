@@ -268,7 +268,7 @@
                                                                     }elseif($data->sfield==9){
                                                                         $message = "OLPCS 2023 Registration Form";
                                                                     }else{
-                                                                        $message = "GMEC 2023 Registration Form";
+                                                                        $message = "Cambridge 2023 Registration Form";
                                                                     }
                                                                     ?>
                                                                     {{ $message }}</span></h2>
@@ -677,7 +677,7 @@
                                                                 <h2
                                                                     style="margin: 0; font-size: 14px; font-weight: 400; text-align: start; margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
                                                                     <span class="tinyMce-placeholder">Address /
-                                                                        ที่อยู่ภาษาไทย<br>สำหรับจัดส่งของรางวัล</span>
+                                                                        ที่อยู่ภาษาไทย</span>
                                                                 </h2>
                                                             </td>
                                                         </tr>
@@ -959,7 +959,7 @@
                                                                     if($data->sfield==9){
                                                                         $message1 = "OLPCS";
                                                                     }else{
-                                                                        $message1 = "GMEC";
+                                                                        $message1 = "Cambridge";
                                                                     }
                                                                     ?> สอบ {{ $message1 }}
                                                                         จากช่องทาง<br>ใด</span></h2>
