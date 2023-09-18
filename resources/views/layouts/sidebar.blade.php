@@ -42,6 +42,15 @@
 
 
                 @if (Auth::user()->level == 2 || Auth::user()->level == 1)
+
+
+                <li class="app-sidebar__heading">  </li>
+                    <li>
+                        <a href="{{ route('home') }}">
+                            <i class="metismenu-icon pe-7s-home"></i>
+                            Dashboard
+                            {{-- <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i> --}}
+                        </a>
                     <li class="app-sidebar__heading">โรงเรียน </li>
 
                     <li>
@@ -325,6 +334,18 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '13']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    ISOCSEA
+                                </a>
+                            </li>
+                             <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '14']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    IMOCSEA+ISOCSEA
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('receipts_form', ['sfield' => '5']) }}">
                                     <i class="metismenu-icon"></i>
                                     INFINITE Spelling Bee
@@ -393,6 +414,16 @@
                                 <a href="{{ route('receipts', ['sfield' => '4']) }}">
                                     <i class="metismenu-icon"></i>
                                     IMOCSEA
+                                </a>
+                            </li>    <li>
+                                <a href="{{ route('receipts', ['sfield' => '13']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    ISOCSEA
+                                </a>
+                            </li>    <li>
+                                <a href="{{ route('receipts', ['sfield' => '14']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    IMOCSEA+ISOCSEA
                                 </a>
                             </li>
                             <li>
@@ -511,6 +542,22 @@
                             <a href="{{ route('users') }}">
                                 <i class="metismenu-icon"></i>
                                 รายชื่อพนักงาน
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon pe-7s-users"></i>
+                        สรุปยอดนักเรียน
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+
+                    <ul>
+                        <li>
+                            <a href="{{ route('report-student') }}">
+                                <i class="metismenu-icon"></i>
+                                รายงานยอดนักเรียน
                             </a>
                         </li>
                     </ul>

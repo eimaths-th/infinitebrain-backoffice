@@ -4,7 +4,7 @@
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <script src="https://malsup.github.io/jquery.blockUI.js"></script>
+    <script src="http://malsup.github.io/jquery.blockUI.js"></script>
     <script src="https://rawgit.com/RobinHerbots/Inputmask/5.x/dist/jquery.inputmask.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
@@ -352,8 +352,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                            <p>{{ $message }}</p>
-                                             </div>-->
+                                        <p>{{ $message }}</p>
+                                         </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -363,8 +363,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                            <p>{{ $message }}</p>
-                                             </div>-->
+                                        <p>{{ $message }}</p>
+                                         </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -457,7 +457,7 @@
             <form id="infiniteEdit" class="form" action="" method="POST">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Generate Receipt</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Generate Receipt (<span id="rnumber" style="color: red;"></span>)</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
@@ -576,7 +576,7 @@
                                     <div class="form-group">
                                         <label for="Newsf">ข่าวสารการจัดสอบ:</label>
                                         <input type="text" class="form-control" name="newsf" id="AddNewsf"
-                                            value="">
+                                            value="" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -598,6 +598,13 @@
                                         <label for="Parent">Contest:</label>
                                         <input type="text" class="form-control" name="contest" id="AddContest"
                                             value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="Dcode">Discount Code:</label>
+                                        <input type="text" class="form-control" name="dcode" id="AddDcode"
+                                            value="" readonly>
                                     </div>
                                 </div>
 
@@ -624,8 +631,7 @@
                                     <a id="dphoto"></a>
                                     <div class="position-relative form-group">
                                         <label class="form-label form-label-top form-label-auto"
-                                            for="att">อัพโหลดหลักฐานการชำระเงิน เพิ่มเติม<span
-                                                class="form-required">*</span>
+                                            for="att">อัพโหลดหลักฐานการชำระเงิน<span class="form-required">*</span>
                                             <div style="width: 280px"></div>
                                         </label>
                                         <input type="text" id="drop1" name="drop1"
@@ -635,8 +641,8 @@
 
                                             </div>
                                         </div>
-                                        <label class="form-sub-label" style="min-height:13px"
-                                            aria-hidden="false">สลิปการโอนเงิน</label>
+                                        <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Receipt
+                                            Photo</label>
                                         <div id="dropzone-att-error" class="form-error-message" role="alert">
                                             <img src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
                                                 height="10">
@@ -692,7 +698,7 @@
                 if (len > 0) {
                     if (confirm("Click OK to Delete?")) {
                         $('form#delete_all').attr('action',
-                            '{{ route('receipts_form.destroy_all') }}'); //this fails silently
+                        '{{ route('receipts_form.destroy_all') }}'); //this fails silently
                         $('form#delete_all').submit();
                     }
                 } else {
@@ -706,7 +712,7 @@
                 if (len > 0) {
                     if (confirm("Click OK to Export?")) {
                         $('form#delete_all').attr('action',
-                            '{{ route('receipts_form.export') }}'); //this fails silently
+                        '{{ route('receipts_form.export') }}'); //this fails silently
                         $('form#delete_all').submit();
                     }
                 } else {
@@ -752,7 +758,7 @@
                     [0, "desc"]
                 ],
                 iDisplayLength: 10,
-                lengthMenu: [10, 20, 50, 75, 100],
+                lengthMenu: [10, 20, 50, 75, 100, 500, 1000],
                 stateSave: true,
                 sPaginationType: "full_numbers",
                 dom: 'T<"clear">lfrtip',
@@ -817,6 +823,7 @@
                         $('#AddSubmissiondate').val(res.data.submission_date);
                         $('#AddPackage').val(res.data.package);
                         $('#AddContest').val(res.data.contest);
+                        $('#AddDcode').val(res.data.discount_code);
                         $('#AddFirstname').val(res.data.first_name);
                         $('#AddLastname').val(res.data.last_name);
                         $('#AddNickname').val(res.data.nick_name);
@@ -838,6 +845,7 @@
                         $('#fid').val(res.data.id);
                         $('#sphoto').html(res.data.photo);
                         $('#satt').html(res.data.file);
+                        $('#rnumber').html(res.data.rnumber);
                         if (res.data.generate == 1) {
                             $('#SubmitEditForm').css('display', 'none');
                         }
@@ -882,13 +890,13 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
                 //alert($('#AddFile').val());
-
                 var values = $("input[name='imgFiles[]']")
                     .map(function() {
                         return $(this).val();
                     }).get();
 
-
+                    //alert(values);
+                    //exit();
 
                 $.ajax({
                     url: "{{ route('receipts_form.store') }}",
@@ -899,6 +907,7 @@
                         first_name: $('#AddFirstname').val(),
                         last_name: $('#AddLastname').val(),
                         grade: $('#AddGrade').val(),
+                        dcode: $('#AddDcode').val(),
                         description: $('#AddPackage').val(),
                         street_address: $('#AddAddress').val(),
                         //street_address2: $('#AddAddress2').val(),
@@ -934,6 +943,7 @@
                             });
                             $('.dz-preview').remove();
                             $(".file_arr").remove();
+                            $('#dropzone_preview').css("display", "none");
                             $('#EditModal').modal('hide');
                             $('#Listview').DataTable().ajax.reload(null, false);
 
@@ -962,6 +972,9 @@
                     .map(function() {
                         return $(this).val();
                     }).get();
+                    //alert(values);
+                    //exit();
+
 
                 $.ajax({
                     url: "{{ route('receipts_form.update') }}",
@@ -1012,6 +1025,7 @@
                             });
                             $('.dz-preview').remove();
                             $(".file_arr").remove();
+                            $('#dropzone_preview').css("display", "none");
                             $('#EditModal').modal('hide');
                             $('#Listview').DataTable().ajax.reload(null, false);
 
@@ -1054,9 +1068,8 @@
                     }
                 }); //end ajax
             })
+
         })
-
-
 
         var myDropzone = {};
         Dropzone.options.myAwesomeDropzone = {
@@ -1113,16 +1126,16 @@
                         },
                         success: function(data) {
                             console.log('success: ' + data);
-                            var element = document.getElementById("infinite");
+                            var element = document.getElementById("infiniteEdit");
                             var child = document.getElementById(name);
                             element.removeChild(child);
                             if (!document.getElementsByName('imgFiles[]').length) {
                                 $('#dropzone_preview').css("display", "none");
-                                $('#dropzone-photo').addClass('form-focus-error');
+                               /*  $('#dropzone-photo').addClass('form-focus-error');
                                 $('#dropzone-photo')
                                     .find('.form-error-message').css("display",
                                         "block");
-                                $('#dropzone-photo').css('border', 'solid 1px red');
+                                $('#dropzone-photo').css('border', 'solid 1px red'); */
                             }
                         }
                     });

@@ -2,10 +2,11 @@
 
 @section('style')
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
-    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://malsup.github.io/jquery.blockUI.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
@@ -49,7 +50,6 @@
             use Carbon\Carbon;
             $all = 0;
             $remain = 0;
-            $i = 0;
             $qty1 = [];
             $bonus = 0;
             $result_month = 0;
@@ -67,31 +67,29 @@
             $currentMonth = Carbon::createFromFormat('Y-m', $current_Month);
             // $currentReceiptEndDate = Carbon::createFromFormat('Y-m', '2023-9');
             $currentReceiptEndDate = Carbon::createFromFormat('Y-m', $end_date);
+            // dd($end_date);
         @endphp
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-
                 <form action="" name="" id="">
                     @if ($startcourse == null)
-                        <h5 class="text-danger"> {{ $parentCheck }}</h5>
                         <h5 class="text-danger"> ไม่พบใบเสร็จ</h5>
                         <h5>code : {{ $std->code }} | NickName : {{ $std->nick_name }}</h5>
                         <h5>Student Name : {{ $std->full_name }}</h5>
                     @else
-                        <h5 class="text-danger"> {{ $parentCheck }}</h5>
+                        @php
+                            if ($std->status == 'กำลังยุติการการเรียน') {
 
-                        {{-- @if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate))
-                            <h5> <span class="text-danger">พ้นสภาพนักเรียน </span>{{ $std->reason ?? 'ยังไม่ระบุเหตุผล' }}
-                            </h5>
-                        @else
-                            @if ($currentMonth->greaterThan($currentReceiptEndDate))
-                                <h5><span class="text-warning">กำลังยุติการเรียน</span> สิ้นสุดที่ {{ $end_date }}</h5>
-                            @else
-                                <h5><span class="text-success">กำลังเรียนอยู่</span> สิ้นสุดที่ {{ $end_date }}</h5>
-                            @endif
-                        @endif --}}
-                        <h5><span class="text-success">{{ $std->status }}</span> สิ้นสุดที่ {{ $end_date }}</h5>
+                                $class = 'warning';
+                            }else if ($std->status == 'พ้นสภาพนักเรียน') {
 
+                                $class ='danger';
+                            }else {
+
+                                $class ='success';
+                            }
+                        @endphp
+                        <h5><span class="text-{{ $class }}">{{ $std->status }}</span> สิ้นสุดที่ {{ $end_date }}</h5>
                         <h5>code : {{ $std->code }} | NickName : {{ $std->nick_name }}
                         </h5>
                         <h5>Student Name : {{ $std->full_name }}</h5>
@@ -125,56 +123,59 @@
                                 @foreach ($school_pice as $school_pices)
                                     @if (in_array($school_pices->id, $reset_id))
                                     @else
+                                        @php
+                                            $course = 0;
+                                            $qty = null;
+                                            $num_month = null;
+                                            $prefer = 0;
+                                            $school = $school_pices->qty;
+                                            $sub_ids = $school_pices->subject;
+                                            $history = \App\Models\History::where('student_id', $std->id)
+                                                ->where('subject_id', $sub_ids)
+                                                ->get();
+
+                                            // dd($sub_ids, $history);
+                                            if (!empty($history)) {
+                                                $his_succsss = count($history);
+                                                $firstRecord = $history->first();
+                                                if (!empty($firstRecord) && !in_array($firstRecord->id, $processedIds)) {
+                                                    $processedIds[] = $firstRecord->id;
+                                                } else {
+                                                    $his_succsss = 0;
+                                                }
+                                            }
+                                            $startcourse = $school_pices->period ?? null;
+                                            if ($school_pices->period == $startcourse) {
+                                                $num_month = $school;
+                                                $course++;
+                                            } else {
+                                                $num_month += $school;
+                                            }
+                                            $qty += $school;
+                                            if ($num_month > 11) {
+                                                $bonus = 12 * $course;
+                                                $prefer = $qty * 8;
+                                                $all = $qty * 8 + $bonus ?? 'N/A';
+                                                $remain = $all - $his_succsss;
+                                            } elseif ($num_month > 5) {
+                                                $bonus = 5 * $course;
+                                                $prefer = $qty * 8;
+                                                $all = $qty * 8 + $bonus ?? 'N/A';
+                                                $remain = $all - $his_succsss;
+                                            } elseif ($num_month > 3) {
+                                                $bonus = 3 * $course;
+                                                $prefer = $qty * 8;
+                                                $all = $qty * 8 + $bonus ?? 'N/A';
+                                                $remain = $all - $his_succsss;
+                                            } else {
+                                                $prefer = $qty * 8;
+                                                $all = $qty * 8 ?? 'N/A';
+                                                $remain = $all - $his_succsss;
+                                            }
+                                        @endphp
                                         <tr>
                                             <td>{{ $school_pices->school_sub->title }}</td>
                                             <td>{{ $school_pices->period }}</td>
-                                            @php
-                                                $course = 0;
-                                                $qty = null;
-                                                $num_month = null;
-                                                $prefer= 0 ;
-                                                $school = $school_pices->qty;
-                                                $history = \App\Models\History::where('student_id', $std->id)
-                                                    ->where('subject_id', $school_pices->subject)
-                                                    ->get();
-                                                if (!empty($history)) {
-                                                    $his_succsss = count($history);
-                                                    $firstRecord = $history->first();
-                                                    if (!empty($firstRecord) && !in_array($firstRecord->id, $processedIds)) {
-                                                        $processedIds[] = $firstRecord->id;
-                                                    } else {
-                                                        $his_succsss = 0;
-                                                    }
-                                                }
-                                                $startcourse = $school_pices->period ?? null;
-                                                if ($school_pices->period == $startcourse) {
-                                                    $num_month = $school;
-                                                    $course++;
-                                                } else {
-                                                    $num_month += $school;
-                                                }
-                                                $qty += $school;
-                                                if ($num_month > 11) {
-                                                    $bonus = 12 * $course;
-                                                    $prefer = $qty * 8;
-                                                    $all = $qty * 8 + $bonus ?? 'N/A';
-                                                    $remain = $all - $his_succsss;
-                                                } elseif ($num_month > 5) {
-                                                    $bonus = 5 * $course;
-                                                    $prefer = $qty * 8;
-                                                    $all = $qty * 8 + $bonus ?? 'N/A';
-                                                    $remain = $all - $his_succsss;
-                                                } elseif ($num_month > 3) {
-                                                    $bonus = 3 * $course;
-                                                    $prefer = $qty * 8;
-                                                    $all = $qty * 8 + $bonus ?? 'N/A';
-                                                    $remain = $all - $his_succsss;
-                                                } else {
-                                                    $prefer = $qty * 8;
-                                                    $all = $qty * 8 ?? 'N/A';
-                                                    $remain = $all - $his_succsss;
-                                                }
-                                            @endphp
                                             <td>{{ $num_month }}</td>
                                             <td>{{ $prefer }} </td>
                                             <td>{{ $bonus }}</td>
@@ -294,6 +295,15 @@
                     <div class="modal-footer">
                         {{-- <button type="button" class="btn btn-success" id="SubmitEditForm">Update</button> --}}
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+
+                        </div>
+                        <div class="col-lg-6">
+
+                        </div>
                     </div>
                 </div>
         </div>

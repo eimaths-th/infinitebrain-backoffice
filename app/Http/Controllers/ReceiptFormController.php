@@ -25,7 +25,7 @@ use App\Exports\ExportUser;
 class ReceiptFormController extends Controller
 {
     const sfielda = array(
-        '2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE', '11' => 'Cambridge'
+        '2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE', '11' => 'Cambridge', '13' => 'ISOCSEA','14' => 'IMOCSEA+ISOCSEA'
     );
 
     public function gmec()
@@ -47,6 +47,22 @@ class ReceiptFormController extends Controller
     {
         return view("receipt_form.gelosea");
     }
+
+    public function imocsea()
+    {
+        return view("receipt_form.imocsea");
+    }
+
+    public function isocsea()
+    {
+        return view("receipt_form.isocsea");
+    }
+
+    public function imocsea_isocsea()
+    {
+        return view("receipt_form.imocsea_isocsea");
+    }
+
 
     public function cambridge()
     {
@@ -266,7 +282,7 @@ class ReceiptFormController extends Controller
             'name_parent' => 'required|string',
             'mobile' => 'required|string',
             'package' => 'required|string',
-            'file_att' => 'required|string',
+            //'file_att' => 'required|string',
             'description' => 'required|string',
             'grade' => 'required|string',
         ]);
@@ -276,6 +292,11 @@ class ReceiptFormController extends Controller
         }
 
         $id = $request->get('fid');
+        $form = ReceiptForm::find($id);
+
+        if ($form->generate==1) {
+          return response()->json(['error' => 'Receive is already generate']);
+        }
 
 
         $rnumber = Receipt_RunningNumber::generate($request->get('sfield'));
@@ -284,6 +305,10 @@ class ReceiptFormController extends Controller
 
         $receipt = new Receipt($request->all());
         $receipt->save();
+
+        //$form = ReceiptForm::find($id);
+        $form->generate =  '1';
+        $form->save();
 
         //add more inages
         $img = $request->get('img');
@@ -300,7 +325,7 @@ class ReceiptFormController extends Controller
                 File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
 
                 //watermark
-                $urlb = url('/') . '/receipt_form_images/' . $fileb;
+                $urlb = url('/') . '/receipt_form_images/' . $oldfile[0]->filename;
 
                 //watermark
                 $fileex = explode("/", $urlb);
@@ -330,18 +355,23 @@ class ReceiptFormController extends Controller
         //add more images
 
 
-        $form = ReceiptForm::find($id);
-        $form->generate =  '1';
-        $form->save();
-
-
         $rid = $receipt->id;
 
         $out_price = $this->delete_all_between('(', ')', $request->get('package'));
 
         $price = preg_replace("/[^0-9.]/", "", $out_price);
 
-
+        if (strtolower($request->get('dcode')) == "meta200") {
+            $discount = 200;
+        } elseif (strtolower($request->get('dcode')) == "cem100") {
+            $discount = 100;
+        } elseif (strtolower($request->get('dcode')) == "cbp100") {
+            $discount = 100;
+        } elseif (strtolower($request->get('dcode')) == "cbl150") {
+            $discount = 150;
+        } else {
+            $discount = 0;
+        }
 
         $rdata = new ReceiptDetail([
             'receipt_id' => $rid,
@@ -349,7 +379,7 @@ class ReceiptFormController extends Controller
             'quantity' => 1,
             //'unit' => '',
             'unitprice' => (int)$price,
-            //'discount' => '',
+            'discount' => $discount,
             //'amount' => $request->get('book_old_price'),
         ]);
         $rdata->save();
@@ -451,6 +481,7 @@ class ReceiptFormController extends Controller
             'grade' => $request->get('grade'),
             'package' => $request->get('package'),
             'contest' => $request->get('contest'),
+            'discount_code' => $request->get('dcode'),
             'name_parent' => $request->get('parent'),
             'street_address' => $request->get('address'),
             'postcode' => $request->get('postcode'),
@@ -544,6 +575,15 @@ class ReceiptFormController extends Controller
         $data->file = $file_att;
 
         $data->file_re = $furl;
+        
+        if ($data->generate==0) {
+         $data->rnumber = Receipt_RunningNumber::pre_generate($data->sfield);
+        } else {
+         $data->rnumber = '';
+        }
+        
+        //dd($data);
+        
 
         return response()->json([
             'data' =>  $data

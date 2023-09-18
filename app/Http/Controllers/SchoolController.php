@@ -16,7 +16,10 @@ use App\Models\History;
 use App\Models\Level;
 use App\Models\Subject;
 use App\Models\ParentRegister;
+use App\Models\Receipt_School;
+use App\Models\SchoolPrice;
 use App\Models\Student;
+use Carbon\Carbon;
 
 class SchoolController extends Controller
 {
@@ -112,16 +115,37 @@ class SchoolController extends Controller
             ';
         $course_html = '';
         $student_html = "";
-        $student = Student::where([['pid', $id]])
+        $student = Student::where('pid', $id)
             ->orderBy("id", "asc")
             ->get();
 
         $i = 1;
 
+
+        $std_check = count($student);
+
+
+        if ($std_check < 1) {
+            // echo 'แตก1';
+
+            $student_html = 'ไม่พบ ! ข้อมูลนักเรียน';
+            $histories_html = 'ไม่พบ ! ประวัติการเรียน';
+            $comment_html = 'ไม่พบ ! ความคิดเห็น';
+            $course_html =[];
+
+
+            return view('register.home')->with(['parent_html' =>  $parent_html])
+            ->with(['student_html' =>  $student_html])
+            ->with(['histories_html' =>  $histories_html])
+            ->with(['comment_html' =>  $comment_html])
+            ->with(['student_chart' =>  $course_html]);
+        }
+
+
+
+        // dd($student,$std_check);
+
         foreach ($student as $stu_result) {
-
-
-
             $select_grade = "";
             $grade = array(
                 "Kindergarten" => "Kindergarten", "Grade 1" => "Grade 1", "Grade 2" => "Grade 2", "Grade 3" => "Grade 3", "Grade 4" => "Grade 4", "Grade 5" => "Grade 5", "Grade 6" => "Grade 6", "Grade 7" => "Grade 7", "Grade 8" => "Grade 8", "Grade 9" => "Grade 9", "Grade 10" => "Grade 10", "Grade 11" => "Grade 11", "Grade 12" => "Grade 12"
@@ -158,9 +182,111 @@ class SchoolController extends Controller
                 $class = 'success';
             }
 
+
+            //detail std
+            $stdId = $stu_result->id;
+
+            $rec = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
+
+            // dd($rec);
+
+            $startcourse = null;
+
+            $crec = count($rec);
+
+            if ($crec > 0) {
+                $parentCheck = '';
+                $rec_ids = [];
+                // $rec = Receipt_School::where('name_parent', $id_parent)->get();
+                $get_qty = [];
+                foreach ($rec as $record) {
+                    $school_pice = SchoolPrice::where('rid', $record->id)->get();
+                    foreach ($school_pice as  $sp_qty) {
+                        # code...
+                        if ($sp_qty->qty !== null) {
+
+                            $rec_ids[] = $sp_qty->id;
+                        }
+                    }
+
+                    // if (!empty($record->school_pice->qty) || $record->school_pice->qty == null) {
+                    // }
+                }
+
+                $school_pice = SchoolPrice::whereIn('id', $rec_ids)->get();
+
+                // dd($rec,$rec_ids, $school_pice);
+
+                $count_rec_ids = count($rec_ids);
+
+                if ($count_rec_ids > 0) {
+                    // $school_pice = SchoolPrice::whereIn('rid', $rec_ids)->get();
+                    // dd($rec_ids, $school_pice);
+
+                    if (count($school_pice) > 1) {
+                        $startcourse = $school_pice->first()->period;
+                        $period = $school_pice->last()->period;
+                    } else {
+                        // dd($rec_ids, $school_pice);
+
+                        $startcourse = $school_pice->first()->period;
+                        $period = $school_pice->first()->period;
+                    }
+                    $parts = explode('-', $period);
+                    $lastTwoParts = array_slice($parts, -2);
+                    $end_date = implode('-', $lastTwoParts);
+                }
+                // elseif ($count_rec_ids > 0) {
+                //     $school_pice = SchoolPrice::whereIn('rid', $rec_ids)->get();
+                //     if (count($school_pice) > 1) {
+                //         $startcourse = $school_pice->first()->period;
+                //         $period = $school_pice->last()->period;
+                //     } else {
+                //         $startcourse = $school_pice->first()->period;
+                //         $period = $school_pice->first()->period;
+                //     }
+                //     $parts = explode('-', $period);
+                //     $lastTwoParts = array_slice($parts, -2);
+                //     $end_date = implode('-', $lastTwoParts);
+                // }
+                else {
+                    // dd($rec_ids, $school_pice);
+                    $school_pice = [];
+                    $end_date = '2999-01';
+                    // $parentCheck = 'ผู้ปกครองไม่ตรงกัน';
+                }
+            } else {
+                $school_pice = [];
+                $end_date = '2999-01';
+            }
+
+            $all = 0;
+            $remain = 0;
+            $qty1 = [];
+            $bonus = 0;
+            $result_month = 0;
+            $result_all = 0;
+            $result_bonus = 0;
+            $result_his = 0;
+            $result_remain = 0;
+            $result_prefer = 0;
+
+            $processedIds = [];
+            $reset_id = [];
+            $current_Month = date('Y-m');
+
+            // $currentMonth = Carbon::createFromFormat('Y-m','2023-10');
+            // $currentMonth = Carbon::createFromFormat('Y-m', $current_Month);
+            $currentMonth = Carbon::parse($current_Month);
+            // $currentReceiptEndDate = Carbon::createFromFormat('Y-m', '2023-9');
+            // $currentReceiptEndDate = Carbon::createFromFormat('Y-m', $end_date);
+
+            $currentReceiptEndDate = Carbon::parse($end_date);
+
             $photo = url('/') . '/receipt_form_images/' . $stu_result->photo_att;
-            $student_html .= '<div class="container rounded bg-white mt-5 mb-5">
-        <div class="row">
+            $student_html .= '
+    <div class="container rounded bg-white mt-5 mb-5">
+        <div class="row mb-3">
             <div class="col-md-4 border-right">
                 <div
                     class="d-flex flex-column align-items-center text-center p-3 py-5">
@@ -248,8 +374,120 @@ class SchoolController extends Controller
                 </div>
             </div>
         </div>
-    </div>
-            ';
+        <div class="modal-footer">
+                    </div>
+    <table style="width: 100%;" id="Listview" class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">
+        <thead>
+            <tr>
+                <th>รายวิชา</th>
+                <th>เดือน</th>
+                <th>ระยะเวลา</th>
+                <th>สมัคร</th>
+                <th>โบนัส</th>
+                <th>รวม</th>
+                <th>เข้าเรียนแล้ว</th>
+                <th>คงเหลือ</th>
+
+            </tr>
+        </thead>
+        <tbody>';
+
+            if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate)) {
+                # code...
+                foreach ($school_pice as $reset) {
+                    # code...
+                    $reset_id[] = $reset->id;
+                }
+            } else {
+
+                foreach ($school_pice as $school_pices) {
+
+                    if (in_array($school_pices->id, $reset_id)) {
+                        # code...
+                    } else {
+
+                        $numcourse = 0;
+                        $qty = null;
+                        $num_month = null;
+                        $prefer = 0;
+                        $school = $school_pices->qty;
+                        $sub_ids = $school_pices->subject;
+                        $history = History::where('student_id', $stdId)
+                            ->where('subject_id', $sub_ids)
+                            ->get();
+
+                        // dd($sub_ids, $history);
+                        if (!empty($history)) {
+                            $his_succsss = count($history);
+                            $firstRecord = $history->first();
+                            if (!empty($firstRecord) && !in_array($firstRecord->id, $processedIds)) {
+                                $processedIds[] = $firstRecord->id;
+                            } else {
+                                $his_succsss = 0;
+                            }
+                        }
+                        $startcourse = $school_pices->period ?? null;
+                        if ($school_pices->period == $startcourse) {
+                            $num_month = $school;
+                            $numcourse++;
+                        } else {
+                            $num_month += $school;
+                        }
+                        $qty += $school;
+                        if ($num_month > 11) {
+                            $bonus = 12 * $numcourse;
+                            $prefer = $qty * 8;
+                            $all = $qty * 8 + $bonus ?? 'N/A';
+                            $remain = $all - $his_succsss;
+                        } elseif ($num_month > 5) {
+                            $bonus = 5 * $numcourse;
+                            $prefer = $qty * 8;
+                            $all = $qty * 8 + $bonus ?? 'N/A';
+                            $remain = $all - $his_succsss;
+                        } elseif ($num_month > 3) {
+                            $bonus = 3 * $numcourse;
+                            $prefer = $qty * 8;
+                            $all = $qty * 8 + $bonus ?? 'N/A';
+                            $remain = $all - $his_succsss;
+                        } else {
+                            $prefer = $qty * 8;
+                            $all = $qty * 8 ?? 'N/A';
+                            $remain = $all - $his_succsss;
+                        }
+                    }
+                    $student_html .= '
+                    <tr>
+                        <td> ' . $school_pices->school_sub->title . ' </td>
+                        <td> ' . $school_pices->period . ' </td>
+                        <td> ' . $num_month . ' เดือน</td>
+                        <td>' . $prefer . ' ครั้ง</td>
+                        <td> ' . $bonus . ' ครั้ง</td>
+                        <td> ' . $all . ' ครั้ง</td>
+                        <td> ' . $his_succsss . ' ครั้ง</td>
+                        <td>' . $remain . ' ครั้ง</td>
+                    </tr>';
+
+                    $result_month += $num_month;
+                    $result_prefer += $prefer;
+                    $result_all += $all;
+                    $result_bonus += $bonus;
+                    $result_his += $his_succsss;
+                    $result_remain += $remain;
+                } //end foreach
+            } //end if
+            $student_html .= '
+            <tr>
+                <th>Result</th>
+                <th> </th>
+                <th> ' . $result_month . ' </th>
+                <th> ' . $result_prefer . ' ครั้ง </th>
+                <th> ' . $result_bonus . ' ครั้ง </th>
+                <th> ' . $result_all . '  ครั้ง</th>
+                <th> ' . $result_his . '  ครั้ง</th>
+                <th> ' . $result_remain . ' ครั้ง</th>
+            </tr>';
+            $student_html .= '</tbody></table></div>';
+
 
             if ($student) {
                 $course[] = Course::where([['student_id', $stu_result->id]])

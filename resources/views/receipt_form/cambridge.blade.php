@@ -581,8 +581,9 @@
 
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>
                                                 Registration
-                                                Date:</strong> 1 July - 9 September 2023</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Sitting Date:</strong>&nbsp;30 September and 1 October 2023</span>
+                                                Date:</strong>  1 July - 9 October 2023</span></p>
+                                    <p><span style="color: #6351a2;"><strong>Sitting Date:</strong>&nbsp; Cambridge Primary Insight (Year 1 - 6) 28 October 2023
+                                    MidYIS (Year 7 - 9) 29 October 2023</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -907,8 +908,8 @@
                                     <div class="col-md-6 col-sm-12">
                                         <div class="position-relative form-group" style="padding-top:0px;">
                                             <label class="form-label form-label-top form-label-auto" for="grade">E-mail
-                                                (กรุณาตรวจสอบที่อยู่อีเมลให้ถูกต้อง หากกรอกผิด
-                                                จะไม่สามารถส่งข้อมูลในการเข้าสอบได้) <span
+                                                (กรุณาใช้ @gmail.com เท่านั้น เพื่อที่จะสามารถส่งข้อมูลสำหรับเข้าสอบได้)
+                                                **สำหรับผู้ที่สมัครมากกว่า 1 คน รบกวนไม่ใช้อีเมลเดิมในการสมัครสอบ <span
                                                     class="form-required">*</span></label>
                                             <input type="email" class="form-control" name="email" id="email"
                                                 value="" maxlength="70" required>
@@ -1579,4 +1580,14 @@
             warningDescCSS);
         //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
     </script>
+    
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2EMF2S1GBP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      
+        gtag('config', 'G-2EMF2S1GBP');
+        </script>
 @endsection

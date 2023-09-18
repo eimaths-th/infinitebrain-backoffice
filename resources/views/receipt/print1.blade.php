@@ -167,25 +167,7 @@
 
                         </tr>
                         @foreach ($receipt_detail_arr as $receipt_detail)
-                            {{-- <tr>
-                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
-                                <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
-                                <td align="center">{{ $receipt_detail['quantity'] }}</td>
-                                <td align="center">{{ $receipt_detail['unit'] }}</td>
-                                <td align="center">{{ $receipt_detail['unitprice'] }}</td>
-                                <td align="center">{{ $receipt_detail['discount'] }}</td>
-                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}</td>
-                            </tr>
-                            <tr>
-                                <td align="center" style="vertical-align: top;"></td>
-                                <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
-                                <td align="center">{{ $receipt_detail['book'] }}</td>
-                                <td align="center">{{ $receipt_detail['unit'] }}</td>
-                                <td align="center">{{ $receipt_detail['books'] }}</td>
-                                <td align="center"></td>
-                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['bookprice'] }}</td>
-                            </tr> --}}
-                            @if ($receipt_detail['course_type'] !== 2 && $receipt_detail['course_type'] !== 3)
+                            @if ($receipt_detail['course_type'] == 1)
                                 <tr>
                                     <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
                                     <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
@@ -197,65 +179,68 @@
                                     <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}
                                     </td>
                                 </tr>
-                            @else
+
+                                @if ($receipt_detail['entrance_fee'] > 0)
+                                    <td></td>
+                                    <td align="left">ค่าแรกเข้า </td>
+                                    <td align="left"> </td>
+                                    <td align="center"> 1</td>
+                                    <td align="center">ครั้ง</td>
+                                    <td align="center">{{ number_format($receipt_detail['entrance_fee'], 2) }}</td>
+                                    <td align="center"></td>
+                                    <td align="center" style="vertical-align: top;">
+                                        {{ number_format($receipt_detail['entrance_fee'], 2) }}</td>
+                                @endif
+
+                                <tr>
+                                    <td align="center" style="vertical-align: top;">
+                                        @if ($receipt_detail['course_type'] == 2 && $receipt_detail['course_type'] !== 1)
+                                            {{ $receipt_detail['no'] }}
+                                        @endif
+                                    </td>
+                                    @if ($receipt_detail['book'] !== '0')
+                                        <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
+                                        <td align="left"></td>
+                                        <td align="center">{{ $receipt_detail['book'] }}</td>
+                                        <td align="center">เล่ม</td>
+                                        <td align="center">{{ number_format($receipt_detail['books'], 2) }}</td>
+                                        <td align="center">
+                                        </td>
+                                        <td align="center" style="vertical-align: top;">
+                                            {{ $receipt_detail['bookprice'] }}</td>
+                                    @endif
+
+                                </tr>
+                            @elseif ($receipt_detail['course_type'] == 2)
+                                <tr>
+                                    <td align="center" style="vertical-align: top;">
+                                        @if ($receipt_detail['course_type'] == 2 && $receipt_detail['course_type'] !== 1)
+                                            {{ $receipt_detail['no'] }}
+                                        @endif
+                                    </td>
+                                    @if ($receipt_detail['book'] !== '0')
+                                        <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
+                                        <td align="left"></td>
+                                        <td align="center">{{ $receipt_detail['book'] }}</td>
+                                        <td align="center">เล่ม</td>
+                                        <td align="center">{{ number_format($receipt_detail['books'], 2) }}</td>
+                                        <td align="center">
+                                        </td>
+                                        <td align="center" style="vertical-align: top;">
+                                            {{ $receipt_detail['bookprice'] }}</td>
+                                    @endif
+
+                                </tr>
+                            @elseif ($receipt_detail['course_type'] == 3)
+                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
+                                <td align="left">ค่าสื่อการสอน {!! $receipt_detail['media_name'] !!}</td>
+                                <td align="left"> </td>
+                                <td align="center">{{ $receipt_detail['quantity'] }}</td>
+                                <td align="center">{{ $receipt_detail['unit'] }}</td>
+                                <td align="center">{{ $receipt_detail['unitprice'] }}</td>
+                                <td align="center">{{ $receipt_detail['discount'] }}</td>
+                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}</td>
                             @endif
-
-                            @if ($receipt_detail['course_type'] == 2)
-                            <tr>
-                                <td align="center" style="vertical-align: top;">
-                                    @if ($receipt_detail['course_type'] == 2)
-                                        {{ $receipt_detail['no'] }}
-                                    @endif
-                                </td>
-                                <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
-                                <td align="left"></td>
-                                <td align="center">{{ $receipt_detail['book'] }}</td>
-                                <td align="center">เล่ม</td>
-                                <td align="center">{{ $receipt_detail['books'] }}</td>
-                                <td align="center">
-                                    @if ($receipt_detail['course_type'] == 2)
-                                        {{ $receipt_detail['discount'] }}
-                                    @endif
-                                </td>
-                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['bookprice'] }}
-                                </td>
-                            </tr>
-                        @elseif ($receipt_detail['course_type'] == 3)
-                            <tr>
-                                <td align="center" style="vertical-align: top;">
-                                    @if ($receipt_detail['course_type'] == 3)
-                                        {{ $receipt_detail['no'] }}
-                                    @endif
-                                </td>
-                                <td align="left">ค่าสื่อการสอน {!! $receipt_detail['description'] !!}</td>
-                                <td align="left">{{ $receipt_detail['period'] }}</td>
-                                <td align="center">{{ $receipt_detail['book'] }}</td>
-                                <td align="center">รายการ</td>
-                                <td align="center">{{ $receipt_detail['bookprice'] }}</td>
-                                <td align="center">
-                                    @if ($receipt_detail['course_type'] == 3)
-                                        {{ $receipt_detail['discount'] }}
-                                    @endif
-                                </td>
-                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['total'] }}</td>
-                            </tr>
-                        @else
-                            <tr>
-                                <td align="center" style="vertical-align: top;">
-
-                                </td>
-                                <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
-                                <td align="left"></td>
-                                <td align="center">{{ $receipt_detail['book'] }}</td>
-                                <td align="center">เล่ม</td>
-                                <td align="center">{{ $receipt_detail['books'] }}</td>
-                                <td align="center">
-                                    {{ $receipt_detail['discount'] }}
-                                </td>
-                                <td align="center" style="vertical-align: top;">{{ $receipt_detail['bookprice'] }}
-                                </td>
-                            </tr>
-                        @endif
                         @endforeach
                         {{--  <tr>
                         <td align="center" style="vertical-align: top;">1</td>
@@ -323,7 +308,7 @@
                                         <td width="10%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="67%" class="grey">ส่วนลด/Discout</td>
-                                        <td width="15%" align="right"><b>00.00</b></td>
+                                        <td width="15%" align="right"><b>{{ $discount }}</b></td>
                                         <td width="8%"></td>
 
                                     </tr>

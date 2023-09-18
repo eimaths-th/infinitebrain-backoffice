@@ -8,16 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class SchoolPrice extends Model
 {
     use HasFactory;
+
     protected $table="school_price";
 
 
     protected $fillable = [
         'subject',
+        'group',
         'course_type',
+        'student_id',
         'level',
         'week',
         'qty',
         'book',
+        'media_name',
+        'media_price',
+        'entrance_fee',
         'bookprice',
         'discount',
         'price',
@@ -36,6 +42,11 @@ class SchoolPrice extends Model
     public function school_sub()
     {
         return $this->hasOne(Subject::class, 'id', 'subject');
+    }
+
+    public function std()
+    {
+        return $this->hasOne(Student::class, 'id', 'student_id');
     }
 
 }

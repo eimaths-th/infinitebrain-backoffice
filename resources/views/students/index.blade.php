@@ -36,8 +36,7 @@
                                 class="fa fa-file-excel"></i> Import Excel
                         </a>
                         <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
-                            id="CreateButton"><i class="fa fa-plus"></i> Create New
-                            Student</a>
+                            id="CreateButton"><i class="fa fa-plus"></i> Create New Student</a>
                         <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
                             All</a>
 
@@ -171,9 +170,9 @@
 
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="Name">Code:</label>
-                            <input type="text" class="form-control" name="code" id="AddCode" value="">
+                        <div class="form-group my-3">
+                            <label for="Name">Code: {{ $newStudentCode }}</label>
+                            <input type="hidden" class="form-control" name="code" id="AddCode" value="">
                         </div>
                         <div class="form-group">
                             <label for="Name">Name:</label>
@@ -185,7 +184,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Name">Nickname:</label>
-                            <input type="text" class="form-control" name="nickname" id="AddNickname" value="">
+                            <input type="text" class="form-control" name="nick_name" id="AddNickname" value="">
                         </div>
                         <div class="form-group">
                             <label for="Name">Mobile:</label>
@@ -545,7 +544,7 @@
                         code: $('#AddCode').val(),
                         name: $('#AddName').val(),
                         lastname: $('#AddLastname').val(),
-                        nickname: $('#AddNickname').val(),
+                        nick_name: $('#AddNickname').val(),
                         mobile: $('#AddMobile').val(),
                         grade: $('#AddGrade').val(),
                         parent: $('#AddParent').val()[0],

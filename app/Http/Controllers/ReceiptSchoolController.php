@@ -25,6 +25,7 @@ use App\Models\Receipt_School_RunningNumber;
 class ReceiptSchoolController extends Controller
 {
 
+    //test host
     const BAHT_TEXT_NUMBERS = array('ศูนย์', 'หนึ่ง', 'สอง', 'สาม', 'สี่', 'ห้า', 'หก', 'เจ็ด', 'แปด', 'เก้า');
     const BAHT_TEXT_UNITS = array('', 'สิบ', 'ร้อย', 'พัน', 'หมื่น', 'แสน', 'ล้าน');
     const BAHT_TEXT_ONE_IN_TENTH = 'เอ็ด';
@@ -454,8 +455,6 @@ class ReceiptSchoolController extends Controller
     public function index(Request $request)
     {
 
-
-
         if ($request->ajax()) {
 
 
@@ -482,20 +481,31 @@ class ReceiptSchoolController extends Controller
             // print_r($receipt);
             // echo "</pre>";
             // exit();
-
             return datatables()->of($receipt)
                 ->editColumn('pid', function ($row) {
                     $student = "";
                     $stu = explode('|', $row->pid);
+                    // dd($stu);
+                    $numname = 0;
+
                     if ($row->pid !== "") {
                         foreach ($stu as $stus) {
+
                             if (Student::where('id', $stus)->exists()) {
                                 $stusq = Student::where('id', $stus)->get();
                                 //$student .= $stusq[0]->nick_name . " ," . $stusq[0]->last_name . ' ';
-                                $student .= $stusq[0]->nick_name . " ,";
+                                if ($numname < 1) {
+                                    # code...
+                                    $student .= $stusq[0]->nick_name;
+                                } else {
+
+                                    $student .= " , " . $stusq[0]->nick_name;
+                                }
                             } else {
                                 $student .= '-';
                             }
+
+                            $numname++;
                         }
                     } else {
                         $student = '-';
@@ -555,11 +565,15 @@ class ReceiptSchoolController extends Controller
         return view('receipt_school.receipt')->with(['data2' => $student])->with(['data3' => $subject])->with(['data4' => $parent])
             ->with(['datap' => self::datap]);
     }
+
     public function edit($id, $type)
     {
         $data = Receipt_School::find($id);
         $data2 = ParentRegister::find($data->name_parent);
 
+
+        // dd( $stds,$data2);
+        // $std_schp = SchoolPrice::where('student_id',$stds->id)->get();
         //parent list
         $select_list_parent = "";
         $parent = ParentRegister::orderBy("id", "asc")->get();
@@ -568,10 +582,10 @@ class ReceiptSchoolController extends Controller
 
                 $select_list_parent .= '<option value="' . $keys->id . '" selected>' . $keys->code . ' ' . $keys->name_parent . '</option>';
             } else {
+
                 $select_list_parent .= '<option value="' . $keys->id . '" >' . $keys->code . ' ' . $keys->name_parent . '</option>';
             }
         }
-
 
         //student list
         $student = "";
@@ -584,7 +598,6 @@ class ReceiptSchoolController extends Controller
         }
 
         $payment = '';
-
         foreach (self::datap as $pay) {
 
             if ($pay['id'] == $data->payment_type) {
@@ -604,6 +617,15 @@ class ReceiptSchoolController extends Controller
         $x = 1;
         $data_html = '';
 
+        // dd($receipts_detail);
+        $firstId = null;
+        foreach ($receipts_detail as $value) {
+            if ($value->course_type == 1) {
+                $firstId = $value->id;
+                break;
+            }
+        }
+        // dd($firstId);
         foreach ($receipts_detail as $dresult) {
             $subject = Subject::where('id', $dresult['subject'])->orderBy("id", "asc")->get();
             $level = Level::where('subject', $dresult['subject'])->where('id', $dresult['level'])->orderBy("id", "asc")->get();
@@ -616,36 +638,29 @@ class ReceiptSchoolController extends Controller
                 $subject_list .= '<option value="' . $key->id . '" >  ' . $key->title . '</option>';
             }
 
-
             foreach ($datalevel as $key) {
 
                 $select_list .= '<option value="' . $key->id . '" > (' . $key->level_sort . ') ' . $key->title . '</option>';
             }
-
             $course_type_1 = '';
+            $course_type_2 = '';
+            $course_type_3 = '';
+
             if ($dresult['course_type'] == 1) {
                 $course_type_1 = 'selected';
-            }
-            $course_type_2 = '';
-            if ($dresult['course_type'] == 2) {
+            } elseif ($dresult['course_type'] == 2) {
                 $course_type_2 = 'selected';
             } else {
-                $course_type_1 = 'selected';
-            }
-            $course_type_3 = '';
-            if ($dresult['course_type'] == 3) {
                 $course_type_3 = 'selected';
-            } else {
-                $course_type_1 = 'selected';
             }
-            $course_type_select = '
-            <option value="1" ' . $course_type_1 . '>Course+Book
-            </option>
-            <option value="2" ' . $course_type_2 . '>Book
-            </option>
-            <option value="3" ' . $course_type_3 . '>สื่อการสอน
-            </option>';
 
+            $course_type_select = '
+
+                <option value="1" ' . $course_type_1 . '>Course+Book </option>
+                <option value="2" ' . $course_type_2 . '>Book </option>
+                <option value="3" ' . $course_type_3 . '>สื่อการสอน </option>
+
+            ';
 
             $message = "";
             if ($dresult['type'] == 1) {
@@ -677,28 +692,90 @@ class ReceiptSchoolController extends Controller
                 $weekstaus = "disabled";
             }
 
-            if ($dresult['course_type'] == 2 || $dresult['course_type'] == 3) {
+            if ($dresult['course_type'] == 2) {
                 $weekstaus = "disabled";
             }
 
-            //hide
+            $msg_entran = '';
+            $val_entrance = 0;
+            $entrance_fee = $dresult->entrance_fee;
+            if ($entrance_fee > 0) {
+                # code...
+                $val_entrance = 1;
+                $msg_entran .= 'checked';
+            }
+            $entance_html = '';
+
+            $std = $dresult->student_id;
+            // dd($stds);
+            $stds = Student::where('pid', $data2->id)->get();
+            $std_rec = "";
+
+
+            // dd($std);
+
+
+            if ($std) {
+                $std_rec .= '<option value="' . $dresult->student_id . '" selected> ' . $dresult->std->full_name . ' </option>';
+                foreach ($stds as $key => $stds_std) {
+                    $std_rec .= '<option value="' . $stds_std->id . '"> ' . $stds_std->full_name . ' </option>';
+                }
+            }else {
+                foreach ($stds as $key => $stds_std) {
+                    # code...
+                    $std_rec .= '<option value="" selected> เลือกนักเรียน </option>';
+                    $std_rec .= '<option value="' . $stds_std->id . '" > ' . $stds_std->full_name . ' </option>';
+                }
+            }
+
+
+
+
+            // if ($dresult->id = $firstId && $dresult->course_type == 1) {
+            if ($dresult->id == $firstId) {
+                $entance_html .= '
+                    <div class="col-md-12 col-sm-12 col-xs-12" id="entrance_fee_1">
+                        <div class="form-check">
+                            <input class="form-check-input" id="entrance_fee_val_1" type="checkbox" name="entrance_fee[]" value="535" ' . $msg_entran . ' />
+                            <label class="form-check-label" for="entrance_fee" >ค่าแรกเข้า</label>
+                        </div>
+                    </div>
+                ';
+            } else {
+                $entance_html .= '
+                    <input class="form-check-input" id="entrance_fee_val_1" type="hidden" name="entrance_fee[]" value="0" ' . $msg_entran . ' />
+                ';
+            }
+
             $data_html .= '<tr class="firstTr3">
-        <td width="5%">
+            <td width="4%">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <input type="text" id="rno[]" name="rno[]"
                     class="form-control has-feedback-left" value="' . $x . '">
                     <input name="rrid[]"  id="rrid" type="hidden" value="' . $dresult['id'] . '" />
             </div>
-        </td>
-        <td width="10%">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-            <select style="width: 100%;" class="ctype form-control"
+
+            <td width="10%">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <select style="width: 100%;" class="select2 form-control stdrec" id="student_id[]" name="student_id[]" required>
+                    '.$std_rec.'
+                    </select>
+                </div>
+            </td>
+
+            </td>
+            <td width="9%">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+            <select style="width: 100%;" class="ctype rrcourse_type form-control"
                 id="course_type" name="course_type[]" required>
                 ' . $course_type_select . '
             </select>
-        </div>
-    </td>
-        <td width="10%">
+            </div>
+
+            ' . $entance_html . '
+
+            </td>
+                <td width="10%">
             <div class="col-md-12 col-sm-12 col-xs-12 ">
 
                 <select style="width: 100%;" class=" form-control" id="rrsub" name="rrsub[]" value="' . $subject[0]->id . '" >
@@ -707,19 +784,19 @@ class ReceiptSchoolController extends Controller
             </select>
 
             </div>
-        </td>
+            </td>
 
-        <td width="10%">
-        <div class="col-md-12 col-sm-12 col-xs-12">
+            <td width="10%">
+            <div class="col-md-12 col-sm-12 col-xs-12">
             <select style="width: 100%;" class=" form-control" id="rrlevel" name="rrlevel[]" value="' . $level[0]->id . '">
             <option value="' . $level[0]->id .  '" selected> (' . $level[0]->level_sort . ')' . $level[0]->title  . ' </option>
             ' . $select_list . '
 
             </select>
-        </div>
-    </td>
+         </div>
+            </td>
 
-        <td width="7%">
+        <td width="5%">
             <div class="col-md-12 col-sm-12 col-xs-12">
             <select style="width: 100%;" class=" form-control" id="rrweek" name="rrweek[]" >
                                                         <option class="weekh" value="' . $dresult['week'] . '" selected>' . $dresult['week'] . " " . "week" . '</option>
@@ -735,10 +812,10 @@ class ReceiptSchoolController extends Controller
                                                     </select>
 
             </div>
-        </td>
-        <td width="5%">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-        <select style="width: 100%;" class=" form-control" id="rrqty" name="rrqty[]" ' . $weekstaus . '>
+            </td>
+         <td width="4%">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+          <select style="width: 100%;" class=" form-control" id="rrqty" name="rrqty[]" ' . $weekstaus . '>
                                                         <option class="qtyh" value="' . $dresult['qty'] . '" selected>' . $dresult['qty'] . '</option>
 
                                                         <option value="1">1
@@ -768,22 +845,27 @@ class ReceiptSchoolController extends Controller
 
                                                     </select>
 
-    </div>
-        </td>
+            </div>
+            </td>
 
-        <td width="7%">
+         <td width="5%">
             <div class="col-md-12 col-sm-12 col-xs-12 ffff">
                 <input type="number" id="rrbook" name="rrbook[]"
                 class="form-control has-feedback-left" value="' . $dresult['book'] . '">
             </div>
-        </td>
-        <td width="7%">
-        <div class="col-md-12 col-sm-12 col-xs-12 cc">
+         </td>
+         <td width="5%">
+         <div class="col-md-12 col-sm-12 col-xs-12 cc">
             <input type="text" id="rrbookprice" name="rrbookprice[]"
-            class="form-control has-feedback-left" value="' . $dresult['bookprice'] . '" disabled>
-        </div>
-    </td>
-    <td width="10%">
+            class="rrbookprice form-control has-feedback-left" value="' . $dresult['bookprice'] . '" disabled>
+         </div>
+         <div class="col-md-12 col-sm-12 col-xs-12 cc">
+            <input type="text" id="rrmedia_price" name="media_price[]" class="rrmedia_price form-control has-feedback-left "
+                placeholder="ราคาสื่อการสอน" value="' . $dresult['media_price'] . '" autocomplete="off">
+
+         </div>
+            </td>
+            <td width="7%">
             <div class="col-md-12 col-sm-12 col-xs-12 ">
             <select style="width: 100%;" class=" form-control" id="rrtype" name="rrtype[]" ' . $onoff . '>
             <option value="' . $dresult['type'] . '" selected>' . $message . '</option>
@@ -793,17 +875,17 @@ class ReceiptSchoolController extends Controller
             </option>
 
 
-        </select>
+            </select>
 
             </div>
-        </td>
-        <td width="7%">
+            </td>
+            <td width="5%">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <input type="number" id="rrdiscount" name="rrdiscount[]"
                 class="form-control has-feedback-left" value="' . $dresult['discount'] . '">
             </div>
-        </td>
-        <td width="7%">
+            </td>
+            <td width="7%">
             <div class="col-md-12 col-sm-12 col-xs-12">
             <select style="width: 100%;" class="bbb form-control" id="rrprice" name="rrprice[]">
                                                         <option class="priceh" value="' . $dresult['price'] . '" selected>' . $messageprice . '</option>
@@ -816,25 +898,33 @@ class ReceiptSchoolController extends Controller
                                                     </select>
 
             </div>
-        </td>
-        <td width="7%">
+            </td>
+            <td width="10%">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <input type="text" id="rrperiod" name="rrperiod[]"
-                class="form-control has-feedback-left" value="' . $dresult['period'] . '">
+                class="rrperiod form-control has-feedback-left" value="' . $dresult['period'] . '">
             </div>
-        </td>
-        <td width="20%">
+            <div class="col-md-12 col-sm-12 col-xs-12 ">
+                                                            <input type="text" class="rrmedia_name form-control" name="media_name[]"
+                                                                id="rrmedia_name" value="' . $dresult['media_name'] . '"
+                                                                placeholder="ชื่อสื่อการสอน" autocomplete="off">
+
+                                                        </div>
+            </td>
+            <td width="8%">
             <div class="col-md-12 col-sm-12 col-xs-12 acdc">
             <input type="text" id="rrtotal" name="rrtotal[]"
             class="form-control has-feedback-left" value="' . $dresult['total'] . '">
 
             </div>
-        </td>
-        <!--<td><button type="button" id="removeRowt"
+                    <input type="hidden" id="entrace_edit_' . $val_entrance . '" name="entrace_edit" value="' . $val_entrance . '">
+
+            </td>
+            <!--<td><button type="button" id="removeRowt"
                 class="btn btn-sm btn-danger btnRemoveg"><i
                     class="fa fa-minus"></i></button></td>-->
 
-    </tr>';
+            </tr>';
             $x++;
         }
 
@@ -891,17 +981,25 @@ class ReceiptSchoolController extends Controller
         $booksum = 0;
         $pricesub = 0;
         $discount = 0;
+
+        $test = [];
         foreach ($receipts_detail as $dresult) {
-            if ($dresult['course_type'] == 2 || $dresult['course_type'] == 3) {
+            if ($dresult['course_type'] == 2) {
                 $price = $dresult['bookprice'];
+            } elseif ($dresult['course_type'] == 3) {
+                $price = $dresult['media_price'];
             } else {
                 $price = ($dresult['total'] - $dresult['bookprice']);
             }
-
+            // dd($dresult->total);
             $message = "";
             if ($dresult['week'] == 1 || $dresult['week'] == 2 || $dresult['week'] == 3) {
                 $message = " สัปดาห์";
                 $qty = $dresult['week'];
+                if ($dresult['course_type'] == 3) {
+                    # code...
+                    $message = "ชุด";
+                }
             } else {
                 $message = "เดือน";
                 $qty = $dresult['qty'];
@@ -918,19 +1016,26 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['bookprice'] = '';
                 $receipt_detail_arr[$x]['receipt_number'] = '';
                 $receipt_detail_arr[$x]['period'] = '';
+                $receipt_detail_arr[$x]['media_name'] = '';
+                $receipt_detail_arr[$x]['entrance_fee'] = '';
+
                 $receipt_detail_arr[$x]['course_type'] = $dresult['course_type'];
             } else {
-
                 $receipt_detail_arr[$x]['no'] = $no;
-                $receipt_detail_arr[$x]['price'] = number_format($price, 2);
+                $receipt_detail_arr[$x]['price'] = number_format($price - $dresult['entrance_fee'], 2);
                 $receipt_detail_arr[$x]['unit'] = $message;
                 $receipt_detail_arr[$x]['course_type'] = $dresult['course_type'];
+                $receipt_detail_arr[$x]['entrance_fee'] = $dresult['entrance_fee'];
+
+                $receipt_detail_arr[$x]['media_name'] = $dresult['media_name'];
+
                 if ($dresult['course_type'] == 2) {
+
                     $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] - $dresult['discount']) / $dresult['book'], 2);
-                } else if ($dresult['course_type'] == 3) {
-                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] - $dresult['discount']) / $dresult['book'], 2);
+                } elseif ($dresult['course_type'] == 3) {
+                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['media_price']), 2);
                 } else {
-                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] + $dresult['discount'] - $dresult['bookprice']) / $dresult['qty'], 2);
+                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] + $dresult['discount'] - $dresult['bookprice'] - $dresult['entrance_fee']) / $dresult['qty'], 2);
                 }
                 $receipt_detail_arr[$x]['quantity'] =  $qty; //$dresult['qty'];
                 $receipt_detail_arr[$x]['discount'] = number_format($dresult['discount'], 2);
@@ -938,10 +1043,7 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['bookprice'] = number_format($dresult['bookprice'], 2);
                 $receipt_detail_arr[$x]['receipt_number'] = ($dresult['receipt_number']);
                 $receipt_detail_arr[$x]['period'] = $dresult['period'];
-                $receipt_detail_arr[$x]['total'] = number_format($dresult['total'], 2);
             }
-
-            //dd($receipt_detail_arr);
 
 
             $subject = Subject::where('id', $dresult['subject'])
@@ -965,29 +1067,38 @@ class ReceiptSchoolController extends Controller
             }
 
 
-            $pricesub = $pricesub + (($dresult['total']) - $dresult['bookprice']);
+            $pricesub = $pricesub + (($dresult['total']) - $dresult['bookprice'] - $dresult['media_price']);
             //- $dresult['discount']
 
             $receipt_detail_arr[$x]['books'] = $bookp->book_price;
             $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort;
-            $booksum = $booksum + $dresult['bookprice'];
+            $booksum = $booksum + $dresult['bookprice'] + $dresult['media_price'];
             $discount = $discount + $dresult['discount'];
             $all_price =  $booksum + $pricesub;
             //- $discount
+            $test[$x] = $dresult['bookprice'];
+
             $no++;
             $x++;
         }
         //exit();
+        // dd($booksum , $dresult['bookprice'] , $dresult['media_price'] ,$dresult['entrance_fee'],$test);
+
+        // dd($booksum,$dresult['bookprice'],$dresult['media_price'],$dresult['entrance_fee']);
 
 
         $price_text = $this->baht_text($all_price);
         $price_texten = $this->convertNumber($all_price);
         $vat_price = ($pricesub * 100) / 107;
         $vat_total = $pricesub - $vat_price;
+        // dd($pricesub);
         $vat_price_val = number_format($vat_price, 2);
         $vat_val = number_format($vat_total, 2);
 
         $price_val = number_format(($vat_price + $vat_total) + $booksum, 2);
+
+
+
 
         $mes = "";
         $text = "";
@@ -1047,9 +1158,9 @@ class ReceiptSchoolController extends Controller
 
 
         return view($viewr)->with(['id' => $id])
-            ->with(['discount' => number_format($discount, 2)])
+            ->with(['discount' => $discount])
             ->with(['vat_price' => $vat_price])
-            ->with(['booksum' => number_format($booksum, 2)])
+            ->with(['booksum' => $booksum])
             ->with(['html' => $html])
             ->with(['data' => $data])
             ->with(['data2' => $data2])
@@ -1073,6 +1184,9 @@ class ReceiptSchoolController extends Controller
     {
         $data = Student::where('pid', $parent)->orderBy("id", "asc")->get();
         $select_list = "";
+
+        // $select_list1 = '';
+        $select_list1 = '<option value="">เลือกชื่อนักเรียน</option>';
         $data2 = ParentRegister::where('id', $parent)->orderBy("id", "asc")->get();
         $mobile = "";
         $address = "";
@@ -1087,8 +1201,15 @@ class ReceiptSchoolController extends Controller
             $select_list .= '<option value="' . $key->id . '" > ' . $key->first_name . ' ' . $key->last_name . '</option>';
         }
 
+        foreach ($data as $key) {
+
+            $select_list1 .= '
+            <option value="' . $key->id . '" > ' . $key->first_name . ' ' . $key->last_name . '</option>
+            ';
+        }
+
         return response()->json([
-            'html' =>  $select_list, 'html2' => $mobile, 'html3' => $address, 'html4' => $postcode
+            'html' =>  $select_list, 'html2' => $mobile, 'html3' => $address, 'html4' => $postcode, 'html5' => $select_list1
         ]);
     }
 
@@ -1109,7 +1230,7 @@ class ReceiptSchoolController extends Controller
         ]);
     }
 
-    public function searchs($sub_id, $level_id, $week, $price, $qty, $discount, $book_price, $type, $course_type)
+    public function searchs($sub_id, $level_id, $week, $price, $qty, $discount, $book_price, $type, $course_type, $entrance_fee)
     {
         $select_list = "";
         if ($price == 1) {
@@ -1126,19 +1247,31 @@ class ReceiptSchoolController extends Controller
             }
         }
 
-
         $output = "";
         $outputsum = "";
         if ($course_type == 2) {
             $pricet = (int)$book_price - (int)$discount;
         } else {
-            $pricet = (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount;
+            $pricet = (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount + $entrance_fee;
         }
-        $output .= '<input type="text" id="pp" name="pp" class="form-control has-feedback-left" value="' . $pricet . '" >
+
+        // $entrace_edit = 0;
+        if ($entrance_fee > 1) {
+            # code...
+            $output .= '<input type="text" id="pp" name="pp" class="form-control has-feedback-left" value="' . $pricet . '" >
+        <input type="hidden" id="enhide" name="enhide" class="form-control has-feedback-left" value="1" >
         ';
-        $outputsum .= '' . $pricet . '';
+            $outputsum .= '' . $pricet . '';
+            // $entrace_edit = 1;
+        } else {
+            $output .= '<input type="text" id="pp" name="pp" class="form-control has-feedback-left" value="' . $pricet . '" >
+            ';
+            $outputsum .= '' . $pricet . '';
+            //
+        }
         return response()->json([
-            'html' =>  $output, 'outputsum' => $outputsum
+            'html' =>  $output, 'outputsum' => $outputsum,
+            // 'entrace_edit' => $entrace_edit
         ]);
     }
 
@@ -1155,6 +1288,8 @@ class ReceiptSchoolController extends Controller
         ';
         $sum = "";
         $sum = '' . (int)$select_list * (int)$book . ' ';
+
+        // dd($sub_id, $level_id, $book,$sum);
         return response()->json([
             'html' =>  $output, 'sum' => $sum
         ]);
@@ -1162,6 +1297,8 @@ class ReceiptSchoolController extends Controller
 
     public function store(Request $request)
     {
+
+        // dd($request);
         $validator =  Validator::make(
             $request->all(),
             [
@@ -1179,7 +1316,8 @@ class ReceiptSchoolController extends Controller
                 //'receipt.*.qty' => 'required',
                 'receipt.*.price' => 'required',
                 'receipt.*.pp' => 'required',
-                //'receipt.*.period' => 'required',
+                'receipt.*.std_id' => 'required',
+                // 'receipt.*.period' => 'required',
 
                 // 'level' => 'required|string',
                 // 'week' => 'required|string',
@@ -1191,7 +1329,6 @@ class ReceiptSchoolController extends Controller
                 // 'total' => 'required|string',
 
                 // 'file_att' => 'required|string
-                //
 
             ],
             [
@@ -1201,6 +1338,8 @@ class ReceiptSchoolController extends Controller
                 //'receipt.*.qty.required' => 'The QTY field is required. !',
                 'receipt.*.price.required' => 'The Price field is required.  !',
                 'receipt.*.pp.required' => 'The Book field is required.  !',
+                'receipt.*.std_id.required' => 'ระบุชื่อ นร ในรายการใบเสร็จ',
+                // 'receipt.*.period.required' => 'The period field is required.  !',
                 //'receipt.*.period.required' => 'The Period field is required.  !',
 
             ]
@@ -1249,19 +1388,24 @@ class ReceiptSchoolController extends Controller
             // 'sid' => $request->get('student'),
             'receipt_number' => $rnumber,
             'file_att' => $filebs,
-
         ]);
-
 
         $data->save();
         $rid = $data->id;
         // print_r($request->get('receipt'));
 
+
         foreach ($request->get('receipt') as $value) {
 
+            if (isset($value['entrance_fee'])) {
+                $entranceFee = $value['entrance_fee'];
+            } else {
+                $entranceFee = null;
+            }
             $data2 = new SchoolPrice([
                 'subject' => $value['subject'],
                 'course_type' => $value['course_type'],
+                'student_id' => $value['std_id'],
                 'level' => $value['level'],
                 'week' => $value['week'],
                 'qty' => $value['qty'],
@@ -1269,6 +1413,9 @@ class ReceiptSchoolController extends Controller
                 'bookprice' => $value['book_price'],
                 'discount' => $value['discount'],
                 'price' => $value['price'],
+                'media_name' => $value['media_name'],
+                'media_price' => $value['media_price'],
+                'entrance_fee' => $entranceFee,
                 'total' => $value['pp'],
                 'rid' => $rid,
                 'type' => $value['type'],
@@ -1329,23 +1476,34 @@ class ReceiptSchoolController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd($request);
+        $validator =  Validator::make(
+            $request->all(),
+            [
+                'submission_date' => 'required|string',
+                'payment_type' => 'required|string',
+                'student_id' => 'required|array', // Validate that it's an array
+                'student_id.*' => 'required', // Validate each element in the array
 
-        $validator =  Validator::make($request->all(), [
-            'submission_date' => 'required|string',
-            'payment_type' => 'required|string',
-            // 'first_name' => 'required|string',
-            // 'last_name' => 'required|string',
-            //'street_address' => 'required|string',
-            //'city' => 'required|string',
-            //'province' => 'required|string',
-            //'postcode' => 'required|string',
-            //'mobile' => 'required|string',
+                // 'first_name' => 'required|string',
+                // 'last_name' => 'required|string',
+                //'street_address' => 'required|string',
+                //'city' => 'required|string',
+                //'province' => 'required|string',
+                //'postcode' => 'required|string',
+                //'mobile' => 'required|string',
 
-            //'package' => 'required|string',
-            //'file_att' => 'required|string',
-            //'description' => 'required|string',
-            // 'grade' => 'required|string',
-        ]);
+                //'package' => 'required|string',
+                //'file_att' => 'required|string',
+                //'description' => 'required|string',
+                // 'grade' => 'required|string',
+            ],
+            [
+
+                'student_id.*.required' => 'ระบุชื่อ นร ในรายการใบเสร็จ',
+
+            ]
+        );
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
@@ -1420,6 +1578,7 @@ class ReceiptSchoolController extends Controller
         // echo $request->get('name_parent2');
         // exit();
         $rrid  = $request->get('rrid');
+        $std_id  = $request->get('student_id');
         $rrsub  = $request->get('rrsub');
         $rrcourse  = $request->get('rrcourse');
         $rrlevel  = $request->get('rrlevel');
@@ -1432,8 +1591,13 @@ class ReceiptSchoolController extends Controller
         $rrprice  = $request->get('rrprice');
         $rrtotal  = $request->get('rrtotal');
         $rrperiod = $request->get('rrperiod');
+        $media_price = $request->get('media_price');
+        $media_name = $request->get('media_name');
+        $entrance_fee = $request->get('entrance_fee');
+
 
         //add student to request
+
         $request->request->add(['pid' => $stud]);
 
         Receipt_School::find($id)->update($request->all());
@@ -1446,6 +1610,7 @@ class ReceiptSchoolController extends Controller
 
                 $rdata = new SchoolPrice([
                     'rid' => $id,
+                    'student_id' => $std_id[$xx],
                     'subject' => $rrsub[$xx],
                     'course_type' => $rrcourse[$xx],
                     'level' => $rrlevel[$xx],
@@ -1459,12 +1624,16 @@ class ReceiptSchoolController extends Controller
                     'total' => $rrtotal[$xx],
                     'receipt_number' => 0,
                     'period' => $rrperiod[$xx],
+                    'media_name' => $media_name[$xx],
+                    'media_price' => $media_price[$xx],
+                    'entrance_fee' => $entrance_fee[$xx],
                     //'amount' => $request->get('book_old_price'),
                 ]);
             } else {
 
                 $rdata = new SchoolPrice([
                     'rid' => $id,
+                    'student_id' => $std_id[$xx],
                     'subject' => $rrsub[$xx],
                     'course_type' => $rrcourse[$xx],
                     'level' => $rrlevel[$xx],
@@ -1478,59 +1647,20 @@ class ReceiptSchoolController extends Controller
                     'total' => $rrtotal[$xx],
                     'receipt_number' => 0,
                     'period' => $rrperiod[$xx],
+                    'media_name' => $media_name[$xx],
+                    'media_price' => $media_price[$xx],
+                    'entrance_fee' => $entrance_fee[$xx],
 
                     //'amount' => $request->get('book_old_price'),
                 ]);
             }
+            // dd($entrance_fee);
 
             // print_r($rrtype);
             // exit();
             $rdata->save();
         }
 
-        // print_r ($rrid[1]);
-        // for ($x = 0; $x < count($request->get('rrsub')); $x++) {
-
-
-        //     if($rrid != null){
-        //         SchoolPrice::find($rrid[$x])
-        //         ->update([
-        //             'subject' => $rrsub[$x],
-        //             'level' => $rrlevel[$x],
-        //             'week' => $rrweek[$x],
-        //             'qty' => $rrqty[$x],
-        //             'book' => $rrbook[$x],
-        //             'bookprice' => $rrbookprice[$x],
-        //             'type' => $rrtype[$x],
-        //             'discount' => $rrdiscount[$x],
-        //             'price' => $rrprice[$x],
-        //             'total' => $rrtotal[$x],
-
-        //         ]);
-        //     }else{
-        //         $rdata = array();
-        //         $rdata = new SchoolPrice([
-        //             'subject' => $rrsub[$x],
-        //             'level' => $rrlevel[$x],
-        //             'week' => $rrweek[$x],
-        //             'qty' => $rrqty[$x],
-        //             'book' => $rrbook[$x],
-        //             'bookprice' => $rrbookprice[$x],
-        //             'type' => $rrtype[$x],
-        //             'discount' => $rrdiscount[$x],
-        //             'price' => $rrprice[$x],
-        //             'total' => $rrtotal[$x],
-        //             'rid'=> 0,
-        //             //'amount' => $request->get('book_old_price'),
-        //         ]);
-        //         $rdata->save();
-
-        //     }
-
-
-
-
-        // }
         return response()->json(['success' => 'Receipt updated successfully']);
     }
 }

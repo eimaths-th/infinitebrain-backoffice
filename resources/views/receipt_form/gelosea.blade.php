@@ -570,8 +570,8 @@
                                     <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
                                     <p><span style="color: #6351a2;"><strong>Test:</strong> 850 baht</span>
                                     </p>
-                                    <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1250 bath</span><br></p>
+                                    {{--<p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
+                                            style="color: #6351a2;">1250 bath</span><br></p>--}}
                                     <p>&nbsp;</p>
                                     <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร GELOSEA</b> <br>
 
@@ -770,8 +770,8 @@
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test: 850 baht">Test: 850 baht</option>
-                                                <option value="Test + tutoring class: 1250 bath (1 class 2 hours)">Test +
-                                                    tutoring class: 1250 bath (1 class 2 hours)</option>
+                                                {{--<option value="Test + tutoring class: 1250 bath (1 class 2 hours)">Test +
+                                                    tutoring class: 1250 bath (1 class 2 hours)</option>--}}
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"

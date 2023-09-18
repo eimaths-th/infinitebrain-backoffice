@@ -1,10 +1,16 @@
 <div class="app-header header-shadow">
     <div class="app-header__logo">
-        <div class="logo-src"><img src="{{ asset('images/logo_infinitebrain.png') }}" alt="..." height="36"
-                style="padding-bottom: 5px"></div>
+        <a href="{{ route('home') }}">
+
+            <div class="logo-src">
+                <img src="{{ asset('images/logo_infinitebrain.png') }}" alt="..." height="36"
+                    style="padding-bottom: 5px">
+            </div>
+        </a>
         <div class="header__pane ms-auto">
             <div>
-                <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
+                <button type="button" class="hamburger close-sidebar-btn hamburger--elastic"
+                    data-class="closed-sidebar">
                     <span class="hamburger-box">
                         <span class="hamburger-inner"></span>
                     </span>

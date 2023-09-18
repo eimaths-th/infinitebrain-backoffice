@@ -41,7 +41,7 @@ class CustomAuthController extends Controller
                 if (Auth::user()->level == 1) {
                     //return redirect()->intended('users');
                     //return redirect('/users');
-                    return redirect('/receipts/print_month?pmsfield=9&type=report_view&print_month='.$this_month.'&Pmdescription=ค่าสมัคร OLPCS รอบแรก '. $this_year);
+                    return redirect(route('home'));
                 } elseif (Auth::user()->level == 2) {
                     //return redirect()->intended('course');
                     return redirect('/course');

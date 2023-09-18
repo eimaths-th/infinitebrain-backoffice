@@ -38,5 +38,6 @@ class ReceiptForm extends Model
         'description',
         'description2',
         'contest',
+        'discount_code',
     ];
 }

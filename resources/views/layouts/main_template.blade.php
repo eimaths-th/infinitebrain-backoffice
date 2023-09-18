@@ -25,6 +25,7 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
+    <link rel="icon" type="image/png" href="../images/inf-icon2.png">
 
 
     <script defer src="{{ asset('architectui/assets/scripts/main.js') }}"></script>
@@ -69,7 +70,7 @@
 </head>
 
 <body>
-    <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+    <div class="app-container app-theme-white body-tabs-shadow fixed-header">
 
         <!-- Header -->
         @include('layouts.header')

@@ -33,9 +33,6 @@ class SubjectController extends Controller
         $this->middleware('auth');
     }
 
-
-
-
     /**
      * Display a listing of the resource.
      *
@@ -53,6 +50,7 @@ class SubjectController extends Controller
                 "subjects.id as id",
                 "subjects.book",
                 "subjects.book_per_month",
+                "subjects.group as group",
                 "subjects.title as subject_name",
                 "subjects.title_th as subject_name_th"
             )
@@ -102,6 +100,7 @@ class SubjectController extends Controller
         //
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
+            'group' => 'required|string',
             'title' => 'required|string',
             'title_th' => 'required|string',
             'book' => 'required|integer',
@@ -113,6 +112,8 @@ class SubjectController extends Controller
         }
         // Getting values from the blade template form
         $level = new Subject([
+            'group' => $request->get('group'),
+            'title' => $request->get('title'),
             'title' => $request->get('title'),
             'title_th' => $request->get('title_th'),
             'book' => $request->get('book'),
@@ -224,6 +225,11 @@ class SubjectController extends Controller
         $data = Subject::find($id);
 
         $html = '
+
+        <div class="form-group">
+        <label for="Title">group:</label>
+        <input type="text" class="form-control" name="group" id="EditGroup" value=" ' . $data->group . ' ">
+    </div>
                 <div class="form-group">
                     <label for="Title">Title:</label>
                     <input type="text" class="form-control" name="title" id="EditTitle" value="' . $data->title . '">

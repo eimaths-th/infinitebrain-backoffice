@@ -263,7 +263,7 @@
                                         <td width="10%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="67%" class="grey">ส่วนลด/Discout</td>
-                                        <td width="15%" align="right" ><b>00.00</b></td>
+                                        <td width="15%" align="right" ><b>{{ $discount_val }}</b></td>
                                         <td width="8%"></td>
 
                                     </tr>

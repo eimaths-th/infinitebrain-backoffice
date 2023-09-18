@@ -50,6 +50,7 @@
                             <tr>
                                 <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>Subject Name</th>
+                                <th>Group</th>
                                 <th>Book</th>
                                 <th>Book Per Month</th>
                                 <th width="280px">Action</th>
@@ -89,6 +90,10 @@
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true"></span>
                             </button>
+                        </div>
+                        <div class="form-group">
+                            <label for="Title">group:</label>
+                            <input type="text" class="form-control" name="group" id="AddGroup" value="">
                         </div>
                         <div class="form-group">
                             <label for="Title">Title:</label>
@@ -266,6 +271,10 @@
                         name: 'subject_name'
                     },
                     {
+                        data: 'group',
+                        name: 'group'
+                    },
+                    {
                         data: 'book',
                         name: 'book'
                     },
@@ -345,6 +354,7 @@
                     url: "{{ route('subjects.store') }}",
                     method: 'post',
                     data: {
+                        group: $('#AddGroup').val(),
                         title: $('#AddTitle').val(),
                         title_th: $('#AddTitleTh').val(),
                         book: $('#AddBook').val(),
@@ -392,6 +402,7 @@
                     url: "subjects/save/" + id,
                     method: 'PUT',
                     data: {
+                        group: $('#EditGroup').val(),
                         title: $('#EditTitle').val(),
                         title_th: $('#EditTitleTh').val(),
                         book: $('#EditBook').val(),

@@ -267,8 +267,14 @@
                                                                         $message = "GELOSEA 2023 Registration Form";
                                                                     }elseif($data->sfield==9){
                                                                         $message = "OLPCS 2023 Registration Form";
-                                                                    }else{
-                                                                        $message = "GMEC 2023 Registration Form";
+                                                                    }elseif($data->sfield==11){
+                                                                        $message = "Cambridge 2023 Registration Form";
+                                                                    } elseif($data->sfield==4){
+                                                                        $message = "IMOCSEA 2023 Registration Form";
+                                                                    } elseif($data->sfield==13){
+                                                                        $message = "ISOCSEA 2023 Registration Form";
+                                                                    } elseif($data->sfield==14){
+                                                                        $message = "IMOCSEA+ISOCSEA 2023 Registration Form";
                                                                     }
                                                                     ?>
                                                                     {{ $message }}</span></h2>
@@ -677,7 +683,7 @@
                                                                 <h2
                                                                     style="margin: 0; font-size: 14px; font-weight: 400; text-align: start; margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
                                                                     <span class="tinyMce-placeholder">Address /
-                                                                        ที่อยู่ภาษาไทย<br>สำหรับจัดส่งของรางวัล</span>
+                                                                        ที่อยู่ภาษาไทย</span>
                                                                 </h2>
                                                             </td>
                                                         </tr>
@@ -958,8 +964,18 @@
                                                                     <span class="tinyMce-placeholder"><?php
                                                                     if($data->sfield==9){
                                                                         $message1 = "OLPCS";
-                                                                    }else{
-                                                                        $message1 = "GMEC";
+                                                                    }elseif ($data->sfield==11){
+                                                                        $message1 = "Cambridge";
+                                                                    } elseif ($data->sfield==10) {
+                                                                        $message1 = "ASIAROPE";
+                                                                    } elseif ($data->sfield==6) {
+                                                                        $message1 = "GELOSEA";
+                                                                    } elseif ($data->sfield==4) {
+                                                                        $message1 = "IMOCSEA";
+                                                                    } elseif ($data->sfield==13) {
+                                                                        $message1 = "ISOCSEA";
+                                                                    } elseif ($data->sfield==14) {
+                                                                        $message1 = "IMOCSEA+ISOCSEA";
                                                                     }
                                                                     ?> สอบ {{ $message1 }}
                                                                         จากช่องทาง<br>ใด</span></h2>

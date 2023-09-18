@@ -265,13 +265,13 @@
                                         <td width="40%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="40%" class="grey">ส่วนลด/Discout</td>
-                                        <td width="20%" align="right" style="padding-right: 35px"><b>00.00</b></td>
+                                        <td width="20%" align="right" style="padding-right: 35px"><b>{{ $discount_val }}</b></td>
                                     </tr>
                                     <tr>
                                         <td width="40%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="40%" class="grey">ภาษีมูลค่าเพิ่ม 7% / Vat 7%</td>
-                                        <td width="20%" align="right" style="padding-right: 35px"><b>{{ $vat_val ?? 'null'}}</b></td>
+                                        <td width="20%" align="right" style="padding-right: 35px"><b>{{ $vat_val }}</b></td>
                                     </tr>
                                 </table>
                             </td>
@@ -329,7 +329,7 @@
                         </tr>
 
                     </table>
-                     <center>{!! $file_att !!}</center> 
+                    <center>{!! $file_att !!}</center>
                 </div>
 
 

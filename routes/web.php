@@ -19,6 +19,9 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\ReceiptSchoolController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\RetrospectiveCheckController;
+use App\Http\Controllers\StdlogController;
+use App\Http\Controllers\SuperMasterContrller;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,8 +76,11 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
     });
 });*/
 
-
-
+route::get('/Super-Master',[SuperMasterContrller::class,'index'])->name('sm');
+Route::get('/perform-retrospective-check', [RetrospectiveCheckController::class, 'performRetrospectiveCheck']);
+Route::get('/report-student', [StdlogController::class, 'index'])->name('report-student');
+Route::get('/search_status', [StdlogController::class, 'search_status'])->name('search_status');
+// Route::get('/search_status/{month}/{year}', [StdlogController::class, 'search_status'])->name('search_status');
 
 Route::get('/users', [EmployeeController::class, 'index'])->name('users');
 Route::get('/users/create', [EmployeeController::class, 'create'])->name('users.create');
@@ -166,17 +172,23 @@ Route::post('/parent-register/store', [ParentRegisterController::class, 'store']
 Route::get('/parent-register/complete', [ParentRegisterController::class, 'show'])->name('parentregister.complete');
 Route::get('/school', [SchoolController::class, 'index'])->name('school');
 
-Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
+// Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
 //Route::get('/olpcs', [ReceiptFormController::class, 'olpcs'])->name('olpcs');
-Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
-Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
+// Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
+// Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
+
+Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
+Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
+Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
 Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
+Route::get('/cambridge/line', [ReceiptFormController::class, 'cambridge'])->name('cambridge.line');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
 Route::post('/form/upload/api', [ReceiptFormController::class, 'fileStoreAPI'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->name('form.upload.api');
 Route::post('/form/upload/delete', [ReceiptFormController::class, 'fileDestroy'])->name('form.delete');
 Route::post('/form/store', [ReceiptFormController::class, 'store'])->name('form.store');
 Route::get('/form/complete/{sfield}', [ReceiptFormController::class, 'show'])->name('form.complete');
 Route::get('/form/complete1', [ReceiptFormController::class, 'show1'])->name('form.complete1');
+
 Route::post('/form/store1', [ReceiptFormController::class, 'store1'])->name('form.store1');
 
 Route::get('/receipts_form', [ReceiptFormController::class, 'index'])->name('receipts_form');
@@ -186,8 +198,6 @@ Route::delete('/receipts_form/destroy_all', [ReceiptFormController::class, 'dest
 Route::delete('/receipts_form/export', [ReceiptFormController::class, 'exportForm'])->name('receipts_form.export');
 Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->name('receipts_form.store');
 Route::post('/receipts_form/update', [ReceiptFormController::class, 'update'])->name('receipts_form.update');
-Route::put('/receipt_form/delete_img/{id}/{id2}', [ReceiptFormController::class, 'deleteImg'])->name('receipt_form.delete_img');
-
 
 // Route::prefix('google')->name('google.')->group( function(){
 //     Route::get('login', [GoogleController::class, 'loginWithGoogle'])->name('login');
@@ -238,7 +248,7 @@ Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPass
 
 Route::match(array('GET', 'POST'),'/receipt_school', [ReceiptSchoolController::class, 'index'])->name('receipt_school');
 Route::get('/receipt_school/{sub_id}', [ReceiptSchoolController::class, 'search'])->name('receipt_school.search');
-Route::get('/receipt_school/{sub_id}/{level_id}/{week}/{price}/{qty}/{discount}/{book_price}/{type}/{course_type}', [ReceiptSchoolController::class, 'searchs'])->name('receipt_school.searchs');
+Route::get('/receipt_school/{sub_id}/{level_id}/{week}/{price}/{qty}/{discount}/{book_price}/{type}/{course_type}/{entrance_fee}', [ReceiptSchoolController::class, 'searchs'])->name('receipt_school.searchs');
 Route::get('/receipt_school/{sub_id}/{level_id}/{book}/', [ReceiptSchoolController::class, 'sumbook'])->name('receipt_school.sumbook');
 Route::get('/receipt_school/find/{parent}', [ReceiptSchoolController::class, 'find'])->name('receipt_school.find');
 

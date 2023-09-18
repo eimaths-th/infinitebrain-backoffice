@@ -29,8 +29,8 @@ class ReceiptController extends Controller
     const BAHT_TEXT_BAHT = 'บาท';
     const BAHT_TEXT_SATANG = 'สตางค์';
     const BAHT_TEXT_POINT = 'จุด';
-    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE', '11' => 'Cambridge');
-    const sfieldas = array('2' => 'G', '4' => 'J', '5' => 'I', '6' => 'L', '7' => 'M', '8' => 'N', '9' => 'O', '10' => 'P', '11' => 'Q');
+    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE', '11' => 'Cambridge', '13' => 'ISOCSEA', '14' => 'IMOCSEA+ISOCSEA');
+    const sfieldas = array('2' => 'G', '4' => 'J', '5' => 'I', '6' => 'L', '7' => 'M', '8' => 'N', '9' => 'O', '10' => 'P', '11' => 'Q', '13' => 'S', '14' => 'T');
     const thmonth = array(
         "",
         "มกราคม",
@@ -407,7 +407,7 @@ class ReceiptController extends Controller
             $satang = explode('.', number_format($number, 2, '.', ''))[1];
             $text .= $satang == 0
                 ? self::BAHT_TEXT_INTEGER
-                : $this($satang, false) . self::BAHT_TEXT_SATANG;
+                : $this->baht_text($satang, false) . self::BAHT_TEXT_SATANG;
         } else {
             $exploded = explode('.', $number);
             if (isset($exploded[1])) {
@@ -579,6 +579,8 @@ class ReceiptController extends Controller
     public function create()
     {
         //create
+         $rnumber = Receipt_RunningNumber::pre_generate($request->get('sfield'));
+         return response()->json(['rnumber' => $rnumber]);
     }
 
     /**
@@ -729,11 +731,12 @@ class ReceiptController extends Controller
 
 
         $all_price = 0;
+        $dis_total = 0;
         $receipt_detail_arr = array();
         $no = 1;
         $x = 0;
         foreach ($receipts_detail as $dresult) {
-            $price = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
+            $price = ($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
             if ($price == 0) {
                 $receipt_detail_arr[$x]['no'] = '';
                 $receipt_detail_arr[$x]['price'] = '';
@@ -752,6 +755,7 @@ class ReceiptController extends Controller
 
             $receipt_detail_arr[$x]['description'] = $dresult['description'];
             $all_price = $all_price + $price;
+            $dis_total = $dis_total + $dresult['discount'];
             $no++;
             $x++;
         }
@@ -766,6 +770,7 @@ class ReceiptController extends Controller
         $vat_total = $all_price - $vat_price;
         $vat_price_val = number_format($vat_price, 2);
         $vat_val = number_format($vat_total, 2);
+        $discount_val = number_format($dis_total, 2);
 
 
         /* $price = (int)$res;
@@ -793,13 +798,14 @@ class ReceiptController extends Controller
 
 
             $arrl = explode($urlf, $data->file_att);
+            //dd($arrl);
             for ($i = 1; $i <= count($arrl) - 1; $i++) {
                 $urla = $urlf . $arrl[$i];
                 if (strpos($urla, "jotform")) {
                     $retu = $this->get_img_url($urla);
                 } else {
                     //watermark
-                    $fileex = explode("/", $data->file_att);
+                    $fileex = explode("/", $urla);
                     $this->textWatermark(end($fileex), 'Receipt Number : ' . $data->receipt_number);
 
                     $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
@@ -826,6 +832,7 @@ class ReceiptController extends Controller
             ->with(['text' => $text])
             ->with(['price_texten' => $price_texten])
             ->with(['price_text' => $price_text])
+            ->with(['discount_val' => $discount_val])
             ->with(['vat_price_val' => $vat_price_val])
             ->with(['vat_val' => $vat_val])->with(['file_att' => $file_att]);
         //->with(['des_text' => $des_text]);
@@ -1004,13 +1011,13 @@ class ReceiptController extends Controller
             ->with(['receipt_detail_arr' => $receipt_detail_arr])
             ->with(['fontsize' => $request->get('fontsize')])
             ->with(['pdsfield' => $sfield]);
-            //->with(['price_val' => $price_val])
-            //->with(['mes' => $mes])
-            //->with(['text' => $text])
-            //->with(['price_texten' => $price_texten])
-            //->with(['price_text' => $price_text])
-            //->with(['vat_price_val' => $vat_price_val])
-            //->with(['vat_val' => $vat_val])->with(['file_att' => $file_att]);
+        //->with(['price_val' => $price_val])
+        //->with(['mes' => $mes])
+        //->with(['text' => $text])
+        //->with(['price_texten' => $price_texten])
+        //->with(['price_text' => $price_text])
+        //->with(['vat_price_val' => $vat_price_val])
+        //->with(['vat_val' => $vat_val])->with(['file_att' => $file_att]);
         //->with(['des_text' => $des_text]);
     }
 
@@ -1087,7 +1094,7 @@ class ReceiptController extends Controller
             $price = 0;
             $desresult = '';
             foreach ($receipts_detail as $dresult) {
-                $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
+                $rprice = ($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
                 $price = $price + $rprice;
                 $desresult .= $dresult['description'] . " ";
             }
@@ -1222,8 +1229,14 @@ class ReceiptController extends Controller
 
 
             $ret_receipt[$result->receipt_submission_date]['receipt_submission_date'] = $result->receipt_submission_date;
+            if ($result->receipt_type!==2) {
+            $ret_receipt[$result->receipt_submission_date]['receipt_numberm'][$i] = $result->receipt_number;
+            } else {
+            $ret_receipt[$result->receipt_submission_date]['receipt_numberm'][$i] = '';
+            }
             $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i] = $result->receipt_number;
-            $maxdate = max(array_keys($ret_receipt[$result->receipt_submission_date]['receipt_number']));
+            
+            $maxdate = max(array_keys($ret_receipt[$result->receipt_submission_date]['receipt_numberm']));
             $ret_receipt[$result->receipt_submission_date]['receipt_numbers'] = $ret_receipt[$result->receipt_submission_date]['receipt_number'][0] . ' - ' . $ret_receipt[$result->receipt_submission_date]['receipt_number'][$maxdate];
             $ret_receipt[$result->receipt_submission_date]['receipt_type'][$i] = $result->receipt_type;
 
@@ -1238,7 +1251,7 @@ class ReceiptController extends Controller
             $desresult = '';
 
             foreach ($receipts_detail as $dresult) {
-                $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
+                $rprice = ($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
                 $price = $price + $rprice;
 
                 /*   if ($result->receipt_type == 2) {
@@ -1412,7 +1425,7 @@ class ReceiptController extends Controller
             $desresult = '';
 
             foreach ($receipts_detail as $dresult) {
-                $rprice = (int)($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
+                $rprice = ($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
                 $price = $price + $rprice;
 
                 /*   if ($result->receipt_type == 2) {
