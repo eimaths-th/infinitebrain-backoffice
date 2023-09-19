@@ -15,6 +15,8 @@
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
+
+    {{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
     <!--
     =========================================================
     * ArchitectUI HTML Theme Dashboard - v1.0.0
@@ -44,7 +46,7 @@
     <script defer src="{{ asset('architectui/assets/scripts/fullcalendar.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/maps.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/chart_js.js') }}"></script>
-	<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 
     <!-- Scripts
       @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -66,6 +68,25 @@
             padding-right: 5px;
             padding-left: 5px
         }
+
+        .example {
+            width: 50%;
+            /* 50% of the parent container's width */
+            font-size: 2em;
+            /* 2 times the default font size */
+        }
+
+        /* @media screen and (max-width: 400px) {
+            .screen-auto {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        .screen-auto {
+            max-width: 800;
+            height: 200;
+        } */
     </style>
 </head>
 
@@ -165,7 +186,6 @@
 
     @yield('script')
     <script>
-
         //ตัวนี้จะเอาไว้ set ค่าต่างๆ toastr
         toastr.options = {
             "closeButton": true,

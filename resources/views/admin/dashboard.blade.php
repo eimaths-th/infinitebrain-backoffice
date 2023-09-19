@@ -11,6 +11,19 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link href="../assets/plugins/nvd3/build/nv.d3.css" rel="stylesheet" />
+    <style>
+        @media screen and (max-width: 100px) {
+            .screen-auto {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        .screen-auto {
+            max-width: 800;
+            height: 200;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -174,18 +187,14 @@
                         <div class="card-header-title">
                             <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
                             Current Month Report
-
                         </div>
-                        {{-- <ul class="nav">
-                            <li class="nav-item"><a href="javascript:void(0);" class="active nav-link">Last</a></li>
-                            <li class="nav-item"><a href="javascript:void(0);"
-                                    class="nav-link second-tab-toggle">Current</a></li>
-                        </ul> --}}
                     </div>
                     <div class="card-body">
                         <div class="tab-content">
                             {{--  --}}
-                            <canvas id="barChart" width="800" height="200"></canvas>
+                            <canvas id="barChart" 
+                            {{-- width="800" height="200" --}}
+                            ></canvas>
 
                         </div>
                     </div>
@@ -198,17 +207,13 @@
                             <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
                             Current Month Report
                         </div>
-                        {{-- <ul class="nav">
-                            <li class="nav-item"><a href="javascript:void(0);" class="active nav-link">Last</a></li>
-                            <li class="nav-item"><a href="javascript:void(0);"
-                                    class="nav-link second-tab-toggle">Current</a></li>
-                        </ul> --}}
+
                     </div>
                     <div class="card-body">
                         <div class="tab-content">
-                            {{--  --}}
-                            {{-- <canvas id="barChart" width="800" height="200"></canvas> --}}
-                            <canvas id="lineChart"width="800" height="200"></canvas>
+                            <canvas id="lineChart"
+                            {{-- width="800" height="200" --}}
+                            ></canvas>
 
                         </div>
                     </div>

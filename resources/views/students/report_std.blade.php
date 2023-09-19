@@ -10,6 +10,12 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link href="../assets/plugins/nvd3/build/nv.d3.css" rel="stylesheet" />
+    <style>
+        .screen-auto {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -104,11 +110,15 @@
                 {{-- <div id="nv-line-chart" class="h-250px"></div> --}}
                 <div class="row">
                     <div class="col-lg-6">
-                        <canvas id="lineChart"width="800" height="200"></canvas>
+                        <canvas id="lineChart" class="screen-auto"
+                        {{-- width="800" height="200" --}}
+                        ></canvas>
 
                     </div>
                     <div class="col-lg-6">
-                        <canvas id="barChart" width="800" height="200"></canvas>
+                        <canvas id="barChart" class="screen-auto"
+                        {{-- width="800" height="200" --}}
+                        ></canvas>
 
                     </div>
                 </div>
