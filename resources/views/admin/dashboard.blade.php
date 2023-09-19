@@ -108,23 +108,22 @@
             </tr>
         </tbody>
     </table>
-    <div class="app-main__inner">
-        <div class="app-page-title">
-            <div class="page-title-wrapper">
-                <div class="page-title-heading">
-                    <div class="page-title-icon">
-                        <i
-                            class="fa fa-home
+
+    <div class="app-page-title">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="page-title-icon">
+                    <i class="fa fa-home
                             icon-gradient bg-happy-itmeo">
-                        </i>
-                    </div>
-                    <div>Back Office Dashboard
-                        <div class="page-title-subheading">
-                            Infinite Brain Dashboard
-                        </div>
+                    </i>
+                </div>
+                <div>Back Office Dashboard
+                    <div class="page-title-subheading">
+                        Infinite Brain Dashboard
                     </div>
                 </div>
-                {{-- <div class="page-title-actions">
+            </div>
+            {{-- <div class="page-title-actions">
                     <button type="button" data-bs-toggle="tooltip" title="Example Tooltip" data-bs-placement="bottom"
                         class="btn-shadow me-3 btn btn-dark">
                         <i class="fa fa-star"></i>
@@ -177,340 +176,334 @@
                         </div>
                     </div>
                 </div> --}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-lg-6">
+            <div class="mb-3 card">
+                <div class="card-header-tab card-header-tab-animation card-header">
+                    <div class="card-header-title">
+                        <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                        Current Month Report
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        {{--  --}}
+                        <canvas id="barChart" {{-- width="800" height="200" --}}></canvas>
+
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="col-md-12 col-lg-6">
+            <div class="mb-3 card">
+                <div class="card-header-tab card-header-tab-animation card-header">
+                    <div class="card-header-title">
+                        <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                        Current Month Report
+                    </div>
 
-        <div class="row">
-            <div class="col-md-12 col-lg-6">
-                <div class="mb-3 card">
-                    <div class="card-header-tab card-header-tab-animation card-header">
-                        <div class="card-header-title">
-                            <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
-                            Current Month Report
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="tab-content">
-                            {{--  --}}
-                            <canvas id="barChart" 
-                            {{-- width="800" height="200" --}}
-                            ></canvas>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <canvas id="lineChart" {{-- width="800" height="200" --}}></canvas>
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 col-lg-6">
-                <div class="mb-3 card">
-                    <div class="card-header-tab card-header-tab-animation card-header">
-                        <div class="card-header-title">
-                            <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
-                            Current Month Report
-                        </div>
-
-                    </div>
-                    <div class="card-body">
-                        <div class="tab-content">
-                            <canvas id="lineChart"
-                            {{-- width="800" height="200" --}}
-                            ></canvas>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="main-card mb-3 card">
-            <div class="g-0 row">
-                <div class="col-md-2">
-                    <div class="pt-0 pb-0 card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">Group</div>
-                                                {{-- <div class="widget-subheading">Last year expenses</div> --}}
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-success">English</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">Group</div>
-                                                {{-- <div class="widget-subheading">Total Clients Profit</div> --}}
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-primary"> Math</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="pt-0 pb-0 card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">New Student</div>
-                                                <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-success">
-                                                    {{ $groupStatusCounts['E']['New Student'] }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">New Student</div>
-                                                <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-primary">
-                                                    {{ $groupStatusCounts['M']['New Student'] }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="pt-0 pb-0 card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">Studying</div>
-                                                <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-success">
-                                                    {{ $groupStatusCounts['E']['studying . . .'] }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading">Studying</div>
-                                                <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-primary">
-                                                    {{ $groupStatusCounts['M']['studying . . .'] }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="pt-0 pb-0 card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading text-nowrap">Termination of study</div>
-                                                <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-warning">
-                                                    {{ $groupStatusCounts['E']['Termination of study'] }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading text-nowrap">Termination of study</div>
-                                                <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-warning">
-                                                    {{ $groupStatusCounts['M']['Termination of study'] }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="pt-0 pb-0 card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading text-nowrap">Drop</div>
-                                                <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-danger">
-                                                    {{ $groupStatusCounts['E']['drop'] }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading text-nowrap">Drop</div>
-                                                <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-danger">
-                                                    {{ $groupStatusCounts['M']['drop'] }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="pt-0 pb-0 card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading text-nowrap">Resume</div>
-                                                <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-success">
-                                                    {{ isset($groupStatusCounts['E']['resume']) ? $groupStatusCounts['E']['resume'] : 0 }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-outer">
-                                        <div class="widget-content-wrapper">
-                                            <div class="widget-content-left">
-                                                <div class="widget-heading text-nowrap">Resume</div>
-                                                <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                                            </div>
-                                            <div class="widget-content-right">
-                                                <div class="widget-numbers text-primary">
-                                                    {{ isset($groupStatusCounts['M']['resume']) ? $groupStatusCounts['M']['resume'] : 0 }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-6 col-xl-3   ">
-                <div class="card mb-3 widget-content bg-midnight-bloom">
-                    <div class="widget-content-wrapper text-white">
-                        <div class="widget-content-left">
-                            <div class="widget-heading">Total New Students</div>
-                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                        </div>
-                        <div class="widget-content-right">
-                            <div class="widget-numbers text-white"><span>{{ $totalNewStudents }}</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    </div>
 
-            <div class="col-md-6 col-xl-3">
-                <div class="card mb-3 widget-content bg-grow-early">
-                    <div class="widget-content-wrapper text-white">
-                        <div class="widget-content-left">
-                            <div class="widget-heading">Total Studing</div>
-                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                        </div>
-                        <div class="widget-content-right">
-                            <div class="widget-numbers text-white"><span>{{ $totalStudying }}</span></div>
-                        </div>
-                    </div>
+    <div class="main-card mb-3 card">
+        <div class="g-0 row">
+            <div class="col-md-2">
+                <div class="pt-0 pb-0 card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Group</div>
+                                            {{-- <div class="widget-subheading">Last year expenses</div> --}}
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-success">English</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Group</div>
+                                            {{-- <div class="widget-subheading">Total Clients Profit</div> --}}
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-primary"> Math</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="col-md-6 col-xl-3">
-                <div class="card mb-3 widget-content bg-arielle-smile">
-                    <div class="widget-content-wrapper text-white">
-                        <div class="widget-content-left">
-                            <div class="widget-heading">Total Resume</div>
-                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                        </div>
-                        <div class="widget-content-right">
-                            <div class="widget-numbers text-white"><span>{{ $totalResume }}</span></div>
-                        </div>
-                    </div>
+            <div class="col-md-2">
+                <div class="pt-0 pb-0 card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">New Student</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-success">
+                                                {{ $groupStatusCounts['E']['New Student'] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">New Student</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-primary">
+                                                {{ $groupStatusCounts['M']['New Student'] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="col-md-6 col-xl-3">
-                <div class="card mb-3 widget-content bg-premium-dark">
-                    <div class="widget-content-wrapper text-white">
-                        <div class="widget-content-left">
-                            <div class="widget-heading">Total Drop</div>
-                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                        </div>
-                        <div class="widget-content-right">
-                            <div class="widget-numbers text-warning"><span>{{ $totalDrop }}</span></div>
-                        </div>
+            <div class="col-md-2">
+                <div class="pt-0 pb-0 card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Studying</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-success">
+                                                {{ $groupStatusCounts['E']['studying . . .'] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Studying</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-primary">
+                                                {{ $groupStatusCounts['M']['studying . . .'] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="pt-0 pb-0 card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-nowrap">Termination of study</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-warning">
+                                                {{ $groupStatusCounts['E']['Termination of study'] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-nowrap">Termination of study</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-warning">
+                                                {{ $groupStatusCounts['M']['Termination of study'] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="pt-0 pb-0 card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-nowrap">Drop</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-danger">
+                                                {{ $groupStatusCounts['E']['drop'] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-nowrap">Drop</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-danger">
+                                                {{ $groupStatusCounts['M']['drop'] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="pt-0 pb-0 card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-nowrap">Resume</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-success">
+                                                {{ isset($groupStatusCounts['E']['resume']) ? $groupStatusCounts['E']['resume'] : 0 }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-nowrap">Resume</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-primary">
+                                                {{ isset($groupStatusCounts['M']['resume']) ? $groupStatusCounts['M']['resume'] : 0 }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-xl-3   ">
+            <div class="card mb-3 widget-content bg-midnight-bloom">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total New Students</div>
+                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-white"><span>{{ $totalNewStudents }}</span></div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="col-md-6 col-xl-3">
+            <div class="card mb-3 widget-content bg-grow-early">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total Studing</div>
+                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-white"><span>{{ $totalStudying }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card mb-3 widget-content bg-arielle-smile">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total Resume</div>
+                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-white"><span>{{ $totalResume }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card mb-3 widget-content bg-premium-dark">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total Drop</div>
+                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-warning"><span>{{ $totalDrop }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 @section('script')
