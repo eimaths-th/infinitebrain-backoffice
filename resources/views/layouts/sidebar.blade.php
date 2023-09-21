@@ -44,7 +44,7 @@
                 @if (Auth::user()->level == 2 || Auth::user()->level == 1)
 
 
-                <li class="app-sidebar__heading">  </li>
+                    <li class="app-sidebar__heading">  </li>
                     <li>
                         <a href="{{ route('home') }}">
                             <i class="metismenu-icon pe-7s-home"></i>
@@ -562,7 +562,7 @@
                         </li>
                     </ul>
                 </li>
-            @endif
+                @endif
 
                 {{-- <li class="app-sidebar__heading">UI Components</li>
                 <li>

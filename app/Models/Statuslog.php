@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $id
  * @property integer $student_id
- * @property string $nick_name
  * @property string $group
+ * @property string $nick_name
  * @property string $status
  * @property string $status_date
  * @property string $created_at
@@ -27,7 +27,7 @@ class Statuslog extends Model
     /**
      * @var array
      */
-    protected $fillable = ['student_id', 'group' ,'nick_name', 'status', 'status_date', 'created_at', 'updated_at'];
+    protected $fillable = ['student_id', 'group', 'nick_name', 'status', 'status_date', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -36,4 +36,5 @@ class Statuslog extends Model
     {
         return $this->belongsTo('App\Models\Student');
     }
+    
 }
