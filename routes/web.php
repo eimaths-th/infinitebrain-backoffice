@@ -80,6 +80,7 @@ route::get('/Super-Master',[SuperMasterContrller::class,'index'])->name('sm');
 Route::get('/perform-retrospective-check', [RetrospectiveCheckController::class, 'performRetrospectiveCheck']);
 Route::get('/report-student', [StdlogController::class, 'index'])->name('report-student');
 Route::get('/search_status', [StdlogController::class, 'search_status'])->name('search_status');
+Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
 // Route::get('/search_status/{month}/{year}', [StdlogController::class, 'search_status'])->name('search_status');
 
 Route::get('/users', [EmployeeController::class, 'index'])->name('users');

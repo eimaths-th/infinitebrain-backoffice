@@ -561,6 +561,15 @@ class ReceiptSchoolController extends Controller
         $student = Student::orderBy("first_name", "asc")->get();
         $subject = Subject::orderBy("id", "asc")->get();
         $parent = ParentRegister::orderBy("id", "asc")->get();
+        
+        $school_picei_update_group = SchoolPrice::all();
+        // $subject_ids = $school_picei_update_group->pluck('subject')->toArray();
+        foreach ($school_picei_update_group as $upg) {
+            # code...
+            $group = $upg->school_sub->group;
+            $upg->update(['group' => $group]);
+        }
+        // dd($upg, $group);
 
         return view('receipt_school.receipt')->with(['data2' => $student])->with(['data3' => $subject])->with(['data4' => $parent])
             ->with(['datap' => self::datap]);
@@ -720,7 +729,7 @@ class ReceiptSchoolController extends Controller
                 foreach ($stds as $key => $stds_std) {
                     $std_rec .= '<option value="' . $stds_std->id . '"> ' . $stds_std->full_name . ' </option>';
                 }
-            }else {
+            } else {
                 foreach ($stds as $key => $stds_std) {
                     # code...
                     $std_rec .= '<option value="" selected> เลือกนักเรียน </option>';
@@ -758,7 +767,7 @@ class ReceiptSchoolController extends Controller
             <td width="10%">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <select style="width: 100%;" class="select2 form-control stdrec" id="student_id[]" name="student_id[]" required>
-                    '.$std_rec.'
+                    ' . $std_rec . '
                     </select>
                 </div>
             </td>

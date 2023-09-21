@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Receipt_School;
 use App\Models\SchoolPrice;
 use App\Models\Statuslog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -34,19 +36,30 @@ class StdlogController extends Controller
             ->whereIn('status_log.id', function ($query) {
                 $query->select(DB::raw('MAX(id)'))
                     ->from('status_log')
-                    ->groupBy('student_id', 'group'); // Group by student_id and group
+                    ->groupBy('student_id', 'group');
             })
             ->whereYear('status_log.status_date', $year)
             ->whereMonth('status_log.status_date', $month)
-            ->join('students', 'status_log.student_id', '=', 'students.id') // Assuming 'students' is the name of your students table
+            ->join('students', 'status_log.student_id', '=', 'students.id')
             ->orderBy('students.code')
             ->get();
 
 
-        // $select_status = Statuslog::all()
-        // ->groupBy('status');
+        // $date_sup = [];
+        // foreach ($test_scp as $schoolPrice) {
+        //     if ($schoolPrice->rec_school) {
+        //         $date_sup[] = $schoolPrice->rec_school->submission_date;
+        //         // Do something with $date_sup
+        //     } else {
+        //         // Handle case where rec_school relationship is null
+        //     }
+        // }
+        // $rec_schl = Receipt_School::whereMonth('submission_date',$month)
+        // ->whereYear('submission_date',$year)
+        // ->get();
+        // $qty = $rec_schl->school_pice->course_type = 1;
+        // dd($qty,$rec_schl);
 
-        // dd($select_status);
         return view('students.report_std', [
 
             'latestStatusCounts' => $latestStatusCounts,
@@ -118,6 +131,41 @@ class StdlogController extends Controller
             'latestStatusByStudent' => $latestStatusByStudent,
 
         ]);
+    }
+
+    public function reportMonthStd(){
+        $test_scp = SchoolPrice::all();
+        $currentMonth = Carbon::now()->format('Y-m');
+        $matchingSchoolPrices = [];
+        $schoolPrice_id = [];
+        foreach ($test_scp as $schoolPrice) {
+            if ($schoolPrice->rec_school && $schoolPrice->rec_school->submission_date) {
+
+                $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y-m');
+
+                if ($submissionDate == $currentMonth && $schoolPrice->course_type == 1) {
+                    $matchingSchoolPrices[] = [
+                        'id' => $schoolPrice->id,
+                        'course_type' => $schoolPrice->course_type,
+                        'reciept_id' => $schoolPrice->rid,
+                        'std_id' => $schoolPrice->student_id,
+                        'submission_date' => $schoolPrice->rec_school->submission_date
+                    ];
+                    $schoolPrice_id[] = $schoolPrice->id;
+                }
+            }
+        }
+
+        $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
+        ->orderBy('rid')
+        ->get()
+        ->groupBy('student_id', 'group');
+        // dd($matchingSchoolPrices, $schoolPrice_id, $reportMonth_schoolPrice);
+
+        return view('students.reportMonthStd',[
+            'reportMonth_schoolPrice' => $reportMonth_schoolPrice
+        ]);
+
     }
 
     /**
