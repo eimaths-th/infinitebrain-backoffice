@@ -74,6 +74,8 @@ class StdlogController extends Controller
         $request->validate([
             // 'month' => 'required',
             'year' => 'required',
+        ],[
+            'year.required' => 'Pls. Select year !!'
         ]);
         $month = $request->month;
         $year = $request->year;
@@ -133,7 +135,8 @@ class StdlogController extends Controller
         ]);
     }
 
-    public function reportMonthStd(){
+    public function reportMonthStd()
+    {
         $test_scp = SchoolPrice::all();
         $currentMonth = Carbon::now()->format('Y-m');
         $matchingSchoolPrices = [];
@@ -157,15 +160,61 @@ class StdlogController extends Controller
         }
 
         $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
-        ->orderBy('rid')
-        ->get()
-        ->groupBy('student_id', 'group');
+            ->orderBy('rid')
+            ->get()
+            ->groupBy('student_id', 'group');
         // dd($matchingSchoolPrices, $schoolPrice_id, $reportMonth_schoolPrice);
 
-        return view('students.reportMonthStd',[
+        return view('students.reportMonthStd', [
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice
         ]);
+    }
 
+    public function searchr_reportMonthStd(Request $request)
+    {
+
+        $request->validate(
+            [
+                // 'month' => 'required',
+                'year' => 'required',
+            ],[
+                'year.required' => 'Pls. Select year !!'
+            ]);
+
+        $test_scp = SchoolPrice::all();
+        $month = $request->month;
+        $year = $request->year;
+        $search = Carbon::parse($year . '-' . $month)->format('Y-m');
+
+        $matchingSchoolPrices = [];
+        $schoolPrice_id = [];
+        foreach ($test_scp as $schoolPrice) {
+            if ($schoolPrice->rec_school && $schoolPrice->rec_school->submission_date) {
+
+                $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y-m');
+
+                if ($submissionDate == $search && $schoolPrice->course_type == 1) {
+                    $matchingSchoolPrices[] = [
+                        'id' => $schoolPrice->id,
+                        'course_type' => $schoolPrice->course_type,
+                        'reciept_id' => $schoolPrice->rid,
+                        'std_id' => $schoolPrice->student_id,
+                        'submission_date' => $schoolPrice->rec_school->submission_date
+                    ];
+                    $schoolPrice_id[] = $schoolPrice->id;
+                }
+            }
+        }
+
+        $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
+            ->orderBy('rid')
+            ->get()
+            ->groupBy('student_id', 'group');
+        // dd( $reportMonth_schoolPrice);
+
+        return view('students.reportMonthStd', [
+            'reportMonth_schoolPrice' => $reportMonth_schoolPrice
+        ]);
     }
 
     /**

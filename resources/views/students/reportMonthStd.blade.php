@@ -42,7 +42,7 @@
         </div>
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-                <form action="{{ route('search_status') }}" method="GET">
+                <form action="{{ route('searchr_reportMonthStd') }}" method="GET">
                     @csrf
                     <div class="row mb-5">
                         {{-- <div class="col-lg-2">
@@ -87,7 +87,7 @@
                                 <label for="year" class="col-lg-2">ปี : </label>
                                 <div class="col-lg-9">
                                     <select name="year" id="selectMonth" class="form-select">
-                                        <option value="">เลือกปี</option>
+                                        {{-- <option value="">เลือกปี</option> --}}
                                         @php
                                             $currentYear = date('Y');
                                             for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
@@ -99,8 +99,8 @@
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <button class="btn btn-primary" type="submit" id="seach_status"
-                                name="seach_status">ค้นหา</button>
+                            <button class="btn btn-primary" type="submit"
+                                >ค้นหา</button>
                             {{-- <a href="{{ route('search_status') }}" class="btn btn-primary" id="seach_status" name="seach_status">ค้นหา</a> --}}
                         </div>
                     </div>
@@ -221,12 +221,12 @@
                             @foreach ($groupedData as $key => $data)
                                 <tr>
                                     <td class="text-center">{{ $key + 1 }}</td>
-                                    <td class="text-center">{{ $data->std->code }}</td>
-                                    <td>{{ $data->std->nick_name }}</td>
+                                    <td class="text-center">{{ $data->std->code ?? 'Null'}}</td>
+                                    <td>{{ $data->std->nick_name ?? 'Null'}}</td>
                                     <td>{{ $data->rec_school->submission_date }}</td>
                                     <td>{{ $data->rec_school->receipt_number }}</td>
                                     <td>{{ $data->group }}</td>
-                                    <td>{{ $data->total }}</td>
+                                    <td class="text-end">{{ number_format($data->total) }} บาท</td>
                                 </tr>
                                 @php
                                     $sum += $data->total;
@@ -244,8 +244,8 @@
                             <td class="text-center" hidden></td> <!-- Merged cell -->
                             <td class="text-center" hidden></td> <!-- Merged cell -->
                             <td class="text-center" hidden></td> <!-- Merged cell -->
-                            <td class="text-center" colspan="5">sum total</td> <!-- Merged cell -->
-                            <td >{{ $sum }}</td>
+                            <td class="text-center" colspan="5">Sum Total</td> <!-- Merged cell -->
+                            <td class="text-end">{{ number_format($sum) }} บาท</td>
                         </tr>
 
                     </tbody>

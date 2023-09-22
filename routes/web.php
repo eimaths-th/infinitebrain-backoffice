@@ -81,6 +81,7 @@ Route::get('/perform-retrospective-check', [RetrospectiveCheckController::class,
 Route::get('/report-student', [StdlogController::class, 'index'])->name('report-student');
 Route::get('/search_status', [StdlogController::class, 'search_status'])->name('search_status');
 Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
+Route::get('/searchr_reportMonthStd', [StdlogController::class, 'searchr_reportMonthStd'])->name('searchr_reportMonthStd');
 // Route::get('/search_status/{month}/{year}', [StdlogController::class, 'search_status'])->name('search_status');
 
 Route::get('/users', [EmployeeController::class, 'index'])->name('users');
