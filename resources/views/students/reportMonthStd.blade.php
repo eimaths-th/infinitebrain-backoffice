@@ -254,6 +254,7 @@
                             <th>Submission Date</th>
                             <th>Reciept Number</th>
                             <th>Group</th>
+                            <th>Tpye</th>
                             <th>total</th>
                         </tr>
                     </thead>
@@ -271,7 +272,9 @@
                                     <td>{{ $data->rec_school->submission_date }}</td>
                                     <td>{{ $data->rec_school->receipt_number }}</td>
                                     <td>{{ $data->group }}</td>
-                                    <td class="text-end">{{ number_format($data->total) }} บาท</td>
+                                    <td>{{ $data->course_type }}</td>
+                                    {{-- <td class="text-end">{{ number_format($data->total) }} บาท</td> --}}
+                                    <td class="text-end">{{ (string)$data->total }} บาท</td>
                                 </tr>
                                 @php
                                     $sum += $data->total;
@@ -289,7 +292,8 @@
                             <td class="text-center" hidden></td> <!-- Merged cell -->
                             <td class="text-center" hidden></td> <!-- Merged cell -->
                             <td class="text-center" hidden></td> <!-- Merged cell -->
-                            <td class="text-center" colspan="5">Sum Total</td> <!-- Merged cell -->
+                            <td class="text-center" hidden></td> <!-- Merged cell -->
+                            <td class="text-center" colspan="6">Sum Total</td> <!-- Merged cell -->
                             <td class="text-end">{{ number_format($sum) }} บาท</td>
                         </tr>
 

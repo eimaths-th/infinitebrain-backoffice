@@ -44,22 +44,6 @@ class StdlogController extends Controller
             ->orderBy('students.code')
             ->get();
 
-
-        // $date_sup = [];
-        // foreach ($test_scp as $schoolPrice) {
-        //     if ($schoolPrice->rec_school) {
-        //         $date_sup[] = $schoolPrice->rec_school->submission_date;
-        //         // Do something with $date_sup
-        //     } else {
-        //         // Handle case where rec_school relationship is null
-        //     }
-        // }
-        // $rec_schl = Receipt_School::whereMonth('submission_date',$month)
-        // ->whereYear('submission_date',$year)
-        // ->get();
-        // $qty = $rec_schl->school_pice->course_type = 1;
-        // dd($qty,$rec_schl);
-
         return view('students.report_std', [
 
             'latestStatusCounts' => $latestStatusCounts,
@@ -134,18 +118,17 @@ class StdlogController extends Controller
         ]);
     }
 
-    public function reportMonthStd()
-    {
-        $test_scp = SchoolPrice::all();
-        $currentMonth = Carbon::now()->format('Y-m');
-        $matchingSchoolPrices = [];
 
+    private function getMatchingSchoolPrices($test_scp, $currentMonth, $search)
+    {
+        $matchingSchoolPrices = [];
         $schoolPrice_id = [];
+
         foreach ($test_scp as $schoolPrice) {
             if ($schoolPrice->rec_school && $schoolPrice->rec_school->submission_date) {
-
                 $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y-m');
 
+                // if ($submissionDate == $currentMonth) {
                 if ($submissionDate == $currentMonth && $schoolPrice->course_type == 1) {
                     $matchingSchoolPrices[] = [
                         'id' => $schoolPrice->id,
@@ -158,16 +141,23 @@ class StdlogController extends Controller
                 }
             }
         }
+
         $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
             ->orderBy('rid')
             ->get()
             ->groupBy('student_id', 'group');
 
+        return $reportMonth_schoolPrice;
+    }
+
+    private function queryGrafgh($test_scp)
+    {
+
         $schoolPrice_id_all = [];
         foreach ($test_scp as $schoolPrice) {
             if ($schoolPrice->rec_school) {
                 // $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y-m');
-                if ($schoolPrice->course_type == 1) {
+                if ($schoolPrice->rec_school && $schoolPrice->course_type == 1) {
                     $matchingSchoolPrices[] = [
                         'id' => $schoolPrice->id,
                         'course_type' => $schoolPrice->course_type,
@@ -177,6 +167,14 @@ class StdlogController extends Controller
                     ];
                     $schoolPrice_id_all[] = $schoolPrice->id;
                 }
+                // $matchingSchoolPrices[] = [
+                //     'id' => $schoolPrice->id,
+                //     'course_type' => $schoolPrice->course_type,
+                //     'reciept_id' => $schoolPrice->rid,
+                //     'std_id' => $schoolPrice->student_id,
+                //     'submission_date' => $schoolPrice->rec_school->submission_date
+                // ];
+                // $schoolPrice_id_all[] = $schoolPrice->id;
             }
         }
         $reportMonth_schoolPrice_all = SchoolPrice::whereIn('id', $schoolPrice_id_all)
@@ -194,16 +192,25 @@ class StdlogController extends Controller
                 $totalForAllMonths[$month] += $data->total;
             }
         }
+
         uksort($totalForAllMonths, function ($a, $b) {
             $dateA = DateTime::createFromFormat('F-Y', $a);
             $dateB = DateTime::createFromFormat('F-Y', $b);
 
             return $dateA <=> $dateB;
         });
+        return $totalForAllMonths;
+    }
 
+    public function reportMonthStd()
+    {
+        $test_scp = SchoolPrice::all();
+        $currentMonth = Carbon::now()->format('Y-m');
+
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($test_scp, $currentMonth, $currentMonth);
+        $totalForAllMonths = $this->queryGrafgh($test_scp);
         // ksort($totalForAllMonths);
         // dd($totalForAllMonths,  $reportMonth_schoolPrice);
-
         return view('students.reportMonthStd', [
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
             'totalForAllMonths' => $totalForAllMonths
@@ -213,91 +220,19 @@ class StdlogController extends Controller
     public function searchr_reportMonthStd(Request $request)
     {
 
-        $request->validate(
-            [
-                'month' => 'required',
-                'year' => 'required',
-            ],
-            [
-                'month.required' => 'Pls. Select year !!',
-                'year.required' => 'Pls. Select year !!'
-            ]
-        );
-
+        $request->validate([
+            'month' => 'required',
+            'year' => 'required',
+        ], [
+            'month.required' => 'Pls. Select year !!',
+            'year.required' => 'Pls. Select year !!'
+        ]);
         $test_scp = SchoolPrice::all();
         $month = $request->month;
         $year = $request->year;
         $search = Carbon::parse($year . '-' . $month)->format('Y-m');
-
-        $matchingSchoolPrices = [];
-        $schoolPrice_id = [];
-        foreach ($test_scp as $schoolPrice) {
-            if ($schoolPrice->rec_school && $schoolPrice->rec_school->submission_date) {
-
-                $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y-m');
-
-                if ($submissionDate == $search && $schoolPrice->course_type == 1) {
-                    $matchingSchoolPrices[] = [
-                        'id' => $schoolPrice->id,
-                        'course_type' => $schoolPrice->course_type,
-                        'reciept_id' => $schoolPrice->rid,
-                        'std_id' => $schoolPrice->student_id,
-                        'submission_date' => $schoolPrice->rec_school->submission_date
-                    ];
-                    $schoolPrice_id[] = $schoolPrice->id;
-                }
-            }
-        }
-
-        $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
-            ->orderBy('rid')
-            ->get()
-            ->groupBy('student_id', 'group');
-        // dd( $reportMonth_schoolPrice);
-
-        $schoolPrice_id_all = [];
-        foreach ($test_scp as $schoolPrice) {
-            if ($schoolPrice->rec_school) {
-                // $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y-m');
-                if ($schoolPrice->course_type == 1) {
-                    $matchingSchoolPrices[] = [
-                        'id' => $schoolPrice->id,
-                        'course_type' => $schoolPrice->course_type,
-                        'reciept_id' => $schoolPrice->rid,
-                        'std_id' => $schoolPrice->student_id,
-                        'submission_date' => $schoolPrice->rec_school->submission_date
-                    ];
-                    $schoolPrice_id_all[] = $schoolPrice->id;
-                }
-            }
-        }
-        $reportMonth_schoolPrice_all = SchoolPrice::whereIn('id', $schoolPrice_id_all)
-            ->orderBy('rid')
-            ->get()
-            ->groupBy('student_id', 'group');
-
-        $totalForAllMonths = [];
-        foreach ($reportMonth_schoolPrice_all as $studentId => $groupedData) {
-            foreach ($groupedData as $key => $data) {
-                $month = Carbon::parse($data->rec_school->submission_date)->format('F-Y');
-                // dd($data->rec_school->submission_date,$month);
-
-                // $month = Carbon::parse($data->rec_school->submission_date)->format('F-Y');
-                if (!isset($totalForAllMonths[$month])) {
-                    $totalForAllMonths[$month] = 0;
-                }
-                $totalForAllMonths[$month] += $data->total;
-            }
-        }
-        uksort($totalForAllMonths, function ($a, $b) {
-            $dateA = DateTime::createFromFormat('F-Y', $a);
-            $dateB = DateTime::createFromFormat('F-Y', $b);
-
-            return $dateA <=> $dateB;
-        });
-        // ksort($totalForAllMonths);
-        // dd($totalForAllMonths,  $reportMonth_schoolPrice);
-
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($test_scp, $search, $search);
+        $totalForAllMonths = $this->queryGrafgh($test_scp);
         return view('students.reportMonthStd', [
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
             'totalForAllMonths' => $totalForAllMonths

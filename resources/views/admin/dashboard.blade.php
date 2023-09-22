@@ -217,6 +217,162 @@
 
     </div>
 
+
+
+    <div class="row">
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-premium-dark">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total Student</div>
+                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-warning">
+                            <span>{{ $totalResume + $totalStudying + $totalNewStudents }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-happy-green">
+            {{-- <div class="card mb-3 widget-content bg-midnight-bloom"> --}}
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total New Students</div>
+                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-white"><span>{{ $totalNewStudents }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-grow-early">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total Studing</div>
+                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-white"><span>{{ $totalStudying }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-arielle-smile">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total Resume</div>
+                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-white"><span>{{ $totalResume }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-warning">
+                <div class="widget-content-wrapper text-dark">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total Termination</div>
+                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-dark"><span>{{ $totalTermination }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-danger">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total Drop</div>
+                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-white"><span>{{ $totalDrop }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        {{-- <div class="col-lg-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-happy-green">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Followers</div>
+                        <div class="widget-subheading">People Interested</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-dark"><span>46%</span></div>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+        {{-- <div class="col-lg-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-night-fade">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Followers</div>
+                        <div class="widget-subheading">People Interested</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-dark"><span>46%</span></div>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+
+
+        {{-- <div class="col-md-6 col-xl-3">
+            <div class="card mb-3 widget-content bg-arielle-smile">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total Resume</div>
+                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-white"><span>{{ $totalResume }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card mb-3 widget-content bg-premium-dark">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total Student</div>
+                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-warning">
+                            <span>{{ $totalResume + $totalStudying + $totalNewStudents }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+    </div>
+
+
     <div class="main-card mb-3 card">
         <div class="g-0 row">
             <div class="col-md-2">
@@ -445,62 +601,6 @@
                             </div>
                         </li>
                     </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6 col-xl-3   ">
-            <div class="card mb-3 widget-content bg-midnight-bloom">
-                <div class="widget-content-wrapper text-white">
-                    <div class="widget-content-left">
-                        <div class="widget-heading">Total New Students</div>
-                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                    </div>
-                    <div class="widget-content-right">
-                        <div class="widget-numbers text-white"><span>{{ $totalNewStudents }}</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-xl-3">
-            <div class="card mb-3 widget-content bg-grow-early">
-                <div class="widget-content-wrapper text-white">
-                    <div class="widget-content-left">
-                        <div class="widget-heading">Total Studing</div>
-                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                    </div>
-                    <div class="widget-content-right">
-                        <div class="widget-numbers text-white"><span>{{ $totalStudying }}</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card mb-3 widget-content bg-arielle-smile">
-                <div class="widget-content-wrapper text-white">
-                    <div class="widget-content-left">
-                        <div class="widget-heading">Total Resume</div>
-                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                    </div>
-                    <div class="widget-content-right">
-                        <div class="widget-numbers text-white"><span>{{ $totalResume }}</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card mb-3 widget-content bg-premium-dark">
-                <div class="widget-content-wrapper text-white">
-                    <div class="widget-content-left">
-                        <div class="widget-heading">Total Drop</div>
-                        <div class="widget-subheading">{{ date('Y-m-d') }}</div>
-                    </div>
-                    <div class="widget-content-right">
-                        <div class="widget-numbers text-warning"><span>{{ $totalDrop }}</span></div>
-                    </div>
                 </div>
             </div>
         </div>
