@@ -252,6 +252,7 @@
                             <th width='1%'>Code</th>
                             <th>Student Nickname</th>
                             <th>Submission Date</th>
+                            <th>Period</th>
                             <th>Reciept Number</th>
                             <th>Group</th>
                             <th>Tpye</th>
@@ -270,6 +271,8 @@
                                     <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
                                     <td>{{ $data->std->nick_name ?? 'Null' }}</td>
                                     <td>{{ $data->rec_school->submission_date }}</td>
+                                    <td>{{ $data->period }}</td>
+
                                     <td>{{ $data->rec_school->receipt_number }}</td>
                                     <td>{{ $data->group }}</td>
                                     <td>{{ $data->course_type }}</td>

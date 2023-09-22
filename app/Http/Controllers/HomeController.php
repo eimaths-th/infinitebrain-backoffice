@@ -99,7 +99,6 @@ class HomeController extends Controller
                         }
                     }
                     // dd($newEnrollmentReceipt, $status, $start_date);
-
                 }
 
                 if (count($existingStatus) < 1) {
@@ -177,8 +176,6 @@ class HomeController extends Controller
             ->get();
         $group_scp = $ssss->groupBy('group');
         $status = [];
-
-
         if (!$group_scp->isEmpty()) {
             foreach ($group_scp as $group => $school_pice) {
                 $startdate = null;
