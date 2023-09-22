@@ -40,8 +40,54 @@
 
             </div>
         </div>
+        {{-- <div class="main-card mb-3 card"> --}}
+            {{-- <div class="card-body"> --}}
+                <div class="row mb-3">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header-tab card-header-tab-animation card-header">
+                                <div class="card-header-title">
+                                    <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                                    All Month Report
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    {{--  --}}
+                                    <canvas id="barChart" {{-- width="800" height="200" --}}></canvas>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header-tab card-header-tab-animation card-header">
+                                <div class="card-header-title">
+                                    <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                                    All Month Report
+                                </div>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <canvas id="lineChart" {{-- width="800" height="200" --}}></canvas>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{-- </div> --}}
+
+        {{-- </div> --}}
+
+
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
+
+
+
                 <form action="{{ route('searchr_reportMonthStd') }}" method="GET">
                     @csrf
                     <div class="row mb-5">
@@ -99,8 +145,7 @@
                             </div>
                         </div>
                         <div class="col-lg-2">
-                            <button class="btn btn-primary" type="submit"
-                                >ค้นหา</button>
+                            <button class="btn btn-primary" type="submit">ค้นหา</button>
                             {{-- <a href="{{ route('search_status') }}" class="btn btn-primary" id="seach_status" name="seach_status">ค้นหา</a> --}}
                         </div>
                     </div>
@@ -221,8 +266,8 @@
                             @foreach ($groupedData as $key => $data)
                                 <tr>
                                     <td class="text-center">{{ $key + 1 }}</td>
-                                    <td class="text-center">{{ $data->std->code ?? 'Null'}}</td>
-                                    <td>{{ $data->std->nick_name ?? 'Null'}}</td>
+                                    <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
+                                    <td>{{ $data->std->nick_name ?? 'Null' }}</td>
                                     <td>{{ $data->rec_school->submission_date }}</td>
                                     <td>{{ $data->rec_school->receipt_number }}</td>
                                     <td>{{ $data->group }}</td>
@@ -248,9 +293,17 @@
                             <td class="text-end">{{ number_format($sum) }} บาท</td>
                         </tr>
 
+                        {{-- @foreach ($totalForAllMonths as $month => $total)
+                            <tr>
+                                <td colspan="6" class="text-center">{{ $month }}</td>
+                                <td class="text-end">{{ number_format($total) }} บาท</td>
+                            </tr>
+                        @endforeach --}}
+
                     </tbody>
 
                 </table>
+
 
             </div>
         </div>
@@ -278,89 +331,35 @@
                 lengthMenu: [20, 50, 75, 100, 200],
             });
 
-            // let sub_id, std_id;
-
-            // $(document).on('click', '#getViewData', function(e) {
-            //     e.preventDefault();
-
-            //     $('.alert-danger').html('');
-            //     $('.alert-danger').hide();
-            //     $('.alert-success').html('');
-            //     $('.alert-success').hide();
-
-            //     let id = $(this).data('id');
-            //     [sub_id, std_id] = id.split(',');
-
-            //     $.ajax({
-            //         url: "history/" + sub_id + "/" + std_id,
-            //         method: 'GET',
-            //         success: function(res) {
-            //             $('#time_text').html(res.timeText);
-            //             $('#date_text').html(res.dateText);
-            //             $('#className').html(res.classname);
-            //             $('#ViewModalBody').html(res.html);
-            //             $('#ViewParent').html(res.parent);
-            //             $('#ViewModal').modal('show');
-            //         }
-            //     });
-            // });
-
         })
     </script>
-
-    {{-- <script>
-        var groupLabels = ['New Student', 'Studying', 'Termination of study', 'Drop', 'Resume'];
-        var data = [
-            @foreach ($groupStatusCounts as $group => $statusCounts)
-                @if ($group !== 'N')
-
-                    {
-                        label: '{{ $group }}',
-                        data: [
-                            {{ isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0 }},
-                            {{ isset($statusCounts['studying . . .']) ? $statusCounts['studying . . .'] : 0 }},
-                            {{ isset($statusCounts['Termination of study']) ? $statusCounts['Termination of study'] : 0 }},
-                            {{ isset($statusCounts['drop']) ? $statusCounts['drop'] : 0 }},
-                            {{ isset($statusCounts['resume']) ? $statusCounts['resume'] : 0 }},
-                            // {{ isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0 }},
-                        ]
-                    },
-                @endif
+    <script>
+        var groupLabels = [
+            @foreach ($totalForAllMonths as $month => $total)
+                '{{ $month }}',
             @endforeach
         ];
-        // var ran2 = Math.floor(Math.random() * 255);
-        // var ran3 = Math.floor(Math.random() * 255);
+
+        var data = {
+            labels: groupLabels,
+            datasets: [{
+                label: 'ยอดรวมแต่ละเดือน ',
+                data: [
+                    @foreach ($totalForAllMonths as $month => $total)
+                        {{ $total }},
+                    @endforeach
+                ],
+                pointBackgroundColor: 'rgba(52, 143, 226,.65)',
+                borderColor: 'rgba(52, 143, 226,.65)',
+                backgroundColor: 'rgba(52, 143, 226,.65)',
+                pointRadius: 4,
+                borderWidth: 2,
+            }]
+        };
         var ctx = document.getElementById('lineChart').getContext('2d');
         var lineChart = new Chart(ctx, {
             type: 'line',
-            data: {
-                labels: groupLabels,
-                datasets: data.map(function(item) {
-                    // var ran1 = Math.floor(Math.random() * 255);
-                    // var randomColor = 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 1)';
-                    var groupColors = {
-                        'M': 'rgba(52, 143, 226,.65)',
-                        'E': 'rgba(0, 172, 172,.65)',
-                        // 'N': 'rgba(255, 99, 132,.65)' // Add more colors if needed
-                    };
-                    var grouplabels = {
-                        'M': 'Math',
-                        'E': 'English',
-                        // 'N': 'None' // Add more colors if needed
-                    };
-                    return {
-                        label: grouplabels[item.label],
-                        data: item.data,
-                        pointBackgroundColor: groupColors[item.label],
-                        borderColor: groupColors[item.label],
-                        backgroundColor: groupColors[item.label],
-                        pointRadius: 4,
-                        borderWidth: 2,
-                        // fill: false
-                    }
-                })
-            },
-
+            data: data,
             options: {
                 scales: {
                     y: {
@@ -371,60 +370,40 @@
         });
     </script>
 
-    <script>
-        var groupLabels = ['New Student', 'Studying', 'Termination of study', 'Drop', 'Resume'];
-        var data = [
-            @foreach ($groupStatusCounts as $group => $statusCounts)
-                @if ($group !== 'N')
 
-                    {
-                        label: '{{ $group }}',
-                        data: [
-                            {{ isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0 }},
-                            {{ isset($statusCounts['studying . . .']) ? $statusCounts['studying . . .'] : 0 }},
-                            {{ isset($statusCounts['Termination of study']) ? $statusCounts['Termination of study'] : 0 }},
-                            {{ isset($statusCounts['drop']) ? $statusCounts['drop'] : 0 }},
-                            {{ isset($statusCounts['resume']) ? $statusCounts['resume'] : 0 }},
-                            // {{ isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0 }},
-                        ]
-                    },
-                @endif
+    <script>
+        var groupLabels = [
+            @foreach ($totalForAllMonths as $month => $total)
+                '{{ $month }}',
             @endforeach
         ];
-
+        var data = {
+            labels: groupLabels,
+            datasets: [{
+                label: 'ยอดรวมแต่ละเดือน ',
+                data: [
+                    @foreach ($totalForAllMonths as $month => $total)
+                        {{ $total }},
+                    @endforeach
+                ],
+                pointBackgroundColor: 'rgba(52, 143, 226,.65)',
+                borderColor: 'rgba(52, 143, 226,.65)',
+                backgroundColor: 'rgba(52, 143, 226,.65)',
+                pointRadius: 4,
+                borderWidth: 2,
+            }]
+        };
         var ctx = document.getElementById('barChart').getContext('2d');
         var barChart = new Chart(ctx, {
             type: 'bar',
-            data: {
-                labels: groupLabels,
-                datasets: data.map(function(item) {
-                    var groupColors = {
-                        'M': 'rgba(52, 143, 226,.65)',
-                        'E': 'rgba(0, 172, 172,.65)',
-                        'N': 'rgba(255, 99, 132,.65)' // Add more colors if needed
-                    };
-                    var grouplabels = {
-                        'M': 'Math',
-                        'E': 'English',
-                        'N': 'None' // Add more colors if needed
-                    };
-                    return {
-                        label: grouplabels[item.label],
-                        data: item.data,
-                        backgroundColor: groupColors[item.label],
-                        borderColor: groupColors[item.label],
-                        borderWidth: 1
-                    }
-                })
-            },
+            data: data,
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true,
-                        maxTicksLimit: 5, // Set the maximum number of ticks on the Y-axis
+                        beginAtZero: true
                     }
                 }
             }
         });
-    </script> --}}
+    </script>
 @endsection
