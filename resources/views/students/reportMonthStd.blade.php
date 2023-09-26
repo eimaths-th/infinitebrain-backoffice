@@ -41,44 +41,44 @@
             </div>
         </div>
         {{-- <div class="main-card mb-3 card"> --}}
-            {{-- <div class="card-body"> --}}
-                <div class="row mb-3">
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header-tab card-header-tab-animation card-header">
-                                <div class="card-header-title">
-                                    <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
-                                    All Month Report
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="tab-content">
-                                    {{--  --}}
-                                    <canvas id="barChart" {{-- width="800" height="200" --}}></canvas>
-
-                                </div>
-                            </div>
+        {{-- <div class="card-body"> --}}
+        <div class="row mb-3">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header-tab card-header-tab-animation card-header">
+                        <div class="card-header-title">
+                            <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                            All Month Report
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header-tab card-header-tab-animation card-header">
-                                <div class="card-header-title">
-                                    <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
-                                    All Month Report
-                                </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            {{--  --}}
+                            <canvas id="barChart" {{-- width="800" height="200" --}}></canvas>
 
-                            </div>
-                            <div class="card-body">
-                                <div class="tab-content">
-                                    <canvas id="lineChart" {{-- width="800" height="200" --}}></canvas>
-
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
-            {{-- </div> --}}
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header-tab card-header-tab-animation card-header">
+                        <div class="card-header-title">
+                            <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                            All Month Report
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <canvas id="lineChart" {{-- width="800" height="200" --}}></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- </div> --}}
 
         {{-- </div> --}}
 
@@ -255,6 +255,7 @@
                             <th>Period</th>
                             <th>Reciept Number</th>
                             <th>Group</th>
+                            <th>Stutus</th>
                             <th>Tpye</th>
                             <th>total</th>
                         </tr>
@@ -262,6 +263,8 @@
 
                     <tbody>
                         @php
+                            use App\Models\Statuslog;
+
                             $sum = 0;
                         @endphp
                         @foreach ($reportMonth_schoolPrice as $studentId => $groupedData)
@@ -275,9 +278,29 @@
 
                                     <td>{{ $data->rec_school->receipt_number }}</td>
                                     <td>{{ $data->group }}</td>
+                                    <td>
+
+                                        @php
+
+                                            $cMonth = date('m');
+                                            $cYear = date('Y');
+                                            $status = Statuslog::where('student_id', $data->std->id)
+                                                ->where('group', $data->group)
+                                                ->whereMonth('status_date', $cMonth)
+                                                ->whereYear('status_date', $cYear)
+                                                ->get();
+                                            // dd($status->last()->group, $data->group);
+
+                                        @endphp
+                                        @if ( $data->std->status_log &&  $data->std->status_log->count() > 0 && $status->last()->group == $data->group)
+                                            {{ $status->last()->status ?? 'Null' }}
+                                        @else
+                                            null
+                                        @endif
+                                    </td>
                                     <td>{{ $data->course_type }}</td>
                                     {{-- <td class="text-end">{{ number_format($data->total) }} บาท</td> --}}
-                                    <td class="text-end">{{ (string)$data->total }} บาท</td>
+                                    <td class="text-end">{{ (string) $data->total }} บาท</td>
                                 </tr>
                                 @php
                                     $sum += $data->total;
@@ -296,7 +319,8 @@
                             <td class="text-center" hidden></td> <!-- Merged cell -->
                             <td class="text-center" hidden></td> <!-- Merged cell -->
                             <td class="text-center" hidden></td> <!-- Merged cell -->
-                            <td class="text-center" colspan="6">Sum Total</td> <!-- Merged cell -->
+                            <td class="text-center" hidden></td> <!-- Merged cell -->
+                            <td class="text-center" colspan="8">Sum Total</td> <!-- Merged cell -->
                             <td class="text-end">{{ number_format($sum) }} บาท</td>
                         </tr>
 

@@ -136,6 +136,7 @@
                             <th class="text-warning">Termination of study</th>
                             <th class="text-danger">Drop</th>
                             <th class="text-success">Resume</th>
+                            <th class="text-primary">Waitting . . .</th>
                             <th class="text-info">None Receipt</th>
                             <th>date time</th>
                         </tr>
@@ -160,6 +161,7 @@
                             $totalTermination = 0;
                             $totalDrop = 0;
                             $totalResume = 0;
+                            $totalWait = 0;
                             $totalNoneReceipt = 0;
                         @endphp
                         @foreach ($groupStatusCounts as $group => $statusCounts)
@@ -182,6 +184,7 @@
                                     คน</td>
                                 <td>{{ isset($statusCounts['drop']) ? $statusCounts['drop'] : 0 }} คน</td>
                                 <td>{{ isset($statusCounts['resume']) ? $statusCounts['resume'] : 0 }} คน</td>
+                                <td>{{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }} คน</td>
                                 <td>{{ isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0 }} คน</td>
                                 <td>{{ now() }}</td>
                                 <!-- You can replace this with the actual date time if needed -->
@@ -192,6 +195,7 @@
                                 $totalTermination += isset($statusCounts['Termination of study']) ? $statusCounts['Termination of study'] : 0;
                                 $totalDrop += isset($statusCounts['drop']) ? $statusCounts['drop'] : 0;
                                 $totalResume += isset($statusCounts['resume']) ? $statusCounts['resume'] : 0;
+                                $totalWait += isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0;
                                 $totalNoneReceipt += isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0;
                             @endphp
                         @endforeach
@@ -202,6 +206,7 @@
                             <td>{{ $totalTermination }} คน</td>
                             <td>{{ $totalDrop }} คน</td>
                             <td>{{ $totalResume }} คน</td>
+                            <td>{{ $totalWait }} คน</td>
                             <td>{{ $totalNoneReceipt }} คน</td>
                             <td>{{ now() }}</td>
                         </tr>
@@ -249,7 +254,9 @@
                                         $class = 'text-info';
                                     } elseif ($status->status === 'drop') {
                                         $class = 'text-danger';
-                                    } elseif ($status->status === 'Termination of study') {
+                                    } elseif ($status->status === 'waitting . . .') {
+                                        $class = 'text-primary';
+                                    }elseif ($status->status === 'Termination of study') {
                                         $class = 'text-warning';
                                     } else {
                                         $class = 'text-success';
@@ -468,7 +475,7 @@
         });
     </script> --}}
     <script>
-        var groupLabels = ['New Student', 'Studying', 'Termination of study', 'Drop', 'Resume'];
+        var groupLabels = ['New Student', 'Studying', 'Termination of study', 'Drop', 'Resume','Waiting'];
         var data = [
             @foreach ($groupStatusCounts as $group => $statusCounts)
                 @if ($group !== 'N')
@@ -481,6 +488,7 @@
                             {{ isset($statusCounts['Termination of study']) ? $statusCounts['Termination of study'] : 0 }},
                             {{ isset($statusCounts['drop']) ? $statusCounts['drop'] : 0 }},
                             {{ isset($statusCounts['resume']) ? $statusCounts['resume'] : 0 }},
+                            {{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }},
                             // {{ isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0 }},
                         ]
                     },
@@ -531,7 +539,7 @@
     </script>
 
     <script>
-        var groupLabels = ['New Student', 'Studying', 'Termination of study', 'Drop', 'Resume'];
+        var groupLabels = ['New Student', 'Studying', 'Termination of study', 'Drop', 'Resume','waitting'];
         var data = [
             @foreach ($groupStatusCounts as $group => $statusCounts)
                 @if ($group !== 'N')
@@ -544,6 +552,7 @@
                             {{ isset($statusCounts['Termination of study']) ? $statusCounts['Termination of study'] : 0 }},
                             {{ isset($statusCounts['drop']) ? $statusCounts['drop'] : 0 }},
                             {{ isset($statusCounts['resume']) ? $statusCounts['resume'] : 0 }},
+                            {{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }},
                             // {{ isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0 }},
                         ]
                     },

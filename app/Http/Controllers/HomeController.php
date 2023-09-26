@@ -167,7 +167,7 @@ class HomeController extends Controller
     private function determineStatus($student)
     {
         $stdId = $student->id;
-        // $stdId = 15;
+        // $stdId = 157;
         $receipt = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
 
         $ssss = SchoolPrice::where('student_id', $stdId)
@@ -175,11 +175,13 @@ class HomeController extends Controller
             ->orderBy('rid')
             ->get();
         $group_scp = $ssss->groupBy('group');
+        // dd($group_scp);
+
         $status = [];
         if (!$group_scp->isEmpty()) {
             foreach ($group_scp as $group => $school_pice) {
                 $startdate = null;
-
+                // $submission_date = $school_pice->rec_school->submission_date;
                 if (!$school_pice->isEmpty()) {
                     $startdate = $school_pice->first()->period;
                 }
@@ -193,7 +195,7 @@ class HomeController extends Controller
                 // $current_Month = Carbon::createFromFormat('Y-m', '2023-09');
                 $currentMonth = Carbon::parse($current_Month);
 
-                $count_receipt = count($receipt);
+                // $count_receipt = count($receipt);
                 $count_qty = count($school_pice);
 
                 if ($count_qty < 1) {
@@ -204,17 +206,31 @@ class HomeController extends Controller
                     } else {
 
                         if (count($school_pice) > 1) {
-                            $startcourse = $school_pice->first()->period;
+                            $submission_date = $school_pice->last()->rec_school->submission_date;
                             $period = $school_pice->last()->period;
                         } else {
-
-                            $startcourse = $school_pice->first()->period;
+                            $submission_date = $school_pice->last()->rec_school->submission_date;
                             $period = $school_pice->first()->period;
                         }
+
+
                         $parts = explode('-', $period);
+                        $parts_submission_date = explode('-', $submission_date);
+
                         $lastTwoParts = array_slice($parts, -2);
+                        $firstTwoParts = array_slice($parts, 0, 2);
+                        $first_submission_date = array_slice($parts_submission_date, 0, 2);
+
+
+
+                        $start_date = implode('-', $firstTwoParts);
                         $end_date = implode('-', $lastTwoParts);
+                        $submissionDate = implode('-', $first_submission_date);
+
+                        $currentReceiptStatDate = Carbon::parse($start_date);
                         $currentReceiptEndDate = Carbon::parse($end_date);
+                        $currentReceiptsubmission_date = Carbon::parse($submissionDate);
+
                         if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate)) {
                             //พ้นสภาพนักเรียน
                             // $status = 'พ้นสภาพนักเรียน';
@@ -224,16 +240,14 @@ class HomeController extends Controller
                                 //กำลังยุติการการเรียน
                                 $status[$group] = 'Termination of study';
                             } else {
-                                // if ($student->status == 'resume') {
-                                //     # code...
-                                //     //กลับมาเรียน
-                                // dd($stdId);
-                                //     $status[$group] = 'resume';
-                                // } else {
-                                //     # code...
-                                //     //กำลังเรียนอยู่
-                                $status[$group] = 'studying . . .';
-                                // }
+
+                                if ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+                                    # code...
+                                    //แก้บัค 22/09/2023
+                                    $status[$group] = 'waitting . . .';
+                                } else {
+                                    $status[$group] = 'studying . . .';
+                                }
                             }
                         }
                         // $statuses[$group] = 'old Student';
@@ -241,19 +255,33 @@ class HomeController extends Controller
                 } elseif ($count_qty > 1) {
 
                     if (count($school_pice) > 1) {
-                        $startcourse = $school_pice->first()->period;
+                        // $test1 = $school_pice->last()->rec_school->id;
+                        // $test2 = $school_pice->last()->rid;
+                        // $test3 = $school_pice->last()->rec_school->submission_date;
+                        $submission_date = $school_pice->last()->rec_school->submission_date;
                         $period = $school_pice->last()->period;
                     } else {
-
-                        $startcourse = $school_pice->first()->period;
+                        // $test1 = $school_pice->last()->rec_school->id;
+                        // $test2 = $school_pice->last()->rid;
+                        // $test3 = $school_pice->last()->rec_school->submission_date;
+                        $submission_date = $school_pice->last()->rec_school->submission_date;
                         $period = $school_pice->last()->period;
                     }
 
                     $parts = explode('-', $period);
-                    $lastTwoParts = array_slice($parts, -2);
-                    $end_date = implode('-', $lastTwoParts);
+                    $parts_submission_date = explode('-', $submission_date);
 
+                    $lastTwoParts = array_slice($parts, -2);
+                    $firstTwoParts = array_slice($parts, 0, 2);
+                    $first_submission_date = array_slice($parts_submission_date, 0, 2);
+
+                    $start_date = implode('-', $firstTwoParts);
+                    $end_date = implode('-', $lastTwoParts);
+                    $submissionDate = implode('-', $first_submission_date);
+
+                    $currentReceiptStatDate = Carbon::parse($start_date);
                     $currentReceiptEndDate = Carbon::parse($end_date);
+                    $currentReceiptsubmission_date = Carbon::parse($submissionDate);
 
                     if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate)) {
                         //พ้นสภาพนักเรียน
@@ -280,6 +308,21 @@ class HomeController extends Controller
                             if (count($check_resume) > 0 && $check_resume->first()->status == 'resume') {
 
                                 $status[$group] = 'resume';
+                            } elseif (
+                                $currentMonth->diffInMonths($currentReceiptsubmission_date) == 0
+                                && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)
+                                // && $check_resume->first()->status !== 'studying . . .'
+                            ) {
+                                //แก้บัค 22/09/2023
+                                if ($check_resume->first()->status == 'studying . . .') {
+                                    $status[$group] = 'studying . . .';
+
+                                } else {
+                                    $status[$group] = 'waitting . . .';
+                                }
+                                // $status[$group] = 'waitting . . .';
+
+                                // dd($check_resume,$stdId,$status,$school_pice);
                             } else {
                                 $status[$group] = 'studying . . .';
                             }
