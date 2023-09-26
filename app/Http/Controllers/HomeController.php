@@ -314,13 +314,13 @@ class HomeController extends Controller
                                 // && $check_resume->first()->status !== 'studying . . .'
                             ) {
                                 //แก้บัค 22/09/2023
-                                if ($check_resume->first()->status == 'studying . . .') {
-                                    $status[$group] = 'studying . . .';
+                                // if ($check_resume->first()->status == 'studying . . .') {
+                                //     $status[$group] = 'studying . . .';
 
-                                } else {
-                                    $status[$group] = 'waitting . . .';
-                                }
-                                // $status[$group] = 'waitting . . .';
+                                // } else {
+                                //     $status[$group] = 'waitting . . .';
+                                // }
+                                $status[$group] = 'waitting . . .';
 
                                 // dd($check_resume,$stdId,$status,$school_pice);
                             } else {
