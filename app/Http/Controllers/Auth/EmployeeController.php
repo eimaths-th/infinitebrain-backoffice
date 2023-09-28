@@ -18,7 +18,8 @@ class EmployeeController extends Controller
     public function check_permission()
     {
         if (Auth::check()) {
-            if (Auth::user()->level !== 1) {
+            if (Auth::user()->level == 1 || Auth::user()->level == 0) {
+            } else {
                 abort(403, 'Unauthorized action.');
             }
         } else {
@@ -63,6 +64,8 @@ class EmployeeController extends Controller
                         $ltext = "Teacher";
                     } elseif ($level->level == 3) {
                         $ltext = "Account";
+                    } elseif ($level->level == 0) {
+                        $ltext = "Owner";
                     } else {
                         $ltext = "Normal";
                     }
@@ -171,8 +174,12 @@ class EmployeeController extends Controller
             $dselected = '';
         }
 
-
         if ($data->level == 0) {
+            $oselected = 'selected';
+        } else {
+            $oselected = '';
+        }
+        if ($data->level == 4) {
             $cselected = 'selected';
         } else {
             $cselected = '';
@@ -200,10 +207,11 @@ class EmployeeController extends Controller
                     <label for="Name">Level:</label>
                     <select class="form-control" id="editLevel" name="level">
                      <option value="">Select Level</option>
-                     <option value="0" ' . $cselected . '>Normal</option>
+                     <option value="0" ' . $oselected . '>Owner</option>
                      <option value="1" ' . $aselected . '>Admin</option>
                      <option value="2" ' . $bselected . '>Teacher</option>
                      <option value="3" ' . $dselected . '>Account</option>
+                     <option value="4" ' . $cselected . '>Normal</option>
                     </select>
                 </div>';
 

@@ -110,6 +110,8 @@
                                     Teacher
                                 @elseif (Auth::user()->level == 3)
                                     Account
+                                @elseif (Auth::user()->level == 0)
+                                    Owner
                                 @else
                                     Normal
                                 @endif

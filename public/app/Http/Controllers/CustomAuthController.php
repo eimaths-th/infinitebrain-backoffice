@@ -28,7 +28,7 @@ class CustomAuthController extends Controller
         $this_year = date("Y");
 
         if (Auth::attempt($credentials)) {
-            if (Auth::user()->level == 0) {
+            if (Auth::user()->level == 4) {
 
                 Session::flush();
                 Auth::logout();
@@ -38,7 +38,7 @@ class CustomAuthController extends Controller
                 ]);*/
                 return back()->withErrors(['error' => 'You are users but not have permissions. Please Contact Administrator']);
             } else {
-                if (Auth::user()->level == 1) {
+                if (Auth::user()->level == 1 || Auth::user()->level == 0) {
                     //return redirect()->intended('users');
                     //return redirect('/users');
                     return redirect(route('home'));

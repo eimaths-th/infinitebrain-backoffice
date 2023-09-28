@@ -176,7 +176,7 @@ class ReceiptFormController extends Controller
     public function check_permission()
     {
         if (Auth::check()) {
-            if (Auth::user()->level == 1 || Auth::user()->level == 3) {
+            if (Auth::user()->level == 1 || Auth::user()->level == 3 || Auth::user()->level == 0) {
                 return true;
             } else {
                 abort(403, 'Unauthorized action.');
@@ -575,15 +575,15 @@ class ReceiptFormController extends Controller
         $data->file = $file_att;
 
         $data->file_re = $furl;
-        
+
         if ($data->generate==0) {
          $data->rnumber = Receipt_RunningNumber::pre_generate($data->sfield);
         } else {
          $data->rnumber = '';
         }
-        
+
         //dd($data);
-        
+
 
         return response()->json([
             'data' =>  $data

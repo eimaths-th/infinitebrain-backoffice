@@ -47,6 +47,15 @@
     <script defer src="{{ asset('architectui/assets/scripts/maps.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/chart_js.js') }}"></script>
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <script src="/js/app.js?v=1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://malsup.github.io/jquery.blockUI.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
     <!-- Scripts
       @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -174,6 +183,8 @@
                             </form>
                         </div>
                     </div>
+                    
+                    @include('layouts.modal-form')
 
                 </div>
                 <!-- Footer -->

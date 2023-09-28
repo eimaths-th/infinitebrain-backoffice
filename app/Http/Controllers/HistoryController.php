@@ -35,7 +35,7 @@ class HistoryController extends Controller
     public function check_permission()
     {
         if (Auth::check()) {
-            if (Auth::user()->level == 1 || Auth::user()->level == 2) {
+            if (Auth::user()->level == 1 || Auth::user()->level == 2 || Auth::user()->level == 0) {
                 return true;
             } else {
                 abort(403, 'Unauthorized action 1.');
@@ -122,7 +122,7 @@ class HistoryController extends Controller
         if ($studentId == null) {
             # code...
         } else {
-            
+
             $std = Student::find($studentId);
             $rc = Receipt_School::where('pid', $std->id)->get();
             $rcIds = $rc->pluck('id'); // Retrieve all 'id' values from the collection

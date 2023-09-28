@@ -27,7 +27,7 @@ class StudentController extends Controller
     public function check_permission()
     {
         if (Auth::check()) {
-            if (Auth::user()->level == 1 || Auth::user()->level == 2) {
+            if (Auth::user()->level == 1 || Auth::user()->level == 2 || Auth::user()->level == 0) {
             } else {
                 abort(403, 'Unauthorized action.');
             }

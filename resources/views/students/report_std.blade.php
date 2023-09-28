@@ -38,8 +38,15 @@
                     </div>
                 </div>
 
+                <a href="#" class="btn btn-primary btn-sm"
+                    onclick="formModal('{{ route('test_modal') }}')"
+                    data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
+                    data-bs-title="View OT Record">
+
+                    <i class="fa fa-eye fa-1x"></i></a>
             </div>
         </div>
+
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
                 <form action="{{ route('search_status') }}" method="GET">
@@ -110,15 +117,11 @@
                 {{-- <div id="nv-line-chart" class="h-250px"></div> --}}
                 <div class="row">
                     <div class="col-lg-6">
-                        <canvas id="lineChart" class="screen-auto"
-                        {{-- width="800" height="200" --}}
-                        ></canvas>
+                        <canvas id="lineChart" class="screen-auto" {{-- width="800" height="200" --}}></canvas>
 
                     </div>
                     <div class="col-lg-6">
-                        <canvas id="barChart" class="screen-auto"
-                        {{-- width="800" height="200" --}}
-                        ></canvas>
+                        <canvas id="barChart" class="screen-auto" {{-- width="800" height="200" --}}></canvas>
 
                     </div>
                 </div>
@@ -184,7 +187,8 @@
                                     คน</td>
                                 <td>{{ isset($statusCounts['drop']) ? $statusCounts['drop'] : 0 }} คน</td>
                                 <td>{{ isset($statusCounts['resume']) ? $statusCounts['resume'] : 0 }} คน</td>
-                                <td>{{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }} คน</td>
+                                <td>{{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }} คน
+                                </td>
                                 <td>{{ isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0 }} คน</td>
                                 <td>{{ now() }}</td>
                                 <!-- You can replace this with the actual date time if needed -->
@@ -256,7 +260,7 @@
                                         $class = 'text-danger';
                                     } elseif ($status->status === 'waitting . . .') {
                                         $class = 'text-primary';
-                                    }elseif ($status->status === 'Termination of study') {
+                                    } elseif ($status->status === 'Termination of study') {
                                         $class = 'text-warning';
                                     } else {
                                         $class = 'text-success';
@@ -475,7 +479,7 @@
         });
     </script> --}}
     <script>
-        var groupLabels = ['New Student', 'Studying', 'Termination of study', 'Drop', 'Resume','Waiting'];
+        var groupLabels = ['New Student', 'Studying', 'Termination of study', 'Drop', 'Resume', 'Waiting'];
         var data = [
             @foreach ($groupStatusCounts as $group => $statusCounts)
                 @if ($group !== 'N')
@@ -539,7 +543,7 @@
     </script>
 
     <script>
-        var groupLabels = ['New Student', 'Studying', 'Termination of study', 'Drop', 'Resume','waitting'];
+        var groupLabels = ['New Student', 'Studying', 'Termination of study', 'Drop', 'Resume', 'waitting'];
         var data = [
             @foreach ($groupStatusCounts as $group => $statusCounts)
                 @if ($group !== 'N')

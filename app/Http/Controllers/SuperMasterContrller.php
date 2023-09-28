@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ParentRegister;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class SuperMasterContrller extends Controller
@@ -22,9 +24,15 @@ class SuperMasterContrller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function testModal()
     {
         //
+        $newStudentCode = Student::generateNextStudentCode();
+        $parent = ParentRegister::orderBy("id", "asc")->get();
+
+        return view('students.modalshow', [
+            'newStudentCode' => $newStudentCode
+        ])->with(['data4' => $parent]);
     }
 
     /**

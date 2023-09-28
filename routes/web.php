@@ -77,6 +77,7 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
 });*/
 
 route::get('/Super-Master',[SuperMasterContrller::class,'index'])->name('sm');
+route::get('/testmodal',[SuperMasterContrller::class,'testModal'])->name('test_modal');
 Route::get('/perform-retrospective-check', [RetrospectiveCheckController::class, 'performRetrospectiveCheck']);
 Route::get('/report-student', [StdlogController::class, 'index'])->name('report-student');
 Route::get('/search_status', [StdlogController::class, 'search_status'])->name('search_status');

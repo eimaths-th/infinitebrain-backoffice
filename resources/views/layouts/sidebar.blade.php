@@ -41,7 +41,7 @@
                 </li> --}}
 
 
-                @if (Auth::user()->level == 2 || Auth::user()->level == 1)
+                @if (Auth::user()->level == 2 || Auth::user()->level == 1 || Auth::user()->level == 0)
 
 
                     <li class="app-sidebar__heading">  </li>
@@ -286,7 +286,7 @@
 
                 @endif
 
-                @if (Auth::user()->level == 3 || Auth::user()->level == 1)
+                @if (Auth::user()->level == 3 || Auth::user()->level == 1 || Auth::user()->level == 0)
                     <li class="app-sidebar__heading">สนามสอบ</li>
                     <li>
                         <a href="#">
@@ -528,7 +528,7 @@
                 @endif
 
 
-                @if (Auth::user()->level == 1)
+                @if (Auth::user()->level == 1 || Auth::user()->level == 0)
                 <li class="app-sidebar__heading">ผู้ดูแลระบบ</li>
                 <li>
                     <a href="#">
@@ -560,6 +560,16 @@
                                 รายงานยอดนักเรียน
                             </a>
                         </li>
+
+                        @if (Auth::user()->level == 0)
+                        <li>
+                            <a href="{{ route('report-student') }}">
+                                <i class="metismenu-icon"></i>
+                                รายงานประจำเดือน
+                            </a>
+                        </li>
+                        @endif
+
                     </ul>
                 </li>
                 @endif

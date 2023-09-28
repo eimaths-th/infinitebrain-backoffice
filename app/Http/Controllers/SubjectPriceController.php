@@ -18,7 +18,7 @@ class SubjectPriceController extends Controller
     public function check_permission()
     {
         if (Auth::check()) {
-            if (Auth::user()->level == 1 || Auth::user()->level == 2) {
+            if (Auth::user()->level == 1 || Auth::user()->level == 2 || Auth::user()->level == 0) {
             } else {
                 abort(403, 'Unauthorized action.');
             }
@@ -86,7 +86,7 @@ class SubjectPriceController extends Controller
                 ->editColumn('subject', function (SubjectPrice $subject_price) {
                     return $subject_price->subject_title;
                 })
-              
+
                 ->editColumn('level', function (SubjectPrice $subject_price) {
                     return $subject_price->level_title;
                 })
@@ -99,7 +99,7 @@ class SubjectPriceController extends Controller
                     return $html;
                 })->toJson();
             }
-            
+
         }
 
         //get subject
@@ -171,7 +171,7 @@ class SubjectPriceController extends Controller
 
             ]);
         }
-        
+
         $level->save();
         return response()->json(['success' => 'Cost Add successfully']);
     }
@@ -195,7 +195,7 @@ class SubjectPriceController extends Controller
      */
     public function edit($id)
     {
-        
+
         $this->check_permission();
         $data = SubjectPrice::find($id);
 
@@ -358,7 +358,7 @@ class SubjectPriceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'subject' => 'required|integer',

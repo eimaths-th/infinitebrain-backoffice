@@ -278,21 +278,32 @@
 
                                     <td>{{ $data->rec_school->receipt_number }}</td>
                                     <td>{{ $data->group }}</td>
-                                    <td>
 
-                                        @php
+                                    @php
+                                        $class = '';
 
-                                            $cMonth = date('m');
-                                            $cYear = date('Y');
-                                            $status = Statuslog::where('student_id', $data->std->id)
-                                                ->where('group', $data->group)
-                                                ->whereMonth('status_date', $cMonth)
-                                                ->whereYear('status_date', $cYear)
-                                                ->get();
-                                            // dd($status->last()->group, $data->group);
+                                        $cMonth = date('m');
+                                        $cYear = date('Y');
+                                        $status = Statuslog::where('student_id', $data->std->id)
+                                            ->where('group', $data->group)
+                                            ->whereMonth('status_date', $cMonth)
+                                            ->whereYear('status_date', $cYear)
+                                            ->get();
 
-                                        @endphp
-                                        @if ( $data->std->status_log &&  $data->std->status_log->count() > 0 && $status->last()->group == $data->group)
+                                        if ($status->last()->status === 'None Receipt') {
+                                            $class = 'text-info';
+                                        } elseif ($status->last()->status === 'drop') {
+                                            $class = 'text-danger';
+                                        } elseif ($status->last()->status === 'waitting . . .') {
+                                            $class = 'text-primary';
+                                        } elseif ($status->last()->status === 'Termination of study') {
+                                            $class = 'text-warning';
+                                        } else {
+                                            $class = 'text-success';
+                                        }
+                                    @endphp
+                                    <td class="{{ $class }}">
+                                        @if ($data->std->status_log && $data->std->status_log->count() > 0 && $status->last()->group == $data->group)
                                             {{ $status->last()->status ?? 'Null' }}
                                         @else
                                             null

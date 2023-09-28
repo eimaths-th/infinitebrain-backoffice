@@ -18,7 +18,7 @@ class LevelController extends Controller
     public function check_permission()
     {
         if (Auth::check()) {
-            if (Auth::user()->level == 1 || Auth::user()->level == 2) {
+            if (Auth::user()->level == 1 || Auth::user()->level == 2 || Auth::user()->level == 0) {
             } else {
                 abort(403, 'Unauthorized action.');
             }
@@ -184,12 +184,12 @@ class LevelController extends Controller
                     <label for="Title">Title Thai:</label>
                     <input type="text" class="form-control" name="title_th" id="EditTitleTh" value="' . $data->title_th . '">
                 </div>
-            
+
                 <div class="form-group">
                     <label for="Name">Description</label>
                     <textarea class="form-control" name="description" id="EditDes">' . $data->description . '</textarea>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="Sort">Sort:</label>
                     <input type="number" class="form-control" id="EditSort" name="sort" value="' . $data->level_sort . '" min="1" max="99">

@@ -425,7 +425,7 @@ class ReceiptController extends Controller
     public function check_permission()
     {
         if (Auth::check()) {
-            if (Auth::user()->level == 1 || Auth::user()->level == 3) {
+            if (Auth::user()->level == 1 || Auth::user()->level == 3 || Auth::user()->level == 0) {
                 return true;
             } else {
                 abort(403, 'Unauthorized action 1.');
@@ -1235,7 +1235,7 @@ class ReceiptController extends Controller
             $ret_receipt[$result->receipt_submission_date]['receipt_numberm'][$i] = '';
             }
             $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i] = $result->receipt_number;
-            
+
             $maxdate = max(array_keys($ret_receipt[$result->receipt_submission_date]['receipt_numberm']));
             $ret_receipt[$result->receipt_submission_date]['receipt_numbers'] = $ret_receipt[$result->receipt_submission_date]['receipt_number'][0] . ' - ' . $ret_receipt[$result->receipt_submission_date]['receipt_number'][$maxdate];
             $ret_receipt[$result->receipt_submission_date]['receipt_type'][$i] = $result->receipt_type;

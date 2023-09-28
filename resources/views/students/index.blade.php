@@ -32,11 +32,19 @@
                 </div>
                 <div class="page-title-actions">
                     <div class="d-inline-block dropdown">
+
+
+                        <a href="#" class="btn btn-success" onclick="formModal('{{ route('test_modal') }}')"
+                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
+                            data-bs-title="Create New Student">
+                            <i class="fa fa-plus"></i> Create New Student test
+                        </a>
                         <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="ImportButton"><i
                                 class="fa fa-file-excel"></i> Import Excel
                         </a>
                         <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
                             id="CreateButton"><i class="fa fa-plus"></i> Create New Student</a>
+
                         <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
                             All</a>
 
@@ -162,7 +170,7 @@
                             <select style="width: 100%;" class="parent select2 select2_single form-control"
                                 id="AddParent" name="name_parent" multiple="multiple">
                                 <!-- <option value="" selected>Select Student</option>
-                                                                                                                                                            <option value="" selected>Select Parent</option>-->
+                                                                                                                                                                    <option value="" selected>Select Parent</option>-->
                                 @foreach ($data4 as $key2)
                                     <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->name_parent }}
                                     </option>
@@ -184,7 +192,8 @@
                         </div>
                         <div class="form-group">
                             <label for="Name">Nickname:</label>
-                            <input type="text" class="form-control" name="nick_name" id="AddNickname" value="">
+                            <input type="text" class="form-control" name="nick_name" id="AddNickname"
+                                value="">
                         </div>
                         <div class="form-group">
                             <label for="Name">Mobile:</label>
@@ -247,8 +256,8 @@
                         <div class="form-group mb-2">
                             <label for="Name">หมายเหตุไม่เรียนต่อ:</label>
                             <select style="width: 100%;"
-                                class="form-control form-select select2 select3_single mt-2"id="Editreason" name="reason"
-                                multiple="multiple">
+                                class="form-control form-select select2 select3_single mt-2"id="Editreason"
+                                name="reason" multiple="multiple">
 
                             </select>
 
