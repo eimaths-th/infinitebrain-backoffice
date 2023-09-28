@@ -555,7 +555,7 @@
 
                     <ul>
                         <li>
-                            <a href="{{ route('report-student') }}">
+                            <a href="{{ route('reportMonthStd') }}">
                                 <i class="metismenu-icon"></i>
                                 รายงานยอดนักเรียน
                             </a>

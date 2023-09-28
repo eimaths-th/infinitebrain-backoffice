@@ -563,7 +563,7 @@
 
                         @if (Auth::user()->level == 0)
                         <li>
-                            <a href="{{ route('report-student') }}">
+                            <a href="{{ route('reportMonthStd') }}">
                                 <i class="metismenu-icon"></i>
                                 รายงานประจำเดือน
                             </a>
