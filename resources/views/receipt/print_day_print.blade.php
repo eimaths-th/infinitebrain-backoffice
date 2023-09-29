@@ -145,7 +145,7 @@
                                     <b><font size="{{ $fontsize }}">{{ $receipt['receipt_submission_date'] }}</font></b>
                                 </td>
                                 <td align="left" width="40%" class="actived">&nbsp;
-                                    <b><font size="{{ $fontsize }}">{{ $receipt['receipt_firstname'] }} {{ $receipt['receipt_lastname'] }}  {{ $receipt['receipt_des'] }}</font></b>
+                                    <b><font size="{{ $fontsize }}">{{ $receipt['receipt_firstname'] }} {{ $receipt['receipt_lastname'] }}  {!! $receipt['receipt_des'] !!}</font></b>
                                 </td>
                                 <td align="center" width="15%" class="actived">
                                     <b><font size="{{ $fontsize }}">{{ $receipt['receipt_number'] }}</font></b>

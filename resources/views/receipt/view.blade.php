@@ -49,10 +49,26 @@
         .aaa {
             color: rgb(138, 175, 61);
         }
+
+        #bg-text {
+            text-decoration: underline;
+            /* Add underline to the text */
+            z-index: 9999;
+            top: 50%;
+            /* Adjust the top position */
+            left: 30%;
+            /* Adjust the left position */
+            position: absolute;
+            color: rgba(255, 0, 0, 0.7);
+            font-size: 100px;
+            transform: rotate(200deg);
+            -webkit-transform: rotate(300deg);
+        }
     </style>
 @endsection
 
 @section('content')
+{!! $app_html !!}
     <div class="row">
 
         @if ($message = Session::get('success'))
