@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Receipt_School;
+// use App\Models\Receipt_School;
 use App\Models\SchoolPrice;
 use App\Models\Statuslog;
 use Carbon\Carbon;
@@ -143,7 +143,7 @@ class StdlogController extends Controller
         }
 
         $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
-            ->orderBy('rid')
+            ->orderBy('rid','desc')
             ->get()
             ->groupBy('student_id', 'group');
 

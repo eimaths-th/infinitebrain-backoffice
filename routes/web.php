@@ -34,16 +34,12 @@ use App\Http\Controllers\SuperMasterContrller;
 |
 */
 
-Route::group(array('domain' => 'form.infinitebrain.co.th'), function()
-{
+Route::group(array('domain' => 'form.infinitebrain.co.th'), function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
-
 });
 
-Route::group(array('domain' => 'school.infinitebrain.co.th'), function()
-{
+Route::group(array('domain' => 'school.infinitebrain.co.th'), function () {
     Route::get('/', [App\Http\Controllers\SchoolController::class, 'index']);
-
 });
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
@@ -76,13 +72,18 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
     });
 });*/
 
-route::get('/Super-Master',[SuperMasterContrller::class,'index'])->name('sm');
-route::get('/testmodal',[SuperMasterContrller::class,'testModal'])->name('test_modal');
-Route::get('/perform-retrospective-check', [RetrospectiveCheckController::class, 'performRetrospectiveCheck']);
+// Route::group(['middleware' => 'inactivity'], function () {
+//     // Routes that require inactivity timeout check
+
+// });
+
+Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
 Route::get('/report-student', [StdlogController::class, 'index'])->name('report-student');
 Route::get('/search_status', [StdlogController::class, 'search_status'])->name('search_status');
-Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
 Route::get('/searchr_reportMonthStd', [StdlogController::class, 'searchr_reportMonthStd'])->name('searchr_reportMonthStd');
+route::get('/Super-Master', [SuperMasterContrller::class, 'index'])->name('sm');
+route::get('/testmodal', [SuperMasterContrller::class, 'testModal'])->name('test_modal');
+Route::get('/perform-retrospective-check', [RetrospectiveCheckController::class, 'performRetrospectiveCheck']);
 // Route::get('/search_status/{month}/{year}', [StdlogController::class, 'search_status'])->name('search_status');
 
 Route::get('/users', [EmployeeController::class, 'index'])->name('users');
@@ -160,7 +161,7 @@ Route::match(array('GET', 'POST'), '/receipts/print_day', [ReceiptController::cl
 Route::match(array('GET', 'POST'), '/receipts/print_month', [ReceiptController::class, 'print_month'])->name('receipts.print_month');
 Route::match(array('GET', 'POST'), '/receipts/print_field', [ReceiptController::class, 'print_field'])->name('receipts.print_field');
 Route::get('/receipts/show/{type}/{id}', [ReceiptController::class, 'show'])->name('receipts.show');
-Route::match(array('GET', 'POST'),'/receipts/show_day', [ReceiptController::class, 'show_day'])->name('receipts.show_day');
+Route::match(array('GET', 'POST'), '/receipts/show_day', [ReceiptController::class, 'show_day'])->name('receipts.show_day');
 Route::get('/receipts/edit/{id}/{type}', [ReceiptController::class, 'edit'])->name('receipts.edit');
 Route::get('/receipts/migrate/{id}', [ReceiptController::class, 'migrateReceipt'])->name('receipts.migrate');
 Route::put('/receipts/save/{id}', [ReceiptController::class, 'update'])->name('receipts.save');
@@ -249,7 +250,7 @@ Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPa
 Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
 Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
-Route::match(array('GET', 'POST'),'/receipt_school', [ReceiptSchoolController::class, 'index'])->name('receipt_school');
+Route::match(array('GET', 'POST'), '/receipt_school', [ReceiptSchoolController::class, 'index'])->name('receipt_school');
 Route::get('/receipt_school/{sub_id}', [ReceiptSchoolController::class, 'search'])->name('receipt_school.search');
 Route::get('/receipt_school/{sub_id}/{level_id}/{week}/{price}/{qty}/{discount}/{book_price}/{type}/{course_type}/{entrance_fee}', [ReceiptSchoolController::class, 'searchs'])->name('receipt_school.searchs');
 Route::get('/receipt_school/{sub_id}/{level_id}/{book}/', [ReceiptSchoolController::class, 'sumbook'])->name('receipt_school.sumbook');
