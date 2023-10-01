@@ -1004,7 +1004,7 @@ class ReceiptController extends Controller
                     } else {
                         //watermark
                         $fileex = explode("/", $result->file_att);
-                        //$this->textWatermark(end($fileex), 'Receipt Number : ' . $result->receipt_number);
+                        $this->textWatermark(end($fileex), 'Receipt Number : ' . $result->receipt_number);
 
                         $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
                     }
