@@ -579,7 +579,7 @@ class ReceiptController extends Controller
     public function create()
     {
         //create
-        $rnumber = Receipt_RunningNumber::pre_generate($request->get('sfield'));
+        $rnumber = Receipt_RunningNumber::pre_generate($request->get('sfield'), date("Y-m-d"));
         return response()->json(['rnumber' => $rnumber]);
     }
 
@@ -615,7 +615,7 @@ class ReceiptController extends Controller
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
-        $rnumber = Receipt_RunningNumber::generate($request->get('sfield'));
+        $rnumber = Receipt_RunningNumber::generate($request->get('sfield'),$request->get('submission_date'));
         $rcnumber = Receipt_Customer_RunningNumber::generate($request->get('sfield'));
         $request->request->add(['receipt_number' => $rnumber, 'receipt_customer_number' => $rcnumber]);
 

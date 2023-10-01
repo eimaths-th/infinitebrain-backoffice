@@ -25,7 +25,7 @@ use App\Exports\ExportUser;
 class ReceiptFormController extends Controller
 {
     const sfielda = array(
-        '2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE', '11' => 'Cambridge', '13' => 'ISOCSEA','14' => 'IMOCSEA+ISOCSEA'
+        '2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE', '11' => 'Cambridge', '13' => 'ISOCSEA', '14' => 'IMOCSEA+ISOCSEA'
     );
 
     public function gmec()
@@ -294,12 +294,12 @@ class ReceiptFormController extends Controller
         $id = $request->get('fid');
         $form = ReceiptForm::find($id);
 
-        if ($form->generate==1) {
-          return response()->json(['error' => 'Receive is already generate']);
+        if ($form->generate == 1) {
+            return response()->json(['error' => 'Receive is already generate']);
         }
 
 
-        $rnumber = Receipt_RunningNumber::generate($request->get('sfield'));
+        $rnumber = Receipt_RunningNumber::generate($request->get('sfield'), $request->get('submission_date'));
         $rcnumber = Receipt_Customer_RunningNumber::generate($request->get('sfield'));
         $request->request->add(['receipt_number' => $rnumber, 'receipt_customer_number' => $rcnumber]);
 
@@ -559,7 +559,7 @@ class ReceiptFormController extends Controller
 
                 //watermark
                 $fileex = explode("/", $urlb);
-                $this->textWatermark(end($fileex), 'Date Register : ' . $data->submission_date);
+                //$this->textWatermark(end($fileex), 'Date Register : ' . $data->submission_date);
                 $urlb = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urlb);
 
                 //$retu = $this->get_img_url($urla);
@@ -576,10 +576,10 @@ class ReceiptFormController extends Controller
 
         $data->file_re = $furl;
 
-        if ($data->generate==0) {
-         $data->rnumber = Receipt_RunningNumber::pre_generate($data->sfield);
+        if ($data->generate == 0) {
+            $data->rnumber = Receipt_RunningNumber::pre_generate($data->sfield, $data->submission_date);
         } else {
-         $data->rnumber = '';
+            $data->rnumber = '';
         }
 
         //dd($data);
