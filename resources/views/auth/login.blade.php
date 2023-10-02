@@ -28,7 +28,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-md-9">
-                        
+
                         <div class="card"
                             style="-webkit-box-shadow: 0 30px 50px rgba(0,0,0,.2);box-shadow: 0 30px 50px rgba(0,0,0,.2);">
                             <div class="card-header card-header-custom" style="background-color: #fff;margin-bottom:100px;">
@@ -113,7 +113,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        
+
                               <div class="col-md-5 ">
                                   <div class="checkbox">
                                       <label>
@@ -121,7 +121,7 @@
                                       </label>
                                   </div>
                               </div>
-                          
+
 
                                     </div>
 
@@ -250,6 +250,8 @@
                                                     {{ __('Forgot Your Password?') }}
                                                 </a>
                                             @endif
+
+                                            
                                         </div>
                                     </div>
                                 </form>

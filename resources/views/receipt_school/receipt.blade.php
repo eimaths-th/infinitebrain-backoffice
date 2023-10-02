@@ -11,6 +11,18 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
+    <script src="plugins/moment/moment.min.js"></script>
+    <script src="../plugins/daterangepicker/daterangepicker.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js">
+    </script>
     <style>
         input:required:focus:invalid~.form-error-message {
             display: block;
@@ -357,8 +369,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p>{{ $message }}</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p>{{ $message }}</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -368,8 +380,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <p>{{ $message }}</p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <p>{{ $message }}</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -695,13 +707,13 @@
                                         <div class="form-row">
 
                                             <!-- <div class="col-md-12 ">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <select class="form-select" name="type" id="type" style="width:300px">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <select class="form-select" name="type" id="type" style="width:300px">
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <option value="1" hidden disabled>ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <option value="2">ใบลดหนี้</option>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <option value="1" hidden disabled>ใบกำกับภาษี/ใบเสร็จรับเงิน</option>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <option value="2">ใบลดหนี้</option>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </select>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </select>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
 
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
@@ -711,12 +723,12 @@
                                                 </div>
                                             </div>
                                             <!-- <div class="col-md-6">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="position-relative  form-group">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <label for="Package">Package:</label>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <input type="text" class="form-control" name="package" id="AddPackage"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                value="">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="position-relative  form-group">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <label for="Package">Package:</label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <input type="text" class="form-control" name="package" id="AddPackage"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                value="">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="Payment">Payment Type:</label>
@@ -742,7 +754,7 @@
                                                         class="parent select2 select2_single form-control" id="AddParent"
                                                         name="name_parent" multiple="multiple">
                                                         <!-- <option value="" selected>Select Student</option>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <option value="" selected>Select Parent</option>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <option value="" selected>Select Parent</option>-->
                                                         @foreach ($data4 as $key2)
                                                             <option value="{{ $key2->id }}">{{ $key2->code }}
                                                                 {{ $key2->name_parent }}
@@ -762,19 +774,19 @@
                                             </div>
                                         </div>
                                         <!-- <div class="form-row">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="col-md-6">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="position-relative form-group">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <label for="City">City:</label>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <input type="text" class="form-control" name="city" id="AddCity" value="">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="col-md-6">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="position-relative form-group">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <label for="Province">Province:</label>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <input type="text" class="form-control" name="province" id="AddProvince" value="">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="col-md-6">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="position-relative form-group">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <label for="City">City:</label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <input type="text" class="form-control" name="city" id="AddCity" value="">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="col-md-6">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="position-relative form-group">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <label for="Province">Province:</label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <input type="text" class="form-control" name="province" id="AddProvince" value="">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
 
                                         <div class="form-group">
                                             <label for="Name">Address:</label>
@@ -883,7 +895,8 @@
                                                     <td width="10%">
                                                         <div class="col-md-12 col-sm-12 col-xs-12">
                                                             <select style="width: 100%;"
-                                                                class="select2 form-control stdrec " id="std_id" name="student_id">
+                                                                class="select2 form-control stdrec " id="std_id"
+                                                                name="student_id">
                                                                 <option value="">เลือกชื่อนักเรียน</option>
 
                                                             </select>
@@ -1046,8 +1059,11 @@
                                                     </td>
                                                     <td width="10%">
                                                         <div class="col-md-12 col-sm-12 col-xs-12 ">
-                                                            <input type="text" class="form-control" name="period"
-                                                                id="period" value="">
+                                                            {{-- <input type="text" class="form-control" name="period"
+                                                                id="period" value=""> --}}
+                                                            <input type="text"
+                                                                class="form-control more_reservation1 float-right"
+                                                                id="period" name="period">
 
                                                         </div>
                                                         <div class="col-md-12 col-sm-12 col-xs-12 ">
@@ -1081,7 +1097,8 @@
                                                     <td width="10%">
                                                         <div class="col-md-12 col-sm-12 col-xs-12">
                                                             <select style="width: 100%;"
-                                                                class="select2 form-control stdrec " id="std_id" name="student_id">
+                                                                class="select2 form-control stdrec " id="std_id"
+                                                                name="student_id">
                                                                 <option value="">เลือกชื่อนักเรียน</option>
 
                                                             </select>
@@ -1217,7 +1234,7 @@
                                                                 <option value="0" selected>Select Type</option>
 
                                                                 <!-- <option value="{{ $key2->id }}">{{ $key2->title }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </option> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </option> -->
                                                                 <option value="1">One Tpye แบบเดี่ยว
                                                                 </option>
                                                                 <option value="2">Couple แบบคู่
@@ -1250,8 +1267,12 @@
                                                     </td>
                                                     <td width="10%">
                                                         <div class="col-md-12 col-sm-12 col-xs-12 ">
-                                                            <input type="text" class="form-control" name="period"
-                                                                id="period" value="" required>
+                                                            {{-- <input type="text" class="form-control" name="period"
+                                                                id="period" value="" required> --}}
+
+                                                            <input type="text"
+                                                                class="form-control datePeriod float-right" id="period"
+                                                                name="period">
 
 
                                                         </div>
@@ -1396,7 +1417,7 @@
                                                         class="eparent select2 select2_single form-control"
                                                         id="EditParent" name="name_parent" multiple="multiple">
                                                         <!-- <option value="" selected>Select Student</option>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <option value="" selected>Select Parent</option>-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <option value="" selected>Select Parent</option>-->
 
 
                                                     </select>
@@ -1878,7 +1899,7 @@
                         </div>
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-success"  id="SubmitConvForm">Create</button>
+                            <button type="button" class="btn btn-success" id="SubmitConvForm">Create</button>
                             <button type="button" class="btn btn-danger modelClose"
                                 data-bs-dismiss="modal">Close</button>
                         </div>
@@ -1889,11 +1910,48 @@
     @endsection
 
     @section('script')
+        {{-- <script src="plugins/daterangepicker/daterangepicker.js"></script>
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js">
+        </script>
+        <script src="plugins/moment/moment.js"></script> --}}
         <script>
             $(document).ready(function() {
                 $('input[name="media_name"]').hide();
                 $('input[name="media_price"]').hide();
                 $('#type').prop("disabled", true);
+
+                // let daterange = () => {
+                $('.datePeriod').daterangepicker({
+                    // startDate: startDate,
+                    // endDate: endDate,
+                    locale: {
+                        format: 'YYYY-MM'
+                    }
+                });
+                $('.more_reservation1').daterangepicker({
+                    locale: {
+                        format: 'YYYY-MM'
+                    }
+                });
+                //     // Apply the custom date range filter on input change
+                //     // $('#reservation').on('apply.daterangepicker', function() {
+                //     //     table.draw();
+                //     //     storeFieldValues();
+                //     // });
+                // }
+                // daterange();
+
+                // $('.reservation1').daterangepicker({
+                //     locale: {
+                //         format: 'YYYY-MM'
+                //     }
+                // });
+                // daterange();
+
                 //ดดดดด
                 // $('.firstTr').ready(function() {
 
@@ -3220,6 +3278,11 @@
                     var newrow = $("#tr1").clone(true);
                     newrow.show();
                     $("#myTbl").append(newrow);
+                    $('.more_reservation1').daterangepicker({
+                        locale: {
+                            format: 'YYYY-MM'
+                        }
+                    });
                 });
                 $("#removeRow").click(function() {
                     // // ส่วนสำหรับการลบ
@@ -3239,6 +3302,7 @@
                     // // ส่วนสำหรับการลบ
                     if ($("#myTbl tr").length > 2) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
                         //$("#myTbl tr:last").remove(); // ลบรายการสุดท้าย
+
                         $(this).closest("tr").remove();
                     } else {
                         // เหลือ 1 รายการลบไม่ได้
@@ -3256,6 +3320,7 @@
                     // การกำหนดให้ ไม่ต้องมีการ ดึงข้อมูลจากค่าเดิมมาใช้งาน
                     // รีเซ้ตเป็นค่าว่าง ถ้ามีข้อมูลอยู่แล้ว ทั้ง select หรือ input
                     $(".firstTr3:eq(0)").clone(true)
+
 
                         .find("input").attr("value", "").end()
                         .find("select").attr("value", "").end()

@@ -100,6 +100,13 @@ class HomeController extends Controller
                     }
                     // dd($newEnrollmentReceipt, $status, $start_date);
                 }
+                $currentMonthYear = date('Y-m');
+
+                $status_date = $existingStatus->first()->status_date ?? '';
+                $status_date_year_month = date('Y-m', strtotime($status_date));
+
+                $select_status_date_year_month = date('Y-m', strtotime($currentMonthYear));
+                // dd($status_date_year_month, $select_status_date_year_month);
 
                 if (count($existingStatus) < 1) {
                     Statuslog::create([
@@ -109,7 +116,7 @@ class HomeController extends Controller
                         'status' => $status,
                         'status_date' => now(),
                     ]);
-                } elseif ($existingStatus->first()->status === $status && $existingStatus->first()->group === $subjectGroup) {
+                } elseif ($existingStatus->first()->status === $status && $existingStatus->first()->group === $subjectGroup && $status_date_year_month == $select_status_date_year_month) {
                 } else {
                     Statuslog::create([
                         'student_id' => $student->id,

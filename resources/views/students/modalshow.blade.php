@@ -21,7 +21,7 @@
 
         <div class="form-group">
             <label for="Parent">Name Parent:</label><br>
-            <select style="width: 100%;" class="parent select2 select2_single form-control" id="AddParent"
+            <select style="width: 100%;" class="select2test form-control" id="AddParent"
                 name="name_parent" multiple="multiple">
                 <!-- <option value="" selected>Select Student</option>
                                                                                                                                                         <option value="" selected>Select Parent</option>-->

@@ -561,7 +561,7 @@ class ReceiptSchoolController extends Controller
         $student = Student::orderBy("first_name", "asc")->get();
         $subject = Subject::orderBy("id", "asc")->get();
         $parent = ParentRegister::orderBy("id", "asc")->get();
-        
+
         $school_picei_update_group = SchoolPrice::all();
         // $subject_ids = $school_picei_update_group->pluck('subject')->toArray();
         foreach ($school_picei_update_group as $upg) {

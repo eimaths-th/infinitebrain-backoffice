@@ -428,7 +428,7 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-success">
-                                                {{ $groupStatusCounts['E']['New Student'] }}</div>
+                                                {{ isset($groupStatusCounts['E']['New Student']) ? $groupStatusCounts['E']['New Student'] : 0 }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -444,7 +444,7 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-primary">
-                                                {{ $groupStatusCounts['M']['New Student'] }}</div>
+                                                {{ isset($groupStatusCounts['M']['New Student']) ? $groupStatusCounts['M']['New Student'] : 0 }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -466,7 +466,7 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-success">
-                                                {{ $groupStatusCounts['E']['studying . . .'] }}</div>
+                                                {{ isset($groupStatusCounts['E']['studying . . .']) ? $groupStatusCounts['E']['studying . . .'] : 0 }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -482,7 +482,7 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-primary">
-                                                {{ $groupStatusCounts['M']['studying . . .'] }}</div>
+                                                {{ isset($groupStatusCounts['M']['studying . . .']) ? $groupStatusCounts['M']['studying . . .'] : 0 }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -504,7 +504,7 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-warning">
-                                                {{ $groupStatusCounts['E']['Termination of study'] }}</div>
+                                                {{ isset($groupStatusCounts['E']['Termination of study']) ? $groupStatusCounts['E']['Termination of study'] : 0 }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -520,7 +520,7 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-warning">
-                                                {{ $groupStatusCounts['M']['Termination of study'] }}</div>
+                                                {{ isset($groupStatusCounts['M']['Termination of study']) ? $groupStatusCounts['M']['Termination of study'] : 0 }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -542,7 +542,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-danger">
-                                                {{ $groupStatusCounts['E']['drop'] }}</div>
+                                                {{ isset($groupStatusCounts['E']['drop']) ? $groupStatusCounts['E']['drop'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -558,7 +559,7 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-danger">
-                                                {{ $groupStatusCounts['M']['drop'] }}</div>
+                                                {{ isset($groupStatusCounts['M']['drop']) ? $groupStatusCounts['M']['drop'] : 0 }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -607,7 +608,7 @@
                     </ul>
                 </div>
             </div>
-            
+
         </div>
     </div>
 @endsection
