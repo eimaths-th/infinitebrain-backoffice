@@ -53,6 +53,7 @@ class StdlogController extends Controller
             'latestStatusCounts' => $latestStatusCounts,
             'latestStatusByStudent' => $latestStatusByStudent,
             // 'select_status' => $select_status,
+            // 'select_status' => $select_status,
 
         ]);
     }
