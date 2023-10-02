@@ -1309,9 +1309,7 @@ class ReceiptController extends Controller
             $lastdate = $ret_receipt[$result->receipt_submission_date]['receipt_submission_date'];
 
             //$rtype2='';
-            if ($result->cancle == 1) {
-                $total_price = ($total_price - $price);
-            } else {
+            if ($result->cancle == 0) {
                 $total_price = ($total_price + $price);
             }
             $i++;
