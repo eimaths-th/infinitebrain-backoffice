@@ -123,7 +123,7 @@
                 </div>
                 <div>Back Office Dashboard
                     <div class="page-title-subheading">
-                        Infinite Brain Dashboard
+                        Infinite Brain Dashboard test test
                     </div>
                 </div>
             </div>
