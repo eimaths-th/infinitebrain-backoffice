@@ -5,22 +5,23 @@ function formModal(route) {
         $("#modal_form_content").empty();
         $('#modal_form_content').html(res);
         $("#modal_form").modal("show");
-        $(".select2_single").select2({
 
-            maximumSelectionLength: 1,
-            allowClear: true
-        });
+        $(".select2test").select2({
 
-        $(".select3_single").select2({
-            maximumSelectionLength: 1,
-            // allowClear: true
-        });
-
-        $(".select2_multiple").select2({
             maximumSelectionLength: 2,
-            //placeholder: "With Max Selection limit 4",
             allowClear: true
         });
+
+        // $(".select3_single").select2({
+        //     maximumSelectionLength: 1,
+        //     // allowClear: true
+        // });
+
+        // $(".select2_multiple").select2({
+        //     maximumSelectionLength: 2,
+        //     //placeholder: "With Max Selection limit 4",
+        //     allowClear: true
+        // });
     });
 
 }

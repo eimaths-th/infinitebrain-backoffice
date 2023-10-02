@@ -78,6 +78,9 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
 // });
 
 Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
+Route::get('/report-future-student', [StdlogController::class, 'reportFutureStd'])->name('reportFutureStd');
+Route::get('/searchFuture', [StdlogController::class, 'searchFuture'])->name('searchFuture');
+Route::get('/search_future', [StdlogController::class, 'search_future'])->name('search_future');
 Route::get('/report-student', [StdlogController::class, 'index'])->name('report-student');
 Route::get('/search_status', [StdlogController::class, 'search_status'])->name('search_status');
 Route::get('/searchr_reportMonthStd', [StdlogController::class, 'searchr_reportMonthStd'])->name('searchr_reportMonthStd');
