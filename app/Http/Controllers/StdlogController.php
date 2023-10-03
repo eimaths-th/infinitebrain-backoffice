@@ -92,25 +92,39 @@ class StdlogController extends Controller
                 ->orderBy('students.code')
                 ->get();
         } else {
-            $latestStatusCounts = Statuslog::select('group', 'student_id', 'status')
-                ->whereIn('id', function ($query) {
+            $latestStatusCounts = Statuslog::select(
+                'status_log.student_id',
+                'status_log.group',
+                'status_log.status',
+                'status_log.status_date',
+                'status_log.nick_name'
+            )
+                ->whereIn('status_log.id', function ($query) use ($year, $month) {
                     $query->select(DB::raw('MAX(id)'))
                         ->from('status_log')
-                        ->groupBy('group', 'student_id');
-                })
-                ->whereYear('status_date', $year)
-                ->whereMonth('status_date', $month)
-                ->orderBy('group')
-                ->get();
-
-            $latestStatusByStudent = Statuslog::select('status_log.student_id', 'status_log.group', 'status_log.status', 'status_log.status_date', 'status_log.nick_name')
-                ->whereIn('status_log.id', function ($query) {
-                    $query->select(DB::raw('MAX(id)'))
-                        ->from('status_log')
+                        ->whereYear('status_date', $year)
+                        ->whereMonth('status_date', $month)
                         ->groupBy('student_id', 'group');
                 })
-                ->whereYear('status_log.status_date', $year)
-                ->whereMonth('status_log.status_date', $month)
+                ->join('students', 'status_log.student_id', '=', 'students.id')
+                ->orderBy('students.code')
+                ->get();
+
+
+            $latestStatusByStudent = Statuslog::select(
+                'status_log.student_id',
+                'status_log.group',
+                'status_log.status',
+                'status_log.status_date',
+                'status_log.nick_name'
+            )
+                ->whereIn('status_log.id', function ($query) use ($year, $month) {
+                    $query->select(DB::raw('MAX(id)'))
+                        ->from('status_log')
+                        ->whereYear('status_date', $year)
+                        ->whereMonth('status_date', $month)
+                        ->groupBy('student_id', 'group');
+                })
                 ->join('students', 'status_log.student_id', '=', 'students.id')
                 ->orderBy('students.code')
                 ->get();

@@ -38,12 +38,12 @@
                     </div>
                 </div>
 
-                <a href="#" class="btn btn-primary btn-sm"
+                {{-- <a href="#" class="btn btn-primary btn-sm"
                     onclick="formModal('{{ route('test_modal') }}')"
                     data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
                     data-bs-title="View OT Record">
 
-                    <i class="fa fa-eye fa-1x"></i></a>
+                    <i class="fa fa-eye fa-1x"></i></a> --}}
             </div>
         </div>
 

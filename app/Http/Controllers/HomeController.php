@@ -79,7 +79,7 @@ class HomeController extends Controller
                     //     }
                     // }
 
-                    if ($existingStatus->first()->status === 'drop') {
+                    if ($existingStatus->first()->status === 'drop' || $existingStatus->first()->status === 'waitting . . .') {
                         $newEnrollmentReceipt = SchoolPrice::where('student_id', $student->id)
                             ->where('qty', '>', 0)
                             ->where('group', $subjectGroup)
@@ -174,7 +174,7 @@ class HomeController extends Controller
     private function determineStatus($student)
     {
         $stdId = $student->id;
-        // $stdId = 157;
+        // $stdId = 161;
         $receipt = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
 
         $ssss = SchoolPrice::where('student_id', $stdId)
@@ -307,31 +307,37 @@ class HomeController extends Controller
                             $resume_year = date('Y');
                             $check_resume = Statuslog::where('student_id', $stdId)
                                 ->where('group', $group)
-                                ->whereMonth('status_date', $resume_month)
-                                ->whereYear('status_date', $resume_year)
+                                // ->whereMonth('status_date', $resume_month)
+                                // ->whereYear('status_date', $resume_year)
                                 ->latest()
                                 ->get();
                             // dd($check_resume);
                             if (count($check_resume) > 0 && $check_resume->first()->status == 'resume') {
 
                                 $status[$group] = 'resume';
-                            } elseif (
-                                $currentMonth->diffInMonths($currentReceiptsubmission_date) == 0
-                                && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)
-                                // && $check_resume->first()->status !== 'studying . . .'
-                            ) {
+                            } elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0
+                                && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
                                 //แก้บัค 22/09/2023
                                 if ($check_resume->first()->status == 'studying . . .') {
                                     $status[$group] = 'studying . . .';
 
                                 } else {
-                                    $status[$group] = 'waitting . . .';
+
                                 }
                                 // $status[$group] = 'waitting . . .';
 
                                 // dd($check_resume,$stdId,$status,$school_pice);
                             } else {
-                                $status[$group] = 'studying . . .';
+                                // dd($check_resume,$check_resume->first()->status);
+
+                                if ($check_resume->first()->status == 'waitting . . .') {
+                                    $status[$group] = 'waitting . . .';
+
+                                } else {
+                                    $status[$group] = 'studying . . .';
+                                }
+                                // dd($status);
+
                             }
                         }
                     }
