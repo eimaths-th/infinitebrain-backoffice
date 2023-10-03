@@ -34,11 +34,11 @@
                     <div class="d-inline-block dropdown">
 
 
-                        <a href="#" class="btn btn-success" onclick="formModal('{{ route('test_modal') }}')"
+                        {{-- <a href="#" class="btn btn-success" onclick="formModal('{{ route('test_modal') }}')"
                             data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
                             data-bs-title="Create New Student">
                             <i class="fa fa-plus"></i> Create New Student test
-                        </a>
+                        </a> --}}
                         <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="ImportButton"><i
                                 class="fa fa-file-excel"></i> Import Excel
                         </a>
