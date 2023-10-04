@@ -184,9 +184,9 @@ Route::get('/school', [SchoolController::class, 'index'])->name('school');
 // Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
 // Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
 
-Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
-Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
-Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
+// Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
+// Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
+// Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
 Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
 Route::get('/cambridge/line', [ReceiptFormController::class, 'cambridge'])->name('cambridge.line');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
@@ -205,7 +205,6 @@ Route::delete('/receipts_form/destroy_all', [ReceiptFormController::class, 'dest
 Route::delete('/receipts_form/export', [ReceiptFormController::class, 'exportForm'])->name('receipts_form.export');
 Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->name('receipts_form.store');
 Route::post('/receipts_form/update', [ReceiptFormController::class, 'update'])->name('receipts_form.update');
-Route::put('/receipt_form/delete_img/{id}/{id2}', [ReceiptFormController::class, 'deleteImg'])->name('receipt_form.delete_img');
 
 // Route::prefix('google')->name('google.')->group( function(){
 //     Route::get('login', [GoogleController::class, 'loginWithGoogle'])->name('login');
