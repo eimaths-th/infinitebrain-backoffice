@@ -184,9 +184,9 @@ Route::get('/school', [SchoolController::class, 'index'])->name('school');
 // Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
 // Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
 
-//Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
-//Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
-//Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
+Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
+Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
+Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
 Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
 Route::get('/cambridge/line', [ReceiptFormController::class, 'cambridge'])->name('cambridge.line');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
