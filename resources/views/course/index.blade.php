@@ -103,7 +103,7 @@
 
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true"></span>
-                            </button>
+                            </button>   
                         </div>
                         <div class="form-group">
                             <label for="Student">Student Name:</label><br>
@@ -188,7 +188,7 @@
                                 name="student" multiple="multiple">
                                 <!--<option value="" selected>Select Student</option>-->
                                 @foreach ($data2 as $key2)
-                                    <option value="{{ $key2->id }}"> {{ $key2->name }} {{ $key2->lastname }}
+                                    <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->first_name }} {{ $key2->last_name }}
                                     </option>
                                 @endforeach
 
@@ -595,6 +595,9 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
+                                toastr.success(result.success, {
+                                timeOut: 5000
+                            });
                             $('#Listview').DataTable().ajax.reload();
                             $('#AddStudent').val('').select2();
                             $('#AddSubject').val('');
@@ -605,7 +608,7 @@
                             //$('#SubmitCreateForm').hide();
                             //setTimeout(function() {
                             //$('.alert-success').hide();
-                            //$('#CreateModal').modal('hide');
+                            $('#CreateModal').modal('hide');
                             //}, 10000);
 
                         }
@@ -650,8 +653,11 @@
                             $('.alert-success').show();
                             $('.alert-success').append('<strong><li>' + result.success +
                                 '</li></strong>');
+                                toastr.success(result.success, {
+                                timeOut: 5000
+                            });
                             $('#Listview').DataTable().ajax.reload();
-                            //$('#EditModal').modal('hide');
+                            $('#EditModal').modal('hide');
                             //setTimeout(function() {
                             //$('.alert-success').hide();
                             //  

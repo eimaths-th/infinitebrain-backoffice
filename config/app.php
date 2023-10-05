@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Infinite'),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://form.infinitebrain.co.th'),
 
     'asset_url' => env('ASSET_URL'),
 
@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Bangkok',
 
     /*
     |--------------------------------------------------------------------------
@@ -182,7 +182,8 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        
+        Intervention\Image\ImageServiceProvider::class,
+        Krlove\EloquentModelGenerator\Provider\GeneratorServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -196,8 +197,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
+
 
     ],
 
@@ -216,6 +218,10 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Image' => Intervention\Image\Facades\Image::class,
+
+
     ])->toArray(),
 
 ];

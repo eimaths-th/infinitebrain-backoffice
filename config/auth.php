@@ -39,9 +39,13 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+        ], 
+        'parent' => [
+            'driver' => 'session',
+            'provider' => 'parent',
         ],
     ],
-
+   
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -63,6 +67,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+        'parent' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\ParentRegister::class,
         ],
 
         // 'users' => [

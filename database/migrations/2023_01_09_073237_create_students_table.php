@@ -23,6 +23,14 @@ return new class extends Migration
             $table->string('grade');
             $table->timestamps();
         });
+        
+        // $table->string('first_name')->nullable();
+        // $table->string('last_name')->nullable();
+        // $table->string('nick_name')->nullable();
+        // $table->string('school_name')->nullable();
+        // $table->string('grade')->nullable();
+        // $table->string('birth_date')->nullable();
+        // $table->string('photo_att')->nullable();
     }
 
     /**

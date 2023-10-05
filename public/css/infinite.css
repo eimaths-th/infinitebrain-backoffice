@@ -6206,7 +6206,7 @@ fieldset:disabled .btn {
   word-wrap: break-word;
 }
 
-/**/
+
 .modal {
   position: fixed;
   top: 0;
@@ -6374,6 +6374,8 @@ fieldset:disabled .btn {
     max-width: 1140px;
   }
 }
+
+
 
 .modal-fullscreen {
   width: 100vw;

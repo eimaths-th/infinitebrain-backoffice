@@ -19,11 +19,12 @@ class CourseController extends Controller
     public function check_permission()
     {
         if (Auth::check()) {
-            if (Auth::user()->level == 1 || Auth::user()->level == 2) {
-                
+            if (Auth::user()->level == 1 || Auth::user()->level == 2 || Auth::user()->level == 0) {
             } else {
                 abort(403, 'Unauthorized action.');
             }
+        } else {
+            abort(403, 'Unauthorized action.');
         }
     }
 
@@ -48,9 +49,9 @@ class CourseController extends Controller
                 "levels.title as student_level",
                 "subjects.title as student_subject",
                 "students.code as student_code",
-                "students.name as student_name",
-                "students.lastname as student_lastname",
-                "students.nickname as student_nickname",
+                "students.first_name as student_name",
+                "students.last_name as student_lastname",
+                "students.nick_name as student_nickname",
                 "courses.book_start as book_start",
                 "courses.date_start as date_start",
             )
@@ -61,8 +62,7 @@ class CourseController extends Controller
                 //->where('levels.subject', $request->id)
                 ->orderBy("courses.id", "desc")
                 ->get();
-            //print_r($levels);
-            //exit();
+
             return datatables()->of($course)
                 ->editColumn('student_name', function (Course $course) {
                     return $course->student_name . ' ' . $course->student_lastname;
@@ -82,7 +82,7 @@ class CourseController extends Controller
         $subject = Subject::orderBy("id", "asc")->get();
 
         //get student
-        $student = Student::orderBy("name", "asc")->get();
+        $student = Student::orderBy("first_name", "asc")->get();
         return view('course.index')->with(['data' => $subject])->with(['data2' => $student]);
     }
 
@@ -142,7 +142,11 @@ class CourseController extends Controller
         //
         //echo $type;
         //exit();
-        $this->check_permission();
+        // dd($type, $lang, $id);
+        if ($type !== "html") {
+            $this->check_permission();
+        }
+
         $course = Course::select(
             "courses.id as course_id",
             "levels.title as student_level",
@@ -153,9 +157,9 @@ class CourseController extends Controller
             "subjects.book_per_month as subject_book",
             "subjects.title as student_subject",
             "students.code as student_code",
-            "students.name as student_name",
-            "students.lastname as student_lastname",
-            "students.nickname as student_nickname",
+            "students.first_name as student_name",
+            "students.last_name as student_lastname",
+            "students.nick_name as student_nickname",
             "courses.book_start as book_start",
             "courses.date_start as date_start",
             "students.grade as student_grade",
@@ -173,8 +177,8 @@ class CourseController extends Controller
         $levels_start = Level::where('id', $course[0]->level_id)->get();
 
         //print_r($levels_start);
-        $english1 = array("","Pre - A","A","B","B","D","E","F","G","H","I");
-        $english2 = array("","5","6","7","8");
+        $english1 = array("", "Pre - A", "A", "B", "C", "D", "E", "F", "G", "H", "I");
+        $english2 = array("", "5", "6", "7", "8");
 
         $start_date = explode("-", $course[0]->date_start);
 
@@ -226,14 +230,14 @@ class CourseController extends Controller
             } else if ($lang == "en") {
                 $level_title = $key->title;
             }
-           
-             if ($course[0]->subject_id==4) {
+
+            if ($course[0]->subject_id == 4) {
                 $level_sort = $english1[$key->level_sort];
-             } elseif ($course[0]->subject_id==5) {
+            } elseif ($course[0]->subject_id == 5) {
                 $level_sort = $english2[$key->level_sort];
-             } else {
+            } else {
                 $level_sort = $key->level_sort;
-             }
+            }
 
             $tdhtml[$key->level_sort] = "";
             $tdhtml[$key->level_sort] .= "<tr>
@@ -290,6 +294,11 @@ class CourseController extends Controller
 
                                 $progress_view = "
                                 <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width: " . $bar_percent . "%; height: 8px; top: 0; margin-top: -9px; \" ><tr><td bgcolor=\"blue\"></td></tr></table>";
+                            } else if ($type == "html") {
+                                $progress_view = "
+                                <div class=\"progress-bar-xs mb-3 progress\" style=\"width: " . $bar_percent . "%;\">
+                                <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 100%;\"></div>
+                                </div>";
                             }
 
                             $tdhtml[$key->level_sort] .= "<td " . $div_right . " style=\"padding:0; margin: 0; margin-right: 0px; margin-left: 0px; \" width=\"80\">" . $progress_view . "
@@ -325,8 +334,16 @@ class CourseController extends Controller
 
         //print_r($tdhtml);
         //echo $all_level;
+        // dd($type, $lang, $id , $all_level);
+
+        // for ($ret = ($all_level - 1); $ret >= 1; $ret--) {
+        //     $tb_level .= $tdhtml[$ret];
+        // }
+
         for ($ret = ($all_level - 1); $ret >= 1; $ret--) {
-            $tb_level .= $tdhtml[$ret];
+            if (isset($tdhtml[$ret])) {
+                $tb_level .= $tdhtml[$ret];
+            }
         }
 
         if ($type == "view") {
@@ -335,14 +352,21 @@ class CourseController extends Controller
             $viewr = "course.print";
         }
 
-        return view($viewr)->with(['year' => $start_year])->with(['last_year' => $last_year])
-            ->with(['start_month' => $start_month])
-            ->with(['months' => $months])
-            ->with(['year_span' => $year_span])
-            ->with(['levels' => $tb_level])
-            ->with(['course' => $course])
-            ->with(['id' => $id])
-            ->with(['lang' => $lang]);
+        if ($type == "html") {
+            $html = array(
+                'html' => $tb_level, 'year' => (int)$start_year, 'last_year' => (int)$last_year, 'start_month' => $start_month, 'year_span' => $year_span, 'months' => $months, 'levels' => $tb_level, 'course' => $course
+            );
+            return  $html;
+        } else {
+            return view($viewr)->with(['year' => $start_year])->with(['last_year' => $last_year])
+                ->with(['start_month' => $start_month])
+                ->with(['months' => $months])
+                ->with(['year_span' => $year_span])
+                ->with(['levels' => $tb_level])
+                ->with(['course' => $course])
+                ->with(['id' => $id])
+                ->with(['lang' => $lang]);
+        }
     }
 
 
@@ -433,8 +457,8 @@ class CourseController extends Controller
         $div_right = "";
         $bar_percent = "";
 
-        $english1 = array("","Pre - A","A","B","B","D","E","F","G","H","I");
-        $english2 = array("","5","6","7","8");
+        $english1 = array("", "Pre - A", "A", "B", "C", "D", "E", "F", "G", "H", "I");
+        $english2 = array("", "5", "6", "7", "8");
 
         foreach ($levels as $key) {
             //if ($key->id == $request->get('level')) {
@@ -445,13 +469,19 @@ class CourseController extends Controller
                 $level_title = $key->title;
             }
 
-            if ($course[0]->id==4) {
+            if ($course[0]->id == 4) {
                 $level_sort = $english1[$key->level_sort];
-             } elseif ($course[0]->id==5) {
+            } elseif ($course[0]->id == 5) {
                 $level_sort = $english2[$key->level_sort];
-             } else {
+            } else {
                 $level_sort = $key->level_sort;
-             }
+            }
+
+            //play math
+            //if ($course[0]->id == 2) {
+                //$course[0]->book_per_month = $key->book_per_level;
+                ///$course[0]->book_per_month = $levels_start[0]->book_per_level;
+            //}
 
 
             $tdhtml[$key->level_sort] = "";
@@ -598,9 +628,9 @@ class CourseController extends Controller
         foreach ($student as $keys) {
             if ($data->student_id == $keys->id) {
 
-                $select_list_student .= '<option value="' . $keys->id . '" selected>' . $keys->name . ' ' . $keys->lastname . '</option>';
+                $select_list_student .= '<option value="' . $keys->id . '" selected>' . $keys->code . ' ' . $keys->first_name . ' ' . $keys->last_name . '</option>';
             } else {
-                $select_list_student .= '<option value="' . $keys->id . '" >' . $keys->name . ' ' . $keys->lastname . '</option>';
+                $select_list_student .= '<option value="' . $keys->id . '" >' . $keys->code . ' ' . $keys->first_name . ' ' . $keys->last_name . '</option>';
             }
         }
 

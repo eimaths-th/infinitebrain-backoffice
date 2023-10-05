@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
+
 
 
 class LoginController extends Controller
@@ -28,15 +31,15 @@ class LoginController extends Controller
      *
      * @var string
      */
-    //protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = RouteServiceProvider::HOME;
     protected function redirectTo()
     {
-        if (Auth::user()->level == 1) {
+        if (Auth::user()->level == 1 ||Auth::user()->level == 0) {
             return '/home';
-        } elseif (Auth::user()->level == 2) { 
+        } elseif (Auth::user()->level == 2) {
             return '/home';
         } else {
-            
+            return '/home';
         }
     }
 
@@ -48,5 +51,42 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+        $this->middleware('guest:parent')->except('logout');
+    }
+    public function showParentLoginForm()
+    {
+        return view('auth.login', ['url' => 'parent']);
+    }
+
+    public function parentLogin(Request $request)
+    {
+        $this->validate($request, [
+            'email'   => 'required|email',
+            'password' => 'required|min:6'
+
+        ]);
+        if (Auth::guard('parent')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            //echo ("hello1");
+            //echo Auth::user()->email;
+            //dd(session()->all());
+            //echo $users = Auth::guard('parent')->user()->email;
+            //$users->email;
+            //exit();
+            //return redirect()->intended('/parent');
+            // $this->check_permission();
+
+            return redirect('/parent');
+        }
+        //echo ("hello2");
+        return back()->withInput($request->only('email', 'remember'))
+            ->withErrors(['error' => 'Your Username Or Password Not Match']);
+    }
+
+    public function ParentsignOut()
+    {
+        Session::flush();
+        Auth::guard('parent')->logout();
+
+        return Redirect('login/parent');
     }
 }

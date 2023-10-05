@@ -15,6 +15,8 @@
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
+
+    {{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
     <!--
     =========================================================
     * ArchitectUI HTML Theme Dashboard - v1.0.0
@@ -25,6 +27,7 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
+    <link rel="icon" type="image/png" href="../images/inf-icon2.png">
 
 
     <script defer src="{{ asset('architectui/assets/scripts/main.js') }}"></script>
@@ -43,10 +46,21 @@
     <script defer src="{{ asset('architectui/assets/scripts/fullcalendar.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/maps.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/chart_js.js') }}"></script>
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <script src="/js/app.js?v=1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://malsup.github.io/jquery.blockUI.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
     <!-- Scripts
       @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     -->
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('css/infinite.css') }}">
@@ -63,11 +77,30 @@
             padding-right: 5px;
             padding-left: 5px
         }
+
+        .example {
+            width: 50%;
+            /* 50% of the parent container's width */
+            font-size: 2em;
+            /* 2 times the default font size */
+        }
+
+        /* @media screen and (max-width: 400px) {
+            .screen-auto {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        .screen-auto {
+            max-width: 800;
+            height: 200;
+        } */
     </style>
 </head>
 
 <body>
-    <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+    <div class="app-container app-theme-white body-tabs-shadow fixed-header">
 
         <!-- Header -->
         @include('layouts.header')
@@ -150,6 +183,8 @@
                             </form>
                         </div>
                     </div>
+                    
+                    @include('layouts.modal-form')
 
                 </div>
                 <!-- Footer -->
@@ -162,7 +197,6 @@
 
     @yield('script')
     <script>
-
         //ตัวนี้จะเอาไว้ set ค่าต่างๆ toastr
         toastr.options = {
             "closeButton": true,

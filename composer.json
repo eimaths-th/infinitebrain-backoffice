@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.0.2",
+        "php": "^8.0",
         "ext-gd": "*",
         "doctrine/dbal": "^3.6",
         "guzzlehttp/guzzle": "^7.2",
@@ -20,6 +20,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
+        "krlove/eloquent-model-generator": "^2.0",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
@@ -32,7 +33,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/helpers.php"
+        ]
+
     },
     "autoload-dev": {
         "psr-4": {

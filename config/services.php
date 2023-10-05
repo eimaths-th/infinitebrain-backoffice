@@ -30,5 +30,9 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-
+    'google' => [
+        'client_id' => '315026935235-1fk08k7dale2t93u6aecsunp6ulrr877.apps.googleusercontent.com', //USE FROM Google DEVELOPER ACCOUNT
+        'client_secret' => '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', //USE FROM Google DEVELOPER ACCOUNT
+        'redirect' => 'https://school.infinitebrain.co.th/login/google/callback'
+],
 ];
