@@ -1,5 +1,7 @@
 <?php
 
+// namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\EmployeeController;
@@ -87,7 +89,7 @@ Route::get('/searchr_reportMonthStd', [StdlogController::class, 'searchr_reportM
 route::get('/Super-Master', [SuperMasterContrller::class, 'index'])->name('sm');
 route::get('/testmodal', [SuperMasterContrller::class, 'testModal'])->name('test_modal');
 Route::get('/perform-retrospective-check', [RetrospectiveCheckController::class, 'performRetrospectiveCheck']);
-Route::resource('stdlog', 'StdlogController');
+Route::resource('stdlog', StdlogController::class);
 Route::get('stdlog/create', [StdlogController::class, 'create'])->name('stdlog_create');
 // Route::get('/search_status/{month}/{year}', [StdlogController::class, 'search_status'])->name('search_status');
 

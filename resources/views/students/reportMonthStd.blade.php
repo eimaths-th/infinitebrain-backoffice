@@ -10,11 +10,22 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link href="../assets/plugins/nvd3/build/nv.d3.css" rel="stylesheet" />
+    <link href="/assets/plugins/switchery/dist/switchery.min.css" rel="stylesheet" />
     <style>
         .screen-auto {
             max-width: 100%;
             height: auto;
         }
+
+        /* .switchery {
+                                                width: 30px;
+                                                height: 16px;
+                                            }
+
+                                            .switchery-small {
+                                                width: 12px;
+                                                height: 12px;
+                                            } */
     </style>
 @endsection
 
@@ -148,6 +159,18 @@
                             <button class="btn btn-primary" type="submit">ค้นหา</button>
                             {{-- <a href="{{ route('search_status') }}" class="btn btn-primary" id="seach_status" name="seach_status">ค้นหา</a> --}}
                         </div>
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-2 text-end">
+                            {{-- <button class="btn btn-success">ใบปะหน้า</button> --}}
+                            <a href="#" onclick="formModal('{{ route('stdlog_create') }}')" class="btn btn-success"
+                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
+                                data-bs-title="ใบปะหน้า"> <i class="fa fa-plus"></i> ใบปะหน้า</a>
+
+                        </div>
+
                     </div>
                 </form>
 
@@ -243,108 +266,216 @@
 
                 </table> --}}
 
-                <table style="width: 100%;" id="Listview"
-                    class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
+                            <span class="d-sm-none">Tab 1</span>
+                            <span class="d-sm-block d-none">ตรวจสอบ</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
+                            <span class="d-sm-none">Tab 2</span>
+                            <span class="d-sm-block d-none">บันทึกใบปะหน้า</span>
+                        </a>
+                    </li>
+                    {{-- <li class="nav-item">
+                        <a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
+                            <span class="d-sm-none">Tab 3</span>
+                            <span class="d-sm-block d-none">Default Tab 3</span>
+                        </a>
+                    </li> --}}
+                </ul>
+                <div class="tab-content panel m-0 rounded-0 p-3">
+                    <!-- BEGIN tab-pane -->
+                    <div class="tab-pane fade active show" id="default-tab-1">
+                        <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนเดือน {{ thaidate('F',date('F')) }} {{ date('Y') }}</h3>
+                        <table style="width: 100%;" id="Listview"
+                            class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
 
-                    <thead>
-                        <tr>
-                            <th width='1%' class="text-center">no.</th>
-                            <th width='1%'>Code</th>
-                            <th>Student Nickname</th>
-                            <th>Submission Date</th>
-                            <th>Period</th>
-                            <th>Reciept Number</th>
-                            <th>Group</th>
-                            <th>Stutus</th>
-                            <th>Tpye</th>
-                            <th>total</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @php
-                            use App\Models\Statuslog;
-
-                            $sum = 0;
-                        @endphp
-                        @foreach ($reportMonth_schoolPrice as $studentId => $groupedData)
-                            @foreach ($groupedData as $key => $data)
+                            <thead>
                                 <tr>
-                                    <td class="text-center">{{ $key + 1 }}</td>
-                                    <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
-                                    <td>{{ $data->std->nick_name ?? 'Null' }}</td>
-                                    <td>{{ $data->rec_school->submission_date }}</td>
-                                    <td>{{ $data->period }}</td>
-
-                                    <td>{{ $data->rec_school->receipt_number }}</td>
-                                    <td>{{ $data->group }}</td>
-
-                                    @php
-                                        $class = '';
-
-                                        $cMonth = date('m');
-                                        $cYear = date('Y');
-                                        $status = Statuslog::where('student_id', $data->std->id)
-                                            ->where('group', $data->group)
-                                            ->whereMonth('status_date', $cMonth)
-                                            ->whereYear('status_date', $cYear)
-                                            ->get();
-
-                                        if ($status->last()->status === 'None Receipt') {
-                                            $class = 'text-info';
-                                        } elseif ($status->last()->status === 'drop') {
-                                            $class = 'text-danger';
-                                        } elseif ($status->last()->status === 'waitting . . .') {
-                                            $class = 'text-primary';
-                                        } elseif ($status->last()->status === 'Termination of study') {
-                                            $class = 'text-warning';
-                                        } else {
-                                            $class = 'text-success';
-                                        }
-                                    @endphp
-                                    <td class="{{ $class }}">
-                                        @if ($data->std->status_log && $data->std->status_log->count() > 0 && $status->last()->group == $data->group)
-                                            {{ $status->last()->status ?? 'Null' }}
-                                        @else
-                                            null
-                                        @endif
-                                    </td>
-                                    <td>{{ $data->course_type }}</td>
-                                    {{-- <td class="text-end">{{ number_format($data->total) }} บาท</td> --}}
-                                    <td class="text-end">{{ (string) $data->total }} บาท</td>
+                                    <th width='1%' class="text-center">no.</th>
+                                    <th width='1%'>Code</th>
+                                    <th>Student Nickname</th>
+                                    <th>Submission Date</th>
+                                    <th>Period</th>
+                                    <th>Reciept Number</th>
+                                    <th>Group</th>
+                                    <th>Stutus</th>
+                                    <th>Tpye</th>
+                                    <th>total</th>
+                                    <th>Check</th>
                                 </tr>
+                            </thead>
+
+                            <tbody>
                                 @php
-                                    $sum += $data->total;
+                                    use App\Models\Statuslog;
+
+                                    $sum = 0;
                                 @endphp
-                            @endforeach
-                        @endforeach
+                                @foreach ($reportMonth_schoolPrice as $studentId => $groupedData)
+                                    @foreach ($groupedData as $key => $data)
+                                        <tr>
+                                            <td class="text-center">{{ $key + 1 }}</td>
+                                            <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
+                                            <td>{{ $data->std->nick_name ?? 'Null' }}</td>
+                                            <td>{{ $data->rec_school->submission_date }}</td>
+                                            <td>{{ $data->period }}</td>
 
-                    </tbody>
-                    <tbody>
+                                            <td>{{ $data->rec_school->receipt_number }}</td>
+                                            <td>{{ $data->group }}</td>
 
-                        <tr>
-                            <td class="text-center">#</td>
-                            {{-- <td class="text-center" colspan="2"></td> <!-- Merged cell --> --}}
-                            <td class="text-center" hidden></td> <!-- Merged cell -->
-                            <td class="text-center" hidden></td> <!-- Merged cell -->
-                            <td class="text-center" hidden></td> <!-- Merged cell -->
-                            <td class="text-center" hidden></td> <!-- Merged cell -->
-                            <td class="text-center" hidden></td> <!-- Merged cell -->
-                            <td class="text-center" hidden></td> <!-- Merged cell -->
-                            <td class="text-center" colspan="8">Sum Total</td> <!-- Merged cell -->
-                            <td class="text-end">{{ number_format($sum) }} บาท</td>
-                        </tr>
+                                            @php
+                                                $class = '';
 
-                        {{-- @foreach ($totalForAllMonths as $month => $total)
+                                                $cMonth = date('m');
+                                                $cYear = date('Y');
+                                                $status = Statuslog::where('student_id', $data->std->id)
+                                                    ->where('group', $data->group)
+                                                    ->whereMonth('status_date', $cMonth)
+                                                    ->whereYear('status_date', $cYear)
+                                                    ->get();
+
+                                                if ($status->last()->status === 'None Receipt') {
+                                                    $class = 'text-info';
+                                                } elseif ($status->last()->status === 'drop') {
+                                                    $class = 'text-danger';
+                                                } elseif ($status->last()->status === 'waitting . . .') {
+                                                    $class = 'text-primary';
+                                                } elseif ($status->last()->status === 'Termination of study') {
+                                                    $class = 'text-warning';
+                                                } else {
+                                                    $class = 'text-green';
+                                                }
+                                            @endphp
+                                            <td class="{{ $class }}">
+                                                @if ($data->std->status_log && $data->std->status_log->count() > 0 && $status->last()->group == $data->group)
+                                                    {{ $status->last()->status ?? 'Null' }}
+                                                @else
+                                                    null
+                                                @endif
+                                            </td>
+                                            <td>{{ $data->course_type }}</td>
+                                            {{-- <td class="text-end">{{ number_format($data->total) }} บาท</td> --}}
+                                            <td class="text-end">{{ (string) $data->total }} บาท</td>
+                                            {{-- <td class="text-end"><input type="checkbox" id="switchery-default" checked /></td> --}}
+                                            <td class="text-center">
+                                                {{-- <input type="checkbox" class="switchery-small" id="switchery-default-{{ $loop->index }}" checked /> --}}
+                                                <div class="form-check form-switch form-switch-sm">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="flexSwitchCheckChecked-{{ $data->rec_school->receipt_number }}">
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                        @php
+                                            $sum += $data->total;
+                                        @endphp
+                                    @endforeach
+                                @endforeach
+
+                            </tbody>
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-center">#</td>
+                                    {{-- <td class="text-center" colspan="2"></td> <!-- Merged cell --> --}}
+                                    <td class="text-center" hidden></td> <!-- Merged cell -->
+                                    <td class="text-center" hidden></td> <!-- Merged cell -->
+                                    <td class="text-center" hidden></td> <!-- Merged cell -->
+                                    <td class="text-center" hidden></td> <!-- Merged cell -->
+                                    <td class="text-center" hidden></td> <!-- Merged cell -->
+                                    <td class="text-center" hidden></td> <!-- Merged cell -->
+                                    <td class="text-center" colspan="8">Sum Total</td> <!-- Merged cell -->
+                                    <td class="text-end">{{ number_format($sum) }} บาท</td>
+                                    <td></td>
+                                </tr>
+
+                                {{-- @foreach ($totalForAllMonths as $month => $total)
                             <tr>
                                 <td colspan="6" class="text-center">{{ $month }}</td>
                                 <td class="text-end">{{ number_format($total) }} บาท</td>
                             </tr>
-                        @endforeach --}}
+                            @endforeach --}}
 
-                    </tbody>
+                            </tbody>
 
-                </table>
+                        </table>
+                    </div>
+                    <!-- END tab-pane -->
+                    <!-- BEGIN tab-pane -->
+                    <div class="tab-pane fade" id="default-tab-2">
+                        <blockquote class="blockquote">
+                            <p>ตารางแสดงผลบันทึกใบปะหน้าประจำเดือน</p>
+                        </blockquote>
+                        <table style="width: 100%;" id="Listview2"
+                            class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
+
+                            <thead>
+                                <tr>
+                                    <th width='1%' class="text-center">#</th>
+                                    <th width='1%' class="text-center">NO.</th>
+                                    <th>Submission Date</th>
+                                    <th>Student Nickname</th>
+                                    <th>Reciept Number</th>
+
+                                    <th>Period</th>
+                                    <th>Group</th>
+                                    {{-- <th>Stutus</th> --}}
+                                    {{-- <th>Tpye</th> --}}
+                                    <th>total</th>
+                                    {{-- <th>Check</th> --}}
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach ($paper as $key => $paper_rep)
+                                    <tr>
+                                        <td class="text-center">{{ $key + 1 }}</td>
+                                        <td class="text-center">{{ $paper_rep->no }}</td>
+                                        <td>{{ $paper_rep->submission_date }}</td>
+                                        <td>{{ $paper_rep->student->nick_name }}</td>
+                                        <td>{{ $paper_rep->receipt_number }}</td>
+                                        <td>{{ $paper_rep->school_price->period }}</td>
+                                        <td>{{ $paper_rep->school_price->group }}</td>
+                                        <td>{{ (string) $paper_rep->school_price->total}}</td>
+
+                                    </tr>
+                                @endforeach
+
+                            </tbody>
+
+
+                        </table>
+                    </div>
+                    <!-- END tab-pane -->
+                    <!-- BEGIN tab-pane -->
+                    <div class="tab-pane fade" id="default-tab-3">
+                        <p>
+                            <span class="fa-stack fa-4x float-start me-10px">
+                                <i class="fa fa-square fa-stack-2x"></i>
+                                <i class="fab fa-twitter text-white fa-stack-1x"></i>
+                            </span>
+                            Praesent tincidunt nulla ut elit vestibulum viverra. Sed placerat magna eget eros accumsan
+                            elementum.
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis lobortis neque.
+                            Maecenas justo odio, bibendum fringilla quam nec, commodo rutrum quam.
+                            Donec cursus erat in lacus congue sodales. Nunc bibendum id augue sit amet placerat.
+                            Quisque et quam id felis tempus volutpat at at diam. Vivamus ac diam turpis.Sed at lacinia
+                            augue.
+                            Nulla facilisi. Fusce at erat suscipit, dapibus elit quis, luctus nulla.
+                            Quisque adipiscing dui nec orci fermentum blandit.
+                            Sed at lacinia augue. Nulla facilisi. Fusce at erat suscipit, dapibus elit quis, luctus nulla.
+                            Quisque adipiscing dui nec orci fermentum blandit.
+                        </p>
+                    </div>
+                    <!-- END tab-pane -->
+                </div>
+
+
 
 
             </div>
@@ -366,14 +497,67 @@
     <script src="../assets/plugins/flot/source/jquery.flot.browser.js"></script>
     <script src="../assets/plugins/flot/source/jquery.flot.drawSeries.js"></script>
     <script src="../assets/plugins/flot/source/jquery.flot.uiConstants.js"></script>
-
+    <script src="/assets/plugins/switchery/dist/switchery.min.js"></script>
+    {{-- <script>
+        var checkboxes = document.querySelectorAll('input[id^="switchery-default-"]');
+        checkboxes.forEach(function(checkbox) {
+            var switchery = new Switchery(checkbox, {
+                color: '#00acac'
+            });
+        });
+    </script> --}}
     <script>
         $(document).ready(function() {
             var table1 = $('#Listview').DataTable({
                 lengthMenu: [20, 50, 75, 100, 200],
             });
+            var table1 = $('#Listview2').DataTable({
+                lengthMenu: [20, 50, 75, 100, 200],
+            });
+
+            $('input[type="checkbox"]').change(function() {
+                var isChecked = $(this).is(":checked");
+                if (isChecked) {
+                    $(this).closest('tr').addClass('bg-success');
+                    var id = $(this).attr('id');
+                    localStorage.setItem(id, 'checked');
+                } else {
+                    $(this).closest('tr').removeClass('bg-success');
+                    var id = $(this).attr('id');
+                    localStorage.setItem(id, 'unchecked');
+                }
+            });
+            $(document).ready(function() {
+                $('input[type="checkbox"]').each(function() {
+                    var id = $(this).attr('id');
+                    var state = localStorage.getItem(id);
+                    if (state === 'checked') {
+                        $(this).prop('checked', true);
+                        $(this).closest('tr').addClass('bg-success');
+                    }
+                });
+            });
+
 
         })
+
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        //     checkboxes.forEach(function(checkbox) {
+        //         checkbox.addEventListener('change', function() {
+        //             var isChecked = this.checked;
+        //             if (isChecked) {
+        //                 this.closest('tr').style.backgroundColor = 'green';
+        //             } else {
+        //                 this.closest('tr').style.backgroundColor = '';
+        //             }
+        //         });
+        //     });
+        // });
+
+        $(document).ready(function() {
+
+        });
     </script>
     <script>
         var groupLabels = [
