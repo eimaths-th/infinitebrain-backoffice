@@ -283,6 +283,16 @@ class SchoolController extends Controller
 
             $currentReceiptEndDate = Carbon::parse($end_date);
 
+            $status = '';
+
+            if ($stu_result->status) {
+                # code...
+                $status = $stu_result->status;
+            }else {
+                # code...
+                $status = '';
+            }
+
             $photo = url('/') . '/receipt_form_images/' . $stu_result->photo_att;
             $student_html .= '
     <div class="container rounded bg-white mt-5 mb-5">
@@ -308,7 +318,7 @@ class SchoolController extends Controller
                     </div>
                     <div class="col-lg-6">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">สถานะ : <span class = "text-' . $class .  ' ">' . $stu_result->status ?? null . '</span>
+                            <h4 class="text-right">สถานะ : <span class = "text-' . $class .  ' ">' . $status . '</span>
                             </h4>
                         </div>
                     </div>
