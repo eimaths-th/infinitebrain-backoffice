@@ -180,6 +180,9 @@ class SchoolController extends Controller
             } elseif ($stu_result->status == "กำลังเรียนอยู่") {
                 # code...success
                 $class = 'success';
+            }else {
+                # code...
+                $class ='';
             }
 
 
