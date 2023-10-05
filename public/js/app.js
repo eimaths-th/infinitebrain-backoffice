@@ -13,7 +13,6 @@ function formModal(route) {
         });
         $(".select2-paper_report").select2({
 
-            // maximumSelectionLength: 2,
             allowClear: true
         });
 
