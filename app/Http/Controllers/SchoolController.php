@@ -171,18 +171,18 @@ class SchoolController extends Controller
                 }
             }
 
-            if ($stu_result->status == "ไม่พบใบเสร็จ" || $stu_result->status == "พ้นสภาพนักเรียน") {
+            if ($stu_result->status == "None Receipt" || $stu_result->status == "drop") {
                 # code...
                 $class = 'danger';
-            } elseif ($stu_result->status == "กำลังยุติการการเรียน") {
+            } elseif ($stu_result->status == "Termination of study") {
                 # code...
                 $class = 'warning';
-            } elseif ($stu_result->status == "กำลังเรียนอยู่") {
+            } elseif ($stu_result->status == "studying . . ." || $stu_result->status == "New Student"|| $stu_result->status == "resume") {
                 # code...success
                 $class = 'success';
             }else {
                 # code...
-                $class ='';
+                $class ='info';
             }
 
 
