@@ -269,13 +269,13 @@
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
                         <a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
-                            <span class="d-sm-none">Tab 1</span>
+                            {{-- <span class="d-sm-none">Tab 1</span> --}}
                             <span class="d-sm-block d-none">ตรวจสอบ</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
-                            <span class="d-sm-none">Tab 2</span>
+                            {{-- <span class="d-sm-none">Tab 2</span> --}}
                             <span class="d-sm-block d-none">บันทึกใบปะหน้า</span>
                         </a>
                     </li>
@@ -408,7 +408,7 @@
                     <!-- BEGIN tab-pane -->
                     <div class="tab-pane fade" id="default-tab-2">
                         <blockquote class="blockquote">
-                            <p>ตารางแสดงผลบันทึกใบปะหน้าประจำเดือน</p>
+                            <p>ตารางแสดงผลบันทึกใบปะหน้าประจำเดือน {{ thaidate('F',date('F')) }} {{ date('Y') }}</p>
                         </blockquote>
                         <table style="width: 100%;" id="Listview2"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
