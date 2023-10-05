@@ -87,6 +87,8 @@ Route::get('/searchr_reportMonthStd', [StdlogController::class, 'searchr_reportM
 route::get('/Super-Master', [SuperMasterContrller::class, 'index'])->name('sm');
 route::get('/testmodal', [SuperMasterContrller::class, 'testModal'])->name('test_modal');
 Route::get('/perform-retrospective-check', [RetrospectiveCheckController::class, 'performRetrospectiveCheck']);
+Route::resource('stdlog', 'StdlogController');
+Route::get('stdlog/create', [StdlogController::class, 'create'])->name('stdlog_create');
 // Route::get('/search_status/{month}/{year}', [StdlogController::class, 'search_status'])->name('search_status');
 
 Route::get('/users', [EmployeeController::class, 'index'])->name('users');
@@ -184,9 +186,10 @@ Route::get('/school', [SchoolController::class, 'index'])->name('school');
 // Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
 // Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
 
-// Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
-// Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
-// Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
+Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
+Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
+Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
+
 Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
 Route::get('/cambridge/line', [ReceiptFormController::class, 'cambridge'])->name('cambridge.line');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
