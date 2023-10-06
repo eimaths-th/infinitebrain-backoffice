@@ -106,6 +106,9 @@
                 <form method="post" action="{{ route('receipts.destroy_all') }}" name="delete_all" id="delete_all">
                     @csrf
                     @method('DELETE')
+                    <input type="hidden" value="1" name="excel">
+                    <input type="hidden" name="sfield" value="{{ request()->get('sfield') }}">
+
                     <table style="width: 100%;" id="Listview"
                         class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">
                         <thead>

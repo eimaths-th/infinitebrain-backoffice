@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ExportForm;
+use App\Exports\ExportExcel;
 use App\Models\ReceiptForm;
 use App\Models\ReceiptDetail;
 use App\Models\FileUpload;
@@ -20,7 +21,7 @@ use App\Models\Receipt_Customer_RunningNumber;
 use Mail;
 use App\Mail\ContactMail;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ExportUser;
+// use App\Exports\ExportUser;
 
 class ReceiptFormController extends Controller
 {
@@ -656,7 +657,17 @@ class ReceiptFormController extends Controller
 
     public function exportForm(Request $request)
     {
-        return Excel::download(new ExportForm($request->get('sfield'), $request->get('table_records')), 'form.xlsx');
+
+        // dd($request->excel);
+
+        if ($request->excel === "1") {
+            # code...
+            return Excel::download(new ExportExcel($request->get('sfield'), $request->get('table_records')), 'form.xlsx');
+
+        } else {
+            # code...
+            return Excel::download(new ExportForm($request->get('sfield'), $request->get('table_records')), 'form.xlsx');
+        }
     }
 
 
