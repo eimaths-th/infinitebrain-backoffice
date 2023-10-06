@@ -387,11 +387,18 @@
                                 <div class="widget-content-outer">
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-left">
-                                            <div class="widget-heading">Group</div>
+                                            <div class="widget-numbers text-success">English</div>
+
                                             {{-- <div class="widget-subheading">Last year expenses</div> --}}
                                         </div>
                                         <div class="widget-content-right">
-                                            <div class="widget-numbers text-success">English</div>
+                                            <div class="widget-heading">{{
+                                                (isset($groupStatusCounts['E']['New Student']) ?    $groupStatusCounts['E']['New Student'] : 0) +
+                                                (isset($groupStatusCounts['E']['studying . . .']) ? $groupStatusCounts['E']['studying . . .'] : 0) +
+                                                (isset($groupStatusCounts['E']['resume']) ?         $groupStatusCounts['E']['resume'] : 0)
+                                                }}
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -402,11 +409,18 @@
                                 <div class="widget-content-outer">
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-left">
-                                            <div class="widget-heading">Group</div>
+                                            <div class="widget-numbers text-primary"> Math</div>
+
                                             {{-- <div class="widget-subheading">Total Clients Profit</div> --}}
                                         </div>
                                         <div class="widget-content-right">
-                                            <div class="widget-numbers text-primary"> Math</div>
+                                            <div class="widget-heading">{{
+                                                (isset($groupStatusCounts['M']['New Student']) ?    $groupStatusCounts['M']['New Student'] : 0) +
+                                                (isset($groupStatusCounts['M']['studying . . .']) ? $groupStatusCounts['M']['studying . . .'] : 0) +
+                                                (isset($groupStatusCounts['M']['resume']) ?         $groupStatusCounts['M']['resume'] : 0)
+                                                }}
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
