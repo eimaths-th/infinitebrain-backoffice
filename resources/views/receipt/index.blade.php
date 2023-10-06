@@ -1275,7 +1275,7 @@
                     [0, "desc"]
                 ],
                 iDisplayLength: 10,
-                lengthMenu: [10, 20, 50, 75, 100],
+                lengthMenu: [10, 20, 50, 75, 100, -1],
                 stateSave: true,
                 sPaginationType: "full_numbers",
                 dom: 'T<"clear">lfrtip',
