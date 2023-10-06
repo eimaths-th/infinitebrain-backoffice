@@ -17696,6 +17696,9 @@ legend {
 .widget-content .widget-content-right .widget-heading {
     opacity: 0.8;
     font-size: 1.5rem;
+    /*
+    bug
+    */
     font-weight: bold;
 }
 
