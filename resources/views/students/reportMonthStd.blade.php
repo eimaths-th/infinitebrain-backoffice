@@ -441,7 +441,7 @@
                                         <td>{{ $paper_rep->receipt_number }}</td>
                                         <td>{{ $paper_rep->school_price->period ?? null }}</td>
                                         <td>{{ $paper_rep->school_price->group ?? null }}</td>
-                                        <td>{{ number_format($paper_rep->school_price->total) ?? null }}</td>
+                                        <td class="text-end">{{ number_format($paper_rep->school_price->total) ?? null }} บาท</td>
 
                                     </tr>
                                 @endforeach
