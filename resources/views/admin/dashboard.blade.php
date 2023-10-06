@@ -387,9 +387,9 @@
                                 <div class="widget-content-outer">
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-left">
-                                            <div class="widget-numbers text-success">English</div>
+                                            <div class="widget-heading text-success">English</div>
 
-                                            {{-- <div class="widget-subheading">Last year expenses</div> --}}
+                                            <div class="widget-subheading">Total</div>
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-heading">{{
@@ -409,9 +409,9 @@
                                 <div class="widget-content-outer">
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-left">
-                                            <div class="widget-numbers text-primary"> Math</div>
+                                            <div class="widget-heading text-primary"> Math</div>
 
-                                            {{-- <div class="widget-subheading">Total Clients Profit</div> --}}
+                                            <div class="widget-subheading">Total</div>
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-heading">{{
