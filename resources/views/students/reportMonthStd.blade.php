@@ -359,7 +359,7 @@
                                             </td>
                                             <td>{{ $data->course_type }}</td>
                                             {{-- <td class="text-end">{{ number_format($data->total) }} บาท</td> --}}
-                                            <td class="text-end">{{ (string) $data->total }} บาท</td>
+                                            <td class="text-end">{{ number_format($data->total) }} บาท</td>
                                             {{-- <td class="text-end"><input type="checkbox" id="switchery-default" checked /></td> --}}
                                             <td class="text-center">
                                                 {{-- <input type="checkbox" class="switchery-small" id="switchery-default-{{ $loop->index }}" checked /> --}}
@@ -439,9 +439,9 @@
                                         <td>{{ $paper_rep->submission_date }}</td>
                                         <td>{{ $paper_rep->student->nick_name }}</td>
                                         <td>{{ $paper_rep->receipt_number }}</td>
-                                        <td>{{ $paper_rep->school_price->period }}</td>
-                                        <td>{{ $paper_rep->school_price->group }}</td>
-                                        <td>{{ (string) $paper_rep->school_price->total}}</td>
+                                        <td>{{ $paper_rep->school_price->period ?? null }}</td>
+                                        <td>{{ $paper_rep->school_price->group ?? null }}</td>
+                                        <td>{{ number_format($paper_rep->school_price->total) ?? null }}</td>
 
                                     </tr>
                                 @endforeach
