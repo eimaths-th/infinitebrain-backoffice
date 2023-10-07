@@ -48,7 +48,7 @@
                     @foreach ($groupedData as $key => $data)
                         <option
                             value="{{ $data->std->id }},{{ $data->rec_school->id }},{{ $data->id }},{{ $data->rec_school->receipt_number }},{{ $data->rec_school->submission_date }}">
-                            {{ $data->std->code ?? 'Null' }} {{ $data->std->nick_name ?? 'Null' }} </option>
+                            {{ $data->std->code ?? 'Null' }} {{ $data->std->nick_name ?? 'Null' }} | RecNo. : {{ $data->rec_school->receipt_number }}</option>
                     @endforeach
                 @endforeach
 

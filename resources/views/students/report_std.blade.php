@@ -140,6 +140,8 @@
                             <th class="text-danger">Drop</th>
                             <th class="text-success">Resume</th>
                             <th class="text-primary">Waitting . . .</th>
+                            <th class="text-info">Total</th>
+
                             <th class="text-info">None Receipt</th>
                             <th>date time</th>
                         </tr>
@@ -189,7 +191,14 @@
                                 <td>{{ isset($statusCounts['resume']) ? $statusCounts['resume'] : 0 }} คน</td>
                                 <td>{{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }} คน
                                 </td>
+                                <td>{{
+                                    (isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0) +
+                                    (isset($statusCounts['studying . . .']) ? $statusCounts['studying . . .'] : 0) +
+                                    (isset($statusCounts['resume']) ? $statusCounts['resume'] : 0) }}
+                                    คน
+                                </td>
                                 <td>{{ isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0 }} คน</td>
+
                                 <td>{{ now() }}</td>
                                 <!-- You can replace this with the actual date time if needed -->
                             </tr>
@@ -211,6 +220,7 @@
                             <td>{{ $totalDrop }} คน</td>
                             <td>{{ $totalResume }} คน</td>
                             <td>{{ $totalWait }} คน</td>
+                            <td>{{ $totalNewStudents + $totalStudying + $totalResume }} คน</td>
                             <td>{{ $totalNoneReceipt }} คน</td>
                             <td>{{ now() }}</td>
                         </tr>
