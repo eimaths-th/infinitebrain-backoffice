@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Receipt_RunningNumber extends Model
 {
@@ -48,7 +49,7 @@ class Receipt_RunningNumber extends Model
     ];
 
 
-    public static function pre_generate(string $type)
+    public static function pre_generate(string $type, string $sdate)
     {
         $type = strtoupper($type);
         if (!in_array($type, self::TYPES)) {
@@ -57,17 +58,21 @@ class Receipt_RunningNumber extends Model
         $number = 0;
         $year = date('Y');
         $month = date('m');
-        $day = date('d');
+        $sda = explode("-", $sdate);
+        $ldate = Carbon::create($sda[0], $sda[1], $sda[2]); // Create a Carbon instance for the date 2023-09-30
+        $lastDayOfMonth = $ldate->endOfMonth()->format('d');
+
+        $day = $sda[2];
         //$month = "01";
-        
-         if ($day == '01' && $month != '01') {
-                 $month = str_pad(intval($month) - 1, 2, '0', STR_PAD_LEFT); // Decrease month by 1
-                    if ($month == '00') {
-                            $month = '12'; // If month becomes 00 (December of previous year)
-                            $year--;
-                    }
+
+        if ($day == $lastDayOfMonth && $month != '01') {
+            $month = str_pad(intval($month) - 1, 2, '0', STR_PAD_LEFT); // Decrease month by 1
+            if ($month == '00') {
+                $month = '12'; // If month becomes 00 (December of previous year)
+                $year--;
             }
-        
+        }
+
 
         if (!Receipt_RunningNumber::where('type', $type)->where('year', $year)->where('month', $month)->exists()) {
             Receipt_RunningNumber::create([
@@ -90,32 +95,37 @@ class Receipt_RunningNumber extends Model
         if (strlen(Receipt_RunningNumber::TYPE_PREFIX[$type]) > 1) {
             return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
         } else {
-            return "0".Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
+            return "0" . Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
         }
 
         //return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '01' . $number;
     }
-    
-    public static function generate(string $type)
+
+    public static function generate(string $type, string $sdate)
     {
         $type = strtoupper($type);
         if (!in_array($type, self::TYPES)) {
             throw new \Exception('Undefined running number type.');
         }
+
         $number = 0;
         $year = date('Y');
         $month = date('m');
-        $day = date('d');
+        $sda = explode("-", $sdate);
+        $ldate = Carbon::create($sda[0], $sda[1], $sda[2]); // Create a Carbon instance for the date 2023-09-30
+        $lastDayOfMonth = $ldate->endOfMonth()->format('d');
+
+        $day = $sda[2];
         //$month = "01";
-        
-         if ($day == '01' && $month != '01') {
-                 $month = str_pad(intval($month) - 1, 2, '0', STR_PAD_LEFT); // Decrease month by 1
-                    if ($month == '00') {
-                            $month = '12'; // If month becomes 00 (December of previous year)
-                            $year--;
-                    }
+
+        if ($day == $lastDayOfMonth && $month != '01') {
+            $month = str_pad(intval($month) - 1, 2, '0', STR_PAD_LEFT); // Decrease month by 1
+            if ($month == '00') {
+                $month = '12'; // If month becomes 00 (December of previous year)
+                $year--;
             }
-        
+        }
+
 
         if (!Receipt_RunningNumber::where('type', $type)->where('year', $year)->where('month', $month)->exists()) {
             Receipt_RunningNumber::create([
@@ -138,7 +148,7 @@ class Receipt_RunningNumber extends Model
         if (strlen(Receipt_RunningNumber::TYPE_PREFIX[$type]) > 1) {
             return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
         } else {
-            return "0".Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
+            return "0" . Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
         }
 
         //return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '01' . $number;

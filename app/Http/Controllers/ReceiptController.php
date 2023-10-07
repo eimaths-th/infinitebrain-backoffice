@@ -579,8 +579,8 @@ class ReceiptController extends Controller
     public function create()
     {
         //create
-         $rnumber = Receipt_RunningNumber::pre_generate($request->get('sfield'));
-         return response()->json(['rnumber' => $rnumber]);
+        $rnumber = Receipt_RunningNumber::pre_generate($request->get('sfield'), date("Y-m-d"));
+        return response()->json(['rnumber' => $rnumber]);
     }
 
     /**
@@ -615,7 +615,7 @@ class ReceiptController extends Controller
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
-        $rnumber = Receipt_RunningNumber::generate($request->get('sfield'));
+        $rnumber = Receipt_RunningNumber::generate($request->get('sfield'),$request->get('submission_date'));
         $rcnumber = Receipt_Customer_RunningNumber::generate($request->get('sfield'));
         $request->request->add(['receipt_number' => $rnumber, 'receipt_customer_number' => $rcnumber]);
 
@@ -819,6 +819,14 @@ class ReceiptController extends Controller
             }
         }
 
+        $app_html = '';
+        if ($data->cancle == 1) {
+            $app_html = '<div id="background">
+            <p id="bg-text"> ยกเลิก ใบเสร็จรับเงิน </p>
+            </div>';
+        }
+
+
 
         //$des_text = nl2br($data->description);
 
@@ -830,6 +838,7 @@ class ReceiptController extends Controller
             ->with(['price_val' => $price_val])
             ->with(['mes' => $mes])
             ->with(['text' => $text])
+            ->with(['app_html' => $app_html])
             ->with(['price_texten' => $price_texten])
             ->with(['price_text' => $price_text])
             ->with(['discount_val' => $discount_val])
@@ -879,7 +888,11 @@ class ReceiptController extends Controller
             //->join("subjects", "subjects.id", "=", "receipts.subject_id")
             //->join("levels", "levels.id", "=", "receipts.level_id")
 
-            ->where([['receipts.sfield', $sfield], ['submission_date', $request->get('print_rdate')]])
+            ->where([
+                ['receipts.sfield', $sfield], ['submission_date', $request->get('print_rdate')],
+                ['cancle', '!=', 1]
+            ])
+            /* ->whereNull('cancle') */
             ->orderBy("receipts.receipt_number", "asc")
             ->get();
         //->toArray();
@@ -993,7 +1006,8 @@ class ReceiptController extends Controller
                         $fileex = explode("/", $result->file_att);
                         //$this->textWatermark(end($fileex), 'Receipt Number : ' . $result->receipt_number);
 
-                        $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
+                        //$retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
+                        $retu = $urla;
                     }
 
 
@@ -1062,6 +1076,7 @@ class ReceiptController extends Controller
             "receipts.last_name as receipt_lastname",
             "receipts.package as receipt_price",
             "receipts.type as receipt_type",
+            "receipts.cancle as cancle",
         )
             //->join("students", "students.id", "=", "receipts.student_id")
             //->join("subjects", "subjects.id", "=", "receipts.subject_id")
@@ -1083,6 +1098,7 @@ class ReceiptController extends Controller
             $ret_receipt[$i]['receipt_firstname'] = $result->receipt_firstname;
             $ret_receipt[$i]['receipt_lastname'] = $result->receipt_lastname;
             $ret_receipt[$i]['receipt_type'] = $result->receipt_type;
+            $ret_receipt[$i]['cancle'] = $result->cancle;
 
             /* $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
             $price = (int)$res; */
@@ -1104,15 +1120,22 @@ class ReceiptController extends Controller
                 $ret_receipt[$i]['receipt_type'] = "ใบลดหนี้";
                 $price = $price * -1;
                 $ret_receipt[$i]['receipt_des'] = $desresult;
+            } elseif ($ret_receipt[$i]['cancle'] == 1) {
+                $ret_receipt[$i]['receipt_type'] = "ยกเลิก";
+                $price = $price * -1;
+                $ret_receipt[$i]['receipt_des'] = "<font color='red'>( ยกเลิก )</font>";
             }
 
             $price_val = number_format($price, 2);
 
             $ret_receipt[$i]['receipt_price'] = $price_val;
             $ret_receipt[$i]['receipt_price_label'] = "บาท";
-            $i++;
 
-            $total_price = ($total_price + $price);
+
+            if ($ret_receipt[$i]['cancle'] !== 1) {
+                $total_price = ($total_price + $price);
+            }
+            $i++;
         }
 
         $pagen = 0;
@@ -1198,6 +1221,7 @@ class ReceiptController extends Controller
             "receipts.last_name as receipt_lastname",
             "receipts.package as receipt_price",
             "receipts.type as receipt_type",
+            "receipts.cancle as cancle",
 
         )
             //->join("students", "students.id", "=", "receipts.student_id")
@@ -1229,16 +1253,17 @@ class ReceiptController extends Controller
 
 
             $ret_receipt[$result->receipt_submission_date]['receipt_submission_date'] = $result->receipt_submission_date;
-            if ($result->receipt_type!==2) {
-            $ret_receipt[$result->receipt_submission_date]['receipt_numberm'][$i] = $result->receipt_number;
+            if ($result->receipt_type !== 2) {
+                $ret_receipt[$result->receipt_submission_date]['receipt_numberm'][$i] = $result->receipt_number;
             } else {
-            $ret_receipt[$result->receipt_submission_date]['receipt_numberm'][$i] = '';
+                $ret_receipt[$result->receipt_submission_date]['receipt_numberm'][$i] = '';
             }
             $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i] = $result->receipt_number;
 
             $maxdate = max(array_keys($ret_receipt[$result->receipt_submission_date]['receipt_numberm']));
             $ret_receipt[$result->receipt_submission_date]['receipt_numbers'] = $ret_receipt[$result->receipt_submission_date]['receipt_number'][0] . ' - ' . $ret_receipt[$result->receipt_submission_date]['receipt_number'][$maxdate];
             $ret_receipt[$result->receipt_submission_date]['receipt_type'][$i] = $result->receipt_type;
+            $ret_receipt[$result->receipt_submission_date]['cancle'][$i] = $result->cancle;
 
             /* $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
             $price = (int)$res; */
@@ -1266,18 +1291,28 @@ class ReceiptController extends Controller
                 $rtype2 .= $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i] . ' ';
             }
 
+            if ($result->cancle == 1) {
+                $price = $price * -1;
+                $rtype2 .= "<font color='red'>( ยกเลิก ) " . $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i] . ' </font>';
+            }
+
 
             $ret_receipt[$result->receipt_submission_date]['description'] = $request->get('Pmdescription') . ' ' . $rtype2;
             $ret_receipt[$result->receipt_submission_date]['receipt_price'] = $price;
             $ret_receipt[$result->receipt_submission_date]['receipt_price_label'] = "บาท";
-            $lastprice = $lastprice + $ret_receipt[$result->receipt_submission_date]['receipt_price'];
+            if ($result->cancle == 0) {
+                $lastprice = $lastprice + $ret_receipt[$result->receipt_submission_date]['receipt_price'];
+            }
             $ret_receipt[$result->receipt_submission_date]['last_price'] =  $lastprice;
             $ret_receipt[$result->receipt_submission_date]['total_price'] =  number_format($lastprice, 2);
 
             $lastdate = $ret_receipt[$result->receipt_submission_date]['receipt_submission_date'];
-            $i++;
+
             //$rtype2='';
-            $total_price = ($total_price + $price);
+            if ($result->cancle == 0) {
+                $total_price = ($total_price + $price);
+            }
+            $i++;
         }
         $numrec = count($ret_receipt);
         $pagen = 0;
@@ -1368,6 +1403,7 @@ class ReceiptController extends Controller
             "receipts.last_name as receipt_lastname",
             "receipts.package as receipt_price",
             "receipts.type as receipt_type",
+            "receipts.cancle as cancle",
 
         )
             //->join("students", "students.id", "=", "receipts.student_id")
@@ -1413,6 +1449,7 @@ class ReceiptController extends Controller
             $maxdate = max(array_keys($ret_receipt[$ymcode]['receipt_number']));
             $ret_receipt[$ymcode]['receipt_numbers'] = $ret_receipt[$ymcode]['receipt_number'][0] . ' - ' . $ret_receipt[$ymcode]['receipt_number'][$maxdate];
             $ret_receipt[$ymcode]['receipt_type'][$i] = $result->receipt_type;
+            $ret_receipt[$ymcode]['cancle'][$i] = $result->cancle;
 
             /* $res = preg_replace("/[^0-9.]/", "", $result->receipt_price);
             $price = (int)$res; */
@@ -1439,19 +1476,30 @@ class ReceiptController extends Controller
                 $price = $price * -1;
                 $rtype2 .= $ret_receipt[$ymcode]['receipt_number'][$i] . ' ';
             }
+            $rtype3 = '';
+            if ($result->cancle == 1) {
+                $price = $price * -1;
+                $rtype3 .= "<font color='red'>( ยกเลิก ) " . $ret_receipt[$ymcode]['receipt_number'][$i] . ' </font>';
+            }
 
 
-            $ret_receipt[$ymcode]['description'] = $request->get('Pmdescription') /* . ' ' . $rtype2 */;
+
+            $ret_receipt[$ymcode]['description'] = $request->get('Pmdescription')  . ' ' . $rtype3;
             $ret_receipt[$ymcode]['receipt_price'] = $price;
             $ret_receipt[$ymcode]['receipt_price_label'] = "บาท";
-            $lastprice = $lastprice + $ret_receipt[$ymcode]['receipt_price'];
+            if ($result->cancle == 0) {
+                $lastprice = $lastprice + $ret_receipt[$ymcode]['receipt_price'];
+            }
             $ret_receipt[$ymcode]['last_price'] =  $lastprice;
             $ret_receipt[$ymcode]['total_price'] =  number_format($lastprice, 2);
 
             $lastmonth = $ret_receipt[$ymcode]['receipt_submission_date'];
-            $i++;
+
             //$rtype2='';
-            $total_price = ($total_price + $price);
+            if ($result->cancle == 0) {
+                $total_price = ($total_price + $price);
+            }
+            $i++;
         }
 
 

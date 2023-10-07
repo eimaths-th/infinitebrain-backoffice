@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // use App\Models\Receipt_School;
 
 use App\Models\FutureStd;
+use App\Models\PaperReport;
 use App\Models\Receipt_School;
 use App\Models\SchoolPrice;
 use App\Models\Statuslog;
@@ -227,6 +228,13 @@ class StdlogController extends Controller
     {
         $test_scp = SchoolPrice::all();
         $currentMonth = Carbon::now()->format('Y-m');
+        $month = date('m');
+        $year = date('Y');
+        $paper = PaperReport::whereMonth('submission_date',$month)
+        ->whereYear('submission_date',$year)
+        ->orderBy('rec_id','desc')
+        ->get();
+
 
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($test_scp, $currentMonth, $currentMonth);
         $totalForAllMonths = $this->queryGrafgh($test_scp);
@@ -234,7 +242,8 @@ class StdlogController extends Controller
         // dd($totalForAllMonths,  $reportMonth_schoolPrice);
         return view('students.reportMonthStd', [
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
-            'totalForAllMonths' => $totalForAllMonths
+            'totalForAllMonths' => $totalForAllMonths,
+            'paper' => $paper,
         ]);
     }
 
@@ -741,6 +750,14 @@ class StdlogController extends Controller
     public function create()
     {
         //
+        // dd('test');
+        $test_scp = SchoolPrice::all();
+        $currentMonth = Carbon::now()->format('Y-m');
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($test_scp, $currentMonth, $currentMonth);
+        return view('students.paper_report', [
+            'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
+
+        ]);
     }
 
     /**
@@ -752,6 +769,34 @@ class StdlogController extends Controller
     public function store(Request $request)
     {
         //
+        $noPaperReport = $request->no_paper_report;
+        $std_receipt = $request->std_receipt;
+
+
+        foreach ($std_receipt as $item) {
+            $split_values = explode(',', $item);
+            list($std_id, $rec_id, $schp_id, $receipt_number, $submission_date) = $split_values;
+            // dd(
+            //     $request,
+            //     $std_receipt,
+            //     $noPaperReport,
+            //     $std_id,
+            //     $rec_id,
+            //     $schp_id,
+            //     $receipt_number,
+            //     $submission_date,
+            // );
+
+            PaperReport::create([
+                'no' => $noPaperReport,
+                'std_id' => $std_id,
+                'rec_id' => $rec_id,
+                'schp_id' => $schp_id,
+                'receipt_number' => $receipt_number,
+                'submission_date' => $submission_date,
+            ]);
+        }
+        return redirect(route('reportMonthStd'));
     }
 
     /**

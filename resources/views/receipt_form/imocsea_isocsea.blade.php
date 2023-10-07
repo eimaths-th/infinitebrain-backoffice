@@ -600,9 +600,9 @@
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">2,190 bath</span><br></p>
                                     <p>&nbsp;</p>
-                                    <p><span style="color: #6351a2;"><b>หมายเหตุ</b> <br>สำหรับผู้สมัครระดับชั้น Kindergarten 
+                                    <p><span style="color: #6351a2;"><b>หมายเหตุ</b> <br>สำหรับผู้สมัครระดับชั้น Kindergarten
                                     ISOCSEA เนื้อหาที่ใช้สอบจะถูกปรับเป็นระดับ Grade 1</span>
-                                    </p> 
+                                    </p>
                                     {{-- <p style="text-align: center;"><span style="color: #6351a2;"><b><a target="_blank"
                                                     href="https://cem-th.com/compare-education-system/"><i
                                                         class="fa fa-paper-plane"></i> วิธีการเทียบระดับชั้น</a>
@@ -797,8 +797,8 @@
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test:  1500 Baht">Test:  1500 Baht</option>
-                                                <option value="Test+tutoring class: 2190 bath">Test+tutoring class: 2190 bath
-                                                </option>
+                                               {{--  <option value="Test+tutoring class: 2190 bath">Test+tutoring class: 2190 bath
+                                                </option> --}}
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -1037,7 +1037,7 @@
                         </div>
                         <div class="card-footer text-center">
                             <br>
-                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ** 
+                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
                             ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี **</div>
                             <br>
                             <input type="submit" id="send_data" class="btn btn-lg btn-primary"
@@ -1575,14 +1575,14 @@
             warningDescCSS);
         //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
     </script>
-    
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2EMF2S1GBP"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      
+
         gtag('config', 'G-2EMF2S1GBP');
         </script>
 @endsection

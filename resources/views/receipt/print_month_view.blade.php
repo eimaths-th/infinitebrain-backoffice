@@ -161,7 +161,7 @@
                         @foreach ($data as $receipt)
                         <tr class="activeda" height="30">
                             <td align="center" width="15%" class="actived"><b>{{ $receipt['receipt_submission_date'] }}</b></td>
-                            <td align="left" width="40%" class="actived">&nbsp; <b>{{ $receipt['description'] }}</b></td>
+                            <td align="left" width="40%" class="actived">&nbsp; <b>{!! $receipt['description'] !!}</b></td>
                             <td align="center" width="15%" class="actived"><b>{{ $receipt['receipt_numbers'] }}</b></td>
                             <td align="center" width="15%" class="actived"><b>{{ $receipt['total_price'] }}</b></td>
                             <td align="center" width="15%" class="actived grey"><b>{{ $receipt['receipt_price_label'] }}</b></td>

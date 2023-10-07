@@ -83,9 +83,10 @@
                         </ul>
                     </div>
                 </div>
-                {{-- </div> --}}
             </nav>
         @endisset
+
+
         <main class="py-4">
             @yield('content')
         </main>

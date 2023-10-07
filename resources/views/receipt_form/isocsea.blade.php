@@ -801,8 +801,8 @@
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test:  850 Baht">Test:  850 Baht</option>
-                                                <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250 bath
-                                                </option>
+                                              {{--   <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250 bath
+                                                </option> --}}
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -1041,7 +1041,7 @@
                         </div>
                         <div class="card-footer text-center">
                             <br>
-                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ** 
+                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
                             ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี **</div>
                             <br>
                             <input type="submit" id="send_data" class="btn btn-lg btn-primary"
@@ -1579,14 +1579,14 @@
             warningDescCSS);
         //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
     </script>
-    
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2EMF2S1GBP"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      
+
         gtag('config', 'G-2EMF2S1GBP');
         </script>
 @endsection
