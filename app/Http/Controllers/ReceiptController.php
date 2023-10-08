@@ -1229,6 +1229,7 @@ class ReceiptController extends Controller
             //->join("levels", "levels.id", "=", "receipts.level_id")
             ->where([['receipts.sfield', $sfield], ['submission_date', 'LIKE', $request->get('print_month') . '%']])
             ->orderBy("receipts.submission_date", "asc")
+            ->orderBy("receipts.id", "asc")
             ->get();
         // ->toArray();
 
