@@ -1314,6 +1314,8 @@ class ReceiptController extends Controller
             }
             $i++;
         }
+
+        dd($ret_receipt[$result->receipt_submission_date]['receipt_numberm']);
         $numrec = count($ret_receipt);
         $pagen = 0;
         if ($numrec < 19) {
