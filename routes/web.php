@@ -189,10 +189,9 @@ Route::get('/school', [SchoolController::class, 'index'])->name('school');
 // Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
 
 Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
-Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
-Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
-
-Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
+// Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
+// Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
+// Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
 Route::get('/cambridge/line', [ReceiptFormController::class, 'cambridge'])->name('cambridge.line');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
 Route::post('/form/upload/api', [ReceiptFormController::class, 'fileStoreAPI'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->name('form.upload.api');
