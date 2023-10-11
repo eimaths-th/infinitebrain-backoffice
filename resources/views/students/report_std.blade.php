@@ -200,7 +200,7 @@
                                 <td>{{ isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0 }} คน</td>
 
                                 <td>{{ now() }}</td>
-                                <!-- You can replace this with the actual date time if needed -->
+                              
                             </tr>
                             @php
                                 $totalNewStudents += isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0;

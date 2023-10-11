@@ -230,12 +230,10 @@ class StdlogController extends Controller
         $currentMonth = Carbon::now()->format('Y-m');
         $month = date('m');
         $year = date('Y');
-        $paper = PaperReport::whereMonth('submission_date',$month)
-        ->whereYear('submission_date',$year)
-        ->orderBy('rec_id','desc')
-        ->get();
-
-
+        $paper = PaperReport::whereMonth('submission_date', $month)
+            ->whereYear('submission_date', $year)
+            ->orderBy('rec_id', 'desc')
+            ->get();
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($test_scp, $currentMonth, $currentMonth);
         $totalForAllMonths = $this->queryGrafgh($test_scp);
         // ksort($totalForAllMonths);
@@ -299,13 +297,11 @@ class StdlogController extends Controller
             ->get();
 
         // dd($latestStatusByStudent, $latestStatusCounts);
-
         return view('students.report_std_future', [
 
             'latestStatusCounts' => $latestStatusCounts,
             'latestStatusByStudent' => $latestStatusByStudent,
             // 'select_status' => $select_status,
-
         ]);
         // return view('students.report_std_future');
     }
@@ -313,7 +309,22 @@ class StdlogController extends Controller
     public function searchFuture(Request $request)
     {
 
-        // dd($request);
+        $request->validate([
+            'month' => 'required',
+            'year' => 'required',
+        ], [
+            'month.required' => 'Pls. Select year !!',
+            'year.required' => 'Pls. Select year !!'
+        ]);
+        $month = str_pad(request()->input('month', null), 2, '0', STR_PAD_LEFT);
+        $year = $request->year;
+        $current_day = date('d');
+
+        $select_date = "$year-$month-$current_day";
+        $select_month_year = "$year-$month";
+        // dd($select_month_year, $month, $select_date);
+
+
         $students = Student::with('rec_school')->get();
         // $students = Student::where('id', 1)->get();
         $school_picei_update_group = SchoolPrice::all();
@@ -324,31 +335,22 @@ class StdlogController extends Controller
             $upg->update(['group' => $group]);
             // dd($upg->id,$group);
         }
-        $selected_month = $request->month;
-        $selected_year = $request->year;
-        $current_day = date('d');
 
-        $select_date = "$selected_year-$selected_month-$current_day";
-        $select_month_year = "$selected_year-$selected_month";
 
         foreach ($students as $student) {
             $statuses = $this->determineStatus($student, $select_month_year);
-
             foreach ($statuses as $subjectGroup => $status) {
-
                 $existingStatus = FutureStd::where('student_id', $student->id)
                     ->where('group', $subjectGroup)
                     ->latest()
                     ->get();
                 if (count($existingStatus) > 0) {
-
                     if ($existingStatus->first()->status === 'drop') {
                         $newEnrollmentReceipt = SchoolPrice::where('student_id', $student->id)
                             ->where('qty', '>', 0)
                             ->where('group', $subjectGroup)
                             ->orderBy('id', 'desc')
                             ->first();
-
                         $startdate = $newEnrollmentReceipt->period;
                         $parts = explode('-', $startdate);
                         $lastTwoParts = array_slice($parts, 0, 2);
@@ -362,17 +364,12 @@ class StdlogController extends Controller
                         }
                     }
                 }
-
                 // dd($existingStatus->first()->status_date);
-
                 $status_date = $existingStatus->first()->status_date ?? '';
                 $status_date_year_month = date('Y-m', strtotime($status_date));
                 $select_status_date_year_month = date('Y-m', strtotime($select_month_year));
-
                 // $currentUpdate = Carbon::createFromFormat('Y-m', $status_date_year_month);
-
                 // dd($status_date_year_month, $select_status_date_year_month);
-
                 if (count($existingStatus) < 1) {
                     FutureStd::create([
                         'student_id' => $student->id,
@@ -402,42 +399,64 @@ class StdlogController extends Controller
             }
         }
 
-        $month  = $selected_month;
-        $year   = $selected_year;
-        $latestStatusCounts = FutureStd::whereYear('future_student.status_date', $year)
-            ->whereMonth('future_student.status_date', $month)
-            ->select('group', 'student_id', 'status')
-            ->whereIn('id', function ($query) {
-                $query->select(DB::raw('MAX(id)'))
-                    ->from('future_student')
-                    ->groupBy('group', 'student_id');
-            })
-            ->whereYear('status_date', $year)
-            ->whereMonth('status_date', $month)
-            ->orderBy('group')
+        if ($month == null) {
+            $latestStatusCounts = FutureStd::select('group', 'student_id', 'status')
+                ->whereIn('id', function ($query) {
+                    $query->select(DB::raw('MAX(id)'))
+                        ->from('future_student')
+                        ->groupBy('group', 'student_id');
+                })
+                ->whereYear('status_date', $year)
+                ->orderBy('group')
+                ->get();
+            $latestStatusByStudent = FutureStd::select('future_student.student_id', 'future_student.group', 'future_student.status', 'future_student.status_date', 'future_student.nick_name')
+                ->whereIn('future_student.id', function ($query) {
+                    $query->select(DB::raw('MAX(id)'))
+                        ->from('future_student')
+                        ->groupBy('student_id', 'group');
+                })
+                ->whereYear('future_student.status_date', $year)
+                ->join('students', 'future_student.student_id', '=', 'students.id')
+                ->orderBy('students.code')
+                ->get();
+        } else {
+            $latestStatusCounts = FutureStd::select(
+                'future_student.student_id',
+                'future_student.group',
+                'future_student.status',
+                'future_student.status_date',
+                'future_student.nick_name'
+            )
+                ->whereIn('future_student.id', function ($query) use ($year, $month) {
+                    $query->select(DB::raw('MAX(id)'))
+                        ->from('future_student')
+                        ->whereYear('status_date', $year)
+                        ->whereMonth('status_date', $month)
+                        ->groupBy('student_id', 'group');
+                })
+                ->join('students', 'future_student.student_id', '=', 'students.id')
+                ->orderBy('students.code')
+                ->get();
 
-            ->get();
-        $latestStatusByStudent = FutureStd::whereYear('future_student.status_date', $year)
-            ->whereMonth('future_student.status_date', $month)
-            ->select('future_student.student_id', 'future_student.group', 'future_student.status', 'future_student.status_date', 'future_student.nick_name')
-            ->whereIn('future_student.id', function ($query) {
-                $query->select(DB::raw('MAX(id)'))
-                    ->from('future_student')
-                    ->groupBy('student_id', 'group');
-            })
-            // ->whereYear('future_student.status_date', $year)
-            // ->whereMonth('future_student.status_date', $month)
-            ->join('students', 'future_student.student_id', '=', 'students.id')
-            ->orderBy('students.code')
-            ->get();
 
-
-        // $testquery = FutureStd::whereMonth('status_date',$month)
-        //                         ->whereYear('status_date',$year)
-        //                         ->get();
-
-        // dd($latestStatusByStudent, $latestStatusCounts);
-
+            $latestStatusByStudent = FutureStd::select(
+                'future_student.student_id',
+                'future_student.group',
+                'future_student.status',
+                'future_student.status_date',
+                'future_student.nick_name'
+            )
+                ->whereIn('future_student.id', function ($query) use ($year, $month) {
+                    $query->select(DB::raw('MAX(id)'))
+                        ->from('future_student')
+                        ->whereYear('status_date', $year)
+                        ->whereMonth('status_date', $month)
+                        ->groupBy('student_id', 'group');
+                })
+                ->join('students', 'future_student.student_id', '=', 'students.id')
+                ->orderBy('students.code')
+                ->get();
+        }
         return view('students.report_std_future', [
 
             'latestStatusCounts' => $latestStatusCounts,
@@ -459,10 +478,8 @@ class StdlogController extends Controller
         ]);
         $month = $request->month;
         $year = $request->year;
-        // dd($year,$month);
         if ($month == null) {
-            $latestStatusCounts = FutureStd::whereYear('status_date', $year)
-                ->select('group', 'student_id', 'status')
+            $latestStatusCounts = FutureStd::select('group', 'student_id', 'status')
                 ->whereIn('id', function ($query) {
                     $query->select(DB::raw('MAX(id)'))
                         ->from('future_student')
@@ -471,90 +488,53 @@ class StdlogController extends Controller
                 ->whereYear('status_date', $year)
                 ->orderBy('group')
                 ->get();
-            $latestStatusByStudent = FutureStd::whereYear('future_student.status_date', $year)
-                ->select('future_student.student_id', 'future_student.group', 'future_student.status', 'future_student.status_date', 'future_student.nick_name')
+            $latestStatusByStudent = FutureStd::select('future_student.student_id', 'future_student.group', 'future_student.status', 'future_student.status_date', 'future_student.nick_name')
                 ->whereIn('future_student.id', function ($query) {
                     $query->select(DB::raw('MAX(id)'))
                         ->from('future_student')
                         ->groupBy('student_id', 'group');
                 })
-                // ->whereYear('future_student.status_date', $year)
+                ->whereYear('future_student.status_date', $year)
                 ->join('students', 'future_student.student_id', '=', 'students.id')
                 ->orderBy('students.code')
                 ->get();
         } else {
-            $latestStatusCounts = FutureStd::whereYear('status_date', $year)
-                ->whereMonth('status_date', $month)
-                ->select('group', 'student_id', 'status')
-                ->whereIn('id', function ($query) {
+            $latestStatusCounts = FutureStd::select(
+                'future_student.student_id',
+                'future_student.group',
+                'future_student.status',
+                'future_student.status_date',
+                'future_student.nick_name'
+            )
+                ->whereIn('future_student.id', function ($query) use ($year, $month) {
                     $query->select(DB::raw('MAX(id)'))
                         ->from('future_student')
-
-                        ->groupBy('group', 'student_id');
-                })
-                // ->whereYear('status_date', $year)
-                // ->whereMonth('status_date', $month)
-                ->orderBy('group')
-                ->get();
-
-            $latestStatusByStudent = FutureStd::whereYear('future_student.status_date', $year)
-                ->whereMonth('future_student.status_date', $month)
-                ->select('future_student.student_id', 'future_student.group', 'future_student.status', 'future_student.status_date', 'future_student.nick_name')
-                ->whereIn('future_student.id', function ($query) {
-                    $query->select(DB::raw('MAX(id)'))
-                        ->from('future_student')
+                        ->whereYear('status_date', $year)
+                        ->whereMonth('status_date', $month)
                         ->groupBy('student_id', 'group');
                 })
-                // ->whereYear('future_student.status_date', $year)
-                // ->whereMonth('future_student.status_date', $month)
                 ->join('students', 'future_student.student_id', '=', 'students.id')
                 ->orderBy('students.code')
                 ->get();
-        }
-
-        // $testquery = FutureStd::whereMonth('status_date', $month)
-        //     ->whereYear('status_date', $year)
-        //     ->groupBy('student_id', 'group')
-        //     //
-
-        //     ->get();
-        $month = $request->month;
-        $year = $request->year;
-        $latestStatusCounts = FutureStd::select('group', 'student_id', DB::raw('MAX(status) as max_status'), DB::raw('COUNT(*) as count'))
-            ->whereYear('status_date', $year)
-            ->whereMonth('status_date', $month)
-            ->groupBy('group', 'student_id')
-            ->orderBy('group')
-            ->get();
 
 
-        $testquery = FutureStd::select('student_id', 'group', 'status_date', DB::raw('COUNT(*) as count'))
-            ->whereMonth('status_date', $month)
-            ->whereYear('status_date', $year)
-            ->groupBy('student_id', 'group', 'status_date')
-            ->latest('status_date')
-            ->orderby('student_id') // Order by status_date in descending order
-            ->join('students', 'future_student.student_id', '=', 'students.id')
-            // ->orderBy('students.code')
-            ->get();
-
-        foreach ($testquery as $result) {
-            $studentId = $result->student_id;
-            $group = $result->group;
-            $count = $result->count;
-            $status_date = $result->status_date;
-
-            // Get the latest status for this student and group
-            $latestStatus = FutureStd::where('student_id', $studentId)
-                ->where('group', $group)
-                ->where('status_date', $status_date)
-                ->latest('status_date')
-                ->value('status');
-
-            // Do something with $studentId, $group, $count, and $latestStatus
-            // For example, you can print them out:
-            // echo "Student ID: $studentId    | Group: $group | Count: $count | Latest Status: $latestStatus  | status_date : $status_date";
-            // echo "<br/>";
+            $latestStatusByStudent = FutureStd::select(
+                'future_student.student_id',
+                'future_student.group',
+                'future_student.status',
+                'future_student.status_date',
+                'future_student.nick_name'
+            )
+                ->whereIn('future_student.id', function ($query) use ($year, $month) {
+                    $query->select(DB::raw('MAX(id)'))
+                        ->from('future_student')
+                        ->whereYear('status_date', $year)
+                        ->whereMonth('status_date', $month)
+                        ->groupBy('student_id', 'group');
+                })
+                ->join('students', 'future_student.student_id', '=', 'students.id')
+                ->orderBy('students.code')
+                ->get();
         }
 
         // dd($testquery);
@@ -563,13 +543,14 @@ class StdlogController extends Controller
         return view('students.report_std_future', [
 
             'latestStatusCounts' => $latestStatusCounts,
-            'latestStatusByStudent' => $testquery,
+            'latestStatusByStudent' => $latestStatusByStudent,
 
         ]);
     }
 
     private function determineStatus($student, $select_month_year)
     {
+
         $stdId = $student->id;
         // $stdId = 157;
         $receipt = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
@@ -589,20 +570,16 @@ class StdlogController extends Controller
                 if (!$school_pice->isEmpty()) {
                     $startdate = $school_pice->first()->period;
                 }
-
                 $parts = explode('-', $startdate);
                 $lastTwoParts = array_slice($parts, 0, 2);
                 $start_date = implode('-', $lastTwoParts);
                 $currentReceiptStartDate = Carbon::parse($start_date);
-
                 $current_Month = $select_month_year;
                 // $current_Month = Carbon::createFromFormat('Y-m', );
                 $currentMonth = Carbon::parse($current_Month);
                 // dd('test : '.$currentMonth,$current_Month);
-
                 // $count_receipt = count($receipt);
                 $count_qty = count($school_pice);
-
                 if ($count_qty < 1) {
                     $status[$group] = 'None Receipt';
                 } elseif ($count_qty == 1) {

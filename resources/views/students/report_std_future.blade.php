@@ -28,6 +28,7 @@
         @endif
 
         <div class="app-page-title">
+
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
@@ -36,14 +37,29 @@
                     <div>Students
                         <div class="page-title-subheading">Infinite Brain Student Data</div>
                     </div>
+
+                </div>
+                {{-- <a href="#" class="btn btn-primary btn-sm" onclick="formModal('{{ route('test_modal') }}')"
+                        data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
+                        data-bs-title="View OT Record">
+
+                        <i class="fa fa-eye fa-1x"></i></a> --}}
+                <div class="page-title-actions">
+                    <div class="d-inline-block dropdown">
+
+
+                        {{-- <a href="#" class="btn btn-success" onclick="formModal('{{ route('test_modal') }}')"
+                                    data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
+                                    data-bs-title="Create New Student">
+                                    <i class="fa fa-plus"></i> Create New Student test
+                                </a> --}}
+                        <a href="{{ route('reportFutureStd') }}" class="btn btn-info">return index </a>
+
+                    </div>
                 </div>
 
-                <a href="#" class="btn btn-primary btn-sm" onclick="formModal('{{ route('test_modal') }}')"
-                    data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
-                    data-bs-title="View OT Record">
-
-                    <i class="fa fa-eye fa-1x"></i></a>
             </div>
+
         </div>
 
         <div class="main-card mb-3 card " id="x_content">
@@ -73,8 +89,8 @@
                                     <select name="month" id="selectMonth" class="form-select">
                                         <option value="">เลือกเดือน</option>
                                         @for ($i = 1; $i <= 12; $i++)
-                                            <option value="{{ $i }}"> {{ date('F', mktime(0, 0, 0, $i, 1)) }}
-                                            </option>
+                                            <option value="{{ sprintf('%02d', $i) }}">
+                                                {{ date('F', mktime(0, 0, 0, $i, 1)) }}</option>
                                         @endfor
                                     </select>
                                 </div>
@@ -179,6 +195,8 @@
                             <th class="text-danger">Drop</th>
                             <th class="text-success">Resume</th>
                             <th class="text-primary">Waitting . . .</th>
+                            <th class="text-info">Total</th>
+
                             <th class="text-info">None Receipt</th>
                             <th>date time</th>
                         </tr>
@@ -228,6 +246,11 @@
                                 <td>{{ isset($statusCounts['resume']) ? $statusCounts['resume'] : 0 }} คน</td>
                                 <td>{{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }} คน
                                 </td>
+                                <td>{{ (isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0) +
+                                    (isset($statusCounts['studying . . .']) ? $statusCounts['studying . . .'] : 0) +
+                                    (isset($statusCounts['resume']) ? $statusCounts['resume'] : 0) }}
+                                    คน
+                                </td>
                                 <td>{{ isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0 }} คน</td>
                                 <td>{{ now() }}</td>
                                 <!-- You can replace this with the actual date time if needed -->
@@ -250,6 +273,7 @@
                             <td>{{ $totalDrop }} คน</td>
                             <td>{{ $totalResume }} คน</td>
                             <td>{{ $totalWait }} คน</td>
+                            <td>{{ $totalNewStudents + $totalStudying + $totalResume }} คน</td>
                             <td>{{ $totalNoneReceipt }} คน</td>
                             <td>{{ now() }}</td>
                         </tr>
