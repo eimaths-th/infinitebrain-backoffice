@@ -345,7 +345,7 @@ class StdlogController extends Controller
                     ->latest()
                     ->get();
                 if (count($existingStatus) > 0) {
-                    if ($existingStatus->first()->status === 'drop') {
+                    if ($existingStatus->first()->status === 'drop' || $existingStatus->first()->status === 'waitting . . .') {
                         $newEnrollmentReceipt = SchoolPrice::where('student_id', $student->id)
                             ->where('qty', '>', 0)
                             ->where('group', $subjectGroup)
@@ -359,6 +359,8 @@ class StdlogController extends Controller
                         $submissionDate = Carbon::parse($start_date);
                         // $submissionDate = Carbon::parse($newEnrollmentReceipt->period);
                         $currentMonth = Carbon::createFromFormat('Y-m', date('Y-m'));
+                        // $currentMonth = Carbon::parse($start_date);
+
                         if ($currentMonth->diffInMonths($submissionDate) < 1) {
                             $status = 'resume';
                         }
@@ -693,19 +695,25 @@ class StdlogController extends Controller
                             } elseif (
                                 $currentMonth->diffInMonths($currentReceiptsubmission_date) == 0
                                 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)
-                                // && $check_resume->first()->status !== 'studying . . .'
                             ) {
                                 //แก้บัค 22/09/2023
                                 if ($check_resume->first()->status == 'studying . . .') {
                                     $status[$group] = 'studying . . .';
                                 } else {
-                                    $status[$group] = 'waitting . . .';
                                 }
                                 // $status[$group] = 'waitting . . .';
 
                                 // dd($check_resume,$stdId,$status,$school_pice);
                             } else {
-                                $status[$group] = 'studying . . .';
+                                // dd($check_resume,$check_resume->first()->status);
+
+                                if ($check_resume->first()->status == 'waitting . . .') {
+                                    $status[$group] = 'waitting . . .';
+                                } else {
+                                    $status[$group] = 'studying . . .';
+                                }
+                                // dd($status);
+
                             }
                         }
                     }

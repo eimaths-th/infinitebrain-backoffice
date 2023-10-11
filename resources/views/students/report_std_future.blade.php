@@ -70,7 +70,7 @@
 
                 <form action="{{ route('search_future') }}" method="GET">
                     @csrf
-                    <div class="row mb-5">
+                    <div class="row mb-3">
 
                         @if ($errors->any())
                             <div class="alert alert-danger">
@@ -81,7 +81,7 @@
                                 </ul>
                             </div>
                         @endif
-
+                        <b class="mb-3">ค้นหาข้อมูล</b>
                         <div class="col-lg-2">
                             <div class="row">
                                 <label for="month" class="col-lg-3">เดือน : </label>
@@ -132,8 +132,8 @@
 
                 <form action="{{ route('searchFuture') }}" method="GET">
                     @csrf
-                    <div class="row my-5">
-
+                    <div class="row my-3">
+                        <b class="mb-3">คาดการข้อมูล</b>
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -176,7 +176,7 @@
                         </div>
                         <div class="col-lg-2">
                             <button class="btn btn-primary" type="submit" id="seach_status"
-                                name="seach_status">ค้นหา</button>
+                                name="seach_status">ทำนาย</button>
                         </div>
                     </div>
                 </form>
