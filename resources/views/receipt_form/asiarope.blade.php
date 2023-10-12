@@ -559,7 +559,7 @@
                                                     style="text-decoration: underline;">Asiarope 2023 Registration
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong> 1 May - 7 July 2023</span></p>
+                                                Date:</strong> 14 Oct- 30 Nov</span></p>
                                     <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;23 July 2023</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
