@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html>
 <head>
     <title>Route Control</title>
@@ -6,10 +6,98 @@
 <body>
     <h1>Route Control Page</h1>
 
-    <form action="{{ route('route.toggle', ['route' => 'specific-route']) }}" method="post">
+    <form action="{{ route('save_times') }}" method="post">
         @csrf
-        <input type="checkbox" name="status" value="enabled"> Enable Specific Route<br>
-        <button type="submit">Submit</button>
+
+        <label for="route">Route:</label>
+        <select name="route" id="route">
+            <!-- Populate options with your route names -->
+            <option value="gmec">gmec</option>
+            <option value="olpcs">olpcs</option>
+            <option value="asiarope">asiarope</option>
+            <option value="gelosea">gelosea</option>
+            <option value="imocsea">imocsea</option>
+            <option value="isocsea">isocsea</option>
+            <option value="imocsea+isocsea">imocsea+isocsea</option>
+            <option value="cambridge">cambridge</option>
+
+        </select>
+
+        <label for="opening_time">Opening Time:</label>
+        <input type="datetime-local" name="opening_time" id="opening_time">
+
+        <label for="closing_time">Closing Time:</label>
+        <input type="datetime-local" name="closing_time" id="closing_time">
+
+        <button type="submit">Set Times</button>
     </form>
 </body>
-</html>
+</html> --}}
+<form action="{{ route('save_times') }}" method="post">
+    @csrf
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Set Time</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+        </button>
+    </div>
+    <!-- Modal body -->
+    <div class="modal-body">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+
+            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"></span>
+            </button>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="Parent">Route :</label><br>
+                    <select style="width: 100%;" class="form-control" id="route" name="route">
+                        <option value="">Select Route</option>
+                        <option value="gmec">gmec</option>
+                        <option value="olpcs">olpcs</option>
+                        <option value="asiarope">asiarope</option>
+                        <option value="gelosea">gelosea</option>
+                        <option value="imocsea">imocsea</option>
+                        <option value="isocsea">isocsea</option>
+                        <option value="imocsea+isocsea">imocsea+isocsea</option>
+                        <option value="cambridge">cambridge</option>
+                    </select>
+
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="Name">Opening Time:</label>
+                    <input type="datetime-local" class="form-control" name="opening_time" id="opening_time">
+
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="Name">Closing Time:</label>
+                    <input type="datetime-local" class="form-control" name="closing_time" id="closing_time">
+
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Parent">Route :</label><br>
+            <textarea name="comments" class="form-control" id="comments" rows="5"></textarea>
+
+        </div>
+        <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id  }}">
+
+    </div>
+    <!-- Modal footer -->
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Save</button>
+        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
+    </div>
+</form>

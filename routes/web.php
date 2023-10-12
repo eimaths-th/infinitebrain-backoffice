@@ -25,6 +25,8 @@ use App\Http\Controllers\RetrospectiveCheckController;
 use App\Http\Controllers\RouteToggleController;
 use App\Http\Controllers\StdlogController;
 use App\Http\Controllers\SuperMasterContrller;
+use App\Http\Controllers\TimeController;
+
 // use App\Http\Controllers\RouteToggleController;
 
 /*
@@ -39,13 +41,22 @@ use App\Http\Controllers\SuperMasterContrller;
 */
 
 
-//swift
-// Route to display the route control page
-Route::get('/route-control', [RouteToggleController::class, 'showControlPage'])->name('route.control');
-// Route to handle the toggle action
-Route::post('/toggle-route/{route}', [RouteToggleController::class, 'toggle'])->name('route.toggle');
+Route::group(['middleware' => 'check.opening.date.time'], function () {
 
+    Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
+    Route::get('/olpcs', [ReceiptFormController::class, 'olpcs'])->name('olpcs');
+    Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
+    Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
+    Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
+    Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
+    Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
+    Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
+});
 
+Route::get('/report-future-student', [StdlogController::class, 'reportFutureStd'])->name('reportFutureStd');
+Route::post('/save_times', [TimeController::class, 'saveTimes'])->name('save_times');
+Route::get('/forms-time', [TimeController::class, 'formsTimes'])->name('formsTimes');
+Route::get('/forms-control', [TimeController::class, 'formsControl'])->name('formsControl');
 
 
 Route::group(array('domain' => 'form.infinitebrain.co.th'), function () {
@@ -92,7 +103,7 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
 // });
 
 Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
-Route::get('/report-future-student', [StdlogController::class, 'reportFutureStd'])->name('reportFutureStd');
+// Route::get('/report-future-student', [StdlogController::class, 'reportFutureStd'])->name('reportFutureStd');
 Route::get('/searchFuture', [StdlogController::class, 'searchFuture'])->name('searchFuture');
 Route::get('/search_future', [StdlogController::class, 'search_future'])->name('search_future');
 Route::get('/report-student', [StdlogController::class, 'index'])->name('report-student');
@@ -195,15 +206,7 @@ Route::post('/parent-register/store', [ParentRegisterController::class, 'store']
 Route::get('/parent-register/complete', [ParentRegisterController::class, 'show'])->name('parentregister.complete');
 Route::get('/school', [SchoolController::class, 'index'])->name('school');
 
-// Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
-//Route::get('/olpcs', [ReceiptFormController::class, 'olpcs'])->name('olpcs');
-Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
-// Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
 
-// Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
-// Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
-// Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
-// Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
 
 Route::get('/cambridge/line', [ReceiptFormController::class, 'cambridge'])->name('cambridge.line');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
@@ -283,5 +286,3 @@ Route::put('/receipt_school/save/{id}', [ReceiptSchoolController::class, 'update
 Route::post('/receipt_school/upload', [ReceiptSchoolController::class, 'fileStore'])->name('receipt_school.upload');
 Route::post('/receipt_school/upload/delete', [ReceiptSchoolController::class, 'fileDestroy'])->name('receipt_school.delete');
 Route::put('/receipt_school/delete/{id}/{id2}', [ReceiptSchoolController::class, 'deleteImg'])->name('receipt_school.deleteImg');
-
-
