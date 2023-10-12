@@ -423,7 +423,9 @@ class ReceiptFormController extends Controller
     public function store(Request $request)
     {
         //
+        // dd($request);
         $validator =  Validator::make($request->all(), [
+            // 'firstname' => 'required|string',
             'firstname' => 'required|string',
             'lastname' => 'required|string',
             'nickname' => 'required|string',
@@ -474,6 +476,7 @@ class ReceiptFormController extends Controller
         $receiptForm = new ReceiptForm([
             'sfield' => $request->get('sfield'),
             'submission_date' => date("Y-m-d"),
+            'subject' => $request->get('subject'),
             'first_name' => $request->get('firstname'),
             'last_name' => $request->get('lastname'),
             'nick_name' => $request->get('nickname'),

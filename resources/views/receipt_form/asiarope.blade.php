@@ -560,7 +560,7 @@
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
                                                 Date:</strong> 14 Oct- 30 Nov</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;23 July 2023</span>
+                                    <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;16 DEC 2023</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -575,7 +575,7 @@
                                     <p>&nbsp;</p>
                                     <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร ASIAROPE</b> <br>
 
-                                        รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน (นับจากวันเปิดเทอมจนถึงวันที่สอบ 23 ก.ค.) <br>
+                                        รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
                                         ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน ให้ใช้ระดับชั้นปัจจุบัน <br>
 
                                         รร.นานาชาติใช้ระดับชั้นตามปีการศึกษาปัจจุบัน <br>
@@ -605,6 +605,38 @@
                                             </div>
                                         @endif
                                     </div>
+                                </div>
+
+                                <div class="form-row form-focus">
+                                    <label style="padding-left: 20px"
+                                        class="form-label form-label-top form-label-auto">Select Subject /
+                                        เลือก รายวิชา <span class="form-required">*</span></label>
+                                    <div class="col-md-6">
+
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto" for="subject">
+                                                <div style="width: 270px"></div>
+                                            </label>
+                                            {{-- <input type="text" class="form-control" name="subject" id="subject"
+                                                value="" maxlength="50" minlength="2" required> --}}
+                                                <select name="subject" id="subject" class="form-control">
+
+                                                    <option value="">Please Select</option>
+                                                    <option value="M">Math</option>
+
+                                                </select>
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Subject</label>
+                                            <div class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10"> <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
 
                                 <div class="form-row form-focus">
@@ -640,14 +672,7 @@
                                                 value="" maxlength="50" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
                                                 Name</label>
-                                            {{-- <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div> --}}
+
                                         </div>
                                     </div>
                                 </div>
