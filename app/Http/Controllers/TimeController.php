@@ -45,4 +45,10 @@ class TimeController extends Controller
             'controls' => $controls
         ]);
     }
+    public function deleteControl($id)
+    {
+        $control = OpeningClosingTime::find($id);
+        $control->delete();
+        return redirect()->back()->with('error', 'Control deleted successfully!');
+    }
 }

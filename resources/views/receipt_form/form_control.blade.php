@@ -12,13 +12,12 @@
 @endsection
 
 @section('content')
+    @if ($message = Session::get('error'))
+        <div class="alert alert-danger mb-5">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
     <div class="row">
-
-        @if ($message = Session::get('success'))
-            <div class="alert alert-success">
-                <p>{{ $message }}</p>
-            </div>
-        @endif
 
         <div class="app-page-title">
             <div class="page-title-wrapper">
@@ -54,9 +53,9 @@
         </div>
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-                <form method="post" action="{{ route('students.destroy_all') }}" name="delete_all" id="delete_all">
+                <form method="post" action="#" name="delete_all" id="delete_all">
                     @csrf
-                    @method('DELETE')
+
                     <table style="width: 100%;" id="Listview"
                         class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">
                         <thead>
@@ -69,7 +68,7 @@
                                 <th>Created at</th>
                                 <th>User</th>
                                 <th>Explain</th>
-                                {{-- <th width="280px">Action</th> --}}
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,6 +81,14 @@
                                     <td>{{ $control->created_at }}</td>
                                     <td>{{ $control->user->name }}</td>
                                     <td>{{ $control->comments }}</td>
+                                    <td>
+                                        <form method="post" action="{{ route('delete_control', ['id' => $control->id]) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                        {{-- button destroy --}}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -107,432 +114,9 @@
         </div>
         <br>
     </div>
-
-
-    <!-- Create Modal -->
-    {{-- <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true" id="CreateModal">
-        <div class="modal-dialog modal-lg" role="document">
-            <form class="form" action="" method="POST">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Add Student</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        </button>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
-                            style="display: none;">
-                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert"
-                            style="display: none;">
-
-                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true"></span>
-                            </button>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="Parent">Name Parent:</label><br>
-                            <select style="width: 100%;" class="parent select2 select2_single form-control"
-                                id="AddParent" name="name_parent" multiple="multiple">
-                                <!-- <option value="" selected>Select Student</option>
-                                                                                                                                                                    <option value="" selected>Select Parent</option>-->
-                                @foreach ($data4 as $key2)
-                                    <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->name_parent }}
-                                    </option>
-                                @endforeach
-
-                            </select>
-                        </div>
-                        <div class="form-group my-3">
-                            <label for="Name">Code: {{ $newStudentCode }}</label>
-                            <input type="hidden" class="form-control" name="code" id="AddCode" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Name:</label>
-                            <input type="text" class="form-control" name="name" id="AddName" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Lastname:</label>
-                            <input type="text" class="form-control" name="lastname" id="AddLastname" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Nickname:</label>
-                            <input type="text" class="form-control" name="nick_name" id="AddNickname"
-                                value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Mobile:</label>
-                            <input type="text" class="form-control" name="mobile" id="AddMobile" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Grade:</label>
-                            <input type="text" class="form-control" name="grade" id="AddGrade" value="">
-                        </div>
-
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="SubmitCreateForm">Save</button>
-                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-        </div>
-    </div> --}}
-
-    <!-- Edit Modal -->
-
-
-    <!-- View  Modal -->
 @endsection
 
 @section('script')
-    {{-- <script>
-        $(document).ready(function() {
-
-            $(".delete_all_button").click(function() {
-                var len = $('input[name="table_records[]"]:checked').length;
-                if (len > 0) {
-                    if (confirm("Click OK to Delete?")) {
-                        $('form#delete_all').submit();
-                    }
-                } else {
-                    alert("Please Select Record For Delete");
-                }
-
-            });
-
-            $(".select2_single").select2({
-                maximumSelectionLength: 1,
-                allowClear: true
-            });
-
-            $(".select3_single").select2({
-                maximumSelectionLength: 1,
-                // allowClear: true
-            });
-
-            $(".select2_multiple").select2({
-                maximumSelectionLength: 2,
-                //placeholder: "With Max Selection limit 4",
-                allowClear: true
-            });
-
-            $('#check-all').click(function() {
-                $(':checkbox.flat').prop('checked', this.checked);
-            });
-
-            //$.noConflict();
-            var token = ''
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            var table = $('#Listview').DataTable({
-                /*"aoColumnDefs": [
-                {
-                'bSortable': true,
-                'aTargets': [0]
-                } //disables sorting for column one
-                ],
-                "searching": false,
-                "lengthChange": false,
-                "paging": false,
-                'iDisplayLength': 10,
-                "sPaginationType": "full_numbers",
-                "dom": 'T<"clear">lfrtip',
-                    */
-                ajax: '',
-                serverSide: true,
-                processing: true,
-                language: {
-                    loadingRecords: '&nbsp;',
-                    processing: '<div class="spinner"></div>'
-                },
-                aaSorting: [
-                    [0, "desc"]
-                ],
-                iDisplayLength: 10,
-                lengthMenu: [10, 20, 50, 75, 100],
-                stateSave: true,
-                sPaginationType: "full_numbers",
-                dom: 'T<"clear">lfrtip',
-                columns: [{
-                        data: 'checkbox',
-                        name: 'checkbox',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'photo',
-                        name: 'photo'
-                    },
-                    {
-                        data: 'code',
-                        name: 'code'
-                    },
-                    {
-                        data: 'first_name',
-                        name: 'first_name'
-                    },
-                    {
-                        data: 'last_name',
-                        name: 'last_name'
-                    },
-                    {
-                        data: 'nick_name',
-                        name: 'nick_name'
-                    },
-                    {
-                        data: 'mobile',
-                        name: 'mobile'
-                    },
-                    {
-                        data: 'status',
-                        name: 'status'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action'
-                    },
-                ]
-            });
-
-            $(document).on('click', '#SubmitImportForm', function(e) {
-                e.preventDefault();
-                //$('#loder_bar').show();
-                $.blockUI({
-                    message: $("#loder_bar")
-                });
-                $("#importForm").submit();
-
-            });
-
-            $(document).on('click', '#ImportButton', function(e) {
-                e.preventDefault();
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
-                $('#ImportModal').modal('show');
-            });
-
-            $(document).on('click', '#CreateButton', function(e) {
-                e.preventDefault();
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
-                $('#CreateModal').modal('show');
-            });
-
-            let id;
-            $(document).on('click', '#getEditData', function(e) {
-                e.preventDefault();
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
-
-                id = $(this).data('id');
-                $.ajax({
-                    url: "students/edit/" + id,
-                    method: 'GET',
-                    success: function(res) {
-                        $('#EditModalBody').html(res.html);
-                        $('#EditParent').html(res.parent);
-                        $('#Editreason').html(res.select_reaon);
-                        $('#EditModal').modal('show');
-                        $('#textReason').hide();
-
-                        $(document).ready(function() {
-                            e.preventDefault();
-                            var reasonValue = $('#Editreason').val()[0];
-                            console.log('Editreason : ' + reasonValue);
-
-                            if ($('#Editreason').val()[0] === '') {
-                                $('#textReason').show();
-                            } else {
-                                $('#textReason').hide();
-                            }
-                        });
-
-                    }
-                });
-            });
-            $(document).on('change', '#Editreason', function(e) {
-                e.preventDefault();
-                var reasonValue = $('#Editreason').val()[0];
-                console.log('Editreason : ' + reasonValue);
-
-                if ($('#Editreason').val()[0] === '') {
-                    $('#textReason').show();
-                } else {
-                    $('#textReason').hide();
-                }
-            });
-
-
-            //view
-            $(document).on('click', '#getViewData', function(e) {
-                e.preventDefault();
-
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
-
-                id = $(this).data('id');
-                $.ajax({
-                    url: "students/view/" + id,
-                    method: 'GET',
-                    success: function(res) {
-                        $('#ViewModalBody').html(res.html);
-                        $('#ViewParent').html(res.parent);
-                        $('#ViewModal').modal('show');
-                    }
-                });
-
-            });
-
-            // Create product Ajax request.
-            $('#SubmitCreateForm').click(function(e) {
-                e.preventDefault();
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
-
-                $.ajax({
-                    url: "{{ route('students.store') }}",
-                    method: 'post',
-                    data: {
-                        code: $('#AddCode').val(),
-                        name: $('#AddName').val(),
-                        lastname: $('#AddLastname').val(),
-                        nick_name: $('#AddNickname').val(),
-                        mobile: $('#AddMobile').val(),
-                        grade: $('#AddGrade').val(),
-                        parent: $('#AddParent').val()[0],
-                        _token: token,
-                    },
-                    success: function(result) {
-                        if (result.errors) {
-                            $('.alert-danger').html('');
-                            $.each(result.errors, function(key, value) {
-                                $('.alert-danger').show();
-                                $('.alert-danger').append('<strong><li>' + value +
-                                    '</li></strong>');
-                            });
-                        } else {
-                            $('.alert-danger').hide();
-                            $('.alert-success').show();
-                            $('.alert-success').append('<strong><li>' + result.success +
-                                '</li></strong>');
-                            toastr.success(result.success, {
-                                timeOut: 5000
-                            });
-                            $('#Listview').DataTable().ajax.reload();
-                            $('.form').trigger('reset');
-                            //$('#SubmitCreateForm').hide();
-                            //setTimeout(function() {
-                            //$('.alert-success').hide();
-                            $('#CreateModal').modal('hide');
-                            //}, 10000);
-
-                        }
-                    }
-                });
-            });
-
-            $('#SubmitEditForm').click(function(e) {
-                e.preventDefault();
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
-                $.ajax({
-                    url: "students/save/" + id,
-                    method: 'PUT',
-                    data: {
-                        code: $('#EditCode').val(),
-                        first_name: $('#EditName').val(),
-                        last_name: $('#EditLastname').val(),
-                        nick_name: $('#EditNickname').val(),
-                        mobile: $('#EditMobile').val(),
-                        grade: $('#Editgrade').val(),
-                        // reason: $('#Editreason').val()[0],
-                        reason: $('#Editreason').val()[0] !== null && $('#Editreason').val()[0] !==
-                            '' ? $('#Editreason').val()[0] : $('#textReason').val(),
-                        // reason: JSON.parse($('#Editreason').val()),
-                        pid: $('#EditParent').val()[0],
-                    },
-                    success: function(result) {
-                        console.log(result);
-                        console.log($('#Editreason').val());
-
-                        if (result.errors) {
-                            $('.alert-danger').html('');
-                            $.each(result.errors, function(key, value) {
-                                $('.alert-danger').show();
-                                $('.alert-danger').append('<strong><li>' + value +
-                                    '</li></strong>');
-                            });
-                        } else {
-                            $('.alert-danger').hide();
-                            $('.alert-success').show();
-                            $('.alert-success').append('<strong><li>' + result.success +
-                                '</li></strong>');
-                            toastr.success(result.success, {
-                                timeOut: 5000
-                            });
-
-                            $('#Listview').DataTable().ajax.reload();
-                            //setTimeout(function() {
-                            //$('.alert-success').hide();
-                            $('#EditModal').modal('hide');
-                            //}, 10000);
-
-                        }
-                    }
-                });
-            });
-
-
-            $(document).on('click', '.btn-delete', function() {
-                if (!confirm("Are you sure?")) return;
-
-                var rowid = $(this).data('rowid')
-                var el = $(this)
-                if (!rowid) return;
-
-
-                $.ajax({
-                    type: "POST",
-                    dataType: 'JSON',
-                    url: "students/destroy/" + rowid,
-                    data: {
-                        _method: 'delete',
-                        _token: token
-                    },
-                    success: function(data) {
-                        if (data.success) {
-                            table.row(el.parents('tr'))
-                                .remove()
-                                .draw();
-                        }
-                    }
-                }); //end ajax
-            })
-        })
-    </script> --}}
     <script>
         var table = $('#Listview').DataTable({
             // serverSide: true,

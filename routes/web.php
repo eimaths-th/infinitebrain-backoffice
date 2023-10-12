@@ -57,7 +57,7 @@ Route::get('/report-future-student', [StdlogController::class, 'reportFutureStd'
 Route::post('/save_times', [TimeController::class, 'saveTimes'])->name('save_times');
 Route::get('/forms-time', [TimeController::class, 'formsTimes'])->name('formsTimes');
 Route::get('/forms-control', [TimeController::class, 'formsControl'])->name('formsControl');
-
+Route::delete('/delete_control/{id}', [TimeController::class, 'deleteControl'])->name('delete_control');
 
 Route::group(array('domain' => 'form.infinitebrain.co.th'), function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
