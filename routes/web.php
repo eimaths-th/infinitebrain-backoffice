@@ -22,8 +22,10 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\ReceiptSchoolController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\RetrospectiveCheckController;
+use App\Http\Controllers\RouteToggleController;
 use App\Http\Controllers\StdlogController;
 use App\Http\Controllers\SuperMasterContrller;
+// use App\Http\Controllers\RouteToggleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +37,16 @@ use App\Http\Controllers\SuperMasterContrller;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+//swift
+// Route to display the route control page
+Route::get('/route-control', [RouteToggleController::class, 'showControlPage'])->name('route.control');
+// Route to handle the toggle action
+Route::post('/toggle-route/{route}', [RouteToggleController::class, 'toggle'])->name('route.toggle');
+
+
+
 
 Route::group(array('domain' => 'form.infinitebrain.co.th'), function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
@@ -271,3 +283,5 @@ Route::put('/receipt_school/save/{id}', [ReceiptSchoolController::class, 'update
 Route::post('/receipt_school/upload', [ReceiptSchoolController::class, 'fileStore'])->name('receipt_school.upload');
 Route::post('/receipt_school/upload/delete', [ReceiptSchoolController::class, 'fileDestroy'])->name('receipt_school.delete');
 Route::put('/receipt_school/delete/{id}/{id2}', [ReceiptSchoolController::class, 'deleteImg'])->name('receipt_school.deleteImg');
+
+
