@@ -261,9 +261,15 @@ class StdlogController extends Controller
         $search = Carbon::parse($year . '-' . $month)->format('Y-m');
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($test_scp, $search, $search);
         $totalForAllMonths = $this->queryGrafgh($test_scp);
+        $paper = PaperReport::whereMonth('submission_date', $month)
+            ->whereYear('submission_date', $year)
+            ->orderBy('rec_id', 'desc')
+            ->get();
         return view('students.reportMonthStd', [
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
-            'totalForAllMonths' => $totalForAllMonths
+            'totalForAllMonths' => $totalForAllMonths,
+            'paper' => $paper,
+
         ]);
     }
 
