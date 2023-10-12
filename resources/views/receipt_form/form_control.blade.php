@@ -74,16 +74,15 @@
                         </thead>
                         <tbody>
                             @foreach ($controls as $key => $control)
-                            <tr>
-                                <td>{{ $key+1 }}</td>
-                                <td>{{ $control->route }}</td>
-                                <td>{{ $control->opening_time }}</td>
-                                <td>{{ $control->closing_time }}</td>
-                                <td>{{ $control->created_at }}</td>
-                                <td>{{ $control->user->name }}</td>
-                                <td>{{ $control->comments }}</td>
-                            </tr>
-
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $control->route }}</td>
+                                    <td>{{ $control->opening_time }}</td>
+                                    <td>{{ $control->closing_time }}</td>
+                                    <td>{{ $control->created_at }}</td>
+                                    <td>{{ $control->user->name }}</td>
+                                    <td>{{ $control->comments }}</td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -190,7 +189,6 @@
 
 
     <!-- View  Modal -->
-
 @endsection
 
 @section('script')
@@ -535,4 +533,11 @@
             })
         })
     </script> --}}
+    <script>
+        var table = $('#Listview').DataTable({
+            // serverSide: true,
+            // processing: true,
+            lengthMenu: [10, 20, 50, 75, 100],
+        });
+    </script>
 @endsection
