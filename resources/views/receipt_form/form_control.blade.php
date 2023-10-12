@@ -64,9 +64,9 @@
                                 {{-- <th width="10px"><input type="checkbox" id="check-all" class="flat"></th> --}}
                                 <th width="20px" align="center">#</th>
                                 <th>Route</th>
-                                <th>opening_time</th>
-                                <th>closing_time</th>
-                                <th>created_at</th>
+                                <th>Open</th>
+                                <th>Closs</th>
+                                <th>Created at</th>
                                 <th>User</th>
                                 <th>Explain</th>
                                 {{-- <th width="280px">Action</th> --}}
