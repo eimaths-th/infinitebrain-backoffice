@@ -58,7 +58,7 @@
             <div class="col-lg-4">
                 <div class="form-group">
                     <label for="Parent">Route :</label><br>
-                    <select style="width: 100%;" class="form-control" id="route" name="route">
+                    <select style="width: 100%;" class="form-control" id="route" name="route" required>
                         <option value="">Select Route</option>
                         <option value="gmec">gmec</option>
                         <option value="olpcs">olpcs</option>
@@ -75,20 +75,20 @@
             <div class="col-lg-4">
                 <div class="form-group">
                     <label for="Name">Opening Time:</label>
-                    <input type="datetime-local" class="form-control" name="opening_time" id="opening_time">
+                    <input type="datetime-local" class="form-control" name="opening_time" id="opening_time" required>
 
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="form-group">
                     <label for="Name">Closing Time:</label>
-                    <input type="datetime-local" class="form-control" name="closing_time" id="closing_time">
+                    <input type="datetime-local" class="form-control" name="closing_time" id="closing_time" required>
 
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <label for="Parent">Route :</label><br>
+        <div class="form-group mt-3">
+            <label for="Parent">Explain :</label><br>
             <textarea name="comments" class="form-control" id="comments" rows="5"></textarea>
 
         </div>

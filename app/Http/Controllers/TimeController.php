@@ -10,11 +10,20 @@ class TimeController extends Controller
     //
     public function saveTimes(Request $request)
     {
+        $request->validate([
+            'opening_time'  => 'required',
+            'closing_time'  => 'required',
+            'route'         => 'required',
+            'user_id'       => 'required',
+            // 'comments'      => 'required',
+        ]);
+
         $openingTime = $request->input('opening_time');
         $closingTime = $request->input('closing_time');
         $route = $request->input('route');
         $user_id = $request->input('user_id');
         $comments = $request->input('comments');
+
         OpeningClosingTime::create([
             'user_id' => $user_id,
             'comments' => $comments,
