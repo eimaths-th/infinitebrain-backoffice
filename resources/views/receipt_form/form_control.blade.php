@@ -77,7 +77,7 @@
                                 <tr>
                                     <td align="center"> {{ $key + 1 }}</td>
                                     <td>
-                                        <a target="_blank" class="text-black"
+                                        <a target="_blank" class="f5 text-black"
                                             href="{{ route($control->route) }}">{{ route($control->route) }}</a>
                                     </td>
                                     <td>{{ $control->opening_time }}</td>
@@ -89,8 +89,7 @@
                                             $class = 'danger';
                                         } elseif ($control->status === 'Online') {
                                             $class = 'success';
-
-                                        }else {
+                                        } else {
                                             $class = 'seccondary';
                                         }
                                     @endphp
@@ -103,7 +102,7 @@
                                     @else
                                         <td width="1%" align="center">
                                             <span class="badge bg-{{ $class }} rounded-pill">
-                                                <a target="_blank" class="text-black"
+                                                <a target="_blank" class="f5 text-black"
                                                     href="{{ route($control->route) }}">Update</a>
                                             </span>
                                         </td>
@@ -155,6 +154,14 @@
             // serverSide: true,
             // processing: true,
             lengthMenu: [10, 20, 50, 75, 100],
+        });
+
+        $(document).on('click', '.f5', function(e) {
+            e.preventDefault();
+            window.open(event.target.href);
+            window.location.reload();
+            event.preventDefault();
+            console.log(window.location);
         });
     </script>
 @endsection
