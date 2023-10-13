@@ -25,6 +25,9 @@ class CheckOpeningDateTime
         $times = OpeningClosingTime::where('route', $route)->latest()->first();
 
         if (!$times) {
+
+            $status = 'offline';
+            $times->update(['status' => $status]);
             return abort(404, 'Route times not set.');
         }
 
@@ -32,8 +35,13 @@ class CheckOpeningDateTime
         $closingDateTime = $now->copy()->setDateTimeFrom($times->closing_time);
 
         if ($now < $openingDateTime || $now > $closingDateTime) {
+            $status = 'offline';
+            $times->update(['status' => $status]);
             return abort(404, 'Route is currently closed.');
         }
+        $status = 'Online';
+        $times->update(['status' => $status]);
+
         return $next($request);
     }
 }

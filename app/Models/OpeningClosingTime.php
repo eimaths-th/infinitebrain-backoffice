@@ -16,7 +16,7 @@ class OpeningClosingTime extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id','comments','route','opening_time', 'closing_time', 'created_at', 'updated_at'];
+    protected $fillable = ['user_id','status','comments','route','opening_time', 'closing_time', 'created_at', 'updated_at'];
 
     public function user()
     {

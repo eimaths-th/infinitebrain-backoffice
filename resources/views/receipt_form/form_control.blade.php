@@ -61,10 +61,11 @@
                         <thead>
                             <tr>
                                 {{-- <th width="10px"><input type="checkbox" id="check-all" class="flat"></th> --}}
-                                <th width="20px" align="center">#</th>
+                                <th width="1%" align="center">#</th>
                                 <th>Route</th>
                                 <th>Open</th>
                                 <th>Closs</th>
+                                <th width="1%" align="center">Status</th>
                                 <th>Created at</th>
                                 <th>User</th>
                                 <th>Explain</th>
@@ -74,15 +75,30 @@
                         <tbody>
                             @foreach ($controls as $key => $control)
                                 <tr>
-                                    <td>{{ $key + 1 }}</td>
-                                    <td>{{ $control->route }}</td>
+                                    <td align="center"> {{ $key + 1 }}</td>
+                                    <td>
+                                        <a target="_blank" class="text-black" href="{{ route($control->route) }}">{{ $control->route }}</a>
+                                    </td>
                                     <td>{{ $control->opening_time }}</td>
                                     <td>{{ $control->closing_time }}</td>
+
+                                    @php
+                                        if ($control->status === 'offline') {
+                                            $class = 'danger';
+                                        } else {
+                                            $class = 'success';
+                                        }
+                                    @endphp
+
+                                    <td width="1%" align="center"> <span
+                                            class="badge bg-{{ $class }} rounded-pill"> {{ $control->status }}</span>
+                                    </td>
                                     <td>{{ $control->created_at }}</td>
                                     <td>{{ $control->user->name }}</td>
                                     <td>{{ $control->comments }}</td>
                                     <td>
-                                        <form method="post" action="{{ route('delete_control', ['id' => $control->id]) }}">
+                                        <form method="post"
+                                            action="{{ route('delete_control', ['id' => $control->id]) }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">Delete</button>
