@@ -22,8 +22,12 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\ReceiptSchoolController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\RetrospectiveCheckController;
+use App\Http\Controllers\RouteToggleController;
 use App\Http\Controllers\StdlogController;
 use App\Http\Controllers\SuperMasterContrller;
+use App\Http\Controllers\TimeController;
+
+// use App\Http\Controllers\RouteToggleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +39,25 @@ use App\Http\Controllers\SuperMasterContrller;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+Route::group(['middleware' => 'check.opening.date.time'], function () {
+
+    Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
+    Route::get('/olpcs', [ReceiptFormController::class, 'olpcs'])->name('olpcs');
+    Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
+    Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
+    Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
+    Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
+    Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
+    Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
+});
+
+Route::get('/report-future-student', [StdlogController::class, 'reportFutureStd'])->name('reportFutureStd');
+Route::post('/save_times', [TimeController::class, 'saveTimes'])->name('save_times');
+Route::get('/forms-time', [TimeController::class, 'formsTimes'])->name('formsTimes');
+Route::get('/forms-control', [TimeController::class, 'formsControl'])->name('formsControl');
+Route::delete('/delete_control/{id}', [TimeController::class, 'deleteControl'])->name('delete_control');
 
 Route::group(array('domain' => 'form.infinitebrain.co.th'), function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
@@ -80,7 +103,7 @@ Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout')
 // });
 
 Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
-Route::get('/report-future-student', [StdlogController::class, 'reportFutureStd'])->name('reportFutureStd');
+// Route::get('/report-future-student', [StdlogController::class, 'reportFutureStd'])->name('reportFutureStd');
 Route::get('/searchFuture', [StdlogController::class, 'searchFuture'])->name('searchFuture');
 Route::get('/search_future', [StdlogController::class, 'search_future'])->name('search_future');
 Route::get('/report-student', [StdlogController::class, 'index'])->name('report-student');
@@ -183,16 +206,8 @@ Route::post('/parent-register/store', [ParentRegisterController::class, 'store']
 Route::get('/parent-register/complete', [ParentRegisterController::class, 'show'])->name('parentregister.complete');
 Route::get('/school', [SchoolController::class, 'index'])->name('school');
 
-// Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
-//Route::get('/olpcs', [ReceiptFormController::class, 'olpcs'])->name('olpcs');
-// Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
-// Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
 
-Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
-Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
-Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
 
-Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
 Route::get('/cambridge/line', [ReceiptFormController::class, 'cambridge'])->name('cambridge.line');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
 Route::post('/form/upload/api', [ReceiptFormController::class, 'fileStoreAPI'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->name('form.upload.api');

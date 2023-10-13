@@ -1229,6 +1229,7 @@ class ReceiptController extends Controller
             //->join("levels", "levels.id", "=", "receipts.level_id")
             ->where([['receipts.sfield', $sfield], ['submission_date', 'LIKE', $request->get('print_month') . '%']])
             ->orderBy("receipts.submission_date", "asc")
+            ->orderBy("receipts.id", "asc")
             ->get();
         // ->toArray();
 
@@ -1261,7 +1262,7 @@ class ReceiptController extends Controller
             $ret_receipt[$result->receipt_submission_date]['receipt_number'][$i] = $result->receipt_number;
 
             $maxdate = max(array_keys($ret_receipt[$result->receipt_submission_date]['receipt_numberm']));
-            $ret_receipt[$result->receipt_submission_date]['receipt_numbers'] = $ret_receipt[$result->receipt_submission_date]['receipt_number'][0] . ' - ' . $ret_receipt[$result->receipt_submission_date]['receipt_number'][$maxdate];
+            $ret_receipt[$result->receipt_submission_date]['receipt_numbers'] = $ret_receipt[$result->receipt_submission_date]['receipt_number'][0] . ' - ' . $ret_receipt[$result->receipt_submission_date]['receipt_numberm'][$maxdate];
             $ret_receipt[$result->receipt_submission_date]['receipt_type'][$i] = $result->receipt_type;
             $ret_receipt[$result->receipt_submission_date]['cancle'][$i] = $result->cancle;
 
@@ -1314,6 +1315,8 @@ class ReceiptController extends Controller
             }
             $i++;
         }
+
+        //dd($ret_receipt[$result->receipt_submission_date]['receipt_numberm']);
         $numrec = count($ret_receipt);
         $pagen = 0;
         if ($numrec < 19) {

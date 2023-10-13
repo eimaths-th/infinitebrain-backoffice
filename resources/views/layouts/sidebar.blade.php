@@ -51,6 +51,7 @@
                             Dashboard
                             {{-- <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i> --}}
                         </a>
+                    </li>
                     <li class="app-sidebar__heading">โรงเรียน </li>
 
                     <li>
@@ -289,6 +290,13 @@
                 @if (Auth::user()->level == 3 || Auth::user()->level == 1 || Auth::user()->level == 0)
                     <li class="app-sidebar__heading">สนามสอบ</li>
                     <li>
+                        <a href="{{ route('formsControl') }}">
+                            <i class="metismenu-icon pe-7s-clock"></i>
+                            SetTime
+                            
+                        </a>
+                    </li>
+                    <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-note2"></i>
                             ข้อมูลจาก Online Form
@@ -453,6 +461,7 @@
 
                         </ul>
                     </li>
+
                     <li>
                         @php
                         {{
