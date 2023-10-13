@@ -62,7 +62,7 @@
                             <tr>
                                 {{-- <th width="10px"><input type="checkbox" id="check-all" class="flat"></th> --}}
                                 <th width="1%" align="center">#</th>
-                                <th>Route</th>
+                                <th>Url</th>
                                 <th>Open</th>
                                 <th>Closs</th>
                                 <th width="1%" align="center">Status</th>
@@ -78,7 +78,7 @@
                                     <td align="center"> {{ $key + 1 }}</td>
                                     <td>
                                         <a target="_blank" class="text-black"
-                                            href="{{ route($control->route) }}">{{ $control->route }}</a>
+                                            href="{{ route($control->route) }}">{{ route($control->route) }}</a>
                                     </td>
                                     <td>{{ $control->opening_time }}</td>
                                     <td>{{ $control->closing_time }}</td>
