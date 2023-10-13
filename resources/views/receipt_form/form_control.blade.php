@@ -85,9 +85,9 @@
 
                                     @php
 
-                                        if ($control->status === 'offline') {
+                                        if ($control->status === 'Offline') {
                                             $class = 'danger';
-                                        } elseif ($control->status === 'online') {
+                                        } elseif ($control->status === 'Online') {
                                             $class = 'success';
 
                                         }else {

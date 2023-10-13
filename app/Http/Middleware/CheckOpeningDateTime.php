@@ -26,7 +26,7 @@ class CheckOpeningDateTime
 
         if (!$times) {
 
-            $status = 'offline';
+            $status = 'Offline';
             $times->update(['status' => $status]);
             return abort(404, 'Route times not set.');
         }
@@ -35,7 +35,7 @@ class CheckOpeningDateTime
         $closingDateTime = $now->copy()->setDateTimeFrom($times->closing_time);
 
         if ($now < $openingDateTime || $now > $closingDateTime) {
-            $status = 'offline';
+            $status = 'Offline';
             $times->update(['status' => $status]);
             return abort(404, 'Route is currently closed.');
         }
