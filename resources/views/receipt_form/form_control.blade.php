@@ -77,22 +77,39 @@
                                 <tr>
                                     <td align="center"> {{ $key + 1 }}</td>
                                     <td>
-                                        <a target="_blank" class="text-black" href="{{ route($control->route) }}">{{ $control->route }}</a>
+                                        <a target="_blank" class="text-black"
+                                            href="{{ route($control->route) }}">{{ $control->route }}</a>
                                     </td>
                                     <td>{{ $control->opening_time }}</td>
                                     <td>{{ $control->closing_time }}</td>
 
                                     @php
+
                                         if ($control->status === 'offline') {
                                             $class = 'danger';
-                                        } else {
+                                        } elseif ($control->status === 'online') {
                                             $class = 'success';
+
+                                        }else {
+                                            $class = 'seccondary';
                                         }
                                     @endphp
+                                    @if ($control->status)
+                                        <td width="1%" align="center">
+                                            <span class="badge bg-{{ $class }} rounded-pill">
+                                                {{ $control->status }}
+                                            </span>
+                                        </td>
+                                    @else
+                                        <td width="1%" align="center">
+                                            <span class="badge bg-{{ $class }} rounded-pill">
+                                                <a target="_blank" class="text-black"
+                                                    href="{{ route($control->route) }}">Update</a>
+                                            </span>
+                                        </td>
+                                    @endif
 
-                                    <td width="1%" align="center"> <span
-                                            class="badge bg-{{ $class }} rounded-pill"> {{ $control->status }}</span>
-                                    </td>
+
                                     <td>{{ $control->created_at }}</td>
                                     <td>{{ $control->user->name }}</td>
                                     <td>{{ $control->comments }}</td>
