@@ -97,12 +97,12 @@
                                     <td>{{ $control->user->name }}</td>
                                     <td>{{ $control->comments }}</td>
                                     <td>
-                                        <form method="post"
+                                        {{-- <form method="post"
                                             action="{{ route('delete_control', ['id' => $control->id]) }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">Delete</button>
-                                        </form>
+                                        </form> --}}
                                         {{-- button destroy --}}
                                     </td>
                                 </tr>
