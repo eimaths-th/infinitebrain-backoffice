@@ -63,7 +63,6 @@ class Student extends Model
         $lastStudent = self::orderBy('id', 'desc')->first();
 
         if (!$lastStudent) {
-            // If no students in the database, start with 1
             return '00001';
         }
 

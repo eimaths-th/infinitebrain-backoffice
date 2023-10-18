@@ -1,3 +1,7 @@
+@php
+    use App\Models\Subject;
+
+@endphp
 <div class="app-sidebar sidebar-shadow">
     <div class="app-header__logo">
         <div class="logo-src"></div>
@@ -186,16 +190,21 @@
                                     <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                                 </a>
 
+
                                 <ul>
-                                    {{-- @foreach ($data as $key)
+                                    @php
+                                        $data = Subject::orderBy("id", "asc")->get();
+
+                                    @endphp
+                                    @foreach ($data as $key)
                                         <li>
                                             <a href="{{ route('levels', ['id' => $key->id]) }}">
                                                 <i class="metismenu-icon"></i>
                                                 {{ $key->title }}
                                             </a>
                                         </li>
-                                    @endforeach --}}
-                                    <li>
+                                    @endforeach
+                                    {{-- <li>
                                         <a href="{{ route('levels', ['id' => '1']) }}">
                                             <i class="metismenu-icon"></i>
                                             Math
@@ -230,7 +239,7 @@
                                             <i class="metismenu-icon"></i>
                                             English Spark
                                         </a>
-                                    </li>
+                                    </li> --}}
                                 </ul>
 
                             </li>
@@ -243,7 +252,7 @@
 
                                 <ul>
 
-                                    <li>
+                                    {{-- <li>
                                         <a href="{{ route('subjects_price', ['id' => '1']) }}">
                                             <i class="metismenu-icon"></i>
                                             Math
@@ -278,7 +287,15 @@
                                             <i class="metismenu-icon"></i>
                                             English Spark
                                         </a>
+                                    </li> --}}
+                                    @foreach ($data as $key)
+                                    <li>
+                                        <a href="{{ route('levels', ['id' => $key->id]) }}">
+                                            <i class="metismenu-icon"></i>
+                                            {{ $key->title }}
+                                        </a>
                                     </li>
+                                @endforeach
 
                                 </ul>
 
@@ -293,7 +310,7 @@
                         <a href="{{ route('formsControl') }}">
                             <i class="metismenu-icon pe-7s-clock"></i>
                             SetTime
-                            
+
                         </a>
                     </li>
                     <li>
