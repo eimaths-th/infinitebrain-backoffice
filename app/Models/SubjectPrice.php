@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SubjectPrice extends Model
 {
     use HasFactory;
-    protected $table="subject_prices";
+    protected $table = "subject_prices";
 
     protected $fillable = [
         'subject_id',
@@ -21,4 +21,9 @@ class SubjectPrice extends Model
         'book_price',
         'type',
     ];
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class, 'subject_id', 'id');
+    }
 }

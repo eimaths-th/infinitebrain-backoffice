@@ -1,5 +1,6 @@
 @php
     use App\Models\Subject;
+    use App\Models\SubjectPrice;
 
 @endphp
 <div class="app-sidebar sidebar-shadow">
@@ -194,7 +195,7 @@
                                 <ul>
                                     @php
                                         $data = Subject::orderBy("id", "asc")->get();
-
+                                        $dataGroup = SubjectPrice::orderBy("id", "asc") ->get()->groupBy('subject_id');
                                     @endphp
                                     @foreach ($data as $key)
                                         <li>
@@ -288,14 +289,16 @@
                                             English Spark
                                         </a>
                                     </li> --}}
-                                    @foreach ($data as $key)
-                                    <li>
-                                        <a href="{{ route('levels', ['id' => $key->id]) }}">
-                                            <i class="metismenu-icon"></i>
-                                            {{ $key->title }}
-                                        </a>
-                                    </li>
-                                @endforeach
+                                    @foreach ($data as $subjectt)
+                                            <li>
+                                                <a href="{{ route('subjects_price', ['id' => $subjectt->id]) }}">
+                                                    <i class="metismenu-icon"></i>
+                                                    {{ $subjectt->title }}
+                                                </a>
+                                            </li>
+
+                                    @endforeach
+
 
                                 </ul>
 
