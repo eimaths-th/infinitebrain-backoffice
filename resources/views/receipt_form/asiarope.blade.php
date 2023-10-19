@@ -818,18 +818,12 @@
                                             <select class="form-control" id="contest" name="contest"
                                                 aria-label="Choose Contest Category" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Science Category 1 (Kindergarten ,Grades 1)">Science
-                                                    Category 1 (Kindergarten ,Grades 1) </option>
-                                                <option value="Science Category 2 (Grades 2-3)">Science Category 2 (Grades
-                                                    2-3)</option>
-                                                <option value="Science Category 3 (Grades 4-5)">Science Category 3 (Grades
-                                                    4-5)</option>
-                                                <option value="Science Category 4 (Grades 6-7)">Science Category 4
-                                                    (Grades6-7)</option>
-                                                <option value="Science Category 5 (Grades 8-9)">Science Category 5 (Grades
-                                                    8-9)</option>
-                                                <option value="Science Category 6 (Grades 10-12)">Science Category 6
-                                                    (Grades 10-12)</option>
+                                                <option value="Science Category 1 (Kindergarten ,Grades 1)">Math Category 1 (Kindergarten ,Grades 1) </option>
+                                                <option value="Science Category 2 (Grades 2-3)">Math Category 2 (Grades 2-3)</option>
+                                                <option value="Science Category 3 (Grades 4-5)">Math Category 3 (Grades 4-5)</option>
+                                                <option value="Science Category 4 (Grades 6-7)">Math Category 4 (Grades6-7)</option>
+                                                <option value="Science Category 5 (Grades 8-9)">Math Category 5 (Grades 8-9)</option>
+                                                <option value="Science Category 6 (Grades 10-12)">Math Category 6 (Grades 10-12)</option>
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Contest Category</label>
