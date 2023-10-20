@@ -306,6 +306,7 @@ class ReceiptFormController extends Controller
         $request->request->add(['receipt_number' => $rnumber, 'receipt_customer_number' => $rcnumber]);
 
         $receipt = new Receipt($request->all());
+        $receipt->recform_id =  $form->id;
         $receipt->save();
 
         //$form = ReceiptForm::find($id);
@@ -425,7 +426,7 @@ class ReceiptFormController extends Controller
     public function store(Request $request)
     {
         //
-        dd($request);
+        // dd($request);
         $validator =  Validator::make($request->all(), [
             // 'firstname' => 'required|string',
             'firstname' => 'required|string',
