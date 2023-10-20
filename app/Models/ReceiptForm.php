@@ -12,6 +12,7 @@ class ReceiptForm extends Model
     protected $table="receipt_forms";
 
     protected $fillable = [
+        'rec_id',
         'sfield',
         'submission_date',
         'subject',
@@ -41,4 +42,10 @@ class ReceiptForm extends Model
         'contest',
         'discount_code',
     ];
+
+    public function receipt()
+    {
+        return $this->hasOne(Receipt::class, 'id', 'rec_id');
+    }
+
 }
