@@ -485,6 +485,7 @@
                                             id="AddSubmissiondate" value="">
                                         <input type="hidden" name="Sfield" id="Sfield" value="{{ $sfield }}">
                                         <input type="hidden" name="fid" id="fid" value="">
+                                        <input type="hidden" name="rec_id" id="AddRecId" value="">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -819,7 +820,9 @@
                     method: 'GET',
                     success: function(res) {
                         console.log(res);
+                        // console.log(res.data.id);
                         //$('#EditModalBody').html(res.html);
+                        $('#AddRecId').val(res.data.id);
                         $('#AddSubmissiondate').val(res.data.submission_date);
                         $('#AddPackage').val(res.data.package);
                         $('#AddContest').val(res.data.contest);
@@ -849,6 +852,8 @@
                         if (res.data.generate == 1) {
                             $('#SubmitEditForm').css('display', 'none');
                         }
+
+                        
                         //console.log(res.data.photo);
                         $('#EditModal').modal('show');
 
@@ -902,7 +907,9 @@
                     url: "{{ route('receipts_form.store') }}",
                     method: 'post',
                     data: {
+
                         img: values,
+                        rec_id: $('#AddRecId').val(),
                         submission_date: $('#AddSubmissiondate').val(),
                         first_name: $('#AddFirstname').val(),
                         last_name: $('#AddLastname').val(),
