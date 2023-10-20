@@ -271,6 +271,7 @@ class ReceiptFormController extends Controller
     public function create(Request $request)
     {
         //
+        // dd($request);
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'submission_date' => 'required|string',
@@ -309,6 +310,7 @@ class ReceiptFormController extends Controller
 
         //$form = ReceiptForm::find($id);
         $form->generate =  '1';
+        $form->rec_id =  $receipt->id;
         $form->save();
 
         //add more inages
@@ -423,7 +425,7 @@ class ReceiptFormController extends Controller
     public function store(Request $request)
     {
         //
-        // dd($request);
+        dd($request);
         $validator =  Validator::make($request->all(), [
             // 'firstname' => 'required|string',
             'firstname' => 'required|string',
