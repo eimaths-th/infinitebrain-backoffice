@@ -17,6 +17,7 @@ class Receipt extends Model
      */
     protected $fillable = [
         'type',
+        'recform_id',
         'submission_date',
         'first_name',
         'last_name',
