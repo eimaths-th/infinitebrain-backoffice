@@ -43,6 +43,8 @@ class ExportExcel implements FromCollection, WithHeadings
     public function collection()
     {
         $receipts = Receipt::select(
+            "id",
+            "recform_id",
             "submission_date",
             "first_name",
             "last_name",
@@ -64,17 +66,63 @@ class ExportExcel implements FromCollection, WithHeadings
             ->whereIn('id', $this->export_id)
             ->where([['sfield', $this->sfield_check]])
             ->get();
-
+            // dd($receipts);
         $customResults = $receipts->map(function ($receipt) {
-            return [
+            // return [
+            //     "submission_date" => $receipt->submission_date,
+            //     "first_name" => $receipt->first_name,
+            //     "last_name" => $receipt->last_name,
+            //     // "nick_name" => $receipt->nick_name,
+            //     // "email" => $receipt->email,
+            //     // "school_name" => $receipt->school_name,
+            //     "grade" => $receipt->grade,
+            //     // "birth_date" => $receipt->birth_date,
+            //     "street_address" => $receipt->street_address,
+            //     "postcode" => $receipt->postcode,
+            //     "name_parent" => $receipt->name_parent,
+            //     "mobile" => $receipt->mobile,
+            //     "package" => $receipt->package,
+            //     "price" => preg_replace("/[^0-9.]/", "", $this->delete_all_between('(', ')', $receipt->package)),
+            //     "contest" => $receipt->contest,
+            //     // "photo" => $receipt->photo,
+            //     "slip" => $receipt->slip,
+            //     // "news_form" => $receipt->news_form,
+            //     // Add custom properties or modifications here
+            // ];
+                // dd($receipt->recform->id);
+            if ($receipt->recform) {
+                return [
+                    "submission_date" => $receipt->submission_date,
+                    "first_name" => $receipt->first_name,
+                    "last_name" => $receipt->last_name,
+                    "nick_name" => $receipt->recform->nick_name,
+                    "email" => $receipt->recform->email,
+                    "school_name" => $receipt->recform->school_name,
+                    "grade" => $receipt->grade,
+                    "birth_date" => $receipt->recform->birth_date,
+                    "street_address" => $receipt->street_address,
+                    "postcode" => $receipt->postcode,
+                    "name_parent" => $receipt->name_parent,
+                    "mobile" => $receipt->mobile,
+                    "package" => $receipt->package,
+                    "price" => preg_replace("/[^0-9.]/", "", $this->delete_all_between('(', ')', $receipt->package)),
+                    "contest" => $receipt->contest,
+                    "photo" => $receipt->recform->photo,
+                    "slip" => $receipt->slip,
+                    "news_form" => $receipt->recform->news_form,
+                    // Add custom properties or modifications here
+                ];
+            } else {
+                $null = ' ';
+                return [
                 "submission_date" => $receipt->submission_date,
                 "first_name" => $receipt->first_name,
                 "last_name" => $receipt->last_name,
-                // "nick_name" => $receipt->nick_name,
-                // "email" => $receipt->email,
-                // "school_name" => $receipt->school_name,
+                "nick_name" => $null,
+                "email" => $null,
+                "school_name" => $null,
                 "grade" => $receipt->grade,
-                // "birth_date" => $receipt->birth_date,
+                "birth_date" => $null,
                 "street_address" => $receipt->street_address,
                 "postcode" => $receipt->postcode,
                 "name_parent" => $receipt->name_parent,
@@ -82,11 +130,12 @@ class ExportExcel implements FromCollection, WithHeadings
                 "package" => $receipt->package,
                 "price" => preg_replace("/[^0-9.]/", "", $this->delete_all_between('(', ')', $receipt->package)),
                 "contest" => $receipt->contest,
-                // "photo" => $receipt->photo,
+                "photo" => $null,
                 "slip" => $receipt->slip,
-                // "news_form" => $receipt->news_form,
+                "news_form" => $null,
                 // Add custom properties or modifications here
-            ];
+                ];
+            }
         });
 
         return $customResults;
@@ -98,11 +147,11 @@ class ExportExcel implements FromCollection, WithHeadings
             'Submission Date',
             'First Name',
             'Last Name',
-            // 'Nick Name',
-            // 'Email',
-            // 'School Name',
+            'Nick Name',
+            'Email',
+            'School Name',
             'Grade',
-            // 'Birth Date',
+            'Birth Date',
             'Street Address',
             'Postcode',
             'Name Parent',
@@ -110,9 +159,9 @@ class ExportExcel implements FromCollection, WithHeadings
             'Package',
             'Price',
             'Contest',
-            // 'Photo',
+            'Photo',
             'Slip',
-            // 'News From',
+            'News From',
         ];
     }
 }

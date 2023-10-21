@@ -272,6 +272,8 @@ class ReceiptFormController extends Controller
     {
         //
         // dd($request);
+        $test = Receipt::find(1893);
+        // dd($test->recform->id);
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'submission_date' => 'required|string',
@@ -308,6 +310,7 @@ class ReceiptFormController extends Controller
         $receipt = new Receipt($request->all());
         $receipt->recform_id =  $form->id;
         $receipt->save();
+
 
         //$form = ReceiptForm::find($id);
         $form->generate =  '1';
@@ -557,26 +560,26 @@ class ReceiptFormController extends Controller
 
         $file_att = '';
         $furl = "";
-        if ($data->file_att) {
+        // if ($data->file_att) {
 
-            $arrf = explode('|', $data->file_att);
-            for ($j = 0; $j <= count($arrf) - 1; $j++) {
-                //$urla = "https://" . $arrl[$i];
-                $urlb = url('/') . '/receipt_form_images/' . $arrf[$j];
+        //     $arrf = explode('|', $data->file_att);
+        //     for ($j = 0; $j <= count($arrf) - 1; $j++) {
+        //         //$urla = "https://" . $arrl[$i];
+        //         $urlb = url('/') . '/receipt_form_images/' . $arrf[$j];
 
-                //watermark
-                $fileex = explode("/", $urlb);
-                $this->textWatermark(end($fileex), 'Date Register : ' . $data->submission_date);
-                $urlb = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urlb);
+        //         //watermark
+        //         $fileex = explode("/", $urlb);
+        //         $this->textWatermark(end($fileex), 'Date Register : ' . $data->submission_date);
+        //         $urlb = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urlb);
 
-                //$retu = $this->get_img_url($urla);
-                //if ($this->URL_exists($retu)) {
-                $file_att .= "<div><img src=\"" . $urlb . "\" height=\"80\"></div>&nbsp;&nbsp;
-                <a class='btn btn-xs btn-info btn-view' href=\"" . urldecode($urlb) . "\" target=\"blank\"><i class='fa fa-search'></i></a><a href='#' class='btn btn-xs btn-danger btn-edit' id='getDeleteData' data-id2='" . $data->id . "' data-id='" . $arrf[$j] . "'><i class='fa fa-trash'></i></a><br><br>";
-                //}
-                $furl .= $urlb;
-            }
-        }
+        //         //$retu = $this->get_img_url($urla);
+        //         //if ($this->URL_exists($retu)) {
+        //         $file_att .= "<div><img src=\"" . $urlb . "\" height=\"80\"></div>&nbsp;&nbsp;
+        //         <a class='btn btn-xs btn-info btn-view' href=\"" . urldecode($urlb) . "\" target=\"blank\"><i class='fa fa-search'></i></a><a href='#' class='btn btn-xs btn-danger btn-edit' id='getDeleteData' data-id2='" . $data->id . "' data-id='" . $arrf[$j] . "'><i class='fa fa-trash'></i></a><br><br>";
+        //         //}
+        //         $furl .= $urlb;
+        //     }
+        // }
 
         $data->photo = $photo_att;
         $data->file = $file_att;
@@ -669,7 +672,6 @@ class ReceiptFormController extends Controller
         if ($request->excel === "1") {
             # code...
             return Excel::download(new ExportExcel($request->get('sfield'), $request->get('table_records')), 'form.xlsx');
-
         } else {
             # code...
             return Excel::download(new ExportForm($request->get('sfield'), $request->get('table_records')), 'form.xlsx');
