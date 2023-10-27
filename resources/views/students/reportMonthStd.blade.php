@@ -289,7 +289,7 @@
                 <div class="tab-content panel m-0 rounded-0 p-3">
                     <!-- BEGIN tab-pane -->
                     <div class="tab-pane fade active show" id="default-tab-1">
-                        <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนเดือน {{ thaidate('F',date('F')) }} {{ date('Y') }}</h3>
+                        <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนเดือน {{ thaidate('F',$month) }} {{ $year }}</h3>
                         <table style="width: 100%;" id="Listview"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
 
@@ -453,25 +453,7 @@
                     </div>
                     <!-- END tab-pane -->
                     <!-- BEGIN tab-pane -->
-                    <div class="tab-pane fade" id="default-tab-3">
-                        <p>
-                            <span class="fa-stack fa-4x float-start me-10px">
-                                <i class="fa fa-square fa-stack-2x"></i>
-                                <i class="fab fa-twitter text-white fa-stack-1x"></i>
-                            </span>
-                            Praesent tincidunt nulla ut elit vestibulum viverra. Sed placerat magna eget eros accumsan
-                            elementum.
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis lobortis neque.
-                            Maecenas justo odio, bibendum fringilla quam nec, commodo rutrum quam.
-                            Donec cursus erat in lacus congue sodales. Nunc bibendum id augue sit amet placerat.
-                            Quisque et quam id felis tempus volutpat at at diam. Vivamus ac diam turpis.Sed at lacinia
-                            augue.
-                            Nulla facilisi. Fusce at erat suscipit, dapibus elit quis, luctus nulla.
-                            Quisque adipiscing dui nec orci fermentum blandit.
-                            Sed at lacinia augue. Nulla facilisi. Fusce at erat suscipit, dapibus elit quis, luctus nulla.
-                            Quisque adipiscing dui nec orci fermentum blandit.
-                        </p>
-                    </div>
+
                     <!-- END tab-pane -->
                 </div>
 
@@ -509,10 +491,10 @@
     <script>
         $(document).ready(function() {
             var table1 = $('#Listview').DataTable({
-                lengthMenu: [20, 50, 75, 100, 200],
+                lengthMenu: [-1],
             });
             var table1 = $('#Listview2').DataTable({
-                lengthMenu: [20, 50, 75, 100, 200],
+                lengthMenu: [-1],
             });
 
             $('input[type="checkbox"]').change(function() {

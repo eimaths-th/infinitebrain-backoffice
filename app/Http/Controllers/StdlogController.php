@@ -229,6 +229,7 @@ class StdlogController extends Controller
         $test_scp = SchoolPrice::all();
         $currentMonth = Carbon::now()->format('Y-m');
         $month = date('m');
+        $months = date('F');
         $year = date('Y');
         $paper = PaperReport::whereMonth('submission_date', $month)
             ->whereYear('submission_date', $year)
@@ -242,6 +243,8 @@ class StdlogController extends Controller
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
             'totalForAllMonths' => $totalForAllMonths,
             'paper' => $paper,
+            'year' => $year,
+            'month' => $months,
         ]);
     }
 
@@ -257,6 +260,8 @@ class StdlogController extends Controller
         ]);
         $test_scp = SchoolPrice::all();
         $month = $request->month;
+        // $months = date('F', strtotime('02'));
+        $months = date('F', strtotime('2023-' . $month . '-25'));
         $year = $request->year;
         $search = Carbon::parse($year . '-' . $month)->format('Y-m');
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($test_scp, $search, $search);
@@ -269,6 +274,8 @@ class StdlogController extends Controller
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
             'totalForAllMonths' => $totalForAllMonths,
             'paper' => $paper,
+            'month' => $months,
+            'year' => $year,
 
         ]);
     }
