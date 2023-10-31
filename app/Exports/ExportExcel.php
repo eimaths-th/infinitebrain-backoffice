@@ -66,7 +66,7 @@ class ExportExcel implements FromCollection, WithHeadings
             ->whereIn('id', $this->export_id)
             ->where([['sfield', $this->sfield_check]])
             ->get();
-            dd($receipts);
+            // dd($receipts);
         $customResults = $receipts->map(function ($receipt) {
             // return [
             //     "submission_date" => $receipt->submission_date,
