@@ -27,7 +27,7 @@ class SuperMasterContrller extends Controller
     public function testModal()
     {
         //
-        $newStudentCode = Student::generateNextStudentCode();
+        $newStudentCode = ' ';
         $parent = ParentRegister::orderBy("id", "asc")->get();
 
         return view('students.modalshow', [

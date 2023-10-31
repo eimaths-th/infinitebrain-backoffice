@@ -169,8 +169,7 @@
                             <label for="Parent">Name Parent:</label><br>
                             <select style="width: 100%;" class="parent select2 select2_single form-control"
                                 id="AddParent" name="name_parent" multiple="multiple">
-                                <!-- <option value="" selected>Select Student</option>
-                                                                                                                                                                    <option value="" selected>Select Parent</option>-->
+
                                 @foreach ($data4 as $key2)
                                     <option value="{{ $key2->id }}">{{ $key2->code }} {{ $key2->name_parent }}
                                     </option>
@@ -179,8 +178,18 @@
                             </select>
                         </div>
                         <div class="form-group my-3">
-                            <label for="Name">Code: {{ $newStudentCode }}</label>
-                            <input type="hidden" class="form-control" name="code" id="AddCode" value="">
+                            <label for="Name">Select Code:
+
+                            </label>
+                            @foreach ($newStudentCode as $code)
+                                <div class="form-check">
+                                    <input class="form-check-input AddCode" type="radio" name="code" id="AddCode"
+                                        value="{{ $code['code'] }}">
+                                    <label class="form-check-label" for="code{{ $code['code'] }}"> {{ $code['code'] }}
+                                        {{ $code['type'] }}</label>
+                                </div>
+                            @endforeach
+                            {{-- <input type="hidden" class="form-control" name="code" id="AddCode" value=""> --}}
                         </div>
                         <div class="form-group">
                             <label for="Name">Name:</label>
@@ -256,8 +265,8 @@
                         <div class="form-group mb-2">
                             <label for="Name">หมายเหตุไม่เรียนต่อ:</label>
                             <select style="width: 100%;"
-                                class="form-control form-select select2 select3_single mt-2"id="Editreason"
-                                name="reason" multiple="multiple">
+                                class="form-control form-select select2 select3_single mt-2"id="Editreason" name="reason"
+                                multiple="multiple">
 
                             </select>
 
@@ -545,12 +554,12 @@
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
-
+                var selectedCode = $('.AddCode:checked').val();
                 $.ajax({
                     url: "{{ route('students.store') }}",
                     method: 'post',
                     data: {
-                        code: $('#AddCode').val(),
+                        code: selectedCode,
                         name: $('#AddName').val(),
                         lastname: $('#AddLastname').val(),
                         nick_name: $('#AddNickname').val(),

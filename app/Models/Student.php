@@ -33,19 +33,19 @@ class Student extends Model
 
     public function rec_school()
     {
-        return $this->hasMany(Receipt_School::class, 'pid','id');
+        return $this->hasMany(Receipt_School::class, 'pid', 'id');
         // return $this->hasOne(Receipt_School::class, 'pid','id');
     }
 
     public function school_p()
     {
-        return $this->hasMany(SchoolPrice::class, 'student_id','id');
+        return $this->hasMany(SchoolPrice::class, 'student_id', 'id');
         // return $this->hasOne(Receipt_School::class, 'pid','id');
     }
 
     public function status_log()
     {
-        return $this->hasMany(Statuslog::class, 'student_id','id');
+        return $this->hasMany(Statuslog::class, 'student_id', 'id');
         // return $this->hasOne(Receipt_School::class, 'pid','id');
     }
 
@@ -60,16 +60,42 @@ class Student extends Model
 
     public static function generateNextStudentCode()
     {
-        $lastStudent = self::orderBy('id', 'desc')->first();
+
+        $lastStudent = self::where(function ($query) {
+            $query->where('code', 'like', '0%');
+        })->orderBy('id', 'desc')->first();
+
+        $lastStudentWithThree = self::where(function ($query) {
+            $query->where('code', 'like', '3%');
+        })->orderBy('id', 'desc')->first();
+        $lastStudentWithFour = self::where(function ($query) {
+            $query->where('code', 'like', '4%');
+        })->orderBy('id', 'desc')->first();
 
         if (!$lastStudent) {
-            return '00001';
+            $nextCode = ['code'=>'00001','type'=> 'default'];
+        }else {
+            $nextCode = ['code' =>str_pad($lastStudent->code + 1, 5, '0', STR_PAD_LEFT),'type' => 'default' ];
+        }
+        if (!$lastStudentWithThree) {
+            $nextCodeForThree = ['code'=>'30001','type'=> 'Science'];
+        } else {
+            $nextCodeForThree = ['code' =>$lastStudentWithThree->code[0] === '3' ? $lastStudentWithThree->code + 1 : '30001','type' => 'Science' ];
+        }
+        if (!$lastStudentWithFour) {
+            $nextCodeForFour = ['code'=>'40001','type'=> 'Chinese'];
+        }else {
+            $nextCodeForFour = ['code' => $lastStudentWithFour->code[0] === '4' ? $lastStudentWithFour->code + 1 : '40001','type' => 'Chinese' ];
+
         }
 
-        return str_pad($lastStudent->code + 1, 5, '0', STR_PAD_LEFT);
+
+
+
+        return [
+            $nextCode,
+            $nextCodeForThree,
+            $nextCodeForFour
+        ];
     }
-
-
-
-
 }

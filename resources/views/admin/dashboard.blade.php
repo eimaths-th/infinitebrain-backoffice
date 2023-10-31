@@ -625,6 +625,255 @@
 
         </div>
     </div>
+    <!-- chn & sci -->
+    <div class="main-card mb-3 card">
+        <div class="g-0 row">
+            <div class="col-md-2">
+                <div class="pt-0 pb-0 card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-indigo">Science</div>
+
+                                            <div class="widget-subheading">Total</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-heading">{{
+                                                (isset($groupStatusCounts['Sci']['New Student']) ?    $groupStatusCounts['Sci']['New Student'] : 0) +
+                                                (isset($groupStatusCounts['Sci']['studying . . .']) ? $groupStatusCounts['E']['studying . . .'] : 0) +
+                                                (isset($groupStatusCounts['Sci']['resume']) ?         $groupStatusCounts['Sci']['resume'] : 0)
+                                                }}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-warning"> Chinese</div>
+
+                                            <div class="widget-subheading">Total</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-heading">{{
+                                                (isset($groupStatusCounts['CHN']['New Student']) ?    $groupStatusCounts['CHN']['New Student'] : 0) +
+                                                (isset($groupStatusCounts['CHN']['studying . . .']) ? $groupStatusCounts['CHN']['studying . . .'] : 0) +
+                                                (isset($groupStatusCounts['CHN']['resume']) ?         $groupStatusCounts['CHN']['resume'] : 0)
+                                                }}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="pt-0 pb-0 card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">New Student</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-success">
+                                                {{ isset($groupStatusCounts['Sci']['New Student']) ? $groupStatusCounts['Sci']['New Student'] : 0 }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">New Student</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-primary">
+                                                {{ isset($groupStatusCounts['CHN']['New Student']) ? $groupStatusCounts['CHN']['New Student'] : 0 }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="pt-0 pb-0 card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Studying</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-success">
+                                                {{ isset($groupStatusCounts['Sci']['studying . . .']) ? $groupStatusCounts['Sci']['studying . . .'] : 0 }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Studying</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-primary">
+                                                {{ isset($groupStatusCounts['CHN']['studying . . .']) ? $groupStatusCounts['CHN']['studying . . .'] : 0 }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="pt-0 pb-0 card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-nowrap">Termination of study</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-warning">
+                                                {{ isset($groupStatusCounts['Sci']['Termination of study']) ? $groupStatusCounts['Sci']['Termination of study'] : 0 }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-nowrap">Termination of study</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-warning">
+                                                {{ isset($groupStatusCounts['CHN']['Termination of study']) ? $groupStatusCounts['CHN']['Termination of study'] : 0 }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="pt-0 pb-0 card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-nowrap">Drop</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-danger">
+                                                {{ isset($groupStatusCounts['Sci']['drop']) ? $groupStatusCounts['Sci']['drop'] : 0 }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-nowrap">Drop</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-danger">
+                                                {{ isset($groupStatusCounts['CHN']['drop']) ? $groupStatusCounts['CHN']['drop'] : 0 }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="pt-0 pb-0 card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-nowrap">Resume</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-success">
+                                                {{ isset($groupStatusCounts['Sci']['resume']) ? $groupStatusCounts['Sci']['resume'] : 0 }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading text-nowrap">Resume</div>
+                                            <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-primary">
+                                                {{ isset($groupStatusCounts['CHN']['resume']) ? $groupStatusCounts['CHN']['resume'] : 0 }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
 @endsection
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -850,29 +1099,49 @@
         // var ran2 = Math.floor(Math.random() * 255);
         // var ran3 = Math.floor(Math.random() * 255);
         var ctx = document.getElementById('lineChart').getContext('2d');
+        var colors = [
+            'rgba(245, 156, 26,.65)',
+            'rgba(0, 172, 172,.65)',
+            'rgba(52, 143, 226,.65)',
+            'rgba(135, 83, 217,.65)',
+            // more colors
+            'rgba(255, 91, 87,.65)',
+            'rgba(114, 124, 182,.65)',
+            'rgba(50, 169, 50,.65)',
+            'rgba(144, 202, 75,.65)',
+            'rgba(73, 182, 214,.65)',
+            'rgba(108, 117, 125,.65)',
+            'rgba(251, 85, 151,.65)',
+
+        ];
         var lineChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: groupLabels,
-                datasets: data.map(function(item) {
+                datasets: data.map(function(item,index) {
                     // var ran1 = Math.floor(Math.random() * 255);
                     // var randomColor = 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 1)';
-                    var groupColors = {
-                        'M': 'rgba(52, 143, 226,.65)',
-                        'E': 'rgba(0, 172, 172,.65)',
-                        // 'N': 'rgba(255, 99, 132,.65)' // Add more colors if needed
-                    };
-                    var grouplabels = {
-                        'M': 'Math',
-                        'E': 'English',
-                        // 'N': 'None' // Add more colors if needed
-                    };
+                    // var groupColors = {
+                    //     'M': 'rgba(52, 143, 226,.65)',
+                    //     'E': 'rgba(0, 172, 172,.65)',
+                    //     // 'N': 'rgba(255, 99, 132,.65)' // Add more colors if needed
+                    // };
+                    // var grouplabels = {
+                    //     'M': 'Math',
+                    //     'E': 'English',
+                    //     // 'N': 'None' // Add more colors if needed
+                    // };
                     return {
-                        label: grouplabels[item.label],
+                        label: item.label,
+                        // label: grouplabels[item.label],
                         data: item.data,
-                        pointBackgroundColor: groupColors[item.label],
-                        borderColor: groupColors[item.label],
-                        backgroundColor: groupColors[item.label],
+
+                        // pointBackgroundColor: groupColors[item.label],
+                        // borderColor: groupColors[item.label],
+                        // backgroundColor: groupColors[item.label],
+                        pointBackgroundColor: colors[index % colors.length],
+                        borderColor: colors[index % colors.length],
+                        backgroundColor: colors[index % colors.length],
                         pointRadius: 4,
                         borderWidth: 2,
                         // fill: false
@@ -914,27 +1183,49 @@
         ];
 
         var ctx = document.getElementById('barChart').getContext('2d');
+        var colors = [
+            'rgba(245, 156, 26,.65)',
+            'rgba(0, 172, 172,.65)',
+            'rgba(52, 143, 226,.65)',
+            'rgba(135, 83, 217,.65)',
+            // more colors
+            'rgba(255, 91, 87,.65)',
+            'rgba(114, 124, 182,.65)',
+            'rgba(50, 169, 50,.65)',
+            'rgba(144, 202, 75,.65)',
+            'rgba(73, 182, 214,.65)',
+            'rgba(108, 117, 125,.65)',
+            'rgba(251, 85, 151,.65)',
+
+        ];
         var barChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: groupLabels,
-                datasets: data.map(function(item) {
-                    var groupColors = {
-                        'M': 'rgba(52, 143, 226,.65)',
-                        'E': 'rgba(0, 172, 172,.65)',
-                        'N': 'rgba(255, 99, 132,.65)' // Add more colors if needed
-                    };
-                    var grouplabels = {
-                        'M': 'Math',
-                        'E': 'English',
-                        'N': 'None' // Add more colors if needed
-                    };
+                datasets: data.map(function(item,index) {
+                    // var groupColors = {
+                    //     'M': 'rgba(52, 143, 226,.65)',
+                    //     'E': 'rgba(0, 172, 172,.65)',
+                    //     'N': 'rgba(255, 99, 132,.65)' // Add more colors if needed
+                    // };
+                    // var grouplabels = {
+                    //     'M': 'Math',
+                    //     'E': 'English',
+                    //     'N': 'None' // Add more colors if needed
+                    // };
                     return {
-                        label: grouplabels[item.label],
+                        label: item.label,
+                        // label: grouplabels[item.label],
                         data: item.data,
-                        backgroundColor: groupColors[item.label],
-                        borderColor: groupColors[item.label],
-                        borderWidth: 1
+
+                        // pointBackgroundColor: groupColors[item.label],
+                        // borderColor: groupColors[item.label],
+                        // backgroundColor: groupColors[item.label],
+                        pointBackgroundColor: colors[index % colors.length],
+                        borderColor: colors[index % colors.length],
+                        backgroundColor: colors[index % colors.length],
+                        pointRadius: 4,
+                        borderWidth: 2,
                     }
                 })
             },

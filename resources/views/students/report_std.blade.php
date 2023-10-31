@@ -179,6 +179,8 @@
                                         English
                                     @elseif ($group === 'N')
                                         None Receipt
+                                    @else
+                                        {{ $group }}
                                     @endif
 
                                 </td>
@@ -191,8 +193,7 @@
                                 <td>{{ isset($statusCounts['resume']) ? $statusCounts['resume'] : 0 }} คน</td>
                                 <td>{{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }} คน
                                 </td>
-                                <td>{{
-                                    (isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0) +
+                                <td>{{ (isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0) +
                                     (isset($statusCounts['studying . . .']) ? $statusCounts['studying . . .'] : 0) +
                                     (isset($statusCounts['resume']) ? $statusCounts['resume'] : 0) }}
                                     คน
@@ -200,7 +201,7 @@
                                 <td>{{ isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0 }} คน</td>
 
                                 <td>{{ now() }}</td>
-                              
+
                             </tr>
                             @php
                                 $totalNewStudents += isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0;
@@ -259,6 +260,8 @@
                                         English
                                     @elseif ($status->group === 'N')
                                         None Receipt
+                                    @else
+                                        {{ $group }}
                                     @endif
                                 </td>
 
@@ -509,36 +512,58 @@
                 @endif
             @endforeach
         ];
-        // var ran2 = Math.floor(Math.random() * 255);
-        // var ran3 = Math.floor(Math.random() * 255);
         var ctx = document.getElementById('lineChart').getContext('2d');
+        var colors = [
+            'rgba(245, 156, 26,.65)',
+            'rgba(0, 172, 172,.65)',
+            'rgba(52, 143, 226,.65)',
+            'rgba(135, 83, 217,.65)',
+            // more colors
+            'rgba(255, 91, 87,.65)',
+            'rgba(114, 124, 182,.65)',
+            'rgba(50, 169, 50,.65)',
+            'rgba(144, 202, 75,.65)',
+            'rgba(73, 182, 214,.65)',
+            'rgba(108, 117, 125,.65)',
+            'rgba(251, 85, 151,.65)',
+
+        ];
         var lineChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: groupLabels,
-                datasets: data.map(function(item) {
+
+                datasets: data.map(function(item, index) {
                     // var ran1 = Math.floor(Math.random() * 255);
                     // var randomColor = 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 1)';
-                    var groupColors = {
-                        'M': 'rgba(52, 143, 226,.65)',
-                        'E': 'rgba(0, 172, 172,.65)',
-                        // 'N': 'rgba(255, 99, 132,.65)' // Add more colors if needed
-                    };
-                    var grouplabels = {
-                        'M': 'Math',
-                        'E': 'English',
-                        // 'N': 'None' // Add more colors if needed
-                    };
+                    // var grouplabels = item.label;
+
+                    // var groupColors = {
+                    //     'M': 'rgba(52, 143, 226,.65)',
+                    //     'E': 'rgba(0, 172, 172,.65)',
+                    //     'Sci': 'rgba(135, 83, 217,.65)',
+                    //     'CHN': 'rgba(245, 156, 26,.65)',
+                    // };
+                    // var grouplabels = {
+                    //     'M': 'Math',
+                    //     'E': 'English',
+                    //     'Sci': 'Science',
+                    //     'CHN': 'Chinese' ,
+                    // };
                     return {
-                        label: grouplabels[item.label],
+                        // label: grouplabels[item.label],
+                        label: item.label,
                         data: item.data,
-                        pointBackgroundColor: groupColors[item.label],
-                        borderColor: groupColors[item.label],
-                        backgroundColor: groupColors[item.label],
+                        // pointBackgroundColor: groupColors[item.label],
+                        // borderColor: groupColors[item.label],
+                        // backgroundColor: groupColors[item.label],
+                        pointBackgroundColor: colors[index % colors.length],
+                        borderColor: colors[index % colors.length],
+                        backgroundColor: colors[index % colors.length],
                         pointRadius: 4,
                         borderWidth: 2,
                         // fill: false
-                    }
+                    };
                 })
             },
 
@@ -573,28 +598,51 @@
                 @endif
             @endforeach
         ];
+        var colors = [
+            'rgba(245, 156, 26,.65)',
+            'rgba(0, 172, 172,.65)',
+            'rgba(52, 143, 226,.65)',
+            'rgba(135, 83, 217,.65)',
+            // more colors
+            'rgba(255, 91, 87,.65)',
+            'rgba(114, 124, 182,.65)',
+            'rgba(50, 169, 50,.65)',
+            'rgba(144, 202, 75,.65)',
+            'rgba(73, 182, 214,.65)',
+            'rgba(108, 117, 125,.65)',
+            'rgba(251, 85, 151,.65)',
+
+        ];
 
         var ctx = document.getElementById('barChart').getContext('2d');
         var barChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: groupLabels,
-                datasets: data.map(function(item) {
-                    var groupColors = {
-                        'M': 'rgba(52, 143, 226,.65)',
-                        'E': 'rgba(0, 172, 172,.65)',
-                        'N': 'rgba(255, 99, 132,.65)' // Add more colors if needed
-                    };
-                    var grouplabels = {
-                        'M': 'Math',
-                        'E': 'English',
-                        'N': 'None' // Add more colors if needed
-                    };
+                datasets: data.map(function(item,index) {
+                    // var groupColors = {
+                    //     'M': 'rgba(52, 143, 226,.65)',
+                    //     'E': 'rgba(0, 172, 172,.65)',
+                    //     'Sci': 'rgba(135, 83, 217,.65)', // Add more colors if needed
+                    //     'CHN': 'rgba(245, 156, 26,.65)', // Add more colors if needed
+                    // };
+                    // var grouplabels = {
+                    //     'M': 'Math',
+                    //     'E': 'English',
+                    //     'Sci': 'Science', // Add more colors if needed
+                    //     'CHN': 'Chinese', // Add more colors if needed
+                    // };
                     return {
-                        label: grouplabels[item.label],
+                        label: item.label,
+                        // label: grouplabels[item.label],
                         data: item.data,
-                        backgroundColor: groupColors[item.label],
-                        borderColor: groupColors[item.label],
+                        // backgroundColor: groupColors[item.label],
+                        // borderColor: groupColors[item.label],
+
+
+                        // pointBackgroundColor: colors[index % colors.length],
+                        borderColor: colors[index % colors.length],
+                        backgroundColor: colors[index % colors.length],
                         borderWidth: 1
                     }
                 })

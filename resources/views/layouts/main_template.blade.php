@@ -62,8 +62,11 @@
     -->
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
+    <link href="../assets/css/app.minn.css" rel="stylesheet" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('css/infinite.css') }}">
+
     <style>
         .form-row {
             display: flex;
@@ -183,7 +186,7 @@
                             </form>
                         </div>
                     </div>
-                    
+
                     @include('layouts.modal-form')
 
                 </div>

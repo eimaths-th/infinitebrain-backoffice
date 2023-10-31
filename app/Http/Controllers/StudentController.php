@@ -49,7 +49,7 @@ class StudentController extends Controller
         $this->check_permission();
 
         $newStudentCode = Student::generateNextStudentCode();
-
+        // dd($newStudentCode);
 
 
         // $month = date('m');
@@ -181,16 +181,16 @@ class StudentController extends Controller
             'nick_name.unique' => 'ชื่อเล่น ' . $request->nick_name . ' ของนักเรียนมีในระบบแล้ว'
         ]);
 
-        $code = Student::all();
-        $last  = $code->last()->code;
-        $newStudentCode = Student::generateNextStudentCode();
+        // $code = Student::all();
+        $code  = $request->code;
+        // $newStudentCode = Student::generateNextStudentCode();
         // dd($newStudentCode);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
         // Getting values from the blade template form
         $student = new Student([
-            'code' => $newStudentCode,
+            'code' => $code,
             'first_name' => $request->get('name'),
             'last_name' => $request->get('lastname'),
             'nick_name' => $request->get('nick_name'),
