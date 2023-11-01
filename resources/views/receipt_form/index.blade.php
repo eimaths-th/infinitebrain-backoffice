@@ -1078,6 +1078,7 @@
 
         })
 
+        
         var myDropzone = {};
         Dropzone.options.myAwesomeDropzone = {
             url: '{{ route('form.upload') }}',

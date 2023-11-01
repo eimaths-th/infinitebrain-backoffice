@@ -110,6 +110,8 @@
                 <td>{{ $totalNoneReceipt }} คน</td>
                 <td>{{ now() }}</td>
             </tr>
+
+        {{-- </tbody> --}}
         </tbody>
     </table>
 
