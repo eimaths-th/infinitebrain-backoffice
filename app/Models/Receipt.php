@@ -38,4 +38,8 @@ class Receipt extends Model
         'description2',
         'contest',
     ];
+    public function recform()
+    {
+        return $this->hasOne(ReceiptForm::class, 'id', 'recform_id');
+    }
 }

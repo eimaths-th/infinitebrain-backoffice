@@ -272,6 +272,8 @@ class ReceiptFormController extends Controller
     {
         //
         // dd($request);
+        $test = Receipt::find(1893);
+        // dd($test->recform->id);
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'submission_date' => 'required|string',
@@ -308,6 +310,7 @@ class ReceiptFormController extends Controller
         $receipt = new Receipt($request->all());
         $receipt->recform_id =  $form->id;
         $receipt->save();
+
 
         //$form = ReceiptForm::find($id);
         $form->generate =  '1';
@@ -668,11 +671,10 @@ class ReceiptFormController extends Controller
 
         if ($request->excel === "1") {
             # code...
-            return Excel::download(new ExportExcel($request->get('sfield'), $request->get('table_records')), 'form.xlsx');
-
+            return Excel::download(new ExportExcel($request->get('sfield'), $request->get('table_records')), 'ReceiptForm.xlsx');
         } else {
             # code...
-            return Excel::download(new ExportForm($request->get('sfield'), $request->get('table_records')), 'form.xlsx');
+            return Excel::download(new ExportForm($request->get('sfield'), $request->get('table_records')), 'Registerform.xlsx');
         }
     }
 
