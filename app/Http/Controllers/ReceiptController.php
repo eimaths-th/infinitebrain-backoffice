@@ -615,7 +615,7 @@ class ReceiptController extends Controller
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
-        $rnumber = Receipt_RunningNumber::generate($request->get('sfield'),$request->get('submission_date'));
+        $rnumber = Receipt_RunningNumber::generate($request->get('sfield'), $request->get('submission_date'));
         $rcnumber = Receipt_Customer_RunningNumber::generate($request->get('sfield'));
         $request->request->add(['receipt_number' => $rnumber, 'receipt_customer_number' => $rcnumber]);
 
@@ -1397,7 +1397,8 @@ class ReceiptController extends Controller
         }
 
         $sfield = $request->get('pmsfield');
-
+        $month_year = $request->get('print_monthYear');
+        list($start_year, $start_month, $end_year, $end_month) = explode('-', str_replace(' ', '', $month_year));
         $receipts = Receipt::select(
             "receipts.id as receipt_id",
             "receipts.submission_date as receipt_submission_date",
@@ -1413,9 +1414,19 @@ class ReceiptController extends Controller
             //->join("subjects", "subjects.id", "=", "receipts.subject_id")
             //->join("levels", "levels.id", "=", "receipts.level_id")
             ->where([['receipts.sfield', $sfield]])
+            ->whereYear('receipts.submission_date', '>=', $start_year)
+            ->whereYear('receipts.submission_date', '<=', $end_year)
+            ->whereMonth('receipts.submission_date', '>=', $start_month)
+            ->whereMonth('receipts.submission_date', '<=', $end_month)
             ->orderBy("receipts.submission_date", "asc")
             ->get();
         // ->toArray();
+
+        // foreach ($receipts as $key => $receipt) {
+        //     # code...
+        //     dd($receipt, $request);
+        // }
+        // dd($receipts, $request);
 
         // print_r($receipts);
         // exit();
@@ -1544,22 +1555,47 @@ class ReceiptController extends Controller
 
         //print_r($ret_receipt);
         //exit();
+        // dd($total_price);
+        if ($total_price > 1) {
+            # code...
+            return view($viewr)
+                ->with(['sfield' => $sfield])
+                ->with(['sfielda' =>  self::sfielda])
+                ->with(['sfieldas' =>  self::sfieldas])
+                ->with(['data' => $ret_receipt])
 
-        return view($viewr)->with(['sfield' => $sfield])->with(['sfielda' =>  self::sfielda])
-            ->with(['sfieldas' =>  self::sfieldas])
-            ->with(['ymcode' =>  $ymcode])
-            ->with(['thaiyear' =>  $thai_year])
-            ->with(['thaimonth' =>  $thai_month])
-            //->with(['chart_date' =>  $chart_date])
-            //->with(['chart_date_price' => $chart_date_price])
-            ->with(['data' => $ret_receipt])
-            ->with(['fontsize' => $request->get('fontsize')])
-            ->with(['pmsfield' => $request->get('pmsfield')])
-            ->with(['pmdes' => $request->get('Pmdescription')])
-            //->with(['print_month' => $request->get('print_month')])
-            ->with(['total_price' => number_format($total_price, 2)]);
-        //->with(['print_number' =>  $request->get('print_number')])
-        //->with(['fprint_number' =>  sprintf("%02d", $request->get('print_number'))]);
+                ->with(['ymcode' =>  $ymcode])
+                ->with(['thaiyear' =>  $thai_year])
+                ->with(['thaimonth' =>  $thai_month])
+                //->with(['chart_date' =>  $chart_date])
+                //->with(['chart_date_price' => $chart_date_price])
+                ->with(['fontsize' => $request->get('fontsize')])
+                ->with(['pmsfield' => $request->get('pmsfield')])
+                ->with(['pmdes' => $request->get('Pmdescription')])
+                //->with(['print_month' => $request->get('print_month')])
+                ->with(['total_price' => number_format($total_price, 2)]);
+            //->with(['print_number' =>  $request->get('print_number')])
+            //->with(['fprint_number' =>  sprintf("%02d", $request->get('print_number'))]);
+        } else {
+            # code...
+
+            return view($viewr)
+                ->with(['sfield' => $sfield])
+                ->with(['sfielda' =>  self::sfielda])
+                ->with(['sfieldas' =>  self::sfieldas])
+                ->with(['data' => $ret_receipt])
+
+                ->with(['ymcode' =>  ' '])
+                ->with(['thaiyear' =>  ' '])
+                ->with(['thaimonth' =>  ' '])
+                //->with(['chart_date' =>  $chart_date])
+                //->with(['chart_date_price' => $chart_date_price])
+                ->with(['fontsize' => $request->get('fontsize')])
+                ->with(['pmsfield' => $request->get('pmsfield')])
+                ->with(['pmdes' => $request->get('Pmdescription')])
+                //->with(['print_month' => $request->get('print_month')])
+                ->with(['total_price' => number_format('0', 2)]);
+        }
     }
 
     /**

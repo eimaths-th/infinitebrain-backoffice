@@ -1339,6 +1339,8 @@ class ReceiptController extends Controller
 
     public function print_field(Request $request)
     {
+        dd($request);
+
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'pmsfield' => 'required|string',
@@ -1349,6 +1351,7 @@ class ReceiptController extends Controller
             //return response()->json(['errors' => $validator->errors()->all()]);
             return back()->with(['error' => 'Please input all field ']);
         }
+
 
         $type = $request->get('type');
 

@@ -347,7 +347,7 @@
                                                 } elseif ($status->last()->status === 'Termination of study') {
                                                     $class = 'text-warning';
                                                 } else {
-                                                    $class = 'text-green';
+                                                    $class = 'text-blue';
                                                 }
                                             @endphp
                                             <td class="{{ $class }}">

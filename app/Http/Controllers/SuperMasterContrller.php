@@ -35,6 +35,14 @@ class SuperMasterContrller extends Controller
         ])->with(['data4' => $parent]);
     }
 
+    public function testReq(Request $request)
+    {
+        //
+
+        dd($request);
+
+    }
+
     /**
      * Store a newly created resource in storage.
      *

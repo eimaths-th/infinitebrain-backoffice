@@ -111,6 +111,7 @@ Route::get('/search_status', [StdlogController::class, 'search_status'])->name('
 Route::get('/searchr_reportMonthStd', [StdlogController::class, 'searchr_reportMonthStd'])->name('searchr_reportMonthStd');
 route::get('/Super-Master', [SuperMasterContrller::class, 'index'])->name('sm');
 route::get('/testmodal', [SuperMasterContrller::class, 'testModal'])->name('test_modal');
+route::post('/testReq', [SuperMasterContrller::class, 'testReq'])->name('testReq');
 Route::get('/perform-retrospective-check', [RetrospectiveCheckController::class, 'performRetrospectiveCheck']);
 Route::resource('stdlog', StdlogController::class);
 Route::get('stdlog/create', [StdlogController::class, 'create'])->name('stdlog_create');
