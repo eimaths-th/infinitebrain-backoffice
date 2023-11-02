@@ -193,7 +193,8 @@
                     </table>
 
                 </div>
-
+                {{-- <h1>{{ $month_year }}</h1> --}}
+                {{-- <h1>{{ $ }}</h1> --}}
 
             </div>
         </div>
@@ -204,7 +205,7 @@
 @section('script')
     <script>
         function export_report() {
-           url = '{{ route('receipts.print_field', ['type' => 'print', 'pmsfield' => $pmsfield, 'fontsize' => $fontsize, 'Pmdescription' => $pmdes]) }}';
+           url = '{{ route('receipts.print_field', ['type' => 'print', 'pmsfield' => $pmsfield, 'fontsize' => $fontsize, 'Pmdescription' => $pmdes, 'print_monthYear' => $month_year]) }}';
            console.log(url.replace(/&amp;/g, "&"));
            window.open(
                 url.replace(/&amp;/g, "&")

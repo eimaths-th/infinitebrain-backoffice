@@ -1394,6 +1394,7 @@ class ReceiptController extends Controller
             $viewr = "receipt.print_field_view";
         } else if ($type == "print") {
             $viewr = "receipt.print_field_print";
+            // dd($request);
         }
 
         $sfield = $request->get('pmsfield');
@@ -1572,6 +1573,7 @@ class ReceiptController extends Controller
                 ->with(['fontsize' => $request->get('fontsize')])
                 ->with(['pmsfield' => $request->get('pmsfield')])
                 ->with(['pmdes' => $request->get('Pmdescription')])
+                ->with(['month_year' => $month_year])
                 //->with(['print_month' => $request->get('print_month')])
                 ->with(['total_price' => number_format($total_price, 2)]);
             //->with(['print_number' =>  $request->get('print_number')])
@@ -1592,6 +1594,8 @@ class ReceiptController extends Controller
                 //->with(['chart_date_price' => $chart_date_price])
                 ->with(['fontsize' => $request->get('fontsize')])
                 ->with(['pmsfield' => $request->get('pmsfield')])
+                ->with(['month_year' => $month_year])
+
                 ->with(['pmdes' => $request->get('Pmdescription')])
                 //->with(['print_month' => $request->get('print_month')])
                 ->with(['total_price' => number_format('0', 2)]);
