@@ -18,14 +18,14 @@
         }
 
         /* .switchery {
-                                                width: 30px;
-                                                height: 16px;
-                                            }
+                                                                                width: 30px;
+                                                                                height: 16px;
+                                                                            }
 
-                                            .switchery-small {
-                                                width: 12px;
-                                                height: 12px;
-                                            } */
+                                                                            .switchery-small {
+                                                                                width: 12px;
+                                                                                height: 12px;
+                                                                            } */
     </style>
 @endsection
 
@@ -96,83 +96,6 @@
 
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-
-
-
-                <form action="{{ route('searchr_reportMonthStd') }}" method="GET">
-                    @csrf
-                    <div class="row mb-5">
-                        {{-- <div class="col-lg-2">
-                            <div class="row">
-                                <label for="month" class="col-lg-3">status : </label>
-                                <div class="col-lg-9">
-                                    <select name="month" id="selectMonth" class="form-select">
-                                        <option value="">เลือกเดือน</option>
-                                        @for ($i = 1; $i <= 12; $i++)
-                                            <option value="{{ $i }}"> {{ date("F", mktime(0, 0, 0, $i, 1)) }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                            </div>
-                        </div> --}}
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
-                        <div class="col-lg-2">
-                            <div class="row">
-                                <label for="month" class="col-lg-3">เดือน : </label>
-                                <div class="col-lg-9">
-                                    <select name="month" id="selectMonth" class="form-select">
-                                        <option value="">เลือกเดือน</option>
-                                        @for ($i = 1; $i <= 12; $i++)
-                                            <option value="{{ $i }}"> {{ date('F', mktime(0, 0, 0, $i, 1)) }}
-                                            </option>
-                                        @endfor
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div class="row">
-                                <label for="year" class="col-lg-2">ปี : </label>
-                                <div class="col-lg-9">
-                                    <select name="year" id="selectMonth" class="form-select">
-                                        {{-- <option value="">เลือกปี</option> --}}
-                                        @php
-                                            $currentYear = date('Y');
-                                            for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
-                                                echo "<option value='$i'>$i</option>";
-                                            }
-                                        @endphp
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <button class="btn btn-primary" type="submit">ค้นหา</button>
-                            {{-- <a href="{{ route('search_status') }}" class="btn btn-primary" id="seach_status" name="seach_status">ค้นหา</a> --}}
-                        </div>
-                        <div class="col-lg-2">
-                        </div>
-                        <div class="col-lg-2">
-                        </div>
-                        <div class="col-lg-2 text-end">
-                            {{-- <button class="btn btn-success">ใบปะหน้า</button> --}}
-                            <a href="#" onclick="formModal('{{ route('stdlog_create') }}')" class="btn btn-success"
-                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
-                                data-bs-title="ใบปะหน้า"> <i class="fa fa-plus"></i> ใบปะหน้า</a>
-
-                        </div>
-
-                    </div>
-                </form>
 
                 {{-- กราฟนี้ใช้ได้ --}}
                 {{-- <div id="nv-line-chart" class="h-250px"></div> --}}
@@ -266,15 +189,83 @@
 
                 </table> --}}
 
+                <form action="{{ route('searchr_reportMonthStd') }}" method="GET">
+                    @csrf
+                    <div class="row mb-5">
+
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <div class="col-lg-2">
+                            <div class="row">
+                                <label for="month" class="col-lg-3">เดือน : </label>
+                                <div class="col-lg-9">
+                                    <select name="month" id="selectMonth" class="form-select">
+                                        <option value="">เลือกเดือน</option>
+                                        @for ($i = 1; $i <= 12; $i++)
+                                            <option value="{{ $i }}">
+                                                {{ date('F', mktime(0, 0, 0, $i, 1)) }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="row">
+                                <label for="year" class="col-lg-2">ปี : </label>
+                                <div class="col-lg-9">
+                                    <select name="year" id="selectMonth" class="form-select">
+                                        {{-- <option value="">เลือกปี</option> --}}
+                                        @php
+                                            $currentYear = date('Y');
+                                            for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
+                                                echo "<option value='$i'>$i</option>";
+                                            }
+                                        @endphp
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <button class="btn btn-primary" type="submit">ค้นหา</button>
+                        </div>
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-2 text-end">
+                            <a href="#" onclick="formModal('{{ route('stdlog_create') }}')"
+                            class="btn btn-success" data-bs-toggle="tooltip" data-bs-trigger="hover"
+                            data-bs-container="body" data-bs-title="ใบปะหน้า"> <i class="fa fa-plus"></i>
+                            ใบปะหน้า</a>
+                        </div>
+
+                    </div>
+                </form>
+
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
                         <a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
                             {{-- <span class="d-sm-none">Tab 1</span> --}}
-                            <span class="d-sm-block d-none">ตรวจสอบ</span>
+                            <span class="d-sm-block d-none">ตรวจสอบรายเดือน</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
+                            {{-- <span class="d-sm-none">Tab 1</span> --}}
+                            <span class="d-sm-block d-none">ตรวจสอบรายปี</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
                             {{-- <span class="d-sm-none">Tab 2</span> --}}
                             <span class="d-sm-block d-none">บันทึกใบปะหน้า</span>
                         </a>
@@ -289,7 +280,9 @@
                 <div class="tab-content panel m-0 rounded-0 p-3">
                     <!-- BEGIN tab-pane -->
                     <div class="tab-pane fade active show" id="default-tab-1">
-                        <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนเดือน {{ thaidate('F',$month) }} {{ $year }}</h3>
+
+                        <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนเดือน {{ thaidate('F', $month) }}
+                            {{ $year }}</h3>
                         <table style="width: 100%;" id="Listview"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
 
@@ -314,6 +307,7 @@
                                     use App\Models\Statuslog;
 
                                     $sum = 0;
+                                    $sum1 = 0;
                                 @endphp
                                 @foreach ($reportMonth_schoolPrice as $studentId => $groupedData)
                                     @foreach ($groupedData as $key => $data)
@@ -351,7 +345,13 @@
                                                 }
                                             @endphp
                                             <td class="{{ $class }}">
-                                                @if ($data->std->status_log && $data->std->status_log->count() > 0 && $status->last()->group == $data->group)
+                                                {{-- @if ($data->std->status_log && $data->std->status_log->count() > 0 && $status->last()->group == $data->group) --}}
+                                                @if (
+                                                    $data->std &&
+                                                        $data->std->status_log &&
+                                                        $data->std->status_log->count() > 0 &&
+                                                        $status->last() &&
+                                                        $status->last()->group == $data->group)
                                                     {{ $status->last()->status ?? 'Null' }}
                                                 @else
                                                     null
@@ -404,11 +404,123 @@
 
                         </table>
                     </div>
+                    <div class="tab-pane fade" id="default-tab-2">
+
+                        <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนปี {{ $year }}</h3>
+                        <table style="width: 100%;" id="Listview"
+                            class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
+
+                            <thead>
+                                <tr>
+                                    <th width='1%' class="text-center">no.</th>
+                                    <th width='1%'>Code</th>
+                                    <th>Student Nickname</th>
+                                    <th>Submission Date</th>
+                                    <th>Period</th>
+                                    <th>Reciept Number</th>
+                                    <th>Group</th>
+                                    <th>Stutus</th>
+                                    <th>Tpye</th>
+                                    <th>total</th>
+                                    <th>Check</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach ($reportYear_schoolPrice as $key => $data1)
+                                    {{-- @foreach ($reportYear_schoolPrice as $studentId1 => $groupedData1) --}}
+                                    {{-- @foreach ($groupedData1 as $key => $data1) --}}
+                                    <tr>
+                                        <td class="text-center">{{ $key + 1 }}</td>
+                                        <td class="text-center">{{ $data1->std->code ?? 'Null' }}</td>
+                                        <td>{{ $data1->std->nick_name ?? 'Null' }}</td>
+                                        <td>{{ $data1->rec_school->submission_date }}</td>
+                                        <td>{{ $data1->period }}</td>
+
+                                        <td>{{ $data1->rec_school->receipt_number }}</td>
+                                        <td>{{ $data1->group }}</td>
+                                        @php
+                                            $class = '';
+
+                                            $cMonth = date('m');
+                                            $cYear = date('Y');
+                                            $status = Statuslog::where('student_id', optional($data1->std)->id)
+                                                ->where('group', $data1->group)
+                                                ->whereMonth('status_date', $cMonth)
+                                                ->whereYear('status_date', $cYear)
+                                                ->get();
+
+                                            if ($status->last() && $status->last()->status === 'None Receipt') {
+                                                $class = 'text-info';
+                                            } elseif ($status->last() && $status->last()->status === 'drop') {
+                                                $class = 'text-danger';
+                                            } elseif ($status->last() && $status->last()->status === 'waitting . . .') {
+                                                $class = 'text-primary';
+                                            } elseif ($status->last() && $status->last()->status === 'Termination of study') {
+                                                $class = 'text-warning';
+                                            } else {
+                                                $class = 'text-blue';
+                                            }
+                                        @endphp
+
+                                        <td class="{{ $class }}">
+                                            @if (
+                                                $data1->std &&
+                                                    $data1->std->status_log &&
+                                                    $data1->std->status_log->count() > 0 &&
+                                                    $status->last() &&
+                                                    $status->last()->group == $data1->group)
+                                                {{ $status->last()->status ?? 'Null' }}
+                                            @else
+                                                null
+                                            @endif
+                                        </td>
+                                        <td>{{ $data1->course_type }}</td>
+                                        <td class="text-end">{{ number_format($data1->total) }} บาท</td>
+                                        <td class="text-center">
+                                            <div class="form-check form-switch form-switch-sm">
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="flexSwitchCheckChecked-{{ $data1->rec_school->receipt_number }}">
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    @php
+                                        $sum1 += $data1->total;
+                                    @endphp
+                                    {{-- @endforeach --}}
+                                @endforeach
+
+                            </tbody>
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-center">#</td>
+                                    <td class="text-center" hidden></td> <!-- Merged cell -->
+                                    <td class="text-center" hidden></td> <!-- Merged cell -->
+                                    <td class="text-center" hidden></td> <!-- Merged cell -->
+                                    <td class="text-center" hidden></td> <!-- Merged cell -->
+                                    <td class="text-center" hidden></td> <!-- Merged cell -->
+                                    <td class="text-center" hidden></td> <!-- Merged cell -->
+                                    <td class="text-center" colspan="8">Sum Total</td> <!-- Merged cell -->
+                                    <td class="text-end">{{ number_format($sum1) }} บาท</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
                     <!-- END tab-pane -->
                     <!-- BEGIN tab-pane -->
-                    <div class="tab-pane fade" id="default-tab-2">
+                    <div class="tab-pane fade" id="default-tab-3">
                         <blockquote class="blockquote">
-                            <p>ตารางแสดงผลบันทึกใบปะหน้าประจำเดือน {{ thaidate('F',date('F')) }} {{ date('Y') }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="mb-0">ตารางแสดงผลบันทึกใบปะหน้าประจำเดือน {{ thaidate('F', date('F')) }}
+                                    {{ date('Y') }}</p>
+
+                            </div>
+
                         </blockquote>
                         <table style="width: 100%;" id="Listview2"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
@@ -441,7 +553,8 @@
                                         <td>{{ $paper_rep->receipt_number }}</td>
                                         <td>{{ $paper_rep->school_price->period ?? null }}</td>
                                         <td>{{ $paper_rep->school_price->group ?? null }}</td>
-                                        <td class="text-end">{{ number_format($paper_rep->school_price->total) ?? null }} บาท</td>
+                                        <td class="text-end">{{ number_format($paper_rep->school_price->total) ?? null }}
+                                            บาท</td>
 
                                     </tr>
                                 @endforeach
@@ -490,6 +603,8 @@
     </script> --}}
     <script>
         $(document).ready(function() {
+            document.getElementById('selectMonth1').disabled = true;
+
             var table1 = $('#Listview').DataTable({
                 lengthMenu: [-1],
             });
