@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                background-size: 15px;
-                                            }*/
+                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                    background-size: 15px;
+                                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                border-color: var(--color-invalid);
-                                            }*/
+                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                    border-color: var(--color-invalid);
+                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                display: block;
-                                            }*/
+                                                    display: block;
+                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -528,7 +528,14 @@
             background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
             z-index: 10000;
         }
+
     </style>
+  <style>
+    .custom-image {
+        width: 395px;
+        height: 395px;
+    }
+</style>
 @endsection
 
 
@@ -540,8 +547,9 @@
             <div class="col-md-9">
                 <div class="card bg-light2 mb-3 ">
                     {{-- <div class="card-header">{{ __('Login') }}</div> --}}
-                    <div align="center"><img class="card-img" src="{{ asset('images/GLOW_ASIAROPE_Logo-NoBG-1536x427.png') }}"
-                            alt="..." height="360"></div>
+                    <div align="center"><img class="card-img"
+                            src="{{ asset('images/GLOW_ASIAROPE_Logo-NoBG-1536x427.png') }}" alt="..." height="360">
+                    </div>
                     <form id="infinite" method="POST" action="{{ route('form.store') }}" onsubmit="return check_input();">
                         @csrf
                         <div class="card-body">
@@ -573,15 +581,29 @@
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1250 bath (1 class 2 hours)</span><br></p>
                                     <p>&nbsp;</p>
+
+                                    <div class="row my-5">
+                                        <div class="col-lg-6">
+                                            <img src="images/ASIAROPE-01.jpg" class="custom-image" alt="Image 1">
+
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <img src="images/ASIAROPE-02.jpg" class="custom-image" alt="Image 2">
+
+
+                                        </div>
+                                    </div>
+
                                     <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร ASIAROPE</b> <br>
 
-                                        รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
-                                        ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน ให้ใช้ระดับชั้นปัจจุบัน <br>
+                                            รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
+                                            ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน
+                                            ให้ใช้ระดับชั้นปัจจุบัน <br>
 
-                                        รร.นานาชาติใช้ระดับชั้นตามปีการศึกษาปัจจุบัน <br>
+                                            รร.นานาชาติใช้ระดับชั้นตามปีการศึกษาปัจจุบัน <br>
 
-                                        ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
-                                        เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p>
+                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
+                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p>
                                 </div>
                             </div>
 
@@ -619,13 +641,14 @@
                                             </label>
                                             {{-- <input type="text" class="form-control" name="subject" id="subject"
                                                 value="" maxlength="50" minlength="2" required> --}}
-                                                <select name="subject" id="subject" class="form-control">
+                                            <select name="subject" id="subject" class="form-control">
 
-                                                    <option value="">Please Select</option>
-                                                    <option value="M">Math</option>
+                                                <option value="">Please Select</option>
+                                                <option value="M">Math</option>
 
-                                                </select>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Subject</label>
+                                            </select>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Subject</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
                                                     height="10"> <span class="error-navigation-message">This field is
@@ -670,7 +693,8 @@
                                             </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Last
                                                 Name</label>
 
                                         </div>
@@ -682,13 +706,15 @@
                                     <div class="col-md-6 col-sm-12">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="nickname">Nickname
                                                 (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
                                             <input type="text" class="form-control" name="nickname" id="nickname"
                                                 value="" maxlength="50" minlength="1" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Nick
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Nick
                                                 Name</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -818,12 +844,18 @@
                                             <select class="form-control" id="contest" name="contest"
                                                 aria-label="Choose Contest Category" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Science Category 1 (Kindergarten ,Grades 1)">Math Category 1 (Kindergarten ,Grades 1) </option>
-                                                <option value="Science Category 2 (Grades 2-3)">Math Category 2 (Grades 2-3)</option>
-                                                <option value="Science Category 3 (Grades 4-5)">Math Category 3 (Grades 4-5)</option>
-                                                <option value="Science Category 4 (Grades 6-7)">Math Category 4 (Grades6-7)</option>
-                                                <option value="Science Category 5 (Grades 8-9)">Math Category 5 (Grades 8-9)</option>
-                                                <option value="Science Category 6 (Grades 10-12)">Math Category 6 (Grades 10-12)</option>
+                                                <option value="Science Category 1 (Kindergarten ,Grades 1)">Math Category 1
+                                                    (Kindergarten ,Grades 1) </option>
+                                                <option value="Science Category 2 (Grades 2-3)">Math Category 2 (Grades
+                                                    2-3)</option>
+                                                <option value="Science Category 3 (Grades 4-5)">Math Category 3 (Grades
+                                                    4-5)</option>
+                                                <option value="Science Category 4 (Grades 6-7)">Math Category 4 (Grades6-7)
+                                                </option>
+                                                <option value="Science Category 5 (Grades 8-9)">Math Category 5 (Grades
+                                                    8-9)</option>
+                                                <option value="Science Category 6 (Grades 10-12)">Math Category 6 (Grades
+                                                    10-12)</option>
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Contest Category</label>
@@ -1051,7 +1083,8 @@
                         </div>
                         <div class="card-footer text-center">
                             <br>
-                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ** หากตรวจสอบข้อมูล และ พบว่าผู้สมัครไม่มีสิทธิ์เข้าสอบตามกฎ ของสนามสอบ **
+                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
+                                หากตรวจสอบข้อมูล และ พบว่าผู้สมัครไม่มีสิทธิ์เข้าสอบตามกฎ ของสนามสอบ **
                                 **ทางบริษัทจะมีค่าดำเนินการทางบัญชี 100 บาท ในกรณีที่ต้องโอนค่าสมัครคืน**</div>
                             <br>
                             <input type="submit" id="send_data" class="btn btn-lg btn-primary"
