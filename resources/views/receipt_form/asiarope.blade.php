@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                    background-size: 15px;
-                                                }*/
+                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                background-size: 15px;
+                                                            }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                    border-color: var(--color-invalid);
-                                                }*/
+                                                            input:not(:focus):not(:placeholder-shown):invalid {
+                                                                border-color: var(--color-invalid);
+                                                            }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                    display: block;
-                                                }*/
+                                                                display: block;
+                                                            }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -528,14 +528,25 @@
             background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
             z-index: 10000;
         }
-
     </style>
-  <style>
-    .custom-image {
-        width: 395px;
-        height: 395px;
-    }
-</style>
+    <style>
+        /* .custom-image {
+            width: 395px;
+            height: 395px;
+        } */
+
+        .custom-image {
+            width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 767px) {
+            .custom-image {
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
 @endsection
 
 
@@ -582,9 +593,9 @@
                                             style="color: #6351a2;">1250 bath (1 class 2 hours)</span><br></p>
                                     <p>&nbsp;</p>
 
-                                    <div class="row my-5">
+                                    <div class="row">
                                         <div class="col-lg-6">
-                                            <img src="images/ASIAROPE-01.jpg" class="custom-image" alt="Image 1">
+                                            <img src="images/ASIAROPE-01.jpg" class="custom-image mb-3" alt="Image 1">
 
                                         </div>
                                         <div class="col-lg-6">
@@ -674,7 +685,8 @@
                                             </label>
                                             <input type="text" class="form-control" name="firstname" id="firstname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">First
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">First
                                                 Name</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
