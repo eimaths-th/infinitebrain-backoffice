@@ -117,27 +117,23 @@
                     </tr>
                     <tr>
                         <td width="25%" class="grey">นามลูกค้า,ที่อยู่/Client,Address</td>
-                        <td width="25%" style="padding-left:20px;" align="right" class="grey">
-                            รหัสลูกค้า/Customer's Code</td>
-                        <td width="20%" style="padding-left:15px;"> <b>{{--  {{ $data2->code }}  --}} {{ $student_code }}</b>
-                        </td>
+                        <td width="25%" style="padding-left:20px;" align="right" class="grey"> รหัสลูกค้า/Customer's Code</td>
+                        <td width="20%" style="padding-left:15px;"> <b>{{--  {{ $data2->code }}  --}} {{ $student_code }}</b> </td>
                         <td width="20%" align="right" class="grey">เลขที่ / Document No.</td>
                         <td width="10%" style="padding-left:10px;"> <b> {{ $data->receipt_number }} </b></td>
                     </tr>
                     <tr>
-                        <td>
-                            <font class="grey">K.</font> <b> {{ $data2->name_parent }} </b>
-                        </td>
-                        <td align="right" style="padding-left:20px;" class="grey">ชื่อนักเรียน/Nickname</td>
-                        <td align="left" style="padding-left:15px;"> <b>{{ $student }}
-                            </b></td>
-                        <td align="right" class="grey">วันที่ / Date</td>
-                        <td style="padding-left:10px;"> <b>{{ $data->submission_date }}</b></td>
+                        <td width="25%">  <font class="grey">K.</font> <b> {{ $data2->name_parent }} </b> </td>
+                        <td width="25%" align="right" style="padding-left:20px;" class="grey">ชื่อนักเรียน/Nickname</td>
+                        <td width="20%" align="left" style="padding-left:15px;"> <b>{{ $student }} </b></td>
+                        <td width="20%" align="right" class="grey">วันที่ / Date</td>
+                        <td width="10%" style="padding-left:10px;"> <b>{{ $data->submission_date }}</b></td>
                     </tr>
                     <tr>
                         <!-- <td colspan="3"><font class="grey">ที่อยู่</font> <b>{{ $data->street_address }} {{ $data->street_address2 }}
                                 {{ $data->city }} {{ $data->province }} {{ $data->postcode }} </b></td> -->
                         <td colspan="3"></td>
+
                         <td width="45%" align="right" class="grey">เงื่อนไขการชำระเงิน / Credit Term</td>
                         <td width="30%" style="padding-left:10px;">..........................</td>
                     </tr>

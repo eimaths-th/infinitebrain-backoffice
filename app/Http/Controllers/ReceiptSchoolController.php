@@ -979,6 +979,18 @@ class ReceiptSchoolController extends Controller
         } else if ($type == "print") {
             $viewr = "receipt.print1";
         }
+        $mes = "";
+        $text = "";
+        $file_att = "";
+
+        if ($data->type == 2) {
+            $mes = "ใบลดหนี้";
+            $text = "Credit Note";
+        } else {
+
+            $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+            $text = "Tax Invoice/Receipt";
+        }
 
         $receipts_detail = SchoolPrice::where('rid', $data->id)
             ->orderBy("rid", "asc")
@@ -1109,9 +1121,6 @@ class ReceiptSchoolController extends Controller
 
 
 
-        $mes = "";
-        $text = "";
-        $file_att = "";
 
         $student = "";
         $student_code = "";
