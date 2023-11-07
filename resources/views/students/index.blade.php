@@ -183,9 +183,9 @@
                             </label>
                             @foreach ($newStudentCode as $code)
                                 <div class="form-check">
-                                    <input class="form-check-input AddCode" type="radio" name="code" id="AddCode"
-                                        value="{{ $code['code'] }}">
-                                    <label class="form-check-label" for="code{{ $code['code'] }}"> {{ $code['code'] }}
+                                    <input class="form-check-input AddCode" type="radio" name="code"
+                                        id="AddCode{{ $code['code'] }}" value="{{ $code['code'] }}">
+                                    <label class="form-check-label" for="AddCode{{ $code['code'] }}"> {{ $code['code'] }}
                                         {{ $code['type'] }}</label>
                                 </div>
                             @endforeach
@@ -576,6 +576,8 @@
                                 $('.alert-danger').append('<strong><li>' + value +
                                     '</li></strong>');
                             });
+                            location.reload();
+
                         } else {
                             $('.alert-danger').hide();
                             $('.alert-success').show();

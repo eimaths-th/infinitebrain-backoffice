@@ -69,7 +69,7 @@ class Student extends Model
             $query->where('code', 'like', '3%');
         })->orderBy('id', 'desc')->first();
         $lastStudentWithFour = self::where(function ($query) {
-            $query->where('code', 'like', '4%');
+            $query->where('code', 'like', '1%');
         })->orderBy('id', 'desc')->first();
 
         if (!$lastStudent) {
@@ -83,9 +83,9 @@ class Student extends Model
             $nextCodeForThree = ['code' =>$lastStudentWithThree->code[0] === '3' ? $lastStudentWithThree->code + 1 : '30001','type' => 'Science' ];
         }
         if (!$lastStudentWithFour) {
-            $nextCodeForFour = ['code'=>'40001','type'=> 'Chinese'];
+            $nextCodeForFour = ['code'=>'10001','type'=> 'Chinese'];
         }else {
-            $nextCodeForFour = ['code' => $lastStudentWithFour->code[0] === '4' ? $lastStudentWithFour->code + 1 : '40001','type' => 'Chinese' ];
+            $nextCodeForFour = ['code' => $lastStudentWithFour->code[0] === '1' ? $lastStudentWithFour->code + 1 : '10001','type' => 'Chinese' ];
 
         }
 
