@@ -18,14 +18,14 @@
         }
 
         /* .switchery {
-                                                                                width: 30px;
-                                                                                height: 16px;
-                                                                            }
+                                                                                                                            width: 30px;
+                                                                                                                            height: 16px;
+                                                                                                                        }
 
-                                                                            .switchery-small {
-                                                                                width: 12px;
-                                                                                height: 12px;
-                                                                            } */
+                                                                                                                        .switchery-small {
+                                                                                                                            width: 12px;
+                                                                                                                            height: 12px;
+                                                                                                                        } */
     </style>
 @endsection
 
@@ -242,10 +242,10 @@
                         <div class="col-lg-2">
                         </div>
                         <div class="col-lg-2 text-end">
-                            <a href="#" onclick="formModal('{{ route('stdlog_create') }}')"
-                            class="btn btn-success" data-bs-toggle="tooltip" data-bs-trigger="hover"
-                            data-bs-container="body" data-bs-title="ใบปะหน้า"> <i class="fa fa-plus"></i>
-                            ใบปะหน้า</a>
+                            <a href="#" onclick="formModal('{{ route('stdlog_create') }}')" class="btn btn-success"
+                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
+                                data-bs-title="ใบปะหน้า"> <i class="fa fa-plus"></i>
+                                ใบปะหน้า</a>
                         </div>
 
                     </div>
@@ -659,12 +659,28 @@
     <script>
         var groupLabels = [
             @foreach ($totalForAllMonths as $month => $total)
-                '{{ $month }}',
+
+                '{{ $month }} ',
+            @endforeach
+        ];
+
+        var groupLabels2 = [
+            @foreach ($totalForAllMonths as $month => $total)
+                @if (isset($percentageChangeForAllMonths[$month]))
+                    @if ($percentageChangeForAllMonths[$month] > 0)
+                        '{{ $month }}\n+{{ $percentageChangeForAllMonths[$month] }}%',
+                    @else
+                        '{{ $month }}\n{{ $percentageChangeForAllMonths[$month] }}%',
+                    @endif
+                @else
+                    '{{ $month }}  ',
+                @endif
             @endforeach
         ];
 
         var data = {
-            labels: groupLabels,
+            labels: groupLabels2,
+            // label: groupLabels,
             datasets: [{
                 label: 'ยอดรวมแต่ละเดือน ',
                 data: [
@@ -677,7 +693,7 @@
                 backgroundColor: 'rgba(52, 143, 226,.65)',
                 pointRadius: 4,
                 borderWidth: 2,
-            }]
+            }, ]
         };
         var ctx = document.getElementById('lineChart').getContext('2d');
         var lineChart = new Chart(ctx, {
@@ -700,8 +716,22 @@
                 '{{ $month }}',
             @endforeach
         ];
+        var groupLabels2 = [
+            @foreach ($totalForAllMonths as $month => $total)
+                @if (isset($percentageChangeForAllMonths[$month]))
+                    @if ($percentageChangeForAllMonths[$month] > 0)
+                        '{{ $month }}\n+{{ $percentageChangeForAllMonths[$month] }}%',
+                    @else
+                        '{{ $month }}\n{{ $percentageChangeForAllMonths[$month] }}%',
+                    @endif
+                @else
+                    '{{ $month }}  ',
+                @endif
+            @endforeach
+        ];
+
         var data = {
-            labels: groupLabels,
+            labels: groupLabels2,
             datasets: [{
                 label: 'ยอดรวมแต่ละเดือน ',
                 data: [

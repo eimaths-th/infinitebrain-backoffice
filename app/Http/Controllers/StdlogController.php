@@ -145,11 +145,9 @@ class StdlogController extends Controller
 
     private function queryGrafgh($test_scp)
     {
-
         $schoolPrice_id_all = [];
         foreach ($test_scp as $schoolPrice) {
             if ($schoolPrice->rec_school) {
-                // $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y-m');
                 if ($schoolPrice->rec_school && $schoolPrice->course_type == 1) {
                     $matchingSchoolPrices[] = [
                         'id' => $schoolPrice->id,
@@ -160,14 +158,6 @@ class StdlogController extends Controller
                     ];
                     $schoolPrice_id_all[] = $schoolPrice->id;
                 }
-                // $matchingSchoolPrices[] = [
-                //     'id' => $schoolPrice->id,
-                //     'course_type' => $schoolPrice->course_type,
-                //     'reciept_id' => $schoolPrice->rid,
-                //     'std_id' => $schoolPrice->student_id,
-                //     'submission_date' => $schoolPrice->rec_school->submission_date
-                // ];
-                // $schoolPrice_id_all[] = $schoolPrice->id;
             }
         }
         $reportMonth_schoolPrice_all = SchoolPrice::whereIn('id', $schoolPrice_id_all)
@@ -185,6 +175,7 @@ class StdlogController extends Controller
                 $totalForAllMonths[$month] += $data->total;
             }
         }
+        // dd($totalForAllMonths);
 
         uksort($totalForAllMonths, function ($a, $b) {
             $dateA = DateTime::createFromFormat('F-Y', $a);
@@ -193,6 +184,25 @@ class StdlogController extends Controller
             return $dateA <=> $dateB;
         });
         return $totalForAllMonths;
+    }
+
+    private function calculatePercentageChange($totalForAllMonths)
+    {
+        $percentageChangeForAllMonths = [];
+        $previousValue = null;
+
+        foreach ($totalForAllMonths as $month => $total) {
+            if ($previousValue !== null) {
+                $percentageChange = (($total - $previousValue) / $previousValue) * 100;
+                $percentageChangeForAllMonths[$month] = round($percentageChange, 2);
+            }
+
+            $previousValue = $total;
+        }
+
+        // dd($percentageChangeForAllMonths,$totalForAllMonths);
+
+        return $percentageChangeForAllMonths;
     }
 
     public function reportMonthStd()
@@ -206,6 +216,7 @@ class StdlogController extends Controller
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year);
         $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year);
         $totalForAllMonths = $this->queryGrafgh($test_scp);
+        $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
 
         $paper = PaperReport::whereMonth('submission_date', $month)
             ->whereYear('submission_date', $year)
@@ -217,6 +228,7 @@ class StdlogController extends Controller
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
             'reportYear_schoolPrice' => $reportYear_schoolPrice,
             'totalForAllMonths' => $totalForAllMonths,
+            'percentageChangeForAllMonths' => $percentageChangeForAllMonths,
             'paper' => $paper,
             'year' => $year,
             'month' => $months,
@@ -306,14 +318,14 @@ class StdlogController extends Controller
         if ($month) {
             # code...
             $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
-            ->orderBy('rid', 'desc')
-            ->get()
-            ->groupBy('student_id', 'group');
-        }else {
+                ->orderBy('rid', 'desc')
+                ->get()
+                ->groupBy('student_id', 'group');
+        } else {
             # code...
             $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
-            ->orderBy('rid', 'desc')
-            ->get();
+                ->orderBy('rid', 'desc')
+                ->get();
             // ->groupBy('student_id', 'group');
         }
         return $reportMonth_schoolPrice;
