@@ -726,10 +726,10 @@
                         mode: 'index', // Display multiple tooltips at once
                         intersect: false, // Don't intersect with other elements
                     },
-                    title: {
-                        display: true,
-                        text: 'Chart Title',
-                    },
+                    // title: {
+                    //     display: true,
+                    //     text: 'Chart Title',
+                    // },
                     legend: {
                         display: true,
                         position: 'top',
@@ -796,10 +796,10 @@
                         mode: 'index', // Display multiple tooltips at once
                         intersect: false, // Don't intersect with other elements
                     },
-                    title: {
-                        display: true,
-                        text: 'Chart Title',
-                    },
+                    // title: {
+                    //     display: true,
+                    //     text: 'Chart Title',
+                    // },
                     legend: {
                         display: true,
                         position: 'top',
