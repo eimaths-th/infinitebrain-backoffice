@@ -18,14 +18,14 @@
         }
 
         /* .switchery {
-                                                                                                                            width: 30px;
-                                                                                                                            height: 16px;
-                                                                                                                        }
+                                                                                                                                            width: 30px;
+                                                                                                                                            height: 16px;
+                                                                                                                                        }
 
-                                                                                                                        .switchery-small {
-                                                                                                                            width: 12px;
-                                                                                                                            height: 12px;
-                                                                                                                        } */
+                                                                                                                                        .switchery-small {
+                                                                                                                                            width: 12px;
+                                                                                                                                            height: 12px;
+                                                                                                                                        } */
     </style>
 @endsection
 
@@ -678,33 +678,68 @@
             @endforeach
         ];
 
-        var data = {
-            labels: groupLabels2,
-            // label: groupLabels,
-            datasets: [{
-                label: 'ยอดรวมแต่ละเดือน ',
-                data: [
-                    @foreach ($totalForAllMonths as $month => $total)
-                        {{ $total }},
-                    @endforeach
-                ],
-                pointBackgroundColor: 'rgba(52, 143, 226,.65)',
-                borderColor: 'rgba(52, 143, 226,.65)',
-                backgroundColor: 'rgba(52, 143, 226,.65)',
-                pointRadius: 4,
-                borderWidth: 2,
-            }, ]
-        };
+        // var data = {
+        //     labels: groupLabels2,
+        //     // label: groupLabels,
+        //     datasets: [{
+        //         label: 'ยอดรวมแต่ละเดือน ',
+        //         data: [
+        //             @foreach ($totalForAllMonths as $month => $total)
+        //                 {{ $total }},
+        //             @endforeach
+        //         ],
+        //         pointBackgroundColor: 'rgba(52, 143, 226,.65)',
+        //         borderColor: 'rgba(52, 143, 226,.65)',
+        //         backgroundColor: 'rgba(52, 143, 226,.65)',
+        //         pointRadius: 4,
+        //         borderWidth: 2,
+        //     }, ]
+        // };
         var ctx = document.getElementById('lineChart').getContext('2d');
         var lineChart = new Chart(ctx, {
             type: 'line',
-            data: data,
+            data: {
+                labels: groupLabels2,
+                // label: groupLabels,
+                datasets: [{
+                    label: 'ยอดรวมแต่ละเดือน ',
+                    data: [
+                        @foreach ($totalForAllMonths as $month => $total)
+                            {{ $total }},
+                        @endforeach
+                    ],
+                    pointBackgroundColor: 'rgba(52, 143, 226,.65)',
+                    borderColor: 'rgba(52, 143, 226,.65)',
+                    backgroundColor: 'rgba(52, 143, 226,.65)',
+                    pointRadius: 4,
+                    borderWidth: 2,
+                }, ]
+            },
             options: {
                 scales: {
                     y: {
                         beginAtZero: true
                     }
-                }
+                },
+                plugins: {
+                    tooltip: {
+                        mode: 'index', // Display multiple tooltips at once
+                        intersect: false, // Don't intersect with other elements
+                    },
+                    title: {
+                        display: true,
+                        text: 'Chart Title',
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                },
+                animation: {
+                    duration: 2000, // Animation duration in milliseconds
+                    easing: 'easeInOutQuad', // Easing function
+                },
+
             }
         });
     </script>
@@ -755,7 +790,25 @@
                     y: {
                         beginAtZero: true
                     }
-                }
+                },
+                plugins: {
+                    tooltip: {
+                        mode: 'index', // Display multiple tooltips at once
+                        intersect: false, // Don't intersect with other elements
+                    },
+                    title: {
+                        display: true,
+                        text: 'Chart Title',
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                },
+                animation: {
+                    duration: 2000, // Animation duration in milliseconds
+                    easing: 'easeInOutQuad', // Easing function
+                },
             }
         });
     </script>
