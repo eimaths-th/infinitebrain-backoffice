@@ -572,7 +572,25 @@
                     y: {
                         beginAtZero: true
                     }
-                }
+                },
+                plugins: {
+                    tooltip: {
+                        mode: 'index', // Display multiple tooltips at once
+                        intersect: false, // Don't intersect with other elements
+                    },
+                    // title: {
+                    //     display: true,
+                    //     text: 'Chart Title',
+                    // },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                },
+                animation: {
+                    duration: 2000, // Animation duration in milliseconds
+                    easing: 'easeInOutQuad', // Easing function
+                },
             }
         });
     </script>
@@ -653,7 +671,25 @@
                         beginAtZero: true,
                         maxTicksLimit: 5, // Set the maximum number of ticks on the Y-axis
                     }
-                }
+                },
+                plugins: {
+                    tooltip: {
+                        mode: 'index', // Display multiple tooltips at once
+                        intersect: false, // Don't intersect with other elements
+                    },
+                    // title: {
+                    //     display: true,
+                    //     text: 'Chart Title',
+                    // },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                },
+                animation: {
+                    duration: 2000, // Animation duration in milliseconds
+                    easing: 'easeInOutQuad', // Easing function
+                },
             }
         });
     </script>
