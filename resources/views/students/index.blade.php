@@ -576,7 +576,6 @@
                                 $('.alert-danger').append('<strong><li>' + value +
                                     '</li></strong>');
                             });
-                            location.reload();
 
                         } else {
                             $('.alert-danger').hide();
@@ -593,6 +592,7 @@
                             //$('.alert-success').hide();
                             $('#CreateModal').modal('hide');
                             //}, 10000);
+                            location.reload();
 
                         }
                     }
