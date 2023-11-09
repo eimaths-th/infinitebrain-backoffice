@@ -248,13 +248,16 @@ class StdlogController extends Controller
         $test_scp = SchoolPrice::all();
         $month = $request->month;
         $year = $request->year;
+        // dd($request, $month);
 
         if ($month) {
 
             $months = date('F', strtotime('2023-' . $month . '-25'));
         } else {
-            $months = '';
-            $month = null;
+            // $months = '';
+            $month = date('m');
+            $months = date('F', strtotime('2023-' . $month . '-25'));
+
         }
         // dd($request, $month);
 
