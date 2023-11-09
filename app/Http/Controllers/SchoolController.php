@@ -131,14 +131,14 @@ class SchoolController extends Controller
             $student_html = 'ไม่พบ ! ข้อมูลนักเรียน';
             $histories_html = 'ไม่พบ ! ประวัติการเรียน';
             $comment_html = 'ไม่พบ ! ความคิดเห็น';
-            $course_html =[];
+            $course_html = [];
 
 
             return view('register.home')->with(['parent_html' =>  $parent_html])
-            ->with(['student_html' =>  $student_html])
-            ->with(['histories_html' =>  $histories_html])
-            ->with(['comment_html' =>  $comment_html])
-            ->with(['student_chart' =>  $course_html]);
+                ->with(['student_html' =>  $student_html])
+                ->with(['histories_html' =>  $histories_html])
+                ->with(['comment_html' =>  $comment_html])
+                ->with(['student_chart' =>  $course_html]);
         }
 
 
@@ -177,91 +177,79 @@ class SchoolController extends Controller
             } elseif ($stu_result->status == "Termination of study") {
                 # code...
                 $class = 'warning';
-            } elseif ($stu_result->status == "studying . . ." || $stu_result->status == "New Student"|| $stu_result->status == "resume") {
+            } elseif ($stu_result->status == "studying . . ." || $stu_result->status == "New Student" || $stu_result->status == "resume") {
                 # code...success
                 $class = 'success';
-            }else {
+            } else {
                 # code...
-                $class ='info';
+                $class = 'info';
             }
 
 
             //detail std
             $stdId = $stu_result->id;
 
-            $rec = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
+            // $rec = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
 
             // dd($rec);
-
             $startcourse = null;
 
-            $crec = count($rec);
+            $school_pice = SchoolPrice::where('student_id', $stdId)->get();
 
-            if ($crec > 0) {
-                $parentCheck = '';
-                $rec_ids = [];
-                // $rec = Receipt_School::where('name_parent', $id_parent)->get();
-                $get_qty = [];
-                foreach ($rec as $record) {
-                    $school_pice = SchoolPrice::where('rid', $record->id)->get();
-                    foreach ($school_pice as  $sp_qty) {
-                        # code...
-                        if ($sp_qty->qty !== null) {
-
-                            $rec_ids[] = $sp_qty->id;
-                        }
-                    }
-
-                    // if (!empty($record->school_pice->qty) || $record->school_pice->qty == null) {
-                    // }
-                }
-
-                $school_pice = SchoolPrice::whereIn('id', $rec_ids)->get();
-
-                // dd($rec,$rec_ids, $school_pice);
-
-                $count_rec_ids = count($rec_ids);
-
-                if ($count_rec_ids > 0) {
-                    // $school_pice = SchoolPrice::whereIn('rid', $rec_ids)->get();
-                    // dd($rec_ids, $school_pice);
-
-                    if (count($school_pice) > 1) {
-                        $startcourse = $school_pice->first()->period;
-                        $period = $school_pice->last()->period;
-                    } else {
-                        // dd($rec_ids, $school_pice);
-
-                        $startcourse = $school_pice->first()->period;
-                        $period = $school_pice->first()->period;
-                    }
-                    $parts = explode('-', $period);
-                    $lastTwoParts = array_slice($parts, -2);
-                    $end_date = implode('-', $lastTwoParts);
-                }
-                // elseif ($count_rec_ids > 0) {
-                //     $school_pice = SchoolPrice::whereIn('rid', $rec_ids)->get();
-                //     if (count($school_pice) > 1) {
-                //         $startcourse = $school_pice->first()->period;
-                //         $period = $school_pice->last()->period;
-                //     } else {
-                //         $startcourse = $school_pice->first()->period;
-                //         $period = $school_pice->first()->period;
-                //     }
-                //     $parts = explode('-', $period);
-                //     $lastTwoParts = array_slice($parts, -2);
-                //     $end_date = implode('-', $lastTwoParts);
-                // }
-                else {
-                    // dd($rec_ids, $school_pice);
-                    $school_pice = [];
-                    $end_date = '2999-01';
-                    // $parentCheck = 'ผู้ปกครองไม่ตรงกัน';
-                }
+            if (count($school_pice) > 1) {
+                $startcourse = $school_pice->first()->period;
+                $period = $school_pice->last()->period;
             } else {
-                $school_pice = [];
-                $end_date = '2999-01';
+                // dd($rec_ids, $school_pice);
+
+                $startcourse = $school_pice->first()->period;
+                $period = $school_pice->first()->period;
             }
+            $parts = explode('-', $period);
+            $lastTwoParts = array_slice($parts, -2);
+            $end_date = implode('-', $lastTwoParts);
+
+            // $crec = count($rec);
+
+            // if ($crec > 0) {
+            //     $parentCheck = '';
+            //     $rec_ids = [];
+            //     // $rec = Receipt_School::where('name_parent', $id_parent)->get();
+            //     $get_qty = [];
+            //     foreach ($rec as $record) {
+            //         $school_pice = SchoolPrice::where('rid', $record->id)->get();
+            //         foreach ($school_pice as  $sp_qty) {
+            //             # code...
+            //             if ($sp_qty->qty !== null) {
+
+            //                 $rec_ids[] = $sp_qty->id;
+            //             }
+            //         }
+
+            //         // if (!empty($record->school_pice->qty) || $record->school_pice->qty == null) {
+            //         // }
+            //     }
+
+
+
+            //     // dd($rec,$rec_ids, $school_pice);
+
+            //     $count_rec_ids = count($rec_ids);
+
+            //     if ($count_rec_ids > 0) {
+
+            //     }
+
+            //     else {
+            //         // dd($rec_ids, $school_pice);
+            //         $school_pice = [];
+            //         $end_date = '2999-01';
+            //         // $parentCheck = 'ผู้ปกครองไม่ตรงกัน';
+            //     }
+            // } else {
+            //     $school_pice = [];
+            //     $end_date = '2999-01';
+            // }
 
             $all = 0;
             $remain = 0;
@@ -291,7 +279,7 @@ class SchoolController extends Controller
             if ($stu_result->status) {
                 # code...
                 $status = $stu_result->status;
-            }else {
+            } else {
                 # code...
                 $status = '';
             }
