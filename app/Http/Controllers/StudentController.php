@@ -630,13 +630,13 @@ class StudentController extends Controller
         //     }
         // }
         $school_pice = SchoolPrice::where('student_id', $stdId)->where('course_type', '1')->get();
-        if (count($school_pice) > 1) {
+        if (count($school_pice) > 0) {
             $startcourse = $school_pice->first()->period;
             $period = $school_pice->last()->period;
         } else {
 
-            $startcourse = $school_pice->first()->period;
-            $period = $school_pice->first()->period;
+            $startcourse = null;
+            $period = null;
             // dd($startcourse,$school_pice,$period);
             // dd($id_parent, $std->pid, $stdId, $std, $rec, $rec_ids, $school_pice);
             // dd($period);
