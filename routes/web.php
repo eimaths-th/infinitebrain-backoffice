@@ -65,6 +65,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/delete_control/{id}', [TimeController::class, 'deleteControl'])->name('delete_control');
     //std log
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
+    Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');
     Route::get('/report-future-student', [StdlogController::class, 'reportFutureStd'])->name('reportFutureStd');
     Route::get('/searchFuture', [StdlogController::class, 'searchFuture'])->name('searchFuture');
     Route::get('/search_future', [StdlogController::class, 'search_future'])->name('search_future');

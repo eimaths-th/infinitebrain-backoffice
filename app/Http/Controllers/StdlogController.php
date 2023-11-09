@@ -205,35 +205,7 @@ class StdlogController extends Controller
         return $percentageChangeForAllMonths;
     }
 
-    public function reportMonthStd()
-    {
-        $test_scp = SchoolPrice::all();
-        $currentMonth = Carbon::now()->format('Y-m');
-        $month = date('m');
-        $months = date('F');
-        $year = date('Y');
 
-        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year);
-        $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year);
-        $totalForAllMonths = $this->queryGrafgh($test_scp);
-        $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
-
-        $paper = PaperReport::whereMonth('submission_date', $month)
-            ->whereYear('submission_date', $year)
-            ->orderBy('rec_id', 'desc')
-            ->get();
-        // ksort($totalForAllMonths);
-        // dd($totalForAllMonths,  $reportMonth_schoolPrice);
-        return view('students.reportMonthStd', [
-            'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
-            'reportYear_schoolPrice' => $reportYear_schoolPrice,
-            'totalForAllMonths' => $totalForAllMonths,
-            'percentageChangeForAllMonths' => $percentageChangeForAllMonths,
-            'paper' => $paper,
-            'year' => $year,
-            'month' => $months,
-        ]);
-    }
 
     public function searchr_reportMonthStd(Request $request)
     {
@@ -332,6 +304,64 @@ class StdlogController extends Controller
         return $reportMonth_schoolPrice;
     }
 
+    public function reportMonthStd()
+    {
+        $test_scp = SchoolPrice::all();
+        $currentMonth = Carbon::now()->format('Y-m');
+        $month = date('m');
+        $months = date('F');
+        $year = date('Y');
+
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year);
+        $totalForAllMonths = $this->queryGrafgh($test_scp);
+        $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
+
+        $paper = PaperReport::whereMonth('submission_date', $month)
+            ->whereYear('submission_date', $year)
+            ->orderBy('rec_id', 'desc')
+            ->get();
+        // ksort($totalForAllMonths);
+        // dd($totalForAllMonths,  $reportMonth_schoolPrice);
+        return view('students.reportMonthStd', [
+            'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
+            'reportYear_schoolPrice' => $reportYear_schoolPrice,
+            'totalForAllMonths' => $totalForAllMonths,
+            'percentageChangeForAllMonths' => $percentageChangeForAllMonths,
+            'paper' => $paper,
+            'year' => $year,
+            'month' => $months,
+        ]);
+    }
+    public function reportRecieptStd()
+    {
+        $test_scp = SchoolPrice::all();
+        $currentMonth = Carbon::now()->format('Y-m');
+        $month = date('m');
+        $months = date('F');
+        $year = date('Y');
+
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year);
+        $totalForAllMonths = $this->queryGrafgh($test_scp);
+        $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
+
+        $paper = PaperReport::whereMonth('submission_date', $month)
+            ->whereYear('submission_date', $year)
+            ->orderBy('rec_id', 'desc')
+            ->get();
+        // ksort($totalForAllMonths);
+        // dd($totalForAllMonths,  $reportMonth_schoolPrice);
+        return view('students.report_recipt_std', [
+            'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
+            'reportYear_schoolPrice' => $reportYear_schoolPrice,
+            'totalForAllMonths' => $totalForAllMonths,
+            'percentageChangeForAllMonths' => $percentageChangeForAllMonths,
+            'paper' => $paper,
+            'year' => $year,
+            'month' => $months,
+        ]);
+    }
     // private function getMatchingSchoolPrices($test_scp, $currentMonth, $search)
     // {
     //     $matchingSchoolPrices = [];
