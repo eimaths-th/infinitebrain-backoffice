@@ -250,15 +250,13 @@ class StdlogController extends Controller
         $year = $request->year;
         // dd($request, $month);
 
-        if ($month) {
-
-            $months = date('F', strtotime('2023-' . $month . '-25'));
-        } else {
-            // $months = '';
+        if (!$month) {
             $month = date('m');
-            $months = date('F', strtotime('2023-' . $month . '-25'));
-
         }
+        $months = date('F', strtotime('2023-' . $month . '-25'));
+
+        // $months = date('F', strtotime('2023-' . $month . '-25'));
+
         // dd($request, $month);
 
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year);
