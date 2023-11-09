@@ -613,6 +613,7 @@ class StudentController extends Controller
         $std = Student::find($id);
 
         $stdId = $std->id;
+        $school_pice = SchoolPrice::where('student_id', $stdId)->where('course_type', '1')->get();
 
         $success = History::where('student_id', $stdId)->get();
         // $his_succsss = count($success);
@@ -628,144 +629,44 @@ class StudentController extends Controller
         //         $id_parent = (int)$parent->name_parent;
         //     }
         // }
-
-        $crec = count($rec);
-
-        if ($crec > 0) {
-
-            $parentCheck = '';
-            $rec_ids = [];
-            $get_qty = [];
-            foreach ($rec as $record) {
-                $school_pice = SchoolPrice::where('rid', $record->id)->get();
-                foreach ($school_pice as  $sp_qty) {
-                    # code...
-                    if ($sp_qty->qty !== null) {
-
-                        $rec_ids[] = $sp_qty->id;
-                    }
-                }
-            }
-            $school_pice = SchoolPrice::whereIn('id', $rec_ids)->get();
-
-            // dd($rec,$rec_ids, $school_pice);
-
-            $count_rec_ids = count($rec_ids);
-
-
-
-            if ($count_rec_ids > 1) {
-                // $school_pice = SchoolPrice::whereIn('rid', $rec_ids)->get();
-
-
-                if (count($school_pice) > 1) {
-                    $startcourse = $school_pice->first()->period;
-                    $period = $school_pice->last()->period;
-                } else {
-
-                    $startcourse = $school_pice->first()->period;
-                    $period = $school_pice->first()->period;
-                    // dd($startcourse,$school_pice,$period);
-                    // dd($id_parent, $std->pid, $stdId, $std, $rec, $rec_ids, $school_pice);
-                    // dd($period);
-                }
-                // dd($rec_ids, $school_pice,$period);
-
-                $parts = explode('-', $period);
-                $lastTwoParts = array_slice($parts, -2);
-                $end_date = implode('-', $lastTwoParts);
-                $currentReceiptEndDate = Carbon::parse($end_date);
-            } elseif ($count_rec_ids > 0) {
-                # code...
-                // $school_pice = SchoolPrice::whereIn('rid', $rec_ids)->get();
-                // dd($school_pice);
-
-                if (count($school_pice) > 1) {
-                    $startcourse = $school_pice->first()->period;
-                    $period = $school_pice->last()->period;
-                } else {
-
-                    $startcourse = $school_pice->first()->period;
-                    $period = $school_pice->first()->period;
-                }
-
-                $parts = explode('-', $period);
-                $lastTwoParts = array_slice($parts, -2);
-                $end_date = implode('-', $lastTwoParts);
-
-                // dd($period,$end_date,$current_Month);
-
-
-                $currentReceiptEndDate = Carbon::parse($end_date);
-            } else {
-                // dd($rec_ids, $school_pice);
-                $school_pice = [];
-                $end_date = '2999-01';
-                // $parentCheck = 'ผู้ปกครองไม่ตรงกัน';
-            }
-            // dd($id_parent, $std->pid, $stdId, $std, $rec,$rec_ids,$school_pice);
-            $parentCheck = '';
-
-            // }
-            // else {
-            //     $school_pice = [];
-            //     $end_date = '2999-01';
-            //     $parentCheck = 'ผู้ปกครองไม่ตรงกัน';
-            // }
+        $school_pice = SchoolPrice::where('student_id', $stdId)->where('course_type', '1')->get();
+        if (count($school_pice) > 1) {
+            $startcourse = $school_pice->first()->period;
+            $period = $school_pice->last()->period;
         } else {
-            $school_pice = [];
-            $parentCheck = '';
-            $end_date = '2999-01';
+
+            $startcourse = $school_pice->first()->period;
+            $period = $school_pice->first()->period;
+            // dd($startcourse,$school_pice,$period);
+            // dd($id_parent, $std->pid, $stdId, $std, $rec, $rec_ids, $school_pice);
+            // dd($period);
         }
+        // dd($rec_ids, $school_pice,$period);
 
-        //start test
-        // dd($rec_ids, $school_pice,$end_date);
+        $parts = explode('-', $period);
+        $lastTwoParts = array_slice($parts, -2);
+        $end_date = implode('-', $lastTwoParts);
+        $end_date = trim($end_date);
+        $parts = explode(' ', $end_date);
+        $lastTwoParts = array_slice($parts, -2);
+        $end_date = implode('-', $lastTwoParts);
 
-        // dd($end_date);
-        // dd($id_parent, $std->pid, $stdId, $std, $rec,$rec_ids,$school_pice);
 
-
-        // $tset_std = Student::find($id);
-
-        // $rec_test = Receipt_School::where('pid', $tset_std->id)->get();
-        // $tset_receipt = $tset_std->rec_school;
-        // $arr_test_rec = [];
-        // foreach ($tset_receipt as $etset_receipt) {
-        //     $arr_test_rec[] = $etset_receipt->id;
-        //     # code...
-        // }
-
-        // $scp = SchoolPrice::whereIn('rid', $arr_test_rec)->get();
-
-        // $scp_id = [];
-        // foreach ($scp as $scps) {
-
-        //     if ($scps->qty) {
-        //         # code...
-        //         $scp_id[] = $scps->id;
-        //     }
-        //     # code...
-        // }
-
-        // dd($tset_std->id,$tset_receipt,$rec_test,$arr_test_rec,$scp,$scp_id);
 
         //เทสโค้ด
         $tset_std = Student::find($id);
 
-        $rec_test = Receipt_School::where('pid', $tset_std->id)->get();
 
-        $arr_test_rec = $rec_test->pluck('id')->toArray();
-
-        $scp = SchoolPrice::whereIn('rid', $arr_test_rec)->where('qty', '>', 0)->get();
+        $scp = SchoolPrice::where('student_id', $tset_std->id)->where('course_type', '1')->get();
         $scp_ids = $scp->pluck('id')->toArray();
 
-        // Output debug information
         // dd(
-        //     'Student ID:', $tset_std->id,
-        //     'Receipts:', $rec_test,
-        //     'Receipt IDs:', $arr_test_rec,
-        //     'School Prices:', $scp,
-        //     'School Prices ids :', $scp_ids
+        //     // 'Student ID: ' . $tset_std->id,
+        //     // $scp,
+        //     // $scp_ids,
+        //     // $std,
+        //     $end_date,
+        //     // $startcourse,
         // );
 
         //end test
@@ -775,7 +676,7 @@ class StudentController extends Controller
             'end_date'    => $end_date,
             'school_pice'   => $school_pice,
             // 'success'       => $success,
-            'parentCheck'       => $parentCheck,
+            // 'parentCheck'       => $parentCheck,
             'startcourse'       => $startcourse,
             // 'school_pice'   => $groupedSchoolPice,
             // 'his_succsss'   => $his_succsss,

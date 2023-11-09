@@ -51,8 +51,6 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
     Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
     Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
     Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
-
-
 });
 
 Route::group(['middleware' => ['auth']], function () {
@@ -180,25 +178,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/receipts/destroy/{id}', [ReceiptController::class, 'destroy'])->name('receipts.destroy');
     Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all'])->name('receipts.destroy_all');
 
-    //form
 
-    Route::get('/cambridge/line', [ReceiptFormController::class, 'cambridge'])->name('cambridge.line');
-    Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
-    Route::post('/form/upload/api', [ReceiptFormController::class, 'fileStoreAPI'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->name('form.upload.api');
-    Route::post('/form/upload/delete', [ReceiptFormController::class, 'fileDestroy'])->name('form.delete');
-    Route::post('/form/store', [ReceiptFormController::class, 'store'])->name('form.store');
-    Route::get('/form/complete/{sfield}', [ReceiptFormController::class, 'show'])->name('form.complete');
-    Route::get('/form/complete1', [ReceiptFormController::class, 'show1'])->name('form.complete1');
-
-    Route::post('/form/store1', [ReceiptFormController::class, 'store1'])->name('form.store1');
-
-    Route::get('/receipts_form', [ReceiptFormController::class, 'index'])->name('receipts_form');
-    Route::get('/receipts_form/edit/{id}', [ReceiptFormController::class, 'edit'])->name('receipts_form.edit');
-    Route::delete('/receipts_form/destroy/{id}', [ReceiptFormController::class, 'destroy'])->name('receipts_form.destroy');
-    Route::delete('/receipts_form/destroy_all', [ReceiptFormController::class, 'destroy_all'])->name('receipts_form.destroy_all');
-    Route::delete('/receipts_form/export', [ReceiptFormController::class, 'exportForm'])->name('receipts_form.export');
-    Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->name('receipts_form.store');
-    Route::post('/receipts_form/update', [ReceiptFormController::class, 'update'])->name('receipts_form.update');
 
     //history
 
@@ -230,6 +210,25 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('/receipt_school/delete/{id}/{id2}', [ReceiptSchoolController::class, 'deleteImg'])->name('receipt_school.deleteImg');
 });
 
+//form
+
+Route::get('/cambridge/line', [ReceiptFormController::class, 'cambridge'])->name('cambridge.line');
+Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');
+Route::post('/form/upload/api', [ReceiptFormController::class, 'fileStoreAPI'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->name('form.upload.api');
+Route::post('/form/upload/delete', [ReceiptFormController::class, 'fileDestroy'])->name('form.delete');
+Route::post('/form/store', [ReceiptFormController::class, 'store'])->name('form.store');
+Route::get('/form/complete/{sfield}', [ReceiptFormController::class, 'show'])->name('form.complete');
+Route::get('/form/complete1', [ReceiptFormController::class, 'show1'])->name('form.complete1');
+
+Route::post('/form/store1', [ReceiptFormController::class, 'store1'])->name('form.store1');
+
+Route::get('/receipts_form', [ReceiptFormController::class, 'index'])->name('receipts_form');
+Route::get('/receipts_form/edit/{id}', [ReceiptFormController::class, 'edit'])->name('receipts_form.edit');
+Route::delete('/receipts_form/destroy/{id}', [ReceiptFormController::class, 'destroy'])->name('receipts_form.destroy');
+Route::delete('/receipts_form/destroy_all', [ReceiptFormController::class, 'destroy_all'])->name('receipts_form.destroy_all');
+Route::delete('/receipts_form/export', [ReceiptFormController::class, 'exportForm'])->name('receipts_form.export');
+Route::post('/receipts_form/store', [ReceiptFormController::class, 'create'])->name('receipts_form.store');
+Route::post('/receipts_form/update', [ReceiptFormController::class, 'update'])->name('receipts_form.update');
 
 Route::group(array('domain' => 'form.infinitebrain.co.th'), function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);

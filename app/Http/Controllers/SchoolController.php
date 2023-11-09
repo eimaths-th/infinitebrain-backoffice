@@ -194,7 +194,7 @@ class SchoolController extends Controller
             // dd($rec);
             $startcourse = null;
 
-            $school_pice = SchoolPrice::where('student_id', $stdId)->get();
+            $school_pice = SchoolPrice::where('student_id', $stdId)->where('course_type', '1')->get();
 
             if (count($school_pice) > 1) {
                 $startcourse = $school_pice->first()->period;

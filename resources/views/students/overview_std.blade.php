@@ -66,8 +66,9 @@
             // $currentMonth = Carbon::createFromFormat('Y-m','2023-10');
             $currentMonth = Carbon::createFromFormat('Y-m', $current_Month);
             // $currentReceiptEndDate = Carbon::createFromFormat('Y-m', '2023-9');
-            $currentReceiptEndDate = Carbon::createFromFormat('Y-m', $end_date);
-            // dd($end_date);
+            // dd($currentMonth);
+
+            $currentReceiptEndDate = Carbon::parse($end_date);
         @endphp
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
