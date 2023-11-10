@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'auth.apikey' => \App\Http\Middleware\AuthenticateApiKey::class,
         'inactivity' => \App\Http\Middleware\InactivityTimeoutMiddleware::class,
         'check.opening.date.time' => \App\Http\Middleware\CheckOpeningDateTime::class,
+        'checkUserId' => \App\Http\Middleware\CheckUserId::class,
     ];
 }
