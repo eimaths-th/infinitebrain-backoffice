@@ -598,12 +598,12 @@
                                 รายงานประจำเดือน
                             </a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a href="{{ route('reportRecieptStd') }}">
                                 <i class="metismenu-icon"></i>
                                 Report Student Recieept
                             </a>
-                        </li>
+                        </li> --}}
                         @endif
 
                     </ul>
