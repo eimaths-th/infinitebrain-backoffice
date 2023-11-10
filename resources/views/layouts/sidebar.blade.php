@@ -590,19 +590,20 @@
                             </a>
                         </li>
 
-                        @if (Auth::user()->level == 0)
+                        {{-- แก้ เช็คชื่อ พี่หนึ่ง && me --}}
+                        @if (Auth::user()->level == 0 && Auth::user()->id == 4 || Auth::user()->id == 16)
                         <li>
                             <a href="{{ route('reportMonthStd') }}">
                                 <i class="metismenu-icon"></i>
                                 รายงานประจำเดือน
                             </a>
                         </li>
-                        {{-- <li>
+                        <li>
                             <a href="{{ route('reportRecieptStd') }}">
                                 <i class="metismenu-icon"></i>
                                 Report Student Recieept
                             </a>
-                        </li> --}}
+                        </li>
                         @endif
 
                     </ul>
