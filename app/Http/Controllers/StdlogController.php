@@ -335,7 +335,7 @@ class StdlogController extends Controller
     }
     public function reportRecieptStd()
     {
-        $test_scp = SchoolPrice::all();
+        $stdlog = Statuslog::all();
         $currentMonth = Carbon::now()->format('Y-m');
         $month = date('m');
         $months = date('F');
@@ -343,7 +343,7 @@ class StdlogController extends Controller
 
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year);
         $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year);
-        $totalForAllMonths = $this->queryGrafgh($test_scp);
+        $totalForAllMonths = $this->queryGrafgh1($stdlog);
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
 
         $paper = PaperReport::whereMonth('submission_date', $month)
@@ -351,7 +351,7 @@ class StdlogController extends Controller
             ->orderBy('rec_id', 'desc')
             ->get();
         // ksort($totalForAllMonths);
-        // dd($totalForAllMonths,  $reportMonth_schoolPrice);
+        // dd($totalForAllMonths,$percentageChangeForAllMonths);
         return view('students.report_recipt_std', [
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
             'reportYear_schoolPrice' => $reportYear_schoolPrice,
@@ -362,6 +362,80 @@ class StdlogController extends Controller
             'month' => $months,
         ]);
     }
+
+    private function queryGrafgh1($stdlog)
+    {
+
+        $uniqueMonthsYears = [];
+        $statusLogs = Statuslog::all();
+        foreach ($statusLogs as $statusLog) {
+            $monthYear = Carbon::parse($statusLog->status_date)->format('Y-m');
+
+            if (!in_array($monthYear, $uniqueMonthsYears)) {
+                $uniqueMonthsYears[] = $monthYear;
+            }
+        }
+        $monthlyStatusCounts = [];
+        $monthlyStatusCountsAll = [];
+        foreach ($uniqueMonthsYears as $monthyear) {
+            list($year, $month) = explode('-', $monthyear);
+            $latestStatusCounts = Statuslog::select(
+                'status_log.student_id',
+                'status_log.group',
+                'status_log.status',
+                'status_log.status_date',
+                'status_log.nick_name'
+            )
+                ->whereIn('status_log.id', function ($query) use ($year, $month) {
+                    $query->select(DB::raw('MAX(id)'))
+                        ->from('status_log')
+                        ->whereYear('status_date', $year)
+                        ->whereMonth('status_date', $month)
+                        ->groupBy('student_id', 'group');
+                })
+                ->join('students', 'status_log.student_id', '=', 'students.id')
+                ->orderBy('students.code')
+                ->get();
+
+            // dd($latestStatusCounts);
+            $monthlyStatusCounts[$monthyear] = [];
+
+            foreach ($latestStatusCounts as $statusCount) {
+                $status = $statusCount->status;
+
+                if (!isset($monthlyStatusCounts[$monthyear][$status])) {
+                    $monthlyStatusCounts[$monthyear][$status] = 0;
+                }
+                $monthlyStatusCounts[$monthyear][$status]++;
+            }
+            $monthlyStatusCountsAll[$monthyear] = 0;
+
+            if (isset($monthlyStatusCounts[$monthyear]['New Student'])) {
+                $monthlyStatusCountsAll[$monthyear] += $monthlyStatusCounts[$monthyear]['New Student'];
+            }
+
+            if (isset($monthlyStatusCounts[$monthyear]['studying . . .'])) {
+                $monthlyStatusCountsAll[$monthyear] += $monthlyStatusCounts[$monthyear]['studying . . .'];
+            }
+
+            if (isset($monthlyStatusCounts[$monthyear]['resume'])) {
+                $monthlyStatusCountsAll[$monthyear] += $monthlyStatusCounts[$monthyear]['resume'];
+            }
+        }
+
+
+        uksort($monthlyStatusCountsAll, function ($a, $b) {
+            $dateA = DateTime::createFromFormat('F-Y', $a);
+            $dateB = DateTime::createFromFormat('F-Y', $b);
+
+            return $dateA <=> $dateB;
+        });
+        // dd($monthlyStatusCounts, $monthlyStatusCountsAll);
+
+        return $monthlyStatusCountsAll;
+    }
+
+
     // private function getMatchingSchoolPrices($test_scp, $currentMonth, $search)
     // {
     //     $matchingSchoolPrices = [];
