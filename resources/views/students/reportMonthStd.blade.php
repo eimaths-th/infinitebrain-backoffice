@@ -18,14 +18,14 @@
         }
 
         /* .switchery {
-                                                                                                                                            width: 30px;
-                                                                                                                                            height: 16px;
-                                                                                                                                        }
+                                                                                                                                                width: 30px;
+                                                                                                                                                height: 16px;
+                                                                                                                                            }
 
-                                                                                                                                        .switchery-small {
-                                                                                                                                            width: 12px;
-                                                                                                                                            height: 12px;
-                                                                                                                                        } */
+                                                                                                                                            .switchery-small {
+                                                                                                                                                width: 12px;
+                                                                                                                                                height: 12px;
+                                                                                                                                            } */
     </style>
 @endsection
 
@@ -583,8 +583,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {{-- <script src="https://d3js.org/d3.v7.min.js"></script> --}}
     <script src="../assets/plugins/d3/d3.min.js"></script>
-    <script src="../assets/plugins/nvd3/build/nv.d3.min.js"></script>
-    <script src="../assets/plugins/chart.js/dist/Chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    {{-- <script src="../assets/plugins/nvd3/build/nv.d3.min.js"></script> --}}
+    {{-- <script src="../assets/plugins/chart.js/dist/Chart.min.js"></script> --}}
     <script src="../assets/plugins/flot/source/jquery.canvaswrapper.js"></script>
     <script src="../assets/plugins/flot/source/jquery.colorhelpers.js"></script>
     <script src="../assets/plugins/flot/source/jquery.flot.js"></script>
@@ -593,27 +594,35 @@
     <script src="../assets/plugins/flot/source/jquery.flot.drawSeries.js"></script>
     <script src="../assets/plugins/flot/source/jquery.flot.uiConstants.js"></script>
     <script src="/assets/plugins/switchery/dist/switchery.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     {{-- <script>
-        var checkboxes = document.querySelectorAll('input[id^="switchery-default-"]');
-        checkboxes.forEach(function(checkbox) {
-            var switchery = new Switchery(checkbox, {
-                color: '#00acac'
-            });
+    var checkboxes = document.querySelectorAll('input[id^="switchery-default-"]');
+    checkboxes.forEach(function(checkbox) {
+        var switchery = new Switchery(checkbox, {
+            color: '#00acac'
         });
-    </script> --}}
+    });
+</script> --}}
     <script>
         $(document).ready(function() {
-            document.getElementById('selectMonth1').disabled = true;
+            var selectMonth1 = document.getElementById('selectMonth1');
+
+            if (selectMonth1) {
+                selectMonth1.disabled = true;
+            }
 
             var table1 = $('#Listview').DataTable({
                 lengthMenu: [-1],
             });
-            var table1 = $('#Listview2').DataTable({
+            var table2 = $('#Listview2').DataTable({
                 lengthMenu: [-1],
             });
 
             $('input[type="checkbox"]').change(function() {
                 var isChecked = $(this).is(":checked");
+                console.log(isChecked);
                 if (isChecked) {
                     $(this).closest('tr').addClass('bg-success');
                     var id = $(this).attr('id');
@@ -624,38 +633,31 @@
                     localStorage.setItem(id, 'unchecked');
                 }
             });
-            $(document).ready(function() {
-                $('input[type="checkbox"]').each(function() {
-                    var id = $(this).attr('id');
-                    var state = localStorage.getItem(id);
-                    if (state === 'checked') {
-                        $(this).prop('checked', true);
-                        $(this).closest('tr').addClass('bg-success');
-                    }
-                });
+
+            $('input[type="checkbox"]').each(function() {
+
+                var id = $(this).attr('id');
+                var state = localStorage.getItem(id);
+                // console.log(id);
+
+                if (state === 'checked') {
+                    $(this).prop('checked', true);
+                    $(this).closest('tr').addClass('bg-success');
+                }
             });
-
-
-        })
-
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        //     checkboxes.forEach(function(checkbox) {
-        //         checkbox.addEventListener('change', function() {
-        //             var isChecked = this.checked;
-        //             if (isChecked) {
-        //                 this.closest('tr').style.backgroundColor = 'green';
-        //             } else {
-        //                 this.closest('tr').style.backgroundColor = '';
-        //             }
-        //         });
-        //     });
-        // });
-
-        $(document).ready(function() {
 
         });
     </script>
+
+    {{-- <script>
+        var checkboxes = document.querySelectorAll('input[id^="switchery-default-"]');
+        checkboxes.forEach(function(checkbox) {
+            var switchery = new Switchery(checkbox, {
+                color: '#00acac'
+            });
+        });
+    </script> --}}
+
     <script>
         var groupLabels = [
             @foreach ($totalForAllMonths as $month => $total)
