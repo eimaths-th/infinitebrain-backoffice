@@ -18,14 +18,14 @@
         }
 
         /* .switchery {
-                                                                                                                                                width: 30px;
-                                                                                                                                                height: 16px;
-                                                                                                                                            }
+                                                                                                                                                        width: 30px;
+                                                                                                                                                        height: 16px;
+                                                                                                                                                    }
 
-                                                                                                                                            .switchery-small {
-                                                                                                                                                width: 12px;
-                                                                                                                                                height: 12px;
-                                                                                                                                            } */
+                                                                                                                                                    .switchery-small {
+                                                                                                                                                        width: 12px;
+                                                                                                                                                        height: 12px;
+                                                                                                                                                    } */
     </style>
 @endsection
 
@@ -311,39 +311,42 @@
                                 @endphp
                                 @foreach ($reportMonth_schoolPrice as $studentId => $groupedData)
                                     @foreach ($groupedData as $key => $data)
+                                        @php
+                                            $class = '';
+
+                                            $cMonth = date('m');
+                                            $cYear = date('Y');
+                                            $status = Statuslog::where('student_id', $data->std->id)
+                                                ->where('group', $data->group)
+                                                ->whereMonth('status_date', $cMonth)
+                                                ->whereYear('status_date', $cYear)
+                                                ->get();
+
+                                            if ($status->last()->status === 'None Receipt') {
+                                                $class = 'text-info';
+                                            } elseif ($status->last()->status === 'drop') {
+                                                $class = 'text-black';
+                                            } elseif ($status->last()->status === 'waitting . . .') {
+                                                $class = 'text-primary';
+                                            } elseif ($status->last()->status === 'Termination of study') {
+                                                $class = 'text-warning';
+                                            } elseif ($status->last()->status === 'New Student') {
+                                                $class = 'text-red';
+                                            }else {
+                                                $class = 'text-blue';
+                                            }
+                                        @endphp
                                         <tr>
                                             <td class="text-center">{{ $key + 1 }}</td>
                                             <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
-                                            <td>{{ $data->std->nick_name ?? 'Null' }}</td>
+                                            <td class="{{ $class }}">{{ $data->std->nick_name ?? 'Null' }}</td>
                                             <td>{{ $data->rec_school->submission_date }}</td>
                                             <td>{{ $data->period }}</td>
 
                                             <td>{{ $data->rec_school->receipt_number }}</td>
                                             <td>{{ $data->group }}</td>
 
-                                            @php
-                                                $class = '';
 
-                                                $cMonth = date('m');
-                                                $cYear = date('Y');
-                                                $status = Statuslog::where('student_id', $data->std->id)
-                                                    ->where('group', $data->group)
-                                                    ->whereMonth('status_date', $cMonth)
-                                                    ->whereYear('status_date', $cYear)
-                                                    ->get();
-
-                                                if ($status->last()->status === 'None Receipt') {
-                                                    $class = 'text-info';
-                                                } elseif ($status->last()->status === 'drop') {
-                                                    $class = 'text-danger';
-                                                } elseif ($status->last()->status === 'waitting . . .') {
-                                                    $class = 'text-primary';
-                                                } elseif ($status->last()->status === 'Termination of study') {
-                                                    $class = 'text-warning';
-                                                } else {
-                                                    $class = 'text-blue';
-                                                }
-                                            @endphp
                                             <td class="{{ $class }}">
                                                 {{-- @if ($data->std->status_log && $data->std->status_log->count() > 0 && $status->last()->group == $data->group) --}}
                                                 @if (
@@ -431,38 +434,41 @@
                                 @foreach ($reportYear_schoolPrice as $key => $data1)
                                     {{-- @foreach ($reportYear_schoolPrice as $studentId1 => $groupedData1) --}}
                                     {{-- @foreach ($groupedData1 as $key => $data1) --}}
+                                    @php
+                                        $class = '';
+
+                                        $cMonth = date('m');
+                                        $cYear = date('Y');
+                                        $status = Statuslog::where('student_id', optional($data1->std)->id)
+                                            ->where('group', $data1->group)
+                                            ->whereMonth('status_date', $cMonth)
+                                            ->whereYear('status_date', $cYear)
+                                            ->get();
+
+                                        if ($status->last() && $status->last()->status === 'None Receipt') {
+                                            $class = 'text-info';
+                                        } elseif ($status->last() && $status->last()->status === 'drop') {
+                                            $class = 'text-black';
+                                        } elseif ($status->last() && $status->last()->status === 'waitting . . .') {
+                                            $class = 'text-primary';
+                                        } elseif ($status->last() && $status->last()->status === 'Termination of study') {
+                                            $class = 'text-warning';
+                                        } elseif ($status->last() && $status->last()->status === 'New Student') {
+                                            $class = 'text-red';
+                                        } else {
+                                            $class = 'text-blue';
+                                        }
+                                    @endphp
                                     <tr>
                                         <td class="text-center">{{ $key + 1 }}</td>
                                         <td class="text-center">{{ $data1->std->code ?? 'Null' }}</td>
-                                        <td>{{ $data1->std->nick_name ?? 'Null' }}</td>
+                                        <td class="{{ $class }}">{{ $data1->std->nick_name ?? 'Null' }}</td>
                                         <td>{{ $data1->rec_school->submission_date }}</td>
                                         <td>{{ $data1->period }}</td>
 
                                         <td>{{ $data1->rec_school->receipt_number }}</td>
                                         <td>{{ $data1->group }}</td>
-                                        @php
-                                            $class = '';
 
-                                            $cMonth = date('m');
-                                            $cYear = date('Y');
-                                            $status = Statuslog::where('student_id', optional($data1->std)->id)
-                                                ->where('group', $data1->group)
-                                                ->whereMonth('status_date', $cMonth)
-                                                ->whereYear('status_date', $cYear)
-                                                ->get();
-
-                                            if ($status->last() && $status->last()->status === 'None Receipt') {
-                                                $class = 'text-info';
-                                            } elseif ($status->last() && $status->last()->status === 'drop') {
-                                                $class = 'text-danger';
-                                            } elseif ($status->last() && $status->last()->status === 'waitting . . .') {
-                                                $class = 'text-primary';
-                                            } elseif ($status->last() && $status->last()->status === 'Termination of study') {
-                                                $class = 'text-warning';
-                                            } else {
-                                                $class = 'text-blue';
-                                            }
-                                        @endphp
 
                                         <td class="{{ $class }}">
                                             @if (
