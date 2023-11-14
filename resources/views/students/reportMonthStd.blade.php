@@ -410,7 +410,7 @@
                     <div class="tab-pane fade" id="default-tab-2">
 
                         <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนปี {{ $year }}</h3>
-                        <table style="width: 100%;" id="Listview"
+                        <table style="width: 100%;" id="Listview3"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
 
                             <thead>
@@ -623,6 +623,10 @@
                 lengthMenu: [-1],
             });
             var table2 = $('#Listview2').DataTable({
+                lengthMenu: [-1],
+            });
+
+            var table3 = $('#Listview3').DataTable({
                 lengthMenu: [-1],
             });
 

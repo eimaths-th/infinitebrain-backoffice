@@ -18,14 +18,14 @@
         }
 
         /* .switchery {
-                                                                                                                                            width: 30px;
-                                                                                                                                            height: 16px;
-                                                                                                                                        }
+                                                                                                                                                                width: 30px;
+                                                                                                                                                                height: 16px;
+                                                                                                                                                            }
 
-                                                                                                                                        .switchery-small {
-                                                                                                                                            width: 12px;
-                                                                                                                                            height: 12px;
-                                                                                                                                        } */
+                                                                                                                                                            .switchery-small {
+                                                                                                                                                                width: 12px;
+                                                                                                                                                                height: 12px;
+                                                                                                                                                            } */
     </style>
 @endsection
 
@@ -94,8 +94,9 @@
         {{-- </div> --}}
 
 
-        {{-- <div class="main-card mb-3 card " id="x_content">
+        <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
+
 
                 <form action="{{ route('searchr_reportMonthStd') }}" method="GET">
                     @csrf
@@ -131,6 +132,7 @@
                                 <label for="year" class="col-lg-2">ปี : </label>
                                 <div class="col-lg-9">
                                     <select name="year" id="selectMonth" class="form-select">
+                                        {{-- <option value="">เลือกปี</option> --}}
                                         @php
                                             $currentYear = date('Y');
                                             for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
@@ -161,16 +163,19 @@
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
                         <a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
+                            {{-- <span class="d-sm-none">Tab 1</span> --}}
                             <span class="d-sm-block d-none">ตรวจสอบรายเดือน</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
+                            {{-- <span class="d-sm-none">Tab 1</span> --}}
                             <span class="d-sm-block d-none">ตรวจสอบรายปี</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
+                            {{-- <span class="d-sm-none">Tab 2</span> --}}
                             <span class="d-sm-block d-none">บันทึกใบปะหน้า</span>
                         </a>
                     </li>
@@ -183,7 +188,7 @@
                         <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนเดือน {{ thaidate('F', $month) }}
                             {{ $year }}</h3>
                         <table style="width: 100%;" id="Listview"
-                            class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
+                            class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">
 
                             <thead>
                                 <tr>
@@ -210,40 +215,44 @@
                                 @endphp
                                 @foreach ($reportMonth_schoolPrice as $studentId => $groupedData)
                                     @foreach ($groupedData as $key => $data)
+                                        @php
+                                            $class = '';
+
+                                            $cMonth = date('m');
+                                            $cYear = date('Y');
+                                            $status = Statuslog::where('student_id', $data->std->id)
+                                                ->where('group', $data->group)
+                                                ->whereMonth('status_date', $cMonth)
+                                                ->whereYear('status_date', $cYear)
+                                                ->get();
+
+                                            if ($status->last()->status === 'None Receipt') {
+                                                $class = 'text-info';
+                                            } elseif ($status->last()->status === 'drop') {
+                                                $class = 'text-black';
+                                            } elseif ($status->last()->status === 'waitting . . .') {
+                                                $class = 'text-primary';
+                                            } elseif ($status->last()->status === 'Termination of study') {
+                                                $class = 'text-warning';
+                                            } elseif ($status->last()->status === 'New Student') {
+                                                $class = 'text-red';
+                                            } else {
+                                                $class = 'text-blue';
+                                            }
+                                        @endphp
                                         <tr>
                                             <td class="text-center">{{ $key + 1 }}</td>
                                             <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
-                                            <td>{{ $data->std->nick_name ?? 'Null' }}</td>
+                                            <td class="{{ $class }}">{{ $data->std->nick_name ?? 'Null' }}</td>
                                             <td>{{ $data->rec_school->submission_date }}</td>
                                             <td>{{ $data->period }}</td>
 
                                             <td>{{ $data->rec_school->receipt_number }}</td>
                                             <td>{{ $data->group }}</td>
 
-                                            @php
-                                                $class = '';
 
-                                                $cMonth = date('m');
-                                                $cYear = date('Y');
-                                                $status = Statuslog::where('student_id', $data->std->id)
-                                                    ->where('group', $data->group)
-                                                    ->whereMonth('status_date', $cMonth)
-                                                    ->whereYear('status_date', $cYear)
-                                                    ->get();
-
-                                                if ($status->last()->status === 'None Receipt') {
-                                                    $class = 'text-info';
-                                                } elseif ($status->last()->status === 'drop') {
-                                                    $class = 'text-danger';
-                                                } elseif ($status->last()->status === 'waitting . . .') {
-                                                    $class = 'text-primary';
-                                                } elseif ($status->last()->status === 'Termination of study') {
-                                                    $class = 'text-warning';
-                                                } else {
-                                                    $class = 'text-blue';
-                                                }
-                                            @endphp
                                             <td class="{{ $class }}">
+                                                {{-- @if ($data->std->status_log && $data->std->status_log->count() > 0 && $status->last()->group == $data->group) --}}
                                                 @if (
                                                     $data->std &&
                                                         $data->std->status_log &&
@@ -256,8 +265,11 @@
                                                 @endif
                                             </td>
                                             <td>{{ $data->course_type }}</td>
+                                            {{-- <td class="text-end">{{ number_format($data->total) }} บาท</td> --}}
                                             <td class="text-end">{{ number_format($data->total) }} บาท</td>
+                                            {{-- <td class="text-end"><input type="checkbox" id="switchery-default" checked /></td> --}}
                                             <td class="text-center">
+                                                {{-- <input type="checkbox" class="switchery-small" id="switchery-default-{{ $loop->index }}" checked /> --}}
                                                 <div class="form-check form-switch form-switch-sm">
                                                     <input class="form-check-input" type="checkbox"
                                                         id="flexSwitchCheckChecked-{{ $data->rec_school->receipt_number }}">
@@ -273,9 +285,9 @@
 
                             </tbody>
                             <tbody>
-
                                 <tr>
                                     <td class="text-center">#</td>
+                                    {{-- <td class="text-center" colspan="2"></td> <!-- Merged cell --> --}}
                                     <td class="text-center" hidden></td> <!-- Merged cell -->
                                     <td class="text-center" hidden></td> <!-- Merged cell -->
                                     <td class="text-center" hidden></td> <!-- Merged cell -->
@@ -286,7 +298,6 @@
                                     <td class="text-end">{{ number_format($sum) }} บาท</td>
                                     <td></td>
                                 </tr>
-
                             </tbody>
 
                         </table>
@@ -294,60 +305,63 @@
                     <div class="tab-pane fade" id="default-tab-2">
 
                         <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนปี {{ $year }}</h3>
-                        <table style="width: 100%;" id="Listview"
+                        <table style="width: 100%;" id="Listview3"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
 
                             <thead>
                                 <tr>
                                     <th width='1%' class="text-center">no.</th>
-                                    <th width='1%'>Code</th>
+                                    <th width='1%' class="text-center">Code</th>
                                     <th>Student Nickname</th>
                                     <th>Submission Date</th>
                                     <th>Period</th>
                                     <th>Reciept Number</th>
-                                    <th>Group</th>
+                                    <th width='1%'>Group 1</th>
                                     <th>Stutus</th>
                                     <th>Tpye</th>
                                     <th>total</th>
-                                    <th>Check</th>
+                                    <th>Check </th>
                                 </tr>
                             </thead>
 
                             <tbody>
 
                                 @foreach ($reportYear_schoolPrice as $key => $data1)
+                                    @php
+                                        $class = '';
+
+                                        $cMonth = date('m');
+                                        $cYear = date('Y');
+                                        $status = Statuslog::where('student_id', optional($data1->std)->id)
+                                            ->where('group', $data1->group)
+                                            ->whereMonth('status_date', $cMonth)
+                                            ->whereYear('status_date', $cYear)
+                                            ->get();
+
+                                        if ($status->last() && $status->last()->status === 'None Receipt') {
+                                            $class = 'text-info';
+                                        } elseif ($status->last() && $status->last()->status === 'drop') {
+                                            $class = 'text-black';
+                                        } elseif ($status->last() && $status->last()->status === 'waitting . . .') {
+                                            $class = 'text-primary';
+                                        } elseif ($status->last() && $status->last()->status === 'Termination of study') {
+                                            $class = 'text-warning';
+                                        } elseif ($status->last() && $status->last()->status === 'New Student') {
+                                            $class = 'text-red';
+                                        } else {
+                                            $class = 'text-blue';
+                                        }
+                                    @endphp
                                     <tr>
                                         <td class="text-center">{{ $key + 1 }}</td>
                                         <td class="text-center">{{ $data1->std->code ?? 'Null' }}</td>
-                                        <td>{{ $data1->std->nick_name ?? 'Null' }}</td>
+                                        <td class="{{ $class }}">{{ $data1->std->nick_name ?? 'Null' }}</td>
                                         <td>{{ $data1->rec_school->submission_date }}</td>
-                                        <td>{{ $data1->period }}</td>
+                                        <td class="text-nowrap">{{ $data1->period }}</td>
 
                                         <td>{{ $data1->rec_school->receipt_number }}</td>
                                         <td>{{ $data1->group }}</td>
-                                        @php
-                                            $class = '';
 
-                                            $cMonth = date('m');
-                                            $cYear = date('Y');
-                                            $status = Statuslog::where('student_id', optional($data1->std)->id)
-                                                ->where('group', $data1->group)
-                                                ->whereMonth('status_date', $cMonth)
-                                                ->whereYear('status_date', $cYear)
-                                                ->get();
-
-                                            if ($status->last() && $status->last()->status === 'None Receipt') {
-                                                $class = 'text-info';
-                                            } elseif ($status->last() && $status->last()->status === 'drop') {
-                                                $class = 'text-danger';
-                                            } elseif ($status->last() && $status->last()->status === 'waitting . . .') {
-                                                $class = 'text-primary';
-                                            } elseif ($status->last() && $status->last()->status === 'Termination of study') {
-                                                $class = 'text-warning';
-                                            } else {
-                                                $class = 'text-blue';
-                                            }
-                                        @endphp
 
                                         <td class="{{ $class }}">
                                             @if (
@@ -395,8 +409,6 @@
 
                         </table>
                     </div>
-                    <!-- END tab-pane -->
-                    <!-- BEGIN tab-pane -->
                     <div class="tab-pane fade" id="default-tab-3">
                         <blockquote class="blockquote">
                             <div class="d-flex justify-content-between align-items-center">
@@ -424,7 +436,6 @@
                             </thead>
 
                             <tbody>
-
                                 @foreach ($paper as $key => $paper_rep)
                                     <tr>
                                         <td class="text-center">{{ $key + 1 }}</td>
@@ -445,17 +456,10 @@
 
                         </table>
                     </div>
-                    <!-- END tab-pane -->
-                    <!-- BEGIN tab-pane -->
-
-                    <!-- END tab-pane -->
                 </div>
 
-
-
-
             </div>
-        </div> --}}
+        </div>
 
     </div>
 @endsection
@@ -464,8 +468,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {{-- <script src="https://d3js.org/d3.v7.min.js"></script> --}}
     <script src="../assets/plugins/d3/d3.min.js"></script>
-    <script src="../assets/plugins/nvd3/build/nv.d3.min.js"></script>
-    <script src="../assets/plugins/chart.js/dist/Chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    {{-- <script src="../assets/plugins/nvd3/build/nv.d3.min.js"></script> --}}
+    {{-- <script src="../assets/plugins/chart.js/dist/Chart.min.js"></script> --}}
     <script src="../assets/plugins/flot/source/jquery.canvaswrapper.js"></script>
     <script src="../assets/plugins/flot/source/jquery.colorhelpers.js"></script>
     <script src="../assets/plugins/flot/source/jquery.flot.js"></script>
@@ -474,6 +479,10 @@
     <script src="../assets/plugins/flot/source/jquery.flot.drawSeries.js"></script>
     <script src="../assets/plugins/flot/source/jquery.flot.uiConstants.js"></script>
     <script src="/assets/plugins/switchery/dist/switchery.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+    {{-- <script>
     {{-- <script>
         var checkboxes = document.querySelectorAll('input[id^="switchery-default-"]');
         checkboxes.forEach(function(checkbox) {
@@ -484,12 +493,19 @@
     </script> --}}
     <script>
         $(document).ready(function() {
-            document.getElementById('selectMonth1').disabled = true;
+            var selectMonth1 = document.getElementById('selectMonth1');
 
+            if (selectMonth1) {
+                selectMonth1.disabled = true;
+            }
             var table1 = $('#Listview').DataTable({
                 lengthMenu: [-1],
             });
-            var table1 = $('#Listview2').DataTable({
+
+            var table2 = $('#Listview2').DataTable({
+                lengthMenu: [-1],
+            });
+            var table3 = $('#Listview3').DataTable({
                 lengthMenu: [-1],
             });
 

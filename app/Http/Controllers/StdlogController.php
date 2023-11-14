@@ -304,6 +304,55 @@ class StdlogController extends Controller
         return $reportMonth_schoolPrice;
     }
 
+
+    private function getMatchingSchoolPrices2($month, $year)
+    {
+        $matchingSchoolPrices = [];
+        $schoolPrice_id = [];
+        $test_scp = SchoolPrice::all();
+
+        // dd($year);
+
+        foreach ($test_scp as $schoolPrice) {
+            if ($schoolPrice->rec_school && $schoolPrice->rec_school->submission_date) {
+                if ($month) {
+                    $currentMonth = Carbon::parse($year . '-' . $month)->format('Y-m');
+                    $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y-m');
+                } else {
+                    $currentMonth = $year;
+                    // $currentMonth = Carbon::parse($year)->format('Y');
+                    $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y');
+                    // dd($year,$currentMonth,$submissionDate);
+                }
+                // if ($submissionDate == $currentMonth) {
+                if ($submissionDate == $currentMonth && $schoolPrice->course_type == 1) {
+                    $matchingSchoolPrices[] = [
+                        'id' => $schoolPrice->id,
+                        'course_type' => $schoolPrice->course_type,
+                        'reciept_id' => $schoolPrice->rid,
+                        'std_id' => $schoolPrice->student_id,
+                        'submission_date' => $schoolPrice->rec_school->submission_date
+                    ];
+                    $schoolPrice_id[] = $schoolPrice->id;
+                }
+            }
+        }
+        if ($month) {
+            # code...
+            $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
+                ->orderBy('rid', 'desc')
+                ->get()
+                ->groupBy('student_id', 'group');
+        } else {
+            # code...
+            $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
+                ->orderBy('student_id')
+                ->orderBy('rid', 'desc')
+                ->get();
+            // ->groupBy('student_id', 'group');
+        }
+        return $reportMonth_schoolPrice;
+    }
     public function reportMonthStd()
     {
         $test_scp = SchoolPrice::all();
@@ -341,8 +390,8 @@ class StdlogController extends Controller
         $months = date('F');
         $year = date('Y');
 
-        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year);
-        $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year);
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices2(null, $year);
         $totalForAllMonths = $this->queryGrafgh1($stdlog);
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
 
@@ -351,7 +400,7 @@ class StdlogController extends Controller
             ->orderBy('rec_id', 'desc')
             ->get();
         // ksort($totalForAllMonths);
-        // dd($totalForAllMonths,$percentageChangeForAllMonths);
+        // dd($reportYear_schoolPrice);
         return view('students.report_recipt_std', [
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
             'reportYear_schoolPrice' => $reportYear_schoolPrice,
