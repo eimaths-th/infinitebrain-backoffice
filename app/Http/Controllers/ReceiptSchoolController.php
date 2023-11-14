@@ -1316,7 +1316,12 @@ class ReceiptSchoolController extends Controller
     public function store(Request $request)
     {
 
-        // dd($request);
+
+        $subjects = collect($request->input('receipt'))->pluck('subject')->toArray();
+        $groupsub = Subject::whereIn('id', $subjects)->get();
+        $group = $groupsub->first()->group;
+        // dd($request,$subjects, $groupsub,$group);
+
         $validator =  Validator::make(
             $request->all(),
             [
@@ -1373,7 +1378,6 @@ class ReceiptSchoolController extends Controller
         $filebs = "";
         foreach ($filesb as $fileb) {
             //echo $fileb;
-
             $oldfile = FileUpload::where('oldname', $fileb)->get();
             $filebs .= $oldfile[0]->filename . "|";
             File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
@@ -1390,9 +1394,12 @@ class ReceiptSchoolController extends Controller
             //echo $filea;
             $stu .= $sss . "|";
         }
-
         $stu = rtrim($stu, "|");
-        $rnumber = Receipt_School_RunningNumber::generate();
+
+
+
+
+        $rnumber = Receipt_School_RunningNumber::generate($group);
 
         $data = new Receipt_School([
             'submission_date' => $request->get('submission_date'),
