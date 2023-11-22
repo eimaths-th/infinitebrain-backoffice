@@ -261,7 +261,7 @@
                                     @elseif ($status->group === 'N')
                                         None Receipt
                                     @else
-                                        {{ $group }}
+                                        {{ $status->group }}
                                     @endif
                                 </td>
 

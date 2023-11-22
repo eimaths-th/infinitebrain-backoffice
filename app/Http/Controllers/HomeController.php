@@ -312,32 +312,50 @@ class HomeController extends Controller
                                 ->latest()
                                 ->get();
                             // dd($check_resume);
-                            if (count($check_resume) > 0 && $check_resume->first()->status == 'resume') {
+                            // if (count($check_resume) > 0 && $check_resume->first()->status == 'resume') {
 
-                                $status[$group] = 'resume';
-                            } elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0
-                                && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
-                                //แก้บัค 22/09/2023
-                                if ($check_resume->first()->status == 'studying . . .') {
-                                    $status[$group] = 'studying . . .';
+                            //     $status[$group] = 'resume';
+                            // } elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+                            //     //แก้บัค 22/09/2023
+                            //     if ($check_resume->first()->status == 'studying . . .') {
+                            //         $status[$group] = 'studying . . .';
+                            //     } else {
+                            //     }
+                            //     // $status[$group] = 'waitting . . .';
 
+                            //     // dd($check_resume,$stdId,$status,$school_pice);
+                            // } else {
+                            //     // dd($check_resume,$check_resume->first()->status);
+
+                            //     // if ($check_resume && $check_resume->first() && property_exists($check_resume->first(), 'status')) {
+                            //     if ($check_resume->first()->status == 'waiting . . .') {
+                            //         $status[$group] = 'waiting . . .';
+                            //     } else {
+                            //         $status[$group] = 'studying . . .';
+                            //     }
+                            //     // } else {
+                            //     // dd($stdId, $check_resume);
+                            //     // }
+                            // }
+                            if (count($check_resume) > 0) {
+                                $firstLog = $check_resume->first();
+
+                                if ($firstLog->status == 'resume') {
+                                    $status[$group] = 'resume';
+                                } elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+                                    if ($firstLog->status == 'studying . . .') {
+                                        $status[$group] = 'studying . . .';
+                                    } else {
+                                    }
                                 } else {
-
+                                    if ($firstLog->status == 'waiting . . .') {
+                                        $status[$group] = 'waiting . . .';
+                                    } else {
+                                        $status[$group] = 'studying . . .';
+                                    }
                                 }
-                                // $status[$group] = 'waitting . . .';
-
-                                // dd($check_resume,$stdId,$status,$school_pice);
                             } else {
-                                // dd($check_resume,$check_resume->first()->status);
-
-                                if ($check_resume->first()->status == 'waitting . . .') {
-                                    $status[$group] = 'waitting . . .';
-
-                                } else {
-                                    $status[$group] = 'studying . . .';
-                                }
-                                // dd($status);
-
+                                  
                             }
                         }
                     }

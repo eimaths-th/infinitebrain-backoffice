@@ -18,14 +18,14 @@
         }
 
         /* .switchery {
-                                                                                                                                                        width: 30px;
-                                                                                                                                                        height: 16px;
-                                                                                                                                                    }
+                                                                                                                                                            width: 30px;
+                                                                                                                                                            height: 16px;
+                                                                                                                                                        }
 
-                                                                                                                                                    .switchery-small {
-                                                                                                                                                        width: 12px;
-                                                                                                                                                        height: 12px;
-                                                                                                                                                    } */
+                                                                                                                                                        .switchery-small {
+                                                                                                                                                            width: 12px;
+                                                                                                                                                            height: 12px;
+                                                                                                                                                        } */
     </style>
 @endsection
 
@@ -321,19 +321,26 @@
                                                 ->whereMonth('status_date', $cMonth)
                                                 ->whereYear('status_date', $cYear)
                                                 ->get();
+                                            // $status = '';
 
-                                            if ($status->last()->status === 'None Receipt') {
-                                                $class = 'text-info';
-                                            } elseif ($status->last()->status === 'drop') {
-                                                $class = 'text-black';
-                                            } elseif ($status->last()->status === 'waitting . . .') {
-                                                $class = 'text-primary';
-                                            } elseif ($status->last()->status === 'Termination of study') {
-                                                $class = 'text-warning';
-                                            } elseif ($status->last()->status === 'New Student') {
-                                                $class = 'text-red';
-                                            }else {
-                                                $class = 'text-blue';
+                                            if ($status->isNotEmpty() && $status->last()->status) {
+                                                if ($status->last()->status === 'None Receipt') {
+                                                    $class = 'text-info';
+                                                } elseif ($status->last()->status === 'drop') {
+                                                    $class = 'text-black';
+                                                } elseif ($status->last()->status === 'waitting . . .') {
+                                                    $class = 'text-primary';
+                                                } elseif ($status->last()->status === 'Termination of study') {
+                                                    $class = 'text-warning';
+                                                } elseif ($status->last()->status === 'New Student') {
+                                                    $class = 'text-red';
+                                                } else {
+                                                    $class = 'text-blue';
+                                                }
+                                                $statusValue = $status->last()->status;
+                                            } else {
+                                                $class = 'text-muted'; // You can set a default class for null or empty status
+                                                $statusValue = 'Null';
                                             }
                                         @endphp
                                         <tr>
@@ -349,16 +356,7 @@
 
                                             <td class="{{ $class }}">
                                                 {{-- @if ($data->std->status_log && $data->std->status_log->count() > 0 && $status->last()->group == $data->group) --}}
-                                                @if (
-                                                    $data->std &&
-                                                        $data->std->status_log &&
-                                                        $data->std->status_log->count() > 0 &&
-                                                        $status->last() &&
-                                                        $status->last()->group == $data->group)
-                                                    {{ $status->last()->status ?? 'Null' }}
-                                                @else
-                                                    null
-                                                @endif
+                                                {{ $statusValue }}
                                             </td>
                                             <td>{{ $data->course_type }}</td>
                                             {{-- <td class="text-end">{{ number_format($data->total) }} บาท</td> --}}

@@ -347,9 +347,10 @@ class StdlogController extends Controller
             # code...
             $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
                 ->orderBy('student_id')
-                ->orderBy('rid', 'desc')
-                ->get();
-            // ->groupBy('student_id', 'group');
+                ->orderBy('rid', 'asc')
+                ->get()
+                ->groupBy('student_id');
+            // dd($reportMonth_schoolPrice);
         }
         return $reportMonth_schoolPrice;
     }
@@ -392,6 +393,7 @@ class StdlogController extends Controller
 
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
         $reportYear_schoolPrice = $this->getMatchingSchoolPrices2(null, $year);
+
         $totalForAllMonths = $this->queryGrafgh1($stdlog);
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
 
@@ -399,17 +401,39 @@ class StdlogController extends Controller
             ->whereYear('submission_date', $year)
             ->orderBy('rec_id', 'desc')
             ->get();
-        // ksort($totalForAllMonths);
+        $test_scp = SchoolPrice::all();
+        $totalGroups = count($test_scp->unique('group'));
         // dd($reportYear_schoolPrice);
         return view('students.report_recipt_std', [
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
             'reportYear_schoolPrice' => $reportYear_schoolPrice,
             'totalForAllMonths' => $totalForAllMonths,
             'percentageChangeForAllMonths' => $percentageChangeForAllMonths,
+            'totalGroups' => $totalGroups,
             'paper' => $paper,
             'year' => $year,
             'month' => $months,
         ]);
+    }
+
+    public function reportRecieptStdShow($id)
+    {
+        // dd($id);
+        $std = Student::find($id);
+        $rec_sch = Receipt_School::whereRaw("FIND_IN_SET($id, REPLACE(pid, '|', ','))")->get();
+        $rec_id = $rec_sch->pluck('id')->toArray();
+        $school_pice = SchoolPrice::where('student_id',$id)
+        ->whereIn('rid',$rec_id)
+        ->where('course_type', 1)
+        ->get();
+
+        // dd($id,$rec_sch,$rec_id,$school_pice);
+        return view('students.reportMonthStdModalShow', [
+            'std' => $std,
+            'rec_sch' => $rec_sch,
+            'school_pice' => $school_pice
+        ]);
+
     }
 
     private function queryGrafgh1($stdlog)

@@ -18,14 +18,14 @@
         }
 
         /* .switchery {
-                                                                                                                                                                width: 30px;
-                                                                                                                                                                height: 16px;
-                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    width: 30px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    height: 16px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
 
-                                                                                                                                                            .switchery-small {
-                                                                                                                                                                width: 12px;
-                                                                                                                                                                height: 12px;
-                                                                                                                                                            } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                .switchery-small {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    width: 12px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    height: 12px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                } */
     </style>
 @endsection
 
@@ -162,13 +162,13 @@
 
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
+                        <a href="#default-tab-1" data-bs-toggle="tab" class="nav-link">
                             {{-- <span class="d-sm-none">Tab 1</span> --}}
                             <span class="d-sm-block d-none">ตรวจสอบรายเดือน</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
+                        <a href="#default-tab-2" data-bs-toggle="tab" class="nav-link active">
                             {{-- <span class="d-sm-none">Tab 1</span> --}}
                             <span class="d-sm-block d-none">ตรวจสอบรายปี</span>
                         </a>
@@ -183,10 +183,10 @@
                 </ul>
                 <div class="tab-content panel m-0 rounded-0 p-3">
                     <!-- BEGIN tab-pane -->
-                    <div class="tab-pane fade active show" id="default-tab-1">
+                    <div class="tab-pane fade " id="default-tab-1">
 
                         <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนเดือน {{ thaidate('F', $month) }}
-                            {{ $year }}</h3>
+                            {{ $year }} (ยังไม่เสร้จ)</h3>
                         <table style="width: 100%;" id="Listview"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">
 
@@ -196,8 +196,10 @@
                                     <th width='1%'>Code</th>
                                     <th>Student Nickname</th>
                                     <th>Submission Date</th>
+
                                     <th>Period</th>
                                     <th>Reciept Number</th>
+
                                     <th>Group</th>
                                     <th>Stutus</th>
                                     <th>Tpye</th>
@@ -248,6 +250,7 @@
                                             <td>{{ $data->period }}</td>
 
                                             <td>{{ $data->rec_school->receipt_number }}</td>
+
                                             <td>{{ $data->group }}</td>
 
 
@@ -302,111 +305,113 @@
 
                         </table>
                     </div>
-                    <div class="tab-pane fade" id="default-tab-2">
+                    <div class="tab-pane fade active show" id="default-tab-2">
 
-                        <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนปี {{ $year }}</h3>
+                        <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนปี {{ $year }}
+                            (ยังไม่เสร้จ)</h3>
                         <table style="width: 100%;" id="Listview3"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
 
                             <thead>
                                 <tr>
-                                    <th width='1%' class="text-center">no.</th>
-                                    <th width='1%' class="text-center">Code</th>
-                                    <th>Student Nickname</th>
-                                    <th>Submission Date</th>
-                                    <th>Period</th>
-                                    <th>Reciept Number</th>
-                                    <th width='1%'>Group 1</th>
-                                    <th>Stutus</th>
-                                    <th>Tpye</th>
-                                    <th>total</th>
-                                    <th>Check </th>
+                                    {{-- <th width='1%' class="text-center">no.</th> --}}
+                                    <th width='1%' class="text-center" data-orderable="false">Code</th>
+                                    <th data-orderable="false">Name</th>
+                                    <th data-orderable="false">Firs Date</th>
+                                    <th data-orderable="false">Last Date</th>
+                                    <th data-orderable="false">Firs period</th>
+                                    <th data-orderable="false">Last period</th>
+                                    {{-- <th data-orderable="false">Firs period</th>
+                                    <th data-orderable="false">Last period</th> --}}
+                                    {{-- <th>Period</th> --}}
+                                    {{-- <th data-orderable="false">Reciept Number</th> --}}
+
+                                    @php
+                                        $currentMonth = date('m');
+                                        $currentYear = date('Y');
+                                    @endphp
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        <th data-orderable="false" >
+                                            {{ date('m', mktime(0, 0, 0, $i, 1, $currentYear)) }}-{{ $currentYear }}
+                                        </th>
+                                    @endfor
+                                    <th data-orderable="false" width='1%'>view</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-
-                                @foreach ($reportYear_schoolPrice as $key => $data1)
-                                    @php
-                                        $class = '';
-
-                                        $cMonth = date('m');
-                                        $cYear = date('Y');
-                                        $status = Statuslog::where('student_id', optional($data1->std)->id)
-                                            ->where('group', $data1->group)
-                                            ->whereMonth('status_date', $cMonth)
-                                            ->whereYear('status_date', $cYear)
-                                            ->get();
-
-                                        if ($status->last() && $status->last()->status === 'None Receipt') {
-                                            $class = 'text-info';
-                                        } elseif ($status->last() && $status->last()->status === 'drop') {
-                                            $class = 'text-black';
-                                        } elseif ($status->last() && $status->last()->status === 'waitting . . .') {
-                                            $class = 'text-primary';
-                                        } elseif ($status->last() && $status->last()->status === 'Termination of study') {
-                                            $class = 'text-warning';
-                                        } elseif ($status->last() && $status->last()->status === 'New Student') {
-                                            $class = 'text-red';
-                                        } else {
-                                            $class = 'text-blue';
-                                        }
-                                    @endphp
+                                @foreach ($reportYear_schoolPrice as $studentId => $groupedData)
                                     <tr>
-                                        <td class="text-center">{{ $key + 1 }}</td>
-                                        <td class="text-center">{{ $data1->std->code ?? 'Null' }}</td>
-                                        <td class="{{ $class }}">{{ $data1->std->nick_name ?? 'Null' }}</td>
-                                        <td>{{ $data1->rec_school->submission_date }}</td>
-                                        <td class="text-nowrap">{{ $data1->period }}</td>
+                                        {{-- <td class="text-center">{{ $loop->iteration }}</td> --}}
+                                        <td class="text-center">{{ $groupedData->first()->std->code ?? 'Null' }}</td>
+                                        <td>{{ $groupedData->first()->std->nick_name ?? 'Null' }}</td>
+                                        <td>{{ $groupedData->first()->rec_school->submission_date }}</td>
+                                        <td>{{ $groupedData->last()->rec_school->submission_date }}</td>
+                                        <td>{{ $groupedData->first()->period }}</td>
+                                        <td>{{ $groupedData->last()->period }}</td>
 
-                                        <td>{{ $data1->rec_school->receipt_number }}</td>
-                                        <td>{{ $data1->group }}</td>
 
+                                        @for ($month = 1; $month <= 12; $month++)
+                                            <td>
+                                                @php
+                                                    $mark = [];
+                                                    $countdata = 0;
+                                                    $ignorId = [];
+                                                    $groupClass = 'text-red';
 
-                                        <td class="{{ $class }}">
-                                            @if (
-                                                $data1->std &&
-                                                    $data1->std->status_log &&
-                                                    $data1->std->status_log->count() > 0 &&
-                                                    $status->last() &&
-                                                    $status->last()->group == $data1->group)
-                                                {{ $status->last()->status ?? 'Null' }}
-                                            @else
-                                                null
-                                            @endif
-                                        </td>
-                                        <td>{{ $data1->course_type }}</td>
-                                        <td class="text-end">{{ number_format($data1->total) }} บาท</td>
-                                        <td class="text-center">
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <input class="form-check-input" type="checkbox"
-                                                    id="flexSwitchCheckChecked-{{ $data1->rec_school->receipt_number }}">
-                                            </div>
+                                                    foreach ($groupedData as $data1) {
+                                                        $period = explode(' - ', $data1->period);
+                                                        if (count($period) == 1) {
+                                                            $periods = explode('-', $data1->period);
+                                                            $startMonth = date('m', strtotime("{$periods[0]}-{$periods[1]}"));
+                                                            $endMonth = count($periods) > 2 ? date('m', strtotime("{$periods[2]}-{$periods[3]}")) : $startMonth;
+                                                        } else {
+                                                            $startMonth = date('n', strtotime($period[0]));
+                                                            $endMonth = date('n', strtotime($period[1]));
+                                                        }
+                                                        $isInMonthRange = $month >= $startMonth && $month <= $endMonth;
+
+                                                        if ($isInMonthRange === true) {
+                                                            if ($data1->group === 'CHN') {
+                                                                $groupMark = 'C';
+                                                            } elseif ($data1->group === 'Sci') {
+                                                                $groupMark = 'S';
+                                                            } else {
+                                                                $groupMark = $data1->group;
+                                                            }
+                                                            $groupClass = 'text-success';
+                                                        } else {
+                                                            $groupMark = '';
+                                                        }
+                                                        if (!in_array($groupMark, $mark)) {
+                                                            $mark[] = $groupMark;
+                                                        }
+                                                        // if (!in_array($data1->id, $ignorId)) {
+                                                        //     $ignorId[] = $data1->id;
+                                                        // }
+
+                                                    }//endforeach
+
+                                                @endphp
+
+                                                <span class="marked-cell {{ $groupClass }}">
+                                                    @foreach ($mark as $markItem)
+                                                        {{ $markItem }}
+                                                    @endforeach
+                                                </span>
+                                            </td>
+                                        @endfor
+                                        <td>
+                                            {{-- <a href="{{ route('reportRecieptStdShow',['id' => $studentId]) }}" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a> --}}
+                                            <a href="javascript:;" class="btn btn-xs btn-primary" onclick="formModal('{{ route('reportRecieptStdShow',['id' => $studentId]) }}')" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
+                                            data-bs-title="View Detail">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
                                         </td>
 
                                     </tr>
-                                    @php
-                                        $sum1 += $data1->total;
-                                    @endphp
                                 @endforeach
-
                             </tbody>
-                            <tbody>
-
-                                <tr>
-                                    <td class="text-center">#</td>
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" colspan="8">Sum Total</td> <!-- Merged cell -->
-                                    <td class="text-end">{{ number_format($sum1) }} บาท</td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-
                         </table>
                     </div>
                     <div class="tab-pane fade" id="default-tab-3">
