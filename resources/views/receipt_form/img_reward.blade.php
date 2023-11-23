@@ -652,7 +652,7 @@
                                 <input type="hidden" name="postcode" id="postcode" value="N/A">
                                 <input type="hidden" name="email" id="email" value="N/A@email.com">
                                 <input type="hidden" name="newsf" id="newsf" value="N/A">
-
+                                <input type="hidden" class="AddDate form-control" name="birthdate"  id="birthdate" value="N/A">
 
                                 <div class="form-row form-focus">
                                     <div class="col-md-6 col-sm-12">
