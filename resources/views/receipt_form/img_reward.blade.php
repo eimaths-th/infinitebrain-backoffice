@@ -683,10 +683,7 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจรูปภาพ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Test: 850 baht">Test: 850 baht</option>
-                                                <option value="Test + tutoring class: 1250 bath (1 class 2 hours)">Test +
-                                                    tutoring class: 1250 bath (1 class 2 hours)</option>
-
+                                                <option value="รูปรับรางวัล พร้อมกรอบ">รูปรับรางวัล พร้อมกรอบ</option>
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Packages</label>
@@ -827,17 +824,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-center">
-                            <br>
-                            <div class="text-danger">
-                                <h3> ** หากสมัครสำเร็จจะได้รับอีเมลตอบกลับทันที
-                                    กรณีไม่ได้รับอีเมลตอบกลับ รบกวนทำการสมัครใหม่อีกครั้ง หรือทำการติดต่อเจ้าหน้าที่ **
-                                </h3>
-                            </div>
-                            <br>
-                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
-                                หากตรวจสอบข้อมูล และ พบว่าผู้สมัครไม่มีสิทธิ์เข้าสอบตามกฎ ของสนามสอบ **
-                                **ทางบริษัทจะมีค่าดำเนินการทางบัญชี 100 บาท ในกรณีที่ต้องโอนค่าสมัครคืน**</div>
-                            <br>
+
 
                             <input type="submit" id="send_data" class="btn btn-lg btn-primary"
                                 value="Submit Application">
