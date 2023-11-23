@@ -26,7 +26,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class ReceiptFormController extends Controller
 {
     const sfielda = array(
-        '2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE', '11' => 'Cambridge', '13' => 'ISOCSEA', '14' => 'IMOCSEA+ISOCSEA'
+        '0' => 'IMG Reward', '2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE', '11' => 'Cambridge', '13' => 'ISOCSEA', '14' => 'IMOCSEA+ISOCSEA'
     );
 
     public function gmec()
@@ -42,6 +42,10 @@ class ReceiptFormController extends Controller
     public function asiarope()
     {
         return view("receipt_form.asiarope");
+    }
+    public function img_reward()
+    {
+        return view("receipt_form.img_reward");
     }
 
     public function gelosea()

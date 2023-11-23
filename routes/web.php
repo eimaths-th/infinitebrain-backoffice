@@ -217,6 +217,7 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 //form
+Route::get('/Reward', [ReceiptFormController::class, 'img_reward'])->name('imgReward');
 
 Route::get('/cambridge/line', [ReceiptFormController::class, 'cambridge'])->name('cambridge.line');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');

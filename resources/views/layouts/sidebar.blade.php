@@ -397,6 +397,12 @@
                                     STEM
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '0']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Img Reward
+                                </a>
+                            </li>
 
                         </ul>
                     </li>
@@ -476,6 +482,12 @@
                                 <a href="{{ route('receipts', ['sfield' => '8']) }}">
                                     <i class="metismenu-icon"></i>
                                     STEM
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '0']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Img Reward
                                 </a>
                             </li>
 
