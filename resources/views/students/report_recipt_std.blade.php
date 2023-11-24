@@ -386,9 +386,6 @@
                                                         if (!in_array($groupMark, $mark)) {
                                                             $mark[] = $groupMark;
                                                         }
-                                                        // if (!in_array($data1->id, $ignorId)) {
-                                                        //     $ignorId[] = $data1->id;
-                                                        // }
 
                                                     }//endforeach
 

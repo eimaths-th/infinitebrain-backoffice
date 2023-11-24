@@ -260,24 +260,30 @@
                                                             <td class="pad" style="text-align:center;width:100%;">
                                                                 <h2
                                                                     style="margin: 0; color: #201f42; direction: ltr; font-family: 'Noto Serif', Georgia, serif; font-size: 24px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0;">
-                                                                    <span class="tinyMce-placeholder"><?php
-                                                                    if($data->sfield==10){
-                                                                        $message = "ASIAROPE 2023 Registration Form";
-                                                                    }elseif($data->sfield==6){
-                                                                        $message = "GELOSEA 2023 Registration Form";
-                                                                    }elseif($data->sfield==9){
-                                                                        $message = "OLPCS 2023 Registration Form";
-                                                                    }elseif($data->sfield==11){
-                                                                        $message = "Cambridge 2023 Registration Form";
-                                                                    } elseif($data->sfield==4){
-                                                                        $message = "IMOCSEA 2023 Registration Form";
-                                                                    } elseif($data->sfield==13){
-                                                                        $message = "ISOCSEA 2023 Registration Form";
-                                                                    } elseif($data->sfield==14){
-                                                                        $message = "IMOCSEA+ISOCSEA 2023 Registration Form";
-                                                                    }
-                                                                    ?>
-                                                                    {{ $message }}</span></h2>
+                                                                    <span
+                                                                        class="tinyMce-placeholder"><?php
+                                                                        if ($data->sfield == 10) {
+                                                                            $message = 'ASIAROPE 2023 Registration Form';
+                                                                        } elseif ($data->sfield == 6) {
+                                                                            $message = 'GELOSEA 2023 Registration Form';
+                                                                        } elseif ($data->sfield == 9) {
+                                                                            $message = 'OLPCS 2023 Registration Form';
+                                                                        } elseif ($data->sfield == 11) {
+                                                                            $message = 'Cambridge 2023 Registration Form';
+                                                                        } elseif ($data->sfield == 4) {
+                                                                            $message = 'IMOCSEA 2023 Registration Form';
+                                                                        } elseif ($data->sfield == 13) {
+                                                                            $message = 'ISOCSEA 2023 Registration Form';
+                                                                        } elseif ($data->sfield == 14) {
+                                                                            $message = 'IMOCSEA+ISOCSEA 2023 Registration Form';
+                                                                        } elseif ($data->sfield == 0) {
+                                                                            $message = 'Img Reward';
+                                                                        } elseif ($data->sfield == "TT") {
+                                                                            $message = 'Test Field';
+                                                                        }
+                                                                        ?>
+                                                                        {{ $message }}</span>
+                                                                </h2>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -419,7 +425,8 @@
                                                                 <h2
                                                                     style="margin: 0; font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
                                                                     <span class="tinyMce-placeholder">Birth Date /
-                                                                        วันเกิด</span></h2>
+                                                                        วันเกิด</span>
+                                                                </h2>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -524,7 +531,8 @@
                                                                 <h2
                                                                     style="margin: 0; font-size: 14px; font-weight: 400;  text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
                                                                     <span class="tinyMce-placeholder">Grade /
-                                                                        ระดับชั้น</span></h2>
+                                                                        ระดับชั้น</span>
+                                                                </h2>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -577,7 +585,8 @@
                                                                 <h2
                                                                     style="margin: 0; font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
                                                                     <span class="tinyMce-placeholder">แพคเกจในการสอบ
-                                                                        /<br> Packages</span></h2>
+                                                                        /<br> Packages</span>
+                                                                </h2>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -630,7 +639,8 @@
                                                                 <h2
                                                                     style="margin: 0; font-size: 14px; font-weight: 400;  text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
                                                                     <span class="tinyMce-placeholder">Parent's name /
-                                                                        ชื่อและ<br>นามสกุลผู้ปกครอง</span></h2>
+                                                                        ชื่อและ<br>นามสกุลผู้ปกครอง</span>
+                                                                </h2>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -738,7 +748,8 @@
                                                                 <h2
                                                                     style="margin: 0; font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
                                                                     <span class="tinyMce-placeholder">Phone Number /
-                                                                        เบอร์<br>โทรศัพท์</span></h2>
+                                                                        เบอร์<br>โทรศัพท์</span>
+                                                                </h2>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -793,7 +804,8 @@
                                                                     <span
                                                                         class="tinyMce-placeholder">E-mail(กรุณาตรวจสอบที่<br>อยู่อีเมลให้ถูกต้อง
                                                                         หาก<br>กรอกผิด
-                                                                        จะไม่สามารถส่งข้อมูลในการสอบได้)</span></h2>
+                                                                        จะไม่สามารถส่งข้อมูลในการสอบได้)</span>
+                                                                </h2>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -921,7 +933,8 @@
                                                             <td class="pad">
                                                                 <div
                                                                     style="font-size:12px;font-weight:400;ext-align:left;mso-line-height-alt:25.2px;">
-                                                                    <img height="200px" src="{{ asset('receipt_form_images/') }}/<?php echo $data->file_att; ?>"
+                                                                    <img height="200px"
+                                                                        src="{{ asset('receipt_form_images/') }}/<?php echo $data->file_att; ?>"
                                                                         alt="..." srcset=""
                                                                         style="vertical-align:middle;">
 
@@ -961,24 +974,31 @@
                                                             <td class="pad" style="text-align:left;width:100%;">
                                                                 <h2
                                                                     style="margin: 0;  font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 50px;">
-                                                                    <span class="tinyMce-placeholder"><?php
-                                                                    if($data->sfield==9){
-                                                                        $message1 = "OLPCS";
-                                                                    }elseif ($data->sfield==11){
-                                                                        $message1 = "Cambridge";
-                                                                    } elseif ($data->sfield==10) {
-                                                                        $message1 = "ASIAROPE";
-                                                                    } elseif ($data->sfield==6) {
-                                                                        $message1 = "GELOSEA";
-                                                                    } elseif ($data->sfield==4) {
-                                                                        $message1 = "IMOCSEA";
-                                                                    } elseif ($data->sfield==13) {
-                                                                        $message1 = "ISOCSEA";
-                                                                    } elseif ($data->sfield==14) {
-                                                                        $message1 = "IMOCSEA+ISOCSEA";
-                                                                    }
-                                                                    ?> สอบ {{ $message1 }}
-                                                                        จากช่องทาง<br>ใด</span></h2>
+                                                                    <span
+                                                                        class="tinyMce-placeholder"><?php
+                                                                        if ($data->sfield == 9) {
+                                                                            $message1 = 'OLPCS';
+                                                                        } elseif ($data->sfield == 11) {
+                                                                            $message1 = 'Cambridge';
+                                                                        } elseif ($data->sfield == 10) {
+                                                                            $message1 = 'ASIAROPE';
+                                                                        } elseif ($data->sfield == 6) {
+                                                                            $message1 = 'GELOSEA';
+                                                                        } elseif ($data->sfield == 4) {
+                                                                            $message1 = 'IMOCSEA';
+                                                                        } elseif ($data->sfield == 13) {
+                                                                            $message1 = 'ISOCSEA';
+                                                                        } elseif ($data->sfield == 14) {
+                                                                            $message1 = 'IMOCSEA+ISOCSEA';
+                                                                        }elseif ($data->sfield == 0) {
+                                                                            $message = 'Img Reward';
+                                                                        } elseif ($data->sfield == "TT") {
+                                                                            $message = 'Test Field';
+                                                                        }
+                                                                        ?>
+                                                                        สอบ {{ $message1 }}
+                                                                        จากช่องทาง<br>ใด</span>
+                                                                </h2>
                                                             </td>
                                                         </tr>
                                                     </table>

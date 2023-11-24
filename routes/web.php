@@ -51,6 +51,9 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
     Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
     Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
     Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
+
+    Route::get('/reward', [ReceiptFormController::class, 'img_reward'])->name('reward');
+    Route::get('/test_field', [ReceiptFormController::class, 'test_field'])->name('test_field');
 });
 
 Route::group(['middleware' => ['auth', 'checkUserId']], function () {
@@ -217,7 +220,7 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 //form
-Route::get('/Reward', [ReceiptFormController::class, 'img_reward'])->name('imgReward');
+
 
 Route::get('/cambridge/line', [ReceiptFormController::class, 'cambridge'])->name('cambridge.line');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');

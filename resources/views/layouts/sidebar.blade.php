@@ -403,6 +403,12 @@
                                     Img Reward
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => 'TT']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Test Field
+                                </a>
+                            </li>
 
                         </ul>
                     </li>
@@ -488,6 +494,12 @@
                                 <a href="{{ route('receipts', ['sfield' => '0']) }}">
                                     <i class="metismenu-icon"></i>
                                     Img Reward
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => 'TT']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Test Field
                                 </a>
                             </li>
 

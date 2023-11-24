@@ -23,11 +23,11 @@ class CheckOpeningDateTime
         $route = $request->route()->getName();
 
         $times = OpeningClosingTime::where('route', $route)->latest()->first();
-
+        // dd($times);
         if (!$times) {
 
             $status = 'Offline';
-            $times->update(['status' => $status]);
+            // $times->update(['status' => $status]);
             return abort(404, 'Route times not set.');
         }
 
