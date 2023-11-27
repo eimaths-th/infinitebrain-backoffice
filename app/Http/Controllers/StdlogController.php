@@ -311,7 +311,6 @@ class StdlogController extends Controller
         $schoolPrice_id = [];
         $test_scp = SchoolPrice::all();
 
-        // dd($year);
 
         foreach ($test_scp as $schoolPrice) {
             if ($schoolPrice->rec_school && $schoolPrice->rec_school->submission_date) {
@@ -416,16 +415,106 @@ class StdlogController extends Controller
         ]);
     }
 
+    public function reportRecieptStdSearch(Request $request)
+    {
+        // dd($request);
+        $request->validate([
+            // 'month' => 'required',
+            'year' => 'required',
+        ], [
+            // 'month.required' => 'Pls. Select year !!',
+            'year.required' => 'Pls. Select year !!'
+        ]);
+
+        $stdlog = Statuslog::all();
+        $currentMonth = Carbon::now()->format('Y-m');
+        $month = date('m');
+        $months = date('F');
+        $year = date('Y');
+        $periodYear = $request->year;
+
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($periodYear, $year);
+
+        $totalForAllMonths = $this->queryGrafgh1($stdlog);
+        $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
+
+        $paper = PaperReport::whereMonth('submission_date', $month)
+            ->whereYear('submission_date', $year)
+            ->orderBy('rec_id', 'desc')
+            ->get();
+        $test_scp = SchoolPrice::all();
+        $totalGroups = count($test_scp->unique('group'));
+        // dd($reportYear_schoolPrice);
+        return view('students.report_recipt_std', [
+            'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
+            'reportYear_schoolPrice' => $reportYear_schoolPrice,
+            'totalForAllMonths' => $totalForAllMonths,
+            'percentageChangeForAllMonths' => $percentageChangeForAllMonths,
+            'totalGroups' => $totalGroups,
+            'paper' => $paper,
+            'year' => $year,
+            'month' => $months,
+        ]);
+    }
+
+    private function getMatchingSchoolPrices3($periodYear, $year)
+    {
+        $matchingSchoolPrices = [];
+        $schoolPrice_id = [];
+        $test_scp = SchoolPrice::all();
+
+
+        foreach ($test_scp as $schoolPrice) {
+            if ($schoolPrice->rec_school && $schoolPrice->rec_school->submission_date) {
+                if ($year) {
+
+                    $currentMonth = $year;
+                    // $currentMonth = Carbon::parse($year)->format('Y');
+                    $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y');
+                    // dd($year,$currentMonth,$submissionDate);
+                }
+                // if ($submissionDate == $currentMonth) {
+                if ($submissionDate == $currentMonth && $schoolPrice->course_type == 1) {
+                    $matchingSchoolPrices[] = [
+                        'id' => $schoolPrice->id,
+                        'course_type' => $schoolPrice->course_type,
+                        'reciept_id' => $schoolPrice->rid,
+                        'std_id' => $schoolPrice->student_id,
+                        'submission_date' => $schoolPrice->rec_school->submission_date
+                    ];
+                    $schoolPrice_id[] = $schoolPrice->id;
+                }
+            }
+        }
+
+        // dd($periodYear);
+
+        $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
+            ->where(function ($query) use ($periodYear) {
+                $query->where('period', 'like', "%$periodYear%");
+            })
+            ->orderBy('student_id')
+            ->orderBy('rid', 'asc')
+            ->get()
+            // ->get();
+            ->groupBy('student_id');
+
+
+        // dd($reportMonth_schoolPrice);
+
+        return $reportMonth_schoolPrice;
+    }
     public function reportRecieptStdShow($id)
     {
         // dd($id);
         $std = Student::find($id);
         $rec_sch = Receipt_School::whereRaw("FIND_IN_SET($id, REPLACE(pid, '|', ','))")->get();
         $rec_id = $rec_sch->pluck('id')->toArray();
-        $school_pice = SchoolPrice::where('student_id',$id)
-        ->whereIn('rid',$rec_id)
-        ->where('course_type', 1)
-        ->get();
+        $school_pice = SchoolPrice::where('student_id', $id)
+            ->whereIn('rid', $rec_id)
+            ->where('course_type', 1)
+            ->get();
 
         // dd($id,$rec_sch,$rec_id,$school_pice);
         return view('students.reportMonthStdModalShow', [
@@ -433,7 +522,6 @@ class StdlogController extends Controller
             'rec_sch' => $rec_sch,
             'school_pice' => $school_pice
         ]);
-
     }
 
     private function queryGrafgh1($stdlog)

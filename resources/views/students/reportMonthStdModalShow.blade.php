@@ -33,7 +33,7 @@
 
                     <div class="col-lg-4">
                         <div class="form-group">
-                            <label for="Name">date sub: {{ $rec->submission_date }}</label><br>
+                            <label for="Name">Date Submission: {{ $rec->submission_date }}</label><br>
                             @foreach ($matchingRecords as $record)
                                 <label for="Name">Group: {{ $record->group }}</label><br>
                             @endforeach
@@ -41,7 +41,7 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="form-group">
-                            <label for="Name">rec number: {{ $rec->receipt_number }}</label><br>
+                            <label for="Name">Receipt Number: {{ $rec->receipt_number }}</label><br>
                             @foreach ($matchingRecords as $record)
                                 <label for="Name"> ระยะเวลา {{ $record->period }} </label> <br>
                             @endforeach

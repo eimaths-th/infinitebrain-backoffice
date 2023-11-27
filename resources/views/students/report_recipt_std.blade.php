@@ -18,14 +18,14 @@
         }
 
         /* .switchery {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    width: 30px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    height: 16px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                width: 30px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                height: 16px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                .switchery-small {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    width: 12px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    height: 12px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            .switchery-small {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                width: 12px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                height: 12px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            } */
     </style>
 @endsection
 
@@ -98,7 +98,7 @@
             <div class="card-body">
 
 
-                <form action="{{ route('searchr_reportMonthStd') }}" method="GET">
+                <form action="{{ route('reportRecieptStdSearch') }}" method="GET">
                     @csrf
                     <div class="row mb-5">
 
@@ -111,22 +111,6 @@
                                 </ul>
                             </div>
                         @endif
-
-                        <div class="col-lg-2">
-                            <div class="row">
-                                <label for="month" class="col-lg-3">เดือน : </label>
-                                <div class="col-lg-9">
-                                    <select name="month" id="selectMonth" class="form-select">
-                                        <option value="">เลือกเดือน</option>
-                                        @for ($i = 1; $i <= 12; $i++)
-                                            <option value="{{ $i }}">
-                                                {{ date('F', mktime(0, 0, 0, $i, 1)) }}
-                                            </option>
-                                        @endfor
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-lg-2">
                             <div class="row">
                                 <label for="year" class="col-lg-2">ปี : </label>
@@ -134,7 +118,7 @@
                                     <select name="year" id="selectMonth" class="form-select">
                                         {{-- <option value="">เลือกปี</option> --}}
                                         @php
-                                            $currentYear = date('Y');
+                                            $currentYear = date('Y')+1;
                                             for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
                                                 echo "<option value='$i'>$i</option>";
                                             }
@@ -145,16 +129,6 @@
                         </div>
                         <div class="col-lg-2">
                             <button class="btn btn-primary" type="submit">ค้นหา</button>
-                        </div>
-                        <div class="col-lg-2">
-                        </div>
-                        <div class="col-lg-2">
-                        </div>
-                        <div class="col-lg-2 text-end">
-                            <a href="#" onclick="formModal('{{ route('stdlog_create') }}')" class="btn btn-success"
-                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
-                                data-bs-title="ใบปะหน้า"> <i class="fa fa-plus"></i>
-                                ใบปะหน้า</a>
                         </div>
 
                     </div>
@@ -314,25 +288,19 @@
 
                             <thead>
                                 <tr>
-                                    {{-- <th width='1%' class="text-center">no.</th> --}}
                                     <th width='1%' class="text-center" data-orderable="false">Code</th>
                                     <th data-orderable="false">Name</th>
                                     <th data-orderable="false">Firs Date</th>
                                     <th data-orderable="false">Last Date</th>
                                     <th data-orderable="false">Firs period</th>
                                     <th data-orderable="false">Last period</th>
-                                    {{-- <th data-orderable="false">Firs period</th>
-                                    <th data-orderable="false">Last period</th> --}}
-                                    {{-- <th>Period</th> --}}
-                                    {{-- <th data-orderable="false">Reciept Number</th> --}}
-
                                     @php
                                         $currentMonth = date('m');
-                                        $currentYear = date('Y');
+                                        // $currentYear = date('Y');
                                     @endphp
                                     @for ($i = 1; $i <= 12; $i++)
-                                        <th data-orderable="false" >
-                                            {{ date('m', mktime(0, 0, 0, $i, 1, $currentYear)) }}-{{ $currentYear }}
+                                        <th data-orderable="false">
+                                            {{ date('m', mktime(0, 0, 0, $i, 1, $currentYear)) }}-{{ $year }}
                                         </th>
                                     @endfor
                                     <th data-orderable="false" width='1%'>view</th>
@@ -340,57 +308,52 @@
                             </thead>
 
                             <tbody>
+                                @php
+                                    use Carbon\Carbon;
+                                @endphp
                                 @foreach ($reportYear_schoolPrice as $studentId => $groupedData)
                                     <tr>
-                                        {{-- <td class="text-center">{{ $loop->iteration }}</td> --}}
                                         <td class="text-center">{{ $groupedData->first()->std->code ?? 'Null' }}</td>
                                         <td>{{ $groupedData->first()->std->nick_name ?? 'Null' }}</td>
                                         <td>{{ $groupedData->first()->rec_school->submission_date }}</td>
                                         <td>{{ $groupedData->last()->rec_school->submission_date }}</td>
                                         <td>{{ $groupedData->first()->period }}</td>
                                         <td>{{ $groupedData->last()->period }}</td>
-
-
                                         @for ($month = 1; $month <= 12; $month++)
                                             <td>
                                                 @php
+                                                    $currentYear = $year;
+                                                    //เซตวันที่
+                                                    $currentMY = Carbon::parse("$currentYear-$month")->format('Y-m');
+
                                                     $mark = [];
-                                                    $countdata = 0;
-                                                    $ignorId = [];
                                                     $groupClass = 'text-red';
 
                                                     foreach ($groupedData as $data1) {
                                                         $period = explode(' - ', $data1->period);
+
                                                         if (count($period) == 1) {
                                                             $periods = explode('-', $data1->period);
-                                                            $startMonth = date('m', strtotime("{$periods[0]}-{$periods[1]}"));
-                                                            $endMonth = count($periods) > 2 ? date('m', strtotime("{$periods[2]}-{$periods[3]}")) : $startMonth;
-                                                        } else {
-                                                            $startMonth = date('n', strtotime($period[0]));
-                                                            $endMonth = date('n', strtotime($period[1]));
-                                                        }
-                                                        $isInMonthRange = $month >= $startMonth && $month <= $endMonth;
 
-                                                        if ($isInMonthRange === true) {
-                                                            if ($data1->group === 'CHN') {
-                                                                $groupMark = 'C';
-                                                            } elseif ($data1->group === 'Sci') {
-                                                                $groupMark = 'S';
-                                                            } else {
-                                                                $groupMark = $data1->group;
-                                                            }
+                                                            $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
+                                                            $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
+                                                        } else {
+                                                            $startMonth = Carbon::parse($period[0])->format('Y-m');
+                                                            $endMonth = Carbon::parse($period[1])->format('Y-m');
+                                                            // dd($currentMY, $period, $startMonth, $endMonth);
+                                                        }
+                                                        $isInMonthRange = $currentMY >= $startMonth && $currentMY <= $endMonth;
+
+                                                        if ($isInMonthRange) {
+                                                            $groupMark = $data1->group === 'CHN' ? 'C' : ($data1->group === 'Sci' ? 'S' : $data1->group);
                                                             $groupClass = 'text-success';
-                                                        } else {
-                                                            $groupMark = '';
-                                                        }
-                                                        if (!in_array($groupMark, $mark)) {
-                                                            $mark[] = $groupMark;
-                                                        }
 
-                                                    }//endforeach
-
+                                                            if (!in_array($groupMark, $mark)) {
+                                                                $mark[] = $groupMark;
+                                                            }
+                                                        }
+                                                    }
                                                 @endphp
-
                                                 <span class="marked-cell {{ $groupClass }}">
                                                     @foreach ($mark as $markItem)
                                                         {{ $markItem }}
@@ -399,13 +362,13 @@
                                             </td>
                                         @endfor
                                         <td>
-                                            {{-- <a href="{{ route('reportRecieptStdShow',['id' => $studentId]) }}" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a> --}}
-                                            <a href="javascript:;" class="btn btn-xs btn-primary" onclick="formModal('{{ route('reportRecieptStdShow',['id' => $studentId]) }}')" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
-                                            data-bs-title="View Detail">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
+                                            <a href="javascript:;" class="btn btn-xs btn-primary"
+                                                onclick="formModal('{{ route('reportRecieptStdShow', ['id' => $studentId]) }}')"
+                                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
+                                                data-bs-title="View Detail">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
                                         </td>
-
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -712,3 +675,181 @@
         });
     </script>
 @endsection
+
+{{-- @php
+                                                    $mark = [];
+                                                    $countdata = 0;
+                                                    $ignorId = [];
+                                                    $groupClass = 'text-red';
+
+                                                    foreach ($groupedData as $data1) {
+                                                        $period = explode(' - ', $data1->period);
+                                                        if (count($period) == 1) {
+                                                            $periods = explode('-', $data1->period);
+                                                            $startMonth = date('m', strtotime("{$periods[0]}-{$periods[1]}"));
+                                                            $endMonth = count($periods) > 2 ? date('m', strtotime("{$periods[2]}-{$periods[3]}")) : $startMonth;
+                                                        } else {
+                                                            $startMonth = date('n', strtotime($period[0]));
+                                                            $endMonth = date('n', strtotime($period[1]));
+                                                        }
+                                                        $isInMonthRange = $month >= $startMonth && $month <= $endMonth;
+
+                                                        if ($isInMonthRange === true) {
+                                                            if ($data1->group === 'CHN') {
+                                                                $groupMark = 'C';
+                                                            } elseif ($data1->group === 'Sci') {
+                                                                $groupMark = 'S';
+                                                            } else {
+                                                                $groupMark = $data1->group;
+                                                            }
+                                                            $groupClass = 'text-success';
+                                                        } else {
+                                                            $groupMark = '';
+                                                        }
+                                                        if (!in_array($groupMark, $mark)) {
+                                                            $mark[] = $groupMark;
+                                                        }
+                                                    } //endforeach
+
+                                                @endphp --}}
+{{-- @php
+                                                    $mark = [];
+                                                    $countdata = 0;
+                                                    $ignorId = [];
+                                                    $groupClass = 'text-red';
+
+                                                    foreach ($groupedData as $data1) {
+                                                        $period = explode(' - ', $data1->period);
+                                                        $currentYear = date('Y');
+                                                        if (count($period) == 1) {
+                                                            $periods = explode('-', $data1->period);
+
+                                                            $startMonth = date('m', strtotime("{$periods[0]}-{$periods[1]}"));
+                                                            $endMonth = count($periods) > 2 ? date('m', strtotime("{$periods[2]}-{$periods[3]}")) : $startMonth;
+                                                            $startYear = $periods[0];
+                                                            $endYear = $periods[2];
+                                                            // dd($periods, $endMonth, $startMonth, $startYear, $endYear);
+                                                        } else {
+                                                            $periodss = explode('-', $data1->period);
+                                                            $startYear = $periods[0];
+                                                            $endYear = $periods[2];
+                                                            $startMonth = date('m', strtotime("{$periodss[0]}-{$periodss[1]}"));
+                                                            $endMonth = date('m', strtotime("{$periodss[2]}-{$periodss[3]}"));
+                                                            // dd(
+                                                            //     $periodss,
+                                                            //     $startMonth,
+                                                            //     $endMonth,
+                                                            //     // $currentYear
+                                                            //     // $startYear,
+                                                            //     // $endYear
+                                                            // );
+                                                        }
+                                                        $isInMonthRange = $month >= $startMonth && $startMonth == $currentYear && $month <= $endMonth && $endYear >= $currentYear;
+                                                        if ($isInMonthRange === true) {
+                                                            if ($data1->group === 'CHN') {
+                                                                $groupMark = 'C';
+                                                            } elseif ($data1->group === 'Sci') {
+                                                                $groupMark = 'S';
+                                                            } else {
+                                                                $groupMark = $data1->group;
+                                                            }
+                                                            $groupClass = 'text-success';
+                                                        } else {
+                                                            $groupMark = '';
+                                                        }
+                                                        if (!in_array($groupMark, $mark)) {
+                                                            $mark[] = $groupMark;
+                                                        }
+                                                    } //endforeach
+                                                @endphp
+
+                                                @php
+                                                    $mark = [];
+                                                    $countdata = 0;
+                                                    $ignorId = [];
+                                                    $groupClass = 'text-red';
+
+                                                    foreach ($groupedData as $data1) {
+                                                        $period = explode(' - ', $data1->period);
+                                                        $currentYear = date('Y');
+                                                        if (count($period) == 1) {
+                                                            $periods = explode('-', $data1->period);
+
+                                                            $startMonth = date('m', strtotime("{$periods[0]}-{$periods[1]}"));
+                                                            $startYear = $periods[0];
+                                                            $endMonth = count($periods) > 2 ? date('m', strtotime("{$periods[2]}-{$periods[3]}")) : $startMonth;
+                                                            $endYear = count($periods) > 2 ? date('Y', strtotime("{$periods[2]}-{$periods[3]}")) : $startYear;
+                                                        } else {
+                                                            $periodss = explode('-', $data1->period);
+                                                            $startYear = $periodss[0];
+                                                            $endYear = $periodss[2];
+                                                            $startMonth = date('m', strtotime("{$periodss[0]}-{$periodss[1]}"));
+                                                            $endMonth = date('m', strtotime("{$periodss[2]}-{$periodss[3]}"));
+                                                        }
+
+                                                        $isInMonthRange = $currentYear == $startYear && $currentYear == $endYear && $month >= $startMonth && $month <= $endMonth;
+
+                                                        if ($isInMonthRange) {
+                                                            if ($data1->group === 'CHN') {
+                                                                $groupMark = 'C';
+                                                            } elseif ($data1->group === 'Sci') {
+                                                                $groupMark = 'S';
+                                                            } else {
+                                                                $groupMark = $data1->group;
+                                                            }
+
+                                                            $groupClass = 'text-success';
+
+                                                            if (!in_array($groupMark, $mark)) {
+                                                                $mark[] = $groupMark;
+                                                            }
+                                                        }
+                                                    }
+                                                @endphp
+                                                @php
+                                                    // use Carbon\Carbon;
+
+                                                    $mark = [];
+                                                    $countdata = 0;
+                                                    $ignorId = [];
+                                                    $groupClass = 'text-red';
+
+                                                    foreach ($groupedData as $data1) {
+                                                        $period = explode(' - ', $data1->period);
+                                                        $currentYear = date('Y');
+
+                                                        if (count($period) == 1) {
+                                                            $periods = explode('-', $data1->period);
+
+                                                            $startMonth = Carbon::parse("{$periods[0]}-{$periods[1]}")->month;
+                                                            $startYear = $periods[0];
+                                                            $endMonth = count($periods) > 2 ? Carbon::parse("{$periods[2]}-{$periods[3]}")->month : $startMonth;
+                                                            $endYear = count($periods) > 2 ? $periods[2] : $startYear;
+                                                        } else {
+                                                            $periodss = explode('-', $data1->period);
+                                                            $startYear = $periodss[0];
+                                                            $endYear = $periodss[2];
+                                                            $startMonth = Carbon::parse("{$periodss[0]}-{$periodss[1]}")->month;
+                                                            $endMonth = Carbon::parse("{$periodss[2]}-{$periodss[3]}")->month;
+                                                        }
+                                                        dd($startMonth);
+
+                                                        $isInMonthRange = Carbon::now()->year >= $startYear && Carbon::now()->year <= $endYear && Carbon::now()->month >= $startMonth && Carbon::now()->month <= $endMonth;
+
+                                                        if ($isInMonthRange) {
+                                                            if ($data1->group === 'CHN') {
+                                                                $groupMark = 'C';
+                                                            } elseif ($data1->group === 'Sci') {
+                                                                $groupMark = 'S';
+                                                            } else {
+                                                                $groupMark = $data1->group;
+                                                            }
+
+                                                            $groupClass = 'text-success';
+
+                                                            if (!in_array($groupMark, $mark)) {
+                                                                $mark[] = $groupMark;
+                                                            }
+                                                        }
+                                                    }
+                                                @endphp --}}
