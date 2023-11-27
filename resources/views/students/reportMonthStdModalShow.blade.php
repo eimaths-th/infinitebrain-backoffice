@@ -83,7 +83,7 @@
     </div>
     <!-- Modal footer -->
     <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="SubmitCreateForm">Save</button>
+        {{-- <button type="button" class="btn btn-success" id="SubmitCreateForm">Save</button> --}}
         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
     </div>
 </form>
