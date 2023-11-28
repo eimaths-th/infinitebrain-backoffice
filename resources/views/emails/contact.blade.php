@@ -880,12 +880,8 @@
                                                                 <div
                                                                     style="direction:ltr;font-family:Inter, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;">
 
-                                                                    @php
-                                                                        $url1 = "http://form.infinitebrain.co.th/receipt_form_images/" . $data->photo_att;
-                                                                    @endphp
-                                                                    <img src="{{ $url1 }}"
-                                                                        alt="..."
-                                                                        style="vertical-align: middle; height: 200px;">
+                                                                    {{-- {!! $url1 !!} --}}
+                                                                    {{ $url1 }}
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -940,16 +936,11 @@
                                                                 <div
                                                                     style="font-size:12px;font-weight:400;ext-align:left;mso-line-height-alt:25.2px;">
 
-                                                                    @php
-                                                                        $url2 = "http://form.infinitebrain.co.th/receipt_form_images/" . $data->file_att;
-                                                                    @endphp
-                                                                    <img height="200px"
-                                                                        src="{{ $url2 }}"
-                                                                        alt="..." srcset=""
-                                                                        style="vertical-align:middle;">
                                                                     {{-- @php
-                                                                        dd( $url1,$url2 )
+                                                                        $url2 = asset('receipt_form_images/' . $data->file_att);
                                                                     @endphp --}}
+                                                                    {{-- {!! $url2 !!} --}}
+                                                                    {{ $url2 }}
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -958,6 +949,9 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    @php
+                                        // dd($url1,$url2);
+                                    @endphp
                                 </td>
                             </tr>
                         </tbody>

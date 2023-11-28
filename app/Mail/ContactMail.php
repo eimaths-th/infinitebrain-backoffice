@@ -13,7 +13,8 @@ class ContactMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
-
+    public $url1;
+    public $url2;
     /**
      * Create a new message instance.
      *
@@ -23,7 +24,12 @@ class ContactMail extends Mailable
     {
         //
         $this->data = $data;
-       
+        $this->url1 = '<img height="200px" src="' . asset('receipt_form_images/' . $data->photo_att) . '" alt="..." style="vertical-align: middle;">';
+        $this->url2 = '<img src=" ' . asset('receipt_form_images/' . $data->file_att) . ' " alt="..." style="vertical-align: middle; height: 200px;">';
+        // $this->url2 = asset('receipt_form_images/' . $data->file_att);
+
+        // dd($data,$this->url1,$this->url2);
+
     }
 
     /**
@@ -57,6 +63,9 @@ class ContactMail extends Mailable
      */
     public function attachments()
     {
-        return [];
+        return [
+            // public_path('receipt_form_images/' . $this->data->file_att),
+            // public_path('receipt_form_images/' . $this->data->photo_att),
+        ];
     }
 }
