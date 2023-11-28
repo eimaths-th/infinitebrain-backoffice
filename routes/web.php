@@ -54,6 +54,8 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
 
     Route::get('/reward', [ReceiptFormController::class, 'img_reward'])->name('reward');
     Route::get('/test_field', [ReceiptFormController::class, 'test_field'])->name('test_field');
+    Route::get('/mathleague', [ReceiptFormController::class, 'mathleague'])->name('mathleague');
+    Route::get('/huaxiacup', [ReceiptFormController::class, 'huaxiacup'])->name('huaxiacup');
 });
 
 Route::group(['middleware' => ['auth', 'checkUserId']], function () {
