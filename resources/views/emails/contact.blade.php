@@ -880,8 +880,8 @@
                                                                 <div
                                                                     style="direction:ltr;font-family:Inter, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;">
 
-                                                                    {{-- {!! $url1 !!} --}}
-                                                                    {{ $url1 }}
+                                                                    {!! $url1 !!}
+                                                                    {{-- {{ $url1 }} --}}
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -939,8 +939,8 @@
                                                                     {{-- @php
                                                                         $url2 = asset('receipt_form_images/' . $data->file_att);
                                                                     @endphp --}}
-                                                                    {{-- {!! $url2 !!} --}}
-                                                                    {{ $url2 }}
+                                                                    {!! $url2 !!}
+                                                                    {{-- {{ $url2 }} --}}
                                                                 </div>
                                                             </td>
                                                         </tr>
