@@ -276,17 +276,13 @@
                                                                             $message = 'ISOCSEA 2023 Registration Form';
                                                                         } elseif ($data->sfield == 14) {
                                                                             $message = 'IMOCSEA+ISOCSEA 2023 Registration Form';
-                                                                        }
-                                                                        elseif ($data->sfield == 15) {
+                                                                        } elseif ($data->sfield == 15) {
                                                                             $message = 'Huaxiacup';
-                                                                        }
-                                                                        elseif ($data->sfield == 16) {
+                                                                        } elseif ($data->sfield == 16) {
                                                                             $message = 'Mathleague';
-                                                                        }
-
-                                                                        elseif ($data->sfield == 0) {
+                                                                        } elseif ($data->sfield == 0) {
                                                                             $message = 'Img Reward';
-                                                                        } elseif ($data->sfield == "TT") {
+                                                                        } elseif ($data->sfield == 'TT') {
                                                                             $message = 'Test Field';
                                                                         }
                                                                         ?>
@@ -884,10 +880,9 @@
                                                                 <div
                                                                     style="direction:ltr;font-family:Inter, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;">
 
-                                                                    <img src="{{ asset('receipt_form_images/') }}/<?php echo $data->photo_att; ?>"
-                                                                        alt="..." srcset=""
-                                                                        style="vertical-align:middle;  height: 200px;">
-
+                                                                    <img src="{{ asset('receipt_form_images/' . $data->photo_att) }}"
+                                                                        alt="..."
+                                                                        style="vertical-align: middle; height: 200px;">
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -942,10 +937,10 @@
                                                                 <div
                                                                     style="font-size:12px;font-weight:400;ext-align:left;mso-line-height-alt:25.2px;">
                                                                     <img height="200px"
-                                                                        src="{{ asset('receipt_form_images/') }}/<?php echo $data->file_att; ?>"
+                                                                        src="{{ asset('receipt_form_images/' . $data->file_att) }}"
                                                                         alt="..." srcset=""
                                                                         style="vertical-align:middle;">
-
+                                                                   
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -996,19 +991,15 @@
                                                                             $message1 = 'IMOCSEA';
                                                                         } elseif ($data->sfield == 13) {
                                                                             $message1 = 'ISOCSEA';
-                                                                        }
-                                                                        elseif ($data->sfield == 14) {
+                                                                        } elseif ($data->sfield == 14) {
                                                                             $message1 = 'IMOCSEA+ISOCSEA';
-                                                                        }
-                                                                        elseif ($data->sfield == 15) {
+                                                                        } elseif ($data->sfield == 15) {
                                                                             $message1 = 'Huaxiacup';
-                                                                        }
-                                                                        elseif ($data->sfield == 16) {
+                                                                        } elseif ($data->sfield == 16) {
                                                                             $message1 = 'Mathleague';
-                                                                        }
-                                                                        elseif ($data->sfield == 0) {
+                                                                        } elseif ($data->sfield == 0) {
                                                                             $message1 = 'Img Reward';
-                                                                        } elseif ($data->sfield == "TT") {
+                                                                        } elseif ($data->sfield == 'TT') {
                                                                             $message1 = 'Test Field';
                                                                         }
                                                                         ?>
