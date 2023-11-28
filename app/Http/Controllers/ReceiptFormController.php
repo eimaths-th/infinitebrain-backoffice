@@ -109,11 +109,12 @@ class ReceiptFormController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-
         $filecount = count($request->file('file'));
         //return response()->json(['success'=>$x]);
         //print_r($request->file('file'));
         //exit();
+        // dd($request);
+
         $newname = "";
         for ($i = 0; $i <= ($filecount - 1); $i++) {
             $image = $request->file('file')[$i];
@@ -302,7 +303,7 @@ class ReceiptFormController extends Controller
     {
         //
         // dd($request);
-        $test = Receipt::find(1893);
+        // $test = Receipt::find(1893);
         // dd($test->recform->id);
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
@@ -332,9 +333,11 @@ class ReceiptFormController extends Controller
             return response()->json(['error' => 'Receive is already generate']);
         }
 
-
         $rnumber = Receipt_RunningNumber::generate($request->get('sfield'), $request->get('submission_date'));
+
         $rcnumber = Receipt_Customer_RunningNumber::generate($request->get('sfield'));
+        // dd($request);
+
         $request->request->add(['receipt_number' => $rnumber, 'receipt_customer_number' => $rcnumber]);
 
         $receipt = new Receipt($request->all());
@@ -591,6 +594,8 @@ class ReceiptFormController extends Controller
                 //}
             }
         }
+        // dd($urla);
+
 
         $file_att = '';
         $furl = "";
