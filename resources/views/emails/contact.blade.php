@@ -947,9 +947,9 @@
                                                                         src="{{ $url2 }}"
                                                                         alt="..." srcset=""
                                                                         style="vertical-align:middle;">
-                                                                    @php
+                                                                    {{-- @php
                                                                         dd( $url1,$url2 )
-                                                                    @endphp
+                                                                    @endphp --}}
                                                                 </div>
                                                             </td>
                                                         </tr>
