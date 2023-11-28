@@ -880,7 +880,7 @@
                                                                 <div
                                                                     style="direction:ltr;font-family:Inter, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;">
 
-                                                                    <img src="{{ asset('receipt_form_images/' . $data->photo_att) }}"
+                                                                    <img src="{{ url('/') . '/receipt_form_images/'  . $data->photo_att }}"
                                                                         alt="..."
                                                                         style="vertical-align: middle; height: 200px;">
                                                                 </div>
@@ -937,10 +937,10 @@
                                                                 <div
                                                                     style="font-size:12px;font-weight:400;ext-align:left;mso-line-height-alt:25.2px;">
                                                                     <img height="200px"
-                                                                        src="{{ asset('receipt_form_images/' . $data->file_att) }}"
+                                                                        src="{{ url('/') . '/receipt_form_images/'  . $data->file_att }}"
                                                                         alt="..." srcset=""
                                                                         style="vertical-align:middle;">
-                                                                   
+
                                                                 </div>
                                                             </td>
                                                         </tr>
