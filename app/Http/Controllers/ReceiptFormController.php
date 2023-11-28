@@ -26,7 +26,21 @@ use Maatwebsite\Excel\Facades\Excel;
 class ReceiptFormController extends Controller
 {
     const sfielda = array(
-        'TT' => 'test_field', '0' => 'reward', '2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE', '11' => 'Cambridge', '13' => 'ISOCSEA', '14' => 'IMOCSEA+ISOCSEA'
+        'TT' => 'test_field',
+        '0' => 'reward',
+        '2' => 'GMEC',
+        '4' => 'IMOCSEA',
+        '5' => 'INFINITE Spelling Bee',
+        '6' => 'GELOSEA',
+        '7' => 'LIMOC',
+        '8' => 'STEM',
+        '9' => 'OLPCS',
+        '10' => 'ASIAROPE',
+        '11' => 'Cambridge',
+        '13' => 'ISOCSEA',
+        '14' => 'IMOCSEA+ISOCSEA',
+        '15' => 'Huaxiacup',
+        '16' => 'Mathleague',
     );
 
     public function gmec()
@@ -46,6 +60,14 @@ class ReceiptFormController extends Controller
     public function test_field()
     {
         return view("receipt_form.test_field");
+    }
+    public function mathleague()
+    {
+        return view("receipt_form.mathleague");
+    }
+    public function huaxiacup()
+    {
+        return view("receipt_form.huaxiacup");
     }
     public function img_reward()
     {
@@ -516,7 +538,7 @@ class ReceiptFormController extends Controller
 
         $adminEmail = $request->get('email');
 
-        if ($request->get('sfield') == 0 || $request->get('sfield') == "TT") {
+        if ($request->get('sfield') == 0) {
         } else {
             Mail::to($adminEmail)->send(new ContactMail($receiptForm));
         }
