@@ -68,8 +68,11 @@
                         <option value="isocsea">isocsea</option>
                         <option value="imocsea+isocsea">imocsea+isocsea</option>
                         <option value="cambridge">cambridge</option>
+                        <option value="huaxiacup">huaxiacup</option>
+                        <option value="mathleague">mathleague</option>
                         <option value="reward">reward</option>
                         <option value="test_field">test_field</option>
+
                     </select>
 
                 </div>
