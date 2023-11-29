@@ -599,7 +599,7 @@
                                             style="color: #6351a2;">1250 bath (1 class 2 hours)</span><br></p>
                                     <p>&nbsp;</p>
 
-                                    <!-- main sub img -->
+                                    <!-- sub img -->
 
                                     {{-- <div class="row">
                                         <div class="col-lg-6">
@@ -647,8 +647,11 @@
                                         @endif
                                     </div>
                                 </div>
+                                <input type="hidden" id="contest" name="contest" value="null">
+                                <input type="hidden" id="subject" name="subject" value="null">
 
-                                <div class="form-row form-focus">
+                                {{-- <div class="form-row form-focus">
+
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Select Subject /
                                         เลือก รายวิชา <span class="form-required">*</span></label>
@@ -658,8 +661,6 @@
                                             <label class="form-label form-label-top form-label-auto" for="subject">
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            {{-- <input type="text" class="form-control" name="subject" id="subject"
-                                                value="" maxlength="50" minlength="2" required> --}}
                                             <select name="subject" id="subject" class="form-control">
 
                                                 <option value="">Please Select</option>
@@ -679,7 +680,7 @@
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> --}}
 
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
@@ -857,7 +858,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="position-relative form-group">
+                                        {{-- <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="contest">Choose
                                                 Contest Category<span class="form-required">*</span></label>
                                             <select class="form-control" id="contest" name="contest"
@@ -886,7 +887,7 @@
                                                     <div class="form-error-arrow-inner"></div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
 
