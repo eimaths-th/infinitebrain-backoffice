@@ -624,6 +624,7 @@ class ReceiptController extends Controller
     public function store(Request $request)
     {
         //
+
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'type' => 'required|string',

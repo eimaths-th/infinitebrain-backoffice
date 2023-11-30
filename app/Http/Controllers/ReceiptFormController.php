@@ -302,6 +302,10 @@ class ReceiptFormController extends Controller
     public function create(Request $request)
     {
         //
+        if ($request->get('sfield') === "16") {
+            # code...
+            dd('error');
+        }
         // dd($request);
         // $test = Receipt::find(1893);
         // dd($test->recform->id);
@@ -585,6 +589,8 @@ class ReceiptFormController extends Controller
         $data = ReceiptForm::find($id);
 
         $photo_att = '';
+
+
         if ($data->photo_att) {
 
             $arrl = explode('|', $data->photo_att);
