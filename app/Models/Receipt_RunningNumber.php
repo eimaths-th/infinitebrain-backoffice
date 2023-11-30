@@ -69,20 +69,24 @@ class Receipt_RunningNumber extends Model
         $month = date('m');
         $sda = explode("-", $sdate);
         $ldate = Carbon::create($sda[0], $sda[1], $sda[2]); // Create a Carbon instance for the date 2023-09-30
+
         $lastDayOfMonth = $ldate->endOfMonth()->format('d');
 
         $day = $sda[2];
-        //$month = "01";
+        // $month = "12";
 
         if ($day == $lastDayOfMonth && $month != '01') {
-            $month = str_pad(intval($month) - 1, 2, '0', STR_PAD_LEFT); // Decrease month by 1
+            // $month = str_pad(intval($month) -1, 2, '0', STR_PAD_LEFT); // Decrease month by 1
+            $month = str_pad(intval($month) , 2, '0', STR_PAD_LEFT); // Decrease month by 1
+
+
             if ($month == '00') {
                 $month = '12'; // If month becomes 00 (December of previous year)
                 $year--;
             }
         }
 
-
+        // dd($sda[1],$sdate,$day,$lastDayOfMonth,$ldate,$month);
         if (!Receipt_RunningNumber::where('type', $type)->where('year', $year)->where('month', $month)->exists()) {
             Receipt_RunningNumber::create([
                 'type' => $type,
@@ -128,7 +132,8 @@ class Receipt_RunningNumber extends Model
         //$month = "01";
 
         if ($day == $lastDayOfMonth && $month != '01') {
-            $month = str_pad(intval($month) - 1, 2, '0', STR_PAD_LEFT); // Decrease month by 1
+            // $month = str_pad(intval($month) - 1, 2, '0', STR_PAD_LEFT); // Decrease month by 1
+            $month = str_pad(intval($month) , 2, '0', STR_PAD_LEFT); // Decrease month by 1
             if ($month == '00') {
                 $month = '12'; // If month becomes 00 (December of previous year)
                 $year--;

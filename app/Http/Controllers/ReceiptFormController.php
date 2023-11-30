@@ -433,7 +433,7 @@ class ReceiptFormController extends Controller
             }
         } else {
             if ($request->get('sfield') == 16) {
-                
+                $sdes = '';
             } else {
                 if (str_contains($request->get('description'), 'tutoring')) {
                     $sdes = 'สมัครสอบรวมติว';
@@ -635,7 +635,7 @@ class ReceiptFormController extends Controller
             $data->rnumber = '';
         }
 
-        //dd($data);
+        // dd($data->rnumber);
 
 
         return response()->json([

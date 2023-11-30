@@ -279,7 +279,7 @@
                                                                         } elseif ($data->sfield == 15) {
                                                                             $message = 'China Mathematical Olympiad';
                                                                         } elseif ($data->sfield == 16) {
-                                                                            $message = 'Mathleague';
+                                                                            $message = 'Math League';
                                                                         } elseif ($data->sfield == 0) {
                                                                             $message = 'Img Reward';
                                                                         } elseif ($data->sfield == 'TT') {
