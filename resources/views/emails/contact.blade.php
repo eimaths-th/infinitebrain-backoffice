@@ -222,7 +222,7 @@
                                                                 <div align="center" class="alignment"
                                                                     style="line-height:10px">
                                                                     <!-- <a href="https://www.example.com" style="outline:none" tabindex="-1" target="_blank"><img alt="your-logo" class="big" src="images/Your-logo.png" style="display: block; height: auto; border: 0; width: 304px; max-width: 100%;" title="your-logo" width="304"/></a> -->
-                                                                    <img src="{{ asset('images/Logo_Mata-knowledfe_final_PNG.png') }}"
+                                                                    <img src="{{ $message->embed(public_path('images').'/Logo_Mata-knowledfe_final_PNG.png') }}"
                                                                         alt="..." srcset=""
                                                                         style="vertical-align:middle;  height:200px;">
                                                                 </div>
@@ -277,7 +277,7 @@
                                                                         } elseif ($data->sfield == 14) {
                                                                             $message = 'IMOCSEA+ISOCSEA 2023 Registration Form';
                                                                         } elseif ($data->sfield == 15) {
-                                                                            $message = 'Huaxiacup';
+                                                                            $message = 'China Mathematical Olympiad';
                                                                         } elseif ($data->sfield == 16) {
                                                                             $message = 'Mathleague';
                                                                         } elseif ($data->sfield == 0) {
@@ -881,7 +881,7 @@
                                                                     style="direction:ltr;font-family:Inter, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;">
 
                                                                     {!! $url1 !!}
-                                                                    {{-- {{ $url1 }} --}}
+
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -936,11 +936,8 @@
                                                                 <div
                                                                     style="font-size:12px;font-weight:400;ext-align:left;mso-line-height-alt:25.2px;">
 
-                                                                    {{-- @php
-                                                                        $url2 = asset('receipt_form_images/' . $data->file_att);
-                                                                    @endphp --}}
                                                                     {!! $url2 !!}
-                                                                    {{-- {{ $url2 }} --}}
+
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -949,9 +946,6 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    @php
-                                        // dd($url1,$url2);
-                                    @endphp
                                 </td>
                             </tr>
                         </tbody>
