@@ -40,7 +40,8 @@ class TimeController extends Controller
     }
     public function formsControl()
     {
-        $controls = OpeningClosingTime::all();
+        $controls = OpeningClosingTime::orderBy('id', 'desc')->get();
+    
         return view('receipt_form.form_control', [
             'controls' => $controls
         ]);
