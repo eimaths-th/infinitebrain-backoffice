@@ -20,6 +20,8 @@ class Receipt_RunningNumber extends Model
     ];
 
     const TYPES = [
+        '0',
+        'TT',
         '2',
         '4',
         '5',
@@ -30,10 +32,14 @@ class Receipt_RunningNumber extends Model
         '10',
         '11',
         '13',
-        '14'
+        '14',
+        '15',
+        '16',
     ];
 
     const TYPE_PREFIX = [
+        '0' => '0',
+        'TT' => 'TT',
         '2' => '2',
         '4' => '4',
         '5' => '5',
@@ -45,6 +51,9 @@ class Receipt_RunningNumber extends Model
         '11' => '11',
         '13' => '13',
         '14' => '14',
+        '15' => '15',
+        '16' => '16',
+
 
     ];
 
