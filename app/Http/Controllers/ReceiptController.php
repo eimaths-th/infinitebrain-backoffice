@@ -44,7 +44,7 @@ class ReceiptController extends Controller
         '13' => 'ISOCSEA',
         '14' => 'IMOCSEA+ISOCSEA',
         '15' => 'Huaxiacup',
-        '16' => 'Mathleague',
+        // '16' => 'Mathleague',
     );
     const sfieldas = array(
         'TT' => 'Test Field',
@@ -61,7 +61,7 @@ class ReceiptController extends Controller
         '13' => 'S',
         '14' => 'T',
         '15' => 'U',
-        '16' => 'V',
+        // '16' => 'V',
     );
     const thmonth = array(
         "",

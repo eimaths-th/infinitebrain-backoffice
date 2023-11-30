@@ -40,7 +40,7 @@ class ReceiptFormController extends Controller
         '13' => 'ISOCSEA',
         '14' => 'IMOCSEA+ISOCSEA',
         '15' => 'Huaxiacup',
-        '16' => 'Mathleague',
+        // '16' => 'Mathleague',
     );
 
     public function gmec()
