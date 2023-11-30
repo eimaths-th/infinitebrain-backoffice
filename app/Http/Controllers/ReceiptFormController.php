@@ -432,10 +432,14 @@ class ReceiptFormController extends Controller
                 $sdes = 'ค่าลงทะเบียนระดับมัธยม';
             }
         } else {
-            if (str_contains($request->get('description'), 'tutoring')) {
-                $sdes = 'สมัครสอบรวมติว';
+            if ($request->get('sfield') == 16) {
+                
             } else {
-                $sdes = 'สมัครสอบไม่รวมติว';
+                if (str_contains($request->get('description'), 'tutoring')) {
+                    $sdes = 'สมัครสอบรวมติว';
+                } else {
+                    $sdes = 'สมัครสอบไม่รวมติว';
+                }
             }
         }
 

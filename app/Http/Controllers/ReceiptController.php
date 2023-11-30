@@ -29,8 +29,40 @@ class ReceiptController extends Controller
     const BAHT_TEXT_BAHT = 'บาท';
     const BAHT_TEXT_SATANG = 'สตางค์';
     const BAHT_TEXT_POINT = 'จุด';
-    const sfielda = array( 'TT' => 'Test Field','0' => 'IMG Reward','2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE', '11' => 'Cambridge', '13' => 'ISOCSEA', '14' => 'IMOCSEA+ISOCSEA');
-    const sfieldas = array('TT' => 'Test Field','0' => 'IMG Reward','2' => 'G', '4' => 'J', '5' => 'I', '6' => 'L', '7' => 'M', '8' => 'N', '9' => 'O', '10' => 'P', '11' => 'Q', '13' => 'S', '14' => 'T');
+    const sfielda = array(
+        'TT' => 'test_field',
+        '0' => 'reward',
+        '2' => 'GMEC',
+        '4' => 'IMOCSEA',
+        '5' => 'INFINITE Spelling Bee',
+        '6' => 'GELOSEA',
+        '7' => 'LIMOC',
+        '8' => 'STEM',
+        '9' => 'OLPCS',
+        '10' => 'ASIAROPE',
+        '11' => 'Cambridge',
+        '13' => 'ISOCSEA',
+        '14' => 'IMOCSEA+ISOCSEA',
+        '15' => 'Huaxiacup',
+        // '16' => 'Mathleague',
+    );
+    const sfieldas = array(
+        'TT' => 'Test Field',
+        '0' => 'IMG Reward',
+        '2' => 'G',
+        '4' => 'J',
+        '5' => 'I',
+        '6' => 'L',
+        '7' => 'M',
+        '8' => 'N',
+        '9' => 'O',
+        '10' => 'P',
+        '11' => 'Q',
+        '13' => 'S',
+        '14' => 'T',
+        '15' => 'U',
+        // '16' => 'V',
+    );
     const thmonth = array(
         "",
         "มกราคม",

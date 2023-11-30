@@ -398,6 +398,20 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '15']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Huaxiacup
+                                </a>
+                            </li>
+                            {{-- <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '16']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Mathleague
+                                    <!-- ml -->
+                                </a>
+                            </li> --}}
+
+                            <li>
                                 <a href="{{ route('receipts_form', ['sfield' => '0']) }}">
                                     <i class="metismenu-icon"></i>
                                     Img Reward
@@ -490,6 +504,19 @@
                                     STEM
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '15']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Huaxiacup
+                                </a>
+                            </li>
+                            {{-- <li>
+                                <a href="{{ route('receipts', ['sfield' => '16']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Mathleague
+                                    <!-- ml -->
+                                </a>
+                            </li> --}}
                             <li>
                                 <a href="{{ route('receipts', ['sfield' => '0']) }}">
                                     <i class="metismenu-icon"></i>
