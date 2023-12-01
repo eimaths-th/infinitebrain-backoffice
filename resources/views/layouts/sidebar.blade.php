@@ -510,13 +510,13 @@
                                     Huaxiacup
                                 </a>
                             </li>
-                            {{-- <li>
+                            <li>
                                 <a href="{{ route('receipts', ['sfield' => '16']) }}">
                                     <i class="metismenu-icon"></i>
                                     Mathleague
                                     <!-- ml -->
                                 </a>
-                            </li> --}}
+                            </li>
                             <li>
                                 <a href="{{ route('receipts', ['sfield' => '0']) }}">
                                     <i class="metismenu-icon"></i>

@@ -303,7 +303,6 @@ class ReceiptFormController extends Controller
     {
         //
         if ($request->get('sfield') === "16") {
-            # code...
             dd('error');
         }
         // dd($request);

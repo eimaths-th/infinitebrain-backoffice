@@ -30,6 +30,12 @@ class ContactMail extends Mailable
 
         // dd($data,$this->url1,$this->url2);
 
+        // $this->url1 = asset('receipt_form_images/' . $data->photo_att);
+        // $this->url2 = asset('receipt_form_images/' . $data->file_att);
+        // $this->url2 = asset('receipt_form_images/' . $data->file_att);
+
+        // dd($data,$this->url1,$this->url2);
+
     }
 
     /**
@@ -64,8 +70,6 @@ class ContactMail extends Mailable
     public function attachments()
     {
         return [
-            // public_path('receipt_form_images/' . $this->data->file_att),
-            // public_path('receipt_form_images/' . $this->data->photo_att),
         ];
     }
 }
