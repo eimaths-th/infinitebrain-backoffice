@@ -1170,7 +1170,7 @@
                 case 'Science Category 2 (Grades 4)':
                 case 'Science Category 3 (Grades 5)':
                 case 'Science Category 7 (Grades 9)':
-                    if (currentDate >= new Date('2023-11-27') && currentDate <= new Date('2024-01-30')) {
+                    if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-01-30')) {
 
                     } else {
                         this.value = '';
