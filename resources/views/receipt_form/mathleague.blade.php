@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                        background-size: 15px;
-                                                                                                                                    }*/
+                                                                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                                background-size: 15px;
+                                                                                                                                                            }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                        border-color: var(--color-invalid);
-                                                                                                                                    }*/
+                                                                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                                border-color: var(--color-invalid);
+                                                                                                                                                            }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                        display: block;
-                                                                                                                                    }*/
+                                                                                                                                                                display: block;
+                                                                                                                                                            }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,9 +531,9 @@
     </style>
     <style>
         /* .custom-image {
-                                                                                    width: 395px;
-                                                                                    height: 395px;
-                                                                                } */
+                                                                                                            width: 395px;
+                                                                                                            height: 395px;
+                                                                                                        } */
 
         .custom-image {
             width: 100%;
@@ -869,7 +869,8 @@
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test: 850 baht">Test: 850 baht</option>
-                                                <option value="Test + five Years Past Papers: 1,350 baht">Test + 5 Years Past
+                                                <option value="Test + five Years Past Papers: 1,350 baht">Test + 5 Years
+                                                    Past
                                                     Papers: 1,350 baht</option>
                                                 <option value="Test + Math League Boost Camp: 2,350 baht">Test + Math
                                                     League Boost Camp: 2,350 baht</option>
@@ -891,7 +892,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="position-relative form-group">
+                                        {{-- <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="contest">Choose
                                                 Contest Category<span class="form-required">*</span></label>
                                             <select class="form-control" id="contest" name="contest"
@@ -922,7 +923,8 @@
                                                     <div class="form-error-arrow-inner"></div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
+                                        <input type="hidden" id="contest" name="contest" value=" ">
                                     </div>
                                 </div>
 
@@ -1130,11 +1132,7 @@
                                     </div>
 
                                 </div>
-
-
-
                             </div>
-
                         </div>
                         <div class="card-footer text-center">
                             <br>
@@ -1162,25 +1160,36 @@
     <script>
         var currentDate = new Date();
 
-        document.getElementById('contest').onchange = function() {
+        document.getElementById('grade').onchange = function() {
             var selectedOption = this.value;
+            var sdate = new Date('2023-12-01');
+            var edate = new Date('2023-12-2');
+            var sdate = new Date('2023-12-01');
+            var edate = new Date('2023-12-02');
 
+            var options = {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            };
+            var formattedSDate = sdate.toLocaleDateString('en-GB', options);
+            var formattedEDate = edate.toLocaleDateString('en-GB', options);
             switch (selectedOption) {
-                case 'Science Category 1 (Grades 3)':
-                case 'Science Category 2 (Grades 4)':
-                case 'Science Category 3 (Grades 5)':
-                case 'Science Category 7 (Grades 9)':
-                    if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-01-30')) {
+                case 'Grade 3':
+                case 'Grade 4':
+                case 'Grade 5':
+                case 'Grade 9':
+                    if (currentDate >= sdate && currentDate <= edate) {
 
                     } else {
                         this.value = '';
                         alert('Over time Registration for Grade 3-5 and Grade 9.');
-                        alert('Registration Date: 1 Dec 2023 – 30 Mar 2024');
+                        alert('Registration Date: ' + formattedSDate + ' – ' + formattedEDate);
                     }
                     break;
-                case 'Science Category 4 (Grades 6)':
-                case 'Science Category 5 (Grades 7)':
-                case 'Science Category 6 (Grades 8)':
+                case 'Grade 6':
+                case 'Grade 7':
+                case 'Grade 8':
 
                     if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-03-30')) {
 

@@ -647,8 +647,8 @@
                                         @endif
                                     </div>
                                 </div>
-                                <input type="hidden" id="contest" name="contest" value="null">
-                                <input type="hidden" id="subject" name="subject" value="null">
+                                <input type="hidden" id="contest" name="contest" value=" ">
+                                <input type="hidden" id="subject" name="subject" value=" ">
 
                                 {{-- <div class="form-row form-focus">
 
