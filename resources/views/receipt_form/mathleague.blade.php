@@ -1162,10 +1162,10 @@
 
         document.getElementById('grade').onchange = function() {
             var selectedOption = this.value;
+            // var sdate = new Date('2023-12-01');
+            // var edate = new Date('2023-12-2');
             var sdate = new Date('2023-12-01');
-            var edate = new Date('2023-12-2');
-            var sdate = new Date('2023-12-01');
-            var edate = new Date('2023-12-02');
+            var edate = new Date('2024-03-30');
 
             var options = {
                 day: 'numeric',
