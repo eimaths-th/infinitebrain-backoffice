@@ -65,6 +65,7 @@
                                 <th>name</th>
                                 <th>email</th>
                                 <th>Level</th>
+                                <th>Precursor</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -75,13 +76,34 @@
 
                                     <td> {{ $godeye->nextGod->name }} </td>
                                     <td> {{ $godeye->nextGod->email }} </td>
-                                    <td> {{ $godeye->nextGod->level }} </td>
+                                    <td>
+
+                                        @php
+                                            $ltext = '';
+                                            $level = $godeye->nextGod;
+                                            if ($godeye->nextGod->level == 1) {
+                                                $ltext = 'Admin';
+                                            } elseif ($level->level == 2) {
+                                                $ltext = 'Teacher';
+                                            } elseif ($level->level == 3) {
+                                                $ltext = 'Account';
+                                            } elseif ($level->level == 0) {
+                                                $ltext = 'Owner';
+                                            } else {
+                                                $ltext = 'Normal';
+                                            }
+                                        @endphp
+                                        {{ $ltext }}
+                                    </td>
+                                    <td> {{ $godeye->precursor->name }}  </td>
 
                                     <td>
                                         <form action="{{ route('Godeye.destroy', $godeye->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-xs btn-danger btn-delete" onclick="return confirm('Are you sure you want to delete this God?')"><i class="fa fa-trash"></i> Delete</button>
+                                            <button type="submit" class="btn btn-xs btn-danger btn-delete"
+                                                onclick="return confirm('Are you sure you want to delete this God?')"><i
+                                                    class="fa fa-trash"></i> Delete</button>
                                         </form>
                                     </td>
                                 </tr>

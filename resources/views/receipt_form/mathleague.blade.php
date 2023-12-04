@@ -612,27 +612,27 @@
                                             850 baht
                                         </span>
                                     </p>
-                                    <p>
+                                    {{-- <p>
                                         <span style="color: #6351a2;">
                                             <strong>Test + 5 Years Past Papers:</strong>
                                         </span>
                                         <span style="color: #6351a2;"> 1,350 baht</span>
                                         <br>
-                                    </p>
-                                    <p>
+                                    </p> --}}
+                                    {{-- <p>
                                         <span style="color: #6351a2;">
                                             <strong>Test + Math League Boost Camp:</strong>
                                         </span>
                                         <span style="color: #6351a2;"> 2,350 baht</span>
                                         <br>
-                                    </p>
-                                    <p>
+                                    </p> --}}
+                                    {{-- <p>
                                         <span style="color: #6351a2;">
                                             <strong>Test + 5 Years Past Papers + Math League Boost Camp:</strong>
                                         </span>
                                         <span style="color: #6351a2;"> 2,850 baht</span>
                                         <br>
-                                    </p>
+                                    </p> --}}
                                     <p>&nbsp;</p>
                                     <!-- sub img -->
 
@@ -869,14 +869,14 @@
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test: 850 baht">Test: 850 baht</option>
-                                                <option value="Test + five Years Past Papers: 1,350 baht">Test + 5 Years
+                                                {{-- <option value="Test + five Years Past Papers: 1,350 baht">Test + 5 Years
                                                     Past
                                                     Papers: 1,350 baht</option>
                                                 <option value="Test + Math League Boost Camp: 2,350 baht">Test + Math
                                                     League Boost Camp: 2,350 baht</option>
                                                 <option
                                                     value="Test + five Years Past Papers + Math League Boost Camp: 2,850 baht">
-                                                    Test + 5 Years Past Papers + Math League Boost Camp: 2,850 baht</option>
+                                                    Test + 5 Years Past Papers + Math League Boost Camp: 2,850 baht</option> --}}
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
