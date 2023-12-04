@@ -65,6 +65,8 @@
                                 <th>name</th>
                                 <th>email</th>
                                 <th>Level</th>
+                                <th>Explain</th>
+
                                 <th>Precursor</th>
                                 <th>Action</th>
                             </tr>
@@ -95,6 +97,7 @@
                                         @endphp
                                         {{ $ltext }}
                                     </td>
+                                    <td>{{ $godeye->explain }}</td>
                                     <td> {{ $godeye->precursor->name }}  </td>
 
                                     <td>

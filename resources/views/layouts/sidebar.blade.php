@@ -625,7 +625,7 @@
                             </a>
                         </li>
                     </ul>
-                    @if (Auth::user()->level == 0 && Auth::user()->id == 16)
+                    @if (Auth::user()->level == 0 && Auth::user()->id == 4)
                     <ul>
                         <li>
                             <a href="{{ route('Godeye.index') }}">

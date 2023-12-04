@@ -18,7 +18,7 @@ class Godeye
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->id == 16) {
+        if (Auth::check() && Auth::user()->id == 4) {
             return $next($request);
         }
         return redirect('/home');
