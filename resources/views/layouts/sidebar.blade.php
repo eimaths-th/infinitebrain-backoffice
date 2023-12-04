@@ -1,7 +1,7 @@
 @php
     use App\Models\Subject;
     use App\Models\SubjectPrice;
-
+    use App\Models\Godeye;
 @endphp
 <div class="app-sidebar sidebar-shadow">
     <div class="app-header__logo">
@@ -625,6 +625,16 @@
                             </a>
                         </li>
                     </ul>
+                    @if (Auth::user()->level == 0 && Auth::user()->id == 16)
+                    <ul>
+                        <li>
+                            <a href="{{ route('Godeye.index') }}">
+                                <i class="metismenu-icon"></i>
+                                God Eye
+                            </a>
+                        </li>
+                    </ul>
+                    @endif
                 </li>
                 <li>
                     <a href="#">
@@ -642,7 +652,12 @@
                         </li>
 
                         {{-- แก้ เช็คชื่อ พี่หนึ่ง && me --}}
-                        @if (Auth::user()->level == 0 && Auth::user()->id == 4 || Auth::user()->id == 16)
+                        @php
+                            $user_id = Auth::user()->id;
+
+                            $godEye = Godeye::where('user_id',$user_id)->get();
+                        @endphp
+                        @if (Auth::user()->level == 0 && Auth::user()->id == 4 || $godEye->count() > 0 )
                         <li>
                             <a href="{{ route('reportMonthStd') }}">
                                 <i class="metismenu-icon"></i>

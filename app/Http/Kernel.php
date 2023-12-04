@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Godeye;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'inactivity' => \App\Http\Middleware\InactivityTimeoutMiddleware::class,
         'check.opening.date.time' => \App\Http\Middleware\CheckOpeningDateTime::class,
         'checkUserId' => \App\Http\Middleware\CheckUserId::class,
+        'Godeye' => Godeye::class,
     ];
 }

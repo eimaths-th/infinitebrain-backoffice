@@ -66,9 +66,13 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/report-reciept-student/{id}', [StdlogController::class, 'reportRecieptStdShow'])->name('reportRecieptStdShow');
 });
 
+Route::group(['middleware' => ['auth', 'Godeye']], function () {
+    Route::resource('Godeye', GodeyeContreoller::class);
+
+});
+
 Route::group(['middleware' => ['auth']], function () {
 
-    Route::resource('Godeye', GodeyeContreoller::class);
 
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
