@@ -302,9 +302,9 @@ class ReceiptFormController extends Controller
     public function create(Request $request)
     {
         //
-        if ($request->get('sfield') === "16") {
-            dd('error');
-        }
+        // if ($request->get('sfield') === "16") {
+        //     dd('error');
+        // }
         // dd($request);
         // $test = Receipt::find(1893);
         // dd($test->recform->id);

@@ -19,6 +19,7 @@ use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\GodeyeContreoller;
 use App\Http\Controllers\ReceiptSchoolController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\RetrospectiveCheckController;
@@ -66,6 +67,9 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
+
+    Route::resource('Godeye', GodeyeContreoller::class);
+
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
