@@ -22,6 +22,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\GodeyeContreoller;
 use App\Http\Controllers\ReceiptSchoolController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RecordtimeController;
 use App\Http\Controllers\RetrospectiveCheckController;
 use App\Http\Controllers\RouteToggleController;
 use App\Http\Controllers\StdlogController;
@@ -60,6 +62,7 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
 });
 
 Route::group(['middleware' => ['auth', 'checkUserId']], function () {
+    Route::get('/report-month-time', [HomeController::class, 'reportTime'])->name('reportTime');
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
     Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');
     Route::get('/report-reciept-student-search', [StdlogController::class, 'reportRecieptStdSearch'])->name('reportRecieptStdSearch');
@@ -68,15 +71,23 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
 
 Route::group(['middleware' => ['auth', 'Godeye']], function () {
     Route::resource('Godeye', GodeyeContreoller::class);
-
 });
+
+Route::group(['middleware' => ['auth', 'switch']], function () {
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+});
+Route::group(['middleware' => ['auth', 'outhome']], function () {
+
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/Home', [App\Http\Controllers\HomeController::class, 'home2'])->name('home2');
+});
+
 
 Route::group(['middleware' => ['auth']], function () {
 
+    Route::resource('recordtime', RecordtimeController::class);
+    // Route::delete('/recordtime/{id}', [RecordtimeController::class, 'destroy'])->name('recordtimes.destroy');
 
-
-    Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     //settime
     Route::get('/report-future-student', [StdlogController::class, 'reportFutureStd'])->name('reportFutureStd');
     Route::post('/save_times', [TimeController::class, 'saveTimes'])->name('save_times');

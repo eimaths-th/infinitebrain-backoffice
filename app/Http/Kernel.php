@@ -3,6 +3,8 @@
 namespace App\Http;
 
 use App\Http\Middleware\Godeye;
+use App\Http\Middleware\Outhome;
+use App\Http\Middleware\switchhome;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -70,5 +72,8 @@ class Kernel extends HttpKernel
         'check.opening.date.time' => \App\Http\Middleware\CheckOpeningDateTime::class,
         'checkUserId' => \App\Http\Middleware\CheckUserId::class,
         'Godeye' => Godeye::class,
+        'switch' => switchhome::class,
+        'outhome' => Outhome::class,
+        
     ];
 }

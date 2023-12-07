@@ -26,6 +26,61 @@ function formModal(route) {
         //     //placeholder: "With Max Selection limit 4",
         //     allowClear: true
         // });
+        // $(".timepicker").timepicker();
+        $(".timepicker").timepicker({
+            timeFormat: 'H:mm', // Use 'H:mm' for 24-hour format
+            interval: 15,       // Set the time interval
+            scrollbar: true     // Enable the scrollbar for easier time selection
+        });
+
+        $("#datepicker-autoClose").datepicker({
+            todayHighlight: true,
+            autoclose: true
+        });
+    });
+
+}
+
+function formModal_1(route) {
+    $.get(route, function (res) {
+        $("#modal_form_content").empty();
+        $('#modal_form_content').html(res);
+        $("#modal_form").modal("show");
+
+        $(".timepicker").timepicker({
+            timeFormat: 'H:mm', // Use 'H:mm' for 24-hour format
+            interval: 15,       // Set the time interval
+            scrollbar: true     // Enable the scrollbar for easier time selection
+        });
+
+        var currentTime = new Date();
+        var hours = currentTime.getHours();
+        var minutes = currentTime.getMinutes();
+        $(".timepicker").timepicker("setTime", hours + ":" + minutes);
+
+
+        $("#datepicker-autoClose").datepicker({
+            todayHighlight: true,
+            autoclose: true,
+            format: 'yyyy-mm-dd',
+        });
+        $("#datepicker-autoClose").datepicker("setDate", new Date());
+
+        $(document).on('change', '#status', function (e) {
+            var status = $(this).val()
+            console.log(status);
+            if (status == 1 || status == 11 || status == 12) {
+                console.log('true');
+
+                $('#stime').prop('disabled', false);
+                $('#etime').prop('disabled', false);
+            } else {
+                $('#stime').prop('disabled', true);
+                $('#etime').prop('disabled', true);
+            }
+
+        })
+        
     });
 
 }

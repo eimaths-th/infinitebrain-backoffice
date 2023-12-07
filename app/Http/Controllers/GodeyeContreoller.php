@@ -48,9 +48,9 @@ class GodeyeContreoller extends Controller
         //
 
         $request->validate([
-            'user_id'  => 'required',
-            'explain'  => 'required',
-            'precursor_id'         => 'required',
+            'user_id'       => 'required',
+            'explain'       => 'required',
+            'precursor_id'  => 'required',
         ]);
         $input = $request->all();
 

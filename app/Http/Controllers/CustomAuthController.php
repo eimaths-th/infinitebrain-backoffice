@@ -28,16 +28,17 @@ class CustomAuthController extends Controller
         $this_year = date("Y");
 
         if (Auth::attempt($credentials)) {
-            if (Auth::user()->level == 4) {
+            if (Auth::user()->level > 5) {
 
                 Session::flush();
                 Auth::logout();
-
                 /*return back()->withErrors([
                     'email' => 'You are users but not have permissions. Please Contact Administrator',
                 ]);*/
                 return back()->withErrors(['error' => 'You are users but not have permissions. Please Contact Administrator']);
             } else {
+                // dd($request);
+
                 if (Auth::user()->level == 1 || Auth::user()->level == 0) {
                     //return redirect()->intended('users');
                     //return redirect('/users');
@@ -49,7 +50,11 @@ class CustomAuthController extends Controller
                     //return redirect()->intended('receipts');
                     //return redirect('/receipts?sfield=2');
                     return redirect('/receipts/print_month?pmsfield=9&type=report_view&print_month='.$this_month.'&Pmdescription=ค่าสมัคร OLPCS รอบแรก '. $this_year);
+                }elseif (Auth::user()->level == 4 || Auth::user()->level == 5) {
+                    //return redirect()->intended('course');
+                    return redirect(route('home2'));
                 }
+
                 //->withSuccess('Signed in');
             }
         }
