@@ -66,6 +66,8 @@ class EmployeeController extends Controller
                         $ltext = "Account";
                     } elseif ($level->level == 0) {
                         $ltext = "Owner";
+                    } elseif ($level->level == 4) {
+                        $ltext = "Officer";
                     } else {
                         $ltext = "Normal";
                     }
@@ -116,6 +118,7 @@ class EmployeeController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'level' => 'required',
+            'type_user' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -127,6 +130,8 @@ class EmployeeController extends Controller
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
             'level' => $request->get('level'),
+            'code' => $request->get('code'),
+            'type_user' => $request->get('type_user'),
         ]);
         $level->save();
         return response()->json(['success' => 'User Add successfully']);
@@ -184,6 +189,11 @@ class EmployeeController extends Controller
         } else {
             $cselected = '';
         }
+        if ($data->level == 5) {
+            $fselected = 'selected';
+        } else {
+            $fselected = '';
+        }
 
         $html = '<div class="form-group">
                     <label for="Name">Name:</label>
@@ -211,7 +221,9 @@ class EmployeeController extends Controller
                      <option value="1" ' . $aselected . '>Admin</option>
                      <option value="2" ' . $bselected . '>Teacher</option>
                      <option value="3" ' . $dselected . '>Account</option>
-                     <option value="4" ' . $cselected . '>Normal</option>
+                     <option value="4" ' . $cselected . '>Officer</option>
+                     <option value="5" ' . $fselected . '>Normal</option>
+
                     </select>
                 </div>';
 
