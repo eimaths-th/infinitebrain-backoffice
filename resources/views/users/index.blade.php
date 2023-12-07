@@ -109,13 +109,24 @@
                         </div>
                         <div class="form-group">
                             <label for="Name">Level:</label>
+                            <select class="form-control" id="AddType" name="type_user">
+                                <option value="" selected>Select Time</option>
+                                <option value="0">10.00-18.00</option>
+                                <option value="1">09.00-17.00</option>
+
+                            </select>
+                        </div>
+                        <input type="hidden" name="code" value="code" id="AddCode">
+                        <div class="form-group">
+                            <label for="Name">Level:</label>
                             <select class="form-control" id="AddLevel" name="level">
                                 <option value="" selected>Select Level</option>
                                 <option value="0">Owner</option>
                                 <option value="1">Admin</option>
                                 <option value="2">Teacher</option>
                                 <option value="3">Account</option>
-                                <option value="4">Normal</option>
+                                <option value="4">Officer</option>
+                                <option value="5">Normal</option>
                             </select>
                         </div>
                     </div>
@@ -305,6 +316,8 @@
                         name: $('#AddName').val(),
                         email: $('#AddEmail').val(),
                         level: $('#AddLevel').val(),
+                        type_user: $('#AddType').val(),
+                        code: $('#AddCode').val(),
                         _token: token,
                     },
                     success: function(result) {
