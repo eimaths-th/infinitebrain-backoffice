@@ -105,7 +105,7 @@
                 $totalWait = 0;
                 $totalNoneReceipt = 0;
 
-                dd($groupStatusCounts);
+                // dd($groupStatusCounts);
 
             @endphp
             @foreach ($groupStatusCounts as $user_id => $statusCounts)
