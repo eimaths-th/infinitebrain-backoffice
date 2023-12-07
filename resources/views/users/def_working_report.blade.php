@@ -34,7 +34,7 @@
                     <div class="page-title-icon">
                         <i class="pe-7s-users icon-gradient bg-tempting-azure"></i>
                     </div>
-                    <div>Students
+                    <div>Report working time
                         <div class="page-title-subheading">Infinite Brain Student Data</div>
                     </div>
                 </div>
