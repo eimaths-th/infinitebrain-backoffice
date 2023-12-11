@@ -425,12 +425,11 @@ class HomeController extends Controller
 
         $rec_timess = Recordtime::whereMonth('date', $currentMonth)
             ->whereYear('date', $currentYear)
-            ->orderBy('user_id', 'desc')
+            ->orderBy('user_id', 'asc')
             ->get()
             ->groupBy('user_id');
-        $rec_times_year = Recordtime::whereMonth('date', $currentMonth)
-            ->whereYear('date', $currentYear)
-            ->orderBy('user_id', 'desc')
+        $rec_times_year = Recordtime::whereYear('date', $currentYear)
+            ->orderBy('user_id', 'asc')
             ->get()
             ->groupBy('user_id');
         $stwork = Statuswork::orderBy('id', 'asc')->get();
