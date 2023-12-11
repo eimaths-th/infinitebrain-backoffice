@@ -660,6 +660,12 @@
                                             Report Student Recieept
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('reportTime') }}">
+                                            <i class="metismenu-icon"></i>
+                                            รายงานการมาทำงาน
+                                        </a>
+                                    </li>
                                 @endif
 
                             </ul>

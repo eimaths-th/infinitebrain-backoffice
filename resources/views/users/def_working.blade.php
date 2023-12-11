@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link href="/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" />
     <link href="/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <style>
+        .nowrap {
+            white-space: nowrap;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -76,13 +81,13 @@
                                 {{-- <th width="10px"><input type="checkbox" id="check-all" class="flat"></th> --}}
                                 <th width="1%" align="center">#</th>
                                 <th width="1%" align="center">Code</th>
-                                <th>Name</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Staus</th>
+                                <th data-orderable="false">Name</th>
+                                <th data-orderable="false">Date</th>
+                                <th data-orderable="false">Time</th>
+                                <th width="1%" data-orderable="false">Staus</th>
 
                                 {{-- <th>Precursor</th>  --}}
-                                <th>Action</th>
+                                <th class="nowrap" data-orderable="false">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -140,14 +145,32 @@
                                             {{ $rec_time->status_name }}</span>
                                     </td>
 
-                                    <td>
-                                        <form action="{{ route('recordtime.destroy', $rec_time->id) }}" method="POST">
+                                    <td width="1%" class="text-nowrap">
+
+                                        <a href="javascript:;" class="btn btn-xs btn-warning"
+                                            onclick="formModal_2('{{ route('recordtime.edit', [$rec_time->id]) }}')"
+                                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
+                                            data-bs-title="Edit Record time">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        {{-- <button type="button" class="btn btn-xs btn-danger delete-button"
+                                            data-recordid="{{ $rec_time->id }}">
+                                            <i class="fa fa-trash"></i>
+                                        </button> --}}
+                                        {{-- <form action="{{ route('recordtime.destroy', $rec_time->id) }}" method="POST">
+                                            <a href="javascript:;" class="btn btn-xs btn-warning"
+                                                onclick="formModal_2('{{ route('recordtime.edit', [$rec_time->id]) }}')"
+                                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
+                                                data-bs-title="Edit Record time">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-xs btn-danger btn-delete"
-                                                onclick="return confirm('Are you sure you want to delete this God?')"><i
-                                                    class="fa fa-trash"></i> Delete</button>
-                                        </form>
+                                            <button type="submit" class="btn btn-xs btn-danger"
+                                                onclick="return confirm('Are you sure you want to delete this record?')"><i
+                                                    class="fa fa-trash"></i> </button>
+                                        </form> --}}
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -199,4 +222,30 @@
         //     console.log(window.location);
         // });
     </script>
+    {{-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Attach a click event to the delete button
+            document.querySelector('.delete-button').addEventListener('click', function() {
+                // Display a confirmation dialog
+                var confirmDelete = window.confirm('Are you sure you want to delete this record?');
+
+                // If the user confirms, send an AJAX request
+                if (confirmDelete) {
+                    var recordId = this.getAttribute('data-recordid');
+
+                    // Send an AJAX request to the delete route
+                    axios.delete('{{ route('recordtime.destroy', ['recordtime' => ':recordId']) }}'
+                            .replace(':recordId', recordId))
+                        .then(function(response) {
+                            // Handle success, e.g., remove the deleted record from the UI
+                            console.log(response.data);
+                        })
+                        .catch(function(error) {
+                            // Handle error
+                            console.error(error);
+                        });
+                }
+            });
+        });
+    </script> --}}
 @endsection
