@@ -86,7 +86,7 @@
                                 <th data-orderable="false">Time</th>
                                 <th width="1%" data-orderable="false">Staus</th>
 
-                                {{-- <th>Precursor</th>  --}}
+                                <th>หมายเหตุ</th>
                                 <th class="nowrap" data-orderable="false">Action</th>
                             </tr>
                         </thead>
@@ -97,7 +97,9 @@
                                     <td>code</td>
 
                                     <td> {{ $rec_time->user->name }} </td>
-                                    <td> {{ date('D d-m-Y',strtotime($rec_time->date)) }}</td>
+                                    <td>
+                                        {{ date('D d-M-Y',strtotime($rec_time->date)) }}
+                                    </td>
                                     <td> {{ $rec_time->full_time }}</td>
 
                                     @php
@@ -144,6 +146,7 @@
                                                 class="fa fa-circle fs-9px fa-fw me-5px"></i>
                                             {{ $rec_time->status_name }}</span>
                                     </td>
+                                    <td>{{ $rec_time->explain }}</td>
 
                                     <td width="1%" class="text-nowrap">
 

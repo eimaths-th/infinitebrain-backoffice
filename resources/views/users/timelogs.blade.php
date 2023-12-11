@@ -85,10 +85,13 @@
                                 <th data-orderable="false">Old Date</th>
                                 <th data-orderable="false">Old Time</th>
                                 <th data-orderable="false">Old Staus</th>
+                                <th data-orderable="false">หมายเหตุเก่า</th>
                                 <th class="nowrap" data-orderable="false">Action</th>
                                 <th data-orderable="false">New Date</th>
                                 <th data-orderable="false">New Time</th>
                                 <th data-orderable="false">New Staus</th>
+                                <th data-orderable="false">หมายเหตุใหม่</th>
+
                                 <th>edit By</th>
                                 {{-- <th>Precursor</th>  --}}
                             </tr>
@@ -146,7 +149,7 @@
                                                 class="fa fa-circle fs-9px fa-fw me-5px"></i>
                                             {{ $rec_time->old_status_name }}</span>
                                     </td>
-
+                                    <td> {{ $rec_time->old_explain }}</td>
                                     <td width="1%" class="text-nowrap">
                                         @if ($rec_time->action == 'update')
                                             แก้ไขเป็น
@@ -225,6 +228,8 @@
                                                 class="fa fa-circle fs-9px fa-fw me-5px"></i>
                                             {{ $rec_time->new_status_name }}</span>
                                     </td>
+                                    <td> {{ $rec_time->new_explain }}</td>
+
                                     <td> {{ $rec_time->approv->name }} </td>
 
                                 </tr>

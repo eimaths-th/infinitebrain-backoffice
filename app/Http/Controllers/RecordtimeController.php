@@ -133,13 +133,14 @@ class RecordtimeController extends Controller
 
         // dd($status_id);
 
-        // dd($request->get('date'));
+        // dd($request);
         $status = Statuswork::find($status_id);
 
         $rect = new Recordtime([
             'user_id' => $user->id,
             'type_user' => $type,
             'date' => $request->get('date'),
+            'explain' => $request->get('explain'),
             //'unit' => '',
             'stime' => $stime,
             'etime' => $etime,
@@ -265,6 +266,8 @@ class RecordtimeController extends Controller
             'stime' => $stime,
             'etime' => $etime,
             'status' => $status->id,
+            'explain' => $request->get('explain'),
+
             'status_name' => $status->name
         ]);
 
@@ -279,12 +282,14 @@ class RecordtimeController extends Controller
                 'old_etime'         => $originalAttributes['etime'],
                 'old_status'        => $originalAttributes['status'],
                 'old_status_name'   => $originalAttributes['status_name'],
+                'old_explain'       => $originalAttributes['explain'],
 
                 'new_date'          => $oldData->date,
                 'new_stime'         => $oldData->stime,
                 'new_etime'         => $oldData->etime,
                 'new_status'        => $status->id,
                 'new_status_name'   => $status->name,
+                'new_explain'       => $oldData->explain,
 
                 'action'            => 'update',
                 'approv_id'         => auth()->user()->id,

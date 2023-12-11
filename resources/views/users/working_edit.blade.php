@@ -90,6 +90,8 @@
                 </div>
             </div>
         </div>
+        <textarea name="explain" id="explain" cols="30" rows="5" class="form-control" placeholder="หมายเหตุ">{{ $rect->explain }}</textarea>
+
 
     </div>
     <!-- Modal footer -->

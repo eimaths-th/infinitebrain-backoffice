@@ -28,7 +28,7 @@ class Recordtime extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'type_user', 'date', 'stime', 'etime', 'status', 'status_name', 'created_at', 'updated_at'];
+    protected $fillable = ['user_id', 'type_user', 'date', 'stime', 'etime', 'status','explain', 'status_name', 'created_at', 'updated_at'];
 
     public function getFullTimeAttribute()
     {

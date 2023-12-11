@@ -14,11 +14,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $old_etime
  * @property string $old_status
  * @property string $old_status_name
+ * @property string $old_explain
  * @property string $new_date
  * @property string $new_stime
  * @property string $new_etime
  * @property string $new_status
  * @property string $new_status_name
+ * @property string $new_explain
  * @property string $action
  * @property integer $approv_id
  * @property string $created_at
@@ -29,7 +31,27 @@ class WorktimeLogs extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'rectime_id', 'type_user', 'old_date', 'old_stime', 'old_etime', 'old_status', 'old_status_name', 'new_date', 'new_stime', 'new_etime', 'new_status', 'new_status_name', 'action', 'approv_id', 'created_at', 'updated_at'];
+    protected $fillable = [
+        'user_id',
+        'rectime_id',
+        'type_user',
+        'old_date',
+        'old_stime',
+        'old_etime',
+        'old_status',
+        'old_status_name',
+        'old_explain',
+        'new_date',
+        'new_stime',
+        'new_etime',
+        'new_status',
+        'new_status_name',
+        'new_explain',
+        'action',
+        'approv_id',
+        'created_at',
+        'updated_at'
+    ];
 
 
     public function getOldFullTimeAttribute()

@@ -127,6 +127,7 @@
                 </div>
             </div>
         </div>
+        <textarea name="explain" id="explain" cols="30" rows="5" class="form-control" placeholder="หมายเหตุ"></textarea>
         {{-- <div class="form-group mt-3">
             <label for="Parent">Explain :</label><br>
             <textarea name="explain" class="form-control" id="explain" rows="5"></textarea>
