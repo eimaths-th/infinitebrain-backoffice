@@ -97,7 +97,7 @@
                                     <td>code</td>
 
                                     <td> {{ $rec_time->user->name }} </td>
-                                    <td> {{ $rec_time->date }} </td>
+                                    <td> {{ date('D d-m-Y',strtotime($rec_time->date)) }}</td>
                                     <td> {{ $rec_time->full_time }}</td>
 
                                     @php
