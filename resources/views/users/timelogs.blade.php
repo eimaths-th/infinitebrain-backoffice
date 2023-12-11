@@ -42,7 +42,7 @@
                     <div class="page-title-icon">
                         <i class="fas fa-clock-rotate-left icon-gradient bg-tempting-azure"></i>
                     </div>
-                    <div>Record Time Infinite Brain
+                    <div>History Record Time Infinite Brain
                         <div class="page-title-subheading">Infinite Brain SetTime Forms Data</div>
                     </div>
                 </div>

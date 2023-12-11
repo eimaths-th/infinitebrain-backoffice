@@ -31,6 +31,8 @@ use App\Http\Controllers\SuperMasterContrller;
 use App\Http\Controllers\TimeController;
 use App\Http\Controllers\WorktimelogsController;
 
+
+use App\Http\Controllers\AttendanceController;
 // use App\Http\Controllers\RouteToggleController;
 
 /*
@@ -44,6 +46,8 @@ use App\Http\Controllers\WorktimelogsController;
 |
 */
 
+Route::get('/home3', [HomeController::class, 'home3']);
+Route::post('/attendance/import', [AttendanceController::class, 'import']);
 
 Route::group(['middleware' => 'check.opening.date.time'], function () {
 

@@ -28,7 +28,7 @@
 @endsection
 
 @section('content')
-    
+
 
     <div class="app-page-title">
         <div class="page-title-wrapper">
@@ -476,9 +476,9 @@
                                             <div class="widget-heading text-nowrap text-danger">ลากิจ</div>
                                             <div class="widget-subheading">
                                                 @php
-                                                    $sumc = 2;
+                                                    $sumc = 3;
                                                     if (isset($rec_times['ลากิจ'])) {
-                                                        $sumc = 2 - $rec_times['ลากิจ'];
+                                                        $sumc = 3 - $rec_times['ลากิจ'];
                                                     }
                                                 @endphp
                                                 คงเหลือ {{ $sumc }} ครั้ง
@@ -765,9 +765,9 @@
                                             <div class="widget-heading text-nowrap text-danger">ลากิจ</div>
                                             <div class="widget-subheading">
                                                 @php
-                                                    $sumc = 2;
+                                                    $sumc = 3;
                                                     if (isset($rec_times_year['ลากิจ']) ) {
-                                                        $sumc = 2 - $rec_times_year['ลากิจ'];
+                                                        $sumc = 3 - $rec_times_year['ลากิจ'];
                                                     }
                                                 @endphp
                                                 คงเหลือ {{ $sumc }} ครั้ง

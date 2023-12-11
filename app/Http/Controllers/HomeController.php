@@ -446,4 +446,12 @@ class HomeController extends Controller
 
         ]);
     }
+
+    public function home3()
+    {
+
+
+        return view('addexcel');
+    }
+
 }
