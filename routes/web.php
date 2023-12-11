@@ -68,6 +68,7 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
 
 Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/rec-time-logs', [WorktimelogsController::class, 'index'])->name('timelogs');
+    Route::get('/search-report-month-time', [RecordtimeController::class, 'search_reportMonthTime'])->name('search_reportMonthTime');
     Route::get('/report-month-time', [HomeController::class, 'reportTime'])->name('reportTime');
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
     Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');

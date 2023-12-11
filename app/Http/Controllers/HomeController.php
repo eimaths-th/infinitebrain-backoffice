@@ -440,8 +440,8 @@ class HomeController extends Controller
             'rec_timess' => $rec_timess,
             // 'rec_times' => $rec_times,
             'rec_times_year' => $rec_times_year,
-            'currentYear' => $currentYear,
-            'currentMonth' => $currentMonth,
+            'year' => $currentYear,
+            'month' => $currentMonth,
             'stwork' => $stwork,
 
         ]);

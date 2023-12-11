@@ -164,6 +164,53 @@ class RecordtimeController extends Controller
         //
     }
 
+    public function search_reportMonthTime(Request $request)
+    {
+
+
+        $month = $request->month;
+        $year = $request->year;
+        if ($month) {
+            # code...
+            $rec_timess = Recordtime::whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->orderBy('user_id', 'asc')
+                ->get()
+                ->groupBy('user_id');
+            $rec_times_year = Recordtime::whereYear('date', $year)
+                ->orderBy('user_id', 'asc')
+                ->get()
+                ->groupBy('user_id');
+            $stwork = Statuswork::orderBy('id', 'asc')->get();
+        } else {
+            # code...
+            $month = date('m');
+            $rec_timess = Recordtime::whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->orderBy('user_id', 'asc')
+                ->get()
+                ->groupBy('user_id');
+            $rec_times_year = Recordtime::whereYear('date', $year)
+                ->orderBy('user_id', 'asc')
+                ->get()
+                ->groupBy('user_id');
+            $stwork = Statuswork::orderBy('id', 'asc')->get();
+        }
+
+
+        // dd($rec_timess);
+
+        return view('users.def_working_report', [
+            'rec_timess' => $rec_timess,
+            // 'rec_times' => $rec_times,
+            'rec_times_year' => $rec_times_year,
+            'year' => $year,
+            'month' => $month,
+            'stwork' => $stwork,
+
+        ]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

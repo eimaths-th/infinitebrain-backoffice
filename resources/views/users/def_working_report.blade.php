@@ -63,7 +63,7 @@
                 <div class="tab-content panel m-0 rounded-0 p-3">
                     <!-- BEGIN tab-pane -->
                     <div class="tab-pane fade active show" id="default-tab-1">
-                        <form action="{{ route('searchr_reportMonthStd') }}" method="GET">
+                        <form action="{{ route('search_reportMonthTime') }}" method="GET">
                             @csrf
                             <div class="row mb-3">
 
@@ -115,7 +115,7 @@
                         </form>
 
                         <h3 class=""><i class="fa fa-cog"></i> ตารางการมาทำงาน
-                            {{ date('F-Y') }}
+                            {{ date('F-Y', strtotime("$year-$month")) }}
                         </h3>
                         <table style="width: 100%;" id="Listview"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-4 Listview">
@@ -154,7 +154,7 @@
                     </div>
 
                     <div class="tab-pane fade" id="default-tab-2">
-                        <form action="{{ route('searchr_reportMonthStd') }}" method="GET">
+                        <form action="{{ route('search_reportMonthTime') }}" method="GET">
                             @csrf
                             <div class="row mb-3">
                                 @if ($errors->any())
@@ -188,7 +188,7 @@
                             </div>
                         </form>
 
-                        <h3 class=""><i class="fa fa-cog"></i> ตารางการมาทำงานปี {{ date('Y') }} </h3>
+                        <h3 class=""><i class="fa fa-cog"></i> ตารางการมาทำงานปี {{ $year }} </h3>
                         <table style="width: 100%;" id="Listview"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-4 Listview">
 
