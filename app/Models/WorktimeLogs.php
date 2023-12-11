@@ -29,5 +29,47 @@ class WorktimeLogs extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id','rectime_id', 'type_user', 'old_date', 'old_stime', 'old_etime', 'old_status', 'old_status_name', 'new_date', 'new_stime', 'new_etime', 'new_status', 'new_status_name', 'action', 'approv_id', 'created_at', 'updated_at'];
+    protected $fillable = ['user_id', 'rectime_id', 'type_user', 'old_date', 'old_stime', 'old_etime', 'old_status', 'old_status_name', 'new_date', 'new_stime', 'new_etime', 'new_status', 'new_status_name', 'action', 'approv_id', 'created_at', 'updated_at'];
+
+
+    public function getOldFullTimeAttribute()
+    {
+        if ($this->old_stime && $this->old_etime) {
+            # code...
+            return 'เข้า : ' . $this->old_stime . ' ออก : ' . $this->old_etime;
+        } elseif (!$this->old_stime && $this->old_etime) {
+            # code...
+            return 'เข้า : ไม่พบข้อมูล ออก : ' . $this->old_etime;
+        } elseif ($this->old_stime && !$this->old_etime) {
+            # code...
+            return 'เข้า : ' . $this->old_stime . ' ออก : ไม่พบข้อมูล';
+        } else {
+            return 'ไม่พบข้อมูล';
+            // return 'เข้า : ' . $this->stime . ' ออก : ' . $this->etime;
+        }
+    }
+    public function getNewFullTimeAttribute()
+    {
+        if ($this->new_stime && $this->new_etime) {
+            # code...
+            return 'เข้า : ' . $this->new_stime . ' ออก : ' . $this->new_etime;
+        } elseif (!$this->new_stime && $this->new_etime) {
+            # code...
+            return 'เข้า : ไม่พบข้อมูล ออก : ' . $this->new_etime;
+        } elseif ($this->new_stime && !$this->new_etime) {
+            # code...
+            return 'เข้า : ' . $this->new_stime . ' ออก : ไม่พบข้อมูล';
+        } else {
+            return 'ไม่พบข้อมูล';
+            // return 'เข้า : ' . $this->stime . ' ออก : ' . $this->etime;
+        }
+    }
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+    public function approv()
+    {
+        return $this->hasOne(User::class, 'id', 'approv_id');
+    }
 }

@@ -666,6 +666,12 @@
                                             รายงานการมาทำงาน
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('timelogs') }}">
+                                            <i class="metismenu-icon"></i>
+                                            ประวัติการแก้ไขเวลาเข้างาน
+                                        </a>
+                                    </li>
                                 @endif
 
                             </ul>

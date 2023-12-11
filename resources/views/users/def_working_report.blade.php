@@ -137,7 +137,7 @@
                                 @foreach ($rec_timess as $user_id => $records)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>{{ $user_id }}</td>
+                                        <td>code</td>
                                         <td>{{ $records->first()->user->name }}</td>
 
                                         @foreach ($stwork as $status)
@@ -209,7 +209,7 @@
                                 @foreach ($rec_times_year as $user_id => $records)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>{{ $user_id }}</td>
+                                        <td>code</td>
                                         <td>{{ $records->first()->user->name }}</td>
 
                                         @foreach ($stwork as $status)
