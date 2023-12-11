@@ -50,11 +50,11 @@
                     <div class="d-inline-block dropdown">
 
 
-                        <a href="javascript:;" class="btn btn-success"
+                        {{-- <a href="javascript:;" class="btn btn-success"
                             onclick="formModal_1('{{ route('recordtime.create') }}')" data-bs-toggle="tooltip"
                             data-bs-trigger="hover" data-bs-container="body" data-bs-title="Create New Student">
                             <i class="fas fa-user-plus"></i> Add Record
-                        </a>
+                        </a> --}}
 
                         {{-- <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="ImportButton"><i
                                 class="fa fa-file-excel"></i> Import Excel
@@ -89,7 +89,7 @@
                                 <th data-orderable="false">New Date</th>
                                 <th data-orderable="false">New Time</th>
                                 <th data-orderable="false">New Staus</th>
-                                <th>By</th>
+                                <th>edit By</th>
                                 {{-- <th>Precursor</th>  --}}
                             </tr>
                         </thead>
@@ -148,7 +148,11 @@
                                     </td>
 
                                     <td width="1%" class="text-nowrap">
-                                        {{ $rec_time->action }}
+                                        @if ($rec_time->action == 'update')
+                                            แก้ไขเป็น
+                                        @else
+                                            {{ $rec_time->action }}
+                                        @endif
 
                                         {{-- <a href="javascript:;" class="btn btn-xs btn-warning"
                                             onclick="formModal_2('{{ route('recordtime.edit', [$rec_time->id]) }}')"
