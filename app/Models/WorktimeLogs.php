@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $id
  * @property integer $user_id
+ * @property integer $rectime_id
  * @property string $type_user
  * @property string $old_date
  * @property string $old_stime
@@ -28,5 +29,5 @@ class WorktimeLogs extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'type_user', 'old_date', 'old_stime', 'old_etime', 'old_status', 'old_status_name', 'new_date', 'new_stime', 'new_etime', 'new_status', 'new_status_name', 'action', 'approv_id', 'created_at', 'updated_at'];
+    protected $fillable = ['user_id','rectime_id', 'type_user', 'old_date', 'old_stime', 'old_etime', 'old_status', 'old_status_name', 'new_date', 'new_stime', 'new_etime', 'new_status', 'new_status_name', 'action', 'approv_id', 'created_at', 'updated_at'];
 }
