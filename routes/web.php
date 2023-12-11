@@ -29,6 +29,7 @@ use App\Http\Controllers\RouteToggleController;
 use App\Http\Controllers\StdlogController;
 use App\Http\Controllers\SuperMasterContrller;
 use App\Http\Controllers\TimeController;
+use App\Http\Controllers\WorktimelogsController;
 
 // use App\Http\Controllers\RouteToggleController;
 
@@ -62,6 +63,7 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
 });
 
 Route::group(['middleware' => ['auth', 'checkUserId']], function () {
+    Route::get('/rec-time-logs', [WorktimelogsController::class, 'index'])->name('timelogs');
     Route::get('/report-month-time', [HomeController::class, 'reportTime'])->name('reportTime');
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
     Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');

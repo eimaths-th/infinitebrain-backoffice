@@ -105,7 +105,7 @@ class RecordtimeController extends Controller
                 // }
 
                 if (($type == 1) || ($dayOfWeek == "Saturday" || $dayOfWeek == "Sunday")) {
-                    
+
                     $startOfWorkday = Carbon::createFromTime(9, 10, 0); // 9:10 AM start work user type 1
                     $endOfWorkday = Carbon::createFromTime(16, 59, 59); // 5:00 PM
 
@@ -271,6 +271,7 @@ class RecordtimeController extends Controller
         if ($originalAttributes != $oldData->getAttributes()) {
             WorktimeLogs::create([
                 'user_id'           => $oldData->user_id, //not change
+                'rectime_id'        => $id, //not change
                 'type_user'         => $oldData->type_user, //not change
 
                 'old_date'          => $originalAttributes['date'],
