@@ -756,12 +756,12 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="G4-ML2024149 : 500 baht">G4-ML2024149 : 500 baht</option>
-                                                <option value="G5-ML2024258 : 500 baht">G5-ML2024258 : 500 baht</option>
-                                                <option value="G6-ML2024773 : 500 baht">G6-ML2024773 : 500 baht</option>
-                                                <option value="G7-ML2024548 : 500 baht">G7-ML2024548 : 500 baht</option>
-                                                <option value="G8-ML2024674 : 500 baht">G8-ML2024674 : 500 baht</option>
-                                                <option value="G9-ML2024182 : 500 baht">G9-ML2024182 : 500 baht</option>
+                                                <option value="G4-Grade4 : 500 baht">G4-Grade4 : 500 baht</option>
+                                                <option value="G5-Grade5 : 500 baht">G5-Grade5 : 500 baht</option>
+                                                <option value="G6-Grade6 : 500 baht">G6-Grade6 : 500 baht</option>
+                                                <option value="G7-Grade7 : 500 baht">G7-Grade7 : 500 baht</option>
+                                                <option value="G8-Grade8 : 500 baht">G8-Grade8 : 500 baht</option>
+                                                <option value="G9-Grade9 : 500 baht">G9-Grade9 : 500 baht</option>
 
 
                                             </select>
