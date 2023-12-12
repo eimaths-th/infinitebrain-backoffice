@@ -971,32 +971,32 @@
                                                                     <div
                                                                         style="direction:ltr;font-family:Inter, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
                                                                         <p style="margin: 0;">
-                                                                            @if ($data->package == 'G4-ML2024149 : 500 baht')
+                                                                            @if ($data->package == 'G4-Grade4 : 500 baht')
                                                                                 <a target="_blank"
                                                                                     href="https://metaknowledge.co.th/math-league/past-paper/grade-4/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-4/
                                                                                 </a>
-                                                                            @elseif ($data->package == 'G5-ML2024258 : 500 baht')
+                                                                            @elseif ($data->package == 'G5-Grade5 : 500 baht')
                                                                                 <a target="_blank"
                                                                                     href="https://metaknowledge.co.th/math-league/past-paper/grade-5/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-5/
                                                                                 </a>
-                                                                            @elseif ($data->package == 'G6-ML2024773 : 500 baht')
+                                                                            @elseif ($data->package == 'G6-Grade6 : 500 baht')
                                                                                 <a target="_blank"
                                                                                     href="https://metaknowledge.co.th/math-league/past-paper/grade-6/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-6/
                                                                                 </a>
-                                                                            @elseif ($data->package == 'G7-ML2024548 : 500 baht')
+                                                                            @elseif ($data->package == 'G7-Grade7 : 500 baht')
                                                                                 <a target="_blank"
                                                                                     href="https://metaknowledge.co.th/math-league/past-paper/grade-7/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-7/
                                                                                 </a>
-                                                                            @elseif ($data->package == 'G8-ML2024674 : 500 baht')
+                                                                            @elseif ($data->package == 'G8-Grade8 : 500 baht')
                                                                                 <a target="_blank"
                                                                                     href="https://metaknowledge.co.th/math-league/past-paper/grade-8/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-8/
                                                                                 </a>
-                                                                            @elseif ($data->package == 'G9-ML2024182 : 500 baht')
+                                                                            @elseif ($data->package == 'G9-Grade9 : 500 baht')
                                                                                 <a target="_blank"
                                                                                     href="https://metaknowledge.co.th/math-league/past-paper/grade-9/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-9/
