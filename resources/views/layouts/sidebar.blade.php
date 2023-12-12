@@ -383,7 +383,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('receipts_form', ['sfield' => 'TT']) }}">
+                                <a href="{{ route('receipts_form', ['sfield' => '17']) }}">
                                     <i class="metismenu-icon"></i>
                                     Test Field
                                 </a>
@@ -485,7 +485,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('receipts', ['sfield' => 'TT']) }}">
+                                <a href="{{ route('receipts', ['sfield' => '17']) }}">
                                     <i class="metismenu-icon"></i>
                                     Test Field
                                 </a>

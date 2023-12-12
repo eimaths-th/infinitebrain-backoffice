@@ -21,7 +21,7 @@ class Receipt_RunningNumber extends Model
 
     const TYPES = [
         '0',
-        'TT',
+        '17',
         '2',
         '4',
         '5',
@@ -39,7 +39,7 @@ class Receipt_RunningNumber extends Model
 
     const TYPE_PREFIX = [
         '0' => '0',
-        'TT' => 'TT',
+        '17' => '17',
         '2' => '2',
         '4' => '4',
         '5' => '5',

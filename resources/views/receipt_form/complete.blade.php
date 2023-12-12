@@ -2,7 +2,6 @@
 
 @section('style')
     <style>
-
         body {
             background-color: #112d53;
         }
@@ -45,7 +44,6 @@
         .bg-light2 {
             background-color: #e4efff;
         }
-
     </style>
 @endsection
 
@@ -56,23 +54,25 @@
             <div class="col-md-9">
                 <div class="card bg-light2 mb-3 ">
 
-                        <div class="card-body">
-                            <br>
-                            <div align="center"><img src="{{ asset('images/Thankyou-iconV2.png') }}"
-                                alt="..." height="200" ></div>
-                            <div class="text-center">
-                                <h1 class="card-title form_header">Thank You!</h1>
+                    <div class="card-body">
+                        <br>
+                        <div align="center"><img src="{{ asset('images/Thankyou-iconV2.png') }}" alt="..." height="200">
+                        </div>
+                        <div class="text-center">
+                            <h1 class="card-title form_header">Thank You!</h1>
+                            @if ($sfield == 'test_field')
+                                <p class="card-text form_sub_header"><b>กรุณารอรับ Email ตอบกลับภายใน 72 ชม.</b></p>
+                            @else
                                 <p class="card-text form_sub_header"><b>Your submission has been received.</b></p>
-                            </div>
-                            <br>
-
-
-
+                            @endif
                         </div>
-                        <div class="card-footer text-center">
-                           <br><br>
-                           <a class="btn btn-lg btn-primary" href="{{ route($sfield) }}">Go Back To Form</a><br><br>
-                        </div>
+                        <br>
+
+                    </div>
+                    <div class="card-footer text-center">
+                        <br><br>
+                        <a class="btn btn-lg btn-primary" href="{{ route($sfield) }}">Go Back To Form</a><br><br>
+                    </div>
                 </div>
 
             </div>

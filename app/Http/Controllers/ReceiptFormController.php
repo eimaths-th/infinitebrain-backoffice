@@ -26,7 +26,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class ReceiptFormController extends Controller
 {
     const sfielda = array(
-        'TT' => 'test_field',
+        '17' => 'test_field',
         '0' => 'reward',
         '2' => 'GMEC',
         '4' => 'IMOCSEA',
@@ -302,28 +302,46 @@ class ReceiptFormController extends Controller
     public function create(Request $request)
     {
         //
-        // if ($request->get('sfield') === "16") {
-        //     dd('error');
-        // }
-        // dd($request);
+
+
         // $test = Receipt::find(1893);
         // dd($test->recform->id);
         $this->check_permission();
-        $validator =  Validator::make($request->all(), [
-            'submission_date' => 'required|string',
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'street_address' => 'required|string',
-            //'city' => 'required|string',
-            //'province' => 'required|string',
-            'postcode' => 'required|string',
-            'name_parent' => 'required|string',
-            'mobile' => 'required|string',
-            'package' => 'required|string',
-            //'file_att' => 'required|string',
-            'description' => 'required|string',
-            'grade' => 'required|string',
-        ]);
+        if ($request->get('sfield') === "17") {
+            $validator =  Validator::make($request->all(), [
+                'submission_date' => 'required|string',
+                'first_name' => 'required|string',
+                'last_name' => 'required|string',
+                // 'street_address' => 'required|string',
+                //'city' => 'required|string',
+                //'province' => 'required|string',
+                // 'postcode' => 'required|string',
+                // 'name_parent' => 'required|string',
+                'mobile' => 'required|string',
+                'package' => 'required|string',
+                //'file_att' => 'required|string',
+                'description' => 'required|string',
+                'grade' => 'required|string',
+            ]);
+        } else {
+            # code...
+            $validator =  Validator::make($request->all(), [
+                'submission_date' => 'required|string',
+                'first_name' => 'required|string',
+                'last_name' => 'required|string',
+                'street_address' => 'required|string',
+                //'city' => 'required|string',
+                //'province' => 'required|string',
+                'postcode' => 'required|string',
+                'name_parent' => 'required|string',
+                'mobile' => 'required|string',
+                'package' => 'required|string',
+                //'file_att' => 'required|string',
+                'description' => 'required|string',
+                'grade' => 'required|string',
+            ]);
+        }
+
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
@@ -346,10 +364,18 @@ class ReceiptFormController extends Controller
         $receipt = new Receipt($request->all());
         $receipt->recform_id =  $form->id;
         $receipt->save();
+        $adminEmail = $request->get('email');
 
+        Mail::to($adminEmail)->send(new ContactMail($form));
+        // dd(
+        //     $request,
+        //     $adminEmail
+        // );
 
         //$form = ReceiptForm::find($id);
-        $form->generate =  '1';
+
+
+        // $form->generate =  '1';
         $form->rec_id =  $receipt->id;
         $form->save();
 
@@ -396,13 +422,40 @@ class ReceiptFormController extends Controller
         ReceiptForm::find($request->get('fid'))->update(['file_att' => $stu]);
         Receipt::find($receipt->id)->update(['file_att' => $urlbr]);
         //add more images
-
-
         $rid = $receipt->id;
 
-        $out_price = $this->delete_all_between('(', ')', $request->get('package'));
 
-        $price = preg_replace("/[^0-9.]/", "", $out_price);
+
+        if ($request->get('sfield') === "17") {
+            # code...
+            $price = 500;
+        } else {
+            $out_price = $this->delete_all_between('(', ')', $request->get('package'));
+            $price = preg_replace("/[^0-9.]/", "", $out_price);
+            # code...
+        }
+
+        // $package = $request->get('package');
+        // $parts1 = explode(' : ', $package); //500 baht
+        // $parts2 = explode(' baht', $parts1[1]);
+        // $price1 = !empty($parts2[0]) ? intval($parts2[0]) : null;
+
+
+        // $package = $request->get('package');
+
+        // // Define a regular expression pattern to match the desired format
+        // $pattern = '/^([^\s]+) : (\d+) baht$/';
+
+        // // Use preg_match to extract the message and price from the package string
+        // if (preg_match($pattern, $package, $matches)) {
+        //     $price2 = intval($matches[2]);
+        //     $message = $matches[1];
+
+        // } else {
+        // }
+
+
+        // dd($price);
 
         if (strtolower($request->get('dcode')) == "meta200") {
             $discount = 200;
@@ -435,7 +488,7 @@ class ReceiptFormController extends Controller
                 $sdes = 'ค่าลงทะเบียนระดับมัธยม';
             }
         } else {
-            if ($request->get('sfield') == 16) {
+            if ($request->get('sfield') == 16 || $request->get('sfield') == 17) {
                 $sdes = '';
             } else {
                 if (str_contains($request->get('description'), 'tutoring')) {
@@ -470,54 +523,100 @@ class ReceiptFormController extends Controller
     {
         //
         // dd($request->get('sfield'));
-        $validator =  Validator::make($request->all(), [
-            // 'firstname' => 'required|string',
-            'firstname' => 'required|string',
-            'lastname' => 'required|string',
-            'nickname' => 'required|string',
-            'birthdate' => 'required|string',
-            'schoolname' => 'required|string',
-            'grade' => 'required|string',
-            'package' => 'required|string',
-            'parent' => 'required|string',
-            'address' => 'required|string',
-            'postcode' => 'required|string',
-            'phone' => 'required|string',
-            'email' => 'required|email',
-            'newsf' => 'required|string',
-        ]);
+        if ($request->get('sfield') == '17') {
+            # code...
+            $validator =  Validator::make($request->all(), [
+                // 'firstname' => 'required|string',
+                'firstname' => 'required|string',
+                'lastname' => 'required|string',
+                // 'nickname' => 'required|string',
+                // 'birthdate' => 'required|string',
+                // 'schoolname' => 'required|string',
+                'grade' => 'required|string',
+                'package' => 'required|string',
+                // 'parent' => 'required|string',
+                // 'address' => 'required|string',
+                // 'postcode' => 'required|string',
+                'phone' => 'required|string',
+                'email' => 'required|email',
+                // 'newsf' => 'required|string',
+            ]);
+        } else {
+            # code...
+            $validator =  Validator::make($request->all(), [
+                // 'firstname' => 'required|string',
+                'firstname' => 'required|string',
+                'lastname' => 'required|string',
+                'nickname' => 'required|string',
+                'birthdate' => 'required|string',
+                'schoolname' => 'required|string',
+                'grade' => 'required|string',
+                'package' => 'required|string',
+                'parent' => 'required|string',
+                'address' => 'required|string',
+                'postcode' => 'required|string',
+                'phone' => 'required|string',
+                'email' => 'required|email',
+                'newsf' => 'required|string',
+            ]);
+        }
+
 
         if ($validator->fails()) {
             //return response()->json(['errors' => $validator->errors()->all()]);
             return back()->withErrors(['errors' => $validator->errors()->all()]);
         }
-        $filesa = $request->get('imgFiles');
-        $filesb = $request->get('imgFiles2');
 
         //print_r($filesa);
         //print_r($filesb);
         //exit();
-        $fileas = "";
-        foreach ($filesa as $filea) {
-            //echo $filea;
-            $oldfile = FileUpload::where('oldname', $filea)->get();
-            $fileas .= $oldfile[0]->filename . "|";
 
-            File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
-            FileUpload::where('filename', $oldfile[0]->filename)->delete();
+        if ($request->get('sfield') == '17') {
+
+            $filesa = $request->get('imgFiles');
+
+            $fileas = "";
+
+
+            $filesb = $request->get('imgFiles2');
+            $filebs = "";
+            foreach ($filesb as $fileb) {
+                //echo $fileb;
+
+                $oldfile = FileUpload::where('oldname', $fileb)->get();
+                $filebs .= $oldfile[0]->filename . "|";
+                File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            }
+            $filebs = rtrim($filebs, "|");
+        } else {
+            # code...
+            $filesa = $request->get('imgFiles');
+            $fileas = "";
+            foreach ($filesa as $filea) {
+                //echo $filea;
+                $oldfile = FileUpload::where('oldname', $filea)->get();
+                $fileas .= $oldfile[0]->filename . "|";
+
+                File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            }
+            $fileas = rtrim($fileas, "|");
+
+
+            $filesb = $request->get('imgFiles2');
+            $filebs = "";
+            foreach ($filesb as $fileb) {
+                //echo $fileb;
+
+                $oldfile = FileUpload::where('oldname', $fileb)->get();
+                $filebs .= $oldfile[0]->filename . "|";
+                File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            }
+            $filebs = rtrim($filebs, "|");
         }
-        $filebs = "";
-        foreach ($filesb as $fileb) {
-            //echo $fileb;
 
-            $oldfile = FileUpload::where('oldname', $fileb)->get();
-            $filebs .= $oldfile[0]->filename . "|";
-            File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
-            FileUpload::where('filename', $oldfile[0]->filename)->delete();
-        }
-
-        $filebs = rtrim($filebs, "|");
-        $fileas = rtrim($fileas, "|");
 
         $receiptForm = new ReceiptForm([
             'sfield' => $request->get('sfield'),
@@ -548,7 +647,8 @@ class ReceiptFormController extends Controller
 
         $adminEmail = $request->get('email');
 
-        if ($request->get('sfield') == 0) {
+        if ($request->get('sfield') == 0 || $request->get('sfield') == 17) {
+            // dd($request);
         } else {
             Mail::to($adminEmail)->send(new ContactMail($receiptForm));
         }

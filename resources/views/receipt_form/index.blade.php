@@ -923,6 +923,7 @@
                         postcode: $('#AddPostcode').val(),
                         name_parent: $('#AddParent').val(),
                         mobile: $('#AddMobile').val(),
+                        email: $('#AddEmail').val(),
                         package: $('#AddPackage').val(),
                         contest: $('#AddContest').val(),
                         file_att: $('#AddFile').val(),
@@ -1078,7 +1079,7 @@
 
         })
 
-        
+
         var myDropzone = {};
         Dropzone.options.myAwesomeDropzone = {
             url: '{{ route('form.upload') }}',

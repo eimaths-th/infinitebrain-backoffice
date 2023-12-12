@@ -30,7 +30,7 @@ class ReceiptController extends Controller
     const BAHT_TEXT_SATANG = 'สตางค์';
     const BAHT_TEXT_POINT = 'จุด';
     const sfielda = array(
-        'TT' => 'test_field',
+        '17' => 'test_field',
         '0' => 'reward',
         '2' => 'GMEC',
         '4' => 'IMOCSEA',
@@ -47,7 +47,7 @@ class ReceiptController extends Controller
         '16' => 'Mathleague',
     );
     const sfieldas = array(
-        'TT' => 'Test Field',
+        '17' => 'Test Field',
         '0' => 'IMG Reward',
         '2' => 'G',
         '4' => 'J',
@@ -762,7 +762,7 @@ class ReceiptController extends Controller
             ->orderBy("receipt_details.id", "asc")
             ->get();
 
-
+        
         $all_price = 0;
         $dis_total = 0;
         $receipt_detail_arr = array();
