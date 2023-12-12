@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                        background-size: 15px;
-                                                                                    }*/
+                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                            background-size: 15px;
+                                                                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                        border-color: var(--color-invalid);
-                                                                                    }*/
+                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                            border-color: var(--color-invalid);
+                                                                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                        display: block;
-                                                                                    }*/
+                                                                                                            display: block;
+                                                                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,9 +531,9 @@
     </style>
     <style>
         /* .custom-image {
-                                    width: 395px;
-                                    height: 395px;
-                                } */
+                                                        width: 395px;
+                                                        height: 395px;
+                                                    } */
 
         .custom-image {
             width: 100%;
@@ -566,7 +566,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h2 class="card-title form_header">ASIAROPE 2023 Registration Form</h2>
+                                <h2 class="card-title form_header">Test ML Form</h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -574,22 +574,45 @@
 
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
-                                    <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">Asiarope 2023 Registration
-                                                    Form</span></strong></span></p>
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong> 14 Oct- 30 Nov</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;16 DEC 2023</span>
+                                    <p style="text-align: center;"><span style="color: #6351a2;">
+                                            <strong>
+                                                <span style="text-decoration: underline;">
+                                                    Test ML Form
+                                                </span>
+                                            </strong>
+                                        </span>
                                     </p>
-
+                                    <p style="text-align: left;">
+                                        <span style="color: #6351a2;">
+                                            <strong> Registration Date: </strong>
+                                            {{-- 14 Oct- 30 Nov --}}
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <span style="color: #6351a2;">
+                                            <strong> Exam Date: </strong>
+                                            {{-- &nbsp;16 DEC 2023 --}}
+                                        </span>
+                                    </p>
                                     <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
-                                    <p><span style="color: #6351a2;"><strong>Test:</strong> 850 baht</span>
+                                    {{-- <p>
+                                        <span style="color: #6351a2;">
+                                            <strong>Test:</strong>
+                                            850 baht
+                                        </span>
                                     </p>
-                                    <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1250 bath (1 class 2 hours)</span><br></p>
+                                    <p>
+                                        <span style="color: #6351a2;">
+                                            <strong>Test+tutoring class:</strong>
+                                        </span>
+                                        <span style="color: #6351a2;">
+                                            1250 bath (1 class 2 hours)
+                                        </span>
+                                        <br>
+                                    </p> --}}
                                     <p>&nbsp;</p>
 
-                                    <div class="row">
+                                    {{-- <div class="row">
                                         <div class="col-lg-6">
                                             <img src="images/ASIAROPE-01.jpg" class="custom-image mb-3" alt="Image 1">
 
@@ -599,9 +622,12 @@
 
 
                                         </div>
-                                    </div>
+                                    </div> --}}
 
-                                    <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร ASIAROPE</b> <br>
+                                    {{-- <p>
+                                        <span style="color: #6351a2;">
+                                            <b>เกณฑ์การรับสมัคร ASIAROPE</b>
+                                            <br>
 
                                             รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
                                             ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน
@@ -610,7 +636,9 @@
                                             รร.นานาชาติใช้ระดับชั้นตามปีการศึกษาปัจจุบัน <br>
 
                                             ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
-                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p>
+                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์
+                                        </span>
+                                    </p> --}}
                                 </div>
                             </div>
 
@@ -755,7 +783,7 @@
                                     <div class="col-md-6 col-sm-12">
                                         <div class="position-relative form-group" style="padding-top:0px;">
                                             <label class="form-label form-label-top form-label-auto" for="grade">E-mail
-                                               <span class="form-required">*</span></label>
+                                                <span class="form-required">*</span></label>
                                             <input type="email" class="form-control" name="email" id="email"
                                                 value="" maxlength="70" required>
                                             <label class="form-sub-label" style="min-height:13px"
