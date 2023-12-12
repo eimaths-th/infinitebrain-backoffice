@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                background-size: 15px;
-                                                                                                            }*/
+                                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                        background-size: 15px;
+                                                                                                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                border-color: var(--color-invalid);
-                                                                                                            }*/
+                                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                        border-color: var(--color-invalid);
+                                                                                                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                display: block;
-                                                                                                            }*/
+                                                                                                                        display: block;
+                                                                                                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,9 +531,9 @@
     </style>
     <style>
         /* .custom-image {
-                                                            width: 395px;
-                                                            height: 395px;
-                                                        } */
+                                                                    width: 395px;
+                                                                    height: 395px;
+                                                                } */
 
         .custom-image {
             width: 100%;
@@ -574,14 +574,18 @@
 
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
-                                    <p style="text-align: center;"><span style="color: #6351a2;">
+                                    <h4 style="text-align: center;"><span style="color: #6351a2;">
                                             <strong>
                                                 <span style="text-decoration: underline;">
-                                                    Test ML Form
+                                                    Part Papers Order
                                                 </span>
-                                            </strong>
+                                            </strong> <br>
                                         </span>
-                                    </p>
+                                    </h4>
+                                    <h5 style="text-align: center;"><span style="color: #6351a2;">
+
+                                            ข้อสอบย้อนหลัง 5 ปี พร้อมเฉลยแบบละเอียด ราคาเพียง 500 บาท
+                                    </h5>
                                     {{-- <p style="text-align: left;">
                                         <span style="color: #6351a2;">
                                             <strong> Registration Date: </strong>
@@ -594,14 +598,14 @@
                                             &nbsp;16 DEC 2023
                                         </span>
                                     </p> --}}
-                                    <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
-                                    <p>
+                                    {{-- <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p> --}}
+                                    {{-- <p>
                                         <span style="color: #6351a2;">
                                             <b>Math League :</b>
                                             Part Papers Order
                                             ข้อสอบย้อนหลัง 5 ปี พร้อมเฉลยแบบละเอียด ราคาเพียง 500 บาท
                                         </span>
-                                    </p>
+                                    </p> --}}
                                     {{-- <p>
                                         <span style="color: #6351a2;">
                                             <strong>Test+tutoring class:</strong>
@@ -611,7 +615,7 @@
                                         </span>
                                         <br>
                                     </p> --}}
-                                    <p>&nbsp;</p>
+                                    {{-- <p>&nbsp;</p> --}}
 
                                     {{-- <div class="row">
                                         <div class="col-lg-6">
