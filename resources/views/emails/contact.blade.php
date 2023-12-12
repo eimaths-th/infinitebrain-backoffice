@@ -498,7 +498,8 @@
                                                                     style="text-align:left;width:100%;">
                                                                     <h2
                                                                         style="margin: 0; font-size: 14px; font-weight: 400;  text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
-                                                                        <span class="tinyMce-placeholder">Grade / ระดับชั้น</span>
+                                                                        <span class="tinyMce-placeholder">Grade /
+                                                                            ระดับชั้น</span>
                                                                     </h2>
                                                                 </td>
                                                             </tr>
@@ -780,7 +781,7 @@
                                                                         <span
                                                                             class="tinyMce-placeholder">E-mail(กรุณาตรวจสอบที่<br>อยู่อีเมลให้ถูกต้อง
                                                                             หาก<br>กรอกผิด
-                                                                            จะไม่สามารถส่งข้อมูลในการสอบได้)</span>
+                                                                            จะไม่สามารถส่งข้อมูลในการโหลดข้อสอบได้)</span>
                                                                     </h2>
                                                                 </td>
                                                             </tr>
@@ -947,7 +948,8 @@
                                                             <tr>
                                                                 <td class="pad"
                                                                     style="text-align:left;width:100%;">
-                                                                    <h2 style="margin: 0;  font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 50px;">
+                                                                    <h2
+                                                                        style="margin: 0;  font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 50px;">
                                                                         <span class="tinyMce-placeholder">
 
                                                                             ลิ้งสำหรับ Download ข้อสอบ
@@ -970,27 +972,33 @@
                                                                         style="direction:ltr;font-family:Inter, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
                                                                         <p style="margin: 0;">
                                                                             @if ($data->package == 'G4-ML2024149 : 500 baht')
-                                                                                <a target="_blank" href="https://metaknowledge.co.th/math-league/past-paper/grade-4/">
+                                                                                <a target="_blank"
+                                                                                    href="https://metaknowledge.co.th/math-league/past-paper/grade-4/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-4/
                                                                                 </a>
                                                                             @elseif ($data->package == 'G5-ML2024258 : 500 baht')
-                                                                                <a target="_blank"  href="https://metaknowledge.co.th/math-league/past-paper/grade-5/">
+                                                                                <a target="_blank"
+                                                                                    href="https://metaknowledge.co.th/math-league/past-paper/grade-5/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-5/
                                                                                 </a>
                                                                             @elseif ($data->package == 'G6-ML2024773 : 500 baht')
-                                                                                <a target="_blank"  href="https://metaknowledge.co.th/math-league/past-paper/grade-6/">
+                                                                                <a target="_blank"
+                                                                                    href="https://metaknowledge.co.th/math-league/past-paper/grade-6/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-6/
                                                                                 </a>
                                                                             @elseif ($data->package == 'G7-ML2024548 : 500 baht')
-                                                                                <a target="_blank" href="https://metaknowledge.co.th/math-league/past-paper/grade-7/">
+                                                                                <a target="_blank"
+                                                                                    href="https://metaknowledge.co.th/math-league/past-paper/grade-7/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-7/
                                                                                 </a>
                                                                             @elseif ($data->package == 'G8-ML2024674 : 500 baht')
-                                                                                <a target="_blank" href="https://metaknowledge.co.th/math-league/past-paper/grade-8/">
+                                                                                <a target="_blank"
+                                                                                    href="https://metaknowledge.co.th/math-league/past-paper/grade-8/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-8/
                                                                                 </a>
                                                                             @elseif ($data->package == 'G9-ML2024182 : 500 baht')
-                                                                                <a target="_blank" href="https://metaknowledge.co.th/math-league/past-paper/grade-9/">
+                                                                                <a target="_blank"
+                                                                                    href="https://metaknowledge.co.th/math-league/past-paper/grade-9/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-9/
                                                                                 </a>
                                                                             @endif
@@ -1002,8 +1010,12 @@
                                                         </table>
                                                     </td>
                                                 </tr>
+
                                             </tbody>
                                         </table>
+                                        {{-- @php
+                                            dd($data, $url2);
+                                        @endphp --}}
                                     </td>
                                 </tr>
                             </tbody>
