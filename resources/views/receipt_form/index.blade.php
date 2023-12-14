@@ -1110,7 +1110,7 @@
                 // console.log(sfield);
                 if (sfield == 17) {
                     // pls .wait
-                    alert("Please wait a moment to send the email....");
+                    alert("Please wait 2-3 second to send the email. !");
                 }
 
                     //alert(values);
