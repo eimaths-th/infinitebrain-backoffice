@@ -59,6 +59,7 @@
 
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
+    <script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
 
     <!-- Scripts
       @vite(['resources/sass/app.scss', 'resources/js/app.js'])

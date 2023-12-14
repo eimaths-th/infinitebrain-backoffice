@@ -352,6 +352,12 @@ class ReceiptFormController extends Controller
         $id = $request->get('fid');
         $form = ReceiptForm::find($id);
 
+
+        $adminEmail = $request->get('email');
+        Mail::to($adminEmail)->send(new ContactMail($form));
+
+
+
         if ($form->generate == 1) {
             return response()->json(['error' => 'Receive is already generate']);
         }
@@ -366,9 +372,6 @@ class ReceiptFormController extends Controller
         $receipt = new Receipt($request->all());
         $receipt->recform_id =  $form->id;
         $receipt->save();
-        $adminEmail = $request->get('email');
-
-        Mail::to($adminEmail)->send(new ContactMail($form));
         // dd(
         //     $request,
         //     $adminEmail

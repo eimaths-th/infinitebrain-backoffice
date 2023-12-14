@@ -188,60 +188,7 @@ function formModal_2(route) {
 // }
 
 // function modalDesreq(data_do, delete_text) {
-//     swal.fire({
-//         title: "คุณแน่ใจไหม?",
-//         text: 'ที่จะลบ คำร้องของ : ' + delete_text,
-//         icon: 'error',
-//         showCancelButton: true,
-//         confirmButtonColor: '#3085d6',
-//         cancelButtonColor: '#d33',
-//         cancelButtonText: 'ยกเลิก',
-//         confirmButtonText: 'ใช่, ลบเลย!',
-//     }).then((result) => {
-//         if (result.value) {
-//             $.ajax({
-//                 url: data_do, // url where to submit the request
-//                 type: "DELETE", // type of action POST || GET
-//                 data: {
-//                     _token: token
-//                 },
-//                 dataType: 'json',
-//                 cache: false,
-//                 success: function (result) {
-//                     //console.log(result);
-//                     if (result.success == true) {
-//                         Swal.fire({
-//                             icon: 'success',
-//                             title: result.msg,
-//                             html: result.msg + ' กำลังโหลดหน้าใหม่... <b></b>',
-//                             timer: 1000,
-//                             timerProgressBar: true,
-//                             onBeforeOpen: () => {
-//                                 Swal.showLoading()
-//                                 timerInterval = setInterval(() => {
-//                                     Swal.getContent().querySelector('b')
-//                                         .textContent = Swal.getTimerLeft()
-//                                 }, 100)
-//                             },
-//                             onClose: () => {
-//                                 location.reload();
-//                             }
-//                         });
-//                     } else {
-//                         Swal.fire({
-//                             icon: "error",
-//                             text: result.msg
-//                         });
-//                     }
-//                 },
-//                 error: function (xhr, resp, text) {
-//                     console.log(xhr, resp, text);
-//                 }
-//             });
-//         } else {
-//             swal.close()
-//         }
-//     })
+
 // }
 
 // function modalDeldetp(data_do, delete_text) {
