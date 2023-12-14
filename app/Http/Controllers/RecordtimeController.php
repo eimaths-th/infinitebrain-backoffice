@@ -25,9 +25,12 @@ class RecordtimeController extends Controller
     public function index()
     {
         //
+        $users = User::all();
         $rec_times = Recordtime::orderBy('id', 'desc')->get();
         return view('users.def_working', [
             'rec_times' => $rec_times,
+            'users' => $users,
+
         ]);
     }
 
@@ -162,6 +165,37 @@ class RecordtimeController extends Controller
     public function show($id)
     {
         //
+    }
+
+    public function search_rect(Request $request)
+    {
+
+        // dd($request);
+        $user_id = $request->user_id;
+        $month = $request->month;
+        $year = $request->year;
+        if ($user_id) {
+
+            $rec_times = Recordtime::where('user_id', $user_id)
+                ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->orderBy('id', 'desc')
+                ->get();
+            # code...
+        } else {
+
+            $rec_times = Recordtime::whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->orderBy('id', 'desc')
+                ->get();
+        }
+
+        $users = User::all();
+        return view('users.def_working', [
+            'rec_times' => $rec_times,
+            'users' => $users,
+
+        ]);
     }
 
     public function search_reportMonthTime(Request $request)

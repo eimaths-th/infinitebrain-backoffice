@@ -80,6 +80,11 @@ function formModal_1(route) {
             }
 
         })
+        $(".select2test").select2({
+
+            maximumSelectionLength: 2,
+            allowClear: true
+        });
 
     });
 

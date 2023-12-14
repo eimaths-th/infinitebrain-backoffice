@@ -91,6 +91,7 @@ Route::group(['middleware' => ['auth', 'outhome']], function () {
 
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('/search-rect', [RecordtimeController::class, 'search_rect'])->name('search_rect');
 
     Route::resource('recordtime', RecordtimeController::class);
     // Route::delete('/recordtime/{id}', [RecordtimeController::class, 'destroy'])->name('recordtimes.destroy');

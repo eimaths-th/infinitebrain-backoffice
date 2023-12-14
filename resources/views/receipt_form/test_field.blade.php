@@ -594,7 +594,7 @@
                                     </p>
                                     <p>
                                         <span style="color: #6351a2;">
-                                            <strong> Exam Date: </strong>
+                                            <strong> Exam Date: </strong>=
                                             &nbsp;16 DEC 2023
                                         </span>
                                     </p> --}}

@@ -1,38 +1,3 @@
-{{-- <!DOCTYPE html>
-<html>
-<head>
-    <title>Route Control</title>
-</head>
-<body>
-    <h1>Route Control Page</h1>
-
-    <form action="{{ route('save_times') }}" method="post">
-        @csrf
-
-        <label for="route">Route:</label>
-        <select name="route" id="route">
-            <!-- Populate options with your route names -->
-            <option value="gmec">gmec</option>
-            <option value="olpcs">olpcs</option>
-            <option value="asiarope">asiarope</option>
-            <option value="gelosea">gelosea</option>
-            <option value="imocsea">imocsea</option>
-            <option value="isocsea">isocsea</option>
-            <option value="imocsea+isocsea">imocsea+isocsea</option>
-            <option value="cambridge">cambridge</option>
-
-        </select>
-
-        <label for="opening_time">Opening Time:</label>
-        <input type="datetime-local" name="opening_time" id="opening_time">
-
-        <label for="closing_time">Closing Time:</label>
-        <input type="datetime-local" name="closing_time" id="closing_time">
-
-        <button type="submit">Set Times</button>
-    </form>
-</body>
-</html> --}}
 <form action="{{ route('recordtime.store') }}" method="post">
     @csrf
     <div class="modal-header">
