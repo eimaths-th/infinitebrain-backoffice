@@ -1107,7 +1107,7 @@
                     }).get();
                 var sfield = $('#Sfield').val();
 
-                console.log(sfield);
+                // console.log(sfield);
                 if (sfield == 17) {
                     // pls .wait
                     alert("Please wait a moment to send the email....");
