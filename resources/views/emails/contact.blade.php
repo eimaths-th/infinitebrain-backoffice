@@ -215,8 +215,8 @@
                                                             <td class="pad" style="text-align:center;width:100%;">
                                                                 <h2
                                                                     style="margin: 0; color: #201f42; direction: ltr; font-family: 'Noto Serif', Georgia, serif; font-size: 24px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0;">
-                                                                    <span
-                                                                        class="tinyMce-placeholder"><?php
+                                                                    <span class="tinyMce-placeholder">
+                                                                        <?php
                                                                         if ($data->sfield == 10) {
                                                                             $message = 'ASIAROPE 2023 Registration Form';
                                                                         } elseif ($data->sfield == 6) {
@@ -238,7 +238,7 @@
                                                                         } elseif ($data->sfield == 0) {
                                                                             $message = 'Img Reward';
                                                                         } elseif ($data->sfield == '17') {
-                                                                            $message = 'Test Field';
+                                                                            $message = 'Thanks for your order!';
                                                                         }
                                                                         ?>
                                                                         {{ $message }}</span>
@@ -553,7 +553,7 @@
                                                                     <h2
                                                                         style="margin: 0; font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
                                                                         <span
-                                                                            class="tinyMce-placeholder">แพคเกจในการสอบ
+                                                                            class="tinyMce-placeholder">แพคเกจสั่งซื้อ
                                                                             /<br> Packages</span>
                                                                     </h2>
                                                                 </td>
@@ -778,10 +778,7 @@
                                                                     style="text-align:left;width:100%;">
                                                                     <h2
                                                                         style="margin: 0; font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
-                                                                        <span
-                                                                            class="tinyMce-placeholder">E-mail(กรุณาตรวจสอบที่<br>อยู่อีเมลให้ถูกต้อง
-                                                                            หาก<br>กรอกผิด
-                                                                            จะไม่สามารถส่งข้อมูลในการโหลดข้อสอบได้)</span>
+                                                                        <span class="tinyMce-placeholder">E-mail</span>
                                                                     </h2>
                                                                 </td>
                                                             </tr>
@@ -952,7 +949,7 @@
                                                                         style="margin: 0;  font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 50px;">
                                                                         <span class="tinyMce-placeholder">
 
-                                                                            ลิ้งสำหรับ Download ข้อสอบ
+                                                                            ลิ้ง Download ข้อสอบ
                                                                         </span>
                                                                     </h2>
                                                                 </td>
@@ -1001,6 +998,83 @@
                                                                                     href="https://metaknowledge.co.th/math-league/past-paper/grade-9/">
                                                                                     https://metaknowledge.co.th/math-league/past-paper/grade-9/
                                                                                 </a>
+                                                                            @endif
+                                                                        </p>
+                                                                    </div>
+
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                        {{-- @php
+                                            dd($data, $url2);
+                                        @endphp --}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
+                            role="presentation"
+                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; margin-bottom:100px" width="100%">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                            class="row-content stack" role="presentation"
+                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; border-bottom: 0 solid #EFEEF4; border-left: 0 solid #EFEEF4; border-right: 0px solid #EFEEF4; border-top: 0 solid #EFEEF4; color: #000000; width: 700px;"
+                                            width="700">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="column column-1"
+                                                        style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left;  vertical-align: middle; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;"
+                                                        width="33.333333333333336%">
+                                                        <table border="0" cellpadding="0" cellspacing="0"
+                                                            class="heading_block block-1" role="presentation"
+                                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
+                                                            width="100%">
+                                                            <tr>
+                                                                <td class="pad"
+                                                                    style="text-align:left;width:100%;">
+                                                                    <h2
+                                                                        style="margin: 0;  font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 50px;">
+                                                                        <span class="tinyMce-placeholder">
+
+                                                                            META Pass for Download :
+                                                                        </span>
+                                                                    </h2>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                    <td class="column column-2"
+                                                        style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: middle; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;"
+                                                        width="66.66666666666667%">
+                                                        <table border="0" cellpadding="10" cellspacing="0"
+                                                            class="paragraph_block block-1" role="presentation"
+                                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;"
+                                                            width="100%">
+                                                            <tr>
+
+                                                                <td class="pad">
+                                                                    <div
+                                                                        style="direction:ltr;font-family:Inter, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
+                                                                        <p style="margin: 0;">
+                                                                            @if ($data->package == 'G4-Grade4 : 500 baht')
+                                                                                ML2024149
+                                                                            @elseif ($data->package == 'G5-Grade5 : 500 baht')
+                                                                                ML2024258
+                                                                            @elseif ($data->package == 'G6-Grade6 : 500 baht')
+                                                                                ML2024773
+                                                                            @elseif ($data->package == 'G7-Grade7 : 500 baht')
+                                                                                ML2024548
+                                                                            @elseif ($data->package == 'G8-Grade8 : 500 baht')
+                                                                                ML2024674
+                                                                            @elseif ($data->package == 'G9-Grade9 : 500 baht')
+                                                                                ML2024182
                                                                             @endif
                                                                         </p>
                                                                     </div>

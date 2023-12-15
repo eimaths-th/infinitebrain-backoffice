@@ -27,7 +27,12 @@ class ContactMail extends Mailable
         $this->url1 = '<img height="200px" src="' . asset('receipt_form_images/' . $data->photo_att) . '" alt="..." style="vertical-align: middle;">';
         $this->url2 = '<img src=" ' . asset('receipt_form_images/' . $data->file_att) . ' " alt="..." style="vertical-align: middle; height: 200px;">';
         // $this->url2 = asset('receipt_form_images/' . $data->file_att);
+        if ($data->sfield == '17') {
+            $this->subject('Math League');
+        }else {
+            $this->subject('Contact Mail');
 
+        }
         // dd($data,$this->url1,$this->url2);
 
         // $this->url1 = asset('receipt_form_images/' . $data->photo_att);
@@ -43,12 +48,12 @@ class ContactMail extends Mailable
      *
      * @return \Illuminate\Mail\Mailables\Envelope
      */
-    public function envelope()
-    {
-        return new Envelope(
-            subject: 'Contact Mail',
-        );
-    }
+    // public function envelope()
+    // {
+    //     return new Envelope(
+    //         subject: 'Contact Mail',
+    //     );
+    // }
 
     /**
      * Get the message content definition.
@@ -69,7 +74,6 @@ class ContactMail extends Mailable
      */
     public function attachments()
     {
-        return [
-        ];
+        return [];
     }
 }
