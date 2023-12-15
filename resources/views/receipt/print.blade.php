@@ -152,10 +152,10 @@
                             </b>
                         </td>
                         @if ($data->sfield == 17)
-                            <td align="right" style="padding-left:20px;" class="grey"></td>
+                            <td align="right" style="padding-left:20px;" class="grey">โทร.</td>
                             <td align="left" style="padding-left:15px;">
                                 <b>
-
+                                    {{ $data->mobile }}
                             </td>
                         @else
                             <td align="right" style="padding-left:20px;" class="grey">ชื่อนักเรียน/Nickname</td>

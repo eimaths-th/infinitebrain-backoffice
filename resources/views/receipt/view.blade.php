@@ -167,9 +167,19 @@
                         <td> <b>{{ $data->submission_date }}</b></td>
                     </tr>
                     <tr>
-                        <!-- <td colspan="3"><font class="grey">ที่อยู่</font> <b>{{ $data->street_address }} {{ $data->street_address2 }}
-                                                                    {{ $data->city }} {{ $data->province }} {{ $data->postcode }} </b></td> -->
-                        <td colspan="3"></td>
+                        @if ($data->sfield == 17)
+                            <td align="left">
+                                <font class="grey">โทร.</font>
+                                <b>
+                                    {{ $data->mobile }}
+                                </b>
+                            </td>
+                            <td align="left" width="30%"> <b></b></td>
+                        @else
+                            <td align="left" class="grey"></td>
+                            <td align="left" width="30%"> <b></b></td>
+                        @endif
+                        <td colspan="1"></td>
                         <td align="right" class="grey">เงื่อนไขการชำระเงิน / Credit Term</td>
                         <td>..........................</td>
                     </tr>
@@ -180,9 +190,9 @@
                         <td>..........................</td>
                     </tr>
                     <!-- <tr>
-                                                            <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
+                                                                                <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
 
-                                                        </tr> -->
+                                                                            </tr> -->
                 </table>
                 <div class="tbr">
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
@@ -330,11 +340,11 @@
                     </table>
 
                     <!-- <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                                                            <tr>
-                                                                <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
-                                                                <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
-                                                            </tr>
-                                                        </table> -->
+                                                                                <tr>
+                                                                                    <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
+                                                                                    <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
+                                                                                </tr>
+                                                                            </table> -->
 
                     <table align="center" width="85%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
                         <tr>
