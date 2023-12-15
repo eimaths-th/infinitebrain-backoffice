@@ -256,7 +256,7 @@
                     </table>
                     @if ($data->sfield == '17')
 
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-1"
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
@@ -476,7 +476,7 @@
                             </tbody>
                         </table> --}}
 
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-2"
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
@@ -530,7 +530,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-3"
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
@@ -700,7 +700,7 @@
                             </tbody>
                         </table> --}}
 
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4"
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
@@ -756,7 +756,7 @@
                             </tbody>
                         </table>
 
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-5"
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
@@ -867,7 +867,7 @@
                             </tbody>
                         </table> --}}
 
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-6"
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
