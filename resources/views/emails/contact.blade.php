@@ -311,7 +311,7 @@
                             </tbody>
                         </table> --}}
 
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
@@ -531,7 +531,7 @@
                         </table> --}}
 
                         <!-- grades -->
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-5"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
@@ -587,7 +587,7 @@
                         </table>
 
                         <!-- Packages -->
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-6"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
@@ -758,7 +758,7 @@
                         </table> --}}
 
                         <!-- telp. -->
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
@@ -815,7 +815,7 @@
                         </table>
 
                         <!-- email. -->
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
@@ -925,9 +925,8 @@
                                 </tr>
                             </tbody>
                         </table>
-
                         <!-- pass -->
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
@@ -951,7 +950,7 @@
                                                                     <h2
                                                                         style="margin: 0; font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
                                                                         <span class="tinyMce-placeholder">
-                                                                            META Pass for Download :
+                                                                            รหัสผ่านสำหรับดาวน์โหลดข้อสอบ :
                                                                         </span>
                                                                     </h2>
                                                                 </td>
@@ -998,8 +997,7 @@
                         </table>
                         <!-- url -->
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
-                            role="presentation"
-                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; margin-bottom:100px" width="100%">
+                            role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; margin-bottom:100px" width="100%">
                             <tbody>
                                 <tr>
                                     <td>
@@ -1042,7 +1040,7 @@
                                                                     style="text-align:left;width:100%;">
                                                                     <h2
                                                                         style="margin: 0; font-size: 14px; font-weight: 400;  text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
-                                                                        <span class="tinyMce-placeholder">ลิ้ง Download ข้อสอบ </span>
+                                                                        <span class="tinyMce-placeholder">ลิงก์สำหรับดาวน์โหลดข้อสอบ </span>
                                                                     </h2>
                                                                 </td>
                                                             </tr>
@@ -1109,7 +1107,9 @@
                                 </tr>
                             </tbody>
                         </table>
-                        
+                        {{-- @php
+                            dd('error');
+                        @endphp --}}
                     @else
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
@@ -1783,8 +1783,7 @@
                         </table>
 
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
-                            role="presentation"
-                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; margin-bottom:100px" width="100%">
+                            role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; margin-bottom:100px" width="100%">
                             <tbody>
                                 <tr>
                                     <td>
