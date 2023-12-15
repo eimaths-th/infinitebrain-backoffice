@@ -68,7 +68,7 @@
 @endsection
 
 @section('content')
-{!! $app_html !!}
+    {!! $app_html !!}
     <div class="row">
 
         @if ($message = Session::get('success'))
@@ -96,7 +96,7 @@
                         <a href="{{ route('receipts', ['sfield' => $data->sfield]) }}" class="btn btn-success"
                             data-toggle="modal" data-target=".bd-example-modal-lg" id="CreateButton"><i
                                 class="fa fa-backward"></i> Back
-                                {{ $mes }}</a>
+                            {{ $mes }}</a>
 
 
                     </div>
@@ -146,16 +146,29 @@
                     </tr>
                     <tr>
                         <td>
-                            <font class="grey">K.</font> <b> {{ $data->name_parent }} </b>
+                            <font class="grey">K.</font>
+                            <b>
+                                @if ($data->sfield == 17)
+                                    {{ $data->first_name }} {{ $data->last_name }}
+                                @else
+                                    {{ $data->name_parent }}
+                                @endif
+                            </b>
                         </td>
-                        <td align="right" class="grey">ชื่อนักเรียน/Nickname</td>
-                        <td align="left" width="30%"> <b>{{ $data->first_name }} {{ $data->last_name }}</b></td>
+
+                        @if ($data->sfield == 17)
+                            <td align="right" class="grey"></td>
+                            <td align="left" width="30%"> <b></b></td>
+                        @else
+                            <td align="right" class="grey">ชื่อนักเรียน/Nickname</td>
+                            <td align="left" width="30%"> <b>{{ $data->first_name }} {{ $data->last_name }}</b></td>
+                        @endif
                         <td align="right" class="grey">วันที่ / Date</td>
                         <td> <b>{{ $data->submission_date }}</b></td>
                     </tr>
                     <tr>
                         <!-- <td colspan="3"><font class="grey">ที่อยู่</font> <b>{{ $data->street_address }} {{ $data->street_address2 }}
-                                        {{ $data->city }} {{ $data->province }} {{ $data->postcode }} </b></td> -->
+                                                                    {{ $data->city }} {{ $data->province }} {{ $data->postcode }} </b></td> -->
                         <td colspan="3"></td>
                         <td align="right" class="grey">เงื่อนไขการชำระเงิน / Credit Term</td>
                         <td>..........................</td>
@@ -167,9 +180,9 @@
                         <td>..........................</td>
                     </tr>
                     <!-- <tr>
-                                <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
+                                                            <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
 
-                            </tr> -->
+                                                        </tr> -->
                 </table>
                 <div class="tbr">
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
@@ -190,7 +203,13 @@
                         @foreach ($receipt_detail_arr as $receipt_detail)
                             <tr>
                                 <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
-                                <td align="left">{!! $receipt_detail['description'] !!}</td>
+                                <td align="left">
+                                    @if ($data->sfield == 17 && $receipt_detail['no'])
+                                        ข้อสอบ
+                                    @else
+                                    @endif
+                                    {!! $receipt_detail['description'] !!}
+                                </td>
                                 <td align="center">{{ $receipt_detail['quantity'] }}</td>
                                 <td align="center">{{ $receipt_detail['unit'] }}</td>
                                 <td align="center">{{ $receipt_detail['unitprice'] }}</td>
@@ -216,7 +235,7 @@
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
 
-                        </tr>--}}
+                        </tr> --}}
                         <tr>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -265,7 +284,8 @@
                                         <td width="40%"></td>
                                         <td width="40%" class="grey">มูลค่าที่ยกเว้นภาษี/Non-Vat Amount</td>
                                         <!-- <td width="20%"></td> -->
-                                        <td width="20%" align="right" style="padding-right: 35px"> <b> {{-- {{ $vat_price_val }} --}} 00.00</b></td>
+                                        <td width="20%" align="right" style="padding-right: 35px"> <b>
+                                                {{-- {{ $vat_price_val }} --}} 00.00</b></td>
                                         <!-- <td width="10%"></td> -->
 
 
@@ -274,20 +294,26 @@
                                         <td width="40%"></td>
                                         <td width="40%" class="grey">มูลค่าที่คำนวนภาษี/Pre-Vat Amount</td>
                                         <!-- <td width="10%"></td> -->
-                                        <td width="20%" align="right" style="padding-right: 35px"> <b>{{ $vat_price_val }}</b></td>
+                                        <td width="20%" align="right" style="padding-right: 35px">
+                                            <b>{{ $vat_price_val }}</b>
+                                        </td>
                                         <!-- <td width="10%"></td> -->
                                     </tr>
                                     <tr>
                                         <td width="40%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="40%" class="grey">ส่วนลด/Discout</td>
-                                        <td width="20%" align="right" style="padding-right: 35px"><b>{{ $discount_val }}</b></td>
+                                        <td width="20%" align="right" style="padding-right: 35px">
+                                            <b>{{ $discount_val }}</b>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td width="40%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="40%" class="grey">ภาษีมูลค่าเพิ่ม 7% / Vat 7%</td>
-                                        <td width="20%" align="right" style="padding-right: 35px"><b>{{ $vat_val }}</b></td>
+                                        <td width="20%" align="right" style="padding-right: 35px">
+                                            <b>{{ $vat_val }}</b>
+                                        </td>
                                     </tr>
                                 </table>
                             </td>
@@ -304,11 +330,11 @@
                     </table>
 
                     <!-- <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
-                                    <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
-                                </tr>
-                            </table> -->
+                                                            <tr>
+                                                                <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
+                                                                <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
+                                                            </tr>
+                                                        </table> -->
 
                     <table align="center" width="85%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
                         <tr>

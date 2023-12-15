@@ -762,7 +762,7 @@ class ReceiptController extends Controller
             ->orderBy("receipt_details.id", "asc")
             ->get();
 
-        
+
         $all_price = 0;
         $dis_total = 0;
         $receipt_detail_arr = array();
@@ -864,7 +864,7 @@ class ReceiptController extends Controller
         //$des_text = nl2br($data->description);
 
 
-
+        // dd($receipt_detail_arr);
         return view($viewr)->with(['id' => $id])
             ->with(['data' => $data])
             ->with(['receipt_detail_arr' => $receipt_detail_arr])

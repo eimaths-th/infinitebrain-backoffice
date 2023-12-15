@@ -388,16 +388,16 @@ class HomeController extends Controller
             ->groupBy('status_name')
             ->map->count();
 
-        $rec_timess = Recordtime::whereMonth('date', $currentMonth)
-            ->whereYear('date', $currentYear)
-            ->orderBy('user_id', 'desc')
-            ->get()
-            ->groupBy('user_id');
+        // $rec_timess = Recordtime::whereMonth('date', $currentMonth)
+        //     ->whereYear('date', $currentYear)
+        //     ->orderBy('user_id', 'desc')
+        //     ->get()
+        //     ->groupBy('user_id');
 
-        // dd($rec_timess);
+        // dd($rec_times_year);
 
         return view('users.working_report', [
-            'rec_timess' => $rec_timess,
+            // 'rec_timess' => $rec_timess,
             'rec_times' => $rec_times,
             'rec_times_year' => $rec_times_year,
             'currentYear' => $currentYear,

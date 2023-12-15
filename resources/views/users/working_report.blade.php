@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link href="../assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" />
     <link href="../assets/plugins/nvd3/build/nv.d3.css" rel="stylesheet" />
+
     <style>
         @media screen and (max-width: 100px) {
             .screen-auto {
@@ -26,10 +27,14 @@
         }
     </style>
 @endsection
+@push('css')
+@endpush
+
+@push('scripts')
+
+@endpush
 
 @section('content')
-
-
     <div class="app-page-title">
         <div class="page-title-wrapper">
             <div class="page-title-heading">
@@ -500,6 +505,35 @@
 
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-premium-dark">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">วันหยุด</div>
+                        <div class="widget-subheading">Total</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-warning">
+                            <span> {{ $rec_times['วันหยุด'] ?? 0 }} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- <div class="main-card mb-3 card">
+        <div class="card-header-tab card-header-tab-animation card-header">
+            <div class="card-header-title">
+                <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                Current Month Report <br>{{ date('F - Y') }}
+            </div>
+        </div>
+        <div class="row">
+
+        </div>
+    </div> --}}
+
     <div class="main-card mb-3 card">
         <div class="card-header-tab card-header-tab-animation card-header">
             <div class="card-header-title">
@@ -740,7 +774,7 @@
                                             <div class="widget-subheading">
                                                 @php
                                                     $sumb = 6;
-                                                    if (isset($rec_times_year['ลาพักร้อน']) ) {
+                                                    if (isset($rec_times_year['ลาพักร้อน'])) {
                                                         $sumb = 6 - $rec_times_year['ลาพักร้อน'];
                                                     }
                                                 @endphp
@@ -766,7 +800,7 @@
                                             <div class="widget-subheading">
                                                 @php
                                                     $sumc = 3;
-                                                    if (isset($rec_times_year['ลากิจ']) ) {
+                                                    if (isset($rec_times_year['ลากิจ'])) {
                                                         $sumc = 3 - $rec_times_year['ลากิจ'];
                                                     }
                                                 @endphp
@@ -789,7 +823,26 @@
 
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-premium-dark">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">วันหยุด</div>
+                        <div class="widget-subheading">Total</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-warning">
+                            <span> {{ $rec_times_year['วันหยุด'] ?? 0 }} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script src="../assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+
+    {{-- <script src="/assets/js/demo/calendar.demo.js"></script> --}}
 @endsection
