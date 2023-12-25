@@ -600,7 +600,7 @@
                                     </p> --}}
                                     {{-- <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
                                     </p> --}}
-                                    <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
+                                    {{-- <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p> --}}
                                     <div class="boost-camp">
                                         <strong>Private Course : </strong>
                                         คอร์สเรียนตัวต่อตัว <br>
