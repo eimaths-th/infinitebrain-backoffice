@@ -26,7 +26,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class ReceiptFormController extends Controller
 {
     const sfielda = array(
-        '17' => 'test_field',
+
         '0' => 'reward',
         '2' => 'GMEC',
         '4' => 'IMOCSEA',
@@ -41,6 +41,9 @@ class ReceiptFormController extends Controller
         '14' => 'IMOCSEA+ISOCSEA',
         '15' => 'Huaxiacup',
         '16' => 'Mathleague',
+        '17' => 'test_field',
+        '18' => 'Mathleague-II',
+        '19' => 'Huaxiacup-II',
     );
 
     public function gmec()
@@ -65,10 +68,22 @@ class ReceiptFormController extends Controller
     {
         return view("receipt_form.mathleague");
     }
+
+    public function mathleague_II()
+    {
+        return view("receipt_form.mathleague_II");
+    }
+
     public function huaxiacup()
     {
         return view("receipt_form.huaxiacup");
     }
+
+    public function huaxiacup_II()
+    {
+        return view("receipt_form.huaxiacup_II");
+    }
+
     public function img_reward()
     {
         return view("receipt_form.img_reward");
@@ -302,9 +317,9 @@ class ReceiptFormController extends Controller
     public function create(Request $request)
     {
         //
-        // if ($request->get('sfield') === "17") {
-        //     dd('error');
-        // }
+        if ($request->get('sfield') === "18" || $request->get('sfield') === "19") {
+            dd('error');
+        }
 
         // $test = Receipt::find(1893);
         // dd($test->recform->id);
@@ -352,9 +367,11 @@ class ReceiptFormController extends Controller
         $id = $request->get('fid');
         $form = ReceiptForm::find($id);
 
-
-        $adminEmail = $request->get('email');
-        Mail::to($adminEmail)->send(new ContactMail($form));
+        if ($request->get('sfield') === "17") {
+            # code...
+            $adminEmail = $request->get('email');
+            Mail::to($adminEmail)->send(new ContactMail($form));
+        }
 
 
 
@@ -380,7 +397,7 @@ class ReceiptFormController extends Controller
         //$form = ReceiptForm::find($id);
 
 
-        $form->generate =  '1';
+        // $form->generate =  '1';
         $form->rec_id =  $receipt->id;
         $form->save();
 
