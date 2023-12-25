@@ -231,7 +231,7 @@
                                                                             $message = 'ISOCSEA 2023 Registration Form';
                                                                         } elseif ($data->sfield == 14) {
                                                                             $message = 'IMOCSEA+ISOCSEA 2023 Registration Form';
-                                                                        } elseif ($data->sfield == 15) {
+                                                                        } elseif ($data->sfield == 15 || $data->sfield == 19) {
                                                                             $message = 'China Mathematical Olympiad';
                                                                         } elseif ($data->sfield == 16 || $data->sfield == 18) {
                                                                             $message = 'Math League';
@@ -1821,7 +1821,7 @@
                                                                                 $message1 = 'ISOCSEA';
                                                                             } elseif ($data->sfield == 14) {
                                                                                 $message1 = 'IMOCSEA+ISOCSEA';
-                                                                            } elseif ($data->sfield == 15) {
+                                                                            } elseif ($data->sfield == 15 || $data->sfield == 19) {
                                                                                 $message1 = 'Huaxiacup';
                                                                             } elseif ($data->sfield == 16 || $data->sfield == 18) {
                                                                                 $message1 = 'Mathleague';

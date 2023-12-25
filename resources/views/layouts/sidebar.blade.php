@@ -369,9 +369,22 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '19']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Huaxiacup-II
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('receipts_form', ['sfield' => '16']) }}">
                                     <i class="metismenu-icon"></i>
                                     Mathleague
+                                    <!-- ml -->
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '18']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Mathleague-II
                                     <!-- ml -->
                                 </a>
                             </li>

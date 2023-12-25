@@ -397,7 +397,7 @@ class ReceiptFormController extends Controller
         //$form = ReceiptForm::find($id);
 
 
-        // $form->generate =  '1';
+        $form->generate =  '1';
         $form->rec_id =  $receipt->id;
         $form->save();
 
@@ -675,7 +675,7 @@ class ReceiptFormController extends Controller
             Mail::to($adminEmail)->send(new ContactMail($receiptForm));
         }
         $receiptForm->save();
-        
+
         return redirect('/form/complete/' . strtolower(self::sfielda[$request->get('sfield')]));
     }
 

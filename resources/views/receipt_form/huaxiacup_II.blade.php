@@ -1052,6 +1052,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                
                                 <div class="dropzonex dz-default dz-message" id="dropzone_preview2"
                                     style="font-size: 1.5em;">
                                     <h3 class="dropzone-previews ui"></h3>
