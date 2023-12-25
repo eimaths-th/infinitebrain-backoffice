@@ -860,7 +860,7 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="package">แพคเกจในการสอบ / Packages <span
+                                                for="package">แพคเกจในการติว / Packages <span
                                                     class="form-required">*</span></label>
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
@@ -1052,7 +1052,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="dropzonex dz-default dz-message" id="dropzone_preview2"
                                     style="font-size: 1.5em;">
                                     <h3 class="dropzone-previews ui"></h3>
