@@ -591,10 +591,10 @@
                                             </strong>
                                         </span>
                                     </p>
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
+                                    {{-- <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
                                                 Date:</strong> 1 Dec 2023 – 31 Jan 2024</span></p>
                                     <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;17 Feb 2023</span>
-                                    </p>
+                                    </p> --}}
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
                                     </p> --}}
@@ -607,7 +607,7 @@
                                         <ul class="feature-list-2">
                                             <li>✅ สามารถเรียนออนไลน์หรือเรียนที่สถาบันได้</li>
                                             <li>✅ ฟรี! Past Papers พร้อมเฉลย </li>
-                                            <li>ราคาเพียง 2,500 บาท (3 ครั้ง)</li>
+                                            {{-- <li>ราคาเพียง 2,500 บาท (3 ครั้ง)</li> --}}
                                         </ul>
                                     </div>
                                     <div class="boost-camp">
@@ -865,7 +865,7 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="850 บาท">850 บาท (1 ชั่วโมง)</option>
+                                                <option value="800 บาท">800 บาท (1 ชั่วโมง)</option>
                                                 <option value="3,500 บาท">3,500 บาท (5 ชั่วโมง)</option>
 
                                             </select>

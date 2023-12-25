@@ -591,7 +591,7 @@
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
                                                     style="text-decoration: underline;">Math League
                                                     2023</span></strong></span></p>
-                                    <p style="text-align: left;">
+                                    {{-- <p style="text-align: left;">
                                         <span style="color: #6351a2;">
                                             <strong>Registration Date:</strong>
                                             1 Dec 2023 – 30 Jan 2024 (Grade 6 - 8)
@@ -612,7 +612,7 @@
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                             27 April 2023 (Grade 3 – 5 and 9)</span>
-                                    </p>
+                                    </p> --}}
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
                                     </p> --}}
