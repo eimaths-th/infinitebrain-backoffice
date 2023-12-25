@@ -42,7 +42,7 @@ class ReceiptFormController extends Controller
         '15' => 'Huaxiacup',
         '16' => 'Mathleague',
         '17' => 'test_field',
-        '18' => 'Mathleague-II',
+        '18' => 'mathleague-II',
         '19' => 'Huaxiacup-II',
     );
 
@@ -544,7 +544,7 @@ class ReceiptFormController extends Controller
     public function store(Request $request)
     {
         //
-        // dd($request->get('sfield'));
+        // dd($request->get('sfield'),$request);
         if ($request->get('sfield') == '17') {
             # code...
             $validator =  Validator::make($request->all(), [
@@ -675,7 +675,7 @@ class ReceiptFormController extends Controller
             Mail::to($adminEmail)->send(new ContactMail($receiptForm));
         }
         $receiptForm->save();
-
+        
         return redirect('/form/complete/' . strtolower(self::sfielda[$request->get('sfield')]));
     }
 

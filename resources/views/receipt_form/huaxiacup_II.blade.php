@@ -530,11 +530,6 @@
         }
     </style>
     <style>
-        /* .custom-image {
-                                            width: 395px;
-                                            height: 395px;
-                                        } */
-
         .custom-image {
             width: 100%;
             height: auto;
@@ -545,6 +540,19 @@
                 width: 100%;
                 height: auto;
             }
+        }
+        .boost-camp {
+            color: #6351a2;
+        }
+
+        .feature-list {
+            margin-left: 190px;
+
+        }
+
+        .feature-list-2 {
+            margin-left: 100px;
+
         }
     </style>
 @endsection
@@ -568,7 +576,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h2 class="card-title form_header">China Mathematical Olympiad 2023 Registration Form</h2>
+                                <h2 class="card-title form_header">China Mathematical Olympiad Private Course</h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -579,7 +587,7 @@
                                     <p style="text-align: center;">
                                         <span style="color: #6351a2;">
                                             <strong>
-                                                <span style="text-decoration: underline;">China Mathematical Olympiad 2023 Registration Form </span>
+                                                <span style="text-decoration: underline;">China Mathematical Olympiad Private Course </span>
                                             </strong>
                                         </span>
                                     </p>
@@ -593,11 +601,25 @@
                                     {{-- <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
                                     </p> --}}
                                     <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
-                                    <p><span style="color: #6351a2;"><strong>Test:</strong> 850 baht</span>
+                                    <div class="boost-camp">
+                                        <strong>Private Course : </strong>
+                                        คอร์สเรียนตัวต่อตัว <br>
+                                        <ul class="feature-list-2">
+                                            <li>✅ สามารถเรียนออนไลน์หรือเรียนที่สถาบันได้</li>
+                                            <li>✅ ฟรี! Past Papers พร้อมเฉลย </li>
+                                            <li>ราคาเพียง 2,500 บาท (3 ครั้ง)</li>
+                                        </ul>
+                                    </div>
+                                    <div class="boost-camp">
+                                        <strong>หมายเหตุ : </strong>
+                                        คอร์สเรียนตัวต่อตัว ทาง Meta Knowledge <br>
+                                        จะนัดวันและเวลาที่ผู้เรียนสะดวกอีกครั้งหลังจากปิดรับสมัครติว
+                                    </div>
+                                    {{-- <p><span style="color: #6351a2;"><strong>Test:</strong> 850 baht</span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1250 bath (1 class 2 hours)</span><br></p>
-                                    <p>&nbsp;</p>
+                                    <p>&nbsp;</p> --}}
 
                                     <!-- sub img -->
 
@@ -613,7 +635,7 @@
                                         </div>
                                     </div> --}}
 
-                                    <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร China Mathematical Olympiad 2023</b> <br>
+                                    {{-- <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร China Mathematical Olympiad 2023</b> <br>
 
                                             รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
                                             ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน
@@ -622,7 +644,7 @@
                                             รร.นานาชาติใช้ระดับชั้นตามปีการศึกษาปัจจุบัน <br>
 
                                             ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
-                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p>
+                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p> --}}
                                 </div>
                             </div>
 
@@ -649,6 +671,10 @@
                                 </div>
                                 <input type="hidden" id="contest" name="contest" value=" ">
                                 <input type="hidden" id="subject" name="subject" value=" ">
+                                <input type="hidden" name="address" id="address" value="-">
+                                <input type="hidden" name="postcode" id="postcode" value="-">
+                                <input type="hidden" name="sfield" id="sfield" value="19">
+                                <input type="hidden" name="newsf" id="newsf" value="-">
 
                                 {{-- <div class="form-row form-focus">
 
@@ -828,7 +854,6 @@
                                     </div>
                                 </div>
 
-
                                 <div class="form-row form-focus">
 
                                     <div class="col-md-6">
@@ -840,9 +865,8 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Test: 850 baht">Test: 850 baht</option>
-                                                <option value="Test + tutoring class: 1250 bath (1 class 2 hours)">Test +
-                                                    tutoring class: 1250 bath (1 class 2 hours)</option>
+                                                <option value="850 บาท">850 บาท (1 ชั่วโมง)</option>
+                                                <option value="3,500 บาท">3,500 บาท (5 ชั่วโมง)</option>
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -890,40 +914,6 @@
                                         </div> --}}
                                     </div>
                                 </div>
-
-                                <div class="form-row form-focus">
-                                    <div class="col-md-12 col-sm-12">
-                                        <div class="form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="address">Address / ที่อยู่ภาษาไทยสำหรับจัดส่งของรางวัล <span
-                                                    class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="address" id="address"
-                                                maxlength="150" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Street Address</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-sm-12">
-                                        <div class="form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="postcode">
-                                                <div style="width: 270px"></div>
-                                            </label>
-                                            <input type="text" class="form-control" name="postcode" id="postcode"
-                                                maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Postal / Zip Code / รหัสไปรษณีย์ </label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10">
-                                                <span class="error-navigation-message">This field is required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="form-row form-focus">
                                     <div class="col-md-6">
                                         <div class="position-relative form-group" style="padding-top:24px;">
@@ -1065,37 +1055,7 @@
                                 <div class="dropzonex dz-default dz-message" id="dropzone_preview2"
                                     style="font-size: 1.5em;">
                                     <h3 class="dropzone-previews ui"></h3>
-
-
                                 </div>
-
-
-
-                                <div class="form-row form-focus">
-                                    <div class="col-md-6 ">
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="newsf">ท่านทราบข่าวสารการจัดสอบ China Mathematical Olympiad จากช่องทางใด <span
-                                                    class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="newsf" id="newsf"
-                                                value="" maxlength="50" required>
-                                            <input type="hidden" name="sfield" id="sfield" value="19">
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false"></label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-
 
 
                             </div>

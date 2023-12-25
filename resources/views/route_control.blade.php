@@ -69,9 +69,9 @@
                         <option value="imocsea+isocsea">imocsea+isocsea</option>
                         <option value="cambridge">cambridge</option>
                         <option value="huaxiacup">huaxiacup</option>
-                        <option value="huaxiacup-II">huaxiacup-II</option>
+                        <option value="huaxiacup-ii">huaxiacup-II</option>
                         <option value="mathleague">mathleague</option>
-                        <option value="mathleague-II">mathleague-II</option>
+                        <option value="mathleague-ii">mathleague-II</option>
                         <option value="reward">reward</option>
                         <option value="test_field">test_field</option>
 

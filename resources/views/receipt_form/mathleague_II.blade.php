@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                                                background-size: 15px;
-                                                                                                                                                            }*/
+                                                                                                                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                                                                        background-size: 15px;
+                                                                                                                                                                                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                                                border-color: var(--color-invalid);
-                                                                                                                                                            }*/
+                                                                                                                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                                                                        border-color: var(--color-invalid);
+                                                                                                                                                                                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                                                display: block;
-                                                                                                                                                            }*/
+                                                                                                                                                                                                        display: block;
+                                                                                                                                                                                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -530,11 +530,6 @@
         }
     </style>
     <style>
-        /* .custom-image {
-                                                                                                            width: 395px;
-                                                                                                            height: 395px;
-                                                                                                        } */
-
         .custom-image {
             width: 100%;
             height: auto;
@@ -546,6 +541,24 @@
                 height: auto;
             }
         }
+
+        .boost-camp {
+            color: #6351a2;
+        }
+
+        .feature-list {
+            margin-left: 190px;
+
+        }
+
+        .feature-list-2 {
+            margin-left: 100px;
+
+        }
+
+        /* .feature-list li::before {
+                content: '✅ ';
+            } */
     </style>
 @endsection
 
@@ -567,7 +580,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h2 class="card-title form_header">Math League Registration Form</h2>
+                                <h2 class="card-title form_header">Math League </h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -576,8 +589,8 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">Math League 2023 Registration
-                                                    Form</span></strong></span></p>
+                                                    style="text-decoration: underline;">Math League
+                                                    2023</span></strong></span></p>
                                     <p style="text-align: left;">
                                         <span style="color: #6351a2;">
                                             <strong>Registration Date:</strong>
@@ -605,13 +618,44 @@
                                     </p> --}}
                                     {{-- <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
                                     </p> --}}
-                                    <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
-                                    <p>
+                                    {{-- <p>
+                                        <strong>
+                                            <span style="color: #6351a2;">Registration Fee:&nbsp;</span>
+                                        </strong>
+                                    </p> --}}
+                                    <div class="boost-camp">
+                                        <strong>Math League Boost Camp :</strong>
+                                        ติวเข้มจากคลังข้อสอบเก่าย้อนหลัง 10 ปี <br>
+                                        <ul class="feature-list">
+                                            <li>✅ ติวสด ออนไลน์ ผ่าน Zoom</li>
+                                            <li>✅ มีคลิปสำหรับดูย้อนหลัง</li>
+                                            <li>✅ ฟรี! Past Papers พร้อมเฉลย</li>
+                                            <li> ราคาเพียง 1,500 บาท (3 ครั้ง)</li>
+                                        </ul>
+                                    </div>
+                                    <div class="boost-camp">
+                                        <strong>Private Course : </strong>
+                                        คอร์สเรียนตัวต่อตัว <br>
+                                        <ul class="feature-list-2">
+                                            <li>✅ สามารถเรียนออนไลน์หรือเรียนที่สถาบันได้</li>
+                                            <li>✅ ฟรี! Past Papers พร้อมเฉลย </li>
+                                            <li>ราคาเพียง 2,500 บาท (3 ครั้ง)</li>
+                                        </ul>
+                                    </div>
+                                    <div class="boost-camp">
+                                        <strong>หมายเหตุ : </strong>
+                                        คอร์สเรียนตัวต่อตัว ทาง Meta Knowledge <br>
+                                        จะนัดวันและเวลาที่ผู้เรียนสะดวกอีกครั้งหลังจากปิดรับสมัครติว
+                                    </div>
+                                    {{-- <p>
                                         <span style="color: #6351a2;">
-                                            <strong>Test:</strong>
-                                            850 baht
+                                            <strong>Private Course : </strong>
+                                            คอร์สเรียนตัวต่อตัว <br>
+                                            ราคาเพียง 2,500 บาท (3 ครั้ง) <br>
+                                            ✅ สามารถเรียนออนไลน์หรือเรียนที่สถาบันได้ <br>
+                                            ✅ ฟรี! Past Papers พร้อมเฉลย <br>
                                         </span>
-                                    </p>
+                                    </p> --}}
                                     {{-- <p>
                                         <span style="color: #6351a2;">
                                             <strong>Test + 5 Years Past Papers:</strong>
@@ -648,16 +692,7 @@
                                         </div>
                                     </div> --}}
 
-                                    <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร Math League</b> <br>
 
-                                            รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
-                                            ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน
-                                            ให้ใช้ระดับชั้นปัจจุบัน <br>
-
-                                            รร.นานาชาติใช้ระดับชั้นตามปีการศึกษาปัจจุบัน <br>
-
-                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
-                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p>
                                 </div>
                             </div>
 
@@ -863,12 +898,14 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="package">แพคเกจในการสอบ / Packages <span
+                                                for="package">แพคเกจในการติว / Packages <span
                                                     class="form-required">*</span></label>
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Test: 850 baht">Test: 850 baht</option>
+                                                <option value="1,500 (Math League Boost Camp)">1,500 (Math League Boost
+                                                    Camp 3 ครั้ง)</option>
+                                                <option value="2,500 (Private)">2,500 (Private 3 ครั้ง)</option>
                                                 {{-- <option value="Test + five Years Past Papers: 1,350 baht">Test + 5 Years
                                                     Past
                                                     Papers: 1,350 baht</option>
@@ -928,7 +965,11 @@
                                     </div>
                                 </div>
 
-                                <div class="form-row form-focus">
+                                <input type="hidden" name="address" id="address" value="-">
+                                <input type="hidden" name="postcode" id="postcode" value="-">
+                                <input type="hidden" name="newsf" id="newsf" value="-">
+
+                                {{-- <div class="form-row form-focus">
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto"
@@ -959,7 +1000,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="form-row form-focus">
                                     <div class="col-md-6">
@@ -1105,10 +1146,11 @@
 
 
                                 </div>
+                                <input type="hidden" name="sfield" id="sfield" value="18">
 
 
 
-                                <div class="form-row form-focus">
+                                {{-- <div class="form-row form-focus">
                                     <div class="col-md-6 ">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
@@ -1116,7 +1158,6 @@
                                                     class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="newsf" id="newsf"
                                                 value="" maxlength="50" required>
-                                            <input type="hidden" name="sfield" id="sfield" value="18">
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false"></label>
                                             <div class="form-error-message" role="alert"><img
@@ -1131,7 +1172,7 @@
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                         <div class="card-footer text-center">
