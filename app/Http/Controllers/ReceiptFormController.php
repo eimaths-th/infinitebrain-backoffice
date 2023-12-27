@@ -317,7 +317,8 @@ class ReceiptFormController extends Controller
     public function create(Request $request)
     {
         //
-        if ($request->get('sfield') === "18" || $request->get('sfield') === "19") {
+        // if ($request->get('sfield') === "18" || $request->get('sfield') === "19") {
+        if ($request->get('sfield') === "19") {
             dd('error');
         }
 

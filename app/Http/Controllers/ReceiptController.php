@@ -30,7 +30,6 @@ class ReceiptController extends Controller
     const BAHT_TEXT_SATANG = 'สตางค์';
     const BAHT_TEXT_POINT = 'จุด';
     const sfielda = array(
-        '17' => 'test_field',
         '0' => 'reward',
         '2' => 'GMEC',
         '4' => 'IMOCSEA',
@@ -45,9 +44,12 @@ class ReceiptController extends Controller
         '14' => 'IMOCSEA+ISOCSEA',
         '15' => 'Huaxiacup',
         '16' => 'Mathleague',
+        '17' => 'test_field',
+        '18' => 'mathleague-II',
+        '19' => 'Huaxiacup-II',
+
     );
     const sfieldas = array(
-        '17' => 'Test Field',
         '0' => 'IMG Reward',
         '2' => 'G',
         '4' => 'J',
@@ -62,6 +64,10 @@ class ReceiptController extends Controller
         '14' => 'T',
         '15' => 'U',
         '16' => 'V',
+        '17' => 'Test Field',
+        '18' => 'mathleague-II',
+        '19' => 'Huaxiacup-II',
+
     );
     const thmonth = array(
         "",
