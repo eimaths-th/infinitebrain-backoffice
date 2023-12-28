@@ -1048,9 +1048,9 @@
                                     <div class="col-md-6 col-sm-12">
                                         <div class="position-relative form-group" style="padding-top:0px;">
                                             <label class="form-label form-label-top form-label-auto" for="grade">E-mail
-                                                (กรุณาตรวจสอบที่อยู่อีเมลให้ถูกต้อง หากกรอกผิด
-                                                จะไม่สามารถส่งข้อมูลในการเข้าสอบได้) <span
-                                                    class="form-required">*</span></label>
+                                                (กรุณาตรวจสอบที่อยู่อีเมลให้ถูกต้อง หากกรอกผิด จะไม่สามารถส่งข้อมูลลิงก์สำหรับเข้าติวได้)
+                                                <span class="form-required">*</span>
+                                            </label>
                                             <input type="email" class="form-control" name="email" id="email"
                                                 value="" maxlength="70" required>
                                             <label class="form-sub-label" style="min-height:13px"
