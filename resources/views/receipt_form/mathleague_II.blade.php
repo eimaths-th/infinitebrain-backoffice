@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                                                                                        background-size: 15px;
-                                                                                                                                                                                                    }*/
+                                                                                                                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                                                                            background-size: 15px;
+                                                                                                                                                                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                                                                                        border-color: var(--color-invalid);
-                                                                                                                                                                                                    }*/
+                                                                                                                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                                                                            border-color: var(--color-invalid);
+                                                                                                                                                                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                                                                                        display: block;
-                                                                                                                                                                                                    }*/
+                                                                                                                                                                                                            display: block;
+                                                                                                                                                                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -557,8 +557,8 @@
         }
 
         /* .feature-list li::before {
-                content: '✅ ';
-            } */
+                    content: '✅ ';
+                } */
     </style>
 @endsection
 
@@ -718,7 +718,9 @@
                                     </div>
                                 </div>
 
-                                <div class="form-row form-focus">
+                                <input type="hidden" name="subject" id="subject" value="-">
+
+                                {{-- <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Select Subject /
                                         เลือก รายวิชา <span class="form-required">*</span></label>
@@ -728,8 +730,8 @@
                                             <label class="form-label form-label-top form-label-auto" for="subject">
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            {{-- <input type="text" class="form-control" name="subject" id="subject"
-                                                value="" maxlength="50" minlength="2" required> --}}
+                                            <input type="text" class="form-control" name="subject" id="subject"
+                                                value="" maxlength="50" minlength="2" required>
                                             <select name="subject" id="subject" class="form-control">
 
                                                 <option value="">Please Select</option>
@@ -749,7 +751,7 @@
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> --}}
 
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
@@ -782,8 +784,7 @@
                                             </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Last
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
                                                 Name</label>
 
                                         </div>
@@ -795,8 +796,7 @@
                                     <div class="col-md-6 col-sm-12">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="nickname">Nickname
+                                            <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
                                                 (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
@@ -1183,9 +1183,10 @@
                                 </h3>
                             </div>
                             <br>
-                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
+                            {{-- <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
                                 หากตรวจสอบข้อมูล และ พบว่าผู้สมัครไม่มีสิทธิ์เข้าสอบตามกฎ ของสนามสอบ **
-                                **ทางบริษัทจะมีค่าดำเนินการทางบัญชี 100 บาท ในกรณีที่ต้องโอนค่าสมัครคืน**</div>
+                                **ทางบริษัทจะมีค่าดำเนินการทางบัญชี 100 บาท ในกรณีที่ต้องโอนค่าสมัครคืน**
+                            </div> --}}
                             <br>
 
                             <input type="submit" id="send_data" class="btn btn-lg btn-primary"

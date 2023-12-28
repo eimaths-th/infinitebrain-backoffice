@@ -682,8 +682,9 @@
                                         @endif
                                     </div>
                                 </div>
+                                <input type="hidden" name="subject" id="subject" value="-">
 
-                                <div class="form-row form-focus">
+                                {{-- <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Select Subject /
                                         เลือก รายวิชา <span class="form-required">*</span></label>
@@ -693,8 +694,8 @@
                                             <label class="form-label form-label-top form-label-auto" for="subject">
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            {{-- <input type="text" class="form-control" name="subject" id="subject"
-                                                value="" maxlength="50" minlength="2" required> --}}
+                                            <input type="text" class="form-control" name="subject" id="subject"
+                                                value="" maxlength="50" minlength="2" required>
                                             <select name="subject" id="subject" class="form-control">
 
                                                 <option value="">Please Select</option>
@@ -714,7 +715,7 @@
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> --}}
 
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
