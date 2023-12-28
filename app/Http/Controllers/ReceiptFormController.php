@@ -511,7 +511,7 @@ class ReceiptFormController extends Controller
                 $sdes = 'ค่าลงทะเบียนระดับมัธยม';
             }
         } else {
-            if ($request->get('sfield') == 16 || $request->get('sfield') == 17) {
+            if ($request->get('sfield') > 15 && $request->get('sfield') < 20) {
                 $sdes = '';
             } else {
                 if (str_contains($request->get('description'), 'tutoring')) {
