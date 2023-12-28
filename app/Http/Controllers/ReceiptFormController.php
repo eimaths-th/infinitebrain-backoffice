@@ -511,9 +511,18 @@ class ReceiptFormController extends Controller
                 $sdes = 'ค่าลงทะเบียนระดับมัธยม';
             }
         } else {
-            if ($request->get('sfield') > 15 && $request->get('sfield') < 20) {
+            if ($request->get('sfield') == 16 || $request->get('sfield') == 17) {
                 $sdes = '';
-            } else {
+            }elseif ($request->get('sfield') == 18 || $request->get('sfield') == 19) {
+
+                if (str_contains($request->get('description'), 'Private')) {
+                    $sdes = 'สมัครติวแบบส่วนตัว';
+                } else {
+                    $sdes = 'สมัครติว';
+                }
+
+            }
+            else {
                 if (str_contains($request->get('description'), 'tutoring')) {
                     $sdes = 'สมัครสอบรวมติว';
                 } else {

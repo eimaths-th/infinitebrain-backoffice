@@ -865,8 +865,9 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="800 บาท">800 บาท (1 ชั่วโมง)</option>
-                                                <option value="3,500 บาท">3,500 บาท (5 ชั่วโมง)</option>
+                                                <option value="Private : 800 บาท">800 บาท (1 ชั่วโมง)</option>
+                                                <option value="Private : 3,500 บาท">3,500 บาท (5 ชั่วโมง)</option>
+                                                {{-- <option value="3,500 บาท">3,500 บาท (5 ชั่วโมง)</option> --}}
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
