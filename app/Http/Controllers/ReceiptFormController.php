@@ -318,9 +318,9 @@ class ReceiptFormController extends Controller
     {
         //
         // if ($request->get('sfield') === "18" || $request->get('sfield') === "19") {
-        if ($request->get('sfield') === "19") {
-            dd('error');
-        }
+        // if ($request->get('sfield') === "19") {
+        //     dd('error');
+        // }
 
         // $test = Receipt::find(1893);
         // dd($test->recform->id);
