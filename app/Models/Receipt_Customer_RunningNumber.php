@@ -34,7 +34,7 @@ class Receipt_Customer_RunningNumber extends Model
         '16',
         '17',
         '18',
-        // '19',
+        '19',
 
     ];
 
@@ -53,9 +53,9 @@ class Receipt_Customer_RunningNumber extends Model
         '14' => '14',
         '15' => '15',
         '16' => '16',
-        '17',
-        '18',
-        // '19',
+        '17' => '17',
+        '18' => '18',
+        '19' => '19',
 
     ];
 
@@ -70,7 +70,7 @@ class Receipt_Customer_RunningNumber extends Model
         $year = date('Y');
 
 
-        if (! Receipt_Customer_RunningNumber::where('type', $type)->where('year', $year)->exists()) {
+        if (!Receipt_Customer_RunningNumber::where('type', $type)->where('year', $year)->exists()) {
             Receipt_Customer_RunningNumber::create([
                 'type' => $type,
                 'number' => $number,
@@ -90,8 +90,7 @@ class Receipt_Customer_RunningNumber extends Model
         if (strlen(Receipt_Customer_RunningNumber::TYPE_PREFIX[$type]) > 1) {
             return Receipt_Customer_RunningNumber::TYPE_PREFIX[$type] . '' . $number;
         } else {
-            return "0".Receipt_Customer_RunningNumber::TYPE_PREFIX[$type] . '' . $number;
+            return "0" . Receipt_Customer_RunningNumber::TYPE_PREFIX[$type] . '' . $number;
         }
-
     }
 }
