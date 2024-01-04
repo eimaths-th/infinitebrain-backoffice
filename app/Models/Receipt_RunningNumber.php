@@ -140,7 +140,9 @@ class Receipt_RunningNumber extends Model
         $lastDayOfMonth = $ldate->endOfMonth()->format('d');
 
         $day = $sda[2];
-
+        $month = $sda[1];
+        $year = $sda[0];
+        
         if ($day == $lastDayOfMonth && $month != '01') {
             // $month = str_pad(intval($month) - 1, 2, '0', STR_PAD_LEFT); // Decrease month by 1
             $month = str_pad(intval($month), 2, '0', STR_PAD_LEFT); // Decrease month by 1
@@ -149,7 +151,6 @@ class Receipt_RunningNumber extends Model
                 $year--;
             }
         }
-        $month = $sda[1];
 
 
         if (!Receipt_RunningNumber::where('type', $type)->where('year', $year)->where('month', $month)->exists()) {
