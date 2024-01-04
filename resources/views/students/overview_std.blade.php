@@ -80,17 +80,15 @@
                     @else
                         @php
                             if ($std->status == 'กำลังยุติการการเรียน') {
-
                                 $class = 'warning';
-                            }else if ($std->status == 'พ้นสภาพนักเรียน') {
-
-                                $class ='danger';
-                            }else {
-
-                                $class ='success';
+                            } elseif ($std->status == 'พ้นสภาพนักเรียน') {
+                                $class = 'danger';
+                            } else {
+                                $class = 'success';
                             }
                         @endphp
-                        <h5><span class="text-{{ $class }}">{{ $std->status }}</span> สิ้นสุดที่ {{ $end_date }}</h5>
+                        <h5><span class="text-{{ $class }}">{{ $std->status }}</span> สิ้นสุดที่ {{ $end_date }}
+                        </h5>
                         <h5>code : {{ $std->code }} | NickName : {{ $std->nick_name }}
                         </h5>
                         <h5>Student Name : {{ $std->full_name }}</h5>
@@ -131,19 +129,38 @@
                                             $prefer = 0;
                                             $school = $school_pices->qty;
                                             $sub_ids = $school_pices->subject;
-                                            $history = \App\Models\History::where('student_id', $std->id)
-                                                ->where('subject_id', $sub_ids)
-                                                ->get();
+                                            $history = $histories->where('student_id', $std->id)->where('subject_id', $sub_ids);
+                                            // dd($history);
 
-                                            // dd($sub_ids, $history);
                                             if (!empty($history)) {
-                                                $his_succsss = count($history);
+                                                // $his_succsss = count($history);
+
+                                                $history_count = 0;
+                                                foreach ($history as $his_check_time) {
+                                                    # code...
+                                                    // $stime = $his_check_time->stime; //11:15:00
+                                                    // $etime = $his_check_time->etime; //12:15:00
+                                                    $stime = Carbon::parse($his_check_time->stime); //11:15:00
+                                                    $etime = Carbon::parse($his_check_time->etime); //12:15:00
+                                                    $hoursDifference = $etime->diffInHours($stime);
+                                                    // dd($stime, $etime, $hoursDifference);
+                                                    if ($hoursDifference > 1) {
+                                                        # code...
+                                                        $history_count += 2;
+                                                    } else {
+                                                        $history_count += 1;
+                                                    }
+                                                }
+
                                                 $firstRecord = $history->first();
+
                                                 if (!empty($firstRecord) && !in_array($firstRecord->id, $processedIds)) {
                                                     $processedIds[] = $firstRecord->id;
                                                 } else {
-                                                    $his_succsss = 0;
+                                                    $history_count = 0;
                                                 }
+
+
                                             }
                                             $startcourse = $school_pices->period ?? null;
                                             if ($school_pices->period == $startcourse) {
@@ -157,21 +174,21 @@
                                                 $bonus = 12 * $course;
                                                 $prefer = $qty * 8;
                                                 $all = $qty * 8 + $bonus ?? 'N/A';
-                                                $remain = $all - $his_succsss;
+                                                $remain = $all - $history_count;
                                             } elseif ($num_month > 5) {
                                                 $bonus = 5 * $course;
                                                 $prefer = $qty * 8;
                                                 $all = $qty * 8 + $bonus ?? 'N/A';
-                                                $remain = $all - $his_succsss;
+                                                $remain = $all - $history_count;
                                             } elseif ($num_month > 3) {
                                                 $bonus = 3 * $course;
                                                 $prefer = $qty * 8;
                                                 $all = $qty * 8 + $bonus ?? 'N/A';
-                                                $remain = $all - $his_succsss;
+                                                $remain = $all - $history_count;
                                             } else {
                                                 $prefer = $qty * 8;
                                                 $all = $qty * 8 ?? 'N/A';
-                                                $remain = $all - $his_succsss;
+                                                $remain = $all - $history_count;
                                             }
                                         @endphp
                                         <tr>
@@ -181,7 +198,7 @@
                                             <td>{{ $prefer }} </td>
                                             <td>{{ $bonus }}</td>
                                             <td>{{ $all }}</td>
-                                            <td>{{ $his_succsss }}</td>
+                                            <td>{{ $history_count }}</td>
                                             <td>{{ $remain }}</td>
                                             <td>
                                                 <a href="#" class="btn btn-xs btn-primary btn-edit" id="getViewData"
@@ -196,12 +213,15 @@
                                         $result_prefer += $prefer;
                                         $result_all += $all;
                                         $result_bonus += $bonus;
-                                        $result_his += $his_succsss;
+                                        $result_his += $history_count;
                                         $result_remain += $remain;
+
                                     @endphp
                                 @endforeach
                             @endif
+                            @php
 
+                            @endphp
                             <tr>
                                 <th>Result</th>
                                 <th> </th>

@@ -615,9 +615,9 @@ class StudentController extends Controller
         $stdId = $std->id;
         $school_pice = SchoolPrice::where('student_id', $stdId)->where('course_type', '1')->get();
 
-        $success = History::where('student_id', $stdId)->get();
+        // $success = History::where('student_id', $stdId)->get();
         // $his_succsss = count($success);
-        $rec = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
+        // $rec = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
 
         $startcourse = null;
 
@@ -655,8 +655,6 @@ class StudentController extends Controller
 
         //เทสโค้ด
         $tset_std = Student::find($id);
-
-
         $scp = SchoolPrice::where('student_id', $tset_std->id)->where('course_type', '1')->get();
         $scp_ids = $scp->pluck('id')->toArray();
 
@@ -670,11 +668,13 @@ class StudentController extends Controller
         // );
 
         //end test
+        $histories = History::all();
 
         return view('students.overview_std', [
             'std'           => $std,
             'end_date'    => $end_date,
             'school_pice'   => $school_pice,
+            'histories'   => $histories,
             // 'success'       => $success,
             // 'parentCheck'       => $parentCheck,
             'startcourse'       => $startcourse,
