@@ -137,19 +137,15 @@
 
                                                 $history_count = 0;
                                                 foreach ($history as $his_check_time) {
-                                                    # code...
-                                                    // $stime = $his_check_time->stime; //11:15:00
-                                                    // $etime = $his_check_time->etime; //12:15:00
                                                     $stime = Carbon::parse($his_check_time->stime); //11:15:00
                                                     $etime = Carbon::parse($his_check_time->etime); //12:15:00
                                                     $hoursDifference = $etime->diffInHours($stime);
-                                                    // dd($stime, $etime, $hoursDifference);
-                                                    if ($hoursDifference > 1) {
-                                                        # code...
-                                                        $history_count += 2;
-                                                    } else {
-                                                        $history_count += 1;
-                                                    }
+                                                    // $minutesDifference = $etime->diffInMinutes($stime);
+                                                    // $hoursDifference = $minutesDifference / 60; // Convert minutes to hours
+
+                                                    // dd($stime, $etime, $hoursDifference,$minutesDifference,$hoursDifference);
+                                                    $history_count += $hoursDifference;//1 ชม = 1 ครั้ง
+
                                                 }
 
                                                 $firstRecord = $history->first();
@@ -159,8 +155,6 @@
                                                 } else {
                                                     $history_count = 0;
                                                 }
-
-
                                             }
                                             $startcourse = $school_pices->period ?? null;
                                             if ($school_pices->period == $startcourse) {
