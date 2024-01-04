@@ -137,8 +137,8 @@
 
                                                 $history_count = 0;
                                                 foreach ($history as $his_check_time) {
-                                                    $stime = Carbon::parse($his_check_time->stime); //11:15:00
-                                                    $etime = Carbon::parse($his_check_time->etime); //12:15:00
+                                                    $stime = Carbon::parse($his_check_time->stime); //format 11:15:00
+                                                    $etime = Carbon::parse($his_check_time->etime); //format 12:15:00
                                                     $hoursDifference = $etime->diffInHours($stime);
                                                     // $minutesDifference = $etime->diffInMinutes($stime);
                                                     // $hoursDifference = $minutesDifference / 60; // Convert minutes to hours
