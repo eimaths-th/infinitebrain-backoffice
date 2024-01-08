@@ -17,8 +17,8 @@ class ExportDatabase extends Command
         $outputPath = storage_path("app/database_backup_$datetime.sql");
 
         $command = sprintf(
-            '"C:\xampp\mysql\bin\mysqldump.exe" -u%s -p%s --skip-password -h %s %s > %s',
-            // 'mysqldump --user=%s --password=%s --host=%s %s > %s',
+            //'"C:\xampp\mysql\bin\mysqldump.exe" -u%s -p%s --skip-password -h %s %s > %s',
+            'mysqldump --user=%s --password=%s --host=%s %s > %s',
             config('database.connections.mysql.username'),
             config('database.connections.mysql.password'),
             config('database.connections.mysql.host'),
