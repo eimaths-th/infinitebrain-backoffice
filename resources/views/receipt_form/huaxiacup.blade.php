@@ -601,17 +601,17 @@
 
                                     <!-- sub img -->
 
-                                    {{-- <div class="row">
+                                    <div class="row">
                                         <div class="col-lg-6">
-                                            <img src="images/ASIAROPE-01.jpg" class="custom-image mb-3" alt="Image 1">
+                                            <img src="images/HuaXiaCup-01_0.png" class="custom-image mb-3" alt="Image 1">
 
                                         </div>
                                         <div class="col-lg-6">
-                                            <img src="images/ASIAROPE-02.jpg" class="custom-image" alt="Image 2">
+                                            <img src="images/HuaXiaCup-01_2.jpg" class="custom-image" alt="Image 2">
 
 
                                         </div>
-                                    </div> --}}
+                                    </div>
 
                                     <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร China Mathematical Olympiad 2023</b> <br>
 
