@@ -43,6 +43,8 @@ class APIController extends Controller
             ->orderBy("id", "desc")
             ->first();
 
+            dd($range);
+
         // Check if $range is not null and $range->period is not an empty string
         if ($range && $range->period !== '') {
             $dateRange = $range->period;
