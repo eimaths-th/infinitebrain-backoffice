@@ -10,6 +10,7 @@ class History extends Model
     use HasFactory;
     protected $fillable = [
         'student_id',
+        'school_price_id',
         'subject_id',
         'level_id',
         'description',
