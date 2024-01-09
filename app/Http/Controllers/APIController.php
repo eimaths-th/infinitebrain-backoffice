@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Subject;
 use App\Models\Student;
-use App\Models\SchoolPrice;
 use App\Models\History;
+use App\Models\SchoolPrice;
 use Carbon\Carbon;
 
 class APIController extends Controller
@@ -34,6 +34,45 @@ class APIController extends Controller
         return response()->json($results);
     }
 
+    /* public function saveHistories(Request $request)
+    {
+
+        if ($request->hasFile('file')) {
+            $image = $request->file('file');
+            $imageName = $image->getClientOriginalName();
+
+            $newname = Str::random(40) . "_" . $imageName;
+            $image->move(public_path('form_images'), $newname);
+
+            //endtime
+            $time =  $request->get('stime'); // Time string
+            $durationHours = $request->get('hour'); // Duration in hours to add
+
+            $updatedTime = Carbon::createFromFormat('H:i:s', $time)
+                ->addHours($durationHours)
+                ->format('H:i:s');
+
+            $course = new History([
+                'student_id' => $request->get('student'),
+                'subject_id' => $request->get('subject'),
+                //'level_id' => $request->get('level'),
+                'datetime' => $request->get('date'),
+                'stime' => $request->get('stime'),
+                'etime' => $updatedTime,
+                //'description' => $request->get('des'),
+                'signature' => $newname,
+            ]);
+            $course->save();
+
+            return response()->json([
+                'message' => 'Data Save Successfully',
+                'file' => $newname
+            ]);
+        }
+
+        return response()->json(['message' => 'No file found'], 400);
+    } */
+
     public function saveHistories(Request $request)
     {
         $today = $request->get('date'); // Y-m-d format
@@ -43,7 +82,7 @@ class APIController extends Controller
             ->orderBy("id", "desc")
             ->first();
 
-            //dd($range);
+        //dd($range);
 
         // Check if $range is not null and $range->period is not an empty string
         if ($range && $range->period !== '') {
