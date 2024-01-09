@@ -98,7 +98,7 @@ class APIController extends Controller
                 return response()->json(['message' => 'Date is outside of school price period.'], 400);
             }
         } else {
-            // $range is null or $range->period is an empty string
+            /// $range is null or $range->period is an empty string
             return response()->json(['message' => 'School price range not found.'], 400);
         }
     }
