@@ -49,15 +49,18 @@ class APIController extends Controller
         if ($range && $range->period !== '') {
             $dateRange = $range->period;
 
-            // Split the date range into start and end dates
-            list($startDate, $endDate) = explode(' - ', $dateRange);
+            // Split the date range into start and end months
+            list($startMonth, $endMonth) = explode(' - ', $dateRange);
 
-            // Parse the start and end dates into Carbon instances
-            $startCarbon = Carbon::parse($startDate);
-            $endCarbon = Carbon::parse($endDate);
+            // Convert start and end months to Carbon instances
+            $startCarbon = Carbon::parse($startMonth)->startOfMonth();
+            $endCarbon = Carbon::parse($endMonth)->endOfMonth();
+
+            // Convert the current date to a Carbon instance
+            $todayCarbon = Carbon::parse($today);
 
             // Check if the present date is within the date range
-            $isWithinRange = Carbon::parse($today)->between($startCarbon, $endCarbon);
+            $isWithinRange = $todayCarbon->between($startCarbon, $endCarbon);
 
             if ($isWithinRange) {
                 if ($request->hasFile('file')) {
