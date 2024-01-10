@@ -40,9 +40,9 @@ class APIController extends Controller
         } else {
 
             $std = Student::find($studentId);
-            $rc = Receipt_School::where('pid', $std->id)->get();
-            $rcIds = $rc->pluck('id'); // Retrieve all 'id' values from the collection
-            $sch_p = SchoolPrice::whereIn('rid', $rcIds)->get();
+            // $rc = Receipt_School::where('pid', $std->id)->get();
+            // $rcIds = $rc->pluck('id'); // Retrieve all 'id' values from the collection
+            $sch_p = SchoolPrice::where('student_id', $std->id)->get();
             $sch_p_sub = [];
 
             foreach ($sch_p as $sch_p1) {
