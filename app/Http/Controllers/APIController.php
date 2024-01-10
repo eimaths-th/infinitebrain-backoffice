@@ -9,6 +9,7 @@ use App\Models\Subject;
 use App\Models\Student;
 use App\Models\History;
 use App\Models\SchoolPrice;
+use App\Models\Receipt_School;
 use Carbon\Carbon;
 
 class APIController extends Controller
@@ -28,10 +29,75 @@ class APIController extends Controller
     {
         //$query = $request->query('query');
 
-        $results = Subject::orderBy("id", "asc")
-            ->get();
+        /* $results = Subject::orderBy("id", "asc")
+            ->get(); */
+
+        $studentId = $request->get('std');
+
+        if ($studentId == null) {
+            # code...
+            $results = [];
+        } else {
+
+            $std = Student::find($studentId);
+            $rc = Receipt_School::where('pid', $std->id)->get();
+            $rcIds = $rc->pluck('id'); // Retrieve all 'id' values from the collection
+            $sch_p = SchoolPrice::whereIn('rid', $rcIds)->get();
+            $sch_p_sub = [];
+
+            foreach ($sch_p as $sch_p1) {
+                # code...
+                if ($sch_p1->qty !== null) {
+                    $sch_p_sub[] = $sch_p1->subject;
+                }
+            }
+
+            $results = Subject::orderBy("id", "asc")
+                ->whereIn('id', $sch_p_sub)
+                ->get();
+
+
+        }
 
         return response()->json($results);
+    }
+
+    public function stdsub($id)
+    {
+        $studentId = $id;
+
+        if ($studentId == null) {
+            # code...
+        } else {
+
+            $std = Student::find($studentId);
+            $rc = Receipt_School::where('pid', $std->id)->get();
+            $rcIds = $rc->pluck('id'); // Retrieve all 'id' values from the collection
+            $sch_p = SchoolPrice::whereIn('rid', $rcIds)->get();
+            $sch_p_sub = [];
+
+            foreach ($sch_p as $sch_p1) {
+                # code...
+                if ($sch_p1->qty !== null) {
+                    $sch_p_sub[] = $sch_p1->subject;
+                }
+            }
+
+            $subject = Subject::orderBy("id", "asc")
+                ->whereIn('id', $sch_p_sub)
+                ->get();
+
+
+            $html = '<option value="">Select Subject</option>';
+            foreach ($subject as $subject1) {
+                # code...
+                $html .= '<option value="'.$subject1->id.'"> '.$subject1->title.' </option>';
+
+            }
+            return response()->json([
+                'studentsub' => $html
+            ]);
+        }
     }
 
     /* public function saveHistories(Request $request)
