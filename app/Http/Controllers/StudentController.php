@@ -618,7 +618,7 @@ class StudentController extends Controller
         // $success = History::where('student_id', $stdId)->get();
         // $his_succsss = count($success);
         // $rec = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
-
+        // dd($stdId);
         $startcourse = null;
 
         // $id_parent = ;
@@ -630,6 +630,11 @@ class StudentController extends Controller
         //     }
         // }
         $school_pice = SchoolPrice::where('student_id', $stdId)->where('course_type', '1')->get();
+        $school_pice_group = SchoolPrice::where('student_id', $stdId)->where('course_type', '1')->orderBy('rid')->get()->groupBy('subject');
+
+        // dd( $school_pice);
+
+
         if (count($school_pice) > 0) {
             $startcourse = $school_pice->first()->period;
             $period = $school_pice->last()->period;
@@ -641,7 +646,6 @@ class StudentController extends Controller
             // dd($id_parent, $std->pid, $stdId, $std, $rec, $rec_ids, $school_pice);
             // dd($period);
         }
-        // dd($rec_ids, $school_pice,$period);
 
         $parts = explode('-', $period);
         $lastTwoParts = array_slice($parts, -2);
@@ -674,6 +678,7 @@ class StudentController extends Controller
             'std'           => $std,
             'end_date'    => $end_date,
             'school_pice'   => $school_pice,
+            'school_pice_group'   => $school_pice_group,
             'histories'   => $histories,
             // 'success'       => $success,
             // 'parentCheck'       => $parentCheck,
@@ -703,13 +708,29 @@ class StudentController extends Controller
         $html = ' ';
         $date_history = '';
         $time_history = '';
+        $hr_history = '';
+        $sum_hr_history = 0;
         foreach ($history as $key => $hist) {
             # code...
+            $stime = Carbon::parse($hist->stime); //format 11:15:00
+            $etime = Carbon::parse($hist->etime); //format 12:15:00
+            $hoursDifference = $etime->diffInHours($stime);
             $date_history .= '<label for="date"> ' . $hist->datetime . ' </label><br>';
             $time_history .= '<label for="date"> ' . $hist->full_time . ' </label><br>';
+            $hr_history .= '<label for="date"> ' . $hoursDifference . ' ชั่วโมง </label><br>';
+            $sum_hr_history+=$hoursDifference;
         }
         $select_html = 'welcome';
-        return response()->json(['html' => $html, 'parent' => $select_html, 'classname' => $class, 'dateText' => $date_history, 'timeText' => $time_history]);
+        return response()->json([
+            'html' => $html,
+            'parent' => $select_html,
+            'classname' => $class,
+            'dateText' => $date_history,
+            'timeText' => $time_history,
+            'hr_history' => $hr_history,
+            'sum_hr_history' => $sum_hr_history,
+
+        ]);
         // echo "test";
     }
     /**
