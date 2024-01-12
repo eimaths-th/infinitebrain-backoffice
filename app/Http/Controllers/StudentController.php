@@ -689,13 +689,37 @@ class StudentController extends Controller
 
         ]);
     }
-    public function std_his($sub_id, $std_id)
+    public function std_his(Request $request, $sub_id, $std_id)
     {
 
         $std = Student::find($std_id);
-        $history = History::where('student_id', $std->id)
-            ->where('subject_id', $sub_id)
-            ->get();
+        // $historyTimeOut_id = $request->historyTimeOut_id;
+
+
+        if ($request->type === "out") {
+            $historyTimeOut_id = $request->input('historyTimeOut_id');
+
+            $matchingData = [];
+            foreach ($historyTimeOut_id as $item) {
+                if ($item['subject_id'] == $sub_id) {
+                    $matchingData[] = $item['id'];
+                }
+            }
+            # code...
+            $history = History::whereIn('id', $matchingData)
+                ->where('student_id', $std->id)
+                ->where('subject_id', $sub_id)
+                ->orderBy('datetime', 'desc')
+
+                ->get();
+        } else {
+            $history = History::where('student_id', $std->id)
+                ->where('subject_id', $sub_id)
+                ->orderBy('datetime', 'desc')
+                ->get();
+            # code...
+        }
+
         // $test = $std->rec_school->id;
         // dd( $sub_id, $std_id, $history);
         $class = $history->first()->subject->title ?? ' ';
@@ -704,7 +728,6 @@ class StudentController extends Controller
             $class = $classs->title;
         } else {
         }
-        // dd($class);
         $html = ' ';
         $date_history = '';
         $time_history = '';
@@ -718,7 +741,7 @@ class StudentController extends Controller
             $date_history .= '<label for="date"> ' . $hist->datetime . ' </label><br>';
             $time_history .= '<label for="date"> ' . $hist->full_time . ' </label><br>';
             $hr_history .= '<label for="date"> ' . $hoursDifference . ' ชั่วโมง </label><br>';
-            $sum_hr_history+=$hoursDifference;
+            $sum_hr_history += $hoursDifference;
         }
         $select_html = 'welcome';
         return response()->json([

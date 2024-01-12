@@ -56,6 +56,9 @@
             $bonus = 0;
             $processedIds = [];
             $reset_id = [];
+            $his_time_out = [];
+            $historyTimeOut_id = [];
+
             $current_Month = date('Y-m');
             // $currentMonth = Carbon::createFromFormat('Y-m','2023-10');
             $currentMonth = Carbon::createFromFormat('Y-m', $current_Month);
@@ -109,12 +112,10 @@
                                         $reset_id[] = $reset->id;
                                     @endphp
                                 @endforeach
-                                {{-- @php
-                                    dd($school_pice);
-                                @endphp --}}
                             @else
                                 @foreach ($school_pice_group as $school_pice)
                                     @php
+                                        // dd($school_pice_group);
                                         $result_month = 0;
                                         $result_all = 0;
                                         $result_bonus = 0;
@@ -126,6 +127,8 @@
                                         $count_rec = 0;
                                         $monthsDifference = 0;
                                         $count_loop = $school_pice->count();
+                                        // $count_id =
+                                        $count_time_out = 0;
 
                                     @endphp
                                     @foreach ($school_pice as $school_pices)
@@ -135,7 +138,7 @@
                                         @if (in_array($school_pices->id, $reset_id))
                                         @else
                                             @php
-                                                $period = explode(' - ', $school_pices->period); //example format 2023-12 - 2023-12 or 2023-08-2023-11 or 2023-06
+                                                $period = explode(' - ', $school_pices->period);
 
                                                 $course = 0;
                                                 $qty = null;
@@ -181,8 +184,6 @@
                                                     $all = 0;
                                                     $remain = 0;
                                                 }
-
-                                                # code...
                                                 $stdate = explode('-', $startMonthYMD);
                                                 [$stYear, $stMonth] = $stdate;
 
@@ -198,6 +199,7 @@
                                                     ->get();
                                                 if ($history->count() == 0) {
                                                     $history = History::where('student_id', $std->id)
+                                                        ->where('subject_id', $sub_ids)
                                                         ->where(function ($query) use ($stYear, $enYear, $stMonth, $enMonth) {
                                                             $query
                                                                 ->whereYear('datetime', '>', $stYear)
@@ -210,18 +212,6 @@
                                                         })
                                                         ->get();
                                                 }
-                                                // $history->toSql();
-                                                // ->get();
-                                                // ->whereMonthYear('datetime', [$startMonthYMD, $endMonth])
-                                                // ->whereBetween('datetime', [$startMonthYMD, $currecntMonth_Year])
-                                                // ->get();
-
-                                                // dd($history,$startMonthYMD, $endMonth);
-                                                // dd($history, $stYear, $enYear,$stMonth, $enMonth,);
-
-                                                // dd($history);
-
-                                                //เหลิอตกแต่่ง all hiscount result
 
                                                 if (!empty($history)) {
                                                     // $his_succsss = count($history);
@@ -234,7 +224,10 @@
                                                         // $hoursDifference = $minutesDifference / 60; // Convert minutes to hours
                                                         // dd($stime, $etime, $hoursDifference,$minutesDifference,$hoursDifference);
                                                         $history_count += $hoursDifference; //1 ชม = 1 ครั้ง
+                                                        $his_time_out[] = $his_check_time->id;
+                                                        // $his_time_out[] = ['id' => $his_check_time->id, 'subject_id' => $his_check_time->subject_id];
                                                     }
+
                                                     $firstRecord = $history->first();
 
                                                     if (!empty($firstRecord) && !in_array($firstRecord->id, $processedIds)) {
@@ -291,7 +284,7 @@
                                             }
                                         @endphp
                                         <tr class="bg-{{ $class }}">
-                                            <td>{{ $school_pice->first()->school_sub->title }}</td>
+                                            <td> {{ $school_pice->first()->school_sub->title }}</td>
                                             <td>{{ $school_pices->period }}</td>
                                             <td>{{ $num_month }}
                                                 {{-- / {{ $result_month }} --}}
@@ -310,7 +303,7 @@
                                                 {{-- / {{ $result_his }} --}}
                                             </td>
                                             <td>
-                                                {{ $remain }} / {{ $result_remain }}
+                                                {{ $remain }} / {{ $result_remain - $count_time_out }}
                                             </td>
                                             <td>
                                                 <a href="#" class="btn btn-xs btn-primary btn-edit" id="getViewData"
@@ -320,70 +313,80 @@
                                         </tr>
                                     @endforeach
                                     @php
-                                        // dd($history, $stYear, $enYear, $stMonth, $enMonth);
+                                        $historyTimeOut = $histories
+                                            ->where('student_id', $std->id)
+                                            ->whereIn('subject_id', $sub_ids)
+                                            ->reject(function ($historyTime) use ($his_time_out) {
+                                                return in_array($historyTime->id, $his_time_out);
+                                            });
+                                        foreach ($historyTimeOut as $a) {
+                                            if (!in_array($a->id, array_column($historyTimeOut_id, 'id'))) {
+                                                $historyTimeOut_id[] = ['id' => $a->id, 'subject_id' => $a->subject_id];
+                                            }
+                                        }
+
+                                        if (!empty($historyTimeOut)) {
+                                            // $his_succsss = count($history);
+                                            $count_time_out = 0;
+                                            foreach ($historyTimeOut as $his_check_time1) {
+                                                $stime1 = Carbon::parse($his_check_time1->stime); 
+                                                $etime1 = Carbon::parse($his_check_time1->etime);
+                                                $hoursDifference = $etime1->diffInHours($stime1);
+                                                $count_time_out += $hoursDifference;
+                                            }
+
+                                        }
+
+                                        // $count_time_out = $historyTimeOut->count();
+                                        // dd($historyTimeOut_id, $historyTimeOut);
 
                                         // dd($history, $startMonthYMD, $stMonth, $endMonth, $stYear, $endYear);
                                     @endphp
-                        <tbody class="bg-dark">
-                            <tr>
-                                <td class="text-white">{{ $school_pice->first()->school_sub->title }}</td>
-                                <td class="text-white">date</td>
+                                    <tr class="bg-danger">
+                                        <td class="text-white">{{ $school_pice->first()->school_sub->title }} (นอกระยะเวลา)
+                                        </td>
+                                        <td class="text-white">date</td>
 
-                                <td class="text-white">{{ $result_month }}</td>
-                                <td class="text-white">{{ $all_prefer }}</td>
-                                <td class="text-white">{{ $result_bonus }}</td>
-                                <td class="text-white">{{ $result_all }}</td>
-                                <td class="text-white">{{ $result_his }}</td>
-                                <td class="text-white">{{ $result_remain }}</tdclass=>
-                                <td class="text-white">
-                                    <a href="#" class="btn btn-xs btn-primary btn-edit" id="getViewData"
-                                        data-id="{{ $school_pice->first()->school_sub->id }},{{ $std->id }}"><i
-                                            class="fa fa-eye"></i> View</a>
-                                </td>
-                            </tr>
+                                        <td class="text-white"> - </td>
+                                        <td class="text-white"> - </td>
+                                        <td class="text-white"> - </td>
+                                        <td class="text-white"> - </td>
+                                        <td class="text-white">{{ $count_time_out }}</td>
+                                        <td class="text-white">{{ $result_remain - $count_time_out }}</td>
+                                        <td class="text-white">
+                                            {{-- <a href="#" class="btn btn-xs btn-primary btn-edit" id="getViewData"
+                                                data-id="{{ $school_pice->first()->school_sub->id }},{{ $std->id }}"><i
+                                                    class="fa fa-eye"></i> View</a> --}}
+                                            <a href="#" class="btn btn-xs btn-primary btn-edit" id="getViewData1"
+                                                data-id="{{ $school_pice->first()->school_sub->id }},{{ $std->id }}"><i
+                                                    class="fa fa-eye"></i> View</a>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-dark">
+                                        <td class="text-white"> {{ $school_pice->first()->school_sub->title }} result</td>
+                                        <td class="text-white">date</td>
+
+                                        <td class="text-white">{{ $result_month }}</td>
+                                        <td class="text-white">{{ $all_prefer }}</td>
+                                        <td class="text-white">{{ $result_bonus }}</td>
+                                        <td class="text-white">{{ $result_all }}</td>
+                                        <td class="text-white">{{ $result_his + $count_time_out }}</td>
+                                        <td class="text-white">{{ $result_remain - $count_time_out }}</td>
+                                        <td class="text-white">
+                                            <a href="#" class="btn btn-xs btn-primary btn-edit" id="getViewData"
+                                                data-id="{{ $school_pice->first()->school_sub->id }},{{ $std->id }}"><i
+                                                    class="fa fa-eye"></i> View</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                            @php
+                                // dd($historyTimeOut_id, $historyTimeOut, $his_time_out);
+                            @endphp
+
+
                         </tbody>
-                        @endforeach
-                        @endif
 
-                        {{-- @php
-                            dd($monthsDifference, $firstEndMonth,$startMonth);
-                        @endphp --}}
-
-                        </tbody>
-                        {{-- <tfoot>
-                            @foreach ($school_pice_group as $school_pice_sub)
-                            <tr>
-                                <td>{{ $school_pice_sub->first()->school_sub->title }}</td>
-                                <td>date</td>
-
-                                <td>{{ $num_month }} / {{ $result_month }}</td>
-                                <td>{{ $prefer }} / {{ $all_prefer }}</td>
-                                <td>{{ $bonus }} / {{ $result_bonus }}</td>
-                                <td>{{ $all }} / {{ $result_all }}</td>
-                                <td>{{ $history_count }} / {{ $result_his }}</td>
-                                <td>{{ $remain }} / {{ $result_remain }}</td>
-                                <td>
-                                    <a href="#" class="btn btn-xs btn-primary btn-edit" id="getViewData"
-                                        data-id="{{ $school_pice_sub->first()->school_sub->id }},{{ $std->id }}"><i
-                                            class="fa fa-eye"></i> View</a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tfoot> --}}
-
-                        {{-- <tbody>
-                            <tr>
-                                <th>Result</th>
-                                <th> </th>
-                                <th>{{ $result_month }} </th>
-                                <th>{{ $result_prefer }} </th>
-                                <th> {{ $result_bonus }}</th>
-                                <th> {{ $result_all }}</th>
-                                <th> {{ $result_his }}</th>
-                                <th> {{ $result_remain }}</th>
-                                <th> </th>
-                            </tr>
-                        </tbody> --}}
                     </table>
                 </form>
             </div>
@@ -426,7 +429,8 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
                             <strong>Success!</strong> Student was edit successfully.
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true"></span>
@@ -527,6 +531,36 @@
                 $.ajax({
                     url: "history/" + sub_id + "/" + std_id,
                     method: 'GET',
+                    success: function(res) {
+                        $('#time_text').html(res.timeText);
+                        $('#date_text').html(res.dateText);
+                        $('#hr_history').html(res.hr_history);
+                        $('#sum_hr_history').html(res.sum_hr_history);
+                        $('#className').html(res.classname);
+                        $('#ViewModalBody').html(res.html);
+                        $('#ViewParent').html(res.parent);
+                        $('#ViewModal').modal('show');
+                    }
+                });
+            });
+            $(document).on('click', '#getViewData1', function(e) {
+                e.preventDefault();
+
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+
+                let id = $(this).data('id');
+                [sub_id, std_id] = id.split(',');
+
+                $.ajax({
+                    url: "history/" + sub_id + "/" + std_id,
+                    method: 'GET',
+                    data: {
+                        historyTimeOut_id: {!! json_encode($historyTimeOut_id) !!}, // Pass the array to the controller
+                        type: 'out',
+                    },
                     success: function(res) {
                         $('#time_text').html(res.timeText);
                         $('#date_text').html(res.dateText);
