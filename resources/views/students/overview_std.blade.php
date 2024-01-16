@@ -101,6 +101,7 @@
                                 <th>Bonus</th>
                                 <th>All</th>
                                 <th>History</th>
+                                <th>Per Time</th>
                                 <th>Result</th>
                                 <th>Action</th>
                             </tr>
@@ -303,7 +304,10 @@
                                                 {{-- / {{ $result_his }} --}}
                                             </td>
                                             <td>
-                                                {{ $remain }} / {{ $result_remain - $count_time_out }}
+                                                {{ $remain }}
+                                            </td>
+                                            <td>
+                                                {{ $result_remain - $count_time_out }}
                                             </td>
                                             <td>
                                                 <a href="#" class="btn btn-xs btn-primary btn-edit" id="getViewData"
@@ -329,18 +333,18 @@
                                             // $his_succsss = count($history);
                                             $count_time_out = 0;
                                             foreach ($historyTimeOut as $his_check_time1) {
-                                                $stime1 = Carbon::parse($his_check_time1->stime); 
+                                                $stime1 = Carbon::parse($his_check_time1->stime);
                                                 $etime1 = Carbon::parse($his_check_time1->etime);
                                                 $hoursDifference = $etime1->diffInHours($stime1);
                                                 $count_time_out += $hoursDifference;
                                             }
-
                                         }
 
                                         // $count_time_out = $historyTimeOut->count();
                                         // dd($historyTimeOut_id, $historyTimeOut);
 
                                         // dd($history, $startMonthYMD, $stMonth, $endMonth, $stYear, $endYear);
+
                                     @endphp
                                     <tr class="bg-danger">
                                         <td class="text-white">{{ $school_pice->first()->school_sub->title }} (นอกระยะเวลา)
@@ -352,6 +356,7 @@
                                         <td class="text-white"> - </td>
                                         <td class="text-white"> - </td>
                                         <td class="text-white">{{ $count_time_out }}</td>
+                                        <td class="text-white"> - </td>
                                         <td class="text-white">{{ $result_remain - $count_time_out }}</td>
                                         <td class="text-white">
                                             {{-- <a href="#" class="btn btn-xs btn-primary btn-edit" id="getViewData"
@@ -371,6 +376,7 @@
                                         <td class="text-white">{{ $result_bonus }}</td>
                                         <td class="text-white">{{ $result_all }}</td>
                                         <td class="text-white">{{ $result_his + $count_time_out }}</td>
+                                        <td class="text-white"> - </td>
                                         <td class="text-white">{{ $result_remain - $count_time_out }}</td>
                                         <td class="text-white">
                                             <a href="#" class="btn btn-xs btn-primary btn-edit" id="getViewData"

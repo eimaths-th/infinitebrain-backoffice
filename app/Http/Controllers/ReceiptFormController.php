@@ -847,7 +847,7 @@ class ReceiptFormController extends Controller
     public function exportForm(Request $request)
     {
 
-        // dd($request->excel);
+        // dd($request);
 
         if ($request->excel === "1") {
             # code...
