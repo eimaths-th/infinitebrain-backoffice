@@ -55,8 +55,6 @@ class APIController extends Controller
             $results = Subject::orderBy("id", "asc")
                 ->whereIn('id', $sch_p_sub)
                 ->get();
-
-
         }
 
         return response()->json($results);
@@ -91,8 +89,7 @@ class APIController extends Controller
             $html = '<option value="">Select Subject</option>';
             foreach ($subject as $subject1) {
                 # code...
-                $html .= '<option value="'.$subject1->id.'"> '.$subject1->title.' </option>';
-
+                $html .= '<option value="' . $subject1->id . '"> ' . $subject1->title . ' </option>';
             }
             return response()->json([
                 'studentsub' => $html
@@ -155,7 +152,7 @@ class APIController extends Controller
             $dateRange = $range->period;
 
             // Split the date range into start and end months
-            list($startMonth, $endMonth) = explode(' - ', $dateRange);
+            list($startMonth, $endMonth) = explode('-', str_replace(" ", "", $dateRange));
 
             // Convert start and end months to Carbon instances
             $startCarbon = Carbon::parse($startMonth)->startOfMonth();
