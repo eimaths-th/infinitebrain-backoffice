@@ -153,6 +153,8 @@ class APIController extends Controller
 
             $rem = str_replace(" ", "", $dateRange);
 
+            dd($rem);
+
             // Split the date range into start and end months
             list($startMonth, $endMonth) = explode('-', str_replace(" ", "", $dateRange));
 
