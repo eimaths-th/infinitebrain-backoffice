@@ -151,12 +151,14 @@ class APIController extends Controller
         if ($range && $range->period !== '') {
             $dateRange = $range->period;
 
+            $rem = str_replace(" ", "", $dateRange);
+
             // Split the date range into start and end months
             list($startMonth, $endMonth) = explode('-', str_replace(" ", "", $dateRange));
 
             // Convert start and end months to Carbon instances
-            $startCarbon = Carbon::parse(substr($dateRange, 0, 6))->startOfMonth();
-            $endCarbon = Carbon::parse(substr($dateRange, 7, 6))->endOfMonth();
+            $startCarbon = Carbon::parse(substr($rem, 0, 6))->startOfMonth();
+            $endCarbon = Carbon::parse(substr($rem, 7, 6))->endOfMonth();
 
             // Convert the current date to a Carbon instance
             $todayCarbon = Carbon::parse($today);
