@@ -172,9 +172,11 @@
                                                     $firstEndMonth = $endMonth;
                                                     $count_rec++;
                                                 }
+
                                                 $history = $histories->where('student_id', $std->id)->where('subject_id', $sub_ids);
                                                 $currecntMonth_Year = date('Y-m-d');
                                                 $startMonthYMD = Carbon::parse($startMonth)->format('Y-m');
+
                                                 if ($monthsDifference > 1) {
                                                     $result_month = 0;
                                                     $result_all = 0;
