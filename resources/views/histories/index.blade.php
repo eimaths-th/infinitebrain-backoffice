@@ -722,14 +722,19 @@
                         _token: token,
                     },
                     success: function(result) {
-
+                       
                         if (result.errors) {
                             $('.alert-danger').html('');
+
                             $.each(result.errors, function(key, value) {
                                 $('.alert-danger').show();
                                 $('.alert-danger').append('<strong><li>' + value +
                                     '</li></strong>');
                             });
+                        } else if (result.errortime) {
+                            $('.alert-danger').show();
+                            $('.alert-danger').append('<strong><li>' + result.errortime +
+                                '</li></strong>');
                         } else {
                             $('.alert-danger').hide();
                             $('.alert-success').show();
