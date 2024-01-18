@@ -357,6 +357,7 @@
                                                 $etime1 = Carbon::parse($his_check_time1->etime);
                                                 $hoursDifference = $etime1->diffInHours($stime1);
                                                 $count_time_out += $hoursDifference;
+                                                $his_check_time1->update(['status' => 'non-reciept']);
                                             }
                                         }
 

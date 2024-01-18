@@ -733,14 +733,22 @@ class StudentController extends Controller
         $time_history = '';
         $hr_history = '';
         $sum_hr_history = 0;
+        $class = '';
         foreach ($history as $key => $hist) {
             # code...
+            if ($hist->status === 'non-reciept') {
+                # code...
+                $class = 'danger';
+            }else {
+                # code...
+                $class = 'success';
+            }
             $stime = Carbon::parse($hist->stime); //format 11:15:00
             $etime = Carbon::parse($hist->etime); //format 12:15:00
             $hoursDifference = $etime->diffInHours($stime);
-            $date_history .= '<label for="date"> ' . $hist->datetime . ' </label><br>';
-            $time_history .= '<label for="date"> ' . $hist->full_time . ' </label><br>';
-            $hr_history .= '<label for="date"> ' . $hoursDifference . ' ชั่วโมง </label><br>';
+            $date_history .= '<label for="date" class="text-' . $class . '"> ' . $hist->datetime . ' </label><br>';
+            $time_history .= '<label for="date"class="text-' . $class . '"> ' . $hist->full_time . ' </label><br>';
+            $hr_history .= '<label for="date" class="text-' . $class . '"> ' . $hoursDifference . ' ชั่วโมง </label><br>';
             $sum_hr_history += $hoursDifference;
         }
         $select_html = 'welcome';
