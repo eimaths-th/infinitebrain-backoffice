@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('histories', function (Blueprint $table) {
             //
-            $table->integer('status')->nullable()->after('school_price_id');
+            $table->string('status')->nullable()->after('school_price_id');
 
         });
     }
