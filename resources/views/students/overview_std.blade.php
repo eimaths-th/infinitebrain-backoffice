@@ -201,21 +201,6 @@
                                                     ->whereMonth('datetime', '<=', $enMonth)
                                                     ->get();
 
-                                                // if ($history->count() == 0) {
-                                                //     $history = History::where('student_id', $std->id)
-                                                //         ->where('subject_id', $sub_ids)
-                                                //         ->where(function ($query) use ($stYear, $enYear, $stMonth, $enMonth) {
-                                                //             $query
-                                                //                 ->whereYear('datetime', '>', $stYear)
-                                                //                 ->orWhere(function ($query) use ($stYear, $stMonth) {
-                                                //                     $query->whereYear('datetime', $stYear)->whereMonth('datetime', '>=', $stMonth);
-                                                //                 })
-                                                //                 ->orWhere(function ($query) use ($enYear, $enMonth) {
-                                                //                     $query->whereYear('datetime', $enYear)->whereMonth('datetime', '<=', $enMonth);
-                                                //                 });
-                                                //         })
-                                                //         ->get();
-                                                // }
                                                 if ($history->count() == 0) {
                                                     $history = History::where('student_id', $std->id)
                                                         ->where('subject_id', $sub_ids)
@@ -231,8 +216,21 @@
                                                         })
                                                         ->get();
                                                 }
-
-                                                // dd($startMonthYMD, $endMonth, $history, $stYear, $enYear, $stMonth, $enMonth);
+                                                if ($history->count() == 0) {
+                                                    $history = History::where('student_id', $std->id)
+                                                        ->where('subject_id', $sub_ids)
+                                                        ->where(function ($query) use ($stYear, $enYear, $stMonth, $enMonth) {
+                                                            $query
+                                                                ->whereYear('datetime', '>', $stYear)
+                                                                ->orWhere(function ($query) use ($stYear, $stMonth) {
+                                                                    $query->whereYear('datetime', $stYear)->whereMonth('datetime', '>=', $stMonth);
+                                                                })
+                                                                ->orWhere(function ($query) use ($enYear, $enMonth) {
+                                                                    $query->whereYear('datetime', $enYear)->whereMonth('datetime', '<=', $enMonth);
+                                                                });
+                                                        })
+                                                        ->get();
+                                                }
 
                                                 if (!empty($history)) {
                                                     // $his_succsss = count($history);
@@ -337,6 +335,8 @@
                                         </tr>
                                     @endforeach
                                     @php
+                                        // dd($startMonthYMD, $endMonth, $history, $stYear, $enYear, $stMonth, $enMonth);
+
                                         $historyTimeOut = $histories
                                             ->where('student_id', $std->id)
                                             ->whereIn('subject_id', $sub_ids)
