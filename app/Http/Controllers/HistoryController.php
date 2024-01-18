@@ -256,11 +256,26 @@ class HistoryController extends Controller
                 'stime' => $request->get('stime'),
                 'etime' => $request->get('etime'),
                 'description' => $request->get('des'),
+                'status' => 'reciept',
+
             ]);
             $course->save();
             return response()->json(['success' => 'Histories Add successfully']);
         } else {
-            return response()->json(['errortime' => 'ไม่ได้อยู่ในระยะเวลาที่ลงทะเบียน']);
+            $null = null;
+            $course = new History([
+                'student_id' => $request->get('student'),
+                'subject_id' => $request->get('subject'),
+                'school_price_id' => $null,
+                //'level_id' => $request->get('level'),
+                'datetime' => $request->get('date'),
+                'stime' => $request->get('stime'),
+                'etime' => $request->get('etime'),
+                'description' => $request->get('des'),
+                'status' => 'non-reciept',
+            ]);
+            $course->save();
+            return response()->json(['success' => 'ไม่ได้อยู่ในระยะเวลาที่ลงทะเบียน']);
         }
 
 
