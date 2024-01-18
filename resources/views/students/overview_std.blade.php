@@ -200,21 +200,39 @@
                                                     ->whereMonth('datetime', '>=', $stMonth)
                                                     ->whereMonth('datetime', '<=', $enMonth)
                                                     ->get();
+
+                                                // if ($history->count() == 0) {
+                                                //     $history = History::where('student_id', $std->id)
+                                                //         ->where('subject_id', $sub_ids)
+                                                //         ->where(function ($query) use ($stYear, $enYear, $stMonth, $enMonth) {
+                                                //             $query
+                                                //                 ->whereYear('datetime', '>', $stYear)
+                                                //                 ->orWhere(function ($query) use ($stYear, $stMonth) {
+                                                //                     $query->whereYear('datetime', $stYear)->whereMonth('datetime', '>=', $stMonth);
+                                                //                 })
+                                                //                 ->orWhere(function ($query) use ($enYear, $enMonth) {
+                                                //                     $query->whereYear('datetime', $enYear)->whereMonth('datetime', '<=', $enMonth);
+                                                //                 });
+                                                //         })
+                                                //         ->get();
+                                                // }
                                                 if ($history->count() == 0) {
                                                     $history = History::where('student_id', $std->id)
                                                         ->where('subject_id', $sub_ids)
                                                         ->where(function ($query) use ($stYear, $enYear, $stMonth, $enMonth) {
                                                             $query
                                                                 ->whereYear('datetime', '>', $stYear)
-                                                                ->orWhere(function ($query) use ($stYear, $stMonth) {
+                                                                ->Where(function ($query) use ($stYear, $stMonth) {
                                                                     $query->whereYear('datetime', $stYear)->whereMonth('datetime', '>=', $stMonth);
                                                                 })
-                                                                ->orWhere(function ($query) use ($enYear, $enMonth) {
+                                                                ->Where(function ($query) use ($enYear, $enMonth) {
                                                                     $query->whereYear('datetime', $enYear)->whereMonth('datetime', '<=', $enMonth);
                                                                 });
                                                         })
                                                         ->get();
                                                 }
+
+                                                // dd($startMonthYMD, $endMonth, $history, $stYear, $enYear, $stMonth, $enMonth);
 
                                                 if (!empty($history)) {
                                                     // $his_succsss = count($history);
@@ -432,7 +450,8 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
