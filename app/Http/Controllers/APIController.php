@@ -148,6 +148,7 @@ class APIController extends Controller
         //dd($range);
 
         // Check if $range is not null and $range->period is not an empty string
+        $schoolp = '';
         if ($range && $range->period !== '') {
             $dateRange = $range->period;
 
@@ -198,7 +199,7 @@ class APIController extends Controller
             ->addHours($durationHours)
             ->format('H:i:s');
 
-        if ($schoolp) {
+        if ($schoolp !== '') {
             $course = new History([
                 'student_id' => $request->get('student'),
                 'subject_id' => $request->get('subject'),
