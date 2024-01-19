@@ -184,7 +184,7 @@ class APIController extends Controller
             $status = 'non-reciept';
         }
 
-        if ($request->hasFile('file')) {
+       // if ($request->hasFile('file')) {
             // Your logic for handling file upload
             $image = $request->file('file');
             $imageName = $image->getClientOriginalName();
@@ -217,8 +217,8 @@ class APIController extends Controller
                 'message' => 'Data Save Successfully',
                 'file' => $newname
             ], 200);
-        }
+        //}
 
-        return response()->json(['message' => 'No file found'], 400);
+        //return response()->json(['message' => 'No file found'], 400);
     }
 }
