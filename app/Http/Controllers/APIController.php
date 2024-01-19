@@ -208,7 +208,7 @@ class APIController extends Controller
                     'datetime' => $request->get('date'),
                     'stime' => $request->get('stime'),
                     'etime' => $updatedTime,
-                    //'signature' => $newname,
+                    'signature' => $newname,
                 ]);
             } else {
                 $course = new History([
@@ -218,7 +218,7 @@ class APIController extends Controller
                     'datetime' => $request->get('date'),
                     'stime' => $request->get('stime'),
                     'etime' => $updatedTime,
-                    //'signature' => $newname,
+                    'signature' => $newname,
                 ]);
             }
 
