@@ -183,54 +183,54 @@ class APIController extends Controller
             $status = 'non-reciept';
         }
 
-        // if ($request->hasFile('file')) {
-        // Your logic for handling file upload
-        /*  $image = $request->file('file');
-            $imageName = $image->getClientOriginalName(); */
+        if ($request->hasFile('file')) {
+            // Your logic for handling file upload
+            $image = $request->file('file');
+            $imageName = $image->getClientOriginalName();
 
-        /*  $newname = Str::random(40) . "_" . $imageName;
-            $image->move(public_path('form_images'), $newname); */
+            $newname = Str::random(40) . "_" . $imageName;
+            $image->move(public_path('form_images'), $newname);
 
-        //endtime
-        $time =  $request->get('stime'); // Time string
-        $durationHours = $request->get('hour'); // Duration in hours to add
+            //endtime
+            $time =  $request->get('stime'); // Time string
+            $durationHours = $request->get('hour'); // Duration in hours to add
 
-        $updatedTime = Carbon::createFromFormat('H:i:s', $time)
-            ->addHours($durationHours)
-            ->format('H:i:s');
+            $updatedTime = Carbon::createFromFormat('H:i:s', $time)
+                ->addHours($durationHours)
+                ->format('H:i:s');
 
-        if ($schoolp !== '') {
-            $course = new History([
-                'student_id' => $request->get('student'),
-                'subject_id' => $request->get('subject'),
-                'school_price_id' => $schoolp,
-                'status' => $status,
-                'datetime' => $request->get('date'),
-                'stime' => $request->get('stime'),
-                'etime' => $updatedTime,
-                //'signature' => $newname,
-            ]);
-        } else {
-            $course = new History([
-                'student_id' => $request->get('student'),
-                'subject_id' => $request->get('subject'),
-                'status' => $status,
-                'datetime' => $request->get('date'),
-                'stime' => $request->get('stime'),
-                'etime' => $updatedTime,
-                //'signature' => $newname,
-            ]);
+            if ($schoolp !== '') {
+                $course = new History([
+                    'student_id' => $request->get('student'),
+                    'subject_id' => $request->get('subject'),
+                    'school_price_id' => $schoolp,
+                    'status' => $status,
+                    'datetime' => $request->get('date'),
+                    'stime' => $request->get('stime'),
+                    'etime' => $updatedTime,
+                    //'signature' => $newname,
+                ]);
+            } else {
+                $course = new History([
+                    'student_id' => $request->get('student'),
+                    'subject_id' => $request->get('subject'),
+                    'status' => $status,
+                    'datetime' => $request->get('date'),
+                    'stime' => $request->get('stime'),
+                    'etime' => $updatedTime,
+                    //'signature' => $newname,
+                ]);
+            }
+
+
+            $course->save();
+
+            return response()->json([
+                'message' => 'Data Save Successfully',
+                'file' => $newname
+            ], 200);
         }
 
-
-        $course->save();
-
-        return response()->json([
-            'message' => 'Data Save Successfully',
-            //'file' => $newname
-        ], 200);
-        //}
-
-        //return response()->json(['message' => 'No file found'], 400);
+        return response()->json(['message' => 'No file found'], 400);
     }
 }
