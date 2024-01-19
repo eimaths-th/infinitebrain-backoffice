@@ -170,15 +170,18 @@ class APIController extends Controller
 
             if ($isWithinRange) {
                 $schoolp = $range->id;
+                $status = 'reciept';
             } else {
                 // Present date is outside the specified range
                 //return response()->json(['message' => 'Date is outside of school price period.'], 400);
                 $schoolp = '';
+                $status = 'non-reciept';
             }
         } else {
             /// $range is null or $range->period is an empty string
             //return response()->json(['message' => 'School price range not found.'], 400);
             $schoolp = '';
+            $status = 'non-reciept';
         }
 
         if ($request->hasFile('file')) {
@@ -201,6 +204,7 @@ class APIController extends Controller
                 'student_id' => $request->get('student'),
                 'subject_id' => $request->get('subject'),
                 'school_price_id' => $schoolp,
+                'status' => $status,
                 'datetime' => $request->get('date'),
                 'stime' => $request->get('stime'),
                 'etime' => $updatedTime,
