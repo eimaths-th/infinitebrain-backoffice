@@ -186,11 +186,11 @@ class APIController extends Controller
 
        // if ($request->hasFile('file')) {
             // Your logic for handling file upload
-            $image = $request->file('file');
-            $imageName = $image->getClientOriginalName();
+           /*  $image = $request->file('file');
+            $imageName = $image->getClientOriginalName(); */
 
-            $newname = Str::random(40) . "_" . $imageName;
-            $image->move(public_path('form_images'), $newname);
+           /*  $newname = Str::random(40) . "_" . $imageName;
+            $image->move(public_path('form_images'), $newname); */
 
             //endtime
             $time =  $request->get('stime'); // Time string
@@ -208,14 +208,14 @@ class APIController extends Controller
                 'datetime' => $request->get('date'),
                 'stime' => $request->get('stime'),
                 'etime' => $updatedTime,
-                'signature' => $newname,
+                //'signature' => $newname,
             ]);
 
             $course->save();
 
             return response()->json([
                 'message' => 'Data Save Successfully',
-                'file' => $newname
+                //'file' => $newname
             ], 200);
         //}
 
