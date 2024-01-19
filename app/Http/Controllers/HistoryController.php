@@ -9,6 +9,7 @@ use App\Models\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Receipt_School;
 use App\Models\SchoolPrice;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -87,6 +88,26 @@ class HistoryController extends Controller
                 //->where('levels.subject', $request->id)
                 ->orderBy("histories.id", "desc")
                 ->get();
+            $course = History::select(
+                "histories.id as histories_id",
+                //"levels.title as student_level",
+                "subjects.title as student_subject",
+                "students.code as student_code",
+                "students.first_name as student_name",
+                "students.last_name as student_lastname",
+                "students.nick_name as student_nickname",
+                "histories.description as description",
+                "histories.datetime as datetime",
+                "histories.stime as stime",
+                "histories.etime as etime",
+            )
+                ->join("students", "students.id", "=", "histories.student_id")
+                ->join("subjects", "subjects.id", "=", "histories.subject_id")
+                //->join("levels", "levels.id", "=", "histories.level_id")
+
+                //->where('levels.subject', $request->id)
+                ->orderBy("histories.id", "desc")
+                ->get();
 
             return datatables()->of($course)
                 ->editColumn('student_name', function (History $course) {
@@ -140,15 +161,31 @@ class HistoryController extends Controller
                 ->whereIn('id', $sch_p_sub)
                 ->get();
 
-
             $html = '<option value="">Select Subject</option>';
             foreach ($subject as $subject1) {
                 # code...
-                $html .= '<option value="'.$subject1->id.'"> '.$subject1->title.' </option>';
-
+                $html .= '<option value="' . $subject1->id . '"> ' . $subject1->title . ' </option>';
             }
             return response()->json([
                 'studentsub' => $html
+            ]);
+        }
+    }
+    public function stdsperiod($id, $sub_id)
+    {
+        $studentId = $id;
+
+        if ($studentId == null) {
+        } else {
+            $std = Student::find($studentId);
+            $sch_p = SchoolPrice::where(['student_id' => $std->id, 'subject' => $sub_id, 'course_type' => '1'])->get();
+            $html = '<option value="">Select Preiod</option><option value=" ">นอกระยะเวลา</option>';
+            foreach ($sch_p as $sch_p1) {
+                # code...
+                $html .= '<option value="' . $sch_p1->id . '"> ' . $sch_p1->period . ' </option>';
+            }
+            return response()->json([
+                'studentperiod' => $html
             ]);
         }
     }
@@ -167,10 +204,11 @@ class HistoryController extends Controller
     public function store(Request $request)
     {
         $this->check_permission();
+
         $validator =  Validator::make($request->all(), [
             'student' => 'required',
             'subject' => 'required',
-            //'level' => 'required',
+            // 'preiod' => 'required',
             'date' => 'required',
             'stime' => 'required',
             'etime' => 'required',
@@ -179,18 +217,87 @@ class HistoryController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
+
+        $std_id = $request->student;
+
+        // $schp = SchoolPrice::where(['student_id' => $std_id, 'subject' => $request->subject])->get();
+        $schp = SchoolPrice::find($request->preiod);
+        $last_period = null;
+
+        if ($schp) {
+            $last_period = $schp->period;
+        } else {
+            # code...
+            $null = null;
+            $course = new History([
+                'student_id' => $request->get('student'),
+                'subject_id' => $request->get('subject'),
+                'school_price_id' => $null,
+                //'level_id' => $request->get('level'),
+                'datetime' => $request->get('date'),
+                'stime' => $request->get('stime'),
+                'etime' => $request->get('etime'),
+                'description' => $request->get('des'),
+                'status' => 'non-reciept',
+            ]);
+            $course->save();
+            return response()->json(['success' => 'ไม่ได้อยู่ในระยะเวลาที่ลงทะเบียน']);
+            // dd($request->preiod);
+        }
+
+        $period = explode(' - ', $last_period);
+
+        // dd($last_period,$period);
+
+        if (count($period) == 1) {
+            $periods = explode('-', $last_period);
+            $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
+            $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
+        } else {
+            $startMonth = Carbon::parse($period[0])->format('Y-m');
+            $endMonth = Carbon::parse($period[1])->format('Y-m');
+        }
+        $endMonth = Carbon::parse($endMonth)->addMonth()->format('Y-m');
+        $req_date = Carbon::parse($request->date);
+
+        $checkdate = $req_date->between($startMonth, $endMonth);
+
+        if ($checkdate) {
+            # code...
+            $course = new History([
+                'student_id' => $request->get('student'),
+                'subject_id' => $request->get('subject'),
+                'school_price_id' => $schp->id,
+                //'level_id' => $request->get('level'),
+                'datetime' => $request->get('date'),
+                'stime' => $request->get('stime'),
+                'etime' => $request->get('etime'),
+                'description' => $request->get('des'),
+                'status' => 'reciept',
+
+            ]);
+            $course->save();
+            return response()->json(['success' => 'Histories Add successfully']);
+        } else {
+            $null = null;
+            $course = new History([
+                'student_id' => $request->get('student'),
+                'subject_id' => $request->get('subject'),
+                'school_price_id' => $null,
+                //'level_id' => $request->get('level'),
+                'datetime' => $request->get('date'),
+                'stime' => $request->get('stime'),
+                'etime' => $request->get('etime'),
+                'description' => $request->get('des'),
+                'status' => 'non-reciept',
+            ]);
+            $course->save();
+            return response()->json(['success' => 'ไม่ได้อยู่ในระยะเวลาที่ลงทะเบียน']);
+        }
+
+
         // Getting values from the blade template form
-        $course = new History([
-            'student_id' => $request->get('student'),
-            'subject_id' => $request->get('subject'),
-            //'level_id' => $request->get('level'),
-            'datetime' => $request->get('date'),
-            'stime' => $request->get('stime'),
-            'etime' => $request->get('etime'),
-            'description' => $request->get('des'),
-        ]);
-        $course->save();
-        return response()->json(['success' => 'Histories Add successfully']);
+
     }
 
 

@@ -172,9 +172,11 @@
                                                     $firstEndMonth = $endMonth;
                                                     $count_rec++;
                                                 }
+
                                                 $history = $histories->where('student_id', $std->id)->where('subject_id', $sub_ids);
                                                 $currecntMonth_Year = date('Y-m-d');
                                                 $startMonthYMD = Carbon::parse($startMonth)->format('Y-m');
+
                                                 if ($monthsDifference > 1) {
                                                     $result_month = 0;
                                                     $result_all = 0;
@@ -198,6 +200,22 @@
                                                     ->whereMonth('datetime', '>=', $stMonth)
                                                     ->whereMonth('datetime', '<=', $enMonth)
                                                     ->get();
+
+                                                if ($history->count() == 0) {
+                                                    $history = History::where('student_id', $std->id)
+                                                        ->where('subject_id', $sub_ids)
+                                                        ->where(function ($query) use ($stYear, $enYear, $stMonth, $enMonth) {
+                                                            $query
+                                                                ->whereYear('datetime', '>', $stYear)
+                                                                ->Where(function ($query) use ($stYear, $stMonth) {
+                                                                    $query->whereYear('datetime', $stYear)->whereMonth('datetime', '>=', $stMonth);
+                                                                })
+                                                                ->Where(function ($query) use ($enYear, $enMonth) {
+                                                                    $query->whereYear('datetime', $enYear)->whereMonth('datetime', '<=', $enMonth);
+                                                                });
+                                                        })
+                                                        ->get();
+                                                }
                                                 if ($history->count() == 0) {
                                                     $history = History::where('student_id', $std->id)
                                                         ->where('subject_id', $sub_ids)
@@ -213,6 +231,19 @@
                                                         })
                                                         ->get();
                                                 }
+                                                // $history = History::where('student_id', $std->id)
+                                                //     ->where('subject_id', $sub_ids)
+                                                //     ->where(function ($query) use ($stYear, $enYear, $stMonth, $enMonth) {
+                                                //         $query
+                                                //             ->whereBetween('datetime', ["$stYear-$stMonth-01", "$enYear-$enMonth-31"])
+                                                //             ->orWhere(function ($query) use ($stYear, $stMonth) {
+                                                //                 $query->where('datetime', '>=', "$stYear-$stMonth-01");
+                                                //             })
+                                                //             ->orWhere(function ($query) use ($enYear, $enMonth) {
+                                                //                 $query->where('datetime', '<=', "$enYear-$enMonth-31");
+                                                //             });
+                                                //     })
+                                                //     ->get();
 
                                                 if (!empty($history)) {
                                                     // $his_succsss = count($history);
@@ -317,6 +348,8 @@
                                         </tr>
                                     @endforeach
                                     @php
+                                        // dd($startMonthYMD, $endMonth, $history, $stYear, $enYear, $stMonth, $enMonth);
+
                                         $historyTimeOut = $histories
                                             ->where('student_id', $std->id)
                                             ->whereIn('subject_id', $sub_ids)
@@ -337,6 +370,7 @@
                                                 $etime1 = Carbon::parse($his_check_time1->etime);
                                                 $hoursDifference = $etime1->diffInHours($stime1);
                                                 $count_time_out += $hoursDifference;
+                                                $his_check_time1->update(['status' => 'non-reciept']);
                                             }
                                         }
 
@@ -430,7 +464,8 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

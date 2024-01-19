@@ -227,6 +227,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/histories', [HistoryController::class, 'index'])->name('histories');
     Route::get('/histories/stdsub/{id}', [HistoryController::class, 'stdsub'])->name('stdsub');
+    Route::get('/histories/stdsperiod/{id}/{sub_id}', [HistoryController::class, 'stdsperiod'])->name('stdsperiod');
     Route::get('/histories/edit/{id}', [HistoryController::class, 'edit'])->name('histories.edit');
     Route::put('/histories/save/{id}', [HistoryController::class, 'update'])->name('histories.save');
     Route::post('/histories/show', [HistoryController::class, 'show'])->name('histories.show');
