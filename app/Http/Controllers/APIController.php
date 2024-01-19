@@ -216,7 +216,7 @@ class APIController extends Controller
             return response()->json([
                 'message' => 'Data Save Successfully',
                 'file' => $newname
-            ]);
+            ], 200);
         }
 
         return response()->json(['message' => 'No file found'], 400);
