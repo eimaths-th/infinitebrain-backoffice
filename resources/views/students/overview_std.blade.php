@@ -231,6 +231,19 @@
                                                         })
                                                         ->get();
                                                 }
+                                                // $history = History::where('student_id', $std->id)
+                                                //     ->where('subject_id', $sub_ids)
+                                                //     ->where(function ($query) use ($stYear, $enYear, $stMonth, $enMonth) {
+                                                //         $query
+                                                //             ->whereBetween('datetime', ["$stYear-$stMonth-01", "$enYear-$enMonth-31"])
+                                                //             ->orWhere(function ($query) use ($stYear, $stMonth) {
+                                                //                 $query->where('datetime', '>=', "$stYear-$stMonth-01");
+                                                //             })
+                                                //             ->orWhere(function ($query) use ($enYear, $enMonth) {
+                                                //                 $query->where('datetime', '<=', "$enYear-$enMonth-31");
+                                                //             });
+                                                //     })
+                                                //     ->get();
 
                                                 if (!empty($history)) {
                                                     // $his_succsss = count($history);

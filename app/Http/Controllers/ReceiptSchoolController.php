@@ -10,6 +10,7 @@ use Intervention\Image\Facades\Image;
 use File;
 use Illuminate\Support\Str;
 use App\Models\FileUpload;
+use App\Models\History;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Receipt;
 use App\Models\Receipt_School;
@@ -21,6 +22,7 @@ use App\Models\SchoolPrice;
 use App\Models\SubjectPrice;
 use App\Models\ParentRegister;
 use App\Models\Receipt_School_RunningNumber;
+use Carbon\Carbon;
 
 class ReceiptSchoolController extends Controller
 {
@@ -474,7 +476,7 @@ class ReceiptSchoolController extends Controller
                 ->join("parent", "parent.id", "=", "receipt_school.name_parent")
                 //->join("levels", "levels.id", "=", "receipts.level_id")
 
-                ->orderBy("receipt_school.receipt_number", "desc")
+                ->orderBy("receipt_school.submission_date", "desc")
                 ->get();
 
             // echo "<pre>";
@@ -1322,6 +1324,7 @@ class ReceiptSchoolController extends Controller
         $group = $groupsub->first()->group;
         // dd($request,$subjects, $groupsub,$group);
 
+
         $validator =  Validator::make(
             $request->all(),
             [
@@ -1395,12 +1398,7 @@ class ReceiptSchoolController extends Controller
             $stu .= $sss . "|";
         }
         $stu = rtrim($stu, "|");
-
-
-
-
         $rnumber = Receipt_School_RunningNumber::generate($group);
-
         $data = new Receipt_School([
             'submission_date' => $request->get('submission_date'),
             'payment_type' => $request->get('payment_type'),
@@ -1414,12 +1412,10 @@ class ReceiptSchoolController extends Controller
             'receipt_number' => $rnumber,
             'file_att' => $filebs,
         ]);
-
         $data->save();
+
         $rid = $data->id;
         // print_r($request->get('receipt'));
-
-
         foreach ($request->get('receipt') as $value) {
 
             if (isset($value['entrance_fee'])) {
@@ -1451,8 +1447,45 @@ class ReceiptSchoolController extends Controller
             // print_r($data2['subject']);
             // exit();
             $data2->save();
+
+
+            $period = explode(' - ', $value['period']);
+            // dd($last_period,$period);
+
+            if (count($period) == 1) {
+                $periods = explode('-', $value['period']);
+                $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
+                $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
+            } else {
+                $startMonth = Carbon::parse($period[0])->format('Y-m');
+                $endMonth = Carbon::parse($period[1])->format('Y-m');
+            }
+            // $endMonth = Carbon::parse($endMonth)->addMonth()->format('Y-m');
+
+            if ($startMonth === $endMonth) {
+                # code...
+                $startMonth = Carbon::parse($endMonth)->startOfMonth()->format('Y-m-d');
+                $endMonth = Carbon::parse($endMonth)->endOfMonth()->format('Y-m-d');
+            }
+
+            $his_status = History::where('student_id', $value['std_id'])
+                ->whereBetween('datetime', [$startMonth, $endMonth])
+                ->get();
+            if ($his_status->count() > 0) {
+                # code...
+                foreach ($his_status as  $his_statuss) {
+                    # code...
+                    $his_statuss->update(['status' => 'reciept', 'school_price_id' => $data2->id]);
+                }
+            }
+            // dd($his_status, $data2->id, $startMonth, $endMonth);
         }
 
+
+        // $endMonth = Carbon::parse($endMonth)->addMonth()->format('Y-m');
+        // $req_date = Carbon::parse($request->date);
+
+        // $checkdate = $req_date->between($startMonth, $endMonth);
 
         return response()->json(['success' => 'Receive Add successfully']);
     }

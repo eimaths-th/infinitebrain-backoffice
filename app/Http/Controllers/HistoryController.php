@@ -179,7 +179,7 @@ class HistoryController extends Controller
         } else {
             $std = Student::find($studentId);
             $sch_p = SchoolPrice::where(['student_id' => $std->id, 'subject' => $sub_id, 'course_type' => '1'])->get();
-            $html = '<option value="">Select Preiod</option>';
+            $html = '<option value="">Select Preiod</option><option value=" ">นอกระยะเวลา</option>';
             foreach ($sch_p as $sch_p1) {
                 # code...
                 $html .= '<option value="' . $sch_p1->id . '"> ' . $sch_p1->period . ' </option>';
@@ -208,7 +208,7 @@ class HistoryController extends Controller
         $validator =  Validator::make($request->all(), [
             'student' => 'required',
             'subject' => 'required',
-            'preiod' => 'required',
+            // 'preiod' => 'required',
             'date' => 'required',
             'stime' => 'required',
             'etime' => 'required',
@@ -224,8 +224,25 @@ class HistoryController extends Controller
         $schp = SchoolPrice::find($request->preiod);
         $last_period = null;
 
-        if ($schp->count() > 0) {
+        if ($schp) {
             $last_period = $schp->period;
+        } else {
+            # code...
+            $null = null;
+            $course = new History([
+                'student_id' => $request->get('student'),
+                'subject_id' => $request->get('subject'),
+                'school_price_id' => $null,
+                //'level_id' => $request->get('level'),
+                'datetime' => $request->get('date'),
+                'stime' => $request->get('stime'),
+                'etime' => $request->get('etime'),
+                'description' => $request->get('des'),
+                'status' => 'non-reciept',
+            ]);
+            $course->save();
+            return response()->json(['success' => 'ไม่ได้อยู่ในระยะเวลาที่ลงทะเบียน']);
+            // dd($request->preiod);
         }
 
         $period = explode(' - ', $last_period);
