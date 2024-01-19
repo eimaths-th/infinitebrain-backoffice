@@ -156,7 +156,7 @@ class APIController extends Controller
             //dd($rem);
 
             // Split the date range into start and end months
-            list($startMonth, $endMonth) = explode('-', str_replace(" ", "", $dateRange));
+            //list($startMonth, $endMonth) = explode('-', str_replace(" ", "", $dateRange));
 
             // Convert start and end months to Carbon instances
             $startCarbon = Carbon::parse(substr($rem, 0, 7))->startOfMonth();
@@ -169,48 +169,52 @@ class APIController extends Controller
             $isWithinRange = $todayCarbon->between($startCarbon, $endCarbon);
 
             if ($isWithinRange) {
-                if ($request->hasFile('file')) {
-                    // Your logic for handling file upload
-                    $image = $request->file('file');
-                    $imageName = $image->getClientOriginalName();
-
-                    $newname = Str::random(40) . "_" . $imageName;
-                    $image->move(public_path('form_images'), $newname);
-
-                    //endtime
-                    $time =  $request->get('stime'); // Time string
-                    $durationHours = $request->get('hour'); // Duration in hours to add
-
-                    $updatedTime = Carbon::createFromFormat('H:i:s', $time)
-                        ->addHours($durationHours)
-                        ->format('H:i:s');
-
-                    $course = new History([
-                        'student_id' => $request->get('student'),
-                        'subject_id' => $request->get('subject'),
-                        'school_price_id' => $range->id,
-                        'datetime' => $request->get('date'),
-                        'stime' => $request->get('stime'),
-                        'etime' => $updatedTime,
-                        'signature' => $newname,
-                    ]);
-
-                    $course->save();
-
-                    return response()->json([
-                        'message' => 'Data Save Successfully',
-                        'file' => $newname
-                    ]);
-                }
-
-                return response()->json(['message' => 'No file found'], 400);
+                $schoolp = $range->id;
             } else {
                 // Present date is outside the specified range
-                return response()->json(['message' => 'Date is outside of school price period.'], 400);
+                //return response()->json(['message' => 'Date is outside of school price period.'], 400);
+                $schoolp = '';
             }
         } else {
             /// $range is null or $range->period is an empty string
-            return response()->json(['message' => 'School price range not found.'], 400);
+            //return response()->json(['message' => 'School price range not found.'], 400);
+            $schoolp = '';
         }
+
+        if ($request->hasFile('file')) {
+            // Your logic for handling file upload
+            $image = $request->file('file');
+            $imageName = $image->getClientOriginalName();
+
+            $newname = Str::random(40) . "_" . $imageName;
+            $image->move(public_path('form_images'), $newname);
+
+            //endtime
+            $time =  $request->get('stime'); // Time string
+            $durationHours = $request->get('hour'); // Duration in hours to add
+
+            $updatedTime = Carbon::createFromFormat('H:i:s', $time)
+                ->addHours($durationHours)
+                ->format('H:i:s');
+
+            $course = new History([
+                'student_id' => $request->get('student'),
+                'subject_id' => $request->get('subject'),
+                'school_price_id' => $schoolp,
+                'datetime' => $request->get('date'),
+                'stime' => $request->get('stime'),
+                'etime' => $updatedTime,
+                'signature' => $newname,
+            ]);
+
+            $course->save();
+
+            return response()->json([
+                'message' => 'Data Save Successfully',
+                'file' => $newname
+            ]);
+        }
+
+        return response()->json(['message' => 'No file found'], 400);
     }
 }
