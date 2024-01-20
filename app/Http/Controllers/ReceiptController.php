@@ -29,8 +29,46 @@ class ReceiptController extends Controller
     const BAHT_TEXT_BAHT = 'บาท';
     const BAHT_TEXT_SATANG = 'สตางค์';
     const BAHT_TEXT_POINT = 'จุด';
-    const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS', '10' => 'ASIAROPE', '11' => 'Cambridge', '13' => 'ISOCSEA', '14' => 'IMOCSEA+ISOCSEA');
-    const sfieldas = array('2' => 'G', '4' => 'J', '5' => 'I', '6' => 'L', '7' => 'M', '8' => 'N', '9' => 'O', '10' => 'P', '11' => 'Q', '13' => 'S', '14' => 'T');
+    const sfielda = array(
+        '0' => 'reward',
+        '2' => 'GMEC',
+        '4' => 'IMOCSEA',
+        '5' => 'INFINITE Spelling Bee',
+        '6' => 'GELOSEA',
+        '7' => 'LIMOC',
+        '8' => 'STEM',
+        '9' => 'OLPCS',
+        '10' => 'ASIAROPE',
+        '11' => 'Cambridge',
+        '13' => 'ISOCSEA',
+        '14' => 'IMOCSEA+ISOCSEA',
+        '15' => 'Huaxiacup',
+        '16' => 'Mathleague',
+        '17' => 'test_field',
+        '18' => 'mathleague-II',
+        '19' => 'Huaxiacup-II',
+
+    );
+    const sfieldas = array(
+        '0' => 'IMG Reward',
+        '2' => 'G',
+        '4' => 'J',
+        '5' => 'I',
+        '6' => 'L',
+        '7' => 'M',
+        '8' => 'N',
+        '9' => 'O',
+        '10' => 'P',
+        '11' => 'Q',
+        '13' => 'S',
+        '14' => 'T',
+        '15' => 'U',
+        '16' => 'V',
+        '17' => 'Test Field',
+        '18' => 'mathleague-II',
+        '19' => 'Huaxiacup-II',
+
+    );
     const thmonth = array(
         "",
         "มกราคม",
@@ -592,6 +630,7 @@ class ReceiptController extends Controller
     public function store(Request $request)
     {
         //
+
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'type' => 'required|string',
@@ -831,7 +870,7 @@ class ReceiptController extends Controller
         //$des_text = nl2br($data->description);
 
 
-
+        // dd($receipt_detail_arr);
         return view($viewr)->with(['id' => $id])
             ->with(['data' => $data])
             ->with(['receipt_detail_arr' => $receipt_detail_arr])

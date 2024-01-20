@@ -40,9 +40,36 @@ class TimeController extends Controller
     }
     public function formsControl()
     {
-        $controls = OpeningClosingTime::all();
+        $controls = OpeningClosingTime::orderBy('id', 'desc')
+            ->get()
+            ->groupBy('route');
+        // dd($controls);
+        $now = now();
+
+        foreach ($controls as $route => $time) {
+            # code...
+
+            $times = OpeningClosingTime::where('route', $route)->latest()->first();
+            //
+
+            $openingDateTime = $now->copy()->setDateTimeFrom($times->opening_time);
+            $closingDateTime = $now->copy()->setDateTimeFrom($times->closing_time);
+
+            if ($now < $openingDateTime || $now > $closingDateTime) {
+                $status = 'Offline';
+                $times->update(['status' => $status]);
+                // return abort(404, 'Route is currently closed.');
+            } else {
+                # code...
+                $status = 'Online';
+                $times->update(['status' => $status]);
+            }
+        }
+        // dd($controls);
+        $control = OpeningClosingTime::orderBy('id', 'desc')
+            ->get();
         return view('receipt_form.form_control', [
-            'controls' => $controls
+            'controls' => $control
         ]);
     }
     public function deleteControl($id)

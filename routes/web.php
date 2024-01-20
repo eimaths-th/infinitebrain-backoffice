@@ -19,14 +19,20 @@ use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\GodeyeContreoller;
 use App\Http\Controllers\ReceiptSchoolController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RecordtimeController;
 use App\Http\Controllers\RetrospectiveCheckController;
 use App\Http\Controllers\RouteToggleController;
 use App\Http\Controllers\StdlogController;
 use App\Http\Controllers\SuperMasterContrller;
 use App\Http\Controllers\TimeController;
+use App\Http\Controllers\WorktimelogsController;
 
+
+use App\Http\Controllers\AttendanceController;
 // use App\Http\Controllers\RouteToggleController;
 
 /*
@@ -40,6 +46,8 @@ use App\Http\Controllers\TimeController;
 |
 */
 
+Route::get('/home3', [HomeController::class, 'home3']);
+Route::post('/attendance/import', [AttendanceController::class, 'import']);
 
 Route::group(['middleware' => 'check.opening.date.time'], function () {
 
@@ -51,17 +59,47 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
     Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
     Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
     Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
+
+    Route::get('/reward', [ReceiptFormController::class, 'img_reward'])->name('reward');
+    Route::get('/test_field', [ReceiptFormController::class, 'test_field'])->name('test_field');
+    Route::get('/mathleague', [ReceiptFormController::class, 'mathleague'])->name('mathleague');
+    Route::get('/huaxiacup', [ReceiptFormController::class, 'huaxiacup'])->name('huaxiacup');
+    Route::get('/mathleague-ii', [ReceiptFormController::class, 'mathleague_II'])->name('mathleague-ii');
+    Route::get('/huaxiacup-ii', [ReceiptFormController::class, 'huaxiacup_II'])->name('huaxiacup-ii');
+
+
 });
 
 Route::group(['middleware' => ['auth', 'checkUserId']], function () {
+    Route::get('/rec-time-logs', [WorktimelogsController::class, 'index'])->name('timelogs');
+    Route::get('/search-report-month-time', [RecordtimeController::class, 'search_reportMonthTime'])->name('search_reportMonthTime');
+    Route::get('/report-month-time', [HomeController::class, 'reportTime'])->name('reportTime');
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
     Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');
+    Route::get('/report-reciept-student-search', [StdlogController::class, 'reportRecieptStdSearch'])->name('reportRecieptStdSearch');
+    Route::get('/report-reciept-student/{id}', [StdlogController::class, 'reportRecieptStdShow'])->name('reportRecieptStdShow');
 });
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'Godeye']], function () {
+    Route::resource('Godeye', GodeyeContreoller::class);
+});
 
+Route::group(['middleware' => ['auth', 'switch']], function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+});
+Route::group(['middleware' => ['auth', 'outhome']], function () {
+
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/Home', [App\Http\Controllers\HomeController::class, 'home2'])->name('home2');
+});
+
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/search-rect', [RecordtimeController::class, 'search_rect'])->name('search_rect');
+
+    Route::resource('recordtime', RecordtimeController::class);
+    // Route::delete('/recordtime/{id}', [RecordtimeController::class, 'destroy'])->name('recordtimes.destroy');
+
     //settime
     Route::get('/report-future-student', [StdlogController::class, 'reportFutureStd'])->name('reportFutureStd');
     Route::post('/save_times', [TimeController::class, 'saveTimes'])->name('save_times');
@@ -189,6 +227,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/histories', [HistoryController::class, 'index'])->name('histories');
     Route::get('/histories/stdsub/{id}', [HistoryController::class, 'stdsub'])->name('stdsub');
+    Route::get('/histories/stdsperiod/{id}/{sub_id}', [HistoryController::class, 'stdsperiod'])->name('stdsperiod');
     Route::get('/histories/edit/{id}', [HistoryController::class, 'edit'])->name('histories.edit');
     Route::put('/histories/save/{id}', [HistoryController::class, 'update'])->name('histories.save');
     Route::post('/histories/show', [HistoryController::class, 'show'])->name('histories.show');
@@ -216,6 +255,7 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 //form
+
 
 Route::get('/cambridge/line', [ReceiptFormController::class, 'cambridge'])->name('cambridge.line');
 Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('form.upload');

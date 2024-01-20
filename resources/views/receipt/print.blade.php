@@ -82,8 +82,6 @@
             transform: rotate(200deg);
             -webkit-transform: rotate(300deg);
         }
-
-
     </style>
 </head>
 
@@ -144,11 +142,30 @@
                     </tr>
                     <tr>
                         <td>
-                            <font class="grey">K.</font> <b> {{ $data->name_parent }} </b>
+                            <font class="grey">K.</font>
+                            <b>
+                                @if ($data->sfield == 17)
+                                    {{ $data->first_name }} {{ $data->last_name }}
+                                @else
+                                    {{ $data->name_parent }}
+                                @endif
+                            </b>
                         </td>
-                        <td align="right" style="padding-left:20px;" class="grey">ชื่อนักเรียน/Nickname</td>
-                        <td align="left" style="padding-left:15px;"> <b>{{ $data->first_name }}
-                                {{ $data->last_name }}</b></td>
+                        @if ($data->sfield == 17)
+                            <td align="right" style="padding-left:20px;" class="grey">โทร.</td>
+                            <td align="left" style="padding-left:15px;">
+                                <b>
+                                    {{ $data->mobile }}
+                            </td>
+                        @else
+                            <td align="right" style="padding-left:20px;" class="grey">ชื่อนักเรียน/Nickname</td>
+                            <td align="left" style="padding-left:15px;">
+                                <b>
+                                    {{ $data->first_name }} {{ $data->last_name }}
+                                </b>
+                            </td>
+                        @endif
+
                         <td align="right" class="grey">วันที่ / Date</td>
                         <td style="padding-left:10px;"> <b>{{ $data->submission_date }}</b></td>
                     </tr>
@@ -184,8 +201,15 @@
                         </tr>
                         @foreach ($receipt_detail_arr as $receipt_detail)
                             <tr>
+
                                 <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
-                                <td align="left">{!! $receipt_detail['description'] !!}</td>
+                                <td align="left">
+                                    @if ($data->sfield == 17 && $receipt_detail['no'])
+                                        ข้อสอบ
+                                    @else
+                                    @endif
+                                    {!! $receipt_detail['description'] !!}
+                                </td>
                                 <td align="center">{{ $receipt_detail['quantity'] }}</td>
                                 <td align="center">{{ $receipt_detail['unit'] }}</td>
                                 <td align="center">{{ $receipt_detail['unitprice'] }}</td>
@@ -264,7 +288,7 @@
                                         <td width="10%"></td>
                                         <td width="67%" class="grey">มูลค่าที่ยกเว้นภาษี/Non-Vat Amount</td>
                                         <!-- <td width="20%"></td> -->
-                                        <td width="15%" align="right" > <b> 00.00 </b></td>
+                                        <td width="15%" align="right"> <b> 00.00 </b></td>
                                         <td width="8%"></td>
 
 
@@ -273,7 +297,8 @@
                                         <td width="10%"></td>
                                         <td width="67%" class="grey">มูลค่าที่คำนวนภาษี/Pre-Vat Amount</td>
                                         <!-- <td width="10%"></td> -->
-                                        <td width="15%" align="right" > <b> {{ $vat_price_val }}{{-- {{ $vat_price_val }} --}}  </b></td>
+                                        <td width="15%" align="right"> <b>
+                                                {{ $vat_price_val }}{{-- {{ $vat_price_val }} --}} </b></td>
                                         <td width="8%"></td>
 
                                     </tr>
@@ -281,7 +306,7 @@
                                         <td width="10%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="67%" class="grey">ส่วนลด/Discout</td>
-                                        <td width="15%" align="right" ><b>{{ $discount_val }}</b></td>
+                                        <td width="15%" align="right"><b>{{ $discount_val }}</b></td>
                                         <td width="8%"></td>
 
                                     </tr>
@@ -289,7 +314,7 @@
                                         <td width="10%"></td>
                                         <!-- <td width="20%"></td> -->
                                         <td width="67%" class="grey">ภาษีมูลค่าเพิ่ม 7% / Vat 7%</td>
-                                        <td width="15%" align="right" ><b>{{ $vat_val }}</b></td>
+                                        <td width="15%" align="right"><b>{{ $vat_val }}</b></td>
                                         <td width="8%"></td>
 
                                     </tr>
@@ -300,7 +325,8 @@
                         <tr class="active">
                             <td width="20%" align="center" class="grey">รวมทั้งสิ้น<br>Grand Total</td>
                             <td colspan="4" width="40%" align="left">
-                                <b>{{ $price_text }}</b><br><b>{{ $price_texten }}</b></td>
+                                <b>{{ $price_text }}</b><br><b>{{ $price_texten }}</b>
+                            </td>
                             <td width="20%" align="center"><b>{{ $price_val }}</b></td>
 
                             <td width="20%" align="center" class="grey">บาท<br>Baht</td>

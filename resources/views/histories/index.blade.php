@@ -20,6 +20,20 @@
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js">
     </script>
+    <style>
+        .bg-chn {
+            background-color: #ff9999 !important;
+        }
+        .bg-math {
+            background-color: #80dfff !important;
+        }
+        .bg-eng {
+            background-color: #66ffcc !important;
+        }
+        .bg-sci {
+            background-color: #b3b3ff !important;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -270,6 +284,18 @@
                                         {{ request()->get('id') == $key->id ? 'selected' : '' }}> {{ $key->title }}
                                     </option>
                                 @endforeach
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Preiod">Preiod :</label>
+                            <select class="AddPreiod form-control" id="AddPreiod" name="preiod">
+                                <option value="" selected>Select Preiod</option>
+                                {{-- @foreach ($data as $key)
+                                    <option value="{{ $key->id }}"
+                                        {{ request()->get('id') == $key->id ? 'selected' : '' }}> {{ $key->title }}
+                                    </option>
+                                @endforeach --}}
 
                             </select>
                         </div>
@@ -538,20 +564,71 @@
                 }
             });
 
+            // var table = $('#Listview').DataTable({
+            //     ajax: '',
+            //     serverSide: true,
+            //     processing: true,
+            //     language: {
+            //         loadingRecords: '&nbsp;',
+            //         processing: '<div class="spinner"></div>'
+            //     },
+            //     aaSorting: [
+            //         [0, "desc"]
+            //     ],
+            //     iDisplayLength: 10,
+            //     lengthMenu: [10, 20, 50, 75, 100],
+            //     stateSave: true,
+            //     sPaginationType: "full_numbers",
+            //     dom: 'T<"clear">lfrtip',
+            //     columns: [{
+            //             data: 'checkbox',
+            //             name: 'checkbox',
+            //             orderable: false,
+            //             searchable: false
+            //         },
+            //         {
+            //             data: 'student_code',
+            //             name: 'student_code'
+            //         },
+            //         {
+            //             data: 'student_name',
+            //             name: 'student_name'
+            //         },
+            //         {
+            //             data: 'student_subject',
+            //             name: 'student_subject'
+            //         },
+            //         /*   {
+            //               data: 'student_level',
+            //               name: 'student_level'
+            //           }, */
+            //         {
+            //             data: 'datetime',
+            //             name: 'datetime'
+            //         },
+            //         {
+            //             data: 'stime',
+            //             name: 'stime'
+            //         },
+            //         {
+            //             data: 'etime',
+            //             name: 'etime'
+            //         },
+            //         {
+            //             data: 'action',
+            //             name: 'action'
+            //         },
+            //     ],
+            //     createdRow: function(row, data, dataIndex) {
+            //         // Add a background color to the row based on your condition
+            //         if ( /* Your condition here */ ) {
+            //             $(row).addClass('bg-danger');
+            //         }
+            //     }
+            // });
+
+
             var table = $('#Listview').DataTable({
-                /*"aoColumnDefs": [
-                {
-                'bSortable': true,
-                'aTargets': [0]
-                } //disables sorting for column one
-                ],
-                "searching": false,
-                "lengthChange": false,
-                "paging": false,
-                'iDisplayLength': 10,
-                "sPaginationType": "full_numbers",
-                "dom": 'T<"clear">lfrtip',
-                    */
                 ajax: '',
                 serverSide: true,
                 processing: true,
@@ -585,10 +662,6 @@
                         data: 'student_subject',
                         name: 'student_subject'
                     },
-                    /*   {
-                          data: 'student_level',
-                          name: 'student_level'
-                      }, */
                     {
                         data: 'datetime',
                         name: 'datetime'
@@ -605,9 +678,25 @@
                         data: 'action',
                         name: 'action'
                     },
-                ]
-            });
+                ],
+                createdRow: function(row, data, dataIndex) {
+                    // Add a background color to the row based on your condition
+                    if (data.student_subject === 'Chinese') {
+                        $(row).addClass('bg-chn');
+                    } else if (data.student_subject == 'Math' || data.student_subject == 'Play Math' ||
+                        data.student_subject == 'Private Math') {
+                        $(row).addClass('bg-math');
 
+                    } else if (data.student_subject == 'English Pre-A - I' || data.student_subject ===
+                        'English 5-8' || data.student_subject === 'English Sparks') {
+                        $(row).addClass('bg-eng');
+
+                    } else if (data.student_subject === 'Science') {
+                        $(row).addClass('bg-sci');
+
+                    }
+                }
+            });
 
 
             $(document).on('click', '#CreateButton', function(e) {
@@ -629,8 +718,24 @@
                             _token: token,
                         },
                         success: function(result) {
-                            console.log(result);
+                            // console.log(result);
                             $('#AddSubject').html(result.studentsub);
+                        }
+                    });
+                });
+                $(document).on('change', '#AddSubject', function(e) {
+                    e.preventDefault();
+                    var id = $('#AddStudent').val()[0];
+                    var sub_id = $('#AddSubject').val();
+                    $.ajax({
+                        url: "histories/stdsperiod/" + id + "/" + sub_id,
+                        method: 'get',
+                        data: {
+                            _token: token,
+                        },
+                        success: function(result) {
+                            // console.log(result);
+                            $('#AddPreiod').html(result.studentperiod);
                         }
                     });
                 });
@@ -714,7 +819,7 @@
                     data: {
                         student: $('#AddStudent').val()[0],
                         subject: $('#AddSubject').val(),
-                        //level: $('#AddLevel').val(),
+                        preiod: $('#AddPreiod').val(),
                         date: $('#AddDate').val(),
                         des: $('#AddDes').val(),
                         stime: $('#AddTime').val(),
@@ -725,11 +830,16 @@
 
                         if (result.errors) {
                             $('.alert-danger').html('');
+
                             $.each(result.errors, function(key, value) {
                                 $('.alert-danger').show();
                                 $('.alert-danger').append('<strong><li>' + value +
                                     '</li></strong>');
                             });
+                        } else if (result.errortime) {
+                            $('.alert-danger').show();
+                            $('.alert-danger').append('<strong><li>' + result.errortime +
+                                '</li></strong>');
                         } else {
                             $('.alert-danger').hide();
                             $('.alert-success').show();

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Receipt_School;
+use App\Models\Recordtime;
 use App\Models\SchoolPrice;
 use App\Models\Statuslog;
+use App\Models\Statuswork;
 use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -312,32 +314,49 @@ class HomeController extends Controller
                                 ->latest()
                                 ->get();
                             // dd($check_resume);
-                            if (count($check_resume) > 0 && $check_resume->first()->status == 'resume') {
+                            // if (count($check_resume) > 0 && $check_resume->first()->status == 'resume') {
 
-                                $status[$group] = 'resume';
-                            } elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0
-                                && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
-                                //แก้บัค 22/09/2023
-                                if ($check_resume->first()->status == 'studying . . .') {
-                                    $status[$group] = 'studying . . .';
+                            //     $status[$group] = 'resume';
+                            // } elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+                            //     //แก้บัค 22/09/2023
+                            //     if ($check_resume->first()->status == 'studying . . .') {
+                            //         $status[$group] = 'studying . . .';
+                            //     } else {
+                            //     }
+                            //     // $status[$group] = 'waitting . . .';
 
+                            //     // dd($check_resume,$stdId,$status,$school_pice);
+                            // } else {
+                            //     // dd($check_resume,$check_resume->first()->status);
+
+                            //     // if ($check_resume && $check_resume->first() && property_exists($check_resume->first(), 'status')) {
+                            //     if ($check_resume->first()->status == 'waiting . . .') {
+                            //         $status[$group] = 'waiting . . .';
+                            //     } else {
+                            //         $status[$group] = 'studying . . .';
+                            //     }
+                            //     // } else {
+                            //     // dd($stdId, $check_resume);
+                            //     // }
+                            // }
+                            if (count($check_resume) > 0) {
+                                $firstLog = $check_resume->first();
+
+                                if ($firstLog->status == 'resume') {
+                                    $status[$group] = 'resume';
+                                } elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+                                    if ($firstLog->status == 'studying . . .') {
+                                        $status[$group] = 'studying . . .';
+                                    } else {
+                                    }
                                 } else {
-
+                                    if ($firstLog->status == 'waiting . . .') {
+                                        $status[$group] = 'waiting . . .';
+                                    } else {
+                                        $status[$group] = 'studying . . .';
+                                    }
                                 }
-                                // $status[$group] = 'waitting . . .';
-
-                                // dd($check_resume,$stdId,$status,$school_pice);
                             } else {
-                                // dd($check_resume,$check_resume->first()->status);
-
-                                if ($check_resume->first()->status == 'waitting . . .') {
-                                    $status[$group] = 'waitting . . .';
-
-                                } else {
-                                    $status[$group] = 'studying . . .';
-                                }
-                                // dd($status);
-
                             }
                         }
                     }
@@ -350,4 +369,89 @@ class HomeController extends Controller
 
         return $status;
     }
+
+    public function home2()
+    {
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+        $rec_times = Recordtime::where('user_id', Auth::user()->id)
+            ->whereMonth('date', $currentMonth)
+            ->whereYear('date', $currentYear)
+            // ->get();
+            ->get()
+            ->groupBy('status_name')
+            ->map->count();
+        $rec_times_year = Recordtime::where('user_id', Auth::user()->id)
+            ->whereYear('date', $currentYear)
+            // ->get();
+            ->get()
+            ->groupBy('status_name')
+            ->map->count();
+
+        // $rec_timess = Recordtime::whereMonth('date', $currentMonth)
+        //     ->whereYear('date', $currentYear)
+        //     ->orderBy('user_id', 'desc')
+        //     ->get()
+        //     ->groupBy('user_id');
+
+        // dd($rec_times_year);
+
+        return view('users.working_report', [
+            // 'rec_timess' => $rec_timess,
+            'rec_times' => $rec_times,
+            'rec_times_year' => $rec_times_year,
+            'currentYear' => $currentYear,
+            'currentMonth' => $currentMonth,
+
+        ]);
+    }
+    public function reportTime()
+    {
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+        // $rec_times = Recordtime::where('user_id', Auth::user()->id)
+        //     ->whereMonth('date', $currentMonth)
+        //     ->whereYear('date', $currentYear)
+        //     // ->get();
+        //     ->get()
+        //     ->groupBy('status_name')
+        //     ->map->count();
+        // $rec_times_year = Recordtime::where('user_id', Auth::user()->id)
+        //     ->whereYear('date', $currentYear)
+        //     // ->get();
+        //     ->get()
+        //     ->groupBy('status_name')
+        //     ->map->count();
+
+        $rec_timess = Recordtime::whereMonth('date', $currentMonth)
+            ->whereYear('date', $currentYear)
+            ->orderBy('user_id', 'asc')
+            ->get()
+            ->groupBy('user_id');
+        $rec_times_year = Recordtime::whereYear('date', $currentYear)
+            ->orderBy('user_id', 'asc')
+            ->get()
+            ->groupBy('user_id');
+        $stwork = Statuswork::orderBy('id', 'asc')->get();
+
+        // dd($rec_timess);
+
+        return view('users.def_working_report', [
+            'rec_timess' => $rec_timess,
+            // 'rec_times' => $rec_times,
+            'rec_times_year' => $rec_times_year,
+            'year' => $currentYear,
+            'month' => $currentMonth,
+            'stwork' => $stwork,
+
+        ]);
+    }
+
+    public function home3()
+    {
+
+
+        return view('addexcel');
+    }
+
 }

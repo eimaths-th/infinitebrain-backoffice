@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use Throwable;
 
@@ -49,7 +50,7 @@ class Handler extends ExceptionHandler
             //
         });
     }
-    
+
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         if ($request->expectsJson()) {
@@ -59,7 +60,16 @@ class Handler extends ExceptionHandler
         if ($request->is('parent') || $request->is('parent/*')) {
             return redirect()->guest('/parent');
         }
-        
+
         return redirect()->guest(route('login'));
     }
+
+    // public function render($request, Throwable $exception)
+    // {
+    //     if ($exception instanceof HttpException && $exception->getStatusCode() == 504) {
+    //         return response()->view('errors.504', [], 504);
+    //     }
+
+    //     return parent::render($request, $exception);
+    // }
 }

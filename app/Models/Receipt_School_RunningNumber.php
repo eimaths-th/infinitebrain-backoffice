@@ -11,15 +11,13 @@ class Receipt_School_RunningNumber extends Model
     protected $table = 'receipt_school_running_numbers';
 
     protected $fillable = [
+        'type',
         'number',
         'year',
         'month',
     ];
 
-
-
-
-    public static function generate()
+    public static function generate($group)
     {
         // $type = strtoupper($type);
         // if (!in_array($type, self::TYPES)) {
@@ -29,16 +27,25 @@ class Receipt_School_RunningNumber extends Model
         $year = date('Y');
         $month = date('m');
         //$month = "01";
+        if ($group == 'Sci') {
+            $type = 'Sci';
+        }elseif ($group == 'CHN') {
+            $type = 'CHN';
+        }else {
+            $type = 'def';
+        }
+        // dd($type);
 
-        if (! Receipt_School_RunningNumber::where('year', $year)->where('month', $month)->exists()) {
+        if (! Receipt_School_RunningNumber::where('year', $year)->where('month', $month)->where('type', $type)->exists()) {
             Receipt_School_RunningNumber::create([
                 'number' => $number,
                 'year' => $year,
                 'month' => $month,
+                'type' => $type,
             ]);
         }
 
-        $running_number = Receipt_School_RunningNumber::where('year', $year)->where('month', $month)->first();
+        $running_number = Receipt_School_RunningNumber::where('year', $year)->where('month', $month)->where('type', $type)->first();
         //print_r($running_number);
         //exit();
         $running_number->number++;
@@ -47,7 +54,16 @@ class Receipt_School_RunningNumber extends Model
         $number = str_pad($number, 3, '0', STR_PAD_LEFT);
         // echo(date('y') . '' . date('m') . '' . $number);
         // exit();
-        $result = "00".date('y') . '' . date('m') . '' . $number;
+        if ($type === 'Sci') {
+            $typenumber = "03";
+        }elseif ($type === 'CHN') {
+            $typenumber = "01";
+
+        }else {
+            $typenumber = "00";
+
+        }
+        $result = $typenumber.date('y') . '' . date('m') . '' . $number;
         // A-21-00001
         return  $result;
         //return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '01' . $number;

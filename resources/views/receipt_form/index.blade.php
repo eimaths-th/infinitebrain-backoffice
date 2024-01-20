@@ -885,6 +885,212 @@
                 }
             })
 
+            // $('#SubmitEditForm').click(function(e) {
+            //     //if (!confirm("Are you sure?")) return;
+            //     e.preventDefault();
+
+            //     $('.alert-danger').html('');
+            //     $('.alert-danger').hide();
+            //     $('.alert-success').html('');
+            //     $('.alert-success').hide();
+            //     //alert($('#AddFile').val());
+            //     var values = $("input[name='imgFiles[]']")
+            //         .map(function() {
+            //             return $(this).val();
+            //         }).get();
+
+            //     //alert(values);
+            //     //exit();
+            //     swal({
+            //         title: 'Are you sure?',
+            //         text: 'You will not be able to recover this imaginary file!',
+            //         icon: 'info',
+            //         buttons: {
+            //             cancel: {
+            //                 text: 'Cancel',
+            //                 value: null,
+            //                 visible: true,
+            //                 className: 'btn btn-default',
+            //                 closeModal: true,
+            //             },
+            //             confirm: {
+            //                 text: 'Primary',
+            //                 value: true,
+            //                 visible: true,
+            //                 className: 'btn btn-primary',
+            //                 closeModal: true
+            //             }
+            //         }
+            //     }).then((value) => {
+            //         if (value) {
+            //             $.ajax({
+            //                 url: "{{ route('receipts_form.store') }}",
+            //                 method: 'post',
+            //                 data: {
+
+            //                     img: values,
+            //                     rec_id: $('#AddRecId').val(),
+            //                     submission_date: $('#AddSubmissiondate').val(),
+            //                     first_name: $('#AddFirstname').val(),
+            //                     last_name: $('#AddLastname').val(),
+            //                     grade: $('#AddGrade').val(),
+            //                     dcode: $('#AddDcode').val(),
+            //                     description: $('#AddPackage').val(),
+            //                     street_address: $('#AddAddress').val(),
+            //                     //street_address2: $('#AddAddress2').val(),
+            //                     //city: $('#AddCity').val(),
+            //                     //province: $('#AddProvince').val(),
+            //                     postcode: $('#AddPostcode').val(),
+            //                     name_parent: $('#AddParent').val(),
+            //                     mobile: $('#AddMobile').val(),
+            //                     email: $('#AddEmail').val(),
+            //                     package: $('#AddPackage').val(),
+            //                     contest: $('#AddContest').val(),
+            //                     file_att: $('#AddFile').val(),
+            //                     sfield: $('#Sfield').val(),
+            //                     fid: $('#fid').val(),
+            //                     _token: token,
+            //                 },
+            //                 dataType: 'json',
+            //                 cache: false,
+            //                 success: function(result) {
+            //                     console.log(result);
+            //                     if (result.success) {
+            //                         swal({
+            //                             icon: 'success',
+            //                             title: result
+            //                                 .success,
+            //                             html: result
+            //                                 .success +
+            //                                 ' กำลังโหลดหน้าใหม่... <b></b>',
+            //                             timer: 1000,
+            //                             timerProgressBar: true,
+            //                             onBeforeOpen: () => {
+            //                                 Swal.showLoading()
+            //                                 timerInterval
+            //                                     =
+            //                                     setInterval(
+            //                                         () => {
+            //                                             Swal.getContent()
+            //                                                 .querySelector(
+            //                                                     'b'
+            //                                                 )
+            //                                                 .textContent =
+            //                                                 Swal
+            //                                                 .getTimerLeft()
+            //                                         },
+            //                                         100
+            //                                     )
+            //                             },
+            //                             onClose: () => {
+            //                                 location
+            //                                     .reload();
+            //                             }
+            //                         });
+            //                         $('.alert-danger').hide();
+            //                         $('.alert-success').show();
+            //                         $('.alert-success').append('<strong><li>' + result
+            //                             .success +
+            //                             '</li></strong>');
+            //                         toastr.success(result.success, {
+            //                             timeOut: 5000
+            //                         });
+            //                         $('.dz-preview').remove();
+            //                         $(".file_arr").remove();
+            //                         $('#dropzone_preview').css("display", "none");
+
+
+            //                         // $('#EditModal').modal('hide');
+            //                         $('#Listview').DataTable().ajax.reload(null, false);
+
+            //                     } else {
+            //                         console.log(result);
+
+            //                         $('.alert-danger').html('');
+            //                         $.each(result.errors, function(key, value) {
+            //                             $('.alert-danger').show();
+            //                             $('.alert-danger').append(
+            //                                 '<strong><li>' + value +
+            //                                 '</li></strong>');
+            //                         });
+            //                         swal({
+            //                             icon: "error",
+            //                             text: result.msg
+            //                         });
+            //                     }
+            //                 },
+            //                 error: function(xhr, resp, text) {
+            //                     console.log(xhr, resp, text);
+            //                 }
+            //             });
+            //         } else {
+            //             swal.close()
+            //         }
+            //     })
+
+            //     // $.ajax({
+            //     //     url: "{{ route('receipts_form.store') }}",
+            //     //     method: 'post',
+            //     //     data: {
+
+            //     //         img: values,
+            //     //         rec_id: $('#AddRecId').val(),
+            //     //         submission_date: $('#AddSubmissiondate').val(),
+            //     //         first_name: $('#AddFirstname').val(),
+            //     //         last_name: $('#AddLastname').val(),
+            //     //         grade: $('#AddGrade').val(),
+            //     //         dcode: $('#AddDcode').val(),
+            //     //         description: $('#AddPackage').val(),
+            //     //         street_address: $('#AddAddress').val(),
+            //     //         //street_address2: $('#AddAddress2').val(),
+            //     //         //city: $('#AddCity').val(),
+            //     //         //province: $('#AddProvince').val(),
+            //     //         postcode: $('#AddPostcode').val(),
+            //     //         name_parent: $('#AddParent').val(),
+            //     //         mobile: $('#AddMobile').val(),
+            //     //         email: $('#AddEmail').val(),
+            //     //         package: $('#AddPackage').val(),
+            //     //         contest: $('#AddContest').val(),
+            //     //         file_att: $('#AddFile').val(),
+            //     //         sfield: $('#Sfield').val(),
+            //     //         fid: $('#fid').val(),
+            //     //         _token: token,
+            //     //     },
+
+            //     //     success: function(result) {
+            //     //         console.log(result);
+            //     //         if (result.errors) {
+            //     //             $('.alert-danger').html('');
+            //     //             $.each(result.errors, function(key, value) {
+            //     //                 $('.alert-danger').show();
+            //     //                 $('.alert-danger').append('<strong><li>' + value +
+            //     //                     '</li></strong>');
+            //     //             });
+            //     //         } else {
+            //     //             $('.alert-danger').hide();
+            //     //             $('.alert-success').show();
+            //     //             $('.alert-success').append('<strong><li>' + result.success +
+            //     //                 '</li></strong>');
+            //     //             toastr.success(result.success, {
+            //     //                 timeOut: 5000
+            //     //             });
+            //     //             $('.dz-preview').remove();
+            //     //             $(".file_arr").remove();
+            //     //             $('#dropzone_preview').css("display", "none");
+
+
+            //     //             $('#EditModal').modal('hide');
+            //     //             $('#Listview').DataTable().ajax.reload(null, false);
+
+            //     //             //setTimeout(function() {
+            //     //             //$('.alert-success').hide();
+            //     //             //   $('#EditModal').modal('hide');
+            //     //             //}, 10000);
+
+            //     //         }
+            //     //     }
+            //     // });
+            // });
 
             $('#SubmitEditForm').click(function(e) {
                 //if (!confirm("Are you sure?")) return;
@@ -899,6 +1105,13 @@
                     .map(function() {
                         return $(this).val();
                     }).get();
+                var sfield = $('#Sfield').val();
+
+                // console.log(sfield);
+                if (sfield == 17) {
+                    // pls .wait
+                    alert("Please wait 2-3 second to send the email. !`");
+                }
 
                     //alert(values);
                     //exit();
@@ -923,6 +1136,7 @@
                         postcode: $('#AddPostcode').val(),
                         name_parent: $('#AddParent').val(),
                         mobile: $('#AddMobile').val(),
+                        email: $('#AddEmail').val(),
                         package: $('#AddPackage').val(),
                         contest: $('#AddContest').val(),
                         file_att: $('#AddFile').val(),
@@ -1078,7 +1292,7 @@
 
         })
 
-        
+
         var myDropzone = {};
         Dropzone.options.myAwesomeDropzone = {
             url: '{{ route('form.upload') }}',

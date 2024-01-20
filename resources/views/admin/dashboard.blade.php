@@ -125,7 +125,7 @@
                 </div>
                 <div>Back Office Dashboard
                     <div class="page-title-subheading">
-                        Infinite Brain Dashboard test test
+                        Infinite Brain Dashboard
                     </div>
                 </div>
             </div>

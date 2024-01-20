@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
+ * @property string $user_id
+ * @property string $status
+ * @property string $comments
+ * @property string $route
  * @property string $opening_time
  * @property string $closing_time
  * @property string $created_at

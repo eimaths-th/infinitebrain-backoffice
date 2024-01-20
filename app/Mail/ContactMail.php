@@ -13,7 +13,8 @@ class ContactMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
-
+    public $url1;
+    public $url2;
     /**
      * Create a new message instance.
      *
@@ -23,7 +24,23 @@ class ContactMail extends Mailable
     {
         //
         $this->data = $data;
-       
+        $this->url1 = '<img height="200px" src="' . asset('receipt_form_images/' . $data->photo_att) . '" alt="..." style="vertical-align: middle;">';
+        $this->url2 = '<img src=" ' . asset('receipt_form_images/' . $data->file_att) . ' " alt="..." style="vertical-align: middle; height: 200px;">';
+        // $this->url2 = asset('receipt_form_images/' . $data->file_att);
+        if ($data->sfield == '17') {
+            $this->subject('Math League');
+        }else {
+            $this->subject('Contact Mail');
+
+        }
+        // dd($data,$this->url1,$this->url2);
+
+        // $this->url1 = asset('receipt_form_images/' . $data->photo_att);
+        // $this->url2 = asset('receipt_form_images/' . $data->file_att);
+        // $this->url2 = asset('receipt_form_images/' . $data->file_att);
+
+        // dd($data,$this->url1,$this->url2);
+
     }
 
     /**
@@ -31,12 +48,12 @@ class ContactMail extends Mailable
      *
      * @return \Illuminate\Mail\Mailables\Envelope
      */
-    public function envelope()
-    {
-        return new Envelope(
-            subject: 'Contact Mail',
-        );
-    }
+    // public function envelope()
+    // {
+    //     return new Envelope(
+    //         subject: 'Contact Mail',
+    //     );
+    // }
 
     /**
      * Get the message content definition.

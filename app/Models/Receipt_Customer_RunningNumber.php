@@ -18,6 +18,7 @@ class Receipt_Customer_RunningNumber extends Model
     ];
 
     const TYPES = [
+        '0',
         '2',
         '4',
         '5',
@@ -28,10 +29,17 @@ class Receipt_Customer_RunningNumber extends Model
         '10',
         '11',
         '13',
-        '14'
+        '14',
+        '15',
+        '16',
+        '17',
+        '18',
+        '19',
+
     ];
 
     const TYPE_PREFIX = [
+        '0' => '0',
         '2' => '2',
         '4' => '4',
         '5' => '5',
@@ -43,6 +51,11 @@ class Receipt_Customer_RunningNumber extends Model
         '11' => '11',
         '13' => '13',
         '14' => '14',
+        '15' => '15',
+        '16' => '16',
+        '17' => '17',
+        '18' => '18',
+        '19' => '19',
 
     ];
 
@@ -57,7 +70,7 @@ class Receipt_Customer_RunningNumber extends Model
         $year = date('Y');
 
 
-        if (! Receipt_Customer_RunningNumber::where('type', $type)->where('year', $year)->exists()) {
+        if (!Receipt_Customer_RunningNumber::where('type', $type)->where('year', $year)->exists()) {
             Receipt_Customer_RunningNumber::create([
                 'type' => $type,
                 'number' => $number,
@@ -77,8 +90,7 @@ class Receipt_Customer_RunningNumber extends Model
         if (strlen(Receipt_Customer_RunningNumber::TYPE_PREFIX[$type]) > 1) {
             return Receipt_Customer_RunningNumber::TYPE_PREFIX[$type] . '' . $number;
         } else {
-            return "0".Receipt_Customer_RunningNumber::TYPE_PREFIX[$type] . '' . $number;
+            return "0" . Receipt_Customer_RunningNumber::TYPE_PREFIX[$type] . '' . $number;
         }
-
     }
 }

@@ -50,6 +50,10 @@
     border-color: #794c8a;
 }
 
+.border-black {
+    border-color: #000000;
+}
+
 :root {
     --bs-blue: #78C3FB;
     --bs-indigo: #444054;
@@ -77,6 +81,41 @@
     --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+    --bs-default-rgb: 233, 236, 239;
+    --bs-primary-rgb: 52, 143, 226;
+    --bs-secondary-rgb: 108, 117, 125;
+    --bs-success-rgb: 0, 172, 172;
+    --bs-info-rgb: 73, 182, 214;
+    --bs-warning-rgb: 245, 156, 26;
+    --bs-danger-rgb: 255, 91, 87;
+    --bs-light-rgb: 242, 243, 244;
+    --bs-dark-rgb: 45, 53, 60;
+    --bs-inverse-rgb: 45, 53, 60;
+    --bs-blue-rgb: 52, 143, 226;
+    --bs-indigo-rgb: 135, 83, 222;
+    --bs-purple-rgb: 114, 124, 182;
+    --bs-pink-rgb: 251, 85, 151;
+    --bs-red-rgb: 255, 91, 87;
+    --bs-orange-rgb: 245, 156, 26;
+    --bs-yellow-rgb: 255, 217, 0;
+    --bs-green-rgb: 50, 169, 50;
+    --bs-teal-rgb: 0, 172, 172;
+    --bs-lime-rgb: 144, 202, 75;
+    --bs-cyan-rgb: 73, 182, 214;
+    --bs-white-rgb: 255, 255, 255;
+    --bs-gray-rgb: 108, 117, 125;
+    --bs-gray-dark-rgb: 45, 53, 60;
+    --bs-muted-rgb: 173, 181, 189;
+    --bs-black-rgb: 0, 0, 0;
+    --bs-gray-100-rgb: 248, 249, 250;
+    --bs-gray-200-rgb: 233, 236, 239;
+    --bs-gray-300-rgb: 222, 226, 230;
+    --bs-gray-400-rgb: 206, 212, 218;
+    --bs-gray-500-rgb: 173, 181, 189;
+    --bs-gray-600-rgb: 108, 117, 125;
+    --bs-gray-700-rgb: 73, 80, 87;
+    --bs-gray-800-rgb: 45, 53, 60;
+    --bs-gray-900-rgb: 32, 37, 42;
 }
 
 *,
@@ -102,6 +141,8 @@ body {
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
+
 
 hr {
     margin: 1rem 0;
