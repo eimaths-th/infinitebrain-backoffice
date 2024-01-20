@@ -288,6 +288,7 @@ class StdlogController extends Controller
                 }
             }
         }
+        
         if ($month) {
             # code...
             $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
