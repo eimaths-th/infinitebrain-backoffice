@@ -539,6 +539,10 @@
             width: 100%;
             height: auto;
         }
+        .custom-image2 {
+            width: 50%;
+            height: auto;
+        }
 
         @media (max-width: 767px) {
             .custom-image {
@@ -633,20 +637,20 @@
                                         <span style="color: #6351a2;"> 2,850 baht</span>
                                         <br>
                                     </p> --}}
-                                    <p>&nbsp;</p>
+                                    {{-- <p>&nbsp;</p> --}}
                                     <!-- sub img -->
 
-                                    {{-- <div class="row">
-                                        <div class="col-lg-6">
-                                            <img src="images/ASIAROPE-01.jpg" class="custom-image mb-3" alt="Image 1">
+                                    <div class="row">
+                                        <div class="text-center">
+                                            <img src="images/ML01.jpg" class="custom-image2 mb-3" alt="Image 1" hight="20px">
 
                                         </div>
-                                        <div class="col-lg-6">
+                                        {{-- <div class="col-lg-6">
                                             <img src="images/ASIAROPE-02.jpg" class="custom-image" alt="Image 2">
 
 
-                                        </div>
-                                    </div> --}}
+                                        </div> --}}
+                                    </div>
 
                                     <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร Math League</b> <br>
 
