@@ -40,7 +40,7 @@ class SchoolPrice extends Model
     /**
      * @var array
      */
-    protected $fillable = ['student_id', 'subject', 'group', 'level', 'week', 'media_name', 'qty', 'book', 'entrance_fee', 'bookprice', 'media_price', 'discount', 'price', 'total', 'rid', 'created_at', 'updated_at', 'type', 'receipt_number', 'period', 'course_type'];
+    protected $fillable = ['student_id', 'subject', 'group', 'level', 'week', 'media_name', 'qty', 'book', 'entrance_fee', 'bookprice', 'media_price', 'discount', 'price', 'total', 'rid', 'created_at', 'updated_at', 'type', 'receipt_number', 'period', 'course_type', 'approv_id','approv_name'];
 
     public function rec_school()
     {

@@ -1411,6 +1411,9 @@ class ReceiptSchoolController extends Controller
             // 'sid' => $request->get('student'),
             'receipt_number' => $rnumber,
             'file_att' => $filebs,
+            'approv_id' => auth()->user()->id,
+            'approv_name' => auth()->user()->name,
+
         ]);
         $data->save();
 
@@ -1442,6 +1445,8 @@ class ReceiptSchoolController extends Controller
                 'type' => $value['type'],
                 'receipt_number' => 0,
                 'period' => $value['period'],
+                'approv_id' => auth()->user()->id,
+                'approv_name' => auth()->user()->name,
 
             ]);
             // print_r($data2['subject']);
