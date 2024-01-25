@@ -209,6 +209,8 @@ class HistoryController extends Controller
             'student' => 'required',
             'subject' => 'required',
             // 'preiod' => 'required',
+            // 'preiod' => 'required',
+            // 'preiod' => 'required',
             'date' => 'required',
             'stime' => 'required',
             'etime' => 'required',
