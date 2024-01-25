@@ -33,6 +33,8 @@ use App\Http\Controllers\WorktimelogsController;
 
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\BonusStudentController;
+
 // use App\Http\Controllers\RouteToggleController;
 
 /*
@@ -71,6 +73,9 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
 });
 
 Route::group(['middleware' => ['auth', 'checkUserId']], function () {
+    Route::resource('studentBonus', BonusStudentController::class);
+    Route::get('/studentBonus/schpid/{id}', [BonusStudentController::class, 'schpid'])->name('bonusRec');
+
     Route::get('/rec-time-logs', [WorktimelogsController::class, 'index'])->name('timelogs');
     Route::get('/search-report-month-time', [RecordtimeController::class, 'search_reportMonthTime'])->name('search_reportMonthTime');
     Route::get('/report-month-time', [HomeController::class, 'reportTime'])->name('reportTime');

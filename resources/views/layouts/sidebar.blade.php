@@ -698,6 +698,12 @@
                                             ประวัติการแก้ไขเวลาเข้างาน
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('studentBonus.index') }}">
+                                            <i class="metismenu-icon"></i>
+                                            Bonus Student
+                                        </a>
+                                    </li>
                                 @endif
 
                             </ul>

@@ -49,6 +49,7 @@
         @php
             use Carbon\Carbon;
             use App\Models\History;
+            use App\Models\StudentBonus;
 
             // $all = 0;
             // $remain = 0;
@@ -200,7 +201,6 @@
                                                     ->whereMonth('datetime', '>=', $stMonth)
                                                     ->whereMonth('datetime', '<=', $enMonth)
                                                     ->get();
-
                                                 if ($history->count() == 0) {
                                                     $history = History::where('student_id', $std->id)
                                                         ->where('subject_id', $sub_ids)
@@ -216,6 +216,8 @@
                                                         })
                                                         ->get();
                                                 }
+
+                                                //รอแก้ บัค 00032 กับ 00148
                                                 if ($history->count() == 0) {
                                                     $history = History::where('student_id', $std->id)
                                                         ->where('subject_id', $sub_ids)
@@ -231,6 +233,15 @@
                                                         })
                                                         ->get();
                                                 }
+
+                                                // dd(
+                                                //     $history,
+                                                //     $stYear,
+                                                //     $stMonth,
+                                                //     $enYear,
+                                                //     $enMonth,
+                                                // );
+
                                                 // $history = History::where('student_id', $std->id)
                                                 //     ->where('subject_id', $sub_ids)
                                                 //     ->where(function ($query) use ($stYear, $enYear, $stMonth, $enMonth) {
@@ -269,6 +280,7 @@
                                                     }
                                                 }
 
+                                                $extra = StudentBonus::where(['student_id' => $std->id, 'schoolp_id' => $school_pices->id])->sum('bonus');
                                                 $startcourse = $school_pices->period ?? null;
                                                 if ($school_pices->period == $startcourse) {
                                                     $num_month = $school;
@@ -278,26 +290,27 @@
                                                 }
                                                 $qty += $school;
                                                 if ($num_month > 11) {
-                                                    $bonus = 12 * $course;
+                                                    $bonus = 12 * $course + $extra;
                                                     $prefer = $qty * 8;
                                                     $all = $qty * 8 + $bonus ?? 'N/A';
                                                     $remain = $all - $history_count;
                                                 } elseif ($num_month > 5) {
-                                                    $bonus = 5 * $course;
+                                                    $bonus = 5 * $course +$extra;
                                                     $prefer = $qty * 8;
                                                     $all = $qty * 8 + $bonus ?? 'N/A';
                                                     $remain = $all - $history_count;
                                                 } elseif ($num_month > 3) {
-                                                    $bonus = 3 * $course;
+                                                    $bonus = 3 * $course +$extra;
                                                     $prefer = $qty * 8;
                                                     $all = $qty * 8 + $bonus ?? 'N/A';
                                                     $remain = $all - $history_count;
                                                 } else {
-                                                    $bonus = 0;
+                                                    $bonus = 0 + $extra;
                                                     $prefer = $qty * 8;
-                                                    $all = $qty * 8 ?? 'N/A';
+                                                    $all = $qty * 8 + $bonus ?? 'N/A';
                                                     $remain = $all - $history_count;
                                                 }
+                                                // $bonus = $bonus + $extra;
                                             @endphp
                                         @endif
                                         @php
@@ -348,7 +361,7 @@
                                         </tr>
                                     @endforeach
                                     @php
-                                        // dd($startMonthYMD, $endMonth, $history, $stYear, $enYear, $stMonth, $enMonth);
+                                        // dd($extra, $endMonth, $history, $stYear, $enYear, $stMonth, $enMonth);
 
                                         $historyTimeOut = $histories
                                             ->where('student_id', $std->id)
