@@ -144,7 +144,14 @@
                                 <td> {{ $record->bonus }} ครั้ง</td>
                                 <td> {{ $record->detail }} </td>
                                 <td> {{ $record->user->name }} </td>
-                                <td></td>
+                                <td>
+                                    <!-- delete btn $record->id -->
+                                    <form action="{{ route('studentBonus.destroy', $record->id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this record?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

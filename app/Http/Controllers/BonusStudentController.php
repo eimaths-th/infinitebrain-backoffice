@@ -132,5 +132,8 @@ class BonusStudentController extends Controller
     public function destroy($id)
     {
         //
+        StudentBonus::find($id)->delete();
+        return redirect()->route('studentBonus.index');
+
     }
 }
