@@ -288,29 +288,68 @@
                                                 } else {
                                                     $num_month += $school;
                                                 }
+                                                $startMonthYMD = Carbon::createFromFormat('Y-m', $startMonth);
+                                                $stopBonus = '2024-01-01';
+                                                $stopBonuss = Carbon::parse($stopBonus)->format('Y-m');
+
                                                 $qty += $school;
-                                                if ($num_month > 11) {
-                                                    $bonus = 12 * $course + $extra;
-                                                    $prefer = $qty * 8;
-                                                    $all = $qty * 8 + $bonus ?? 'N/A';
-                                                    $remain = $all - $history_count;
-                                                } elseif ($num_month > 5) {
-                                                    $bonus = 5 * $course +$extra;
-                                                    $prefer = $qty * 8;
-                                                    $all = $qty * 8 + $bonus ?? 'N/A';
-                                                    $remain = $all - $history_count;
-                                                } elseif ($num_month > 3) {
-                                                    $bonus = 3 * $course +$extra;
-                                                    $prefer = $qty * 8;
-                                                    $all = $qty * 8 + $bonus ?? 'N/A';
-                                                    $remain = $all - $history_count;
-                                                } else {
+                                                $checkbonus = $startMonthYMD->greaterThan($stopBonuss);
+
+                                                // if ($num_month > 11) {
+                                                //     if ($checkbonus) {
+                                                //         $bonus = 0 + $extra;
+                                                //     } else {
+                                                //         $bonus = 12 * $course + $extra;
+                                                //     }
+                                                //     $prefer = $qty * 8;
+                                                //     $all = $qty * 8 + $bonus ?? 'N/A';
+                                                //     $remain = $all - $history_count;
+                                                // } elseif ($num_month > 5) {
+                                                //     if ($checkbonus) {
+                                                //         $bonus = 0 + $extra;
+                                                //     } else {
+                                                //         $bonus = 5 * $course + $extra;
+                                                //     }
+
+                                                //     $prefer = $qty * 8;
+                                                //     $all = $qty * 8 + $bonus ?? 'N/A';
+                                                //     $remain = $all - $history_count;
+                                                // } elseif ($num_month > 3) {
+                                                //     if ($checkbonus) {
+                                                //         $bonus = 0 + $extra;
+                                                //     } else {
+                                                //         $bonus = 3 * $course + $extra;
+                                                //     }
+                                                //     $prefer = $qty * 8;
+                                                //     $all = $qty * 8 + $bonus ?? 'N/A';
+                                                //     $remain = $all - $history_count;
+                                                // } else {
+                                                //     $bonus = 0 + $extra;
+                                                //     $prefer = $qty * 8;
+                                                //     $all = $qty * 8 + $bonus ?? 'N/A';
+                                                //     $remain = $all - $history_count;
+                                                // }
+
+                                                if ($checkbonus) {
                                                     $bonus = 0 + $extra;
-                                                    $prefer = $qty * 8;
-                                                    $all = $qty * 8 + $bonus ?? 'N/A';
-                                                    $remain = $all - $history_count;
+                                                } else {
+                                                    if ($num_month > 11) {
+                                                        $bonus = 12 * $course + $extra;
+                                                    } elseif ($num_month > 5) {
+                                                        $bonus = 5 * $course + $extra;
+                                                    } elseif ($num_month > 3) {
+                                                        $bonus = 3 * $course + $extra;
+                                                    } else {
+                                                        $bonus = 0 + $extra;
+                                                    }
                                                 }
+
+                                                $prefer = $qty * 8;
+                                                $all = $qty * 8 + $bonus ?? 'N/A';
+                                                $remain = $all - $history_count;
+
                                                 // $bonus = $bonus + $extra;
+
                                             @endphp
                                         @endif
                                         @php
