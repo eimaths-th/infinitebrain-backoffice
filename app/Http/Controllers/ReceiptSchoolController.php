@@ -1006,6 +1006,7 @@ class ReceiptSchoolController extends Controller
         $discount = 0;
 
         $test = [];
+        // dd($receipts_detail);
         foreach ($receipts_detail as $dresult) {
             if ($dresult['course_type'] == 2) {
                 $price = $dresult['bookprice'];
@@ -1016,6 +1017,7 @@ class ReceiptSchoolController extends Controller
             }
             // dd($dresult->total);
             $message = "";
+
             if ($dresult['week'] == 1 || $dresult['week'] == 2 || $dresult['week'] == 3) {
                 $message = " สัปดาห์";
                 $qty = $dresult['week'];
@@ -1024,7 +1026,12 @@ class ReceiptSchoolController extends Controller
                     $message = "ชุด";
                 }
             } else {
-                $message = "เดือน";
+                if ($dresult['group'] === 'CHN') {
+                    $message = "คอร์ส";
+                } else {
+                    # code...
+                    $message = "เดือน";
+                }
                 $qty = $dresult['qty'];
             }
 
@@ -1452,6 +1459,11 @@ class ReceiptSchoolController extends Controller
             // print_r($data2['subject']);
             // exit();
             $data2->save();
+
+
+            # code...
+            $group = $data2->school_sub->group;
+            $data2->update(['group' => $group]);
 
 
             $period = explode(' - ', $value['period']);

@@ -344,8 +344,13 @@
                                                     }
                                                 }
 
-                                                $prefer = $qty * 8;
-                                                $all = $qty * 8 + $bonus ?? 'N/A';
+                                                if ($school_pices->group === 'CHN') {
+                                                    # code...
+                                                    $prefer = $qty * 10;
+                                                } else {
+                                                    $prefer = $qty * 8;
+                                                }
+                                                $all = $prefer + $bonus ?? 'N/A';
                                                 $remain = $all - $history_count;
 
                                                 // $bonus = $bonus + $extra;
