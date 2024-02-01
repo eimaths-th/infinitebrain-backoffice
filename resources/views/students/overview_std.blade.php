@@ -344,12 +344,14 @@
                                                     }
                                                 }
 
-                                                if ($school_pices->group === 'CHN') {
-                                                    # code...
-                                                    $prefer = $qty * 10;
-                                                } else {
-                                                    $prefer = $qty * 8;
-                                                }
+                                                // if ($school_pices->group === 'CHN') {
+                                                //     # code...
+                                                //     $prefer = $qty * 10;
+                                                // } else {
+                                                //     $prefer = $qty * 8;
+                                                // }
+                                                
+                                                $prefer = $qty * $school_pices->school_sub->hr_per_course;
                                                 $all = $prefer + $bonus ?? 'N/A';
                                                 $remain = $all - $history_count;
 
