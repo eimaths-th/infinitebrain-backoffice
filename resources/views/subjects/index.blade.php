@@ -53,6 +53,7 @@
                                 <th>Group</th>
                                 <th>Book</th>
                                 <th>Book Per Month</th>
+                                <th>Hr Per Course</th>
                                 <th width="280px">Action</th>
                             </tr>
                         </thead>
@@ -112,6 +113,11 @@
                         <div class="form-group">
                             <label for="Book">Book Per Month:</label>
                             <input type="number" class="form-control" id="AddBookP" name="bookp" value=""
+                                min="1" max="99">
+                        </div>
+                        <div class="form-group">
+                            <label for="Book">Hr Per Course:</label>
+                            <input type="number" class="form-control" id="AddHr" name="hr" value=""
                                 min="1" max="99">
                         </div>
                     </div>
@@ -283,6 +289,10 @@
                         name: 'book_per_month'
                     },
                     {
+                        data: 'hr_per_course',
+                        name: 'hr_per_course'
+                    },
+                    {
                         data: 'action',
                         name: 'action'
                     },
@@ -359,6 +369,7 @@
                         title_th: $('#AddTitleTh').val(),
                         book: $('#AddBook').val(),
                         book_per_month: $('#AddBookP').val(),
+                        hr_per_course: $('#AddHr').val(),
                         _token: token,
                     },
                     success: function(result) {
@@ -407,6 +418,7 @@
                         title_th: $('#EditTitleTh').val(),
                         book: $('#EditBook').val(),
                         book_per_month: $('#EditBookP').val(),
+                        hr_per_course: $('#EditHr').val(),
                     },
 
                     success: function(result) {
@@ -463,6 +475,6 @@
                     }
                 }); //end ajax
             })
-        })
+        });
     </script>
 @endsection

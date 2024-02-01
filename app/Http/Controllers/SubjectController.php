@@ -52,7 +52,9 @@ class SubjectController extends Controller
                 "subjects.book_per_month",
                 "subjects.group as group",
                 "subjects.title as subject_name",
-                "subjects.title_th as subject_name_th"
+                "subjects.title_th as subject_name_th",
+                "subjects.hr_per_course as hr_per_course",
+
             )
                 //->join("subjects", "subjects.id", "=", "subjects.subject")
                 //->where('subjects.subject', $request->id)
@@ -105,12 +107,14 @@ class SubjectController extends Controller
             'title_th' => 'required|string',
             'book' => 'required|integer',
             'book_per_month' => 'required|integer',
+            'hr_per_course' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
         // Getting values from the blade template form
+        // dd($request);
         $level = new Subject([
             'group' => $request->get('group'),
             'title' => $request->get('title'),
@@ -118,6 +122,7 @@ class SubjectController extends Controller
             'title_th' => $request->get('title_th'),
             'book' => $request->get('book'),
             'book_per_month' => $request->get('book_per_month'),
+            'hr_per_course' => $request->get('hr_per_course'),
         ]);
         $level->save();
         return response()->json(['success' => 'Subject Add successfully']);
@@ -201,6 +206,10 @@ class SubjectController extends Controller
                     <label for="BookP">Book Per Month:</label>
                     <input type="number" class="form-control" id="EditBookP" name="bookp" value="' . $data->book_per_month . '" min="1" max="99">
                 </div>
+                <div class="form-group">
+                    <label for="BookP">Hr Per Course:</label>
+                    <input type="number" class="form-control" id="EditHr" name="bookp" value="' . $data->hr_per_course . '" min="1" max="99">
+                </div>
                 <div class="form-group mt-3">
                     <label for="BookP">จำนวนนักเรียนในคลาส ' .  $month . '/' . $year . ' :</label>
                     <label for="BookP"> ' . $count_subj . ' คน </label>
@@ -245,7 +254,12 @@ class SubjectController extends Controller
                 <div class="form-group">
                     <label for="BookP">Book Per Month:</label>
                     <input type="number" class="form-control" id="EditBookP" name="bookp" value="' . $data->book_per_month . '" min="1" max="99">
-                </div>';
+                </div>
+                <div class="form-group">
+                    <label for="BookP">Hr Per Course:</label>
+                    <input type="number" class="form-control" id="EditHr" name="bookp" value="' . $data->hr_per_course . '" min="1" max="99">
+                </div>
+                ';
 
         return response()->json(['html' => $html]);
     }
@@ -265,6 +279,7 @@ class SubjectController extends Controller
             'title_th' => 'required|string',
             'book' => 'required|integer',
             'book_per_month' => 'required|integer',
+            'hr_per_course' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
