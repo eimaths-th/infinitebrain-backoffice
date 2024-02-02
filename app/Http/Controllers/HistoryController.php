@@ -140,11 +140,14 @@ class HistoryController extends Controller
     {
         $studentId = $id;
 
+
         if ($studentId == null) {
-            # code...
+            # code....
         } else {
 
             $std = Student::find($studentId);
+            // dd($studentId,$std);
+
             // $rc = Receipt_School::where('pid', $std->id)->get();
             // $rcIds = $rc->pluck('id'); // Retrieve all 'id' values from the collection
             $sch_p = SchoolPrice::where('student_id', $std->id)->get();
