@@ -84,7 +84,9 @@
                                 $class = 'success';
                             }
                         @endphp
-                        <h5><span class="text-{{ $class }}">{{ $std->status }}</span> สิ้นสุดที่ {{ $end_date }}
+                        <h5>
+                            {{-- <span class="text-{{ $class }}">{{ $std->status }}</span> --}}
+                            สิ้นสุดที่ {{ $end_date }}
                         </h5>
                         <h5>code : {{ $std->code }} | NickName : {{ $std->nick_name }}
                         </h5>
@@ -108,13 +110,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate))
+                            {{-- @if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate))
                                 @foreach ($school_pice as $reset)
                                     @php
                                         $reset_id[] = $reset->id;
                                     @endphp
                                 @endforeach
-                            @else
+                            @else --}}
                                 @foreach ($school_pice_group as $school_pice)
                                     @php
                                         // dd($school_pice_group);
@@ -350,7 +352,7 @@
                                                 // } else {
                                                 //     $prefer = $qty * 8;
                                                 // }
-                                                
+
                                                 $prefer = $qty * $school_pices->school_sub->hr_per_course;
                                                 $all = $prefer + $bonus ?? 'N/A';
                                                 $remain = $all - $history_count;
@@ -478,7 +480,7 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                            @endif
+                            {{-- @endif --}}
                             @php
                                 // dd($historyTimeOut_id, $historyTimeOut, $his_time_out);
                             @endphp
