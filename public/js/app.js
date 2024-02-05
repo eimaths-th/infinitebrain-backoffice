@@ -40,6 +40,26 @@ function formModal(route) {
     });
 
 }
+function formModalBonus(route) {
+    $.get(route, function (res) {
+        $("#modal_form_content").empty();
+        $('#modal_form_content').html(res);
+        $("#modal_form").modal("show");
+        // var std = $('#student_id').val();
+        // console.log(std);
+
+
+        $(".select2_single").select2({
+            maximumSelectionLength: 1,
+            allowClear: true
+        });
+        $(".select2_single2").select2({
+            maximumSelectionLength: 1,
+            allowClear: true
+        });
+    });
+
+}
 
 function formModal_1(route) {
     $.get(route, function (res) {

@@ -122,7 +122,7 @@
 
                             <thead>
                                 <tr>
-                                    <th width='1%' class="text-center">no.</th>
+                                    <th width='1%' class="text-center">No.</th>
                                     <th width='1%'>Code</th>
                                     <th>User</th>
                                     @foreach ($stwork as $status)
@@ -137,12 +137,38 @@
                                 @foreach ($rec_timess as $user_id => $records)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>code</td>
+                                        <td class="text-center">{{ $records->first()->user->code ?? 'code' }}</td>
                                         <td>{{ $records->first()->user->name }}</td>
 
                                         @foreach ($stwork as $status)
                                             <td>
-                                                {{ $records->where('status_name', $status->name)->count() }}
+                                                <a href="{{ route('find_UserRecTime', ['user_id' => $records->first()->user->id, 'status' => $status->id, 'month' => $month, 'year' => $year]) }}"
+                                                    class="text-dark">
+                                                    @php
+                                                        $statusName = $status->name;
+                                                        $statusCount = $records->where('status_name', $status->name)->count();
+                                                        $text = '';
+
+                                                        // if ($status->name === 'ลากิจ') {
+                                                        //     # code...
+                                                        //     $remain = 3;
+                                                        // } elseif ($status->name === 'ลาป่วย') {
+                                                        //     # code...
+                                                        //     $remain = 30;
+                                                        // } elseif ($status->name === 'ลาพักร้อน') {
+                                                        //     # code...
+                                                        //     $remain = 6;
+                                                        // }
+                                                        // if ($status->name === 'ลากิจ' || $status->name === 'ลาป่วย' || $status->name === 'ลาพักร้อน') {
+                                                        //     # code...
+                                                        //     $text = 'remain : ' . $remain - $statusCount ?? '';
+                                                        // }
+                                                    @endphp
+                                                    {{ $statusCount }}
+
+                                                    {{-- {{ $text }} --}}
+
+                                                </a>
                                             </td>
                                         @endforeach
                                     </tr>
@@ -189,13 +215,13 @@
                         </form>
 
                         <h3 class=""><i class="fa fa-cog"></i> ตารางการมาทำงานปี {{ $year }} </h3>
-                        <table style="width: 100%;" id="Listview"
-                            class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-4 Listview">
+                        <table id="Listview3"
+                            class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-4 Listview3">
 
                             <thead>
-                                <tr>
-                                    <th width='1%' class="text-center">no.</th>
-                                    <th width='1%'>Code</th>
+                                <tr id="tr2">
+                                    <th class="text-center" width="1%">No.1</th>
+                                    <th class="text-center">Code</th>
                                     <th>User</th>
                                     @foreach ($stwork as $status)
                                         <th>
@@ -206,15 +232,42 @@
                             </thead>
 
                             <tbody>
+
                                 @foreach ($rec_times_year as $user_id => $records)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>code</td>
+                                        <td class="text-center">{{ $records->first()->user->code ?? 'code' }}</td>
                                         <td>{{ $records->first()->user->name }}</td>
 
                                         @foreach ($stwork as $status)
                                             <td>
-                                                {{ $records->where('status_name', $status->name)->count() }}
+                                                <a href="{{ route('find_UserRecTime', ['user_id' => $records->first()->user->id, 'status' => $status->id, 'month' => 'null', 'year' => $year]) }}"
+                                                    class="text-dark">
+                                                    @php
+                                                        $statusName = $status->name;
+                                                        $statusCount = $records->where('status_name', $status->name)->count();
+                                                        $text = '';
+
+                                                        if ($status->name === 'ลากิจ') {
+                                                            # code...
+                                                            $remain = 3;
+                                                        } elseif ($status->name === 'ลาป่วย') {
+                                                            # code...
+                                                            $remain = 30;
+                                                        } elseif ($status->name === 'ลาพักร้อน') {
+                                                            # code...
+                                                            $remain = 6;
+                                                        }
+                                                        if ($status->name === 'ลากิจ' || $status->name === 'ลาป่วย' || $status->name === 'ลาพักร้อน') {
+                                                            # code...
+                                                            $text = 'remain : ' . $remain - $statusCount ?? '';
+                                                        }
+                                                    @endphp
+                                                    {{ $statusCount }}
+
+                                                    {{ $text }}
+
+                                                </a>
                                             </td>
                                         @endforeach
                                     </tr>
@@ -223,6 +276,7 @@
                             </tbody>
 
                         </table>
+
                     </div>
 
                 </div>
@@ -273,6 +327,15 @@
             var table1 = $('.Listview').DataTable({
                 lengthMenu: [-1],
             });
+            $('#Listview3').DataTable({
+                "column": [{
+                        "width": "1%"
+                    }, // Set the width for the first column
+                    // ... other column configurations
+                ],
+                lengthMenu: [-1],
+            });
+            $('#Listview3 th').removeAttr('style');
             // var table2 = $('#Listview2').DataTable({
             //     lengthMenu: [-1],
             // });

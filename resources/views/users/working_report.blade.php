@@ -31,7 +31,6 @@
 @endpush
 
 @push('scripts')
-
 @endpush
 
 @section('content')
@@ -424,8 +423,8 @@
                                             <div class="widget-subheading">
                                                 @php
                                                     $sumA = 30;
-                                                    if (isset($rec_times['ลาป่วย'])) {
-                                                        $sumA = 30 - $rec_times['ลาป่วย'];
+                                                    if (isset($rec_times_year['ลาป่วย'])) {
+                                                        $sumA = 30 - $rec_times_year['ลาป่วย'];
                                                     }
                                                 @endphp
                                                 คงเหลือ {{ $sumA }} ครั้ง
@@ -456,8 +455,8 @@
                                             <div class="widget-subheading">
                                                 @php
                                                     $sumb = 6;
-                                                    if (isset($rec_times['ลาพักร้อน'])) {
-                                                        $sumb = 6 - $rec_times['ลาพักร้อน'];
+                                                    if (isset($rec_times_year['ลาพักร้อน'])) {
+                                                        $sumb = 6 - $rec_times_year['ลาพักร้อน'];
                                                     }
                                                 @endphp
                                                 คงเหลือ {{ $sumb }} ครั้ง
@@ -482,10 +481,11 @@
                                             <div class="widget-subheading">
                                                 @php
                                                     $sumc = 3;
-                                                    if (isset($rec_times['ลากิจ'])) {
-                                                        $sumc = 3 - $rec_times['ลากิจ'];
+                                                    if (isset($rec_times_year['ลากิจ'])) {
+                                                        $sumc = 3 - $rec_times_year['ลากิจ'];
                                                     }
                                                 @endphp
+                                                {{--  --}}
                                                 คงเหลือ {{ $sumc }} ครั้ง
                                             </div>
                                         </div>

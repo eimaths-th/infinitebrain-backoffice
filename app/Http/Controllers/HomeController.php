@@ -405,47 +405,7 @@ class HomeController extends Controller
 
         ]);
     }
-    public function reportTime()
-    {
-        $currentMonth = date('m');
-        $currentYear = date('Y');
-        // $rec_times = Recordtime::where('user_id', Auth::user()->id)
-        //     ->whereMonth('date', $currentMonth)
-        //     ->whereYear('date', $currentYear)
-        //     // ->get();
-        //     ->get()
-        //     ->groupBy('status_name')
-        //     ->map->count();
-        // $rec_times_year = Recordtime::where('user_id', Auth::user()->id)
-        //     ->whereYear('date', $currentYear)
-        //     // ->get();
-        //     ->get()
-        //     ->groupBy('status_name')
-        //     ->map->count();
 
-        $rec_timess = Recordtime::whereMonth('date', $currentMonth)
-            ->whereYear('date', $currentYear)
-            ->orderBy('user_id', 'asc')
-            ->get()
-            ->groupBy('user_id');
-        $rec_times_year = Recordtime::whereYear('date', $currentYear)
-            ->orderBy('user_id', 'asc')
-            ->get()
-            ->groupBy('user_id');
-        $stwork = Statuswork::orderBy('id', 'asc')->get();
-
-        // dd($rec_timess);
-
-        return view('users.def_working_report', [
-            'rec_timess' => $rec_timess,
-            // 'rec_times' => $rec_times,
-            'rec_times_year' => $rec_times_year,
-            'year' => $currentYear,
-            'month' => $currentMonth,
-            'stwork' => $stwork,
-
-        ]);
-    }
 
     public function home3()
     {

@@ -49,6 +49,7 @@
         @php
             use Carbon\Carbon;
             use App\Models\History;
+            use App\Models\StudentBonus;
 
             // $all = 0;
             // $remain = 0;
@@ -83,7 +84,9 @@
                                 $class = 'success';
                             }
                         @endphp
-                        <h5><span class="text-{{ $class }}">{{ $std->status }}</span> สิ้นสุดที่ {{ $end_date }}
+                        <h5>
+                            {{-- <span class="text-{{ $class }}">{{ $std->status }}</span> --}}
+                            สิ้นสุดที่ {{ $end_date }}
                         </h5>
                         <h5>code : {{ $std->code }} | NickName : {{ $std->nick_name }}
                         </h5>
@@ -107,13 +110,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate))
+                            {{-- @if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate))
                                 @foreach ($school_pice as $reset)
                                     @php
                                         $reset_id[] = $reset->id;
                                     @endphp
                                 @endforeach
-                            @else
+                            @else --}}
                                 @foreach ($school_pice_group as $school_pice)
                                     @php
                                         // dd($school_pice_group);
@@ -200,7 +203,6 @@
                                                     ->whereMonth('datetime', '>=', $stMonth)
                                                     ->whereMonth('datetime', '<=', $enMonth)
                                                     ->get();
-
                                                 if ($history->count() == 0) {
                                                     $history = History::where('student_id', $std->id)
                                                         ->where('subject_id', $sub_ids)
@@ -216,6 +218,8 @@
                                                         })
                                                         ->get();
                                                 }
+
+                                                //รอแก้ บัค 00032 กับ 00148
                                                 if ($history->count() == 0) {
                                                     $history = History::where('student_id', $std->id)
                                                         ->where('subject_id', $sub_ids)
@@ -231,6 +235,15 @@
                                                         })
                                                         ->get();
                                                 }
+
+                                                // dd(
+                                                //     $history,
+                                                //     $stYear,
+                                                //     $stMonth,
+                                                //     $enYear,
+                                                //     $enMonth,
+                                                // );
+
                                                 // $history = History::where('student_id', $std->id)
                                                 //     ->where('subject_id', $sub_ids)
                                                 //     ->where(function ($query) use ($stYear, $enYear, $stMonth, $enMonth) {
@@ -269,6 +282,7 @@
                                                     }
                                                 }
 
+                                                $extra = StudentBonus::where(['student_id' => $std->id, 'schoolp_id' => $school_pices->id])->sum('bonus');
                                                 $startcourse = $school_pices->period ?? null;
                                                 if ($school_pices->period == $startcourse) {
                                                     $num_month = $school;
@@ -276,28 +290,75 @@
                                                 } else {
                                                     $num_month += $school;
                                                 }
+                                                $startMonthYMD = Carbon::createFromFormat('Y-m', $startMonth);
+                                                $stopBonus = '2024-01-01';
+                                                $stopBonuss = Carbon::parse($stopBonus)->format('Y-m');
+
                                                 $qty += $school;
-                                                if ($num_month > 11) {
-                                                    $bonus = 12 * $course;
-                                                    $prefer = $qty * 8;
-                                                    $all = $qty * 8 + $bonus ?? 'N/A';
-                                                    $remain = $all - $history_count;
-                                                } elseif ($num_month > 5) {
-                                                    $bonus = 5 * $course;
-                                                    $prefer = $qty * 8;
-                                                    $all = $qty * 8 + $bonus ?? 'N/A';
-                                                    $remain = $all - $history_count;
-                                                } elseif ($num_month > 3) {
-                                                    $bonus = 3 * $course;
-                                                    $prefer = $qty * 8;
-                                                    $all = $qty * 8 + $bonus ?? 'N/A';
-                                                    $remain = $all - $history_count;
+                                                $checkbonus = $startMonthYMD->greaterThan($stopBonuss);
+
+                                                // if ($num_month > 11) {
+                                                //     if ($checkbonus) {
+                                                //         $bonus = 0 + $extra;
+                                                //     } else {
+                                                //         $bonus = 12 * $course + $extra;
+                                                //     }
+                                                //     $prefer = $qty * 8;
+                                                //     $all = $qty * 8 + $bonus ?? 'N/A';
+                                                //     $remain = $all - $history_count;
+                                                // } elseif ($num_month > 5) {
+                                                //     if ($checkbonus) {
+                                                //         $bonus = 0 + $extra;
+                                                //     } else {
+                                                //         $bonus = 5 * $course + $extra;
+                                                //     }
+
+                                                //     $prefer = $qty * 8;
+                                                //     $all = $qty * 8 + $bonus ?? 'N/A';
+                                                //     $remain = $all - $history_count;
+                                                // } elseif ($num_month > 3) {
+                                                //     if ($checkbonus) {
+                                                //         $bonus = 0 + $extra;
+                                                //     } else {
+                                                //         $bonus = 3 * $course + $extra;
+                                                //     }
+                                                //     $prefer = $qty * 8;
+                                                //     $all = $qty * 8 + $bonus ?? 'N/A';
+                                                //     $remain = $all - $history_count;
+                                                // } else {
+                                                //     $bonus = 0 + $extra;
+                                                //     $prefer = $qty * 8;
+                                                //     $all = $qty * 8 + $bonus ?? 'N/A';
+                                                //     $remain = $all - $history_count;
+                                                // }
+
+                                                if ($checkbonus) {
+                                                    $bonus = 0 + $extra;
                                                 } else {
-                                                    $bonus = 0;
-                                                    $prefer = $qty * 8;
-                                                    $all = $qty * 8 ?? 'N/A';
-                                                    $remain = $all - $history_count;
+                                                    if ($num_month > 11) {
+                                                        $bonus = 12 * $course + $extra;
+                                                    } elseif ($num_month > 5) {
+                                                        $bonus = 5 * $course + $extra;
+                                                    } elseif ($num_month > 3) {
+                                                        $bonus = 3 * $course + $extra;
+                                                    } else {
+                                                        $bonus = 0 + $extra;
+                                                    }
                                                 }
+
+                                                // if ($school_pices->group === 'CHN') {
+                                                //     # code...
+                                                //     $prefer = $qty * 10;
+                                                // } else {
+                                                //     $prefer = $qty * 8;
+                                                // }
+
+                                                $prefer = $qty * $school_pices->school_sub->hr_per_course;
+                                                $all = $prefer + $bonus ?? 'N/A';
+                                                $remain = $all - $history_count;
+
+                                                // $bonus = $bonus + $extra;
+
                                             @endphp
                                         @endif
                                         @php
@@ -348,7 +409,7 @@
                                         </tr>
                                     @endforeach
                                     @php
-                                        // dd($startMonthYMD, $endMonth, $history, $stYear, $enYear, $stMonth, $enMonth);
+                                        // dd($extra, $endMonth, $history, $stYear, $enYear, $stMonth, $enMonth);
 
                                         $historyTimeOut = $histories
                                             ->where('student_id', $std->id)
@@ -419,7 +480,7 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                            @endif
+                            {{-- @endif --}}
                             @php
                                 // dd($historyTimeOut_id, $historyTimeOut, $his_time_out);
                             @endphp

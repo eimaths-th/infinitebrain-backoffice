@@ -198,10 +198,38 @@ class RecordtimeController extends Controller
         ]);
     }
 
+
+    public function reportTime()
+    {
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+
+
+        $rec_timess = Recordtime::whereMonth('date', $currentMonth)
+            ->whereYear('date', $currentYear)
+            ->orderBy('user_id', 'asc')
+            ->get()
+            ->groupBy('user_id');
+        $rec_times_year = Recordtime::whereYear('date', $currentYear)
+            ->orderBy('user_id', 'asc')
+            ->get()
+            ->groupBy('user_id');
+        $stwork = Statuswork::orderBy('id', 'asc')->get();
+
+        // dd($rec_timess);
+
+        return view('users.def_working_report', [
+            'rec_timess' => $rec_timess,
+            // 'rec_times' => $rec_times,
+            'rec_times_year' => $rec_times_year,
+            'year' => $currentYear,
+            'month' => $currentMonth,
+            'stwork' => $stwork,
+
+        ]);
+    }
     public function search_reportMonthTime(Request $request)
     {
-
-
         $month = $request->month;
         $year = $request->year;
         if ($month) {
@@ -241,6 +269,33 @@ class RecordtimeController extends Controller
             'year' => $year,
             'month' => $month,
             'stwork' => $stwork,
+
+        ]);
+    }
+
+    public function find_UserRecTime($user_id, $status, $month, $year)
+    {
+        //
+        $users = User::all();
+
+        // dd($month);
+        if ($month === 'null') {
+            $rec_times = Recordtime::where(['user_id' => $user_id, 'status' => $status])
+                // ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->orderBy('id', 'desc')
+                ->get();
+        } else {
+            $rec_times = Recordtime::where(['user_id' => $user_id, 'status' => $status])
+                ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->orderBy('id', 'desc')
+                ->get();
+        }
+
+        return view('users.def_working', [
+            'rec_times' => $rec_times,
+            'users' => $users,
 
         ]);
     }
