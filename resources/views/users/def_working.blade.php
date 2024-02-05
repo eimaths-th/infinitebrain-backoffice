@@ -157,7 +157,7 @@
                         <tr>
                             {{-- <th width="10px"><input type="checkbox" id="check-all" class="flat"></th> --}}
                             <th width="1%" align="center">#</th>
-                            <th width="1%" align="center">Code</th>
+                            <th width="1%" align="center">Code1</th>
                             <th data-orderable="false">Name</th>
                             <th data-orderable="false">Date</th>
                             <th data-orderable="false">Time</th>
@@ -171,7 +171,7 @@
                         @foreach ($rec_times as $key => $rec_time)
                             <tr>
                                 <td align="center"> {{ $key + 1 }}</td>
-                                <td>code</td>
+                                <td>{{ $rec_time->user->code }}</td>
 
                                 <td> {{ $rec_time->user->name }} </td>
                                 <td>

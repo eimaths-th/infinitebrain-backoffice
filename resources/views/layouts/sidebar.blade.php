@@ -666,6 +666,25 @@
                                         รายงานยอดนักเรียน
                                     </a>
                                 </li>
+                                <!-- แก้ เช็คชื่อ พี่หนึ่ง && me -->
+
+                            </ul>
+                        </li>
+                    @endif
+                    @php
+                        $user_id = Auth::user()->id;
+
+                        $godEye = Godeye::where('user_id', $user_id)->get();
+                    @endphp
+                    @if ((Auth::user()->level == 0 && Auth::user()->id == 4) || $godEye->count() > 0)
+                        <li>
+                            <a href="#">
+                                <i class="metismenu-icon pe-7s-users"></i>
+                                Manager
+                                <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                            </a>
+
+                            <ul>
 
                                 <!-- แก้ เช็คชื่อ พี่หนึ่ง && me -->
                                 @php
@@ -673,42 +692,41 @@
 
                                     $godEye = Godeye::where('user_id', $user_id)->get();
                                 @endphp
-                                @if ((Auth::user()->level == 0 && Auth::user()->id == 4) || $godEye->count() > 0)
-                                    <li>
-                                        <a href="{{ route('reportMonthStd') }}">
-                                            <i class="metismenu-icon"></i>
-                                            รายงานประจำเดือน
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('reportRecieptStd') }}">
-                                            <i class="metismenu-icon"></i>
-                                            Report Student Recieept
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('reportTime') }}">
-                                            <i class="metismenu-icon"></i>
-                                            รายงานการมาทำงาน
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('timelogs') }}">
-                                            <i class="metismenu-icon"></i>
-                                            ประวัติการแก้ไขเวลาเข้างาน
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('studentBonus.index') }}">
-                                            <i class="metismenu-icon"></i>
-                                            Bonus Student
-                                        </a>
-                                    </li>
-                                @endif
+                                <li>
+                                    <a href="{{ route('reportMonthStd') }}">
+                                        <i class="metismenu-icon"></i>
+                                        รายงานประจำเดือน
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('reportRecieptStd') }}">
+                                        <i class="metismenu-icon"></i>
+                                        Report Student Recieept
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('reportTime') }}">
+                                        <i class="metismenu-icon"></i>
+                                        รายงานการมาทำงาน
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('timelogs') }}">
+                                        <i class="metismenu-icon"></i>
+                                        ประวัติการแก้ไขเวลาเข้างาน
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('studentBonus.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        Bonus Student
+                                    </a>
+                                </li>
 
                             </ul>
                         </li>
                     @endif
+
                 @endif
 
             </ul>
