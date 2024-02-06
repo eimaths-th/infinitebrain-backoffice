@@ -228,8 +228,9 @@
                                     @php
                                         $text_late = '';
                                         if ($rec_time->late_time) {
-                                            # code...
+
                                             $text_late = 'สาย : ' . $rec_time->late_time . ' นาที';
+                                            
                                         }
                                     @endphp
                                     {{ $rec_time->explain }} {{ $text_late }}
