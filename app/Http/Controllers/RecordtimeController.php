@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OverLate;
 use App\Models\Recordtime;
 use App\Models\Statuswork;
 use App\Models\User;
@@ -298,6 +299,142 @@ class RecordtimeController extends Controller
             'users' => $users,
 
         ]);
+    }
+
+    public function update_late_time()
+    {
+        $rec_times_5 = Recordtime::where('status', 5)
+
+            ->orderBy('date')
+            ->get()
+            ->groupBy(function ($date) {
+                return Carbon::parse($date->date)->format('Y-m');
+            });
+
+        // dd($rec_times_5);
+
+
+        // foreach ($rec_times as $rec_time) {
+        //     $recDate = Carbon::parse($rec_time->date);
+        //     $isSaturdayOrSunday = $recDate->dayOfWeek == Carbon::SATURDAY || $recDate->dayOfWeek == Carbon::SUNDAY;
+
+        //     if ($rec_time->type_user == '1' || $isSaturdayOrSunday) {
+        //         $workTime = Carbon::createFromTime(9, 10, 0); // 9:10 AM
+        //     } else {
+
+        //         $workTime = Carbon::createFromTime(10, 10, 0); // 10:10 AM
+        //     }
+
+        //     $recTime = Carbon::parse($rec_time->stime);
+
+        //     $timeDifference = $recTime->diff($workTime);
+
+        //     $Minutes = ($timeDifference->h * 60) + $timeDifference->i;
+
+        //     $rec_time->update(['late_time' => $Minutes]);
+
+        //     $totalMinutes += $Minutes;
+
+        //     // echo $rec_time->user->name . " | date : " . $rec_time->date . " | Total time difference: {$Minutes} minutes result : {$totalMinutes}<br>";
+
+        //     list($year, $month, $day) = explode("-", $rec_time->date);
+
+        //     $overlate = OverLate::whereYear('year', $year)
+        //         ->whereMonth('month', $month)
+        //         ->first(); // Use first() directly
+
+        //     if (!$overlate) {
+        //         OverLate::create([
+        //             'month' => $month,
+        //             'year' => $year,
+        //             'late_time_all' => $totalMinutes,
+        //         ]);
+        //     } else {
+        //         $overlate->update(['late_time_all' => $totalMinutes]);
+        //     }
+        // }
+
+        // $rec_times_miss = Recordtime::where('status', 13)
+        //     ->orderBy('user_id', 'desc')
+        //     ->get();
+        // foreach ($rec_times_miss as $rec_times_mis) {
+
+        //     list($year, $month, $day) = explode("-", $rec_times_mis->date);
+
+        //     $overlate->update(['late_time_all' => $totalMinutes]);
+        // }
+
+        foreach ($rec_times_5 as $yearMonth =>  $rec_times) {
+            $totalMinutes = 0;
+            $recDate = Carbon::parse($yearMonth);
+            $isSaturdayOrSunday = $recDate->dayOfWeek == Carbon::SATURDAY || $recDate->dayOfWeek == Carbon::SUNDAY;
+            list($year, $month) = explode("-", $yearMonth);
+
+            foreach ($rec_times as $rec_time) {
+                if ($rec_time->type_user == '1' || $isSaturdayOrSunday) {
+                    $workTime = Carbon::createFromTime(9, 10, 0); // 9:10 AM
+                } else {
+                    $workTime = Carbon::createFromTime(10, 10, 0); // 10:10 AM
+                }
+
+                $recTime = Carbon::parse($rec_time->stime);
+
+                $timeDifference = $recTime->diff($workTime);
+
+                $Minutes = ($timeDifference->h * 60) + $timeDifference->i;
+
+                $rec_time->update(['late_time' => $Minutes]);
+                $totalMinutes += $Minutes;
+                echo $rec_time->user->name . " | date : " . $rec_time->date . " | work time : {$workTime} start time : {$rec_time->stime} | Total time difference: {$Minutes} minutes result : {$totalMinutes}</br></br>";
+            }
+
+            $overlate = OverLate::where('year', $year)
+                ->where('month', $month)
+                ->first();
+
+            if (!$overlate) {
+                OverLate::create([
+                    'month' => $month,
+                    'year' => $year,
+                    'late_time_all' => $totalMinutes,
+                ]);
+            } else {
+                // Use update method directly
+                $overlate->update(['late_time_all' => $totalMinutes]);
+            }
+        }
+        // dd($rec_times_5);
+
+        $rec_times = Recordtime::where('status', 13) //missing_work
+            ->orderBy('date')
+            ->get()
+            ->groupBy(function ($date) {
+                return Carbon::parse($date->date)->format('Y-m');
+            })
+            ->map(function ($group) {
+                return $group->count();
+            });
+        foreach ($rec_times as $yearMonth => $records) {
+            list($year, $month) = explode('-', $yearMonth);
+            $overlate = OverLate::where('year', $year)
+                ->where('month', $month)
+                ->first(); // Use first() directly
+            // dd($overlate,$year,$month);
+            // dd($records);
+
+            if (!$overlate) {
+                OverLate::create([
+                    'month' => $month,
+                    'year' => $year,
+                    'missing_work_all' => $records,
+                ]);
+            } else {
+                $update = OverLate::find($overlate->id);
+                $update->update(['missing_work_all' => $records]);
+            }
+        }
+
+        dd($rec_times);
     }
 
     /**

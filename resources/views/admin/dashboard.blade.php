@@ -645,7 +645,7 @@
                                         <div class="widget-content-right">
                                             <div class="widget-heading">{{
                                                 (isset($groupStatusCounts['Sci']['New Student']) ?    $groupStatusCounts['Sci']['New Student'] : 0) +
-                                                (isset($groupStatusCounts['Sci']['studying . . .']) ? $groupStatusCounts['E']['studying . . .'] : 0) +
+                                                (isset($groupStatusCounts['Sci']['studying . . .']) ? $groupStatusCounts['Sci']['studying . . .'] : 0) +
                                                 (isset($groupStatusCounts['Sci']['resume']) ?         $groupStatusCounts['Sci']['resume'] : 0)
                                                 }}
                                             </div>
