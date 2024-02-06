@@ -117,8 +117,8 @@
                             <div class="row">
                                 <label for="month" class="col-sm-4">เดือน<span class="text-danger">*</span> : </label>
                                 <div class="col-sm-8">
-                                    <select name="month" id="selectMonth" class="form-select form-control" data-parsley-required="true"
-                                        data-parsley-required-message="เลือกเดือน">
+                                    <select name="month" id="selectMonth" class="form-select form-control"
+                                        data-parsley-required="true" data-parsley-required-message="เลือกเดือน">
                                         <option value="">เลือกเดือน</option>
                                         @for ($i = 1; $i <= 12; $i++)
                                             <option value="{{ $i }}">
@@ -133,8 +133,8 @@
                             <div class="row">
                                 <label for="year" class="col-lg-2">ปี : </label>
                                 <div class="col-lg-9">
-                                    <select name="year" id="selectYear" class="form-select form-control" data-parsley-required="true"
-                                        data-parsley-required-message="เลือกปี">
+                                    <select name="year" id="selectYear" class="form-select form-control"
+                                        data-parsley-required="true" data-parsley-required-message="เลือกปี">
                                         {{-- <option value="">เลือกปี</option> --}}
                                         @php
                                             $currentYear = date('Y');
@@ -157,7 +157,7 @@
                         <tr>
                             {{-- <th width="10px"><input type="checkbox" id="check-all" class="flat"></th> --}}
                             <th width="1%" align="center">#</th>
-                            <th width="1%" align="center">Code1</th>
+                            <th width="1%" align="center">Code</th>
                             <th data-orderable="false">Name</th>
                             <th data-orderable="false">Date</th>
                             <th data-orderable="false">Time</th>
@@ -223,7 +223,17 @@
                                             class="fa fa-circle fs-9px fa-fw me-5px"></i>
                                         {{ $rec_time->status_name }}</span>
                                 </td>
-                                <td>{{ $rec_time->explain }}</td>
+
+                                <td>
+                                    @php
+                                        $text_late = '';
+                                        if ($rec_time->late_time) {
+                                            # code...
+                                            $text_late = 'สาย : ' . $rec_time->late_time . ' นาที';
+                                        }
+                                    @endphp
+                                    {{ $rec_time->explain }} {{ $text_late }}
+                                </td>
 
                                 <td width="1%" class="text-nowrap">
 
