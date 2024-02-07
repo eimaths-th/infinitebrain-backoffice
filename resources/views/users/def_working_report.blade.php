@@ -16,6 +16,10 @@
             max-width: 100%;
             height: auto;
         }
+
+        .hidden-element {
+            display: none;
+        }
     </style>
 @endsection
 
@@ -142,12 +146,12 @@
 
                             <tbody>
                                 @php
-
+                                    $loops = 1;
                                     $result = 0;
                                 @endphp
-                                @foreach ($rec_timess as $user_id => $records)
+                                @foreach ($rec_timess as $records)
                                     <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center">{{ (int) $loops }}</td>
                                         <td class="text-center">{{ $records->first()->user->code ?? 'code' }}</td>
                                         <td>{{ $records->first()->user->name }}</td>
 
@@ -187,25 +191,41 @@
                                             @php
                                                 $statuslate = $records->where('status', 5)->sum('late_time');
                                                 $result += $statuslate;
+                                                $loops++;
                                             @endphp
                                             {{ $statuslate ?? '0' }} นาที
                                         </td>
                                     </tr>
                                 @endforeach
-                                <tr>
-                                    <td>รวม</td>
-                                    <td></td>
-                                    <td></td>
-                                    @foreach ($stwork as $test)
-                                        <td>
 
-                                        </td>
+
+                            </tbody>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        #
+                                        {{-- <span class="hidden-element">9999999999</span> --}}
+                                    </td>
+                                    {{-- <td colspan="2">รวม</td> --}}
+
+                                    @php
+                                        $count_line = 0;
+                                    @endphp
+                                    @foreach ($stwork as $test)
+                                        @php
+                                            $count_line++;
+                                        @endphp
                                     @endforeach
-                                    <td>{{ $result }} นาที</td>
+                                    @php
+                                        $colspan = 2 + $count_line;
+                                    @endphp
+                                    <td colspan="{{ $colspan }}">รวม</td>
+
+
+                                    <td> {{ $result }} นาที</td>
 
 
                                 </tr>
-
                             </tbody>
 
                         </table>
