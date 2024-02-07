@@ -171,7 +171,7 @@
                         @foreach ($rec_times as $key => $rec_time)
                             <tr>
                                 <td align="center"> {{ $key + 1 }}</td>
-                                <td>{{ $rec_time->user->code }}</td>
+                                <td>INF{{ $rec_time->user->code }}</td>
 
                                 <td> {{ $rec_time->user->name }} </td>
                                 <td>
@@ -230,7 +230,7 @@
                                         if ($rec_time->late_time) {
 
                                             $text_late = 'สาย : ' . $rec_time->late_time . ' นาที';
-                                            
+
                                         }
                                     @endphp
                                     {{ $rec_time->explain }} {{ $text_late }}

@@ -80,6 +80,7 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/update-late-time', [RecordtimeController::class, 'update_late_time'])->name('update_late_time');
     Route::get('/search-report-month-time', [RecordtimeController::class, 'search_reportMonthTime'])->name('search_reportMonthTime');
     Route::get('/find-UserRecTime/{user_id}/{status}/{month}/{year}', [RecordtimeController::class, 'find_UserRecTime'])->name('find_UserRecTime');
+    Route::get('/find-StatusRecTime/{status}/{month}/{year}', [RecordtimeController::class, 'find_statusRecTime'])->name('find_statusRecTime');
     Route::get('/report-month-time', [RecordtimeController::class, 'reportTime'])->name('reportTime');
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
     Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');
