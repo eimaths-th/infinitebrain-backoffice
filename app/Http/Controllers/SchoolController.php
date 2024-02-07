@@ -418,13 +418,36 @@ class SchoolController extends Controller
                             ->get();
 
                         // dd($sub_ids, $history);
+                        // if (!empty($history)) {
+                        //     $his_succsss = count($history);
+                        //     $firstRecord = $history->first();
+                        //     if (!empty($firstRecord) && !in_array($firstRecord->id, $processedIds)) {
+                        //         $processedIds[] = $firstRecord->id;
+                        //     } else {
+                        //         $his_succsss = 0;
+                        //     }
+                        // }
                         if (!empty($history)) {
-                            $his_succsss = count($history);
+                            // $his_succsss = count($history);
+                            $his_succsss = 0;
+                            foreach ($history as $his_check_time) {
+                                $stime = Carbon::parse($his_check_time->stime); //format 11:15:00
+                                $etime = Carbon::parse($his_check_time->etime); //format 12:15:00
+                                $hoursDifference = $etime->diffInHours($stime);
+                                // $minutesDifference = $etime->diffInMinutes($stime);
+                                // $hoursDifference = $minutesDifference / 60; // Convert minutes to hours
+                                // dd($stime, $etime, $hoursDifference,$minutesDifference,$hoursDifference);
+                                $his_succsss += $hoursDifference; //1 ชม = 1 ครั้ง
+                                $his_time_out[] = $his_check_time->id;
+                                // $his_time_out[] = ['id' => $his_check_time->id, 'subject_id' => $his_check_time->subject_id];
+                            }
+
                             $firstRecord = $history->first();
+
                             if (!empty($firstRecord) && !in_array($firstRecord->id, $processedIds)) {
                                 $processedIds[] = $firstRecord->id;
                             } else {
-                                $his_succsss = 0;
+                                $history_count = 0;
                             }
                         }
                         $startcourse = $school_pices->period ?? null;
