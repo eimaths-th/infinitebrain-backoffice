@@ -422,7 +422,7 @@ class SchoolController extends Controller
 
                             $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
                             $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
-
+                            $firstEndMonth = '';
                             if ($count_rec > 0) {
                                 $monthsDifference = Carbon::parse($firstEndMonth)->diffInMonths(Carbon::parse($startMonth));
 
@@ -433,6 +433,7 @@ class SchoolController extends Controller
                         } else {
                             $startMonth = Carbon::parse($period[0])->format('Y-m');
                             $endMonth = Carbon::parse($period[1])->format('Y-m');
+                            $firstEndMonth = '';
 
                             if ($count_rec > 0) {
                                 $monthsDifference = Carbon::parse($firstEndMonth)->diffInMonths(Carbon::parse($startMonth));
@@ -489,7 +490,7 @@ class SchoolController extends Controller
                             if (!empty($firstRecord) && !in_array($firstRecord->id, $processedIds)) {
                                 $processedIds[] = $firstRecord->id;
                             } else {
-                                $history_count = 0;
+                                $his_succsss = 0;
                             }
                         }
                         $startcourse = $school_pices->period ?? null;
