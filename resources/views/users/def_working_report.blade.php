@@ -16,10 +16,6 @@
             max-width: 100%;
             height: auto;
         }
-
-        .hidden-element {
-            display: none;
-        }
     </style>
 @endsection
 
@@ -200,14 +196,12 @@
 
 
                             </tbody>
-                            <tbody>
+                            <tfoot>
                                 <tr>
                                     <td>
                                         #
-                                        {{-- <span class="hidden-element">9999999999</span> --}}
-                                    </td>
-                                    {{-- <td colspan="2">รวม</td> --}}
 
+                                    </td>
                                     @php
                                         $count_line = 0;
                                     @endphp
@@ -226,7 +220,7 @@
 
 
                                 </tr>
-                            </tbody>
+                            </tfoot>
 
                         </table>
                     </div>
