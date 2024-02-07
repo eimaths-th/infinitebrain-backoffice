@@ -401,6 +401,8 @@ class SchoolController extends Controller
                 }
             } else {
 
+                $count_rec = 0;
+
                 foreach ($school_pice as $school_pices) {
 
                     if (in_array($school_pices->id, $reset_id)) {
@@ -413,9 +415,49 @@ class SchoolController extends Controller
                         $prefer = 0;
                         $school = $school_pices->qty;
                         $sub_ids = $school_pices->subject;
+                        $period = explode(' - ', $school_pices->period);
+
+                        if (count($period) == 1) {
+                            $periods = explode('-', $school_pices->period);
+
+                            $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
+                            $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
+
+                            if ($count_rec > 0) {
+                                $monthsDifference = Carbon::parse($firstEndMonth)->diffInMonths(Carbon::parse($startMonth));
+
+                                $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
+                            }
+                            $firstEndMonth = $endMonth;
+                            $count_rec++;
+                        } else {
+                            $startMonth = Carbon::parse($period[0])->format('Y-m');
+                            $endMonth = Carbon::parse($period[1])->format('Y-m');
+
+                            if ($count_rec > 0) {
+                                $monthsDifference = Carbon::parse($firstEndMonth)->diffInMonths(Carbon::parse($startMonth));
+                                $endMonth = Carbon::parse($period[1])->format('Y-m');
+                            }
+                            $firstEndMonth = $endMonth;
+                            $count_rec++;
+                        }
+                        $currecntMonth_Year = date('Y-m-d');
+                        $startMonthYMD = Carbon::parse($startMonth)->format('Y-m');
+                        $stdate = explode('-', $startMonthYMD);
+                        [$stYear, $stMonth] = $stdate;
+
+                        $endate = explode('-', $endMonth);
+                        [$enYear, $enMonth] = $endate;
+
                         $history = History::where('student_id', $stdId)
                             ->where('subject_id', $sub_ids)
+                            ->whereBetween('datetime', [
+                                "$stYear-$stMonth-01", now()->year($enYear)->month($enMonth)->endOfMonth(),
+                            ])
                             ->get();
+                        // $history = History::where('student_id', $stdId)
+                        //     ->where('subject_id', $sub_ids)
+                        //     ->get();
 
                         // dd($sub_ids, $history);
                         // if (!empty($history)) {
