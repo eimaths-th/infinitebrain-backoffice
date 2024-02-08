@@ -164,9 +164,9 @@
                         <td>..........................</td>
                     </tr>
                     <!-- <tr>
-                                                                                        <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
+                                                                                                    <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
 
-                                                                                    </tr> -->
+                                                                                                </tr> -->
                 </table>
                 <div class="tbr">
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
@@ -219,8 +219,28 @@
                                         <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
                                         <td align="left"></td>
                                         <td align="center">{{ $receipt_detail['book'] }}</td>
-                                        <td align="center">เล่ม</td>
-                                        <td align="center">{{ number_format($receipt_detail['books'], 2) }}</td>
+                                        {{-- <td align="center">
+                                            เล่ม
+                                            ชุด
+                                        </td> --}}
+                                        @php
+                                            $startDate = new DateTime('2024-02-07');
+                                            $currentDate = new DateTime($data->submission_date); //2024-02-08
+                                            $checkDate = $currentDate > $startDate;
+                                        @endphp
+                                        @if ($checkDate)
+                                            <td align="center">
+                                                {{-- เล่ม --}}
+                                                ชุด
+                                            </td>
+                                            <td align="center">{{ number_format($receipt_detail['books'] * 15, 2) }}</td>
+                                        @else
+                                            <td align="center">
+                                                เล่ม
+                                                {{-- ชุด --}}
+                                            </td>
+                                            <td align="center">{{ number_format($receipt_detail['books'], 2) }}</td>
+                                        @endif
                                         <td align="center">
                                         </td>
                                         <td align="center" style="vertical-align: top;">
@@ -348,11 +368,11 @@
                     </table>
 
                     <!-- <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                                                                                        <tr>
-                                                                                            <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
-                                                                                            <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
-                                                                                        </tr>
-                                                                                    </table> -->
+                                                                                                    <tr>
+                                                                                                        <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
+                                                                                                        <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
+                                                                                                    </tr>
+                                                                                                </table> -->
 
                     <table align="center" width="85%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
                         <tr>
