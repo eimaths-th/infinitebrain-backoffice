@@ -173,7 +173,7 @@
                         <tr class="active">
                             <td align="center" width="10%" class="grey">ลำดับที่<br> NO.</td>
                             <td align="center" class="grey">รายการ <br>Description</td>
-                            <td align="center" class="grey"> <br></td>
+                            <td align="center" class="grey">ระยะเวลา<br>Period</td>
                             <td align="center" class="grey">จำนวน <br>Quantity</td>
                             <td align="center" class="grey">หน่วย <br>Unit</td>
                             <td align="center" class="grey">ราคาต่อหน่วย <br>Unit Price</td>
@@ -189,7 +189,7 @@
                                 <tr>
                                     <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
                                     <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
-                                    <td align="left"> {{ $receipt_detail['period'] }}</td>
+                                    <td align="center"> {{ $receipt_detail['period'] }}</td>
                                     <td align="center">{{ $receipt_detail['quantity'] }}</td>
                                     <td align="center">{{ $receipt_detail['unit'] }}</td>
                                     <td align="center">{{ $receipt_detail['unitprice'] }}</td>
@@ -257,7 +257,7 @@
                                     </td>
                                     @if ($receipt_detail['book'] !== '0')
                                         <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
-                                        <td align="left"></td>
+                                        <td align="center"> - </td>
                                         <td align="center">{{ $receipt_detail['book'] }}</td>
                                         <td align="center">เล่ม</td>
                                         <td align="center">{{ number_format($receipt_detail['books'], 2) }}</td>
