@@ -551,7 +551,7 @@ class ReceiptSchoolController extends Controller
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a href=" ' . route('receipt_school.show', ['type'=> 'view','id' => $row->id]) . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->id . '"><i class="fa fa-eye"></i> View </a> ';
+                    $html = '<a href=" ' . route('receipt_school.show', ['type' => 'view', 'id' => $row->id]) . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->id . '"><i class="fa fa-eye"></i> View </a> ';
                     $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     //$html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
@@ -974,6 +974,8 @@ class ReceiptSchoolController extends Controller
 
     public function show($type, $id)
     {
+        // $url = route('receipt_school.show', ['type' => 'view', 'id' => $id]);
+        // dd($url);
         $data = Receipt_School::find($id);
 
         if ($type == "view") {
@@ -1309,6 +1311,8 @@ class ReceiptSchoolController extends Controller
 
     public function sumbook($sub_id, $level_id, $book, $course_type)
     {
+
+        // dd($sub_id, $level_id, $book, $course_type);
         $data = SubjectPrice::Where('subject_prices.subject_id', $sub_id)->Where('subject_prices.level_id', $level_id)->get();
         $select_list = "";
         foreach ($data as $key) {

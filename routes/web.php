@@ -256,7 +256,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/receipt_school/store', [ReceiptSchoolController::class, 'store'])->name('receipt_school.store');
 
-    Route::get('/receipt_school/receipt/show/{type}/{id}', [ReceiptSchoolController::class, 'show'])->name('receipt_school.show');
+    Route::get('/receipt_school/show/{type}/{id}', [ReceiptSchoolController::class, 'show'])->name('receipt_school.show');
 
     Route::get('/receipt_school/{id}/{type}', [ReceiptSchoolController::class, 'edit'])->name('receipt_school.edit');
     Route::put('/receipt_school/save/{id}', [ReceiptSchoolController::class, 'update'])->name('receipt_school.save');
