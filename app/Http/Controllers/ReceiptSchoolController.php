@@ -1315,17 +1315,21 @@ class ReceiptSchoolController extends Controller
         // dd($sub_id, $level_id, $book, $course_type);
         $data = SubjectPrice::Where('subject_prices.subject_id', $sub_id)->Where('subject_prices.level_id', $level_id)->get();
         $select_list = "";
+        $booklet = "";
         foreach ($data as $key) {
 
             $select_list = $key->book_price;
+            $booklet = $key->book;
         }
+
+        // dd($data);
 
         if ($course_type == '1' && $sub_id < 7) {
             # code...
             $output = "";
-            $output = '<input type="text" id="book_price" name="book_price" class="form-control has-feedback-left" value="' . ((int)$select_list * (int)$book) * 15 . ' "readonly >
+            $output = '<input type="text" id="book_price" name="book_price" class="form-control has-feedback-left" value="' . ((int)$select_list * (int)$book) * $booklet . ' "readonly >
             ';
-            $bp = ((int)$select_list * (int)$book) * 15;
+            $bp = ((int)$select_list * (int)$book) * $booklet;
             // $sum = "";
             // $sum = '' . ((int)$select_list * (int)$book) * 15 . ' ';
         } else {
