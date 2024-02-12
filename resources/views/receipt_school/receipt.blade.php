@@ -2508,7 +2508,7 @@
                         type: "GET",
                         async: false,
                         dataType: 'JSON',
-                        url: "receipt_school/" + sub_id + "/" + level_id + "/" + book + "/" + course_type,
+                        url: "receipt_school/" + sub_id + "/" + level_id + "/" + book + "/" + course_type ,
                         success: function(res) {
                             parent.find('#rrbookprice').val(res.bp);
                             // $('.pp').html(res.html);
