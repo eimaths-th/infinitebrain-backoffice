@@ -73,63 +73,65 @@ class RecordtimeController extends Controller
                 ->with('error', 'ผนักงานคนนี้มีข้อมูลทำงานของวันนี้แล้ว');
         }
 
+
         $user = User::find($request->get('user_id'));
         $type = $user->type_user;
         $status_id = $request->get('status');
         $stime = $request->get('stime');
         $etime = $request->get('etime');
+        $explain = $request->get('explain');
         $lateThreshold = 35;
         $starttime = Carbon::parse($stime); //"9:50 AM"
         $endtime = Carbon::parse($etime); //"5:25 PM"
         $date =  Carbon::parse($request->get('date'));
         $dayOfWeek = $date->dayName;
+        $Minutes = 0;
+
+        if (($type == 1) || ($dayOfWeek == "Saturday" || $dayOfWeek == "Sunday")) {
+
+            $startOfWorkday = Carbon::createFromTime(9, 10, 0); // 9:10 AM start work user type 1
+            $endOfWorkday = Carbon::createFromTime(16, 59, 59); // 5:00 PM
+
+        } else {
+
+            $startOfWorkday = Carbon::createFromTime(10, 10, 0); // 10:10 AM start work
+            $endOfWorkday = Carbon::createFromTime(17, 59, 59); // 6:00 PM
+        }
 
         if ($status_id == 1) {
-            if (!$stime && $etime) {
-                $status_id = "6"; //ไม่แสกนเข้า
-            } elseif ($stime && !$etime) {
-                $status_id = "7"; //ไม่แสกนออก
-            }
+
             if ($stime && $etime) {
-                // if ($type == 1) {
-                //     $startOfWorkday = Carbon::createFromTime(9, 10, 0); // 9:10 AM start work user type 1
 
-                //     $endOfWorkday = Carbon::createFromTime(16, 59, 59); // 5:00 PM
-
-                // } else {
-                //     if ($dayOfWeek == "Saturday" || $dayOfWeek == "Sunday") {
-                //         # code...
-                //         $startOfWorkday = Carbon::createFromTime(9, 10, 0); // 9:10 AM start work user type 1
-                //         $endOfWorkday = Carbon::createFromTime(16, 59, 59); // 5:00 PM
-                //     } else {
-                //         # code...
-                //         $startOfWorkday = Carbon::createFromTime(10, 10, 0); // 10:10 AM start work
-                //         $endOfWorkday = Carbon::createFromTime(17, 59, 59); // 5:00 PM
-                //     }
-                // }
-
-
-                if (($type == 1) || ($dayOfWeek == "Saturday" || $dayOfWeek == "Sunday")) {
-
-                    $startOfWorkday = Carbon::createFromTime(9, 10, 0); // 9:10 AM start work user type 1
-                    $endOfWorkday = Carbon::createFromTime(16, 59, 59); // 5:00 PM
-
-                } else {
-
-                    $startOfWorkday = Carbon::createFromTime(10, 10, 0); // 10:10 AM start work
-                    $endOfWorkday = Carbon::createFromTime(17, 59, 59); // 6:00 PM
-
-                }
                 if (!$endtime->gt($endOfWorkday)) {
-                    $status_id = "9"; //ออกก่อนเวลา
-                } elseif ($starttime->diffInMinutes($startOfWorkday) > $lateThreshold && $starttime > $startOfWorkday) {
-                    $status_id = "8"; // เข้างานสายมากกว่า 35 นาที
+                    if ($endtime->diffInMinutes($endOfWorkday) > $lateThreshold) {
+
+                        $status_id = "8"; // สแกนออกก่อนมากกว่า 35 นาที = ลาครึ่งวัน
+                        $explain .= ' | ลาครึ่งวันบ่าย';
+                    } else {
+
+                        $status_id = "9"; //ออกก่อนเวลา
+
+                    }
                 } elseif ($starttime->gt($startOfWorkday)) {
-                    $status_id = "5"; //เข้างานสาย
+                    if ($starttime->diffInMinutes($startOfWorkday) > $lateThreshold) {
+                        # code...
+                        $status_id = "8"; // เข้างานสายมากกว่า 35 นาที
+                        $explain .= ' | ลาครึ่งวันเช้า';
+                    } else {
+                        # code...
+                        $status_id = "5"; //เข้างานสาย
+                    }
                     $timeDifference = $starttime->diff($startOfWorkday);
 
                     $Minutes = ($timeDifference->h * 60) + $timeDifference->i;
                 }
+            } elseif (!$stime && $etime) {
+                $status_id = "6"; //ไม่แสกนเข้า
+            } elseif ($stime && !$etime) {
+                $status_id = "7"; //ไม่แสกนออก
+            } elseif (!$stime && !$etime) {
+                return redirect()->route('recordtime.index')
+                    ->with('error', 'โปรดระบุเวลาเข้าและออกงาน');
             }
         }
 
@@ -139,7 +141,7 @@ class RecordtimeController extends Controller
             'user_id' => $user->id,
             'type_user' => $type,
             'date' => $request->get('date'),
-            'explain' => $request->get('explain'),
+            'explain' => $explain,
             //'unit' => '',
             'stime' => $stime,
             'etime' => $etime,
@@ -644,61 +646,74 @@ class RecordtimeController extends Controller
             return redirect()->route('recordtime.index')->with('error', 'ผนักงานคนนี้มีข้อมูลทำงานของวันนี้แล้ว');
         }
 
-        // $checkdate = Recordtime::where('user_id', $oldData->user_id)->where('date', $request->get('date'))->get();
-
-        // if ($checkdate->count() > 0 && $checkdate->id != $id) {
-        //     return redirect()->route('recordtime.index')->with('error', 'ผนักงานคนนี้มีข้อมูลทำงานของวันนี้แล้ว');
-        // }
-
         $originalAttributes = $oldData->getAttributes();
-
 
         $type = $oldData->type_user;
         $status_id = $request->get('status');
         $stime = $request->get('stime');
         $etime = $request->get('etime');
+        $explain = $request->get('explain');
         $lateThreshold = 35;
         $starttime = Carbon::parse($stime); //"9:50 AM"
         $endtime = Carbon::parse($etime); //"5:25 PM"
 
         $date =  Carbon::parse($request->get('date'));
         $dayOfWeek = $date->dayName;
+        $Minutes = 0;
 
+        if (($type == 1) || ($dayOfWeek == "Saturday" || $dayOfWeek == "Sunday")) {
+
+            $startOfWorkday = Carbon::createFromTime(9, 10, 0); // 9:10 AM start work user type 1
+            $endOfWorkday = Carbon::createFromTime(16, 59, 59); // 5:00 PM
+
+        } else {
+
+            $startOfWorkday = Carbon::createFromTime(10, 10, 0); // 10:10 AM start work
+            $endOfWorkday = Carbon::createFromTime(17, 59, 59); // 6:00 PM
+        }
         if ($status_id == 1) {
-            if (!$stime && $etime) {
+
+            if ($stime && $etime) {
+                if (!$endtime->gt($endOfWorkday)) {
+                    if ($endtime->diffInMinutes($endOfWorkday) > $lateThreshold) {
+
+                        $status_id = "8"; // สแกนออกก่อนมากกว่า 35 นาที = ลาครึ่งวัน
+                        $explain .= ' | ลาครึ่งวันบ่าย';
+                    } else {
+
+                        $status_id = "9"; //ออกก่อนเวลา
+
+                    }
+                } elseif ($starttime->gt($startOfWorkday)) {
+                    if ($starttime->diffInMinutes($startOfWorkday) > $lateThreshold) {
+                        # code...
+                        $status_id = "8"; // เข้างานสายมากกว่า 35 นาที
+                        $explain .= ' | ลาครึ่งวันเช้า';
+                    } else {
+                        # code...
+                        $status_id = "5"; //เข้างานสาย
+                    }
+                    $timeDifference = $starttime->diff($startOfWorkday);
+
+                    $Minutes = ($timeDifference->h * 60) + $timeDifference->i;
+                }
+            } elseif (!$stime && $etime) {
                 $status_id = "6"; //ไม่แสกนเข้า
             } elseif ($stime && !$etime) {
                 $status_id = "7"; //ไม่แสกนออก
+            } elseif (!$stime && !$etime) {
+                return redirect()->route('recordtime.index')
+                    ->with('error', 'โปรดระบุเวลาเข้าและออกงาน');
             }
-            if ($stime && $etime) {
-                if ($type == 1) {
-                    $startOfWorkday = Carbon::createFromTime(9, 10, 0); // 9:10 AM start work user type 1
-                    $endOfWorkday = Carbon::createFromTime(16, 59, 59); // 5:00 PM
-
-                } else {
-                    if ($dayOfWeek == "Saturday" || $dayOfWeek == "Sunday") {
-                        # code...
-                        $startOfWorkday = Carbon::createFromTime(9, 10, 0); // 9:10 AM start work user type 1
-                        $endOfWorkday = Carbon::createFromTime(16, 59, 59); // 5:00 PM
-                    } else {
-                        # code...
-                        $startOfWorkday = Carbon::createFromTime(10, 10, 0); // 10:10 AM start work
-                        $endOfWorkday = Carbon::createFromTime(17, 59, 59); // 5:00 PM
-                    }
-                }
-                // and
-
-
-                if (!$endtime->gt($endOfWorkday)) {
-                    $status_id = "9"; //ออกก่อนเวลา
-                } elseif ($starttime->diffInMinutes($startOfWorkday) > $lateThreshold && $starttime > $startOfWorkday) {
-                    $status_id = "8"; // เข้างานสายมากกว่า 35 นาที
-                } elseif ($starttime->gt($startOfWorkday)) {
-                    $status_id = "5"; //เข้างานสาย
-                }
-            }
-            // dd($starttime->diffInMinutes($startOfWorkday));
         }
+
+        if ($status_id == 5) {
+            # code...
+            $timeDifference = $starttime->diff($startOfWorkday);
+            $Minutes = ($timeDifference->h * 60) + $timeDifference->i;
+        }
+
+        // dd($Minutes);
         $status = Statuswork::find($status_id);
 
         $oldData->update([
@@ -706,9 +721,9 @@ class RecordtimeController extends Controller
             'stime' => $stime,
             'etime' => $etime,
             'status' => $status->id,
-            'explain' => $request->get('explain'),
-
-            'status_name' => $status->name
+            'explain' => $explain,
+            'late_time' => $Minutes,
+            'status_name' => $status->name,
         ]);
 
         if ($originalAttributes != $oldData->getAttributes()) {
@@ -721,12 +736,14 @@ class RecordtimeController extends Controller
                 'old_stime'         => $originalAttributes['stime'],
                 'old_etime'         => $originalAttributes['etime'],
                 'old_status'        => $originalAttributes['status'],
+                'old_late_time'     => $originalAttributes['late_time'],
                 'old_status_name'   => $originalAttributes['status_name'],
                 'old_explain'       => $originalAttributes['explain'],
 
                 'new_date'          => $oldData->date,
                 'new_stime'         => $oldData->stime,
                 'new_etime'         => $oldData->etime,
+                'new_late_time'     => $Minutes,
                 'new_status'        => $status->id,
                 'new_status_name'   => $status->name,
                 'new_explain'       => $oldData->explain,

@@ -229,7 +229,7 @@
                                         $text_late = '';
                                         if ($rec_time->late_time) {
 
-                                            $text_late = 'สาย : ' . $rec_time->late_time . ' นาที';
+                                            $text_late = '| สาย : ' . $rec_time->late_time . ' นาที';
 
                                         }
                                     @endphp
