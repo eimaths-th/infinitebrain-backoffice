@@ -47,6 +47,8 @@
                 foreach ($latestStatusCounts as $record) {
                     $group = $record->group;
                     $status = $record->status;
+                    $status_log_ids = 'ids';
+                    // $ids = [];
 
                     if (!isset($groupStatusCounts[$group])) {
                         $groupStatusCounts[$group] = [];
@@ -54,7 +56,11 @@
                     if (!isset($groupStatusCounts[$group][$status])) {
                         $groupStatusCounts[$group][$status] = 0;
                     }
+                    if (!isset($groupStatusCounts[$group][$status_log_ids][$status])) {
+                        $groupStatusCounts[$group][$status_log_ids][$status] = [];
+                    }
                     $groupStatusCounts[$group][$status]++;
+                    $groupStatusCounts[$group][$status_log_ids][$status][] = $record->id;
                 }
                 $totalNewStudents = 0;
                 $totalStudying = 0;
@@ -63,6 +69,11 @@
                 $totalResume = 0;
                 $totalWait = 0;
                 $totalNoneReceipt = 0;
+
+                //ทำต่ออาทิตหน้า
+                // dd($latestStatusCounts, $groupStatusCounts);
+                // dd($latestStatusCounts, $groupStatusCounts);
+
             @endphp
             @foreach ($groupStatusCounts as $group => $statusCounts)
                 <tr>
@@ -111,7 +122,7 @@
                 <td>{{ now() }}</td>
             </tr>
 
-        {{-- </tbody> --}}
+            {{-- </tbody> --}}
         </tbody>
     </table>
 
@@ -235,7 +246,8 @@
                     </div>
                     <div class="widget-content-right">
                         <div class="widget-numbers text-warning">
-                            <span>{{ $totalResume + $totalStudying + $totalNewStudents }}</span></div>
+                            <span>{{ $totalResume + $totalStudying + $totalNewStudents }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -244,7 +256,7 @@
 
         <div class="col-md-6 col-xl-4">
             <div class="card mb-3 widget-content bg-happy-green">
-            {{-- <div class="card mb-3 widget-content bg-midnight-bloom"> --}}
+                {{-- <div class="card mb-3 widget-content bg-midnight-bloom"> --}}
                 <div class="widget-content-wrapper text-white">
                     <div class="widget-content-left">
                         <div class="widget-heading">Total New Students</div>
@@ -379,7 +391,7 @@
     </div>
 
 
-    <div class="main-card mb-3 card">
+    {{-- <div class="main-card mb-3 card">
         <div class="g-0 row">
             <div class="col-md-2">
                 <div class="pt-0 pb-0 card-body">
@@ -394,13 +406,44 @@
                                             <div class="widget-subheading">Total</div>
                                         </div>
                                         <div class="widget-content-right">
-                                            <div class="widget-heading">{{
-                                                (isset($groupStatusCounts['E']['New Student']) ?    $groupStatusCounts['E']['New Student'] : 0) +
-                                                (isset($groupStatusCounts['E']['studying . . .']) ? $groupStatusCounts['E']['studying . . .'] : 0) +
-                                                (isset($groupStatusCounts['E']['resume']) ?         $groupStatusCounts['E']['resume'] : 0)
-                                                }}
-                                            </div>
+                                            @php
+                                                // dd($groupStatusCounts);
+                                                $routeParameters = [
+                                                    'paraCheck' => 'all',
+                                                    'group' => 'E',
+                                                    'resume' => isset($groupStatusCounts['E']['ids']['resume']) ? $groupStatusCounts['E']['ids']['resume'] : '',
+                                                    'New Student' => isset($groupStatusCounts['E']['ids']['New Student']) ? $groupStatusCounts['E']['ids']['New Student'] : '',
+                                                    'studying . . .' => isset($groupStatusCounts['E']['ids']['studying . . .']) ? $groupStatusCounts['E']['ids']['studying . . .'] : '',
+                                                    'ids' => [],
+                                                ];
 
+                                                if (isset($groupStatusCounts['E']['ids']['resume'])) {
+                                                    $routeParameters['ids'][] = $groupStatusCounts['E']['ids']['resume'];
+                                                }
+
+                                                if (isset($groupStatusCounts['E']['ids']['New Student'])) {
+                                                    $routeParameters['ids'][] = $groupStatusCounts['E']['ids']['New Student'];
+                                                }
+
+                                                if (isset($groupStatusCounts['E']['ids']['studying . . .'])) {
+                                                    $routeParameters['ids'][] = $groupStatusCounts['E']['ids']['studying . . .'];
+                                                }
+                                                $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+
+                                                // dd($groupStatusCounts,$routeParameters);
+
+                                            @endphp
+
+                                            <div class="widget-heading">
+                                                <a class="text-dark"
+                                                    href="{{ route('searchTestLog', ['id' => $routeParameters]) }}">
+                                                    {{ (isset($groupStatusCounts['E']['New Student']) ? $groupStatusCounts['E']['New Student'] : 0) +
+                                                        (isset($groupStatusCounts['E']['studying . . .']) ? $groupStatusCounts['E']['studying . . .'] : 0) +
+                                                        (isset($groupStatusCounts['E']['resume']) ? $groupStatusCounts['E']['resume'] : 0) }}
+
+                                                </a>
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -416,11 +459,10 @@
                                             <div class="widget-subheading">Total</div>
                                         </div>
                                         <div class="widget-content-right">
-                                            <div class="widget-heading">{{
-                                                (isset($groupStatusCounts['M']['New Student']) ?    $groupStatusCounts['M']['New Student'] : 0) +
-                                                (isset($groupStatusCounts['M']['studying . . .']) ? $groupStatusCounts['M']['studying . . .'] : 0) +
-                                                (isset($groupStatusCounts['M']['resume']) ?         $groupStatusCounts['M']['resume'] : 0)
-                                                }}
+                                            <div class="widget-heading">
+                                                {{ (isset($groupStatusCounts['M']['New Student']) ? $groupStatusCounts['M']['New Student'] : 0) +
+                                                    (isset($groupStatusCounts['M']['studying . . .']) ? $groupStatusCounts['M']['studying . . .'] : 0) +
+                                                    (isset($groupStatusCounts['M']['resume']) ? $groupStatusCounts['M']['resume'] : 0) }}
                                             </div>
 
                                         </div>
@@ -444,7 +486,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-success">
-                                                {{ isset($groupStatusCounts['E']['New Student']) ? $groupStatusCounts['E']['New Student'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['E']['New Student']) ? $groupStatusCounts['E']['New Student'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -460,7 +503,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-primary">
-                                                {{ isset($groupStatusCounts['M']['New Student']) ? $groupStatusCounts['M']['New Student'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['M']['New Student']) ? $groupStatusCounts['M']['New Student'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -482,7 +526,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-success">
-                                                {{ isset($groupStatusCounts['E']['studying . . .']) ? $groupStatusCounts['E']['studying . . .'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['E']['studying . . .']) ? $groupStatusCounts['E']['studying . . .'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -498,7 +543,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-primary">
-                                                {{ isset($groupStatusCounts['M']['studying . . .']) ? $groupStatusCounts['M']['studying . . .'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['M']['studying . . .']) ? $groupStatusCounts['M']['studying . . .'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -520,7 +566,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-warning">
-                                                {{ isset($groupStatusCounts['E']['Termination of study']) ? $groupStatusCounts['E']['Termination of study'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['E']['Termination of study']) ? $groupStatusCounts['E']['Termination of study'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -536,7 +583,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-warning">
-                                                {{ isset($groupStatusCounts['M']['Termination of study']) ? $groupStatusCounts['M']['Termination of study'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['M']['Termination of study']) ? $groupStatusCounts['M']['Termination of study'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -575,7 +623,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-danger">
-                                                {{ isset($groupStatusCounts['M']['drop']) ? $groupStatusCounts['M']['drop'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['M']['drop']) ? $groupStatusCounts['M']['drop'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -626,9 +675,9 @@
             </div>
 
         </div>
-    </div>
-    <!-- chn & sci -->
-    <div class="main-card mb-3 card">
+    </div> --}}
+
+    {{-- <div class="main-card mb-3 card">
         <div class="g-0 row">
             <div class="col-md-2">
                 <div class="pt-0 pb-0 card-body">
@@ -643,11 +692,10 @@
                                             <div class="widget-subheading">Total</div>
                                         </div>
                                         <div class="widget-content-right">
-                                            <div class="widget-heading">{{
-                                                (isset($groupStatusCounts['Sci']['New Student']) ?    $groupStatusCounts['Sci']['New Student'] : 0) +
-                                                (isset($groupStatusCounts['Sci']['studying . . .']) ? $groupStatusCounts['Sci']['studying . . .'] : 0) +
-                                                (isset($groupStatusCounts['Sci']['resume']) ?         $groupStatusCounts['Sci']['resume'] : 0)
-                                                }}
+                                            <div class="widget-heading">
+                                                {{ (isset($groupStatusCounts['Sci']['New Student']) ? $groupStatusCounts['Sci']['New Student'] : 0) +
+                                                    (isset($groupStatusCounts['Sci']['studying . . .']) ? $groupStatusCounts['Sci']['studying . . .'] : 0) +
+                                                    (isset($groupStatusCounts['Sci']['resume']) ? $groupStatusCounts['Sci']['resume'] : 0) }}
                                             </div>
 
                                         </div>
@@ -665,11 +713,10 @@
                                             <div class="widget-subheading">Total</div>
                                         </div>
                                         <div class="widget-content-right">
-                                            <div class="widget-heading">{{
-                                                (isset($groupStatusCounts['CHN']['New Student']) ?    $groupStatusCounts['CHN']['New Student'] : 0) +
-                                                (isset($groupStatusCounts['CHN']['studying . . .']) ? $groupStatusCounts['CHN']['studying . . .'] : 0) +
-                                                (isset($groupStatusCounts['CHN']['resume']) ?         $groupStatusCounts['CHN']['resume'] : 0)
-                                                }}
+                                            <div class="widget-heading">
+                                                {{ (isset($groupStatusCounts['CHN']['New Student']) ? $groupStatusCounts['CHN']['New Student'] : 0) +
+                                                    (isset($groupStatusCounts['CHN']['studying . . .']) ? $groupStatusCounts['CHN']['studying . . .'] : 0) +
+                                                    (isset($groupStatusCounts['CHN']['resume']) ? $groupStatusCounts['CHN']['resume'] : 0) }}
                                             </div>
 
                                         </div>
@@ -693,7 +740,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-success">
-                                                {{ isset($groupStatusCounts['Sci']['New Student']) ? $groupStatusCounts['Sci']['New Student'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['Sci']['New Student']) ? $groupStatusCounts['Sci']['New Student'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -709,7 +757,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-primary">
-                                                {{ isset($groupStatusCounts['CHN']['New Student']) ? $groupStatusCounts['CHN']['New Student'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['CHN']['New Student']) ? $groupStatusCounts['CHN']['New Student'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -731,7 +780,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-success">
-                                                {{ isset($groupStatusCounts['Sci']['studying . . .']) ? $groupStatusCounts['Sci']['studying . . .'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['Sci']['studying . . .']) ? $groupStatusCounts['Sci']['studying . . .'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -747,7 +797,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-primary">
-                                                {{ isset($groupStatusCounts['CHN']['studying . . .']) ? $groupStatusCounts['CHN']['studying . . .'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['CHN']['studying . . .']) ? $groupStatusCounts['CHN']['studying . . .'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -769,7 +820,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-warning">
-                                                {{ isset($groupStatusCounts['Sci']['Termination of study']) ? $groupStatusCounts['Sci']['Termination of study'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['Sci']['Termination of study']) ? $groupStatusCounts['Sci']['Termination of study'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -785,7 +837,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-warning">
-                                                {{ isset($groupStatusCounts['CHN']['Termination of study']) ? $groupStatusCounts['CHN']['Termination of study'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['CHN']['Termination of study']) ? $groupStatusCounts['CHN']['Termination of study'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -824,7 +877,8 @@
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="widget-numbers text-danger">
-                                                {{ isset($groupStatusCounts['CHN']['drop']) ? $groupStatusCounts['CHN']['drop'] : 0 }}</div>
+                                                {{ isset($groupStatusCounts['CHN']['drop']) ? $groupStatusCounts['CHN']['drop'] : 0 }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -875,7 +929,360 @@
             </div>
 
         </div>
+    </div> --}}
+    <!-- chn & sci -->
+    <div class="main-card mb-3 card">
+        <div class="g-0 row">
+            @php
+
+                $count_group = count($groupStatusCounts) - 1;
+                $line = '<li class="list-group-item"> </li>';
+            @endphp
+            @foreach ($groupStatusCounts as $group => $groupData)
+                @if ($group != 'N')
+                    @php
+                        if ($group === 'E') {
+                            $text_group = 'English';
+                            $class = 'success';
+                        } elseif ($group === 'M') {
+                            $text_group = 'Math';
+                            $class = 'primary';
+                        } else {
+                            if ($group === 'CHN') {
+                                $class = 'warning';
+                                $text_group = 'Chinese';
+                            } else {
+                                $class = 'indigo';
+                                $text_group = 'Science';
+                            }
+                        }
+                    @endphp
+                    <div class="col-md-2">
+                        <div class="pt-0 pb-0 card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="widget-content p-0">
+                                        <div class="widget-content-outer">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading text-{{ $class }}">
+
+                                                        {{ $text_group }}
+                                                    </div>
+
+                                                    <div class="widget-subheading">Total</div>
+                                                </div>
+
+                                                @php
+                                                    // dd($groupData);
+                                                    $routeParameters = [
+                                                        'paraCheck' => 'all',
+                                                        'group' => $group,
+                                                        'resume' => isset($groupData['ids']['resume']) ? $groupData['ids']['resume'] : '',
+                                                        'New Student' => isset($groupData['ids']['New Student']) ? $groupData['ids']['New Student'] : '',
+                                                        'studying . . .' => isset($groupData['ids']['studying . . .']) ? $groupData['ids']['studying . . .'] : '',
+                                                        'ids' => [],
+                                                    ];
+                                                    if (isset($groupData['ids']['resume'])) {
+                                                        $routeParameters['ids'][] = $groupData['ids']['resume'];
+                                                    }
+
+                                                    if (isset($groupData['ids']['New Student'])) {
+                                                        $routeParameters['ids'][] = $groupData['ids']['New Student'];
+                                                    }
+
+                                                    if (isset($groupData['ids']['studying . . .'])) {
+                                                        $routeParameters['ids'][] = $groupData['ids']['studying . . .'];
+                                                    }
+                                                    $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                                    // dd($groupData, $routeParameters);
+                                                @endphp
+
+                                                <div class="widget-content-right">
+                                                    <div class="widget-heading">
+                                                        {{-- {{ (isset($groupData['resume']) ? $groupData['resume'] : 0) +
+                                                            (isset($groupData['studying . . .']) ? $groupData['studying . . .'] : 0) +
+                                                            (isset($groupData['New Student']) ? $groupData['New Student'] : 0) }} --}}
+                                                        <a class="text-dark"
+                                                            href="{{ route('searchTestLog', $routeParameters) }}">
+                                                            {{ (isset($groupData['New Student']) ? $groupData['New Student'] : 0) +
+                                                                (isset($groupData['studying . . .']) ? $groupData['studying . . .'] : 0) +
+                                                                (isset($groupData['resume']) ? $groupData['resume'] : 0) }}
+
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                @if ($count_group > 1)
+                                    {!! $line !!}
+                                @endif
+
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="pt-0 pb-0 card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="widget-content p-0">
+                                        <div class="widget-content-outer">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading">New Student</div>
+                                                    <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                                </div>
+
+                                                @php
+                                                    // dd($groupData);
+                                                    $routeParameters = [
+                                                        'paraCheck' => 'New Student',
+                                                        'group' => $group,
+                                                        // 'resume' => isset($groupData['ids']['resume']) ? $groupData['ids']['resume'] : '',
+                                                        'New Student' => isset($groupData['ids']['New Student']) ? $groupData['ids']['New Student'] : '',
+                                                        // 'studying . . .' => isset($groupData['ids']['studying . . .']) ? $groupData['ids']['studying . . .'] : '',
+                                                        'ids' => [],
+                                                    ];
+                                                    // if (isset($groupData['ids']['resume'])) {
+                                                    //     $routeParameters['ids'][]= $groupData['ids']['resume'];
+                                                    // }
+
+                                                    if (isset($groupData['ids']['New Student'])) {
+                                                        $routeParameters['ids'][] = $groupData['ids']['New Student'];
+                                                    }
+
+                                                    // if (isset($groupData['ids']['studying . . .'])) {
+                                                    //     $routeParameters['ids'][] = $groupData['ids']['studying . . .'];
+                                                    // }
+                                                    $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                                    // dd($groupData, $routeParameters);
+                                                @endphp
+
+                                                <div class="widget-content-right">
+                                                    <div class="widget-heading">
+                                                        {{-- {{ (isset($groupData['resume']) ? $groupData['resume'] : 0) +
+                                                            (isset($groupData['studying . . .']) ? $groupData['studying . . .'] : 0) +
+                                                            (isset($groupData['New Student']) ? $groupData['New Student'] : 0) }} --}}
+                                                        <a class="text-success"
+                                                            href="{{ route('searchTestLog', $routeParameters) }}">
+                                                            {{ isset($groupData['New Student']) ? $groupData['New Student'] : 0 }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+
+                                                {{-- <div class="widget-content-right">
+                                                    <div class="widget-numbers text-success">
+                                                        {{ isset($groupData['New Student']) ? $groupData['New Student'] : 0 }}
+                                                    </div>
+                                                </div> --}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                @if ($count_group > 1)
+                                    {!! $line !!}
+                                @endif
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="pt-0 pb-0 card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="widget-content p-0">
+                                        <div class="widget-content-outer">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading">Studying</div>
+                                                    <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                                </div>
+
+                                                @php
+                                                    $routeParameters = [
+                                                        'paraCheck' => 'studying',
+                                                        'group' => $group,
+                                                        'studying . . .' => isset($groupData['ids']['studying . . .']) ? $groupData['ids']['studying . . .'] : '',
+                                                        'ids' => [],
+                                                    ];
+                                                    if (isset($groupData['ids']['studying . . .'])) {
+                                                        $routeParameters['ids'][] = $groupData['ids']['studying . . .'];
+                                                    }
+                                                    $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                                @endphp
+                                                <div class="widget-content-right">
+                                                    <div class="widget-heading">
+                                                        <a class="text-success"
+                                                            href="{{ route('searchTestLog', $routeParameters) }}">
+                                                            {{ isset($groupData['studying . . .']) ? $groupData['studying . . .'] : 0 }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                @if ($count_group > 1)
+                                    {!! $line !!}
+                                @endif
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="pt-0 pb-0 card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="widget-content p-0">
+                                        <div class="widget-content-outer">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading text-nowrap">Termination of study</div>
+                                                    <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                                </div>
+
+                                                @php
+                                                    $routeParameters = [
+                                                        'paraCheck' => 'Termination of study',
+                                                        'group' => $group,
+                                                        'Termination of study' => isset($groupData['ids']['Termination of study']) ? $groupData['ids']['Termination of study'] : '',
+                                                        'ids' => [],
+                                                    ];
+                                                    if (isset($groupData['ids']['Termination of study'])) {
+                                                        $routeParameters['ids'][] = $groupData['ids']['Termination of study'];
+                                                    }
+                                                    $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                                @endphp
+                                                <div class="widget-content-right">
+                                                    <div class="widget-heading">
+                                                        <a class="text-warning"
+                                                            href="{{ route('searchTestLog', $routeParameters) }}">
+                                                            {{ isset($groupData['Termination of study']) ? $groupData['Termination of study'] : 0 }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                @if ($count_group > 1)
+                                    {!! $line !!}
+                                @endif
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="pt-0 pb-0 card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="widget-content p-0">
+                                        <div class="widget-content-outer">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading text-nowrap">Drop</div>
+                                                    <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                                </div>
+                                                @php
+                                                    $routeParameters = [
+                                                        'paraCheck' => 'drop',
+                                                        'group' => $group,
+                                                        'drop' => isset($groupData['ids']['drop']) ? $groupData['ids']['drop'] : '',
+                                                        'ids' => [],
+                                                    ];
+                                                    if (isset($groupData['ids']['drop'])) {
+                                                        $routeParameters['ids'][] = $groupData['ids']['drop'];
+                                                    }
+                                                    $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                                @endphp
+                                                <div class="widget-content-right">
+                                                    <div class="widget-heading">
+                                                        <a class="text-danger"
+                                                            href="{{ route('searchTestLog', $routeParameters) }}">
+                                                            {{ isset($groupData['drop']) ? $groupData['drop'] : 0 }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                @if ($count_group > 1)
+                                    {!! $line !!}
+                                @endif
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="pt-0 pb-0 card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="widget-content p-0">
+                                        <div class="widget-content-outer">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading text-nowrap">Resume</div>
+                                                    <div class="widget-subheading">{{ date('Y-m-d') }}</div>
+                                                </div>
+
+                                                @php
+                                                    $routeParameters = [
+                                                        'paraCheck' => 'resume',
+                                                        'group' => $group,
+                                                        'resume' => isset($groupData['ids']['resume']) ? $groupData['ids']['resume'] : '',
+                                                        'ids' => [],
+                                                    ];
+                                                    if (isset($groupData['ids']['resume'])) {
+                                                        $routeParameters['ids'][] = $groupData['ids']['resume'];
+                                                    }
+                                                    $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                                @endphp
+                                                <div class="widget-content-right">
+                                                    <div class="widget-heading">
+                                                        <a class="text-success"
+                                                            href="{{ route('searchTestLog', $routeParameters) }}">
+                                                            {{ isset($groupData['resume']) ? $groupData['resume'] : 0 }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                @if ($count_group > 1)
+                                    {!! $line !!}
+                                @endif
+
+                            </ul>
+                        </div>
+                    </div>
+                @endif
+                @php
+                    $count_group--;
+                @endphp
+            @endforeach
+        </div>
     </div>
+    {{-- @php
+        dd($count_group);
+    @endphp --}}
+    {{-- @foreach ($groupStatusCounts as $group => $groupData)
+        @if ($group != 'N')
+            <h2>{{ $group }}</h2>
+            <ul>
+                <li>Resume: {{ $groupData['resume'] ?? 'N/A' }}</li>
+                <li>New Student: {{ $groupData['New Student'] ?? 'N/A' }}</li>
+                <li>Studying: {{ $groupData['studying . . .'] ?? 'N/A' }}</li>
+                <!-- Add more items as needed -->
+            </ul>
+        @endif
+    @endforeach --}}
 @endsection
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1077,7 +1484,7 @@
         });
     </script> --}}
     <script>
-        var groupLabels = ['New Student', 'Studying', 'Termination of study', 'Drop', 'Resume','Waitting'];
+        var groupLabels = ['New Student', 'Studying', 'Termination of study', 'Drop', 'Resume', 'Waitting'];
         var data = [
             @foreach ($groupStatusCounts as $group => $statusCounts)
                 @if ($group !== 'N')
@@ -1120,7 +1527,7 @@
             type: 'line',
             data: {
                 labels: groupLabels,
-                datasets: data.map(function(item,index) {
+                datasets: data.map(function(item, index) {
                     // var ran1 = Math.floor(Math.random() * 255);
                     // var randomColor = 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 1)';
                     // var groupColors = {
@@ -1204,7 +1611,7 @@
             type: 'bar',
             data: {
                 labels: groupLabels,
-                datasets: data.map(function(item,index) {
+                datasets: data.map(function(item, index) {
                     // var groupColors = {
                     //     'M': 'rgba(52, 143, 226,.65)',
                     //     'E': 'rgba(0, 172, 172,.65)',

@@ -68,6 +68,7 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
     Route::get('/huaxiacup', [ReceiptFormController::class, 'huaxiacup'])->name('huaxiacup');
     Route::get('/mathleague-ii', [ReceiptFormController::class, 'mathleague_II'])->name('mathleague-ii');
     Route::get('/huaxiacup-ii', [ReceiptFormController::class, 'huaxiacup_II'])->name('huaxiacup-ii');
+    Route::get('/neo-science-olympiad', [ReceiptFormController::class, 'neos'])->name('neos');
 
 
 });
@@ -83,10 +84,14 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/find-StatusRecTime/{status}/{month}/{year}', [RecordtimeController::class, 'find_statusRecTime'])->name('find_statusRecTime');
     Route::get('/report-month-time', [RecordtimeController::class, 'reportTime'])->name('reportTime');
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
+
+    // Route::get('/stdLog-search', [StdlogController::class, 'searchTestLog'])->name('stdlog.search');
     Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');
     Route::get('/report-reciept-student-search', [StdlogController::class, 'reportRecieptStdSearch'])->name('reportRecieptStdSearch');
     Route::get('/report-reciept-student/{id}', [StdlogController::class, 'reportRecieptStdShow'])->name('reportRecieptStdShow');
 });
+Route::get('/stdLog-search', [StdlogController::class, 'search_id'])->name('searchTestLog');
+
 
 Route::group(['middleware' => ['auth', 'Godeye']], function () {
     Route::resource('Godeye', GodeyeContreoller::class);

@@ -78,6 +78,10 @@ class ReceiptFormController extends Controller
     {
         return view("receipt_form.huaxiacup");
     }
+    public function neos()
+    {
+        return view("receipt_form.neos");
+    }
 
     public function huaxiacup_II()
     {

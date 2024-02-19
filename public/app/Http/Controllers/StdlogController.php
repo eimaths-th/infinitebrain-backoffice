@@ -14,6 +14,7 @@ class StdlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+   
     public function index()
     {
         $month  = date('m');
@@ -129,6 +130,7 @@ class StdlogController extends Controller
     {
         //
     }
+
 
     /**
      * Store a newly created resource in storage.
