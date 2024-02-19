@@ -37,6 +37,7 @@ class Receipt_RunningNumber extends Model
         '17',
         '18',
         '19',
+        '20',
 
     ];
 
@@ -58,6 +59,7 @@ class Receipt_RunningNumber extends Model
         '17' => '17',
         '18' => '18',
         '19' => '19',
+        '20' => '20',
 
     ];
 
@@ -142,7 +144,7 @@ class Receipt_RunningNumber extends Model
         $day = $sda[2];
         $month = $sda[1];
         $year = $sda[0];
-        
+
         if ($day == $lastDayOfMonth && $month != '01') {
             // $month = str_pad(intval($month) - 1, 2, '0', STR_PAD_LEFT); // Decrease month by 1
             $month = str_pad(intval($month), 2, '0', STR_PAD_LEFT); // Decrease month by 1

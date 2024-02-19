@@ -13,7 +13,9 @@ use App\Models\Receipt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
-use File;
+// use File;
+use Illuminate\Support\Facades\File;
+
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Receipt_RunningNumber;
@@ -44,6 +46,7 @@ class ReceiptFormController extends Controller
         '17' => 'test_field',
         '18' => 'mathleague-II',
         '19' => 'Huaxiacup-II',
+        '20' => 'neos',
     );
 
     public function gmec()
@@ -515,18 +518,16 @@ class ReceiptFormController extends Controller
                 $sdes = 'ค่าลงทะเบียนระดับมัธยม';
             }
         } else {
-            if ($request->get('sfield') == 16 || $request->get('sfield') == 17) {
+            if ($request->get('sfield') == 16 || $request->get('sfield') == 17 || $request->get('sfield') == 20) {
                 $sdes = '';
-            }elseif ($request->get('sfield') == 18 || $request->get('sfield') == 19) {
+            } elseif ($request->get('sfield') == 18 || $request->get('sfield') == 19) {
 
                 if (str_contains($request->get('description'), 'Private')) {
                     $sdes = 'สมัครติวแบบส่วนตัว';
                 } else {
                     $sdes = 'สมัครติว';
                 }
-
-            }
-            else {
+            } else {
                 if (str_contains($request->get('description'), 'tutoring')) {
                     $sdes = 'สมัครสอบรวมติว';
                 } else {
@@ -559,6 +560,7 @@ class ReceiptFormController extends Controller
     {
         //
         // dd($request->get('sfield'),$request);
+
         if ($request->get('sfield') == '17') {
             # code...
             $validator =  Validator::make($request->all(), [
@@ -634,7 +636,17 @@ class ReceiptFormController extends Controller
                 $oldfile = FileUpload::where('oldname', $filea)->get();
                 $fileas .= $oldfile[0]->filename . "|";
 
+                // $sourcePath = public_path() . '/form_images/' . $oldfile[0]->filename;
+                // $destinationPath = public_path() . '/receipt_form_images/' . $oldfile[0]->filename;
+
+                // if (file_exists($sourcePath)) {
+                //     // Continue with the rename operation
+                //     dd('true',$sourcePath);
+                // } else {
+                //     echo 'Source file does not exist.';
+                // }
                 File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+
                 FileUpload::where('filename', $oldfile[0]->filename)->delete();
             }
             $fileas = rtrim($fileas, "|");
@@ -661,6 +673,7 @@ class ReceiptFormController extends Controller
             'first_name' => $request->get('firstname'),
             'last_name' => $request->get('lastname'),
             'nick_name' => $request->get('nickname'),
+            'gender' => $request->get('gender'),
             'birth_date' => $request->get('birthdate'),
             'school_name' => $request->get('schoolname'),
             'grade' => $request->get('grade'),

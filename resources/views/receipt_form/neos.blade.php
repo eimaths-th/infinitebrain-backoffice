@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                background-size: 15px;
-                                                                                                            }*/
+                                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                        background-size: 15px;
+                                                                                                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                border-color: var(--color-invalid);
-                                                                                                            }*/
+                                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                        border-color: var(--color-invalid);
+                                                                                                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                display: block;
-                                                                                                            }*/
+                                                                                                                        display: block;
+                                                                                                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,9 +531,9 @@
     </style>
     <style>
         /* .custom-image {
-                                                            width: 395px;
-                                                            height: 395px;
-                                                        } */
+                                                                    width: 395px;
+                                                                    height: 395px;
+                                                                } */
 
         .custom-image {
             width: 100%;
@@ -584,9 +584,20 @@
                                             </strong>
                                         </span>
                                     </p>
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong> 1 Dec 2023 – 31 Jan 2024</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;17 Feb 2023</span>
+                                    <p style="text-align: left;">
+                                        <span style="color: #6351a2;">
+                                            <strong>Registration Date:</strong>
+                                            {{-- 1 Dec 2023 – 31 Jan 2024 --}}
+                                            null
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <span style="color: #6351a2;">
+                                            <strong>Exam Date:</strong>
+                                            &nbsp;
+                                            {{-- 17 Feb 2023 --}}
+                                            null
+                                        </span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -594,11 +605,12 @@
                                     {{-- <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
                                     </p> --}}
                                     <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
-                                    <p><span style="color: #6351a2;"><strong>Test:</strong> 850 baht</span>
+                                    <p><span style="color: #6351a2;"><strong>Test: </strong>Package - 500 บาท</span>
+
                                     </p>
-                                    <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
+                                    {{-- <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1250 bath (1 class 2 hours)</span><br></p>
-                                    <p>&nbsp;</p>
+                                    <p>&nbsp;</p> --}}
 
                                     <!-- sub img -->
 
@@ -650,6 +662,8 @@
                                 </div>
                                 <input type="hidden" id="contest" name="contest" value=" ">
                                 <input type="hidden" id="subject" name="subject" value=" ">
+                                <input type="hidden" id="birthdate" name="birthdate" value="null">
+                                <input type="hidden" name="sfield" id="sfield" value="20">
 
                                 {{-- <div class="form-row form-focus">
 
@@ -762,7 +776,7 @@
                                             <!-- Female Radio Button -->
                                             <div class="form-check">
                                                 <input type="radio" class="AddGender form-check-input" name="gender"
-                                                    id="female" value="female" >
+                                                    id="female" value="female">
                                                 <label class="form-check-label" for="female">Girl / หญิง</label>
                                             </div>
 
@@ -820,9 +834,9 @@
                                                 name="grade" data-component="dropdown" aria-label="Grade / ระดับชั้น"
                                                 required>
                                                 <option value="">Please Select</option>
-                                                <option value="Kindergarten">Kindergarten</option>
-                                                <option value="Grade 1">Grade 1</option>
-                                                <option value="Grade 2">Grade 2</option>
+                                                {{-- <option value="Kindergarten">Kindergarten</option> --}}
+                                                {{-- <option value="Grade 1">Grade 1</option>
+                                                <option value="Grade 2">Grade 2</option> --}}
                                                 <option value="Grade 3">Grade 3</option>
                                                 <option value="Grade 4">Grade 4</option>
                                                 <option value="Grade 5">Grade 5</option>
@@ -832,7 +846,7 @@
                                                 <option value="Grade 9">Grade 9</option>
                                                 <option value="Grade 10">Grade 10</option>
                                                 <option value="Grade 11">Grade 11</option>
-                                                <option value="Grade 12">Grade 12</option>
+                                                {{-- <option value="Grade 12">Grade 12</option> --}}
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">{{-- Grade as per Academic Year 2022 --}}</label>
@@ -861,10 +875,8 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Test: 850 baht">Test: 850 baht</option>
-                                                <option value="Test + tutoring class: 1250 bath (1 class 2 hours)">
-                                                    Test +
-                                                    tutoring class: 1250 bath (1 class 2 hours)</option>
+                                                <option value="Package - 500 บาท">Package - 500 บาท</option>
+                                                {{-- <option value="Test + tutoring class: 1250 bath (1 class 2 hours)">Test + tutoring class: 1250 bath (1 class 2 hours)</option> --}}
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -1102,11 +1114,10 @@
                                     <div class="col-md-6 ">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="newsf">ท่านทราบข่าวสารการจัดสอบ China Mathematical Olympiad
+                                                for="newsf">ท่านทราบข่าวสารการจัดสอบ NEO Science Olympiad
                                                 จากช่องทางใด <span class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="newsf" id="newsf"
                                                 value="" maxlength="50" required>
-                                            <input type="hidden" name="sfield" id="sfield" value="15">
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false"></label>
                                             <div class="form-error-message" role="alert"><img

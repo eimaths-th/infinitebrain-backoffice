@@ -401,6 +401,12 @@
                                     Test Field
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '20']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Neo science
+                                </a>
+                            </li>
 
                         </ul>
                     </li>
@@ -514,6 +520,12 @@
                                 <a href="{{ route('receipts', ['sfield' => '17']) }}">
                                     <i class="metismenu-icon"></i>
                                     Test Field
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '20']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Neo science
                                 </a>
                             </li>
 

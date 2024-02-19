@@ -47,6 +47,8 @@ class ReceiptController extends Controller
         '17' => 'test_field',
         '18' => 'mathleague-II',
         '19' => 'Huaxiacup-II',
+        '20' => 'neos',
+
 
     );
     const sfieldas = array(
@@ -67,6 +69,7 @@ class ReceiptController extends Controller
         '17' => 'Test Field',
         '18' => 'mathleague-II',
         '19' => 'Huaxiacup-II',
+        '20' => 'neos',
 
     );
     const thmonth = array(

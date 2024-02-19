@@ -239,6 +239,8 @@
                                                                             $message = 'Img Reward';
                                                                         } elseif ($data->sfield == '17') {
                                                                             $message = 'Thanks for your order!';
+                                                                        } elseif ($data->sfield == '20') {
+                                                                            $message = 'NEO Science Olympiad';
                                                                         }
                                                                         ?>
                                                                         {{ $message }}</span>
@@ -1836,6 +1838,8 @@
                                                                                 $message1 = 'Img Reward';
                                                                             } elseif ($data->sfield == '17') {
                                                                                 $message1 = 'Test Field';
+                                                                            } elseif ($data->sfield == '20') {
+                                                                                $message = 'NEO Science Olympiad';
                                                                             }
                                                                             ?>
                                                                             สอบ {{ $message1 }}
@@ -1872,8 +1876,7 @@
                         </table> --}}
                     @else
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4"
-                            role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
-                            width="100%">
+                            role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
                                 <tr>
                                     <td>
@@ -2607,6 +2610,8 @@
                                                                                 $message1 = 'Img Reward';
                                                                             } elseif ($data->sfield == '17') {
                                                                                 $message1 = 'Test Field';
+                                                                            } elseif ($data->sfield == '20') {
+                                                                                $message1 = 'NEO Science Olympiad';
                                                                             }
                                                                             ?>
                                                                             สอบ {{ $message1 }}
