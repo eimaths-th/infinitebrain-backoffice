@@ -12,12 +12,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $old_date
  * @property string $old_stime
  * @property string $old_etime
+ * @property string $old_late_time
  * @property string $old_status
  * @property string $old_status_name
  * @property string $old_explain
  * @property string $new_date
  * @property string $new_stime
  * @property string $new_etime
+ * @property string $new_late_time
  * @property string $new_status
  * @property string $new_status_name
  * @property string $new_explain
@@ -38,12 +40,14 @@ class WorktimeLogs extends Model
         'old_date',
         'old_stime',
         'old_etime',
+        'old_late_time',
         'old_status',
         'old_status_name',
         'old_explain',
         'new_date',
         'new_stime',
         'new_etime',
+        'new_late_time',
         'new_status',
         'new_status_name',
         'new_explain',

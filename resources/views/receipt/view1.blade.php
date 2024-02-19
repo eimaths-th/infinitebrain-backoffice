@@ -164,16 +164,16 @@
                         <td>..........................</td>
                     </tr>
                     <!-- <tr>
-                                                                                        <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
+                                                                                                    <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
 
-                                                                                    </tr> -->
+                                                                                                </tr> -->
                 </table>
                 <div class="tbr">
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
                         <tr class="active">
                             <td align="center" width="10%" class="grey">ลำดับที่<br> NO.</td>
                             <td align="center" class="grey">รายการ <br>Description</td>
-                            <td align="center" class="grey"> <br></td>
+                            <td align="center" class="grey">ระยะเวลา<br>Period</td>
                             <td align="center" class="grey">จำนวน <br>Quantity</td>
                             <td align="center" class="grey">หน่วย <br>Unit</td>
                             <td align="center" class="grey">ราคาต่อหน่วย <br>Unit Price</td>
@@ -189,7 +189,7 @@
                                 <tr>
                                     <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
                                     <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
-                                    <td align="left"> {{ $receipt_detail['period'] }}</td>
+                                    <td align="center"> {{ $receipt_detail['period'] }}</td>
                                     <td align="center">{{ $receipt_detail['quantity'] }}</td>
                                     <td align="center">{{ $receipt_detail['unit'] }}</td>
                                     <td align="center">{{ $receipt_detail['unitprice'] }}</td>
@@ -219,8 +219,28 @@
                                         <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
                                         <td align="left"></td>
                                         <td align="center">{{ $receipt_detail['book'] }}</td>
-                                        <td align="center">เล่ม</td>
-                                        <td align="center">{{ number_format($receipt_detail['books'], 2) }}</td>
+                                        {{-- <td align="center">
+                                            เล่ม
+                                            ชุด
+                                        </td> --}}
+                                        @php
+                                            $startDate = new DateTime('2024-02-07');
+                                            $currentDate = new DateTime($data->submission_date); //2024-02-08
+                                            $checkDate = $currentDate > $startDate;
+                                        @endphp
+                                        @if ($checkDate)
+                                            <td align="center">
+                                                {{-- เล่ม --}}
+                                                ชุด
+                                            </td>
+                                            <td align="center">{{ number_format($receipt_detail['books'] * 15, 2) }}</td>
+                                        @else
+                                            <td align="center">
+                                                เล่ม
+                                                {{-- ชุด --}}
+                                            </td>
+                                            <td align="center">{{ number_format($receipt_detail['books'], 2) }}</td>
+                                        @endif
                                         <td align="center">
                                         </td>
                                         <td align="center" style="vertical-align: top;">
@@ -237,7 +257,7 @@
                                     </td>
                                     @if ($receipt_detail['book'] !== '0')
                                         <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
-                                        <td align="left"></td>
+                                        <td align="center"> - </td>
                                         <td align="center">{{ $receipt_detail['book'] }}</td>
                                         <td align="center">เล่ม</td>
                                         <td align="center">{{ number_format($receipt_detail['books'], 2) }}</td>
@@ -348,11 +368,11 @@
                     </table>
 
                     <!-- <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                                                                                        <tr>
-                                                                                            <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
-                                                                                            <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
-                                                                                        </tr>
-                                                                                    </table> -->
+                                                                                                    <tr>
+                                                                                                        <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
+                                                                                                        <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
+                                                                                                    </tr>
+                                                                                                </table> -->
 
                     <table align="center" width="85%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
                         <tr>

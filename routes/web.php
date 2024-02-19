@@ -77,8 +77,10 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/studentBonus/schpid/{id}', [BonusStudentController::class, 'schpid'])->name('bonusRec');
 
     Route::get('/rec-time-logs', [WorktimelogsController::class, 'index'])->name('timelogs');
+    // Route::get('/update-late-time', [RecordtimeController::class, 'update_late_time'])->name('update_late_time');
     Route::get('/search-report-month-time', [RecordtimeController::class, 'search_reportMonthTime'])->name('search_reportMonthTime');
     Route::get('/find-UserRecTime/{user_id}/{status}/{month}/{year}', [RecordtimeController::class, 'find_UserRecTime'])->name('find_UserRecTime');
+    Route::get('/find-StatusRecTime/{status}/{month}/{year}', [RecordtimeController::class, 'find_statusRecTime'])->name('find_statusRecTime');
     Route::get('/report-month-time', [RecordtimeController::class, 'reportTime'])->name('reportTime');
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
     Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');
@@ -122,7 +124,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/searchr_reportMonthStd', [StdlogController::class, 'searchr_reportMonthStd'])->name('searchr_reportMonthStd');
     route::get('/Super-Master', [SuperMasterContrller::class, 'index'])->name('sm');
     route::get('/testmodal', [SuperMasterContrller::class, 'testModal'])->name('test_modal');
-    route::post('/testReq', [SuperMasterContrller::class, 'testReq'])->name('testReq');
+    route::get('/testReq', [SuperMasterContrller::class, 'testReq'])->name('testReq');
     Route::get('/perform-retrospective-check', [RetrospectiveCheckController::class, 'performRetrospectiveCheck']);
     Route::resource('stdlog', StdlogController::class);
     Route::get('stdlog/create', [StdlogController::class, 'create'])->name('stdlog_create');
@@ -248,11 +250,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(array('GET', 'POST'), '/receipt_school', [ReceiptSchoolController::class, 'index'])->name('receipt_school');
     Route::get('/receipt_school/{sub_id}', [ReceiptSchoolController::class, 'search'])->name('receipt_school.search');
     Route::get('/receipt_school/{sub_id}/{level_id}/{week}/{price}/{qty}/{discount}/{book_price}/{type}/{course_type}/{entrance_fee}', [ReceiptSchoolController::class, 'searchs'])->name('receipt_school.searchs');
-    Route::get('/receipt_school/{sub_id}/{level_id}/{book}/', [ReceiptSchoolController::class, 'sumbook'])->name('receipt_school.sumbook');
+    Route::get('/receipt_school/{sub_id}/{level_id}/{book}/{course_type}/', [ReceiptSchoolController::class, 'sumbook'])->name('receipt_school.sumbook');
+    // Route::get('/receipt_school/{sub_id}/{level_id}/{book}/', [ReceiptSchoolController::class, 'sumbook'])->name('receipt_school.sumbook');
     Route::get('/receipt_school/find/{parent}', [ReceiptSchoolController::class, 'find'])->name('receipt_school.find');
 
     Route::post('/receipt_school/store', [ReceiptSchoolController::class, 'store'])->name('receipt_school.store');
-    Route::get('/receipt_school/receipt/show/{type}/{id}', [ReceiptSchoolController::class, 'show'])->name('receipt_school.show');
+
+    Route::get('/receipt_school/show/{type}/{id}', [ReceiptSchoolController::class, 'show'])->name('receipt_school.show');
+
     Route::get('/receipt_school/{id}/{type}', [ReceiptSchoolController::class, 'edit'])->name('receipt_school.edit');
     Route::put('/receipt_school/save/{id}', [ReceiptSchoolController::class, 'update'])->name('receipt_school.save');
     Route::post('/receipt_school/upload', [ReceiptSchoolController::class, 'fileStore'])->name('receipt_school.upload');

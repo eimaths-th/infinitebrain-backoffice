@@ -551,7 +551,7 @@ class ReceiptSchoolController extends Controller
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a href="receipt_school/receipt/show/view/' . $row->id . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->id . '"><i class="fa fa-eye"></i> View </a> ';
+                    $html = '<a href=" ' . route('receipt_school.show', ['type' => 'view', 'id' => $row->id]) . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->id . '"><i class="fa fa-eye"></i> View </a> ';
                     $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     //$html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
@@ -974,6 +974,8 @@ class ReceiptSchoolController extends Controller
 
     public function show($type, $id)
     {
+        // $url = route('receipt_school.show', ['type' => 'view', 'id' => $id]);
+        // dd($url);
         $data = Receipt_School::find($id);
 
         if ($type == "view") {
@@ -1279,7 +1281,12 @@ class ReceiptSchoolController extends Controller
         if ($course_type == 2) {
             $pricet = (int)$book_price - (int)$discount;
         } else {
-            $pricet = (((int)$select_list * (int)$qty) + (int)$book_price) - (int)$discount + $entrance_fee;
+            if ($sub_id < 7) {
+                # code...
+                $pricet = (((int)$select_list * (int)$qty) + ((int)$book_price * 1)) - (int)$discount + $entrance_fee;
+            } else {
+                $pricet = (((int)$select_list * (int)$qty) + ((int)$book_price * 1)) - (int)$discount + $entrance_fee;
+            }
         }
 
         // $entrace_edit = 0;
@@ -1302,23 +1309,41 @@ class ReceiptSchoolController extends Controller
         ]);
     }
 
-    public function sumbook($sub_id, $level_id, $book)
+    public function sumbook($sub_id, $level_id, $book, $course_type)
     {
+
+        // dd($sub_id, $level_id, $book, $course_type);
         $data = SubjectPrice::Where('subject_prices.subject_id', $sub_id)->Where('subject_prices.level_id', $level_id)->get();
         $select_list = "";
+        $booklet = "";
         foreach ($data as $key) {
 
             $select_list = $key->book_price;
+            $booklet = $key->book;
         }
-        $output = "";
-        $output = '<input type="text" id="book_price" name="book_price" class="form-control has-feedback-left" value="' . (int)$select_list * (int)$book . ' "readonly >
-        ';
+
+        // dd($data);
+
+        if ($course_type == '1' && $sub_id < 7) {
+            # code...
+            $output = "";
+            $output = '<input type="text" id="book_price" name="book_price" class="form-control has-feedback-left" value="' . ((int)$select_list * (int)$book) * $booklet . ' "readonly >
+            ';
+            $bp = ((int)$select_list * (int)$book) * $booklet;
+            // $sum = "";
+            // $sum = '' . ((int)$select_list * (int)$book) * 15 . ' ';
+        } else {
+            $output = "";
+            $output = '<input type="text" id="book_price" name="book_price" class="form-control has-feedback-left" value="' . (int)$select_list * (int)$book . ' "readonly >
+            ';
+            $bp = ((int)$select_list * (int)$book) * 1;
+        }
+
         $sum = "";
         $sum = '' . (int)$select_list * (int)$book . ' ';
-
         // dd($sub_id, $level_id, $book,$sum);
         return response()->json([
-            'html' =>  $output, 'sum' => $sum
+            'html' =>  $output, 'sum' => $sum, 'bp' => $bp
         ]);
     }
 

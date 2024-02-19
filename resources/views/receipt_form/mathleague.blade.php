@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                                                background-size: 15px;
-                                                                                                                                                            }*/
+                                                                                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                                        background-size: 15px;
+                                                                                                                                                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                                                border-color: var(--color-invalid);
-                                                                                                                                                            }*/
+                                                                                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                                        border-color: var(--color-invalid);
+                                                                                                                                                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                                                display: block;
-                                                                                                                                                            }*/
+                                                                                                                                                                        display: block;
+                                                                                                                                                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,14 +531,15 @@
     </style>
     <style>
         /* .custom-image {
-                                                                                                            width: 395px;
-                                                                                                            height: 395px;
-                                                                                                        } */
+                                                                                                                    width: 395px;
+                                                                                                                    height: 395px;
+                                                                                                                } */
 
         .custom-image {
             width: 100%;
             height: auto;
         }
+
         .custom-image2 {
             width: 50%;
             height: auto;
@@ -585,7 +586,7 @@
                                     <p style="text-align: left;">
                                         <span style="color: #6351a2;">
                                             <strong>Registration Date:</strong>
-                                            1 Dec 2023 – 30 Jan 2024 (Grade 6 - 8)
+                                            1 Dec 2023 – 18 Feb 2024 (Grade 6 - 8)
                                             <br>
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -642,7 +643,8 @@
 
                                     <div class="row">
                                         <div class="text-center">
-                                            <img src="images/ML01.jpg" class="custom-image2 mb-3" alt="Image 1" hight="20px">
+                                            <img src="images/ML01.jpg" class="custom-image2 mb-3" alt="Image 1"
+                                                hight="20px">
 
                                         </div>
                                         {{-- <div class="col-lg-6">
@@ -653,7 +655,11 @@
                                     </div>
 
                                     <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร Math League</b> <br>
-
+                                            รร.ไทย กรณีเปิดเทอมไม่ครบ 3 เดือน กรุณาใช้ระดับชั้นปีการศึกษาที่แล้ว <br>
+                                            หากเปิดเทอมครบ 3 เดือน กรุณาใช้ระดับชั้นปัจจุบันที่กำลังศึกษาอยู่<br>
+                                            รร.นานาชาติ กรุณาใช้ระดับชั้นปัจจุบันที่กำลังศึกษาอยู่<br>
+                                            หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ในการสอบ<br>
+                                            {{-- 
                                             รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
                                             ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน
                                             ให้ใช้ระดับชั้นปัจจุบัน <br>
@@ -661,7 +667,8 @@
                                             รร.นานาชาติใช้ระดับชั้นตามปีการศึกษาปัจจุบัน <br>
 
                                             ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
-                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p>
+                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ --}}
+                                        </span></p>
                                 </div>
                             </div>
 
@@ -752,8 +759,7 @@
                                             </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Last
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
                                                 Name</label>
 
                                         </div>
@@ -765,8 +771,7 @@
                                     <div class="col-md-6 col-sm-12">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="nickname">Nickname
+                                            <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
                                                 (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
@@ -1196,12 +1201,12 @@
                 case 'Grade 7':
                 case 'Grade 8':
 
-                    if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-03-30')) {
+                    if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-02-18')) { //18 Feb 2024
 
                     } else {
                         this.value = '';
                         alert('Over time Registration for Grade 6-8.');
-                        alert('Registration Date: 1 Dec 2023 – 30 Jan 2024');
+                        alert('Registration Date: 1 Dec 2023 – 18 Feb 2024');
                     }
                     break;
                 default:

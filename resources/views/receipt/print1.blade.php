@@ -198,8 +198,11 @@
                                         <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
                                         <td align="left"></td>
                                         <td align="center">{{ $receipt_detail['book'] }}</td>
-                                        <td align="center">เล่ม</td>
-                                        <td align="center">{{ number_format($receipt_detail['books'], 2) }}</td>
+                                        <td align="center">
+                                            {{-- เล่ม --}}
+                                            ชุด
+                                        </td>
+                                        <td align="center">{{ number_format($receipt_detail['books']*15, 2) }}</td>
                                         <td align="center">
                                         </td>
                                         <td align="center" style="vertical-align: top;">

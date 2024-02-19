@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $stime
  * @property string $etime
  * @property string $status
+ * @property string $late_time
  * @property string $status_name
  * @property string $created_at
  * @property string $updated_at
@@ -28,7 +29,7 @@ class Recordtime extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'type_user', 'date', 'stime', 'etime', 'status','explain', 'status_name', 'created_at', 'updated_at'];
+    protected $fillable = ['user_id', 'type_user', 'date', 'stime', 'etime', 'status','late_time','explain', 'status_name', 'created_at', 'updated_at'];
 
     public function getFullTimeAttribute()
     {

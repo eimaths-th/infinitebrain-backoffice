@@ -401,6 +401,8 @@ class SchoolController extends Controller
                 }
             } else {
 
+                $count_rec = 0;
+
                 foreach ($school_pice as $school_pices) {
 
                     if (in_array($school_pices->id, $reset_id)) {
@@ -413,14 +415,78 @@ class SchoolController extends Controller
                         $prefer = 0;
                         $school = $school_pices->qty;
                         $sub_ids = $school_pices->subject;
+                        $period = explode(' - ', $school_pices->period);
+
+                        if (count($period) == 1) {
+                            $periods = explode('-', $school_pices->period);
+
+                            $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
+                            $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
+                            $firstEndMonth = '';
+                            if ($count_rec > 0) {
+                                $monthsDifference = Carbon::parse($firstEndMonth)->diffInMonths(Carbon::parse($startMonth));
+
+                                $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
+                            }
+                            $firstEndMonth = $endMonth;
+                            $count_rec++;
+                        } else {
+                            $startMonth = Carbon::parse($period[0])->format('Y-m');
+                            $endMonth = Carbon::parse($period[1])->format('Y-m');
+                            $firstEndMonth = '';
+
+                            if ($count_rec > 0) {
+                                $monthsDifference = Carbon::parse($firstEndMonth)->diffInMonths(Carbon::parse($startMonth));
+                                $endMonth = Carbon::parse($period[1])->format('Y-m');
+                            }
+                            $firstEndMonth = $endMonth;
+                            $count_rec++;
+                        }
+                        $currecntMonth_Year = date('Y-m-d');
+                        $startMonthYMD = Carbon::parse($startMonth)->format('Y-m');
+                        $stdate = explode('-', $startMonthYMD);
+                        [$stYear, $stMonth] = $stdate;
+
+                        $endate = explode('-', $endMonth);
+                        [$enYear, $enMonth] = $endate;
+
                         $history = History::where('student_id', $stdId)
                             ->where('subject_id', $sub_ids)
+                            ->whereBetween('datetime', [
+                                "$stYear-$stMonth-01", now()->year($enYear)->month($enMonth)->endOfMonth(),
+                            ])
                             ->get();
+                        // $history = History::where('student_id', $stdId)
+                        //     ->where('subject_id', $sub_ids)
+                        //     ->get();
 
                         // dd($sub_ids, $history);
+                        // if (!empty($history)) {
+                        //     $his_succsss = count($history);
+                        //     $firstRecord = $history->first();
+                        //     if (!empty($firstRecord) && !in_array($firstRecord->id, $processedIds)) {
+                        //         $processedIds[] = $firstRecord->id;
+                        //     } else {
+                        //         $his_succsss = 0;
+                        //     }
+                        // }
                         if (!empty($history)) {
-                            $his_succsss = count($history);
+                            // $his_succsss = count($history);
+                            $his_succsss = 0;
+                            foreach ($history as $his_check_time) {
+                                $stime = Carbon::parse($his_check_time->stime); //format 11:15:00
+                                $etime = Carbon::parse($his_check_time->etime); //format 12:15:00
+                                $hoursDifference = $etime->diffInHours($stime);
+                                // $minutesDifference = $etime->diffInMinutes($stime);
+                                // $hoursDifference = $minutesDifference / 60; // Convert minutes to hours
+                                // dd($stime, $etime, $hoursDifference,$minutesDifference,$hoursDifference);
+                                $his_succsss += $hoursDifference; //1 ชม = 1 ครั้ง
+                                $his_time_out[] = $his_check_time->id;
+                                // $his_time_out[] = ['id' => $his_check_time->id, 'subject_id' => $his_check_time->subject_id];
+                            }
+
                             $firstRecord = $history->first();
+
                             if (!empty($firstRecord) && !in_array($firstRecord->id, $processedIds)) {
                                 $processedIds[] = $firstRecord->id;
                             } else {

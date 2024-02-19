@@ -39,6 +39,8 @@ class SuperMasterContrller extends Controller
     {
         //
 
+        return view('admin.test');
+
         dd($request);
 
     }

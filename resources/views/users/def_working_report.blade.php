@@ -58,6 +58,12 @@
                             <span class="d-sm-block d-none">ตรวจสอบรายปี</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
+                            {{-- <span class="d-sm-none">Tab 1</span> --}}
+                            <span class="d-sm-block d-none">Late time</span>
+                        </a>
+                    </li>
 
                 </ul>
                 <div class="tab-content panel m-0 rounded-0 p-3">
@@ -130,13 +136,18 @@
                                             {{ $status->name }}
                                         </th>
                                     @endforeach
+                                    <th>Late Time</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @foreach ($rec_timess as $user_id => $records)
+                                @php
+                                    $loops = 1;
+                                    $result = 0;
+                                @endphp
+                                @foreach ($rec_timess as $records)
                                     <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center">{{ (int) $loops }}</td>
                                         <td class="text-center">{{ $records->first()->user->code ?? 'code' }}</td>
                                         <td>{{ $records->first()->user->name }}</td>
 
@@ -163,6 +174,7 @@
                                                         //     # code...
                                                         //     $text = 'remain : ' . $remain - $statusCount ?? '';
                                                         // }
+
                                                     @endphp
                                                     {{ $statusCount }}
 
@@ -171,10 +183,44 @@
                                                 </a>
                                             </td>
                                         @endforeach
+                                        <td>
+                                            @php
+                                                $statuslate = $records->where('status', 5)->sum('late_time');
+                                                $result += $statuslate;
+                                                $loops++;
+                                            @endphp
+                                            {{ $statuslate ?? '0' }} นาที
+                                        </td>
                                     </tr>
                                 @endforeach
 
+
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>
+                                        #
+
+                                    </td>
+                                    @php
+                                        $count_line = 0;
+                                    @endphp
+                                    @foreach ($stwork as $test)
+                                        @php
+                                            $count_line++;
+                                        @endphp
+                                    @endforeach
+                                    @php
+                                        $colspan = 2 + $count_line;
+                                    @endphp
+                                    <td colspan="{{ $colspan }}">รวม</td>
+
+
+                                    <td> {{ $result }} นาที</td>
+
+
+                                </tr>
+                            </tfoot>
 
                         </table>
                     </div>
@@ -279,6 +325,85 @@
 
                     </div>
 
+                    <div class="tab-pane fade" id="default-tab-3">
+                        {{-- <form action="{{ route('search_reportMonthTime') }}" method="GET">
+                            @csrf
+                            <div class="row mb-3">
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+                                <div class="col-lg-2">
+                                    <div class="row">
+                                        <label for="year" class="col-lg-2">ปี : </label>
+                                        <div class="col-lg-9">
+                                            <select name="year" id="selectMonth" class="form-select">
+                                                @php
+                                                    $currentYear = date('Y');
+                                                    for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
+                                                        echo "<option value='$i'>$i</option>";
+                                                    }
+                                                @endphp
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <button class="btn btn-primary" type="submit">ค้นหา</button>
+                                </div>
+                            </div>
+                        </form> --}}
+
+                        <h3 class=""><i class="fa fa-cog"></i> รวม เวลามาสาย & ขาดงาน </h3>
+                        <table id="Listview4"
+                            class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-4 Listview3">
+
+                            <thead>
+                                <tr id="tr2">
+                                    <th class="text-center" width="1%">No.1</th>
+                                    <th class="text-center">Date</th>
+                                    <th>Late All</th>
+                                    <th>Missing Work All</th>
+                                    <th>Updated At</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($overlates as $key => $overlate)
+                                    <tr>
+                                        <td class="text-center">{{ $key + 1 }}</td>
+                                        <td class="text-center">
+                                            {{ $overlate->month ?? 'null' }}-{{ $overlate->year ?? 'null' }} </td>
+                                        <td>
+                                            <a href="{{ route('find_statusRecTime', ['status' => 5, 'month' => $overlate->month, 'year' => $overlate->year]) }}"
+                                                class="text-dark">
+                                                {{ $overlate->late_time_all ?? '0' }} นาที
+
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('find_statusRecTime', ['status' => 13, 'month' => $overlate->month, 'year' => $overlate->year]) }}"
+                                                class="text-dark">
+                                                {{ $overlate->missing_work_all ?? '0' }} วัน
+                                            </a>
+                                        </td>
+                                        <td> {{ $overlate->updated_at ?? 'null' }}</td>
+                                    </tr>
+                                @endforeach
+
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
                 </div>
 
 
@@ -336,6 +461,15 @@
                 lengthMenu: [-1],
             });
             $('#Listview3 th').removeAttr('style');
+            $('#Listview4').DataTable({
+                "column": [{
+                        "width": "1%"
+                    }, // Set the width for the first column
+                    // ... other column configurations
+                ],
+                lengthMenu: [-1],
+            });
+            $('#Listview4 th').removeAttr('style');
             // var table2 = $('#Listview2').DataTable({
             //     lengthMenu: [-1],
             // });
