@@ -1201,7 +1201,7 @@
                 case 'Grade 7':
                 case 'Grade 8':
 
-                    if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-02-19T12:00:00')) { //2024-02-19
+                    if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-02-19T13:45:00')) { //2024-02-19
 
                     } else {
                         this.value = '';
