@@ -596,6 +596,39 @@ class StdlogController extends Controller
 
         return $monthlyStatusCountsAll;
     }
+    public function search_id(Request $request)
+    {
+        //
+        $title = $request['paraCheck'];
+        if (!empty($request['ids'])) {
+            $lists = Statuslog::whereIn('id', $request['ids'])->get();
+        } else {
+            // Handle the case where 'ids' is empty (e.g., provide default values or return an empty result)
+            $lists = collect(); // or any other suitable handling
+        }
+
+        if ($request['group'] === 'M') {
+            $group = 'Math';
+        } elseif ($request['group'] === 'E') {
+            $group = 'English';
+        } elseif ($request['group'] === 'Sci') {
+            $group = 'Science';
+        }else {
+            $group = 'Chinese';
+        }
+
+        if ($request['paraCheck'] === 'all') {
+            $title = 'ทั้งหมด';
+        } else {
+            $title = $request['paraCheck'] . ' ' . $group;
+        }
+
+
+        return view('admin.result_status', [
+            'lists' => $lists,
+            'title' => $title,
+        ]);
+    }
 
 
     // private function getMatchingSchoolPrices($test_scp, $currentMonth, $search)

@@ -127,7 +127,6 @@ class HomeController extends Controller
             }
         }
 
-
         $month  = date('m');
         $year   = date('Y');
         $latestStatusCounts = Statuslog::select('group', 'student_id', 'status')
@@ -141,7 +140,6 @@ class HomeController extends Controller
             ->orderBy('group')
 
             ->get();
-
         // $latestStatusByStudent = Statuslog::select('status_log.student_id', 'status_log.group', 'status_log.status', 'status_log.status_date', 'status_log.nick_name')
         //     ->whereIn('status_log.id', function ($query) {
         //         $query->select(DB::raw('MAX(id)'))

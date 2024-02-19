@@ -74,6 +74,7 @@
                         <option value="mathleague-ii">mathleague-II</option>
                         <option value="reward">reward</option>
                         <option value="test_field">test_field</option>
+                        <option value="neos">neo-science-olympiad</option>
 
                     </select>
 
