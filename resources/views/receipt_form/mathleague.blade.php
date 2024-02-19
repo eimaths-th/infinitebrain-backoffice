@@ -597,13 +597,13 @@
                                         </span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;
-                                            2 Mar 2023 (Grade 6 - 8)
+                                            2 Mar 2024 (Grade 6 - 8)
                                             <br>
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                                            27 April 2023 (Grade 3 – 5 and 9)</span>
+                                            27 April 2024 (Grade 3 – 5 and 9)</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -659,7 +659,7 @@
                                             หากเปิดเทอมครบ 3 เดือน กรุณาใช้ระดับชั้นปัจจุบันที่กำลังศึกษาอยู่<br>
                                             รร.นานาชาติ กรุณาใช้ระดับชั้นปัจจุบันที่กำลังศึกษาอยู่<br>
                                             หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ในการสอบ<br>
-                                            {{-- 
+                                            {{--
                                             รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
                                             ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน
                                             ให้ใช้ระดับชั้นปัจจุบัน <br>
@@ -1201,7 +1201,7 @@
                 case 'Grade 7':
                 case 'Grade 8':
 
-                    if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-02-18')) { //18 Feb 2024
+                    if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-02-20')) { //18 Feb 2024
 
                     } else {
                         this.value = '';
