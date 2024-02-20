@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                        background-size: 15px;
-                                                                                                                    }*/
+                                                                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                    background-size: 15px;
+                                                                                                                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                        border-color: var(--color-invalid);
-                                                                                                                    }*/
+                                                                                                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                    border-color: var(--color-invalid);
+                                                                                                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                        display: block;
-                                                                                                                    }*/
+                                                                                                                                    display: block;
+                                                                                                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,9 +531,9 @@
     </style>
     <style>
         /* .custom-image {
-                                                                    width: 395px;
-                                                                    height: 395px;
-                                                                } */
+                                                                                width: 395px;
+                                                                                height: 395px;
+                                                                            } */
 
         .custom-image {
             width: 100%;
@@ -570,6 +570,7 @@
                             <div class="text-center">
                                 <h2 class="card-title form_header">NEO Science Olympiad 2023 Registration Form</h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
+
                             </div>
                             <br>
                             <hr />
@@ -580,7 +581,9 @@
                                         <span style="color: #6351a2;">
                                             <strong>
                                                 <span style="text-decoration: underline;">NEO Science Olympiad 2023
-                                                    Registration Form </span>
+                                                    Registration Form </span> <br>
+                                                <span style="text-decoration: underline;"> โปรโมชั่นแทนคำขอบคุณ
+                                                    พิเศษเพียง 500 บาท สามารถสอบได้ถึง 2 วิชา (คณิตศาสตร์และวิทยาศาสตร์)</span>
                                             </strong>
                                         </span>
                                     </p>
@@ -588,7 +591,7 @@
                                         <span style="color: #6351a2;">
                                             <strong>Registration Date:</strong>
                                             {{-- 1 Dec 2023 – 31 Jan 2024 --}}
-                                            null
+                                            2024 Feb 20 - 27 Mar 2567
                                         </span>
                                     </p>
                                     <p>
@@ -596,7 +599,8 @@
                                             <strong>Exam Date:</strong>
                                             &nbsp;
                                             {{-- 17 Feb 2023 --}}
-                                            null
+
+                                            2024 Mar 31
                                         </span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
@@ -612,6 +616,17 @@
                                             style="color: #6351a2;">1250 bath (1 class 2 hours)</span><br></p>
                                     <p>&nbsp;</p> --}}
 
+                                    <div class="row mb-5">
+                                        <div class="text-center">
+                                            <img src="images/neo_science.png" class="custom-image2 mb-3" alt="Image 1"
+                                                hight="20px">
+                                        </div>
+                                        {{-- <div class="col-lg-6">
+                                            <img src="images/ASIAROPE-02.jpg" class="custom-image" alt="Image 2">
+
+
+                                        </div> --}}
+                                    </div>
                                     <!-- sub img -->
 
                                     {{-- <div class="row">
@@ -626,16 +641,15 @@
                                         </div>
                                     </div> --}}
 
-                                    <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร NEO Science Olympiad 2023</b> <br>
-
-                                            รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
-                                            ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน
-                                            ให้ใช้ระดับชั้นปัจจุบัน <br>
-
-                                            รร.นานาชาติใช้ระดับชั้นตามปีการศึกษาปัจจุบัน <br>
-
-                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
-                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p>
+                                    <p>
+                                        <span style="color: #6351a2;">
+                                            <b>เกณฑ์การรับสมัคร NEO Science Olympiad 2023</b> <br>
+                                            รร.ไทย กรณีเปิดเทอมไม่ครบ 3 เดือน กรุณาใช้ระดับชั้นปีการศึกษาที่แล้ว <br>
+                                            หากเปิดเทอมครบ 3 เดือน กรุณาใช้ระดับชั้นปัจจุบันที่กำลังศึกษาอยู่ <br>
+                                            รร.นานาชาติ กรุณาใช้ระดับชั้นปัจจุบันที่กำลังศึกษาอยู่ <br>
+                                            หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ในการสอบ <br>
+                                        </span>
+                                    </p>
                                 </div>
                             </div>
 
@@ -740,7 +754,8 @@
                                     <div class="col-md-6 col-sm-12">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="nickname">Nickname
                                                 (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
@@ -770,14 +785,14 @@
                                             <div class="form-check">
                                                 <input type="radio" class="AddGender form-check-input" name="gender"
                                                     id="male" value="male" checked required>
-                                                <label class="form-check-label" for="male">Boy / ชาย</label>
+                                                <label class="form-check-label" for="male">Male / ชาย</label>
                                             </div>
 
                                             <!-- Female Radio Button -->
                                             <div class="form-check">
                                                 <input type="radio" class="AddGender form-check-input" name="gender"
                                                     id="female" value="female">
-                                                <label class="form-check-label" for="female">Girl / หญิง</label>
+                                                <label class="form-check-label" for="female">Female / หญิง</label>
                                             </div>
 
                                             <!-- Other Radio Button (if applicable) -->
@@ -875,7 +890,7 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Package - 500 บาท">Package - 500 บาท</option>
+                                                <option value="Test: 500 baht">Test: 500 baht</option>
                                                 {{-- <option value="Test + tutoring class: 1250 bath (1 class 2 hours)">Test + tutoring class: 1250 bath (1 class 2 hours)</option> --}}
 
                                             </select>
@@ -930,8 +945,7 @@
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="address">Address / ที่อยู่ภาษาไทยสำหรับจัดส่งของรางวัล <span
-                                                    class="form-required">*</span></label>
+                                                for="address">Address : <span class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="address" id="address"
                                                 maxlength="150" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px"

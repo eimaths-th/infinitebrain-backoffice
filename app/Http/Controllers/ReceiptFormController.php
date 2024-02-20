@@ -46,7 +46,7 @@ class ReceiptFormController extends Controller
         '17' => 'test_field',
         '18' => 'mathleague-II',
         '19' => 'Huaxiacup-II',
-        '20' => 'neos',
+        '20' => 'Neo science',
     );
 
     public function gmec()
@@ -518,7 +518,7 @@ class ReceiptFormController extends Controller
                 $sdes = 'ค่าลงทะเบียนระดับมัธยม';
             }
         } else {
-            if ($request->get('sfield') == 16 || $request->get('sfield') == 17 || $request->get('sfield') == 20) {
+            if ($request->get('sfield') == 16 || $request->get('sfield') == 17) {
                 $sdes = '';
             } elseif ($request->get('sfield') == 18 || $request->get('sfield') == 19) {
 
@@ -527,7 +527,12 @@ class ReceiptFormController extends Controller
                 } else {
                     $sdes = 'สมัครติว';
                 }
-            } else {
+            }elseif ($request->get('sfield') == 20) {
+                # code...
+                $sdes = 'สมัครสอบปกติ';
+
+            }
+            else {
                 if (str_contains($request->get('description'), 'tutoring')) {
                     $sdes = 'สมัครสอบรวมติว';
                 } else {

@@ -47,7 +47,8 @@ class ReceiptController extends Controller
         '17' => 'test_field',
         '18' => 'mathleague-II',
         '19' => 'Huaxiacup-II',
-        '20' => 'neos',
+        '20' => 'Neo science',
+
 
 
     );
