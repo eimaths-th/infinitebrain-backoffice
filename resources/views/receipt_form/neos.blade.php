@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                    background-size: 15px;
-                                                                                                                                }*/
+                                                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                            background-size: 15px;
+                                                                                                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                    border-color: var(--color-invalid);
-                                                                                                                                }*/
+                                                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                            border-color: var(--color-invalid);
+                                                                                                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                    display: block;
-                                                                                                                                }*/
+                                                                                                                                            display: block;
+                                                                                                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,9 +531,9 @@
     </style>
     <style>
         /* .custom-image {
-                                                                                width: 395px;
-                                                                                height: 395px;
-                                                                            } */
+                                                                                        width: 395px;
+                                                                                        height: 395px;
+                                                                                    } */
 
         .custom-image {
             width: 100%;
@@ -566,7 +566,17 @@
                     <form id="infinite" method="POST" action="{{ route('form.store') }}" onsubmit="return check_input();">
                         @csrf
                         <div class="card-body">
-                            <br>
+                            <div class="row">
+                                <div class="text-center">
+                                    <img src="images/neo_science.png" class="custom-image2 mb-3" alt="Image 1"
+                                        hight="20px">
+                                </div>
+                                {{-- <div class="col-lg-6">
+                                    <img src="images/ASIAROPE-02.jpg" class="custom-image" alt="Image 2">
+
+
+                                </div> --}}
+                            </div>
                             <div class="text-center">
                                 <h2 class="card-title form_header">NEO Science Olympiad 2023 Registration Form</h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
@@ -583,7 +593,8 @@
                                                 <span style="text-decoration: underline;">NEO Science Olympiad 2023
                                                     Registration Form </span> <br>
                                                 <span style="text-decoration: underline;"> โปรโมชั่นแทนคำขอบคุณ
-                                                    พิเศษเพียง 500 บาท สามารถสอบได้ถึง 2 วิชา (คณิตศาสตร์และวิทยาศาสตร์)</span>
+                                                    พิเศษเพียง 500 บาท สามารถสอบได้ถึง 2 วิชา
+                                                    (คณิตศาสตร์และวิทยาศาสตร์)</span>
                                             </strong>
                                         </span>
                                     </p>
@@ -591,7 +602,7 @@
                                         <span style="color: #6351a2;">
                                             <strong>Registration Date:</strong>
                                             {{-- 1 Dec 2023 – 31 Jan 2024 --}}
-                                            2024 Feb 20 - 27 Mar 2567
+                                            2024 Feb 20 - 2024 Mar 27
                                         </span>
                                     </p>
                                     <p>
@@ -608,25 +619,22 @@
                                     </p> --}}
                                     {{-- <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
                                     </p> --}}
-                                    <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
-                                    <p><span style="color: #6351a2;"><strong>Test: </strong>Package - 500 บาท</span>
+                                    <p>
+                                        <span style="color: #6351a2;">
+                                            <strong>
+                                                Registration Fee:&nbsp;
+                                            </strong>
+                                            500 Baht
+                                        </span>
+                                    </p>
+                                    {{-- <p><span style="color: #6351a2;"><strong>Test: </strong>Package - 500 บาท</span> --}}
 
                                     </p>
                                     {{-- <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1250 bath (1 class 2 hours)</span><br></p>
                                     <p>&nbsp;</p> --}}
 
-                                    <div class="row mb-5">
-                                        <div class="text-center">
-                                            <img src="images/neo_science.png" class="custom-image2 mb-3" alt="Image 1"
-                                                hight="20px">
-                                        </div>
-                                        {{-- <div class="col-lg-6">
-                                            <img src="images/ASIAROPE-02.jpg" class="custom-image" alt="Image 2">
 
-
-                                        </div> --}}
-                                    </div>
                                     <!-- sub img -->
 
                                     {{-- <div class="row">
@@ -742,7 +750,8 @@
                                             </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Last
                                                 Name</label>
 
                                         </div>
