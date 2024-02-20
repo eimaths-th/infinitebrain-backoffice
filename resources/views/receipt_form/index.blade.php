@@ -352,8 +352,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                        <p>{{ $message }}</p>
-                                         </div>-->
+                                            <p>{{ $message }}</p>
+                                             </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -363,8 +363,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                        <p>{{ $message }}</p>
-                                         </div>-->
+                                            <p>{{ $message }}</p>
+                                             </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -378,8 +378,16 @@
                     <div class="page-title-icon">
                         <i class="pe-7s-note2 icon-gradient bg-tempting-azure"></i>
                     </div>
-                    <div>{{ $sfielda[request()->get('sfield')] }} Online Form
-                        <div class="page-title-subheading">Infinite Brain Online Form Data</div>
+                   
+                    <div>
+                        @if ($sfielda[request()->get('sfield')] === 'neos')
+                            Neo science Online Form
+                            <div class="page-title-subheading">Infinite Brain Online Form Data</div>
+                        @else
+                            {{ $sfielda[request()->get('sfield')] }} Online Form
+                            <div class="page-title-subheading">Infinite Brain Online Form Data</div>
+                        @endif
+
                     </div>
                 </div>
                 <div class="page-title-actions">
@@ -457,7 +465,8 @@
             <form id="infiniteEdit" class="form" action="" method="POST">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Generate Receipt (<span id="rnumber" style="color: red;"></span>)</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Generate Receipt (<span id="rnumber"
+                                style="color: red;"></span>)</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
@@ -699,7 +708,7 @@
                 if (len > 0) {
                     if (confirm("Click OK to Delete?")) {
                         $('form#delete_all').attr('action',
-                        '{{ route('receipts_form.destroy_all') }}'); //this fails silently
+                            '{{ route('receipts_form.destroy_all') }}'); //this fails silently
                         $('form#delete_all').submit();
                     }
                 } else {
@@ -713,7 +722,7 @@
                 if (len > 0) {
                     if (confirm("Click OK to Export?")) {
                         $('form#delete_all').attr('action',
-                        '{{ route('receipts_form.export') }}'); //this fails silently
+                            '{{ route('receipts_form.export') }}'); //this fails silently
                         $('form#delete_all').submit();
                     }
                 } else {
@@ -1113,8 +1122,8 @@
                     alert("Please wait 2-3 second to send the email. !`");
                 }
 
-                    //alert(values);
-                    //exit();
+                //alert(values);
+                //exit();
 
                 $.ajax({
                     url: "{{ route('receipts_form.store') }}",
@@ -1193,8 +1202,8 @@
                     .map(function() {
                         return $(this).val();
                     }).get();
-                    //alert(values);
-                    //exit();
+                //alert(values);
+                //exit();
 
 
                 $.ajax({
@@ -1353,11 +1362,11 @@
                             element.removeChild(child);
                             if (!document.getElementsByName('imgFiles[]').length) {
                                 $('#dropzone_preview').css("display", "none");
-                               /*  $('#dropzone-photo').addClass('form-focus-error');
-                                $('#dropzone-photo')
-                                    .find('.form-error-message').css("display",
-                                        "block");
-                                $('#dropzone-photo').css('border', 'solid 1px red'); */
+                                /*  $('#dropzone-photo').addClass('form-focus-error');
+                                 $('#dropzone-photo')
+                                     .find('.form-error-message').css("display",
+                                         "block");
+                                 $('#dropzone-photo').css('border', 'solid 1px red'); */
                             }
                         }
                     });

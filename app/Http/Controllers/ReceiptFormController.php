@@ -46,7 +46,7 @@ class ReceiptFormController extends Controller
         '17' => 'test_field',
         '18' => 'mathleague-II',
         '19' => 'Huaxiacup-II',
-        '20' => 'Neo science',
+        '20' => 'neos',
     );
 
     public function gmec()
