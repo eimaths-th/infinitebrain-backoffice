@@ -976,6 +976,7 @@
                                                 @php
                                                     // dd($groupData);
                                                     $routeParameters = [
+                                                        'type' => 'view',
                                                         'paraCheck' => 'all',
                                                         'group' => $group,
                                                         'resume' => isset($groupData['ids']['resume']) ? $groupData['ids']['resume'] : '',
@@ -1039,6 +1040,7 @@
                                                 @php
                                                     // dd($groupData);
                                                     $routeParameters = [
+                                                        'type' => 'view',
                                                         'paraCheck' => 'New Student',
                                                         'group' => $group,
                                                         // 'resume' => isset($groupData['ids']['resume']) ? $groupData['ids']['resume'] : '',
@@ -1103,6 +1105,7 @@
 
                                                 @php
                                                     $routeParameters = [
+                                                        'type' => 'view',
                                                         'paraCheck' => 'studying',
                                                         'group' => $group,
                                                         'studying . . .' => isset($groupData['ids']['studying . . .']) ? $groupData['ids']['studying . . .'] : '',
@@ -1147,6 +1150,7 @@
 
                                                 @php
                                                     $routeParameters = [
+                                                        'type' => 'view',
                                                         'paraCheck' => 'Termination of study',
                                                         'group' => $group,
                                                         'Termination of study' => isset($groupData['ids']['Termination of study']) ? $groupData['ids']['Termination of study'] : '',
@@ -1189,6 +1193,7 @@
                                                 </div>
                                                 @php
                                                     $routeParameters = [
+                                                        'type' => 'view',
                                                         'paraCheck' => 'drop',
                                                         'group' => $group,
                                                         'drop' => isset($groupData['ids']['drop']) ? $groupData['ids']['drop'] : '',
@@ -1232,6 +1237,7 @@
 
                                                 @php
                                                     $routeParameters = [
+                                                        'type' => 'view',
                                                         'paraCheck' => 'resume',
                                                         'group' => $group,
                                                         'resume' => isset($groupData['ids']['resume']) ? $groupData['ids']['resume'] : '',

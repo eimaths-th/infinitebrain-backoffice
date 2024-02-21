@@ -288,7 +288,7 @@ class StdlogController extends Controller
                 }
             }
         }
-        
+
         if ($month) {
             # code...
             $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
@@ -599,34 +599,49 @@ class StdlogController extends Controller
     public function search_id(Request $request)
     {
         //
-        $title = $request['paraCheck'];
         if (!empty($request['ids'])) {
+
             $lists = Statuslog::whereIn('id', $request['ids'])->get();
         } else {
-            // Handle the case where 'ids' is empty (e.g., provide default values or return an empty result)
-            $lists = collect(); // or any other suitable handling
-        }
 
-        if ($request['group'] === 'M') {
-            $group = 'Math';
-        } elseif ($request['group'] === 'E') {
-            $group = 'English';
-        } elseif ($request['group'] === 'Sci') {
-            $group = 'Science';
-        }else {
-            $group = 'Chinese';
+            $lists = collect();
         }
+        $input = $request->all();
+        // dd($input['type']);
+        if ($input['type'] === "view") {
+            $view = 'admin.result_status';
+            if ($request['group'] === 'M') {
+                $group = 'Math';
+            } elseif ($request['group'] === 'E') {
+                $group = 'English';
+            } elseif ($request['group'] === 'Sci') {
+                $group = 'Science';
+            } else {
+                $group = 'Chinese';
+            }
+            
+            $title = $request['paraCheck'];
 
-        if ($request['paraCheck'] === 'all') {
-            $title = 'ทั้งหมด';
+            if ($request['paraCheck'] === 'all') {
+
+                $title = $group . ' ทั้งหมด';
+            } else {
+
+                $title = $request['paraCheck'] . ' ' . $group;
+            }
         } else {
-            $title = $request['paraCheck'] . ' ' . $group;
+            $title = $input['title'];
+            $view = 'admin.result_status_print';
+            if ($title === "ทั้งหมด") {
+                $title = 'ที่กำลังเรียนอยู่ ' . $input['title'];
+            }
         }
 
-
-        return view('admin.result_status', [
+        return view($view, [
             'lists' => $lists,
             'title' => $title,
+            'fontsize' => 1,
+
         ]);
     }
 

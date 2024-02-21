@@ -33,15 +33,25 @@
                     <div class="d-inline-block dropdown">
 
 
-                        <a href="#" class="btn btn-success" onclick="formModal('{{ route('formsTimes') }}')"
+                        {{-- <a href="#" class="btn btn-success" onclick="formModal('{{ route('formsTimes') }}')"
                             data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
                             data-bs-title="Create New Student">
                             <i class="fas fa-clock"></i> down load
-                        </a>
-                        <a href="#" class="btn btn-success" onclick="formModal('{{ route('formsTimes') }}')"
+                        </a> --}}
+                        @php
+                            $listArray = $lists->toArray();
+                            // dd($listArray);
+                            $listIds = array_column($listArray, 'id');
+                            $routeParameters = [
+                                'type' => 'print',
+                                'ids' => $listIds,
+                                'title' => $title,
+                            ];
+                        @endphp
+                        <a href="#" onclick="export_report();" class="btn btn-success"
                             data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
-                            data-bs-title="Create New Student">
-                            <i class="fas fa-clock"></i> print
+                            data-bs-title="print">
+                            <i class="fa fa-print"></i> print
                         </a>
                         {{-- <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="ImportButton"><i
                                 class="fa fa-file-excel"></i> Import Excel
@@ -119,7 +129,16 @@
         var table = $('#Listview').DataTable({
             // serverSide: true,
             // processing: true,
-            lengthMenu: [10, 20, 50, 75, 100],
+            lengthMenu: [20, 50, 75, 100],
         });
+
+        function export_report() {
+
+            url = '{{ route('searchTestLog', $routeParameters) }}';
+
+            window.open(
+                url.replace(/&amp;/g, "&")
+            );
+        }
     </script>
 @endsection
