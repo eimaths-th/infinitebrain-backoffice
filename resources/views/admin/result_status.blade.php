@@ -48,9 +48,8 @@
                                 'title' => $title,
                             ];
                         @endphp
-                        <a href="#" onclick="export_report();" class="btn btn-success"
-                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
-                            data-bs-title="print">
+                        <a href="#" onclick="export_report();" class="btn btn-success" data-bs-toggle="tooltip"
+                            data-bs-trigger="hover" data-bs-container="body" data-bs-title="print">
                             <i class="fa fa-print"></i> print
                         </a>
                         {{-- <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="ImportButton"><i
@@ -91,7 +90,11 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $list->student->code }}</td>
-                                    <td>{{ $list->student->full_name }} ( {{ $list->student->nick_name }} )</td>
+                                    <td>
+                                        <a target="_blank" class="text-dark" href="{{ route('students.show', $list->student->id) }}">
+                                            {{ $list->student->full_name }} ( {{ $list->student->nick_name }} )
+                                        </a>
+                                    </td>
                                     <td>{{ $list->student->parent->name_parent }}</td>
                                     <td>{{ $list->student->parent->mobile }}</td>
                                     <td>{{ $list->group }}</td>
