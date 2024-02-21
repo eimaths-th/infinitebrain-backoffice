@@ -116,6 +116,7 @@
                                 </div>
                                 <div class="col-lg-2">
                                     <button class="btn btn-primary" type="submit">ค้นหา</button>
+                                    <a href="#" onclick="export_report1();" class="btn btn-success">Print</a>
                                 </div>
                             </div>
                         </form>
@@ -200,7 +201,6 @@
                                 <tr>
                                     <td>
                                         #
-
                                     </td>
                                     @php
                                         $count_line = 0;
@@ -256,6 +256,8 @@
                                 </div>
                                 <div class="col-lg-2">
                                     <button class="btn btn-primary" type="submit">ค้นหา</button>
+                                    <a href="#" onclick="export_report2();" class="btn btn-success">Print</a>
+
                                 </div>
                             </div>
                         </form>
@@ -266,7 +268,7 @@
 
                             <thead>
                                 <tr id="tr2">
-                                    <th class="text-center" width="1%">No.1</th>
+                                    <th class="text-center" width="1%">No.</th>
                                     <th class="text-center">Code</th>
                                     <th>User</th>
                                     @foreach ($stwork as $status)
@@ -359,13 +361,14 @@
                             </div>
                         </form> --}}
 
-                        <h3 class=""><i class="fa fa-cog"></i> รวม เวลามาสาย & ขาดงาน </h3>
+                        <h3 class=""><i class="fa fa-cog"></i> รวม เวลามาสาย & ขาดงาน <a href="#" onclick="export_report3();" class="btn btn-success">Print</a></h3>
+
                         <table id="Listview4"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-4 Listview3">
 
                             <thead>
                                 <tr id="tr2">
-                                    <th class="text-center" width="1%">No.1</th>
+                                    <th class="text-center" width="1%">No.</th>
                                     <th class="text-center">Date</th>
                                     <th>Late All</th>
                                     <th>Missing Work All</th>
@@ -442,6 +445,31 @@
     });
 </script> --}}
     <script>
+        function export_report1() {
+
+            url = '{{ route('search_reportMonthTime', ['type' => 'print', 'tap' => '1', 'month' => $month, 'year' => $year]) }}';
+
+            window.open(
+                url.replace(/&amp;/g, "&")
+            );
+        }
+
+        function export_report2() {
+
+            url = '{{ route('search_reportMonthTime', ['type' => 'print', 'tap' => '2', 'year' => $year]) }}';
+
+            window.open(
+                url.replace(/&amp;/g, "&")
+            );
+        }
+        function export_report3() {
+
+            url = '{{ route('search_reportMonthTime', ['type' => 'print', 'tap' => '3']) }}';
+
+            window.open(
+                url.replace(/&amp;/g, "&")
+            );
+        }
         $(document).ready(function() {
             // var selectMonth1 = document.getElementById('selectMonth1');
 
