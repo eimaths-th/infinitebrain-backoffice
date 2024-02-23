@@ -407,6 +407,12 @@
                                     Neo science
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '21']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Neo science - School
+                                </a>
+                            </li>
 
                         </ul>
                     </li>
@@ -526,6 +532,12 @@
                                 <a href="{{ route('receipts', ['sfield' => '20']) }}">
                                     <i class="metismenu-icon"></i>
                                     Neo science
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '21']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Neo science - School
                                 </a>
                             </li>
 

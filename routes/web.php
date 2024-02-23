@@ -69,6 +69,7 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
     Route::get('/mathleague-ii', [ReceiptFormController::class, 'mathleague_II'])->name('mathleague-ii');
     Route::get('/huaxiacup-ii', [ReceiptFormController::class, 'huaxiacup_II'])->name('huaxiacup-ii');
     Route::get('/neo-science-olympiad', [ReceiptFormController::class, 'neos'])->name('neos');
+    Route::get('/neo-science-olympiad-II', [ReceiptFormController::class, 'neos2'])->name('neos-2');
 
 
 });

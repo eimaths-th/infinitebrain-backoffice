@@ -47,6 +47,7 @@ class ReceiptFormController extends Controller
         '18' => 'mathleague-II',
         '19' => 'Huaxiacup-II',
         '20' => 'neos',
+        '21' => 'neos-2',
     );
 
     public function gmec()
@@ -84,6 +85,11 @@ class ReceiptFormController extends Controller
     public function neos()
     {
         return view("receipt_form.neos");
+    }
+
+    public function neos2()
+    {
+        return view("receipt_form.neos-II");
     }
 
     public function huaxiacup_II()
@@ -527,7 +533,7 @@ class ReceiptFormController extends Controller
                 } else {
                     $sdes = 'สมัครติว';
                 }
-            }elseif ($request->get('sfield') == 20) {
+            }elseif ($request->get('sfield') == 20 ||$request->get('sfield') == 21) {
                 # code...
                 $sdes = 'สมัครสอบปกติ';
 

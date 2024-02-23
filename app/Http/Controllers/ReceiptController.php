@@ -48,6 +48,7 @@ class ReceiptController extends Controller
         '18' => 'mathleague-II',
         '19' => 'Huaxiacup-II',
         '20' => 'Neo science',
+        '21' => 'Neo science',
 
 
 
@@ -71,6 +72,7 @@ class ReceiptController extends Controller
         '18' => 'mathleague-II',
         '19' => 'Huaxiacup-II',
         '20' => 'neos',
+        '21' => 'neos-2',
 
     );
     const thmonth = array(
@@ -1221,7 +1223,8 @@ class ReceiptController extends Controller
             ->with(['fontsize' => $request->get('fontsize')])
             ->with(['total_price' => number_format($total_price, 2)])
             ->with(['print_number' =>  $request->get('print_number')])
-            ->with(['fprint_number' =>  sprintf("%02d", $request->get('print_number'))]);
+            ->with(['fprint_number' =>  sprintf("%02d", $request->get('print_number'))]
+            );
     }
 
     public function print_month(Request $request)
