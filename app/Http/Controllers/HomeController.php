@@ -58,7 +58,7 @@ class HomeController extends Controller
         }
         foreach ($students as $student) {
             $statuses = $this->determineStatus($student);
-
+            // dd($statuses);
             foreach ($statuses as $subjectGroup => $status) {
 
                 $existingStatus = Statuslog::where('student_id', $student->id)
@@ -81,9 +81,11 @@ class HomeController extends Controller
                     //     }
                     // }
 
-                    if ($existingStatus->first()->status === 'drop' || $existingStatus->first()->status === 'waitting . . .') {
+                    // if ($existingStatus->first()->status === 'drop' || $existingStatus->first()->status === 'waitting . . .') {
+                    if ($existingStatus->first()->status === 'drop') {
                         $newEnrollmentReceipt = SchoolPrice::where('student_id', $student->id)
                             ->where('qty', '>', 0)
+                            ->where('course_type', 1)
                             ->where('group', $subjectGroup)
                             ->orderBy('id', 'desc')
                             ->first();
@@ -138,7 +140,7 @@ class HomeController extends Controller
 
         $month  = date('m');
         $year   = date('Y');
-        $latestStatusCounts = Statuslog::select('id','group', 'student_id', 'status')
+        $latestStatusCounts = Statuslog::select('id', 'group', 'student_id', 'status')
             ->whereIn('id', function ($query) {
                 $query->select(DB::raw('MAX(id)'))
                     ->from('status_log')
@@ -162,7 +164,7 @@ class HomeController extends Controller
         //     ->orderBy('students.code')
         //     ->get();
 
-        // dd($latestStatusCounts->last());
+        // dd($latestStatusCounts);
 
         // return view('homebk2');
         return view('admin.dashboard', [
@@ -181,11 +183,11 @@ class HomeController extends Controller
         $receipt = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
 
         $ssss = SchoolPrice::where('student_id', $stdId)
+            ->where('course_type', 1)
             ->where('qty', '>', 0)
             ->orderBy('rid')
             ->get();
         $group_scp = $ssss->groupBy('group');
-        // dd($group_scp);
 
         $status = [];
         if (!$group_scp->isEmpty()) {
@@ -214,15 +216,13 @@ class HomeController extends Controller
                     if ($currentMonth->diffInMonths($currentReceiptStartDate) <= 0) {
                         $status[$group] = 'New Student';
                     } else {
-
+                        $submission_date = $school_pice->last()->rec_school->submission_date;
                         if (count($school_pice) > 1) {
-                            $submission_date = $school_pice->last()->rec_school->submission_date;
                             $period = $school_pice->last()->period;
                         } else {
-                            $submission_date = $school_pice->last()->rec_school->submission_date;
                             $period = $school_pice->first()->period;
+                            // dd($count_qty, $school_pice);
                         }
-
 
                         $parts = explode('-', $period);
                         $parts_submission_date = explode('-', $submission_date);
@@ -230,8 +230,6 @@ class HomeController extends Controller
                         $lastTwoParts = array_slice($parts, -2);
                         $firstTwoParts = array_slice($parts, 0, 2);
                         $first_submission_date = array_slice($parts_submission_date, 0, 2);
-
-
 
                         $start_date = implode('-', $firstTwoParts);
                         $end_date = implode('-', $lastTwoParts);
@@ -308,12 +306,7 @@ class HomeController extends Controller
                             // $resume_month = '10';
                             // $resume_month = Carbon::createFromFormat('Y-m', '2023-10');
                             $resume_year = date('Y');
-                            $check_resume = Statuslog::where('student_id', $stdId)
-                                ->where('group', $group)
-                                // ->whereMonth('status_date', $resume_month)
-                                // ->whereYear('status_date', $resume_year)
-                                ->latest()
-                                ->get();
+
                             // dd($check_resume);
                             // if (count($check_resume) > 0 && $check_resume->first()->status == 'resume') {
 
@@ -340,15 +333,20 @@ class HomeController extends Controller
                             //     // dd($stdId, $check_resume);
                             //     // }
                             // }
+                            $check_resume = Statuslog::where('student_id', $stdId)
+                                ->where('group', $group)
+                                // ->whereMonth('status_date', $resume_month)
+                                // ->whereYear('status_date', $resume_year)
+                                ->latest()
+                                ->get();
                             if (count($check_resume) > 0) {
                                 $firstLog = $check_resume->first();
 
                                 if ($firstLog->status == 'resume') {
                                     $status[$group] = 'resume';
-                                } elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+                                }elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
                                     if ($firstLog->status == 'studying . . .') {
                                         $status[$group] = 'studying . . .';
-                                    } else {
                                     }
                                 } else {
                                     if ($firstLog->status == 'waiting . . .') {
@@ -357,7 +355,6 @@ class HomeController extends Controller
                                         $status[$group] = 'studying . . .';
                                     }
                                 }
-                            } else {
                             }
                         }
                     }
@@ -414,5 +411,4 @@ class HomeController extends Controller
 
         return view('addexcel');
     }
-
 }
