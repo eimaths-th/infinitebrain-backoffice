@@ -3,11 +3,19 @@ namespace App\Services;
 
 use App\Models\SchoolPrice;
 use App\Models\Statuslog;
+use App\Models\Student;
 use Carbon\Carbon;
 
 class StatusService
 {
-    public  function updateStatus($students)
+    public function updateStudentStatus()
+    {
+        $students = Student::with('rec_school')->get();
+
+        $updateStatus = $this->updateStatus($students);
+        // return redirect()->route('home');
+    }
+    public function updateStatus($students)
     {
         foreach ($students as $student) {
             $statuses = $this->determineStatus($student);
@@ -58,7 +66,7 @@ class StatusService
             }
         }
     }
-    private function determineStatus($student)
+    public function determineStatus($student)
     {
         $stdId = $student->id;
 
