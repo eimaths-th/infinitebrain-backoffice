@@ -55,9 +55,7 @@ class HomeController extends Controller
             $upg->update(['group' => $group]);
             // dd($upg->id,$group);
         }
-        // $students = Student::with('rec_school')->get();
 
-        // $updateStatus = $this->updateStatus($students);
 
         $month  = date('m');
         $year   = date('Y');
@@ -94,6 +92,13 @@ class HomeController extends Controller
         //     ->get();
 
 
+    }
+    public function updateStudentStatus()
+    {
+        $students = Student::with('rec_school')->get();
+
+        $updateStatus = $this->updateStatus($students);
+        return redirect()->route('home');
     }
     private function updateStatus($students)
     {

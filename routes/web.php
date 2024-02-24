@@ -103,6 +103,7 @@ Route::group(['middleware' => ['auth', 'switch']], function () {
 });
 Route::group(['middleware' => ['auth', 'outhome']], function () {
 
+    Route::get('/updateStudentStatus', [App\Http\Controllers\HomeController::class, 'updateStudentStatus'])->name('updateStudentStatus');
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/Home', [App\Http\Controllers\HomeController::class, 'home2'])->name('home2');
 });
