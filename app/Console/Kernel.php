@@ -23,11 +23,11 @@ class Kernel extends ConsoleKernel
         //$schedule->command('export:database')->dailyAt('16:45');//now 16.10
         // $schedule->command('export:database')->everyMinute();
         $schedule->command('export:database')->dailyAt('19.00');
-        // $schedule->call(function () {
-        //     $students = Student::with('rec_school')->get();
-        //     $statusService = app(StatusService::class);
-        //     $statusService->updateStatus($students);
-        // })->everyMinute(); // for test
+        $schedule->call(function () {
+            $students = Student::with('rec_school')->get();
+            $statusService = app(StatusService::class);
+            $statusService->updateStatus($students);
+        })->everyMinute(); // for test
         // })->dailyAt('7:00');
     }
 
