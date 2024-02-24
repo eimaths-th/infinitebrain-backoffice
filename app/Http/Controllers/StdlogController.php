@@ -619,7 +619,7 @@ class StdlogController extends Controller
             } else {
                 $group = 'Chinese';
             }
-            
+
             $title = $request['paraCheck'];
 
             if ($request['paraCheck'] === 'all') {

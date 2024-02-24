@@ -46,8 +46,7 @@ class HomeController extends Controller
     public function index()
     {
         $this->check_permission();
-        $students = Student::with('rec_school')->get();
-        // $students = Student::where('id', 1)->get();
+        // $students = Student::where('id', 21)->get();
         $school_picei_update_group = SchoolPrice::all();
         // $subject_ids = $school_picei_update_group->pluck('subject')->toArray();
         foreach ($school_picei_update_group as $upg) {
@@ -56,87 +55,9 @@ class HomeController extends Controller
             $upg->update(['group' => $group]);
             // dd($upg->id,$group);
         }
-        foreach ($students as $student) {
-            $statuses = $this->determineStatus($student);
-            // dd($statuses);
-            foreach ($statuses as $subjectGroup => $status) {
+        // $students = Student::with('rec_school')->get();
 
-                $existingStatus = Statuslog::where('student_id', $student->id)
-                    ->where('group', $subjectGroup)
-                    ->latest()
-                    ->get();
-                // dd($existingStatus,$status,$subjectGroup,$student->id);
-
-                if (count($existingStatus) > 0) {
-                    # code...
-                    // if ($existingStatus->first()->status === 'drop') {
-                    //     $newEnrollmentReceipt = Receipt_School::whereRaw("FIND_IN_SET($student->id, REPLACE(pid, '|', ','))")
-                    //         ->orderBy('submission_date', 'desc')
-                    //         ->first();
-                    //     // dd($newEnrollmentReceipt,$status);
-                    //     $submissionDate = Carbon::parse($newEnrollmentReceipt->submission_date);
-                    //     $currentMonth = Carbon::createFromFormat('Y-m', date('Y-m'));
-                    //     if ($currentMonth->diffInMonths($submissionDate) < 1) {
-                    //         $status = 'resume';
-                    //     }
-                    // }
-
-                    // if ($existingStatus->first()->status === 'drop' || $existingStatus->first()->status === 'waitting . . .') {
-                    if ($existingStatus->first()->status === 'drop') {
-                        $newEnrollmentReceipt = SchoolPrice::where('student_id', $student->id)
-                            ->where('qty', '>', 0)
-                            ->where('course_type', 1)
-                            ->where('group', $subjectGroup)
-                            ->orderBy('id', 'desc')
-                            ->first();
-
-                        $startdate = $newEnrollmentReceipt->period;
-                        $parts = explode('-', $startdate);
-                        $lastTwoParts = array_slice($parts, 0, 2);
-                        $start_date = implode('-', $lastTwoParts);
-
-                        $submissionDate = Carbon::parse($start_date);
-                        // $submissionDate = Carbon::parse($newEnrollmentReceipt->period);
-                        $currentMonth = Carbon::createFromFormat('Y-m', date('Y-m'));
-                        if ($currentMonth->diffInMonths($submissionDate) < 1) {
-                            $status = 'resume';
-                        }
-                    }
-                    // dd($newEnrollmentReceipt, $status, $start_date);
-                }
-                $currentMonthYear = date('Y-m');
-
-                $status_date = $existingStatus->first()->status_date ?? '';
-                $status_date_year_month = date('Y-m', strtotime($status_date));
-
-                $select_status_date_year_month = date('Y-m', strtotime($currentMonthYear));
-                // dd($status_date_year_month, $select_status_date_year_month);
-
-                if (count($existingStatus) < 1) {
-                    Statuslog::create([
-                        'student_id' => $student->id,
-                        'nick_name' => $student->nick_name,
-                        'group' => $subjectGroup,
-                        'status' => $status,
-                        'status_date' => now(),
-                    ]);
-                } elseif ($existingStatus->first()->status === $status && $existingStatus->first()->group === $subjectGroup && $status_date_year_month == $select_status_date_year_month) {
-                } else {
-                    Statuslog::create([
-                        'student_id' => $student->id,
-                        'nick_name' => $student->nick_name,
-                        'group' => $subjectGroup,
-                        'status' => $status,
-                        'status_date' => now(),
-                    ]);
-                }
-                $lastStatusLog = $student->status_log->last();
-                if ($lastStatusLog) {
-                    $student->update(['status' => $lastStatusLog->status]);
-                }
-            }
-        }
-
+        // $updateStatus = $this->updateStatus($students);
 
         $month  = date('m');
         $year   = date('Y');
@@ -151,7 +72,15 @@ class HomeController extends Controller
             ->orderBy('group')
 
             ->get();
+        // dd($latestStatusCounts);
 
+        return view('admin.dashboard', [
+
+            'latestStatusCounts' => $latestStatusCounts,
+            // 'latestStatusByStudent' => $latestStatusByStudent,
+            // 'select_status' => $select_status,
+
+        ]);
         // $latestStatusByStudent = Statuslog::select('status_log.student_id', 'status_log.group', 'status_log.status', 'status_log.status_date', 'status_log.nick_name')
         //     ->whereIn('status_log.id', function ($query) {
         //         $query->select(DB::raw('MAX(id)'))
@@ -164,23 +93,62 @@ class HomeController extends Controller
         //     ->orderBy('students.code')
         //     ->get();
 
-        // dd($latestStatusCounts);
 
-        // return view('homebk2');
-        return view('admin.dashboard', [
-
-            'latestStatusCounts' => $latestStatusCounts,
-            // 'latestStatusByStudent' => $latestStatusByStudent,
-            // 'select_status' => $select_status,
-
-        ]);
     }
+    private function updateStatus($students)
+    {
+        foreach ($students as $student) {
+            $statuses = $this->determineStatus($student);
+            $cl = 0;
+            foreach ($statuses as $statuse) {
+                foreach ($statuse as $subjectGroup => $statu) {
 
+                    $schp_id = $statu['schoolprice_id'];
+                    $status = $statu['status'];
+
+                    $existingStatus = Statuslog::where('student_id', $student->id)
+                        ->where('group', $subjectGroup)
+                        ->latest()
+                        ->get();
+                    $currentMonthYear = date('Y-m');
+
+                    $status_date = $existingStatus->first()->status_date ?? '';
+                    $status_date_year_month = date('Y-m', strtotime($status_date));
+
+                    $select_status_date_year_month = date('Y-m', strtotime($currentMonthYear));
+
+                    if (count($existingStatus) < 1) {
+                        Statuslog::create([
+                            'student_id' => $student->id,
+                            'schoolprice_id' => $schp_id,
+                            'nick_name' => $student->nick_name,
+                            'group' => $subjectGroup,
+                            'status' => $status,
+                            'status_date' => now(),
+                        ]);
+                    } elseif ($existingStatus->first()->status === $status && $existingStatus->first()->group === $subjectGroup && $status_date_year_month == $select_status_date_year_month) {
+                    } else {
+                        Statuslog::create([
+                            'student_id' => $student->id,
+                            'schoolprice_id' => $schp_id,
+                            'nick_name' => $student->nick_name,
+                            'group' => $subjectGroup,
+                            'status' => $status,
+                            'status_date' => now(),
+                        ]);
+                    }
+                    $lastStatusLog = $student->status_log->last();
+                    if ($lastStatusLog) {
+                        $student->update(['status' => $lastStatusLog->status]);
+                    }
+                }
+                $cl++;
+            }
+        }
+    }
     private function determineStatus($student)
     {
         $stdId = $student->id;
-        // $stdId = 161;
-        $receipt = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
 
         $ssss = SchoolPrice::where('student_id', $stdId)
             ->where('course_type', 1)
@@ -188,182 +156,137 @@ class HomeController extends Controller
             ->orderBy('rid')
             ->get();
         $group_scp = $ssss->groupBy('group');
-
         $status = [];
+        $statusss = [];
+
         if (!$group_scp->isEmpty()) {
+
             foreach ($group_scp as $group => $school_pice) {
-                $startdate = null;
-                // $submission_date = $school_pice->rec_school->submission_date;
-                if (!$school_pice->isEmpty()) {
-                    $startdate = $school_pice->first()->period;
-                }
-
-                $parts = explode('-', $startdate);
-                $lastTwoParts = array_slice($parts, 0, 2);
-                $start_date = implode('-', $lastTwoParts);
-                $currentReceiptStartDate = Carbon::parse($start_date);
-
+                // $current_Month = Carbon::createFromFormat('Y-m', '2024-05');
                 $current_Month = date('Y-m');
-                // $current_Month = Carbon::createFromFormat('Y-m', '2023-09');
-                $currentMonth = Carbon::parse($current_Month);
-
-                // $count_receipt = count($receipt);
+                $currentMonth = Carbon::parse($current_Month)->firstOfMonth();
+                $count_qty = count($school_pice);
+                $count_rec = 0;
+                $monthsDifference = 0;
+                $datepr = [];
+                $dateDrop = '';
+                $dateResume = '';
+                $firstEndMonth = '';
                 $count_qty = count($school_pice);
 
-                if ($count_qty < 1) {
-                    $status[$group] = 'None Receipt';
-                } elseif ($count_qty == 1) {
-                    if ($currentMonth->diffInMonths($currentReceiptStartDate) <= 0) {
-                        $status[$group] = 'New Student';
+                foreach ($school_pice as $school_pice_II) {
+                    # code...
+                    $submission_date = $school_pice_II->rec_school->submission_date;
+                    $period = $school_pice_II->period;
+
+                    $periodd = explode(' - ', $period);
+                    if (count($periodd) == 1) {
+                        $periods = explode('-', $period);
+                        $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
+                        $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
                     } else {
-                        $submission_date = $school_pice->last()->rec_school->submission_date;
-                        if (count($school_pice) > 1) {
-                            $period = $school_pice->last()->period;
-                        } else {
-                            $period = $school_pice->first()->period;
-                            // dd($count_qty, $school_pice);
-                        }
 
-                        $parts = explode('-', $period);
-                        $parts_submission_date = explode('-', $submission_date);
-
-                        $lastTwoParts = array_slice($parts, -2);
-                        $firstTwoParts = array_slice($parts, 0, 2);
-                        $first_submission_date = array_slice($parts_submission_date, 0, 2);
-
-                        $start_date = implode('-', $firstTwoParts);
-                        $end_date = implode('-', $lastTwoParts);
-                        $submissionDate = implode('-', $first_submission_date);
-
-                        $currentReceiptStatDate = Carbon::parse($start_date);
-                        $currentReceiptEndDate = Carbon::parse($end_date);
-                        $currentReceiptsubmission_date = Carbon::parse($submissionDate);
-
-                        if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate)) {
-                            //พ้นสภาพนักเรียน
-                            // $status = 'พ้นสภาพนักเรียน';
-                            $status[$group] = 'drop';
-                        } else {
-                            if ($currentMonth->greaterThan($currentReceiptEndDate)) {
-                                //กำลังยุติการการเรียน
-                                $status[$group] = 'Termination of study';
-                            } else {
-
-                                if ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
-                                    # code...
-                                    //แก้บัค 22/09/2023
-                                    $status[$group] = 'waitting . . .';
-                                } else {
-                                    $status[$group] = 'studying . . .';
-                                }
-                            }
-                        }
-                        // $statuses[$group] = 'old Student';
-                    }
-                } elseif ($count_qty > 1) {
-
-                    if (count($school_pice) > 1) {
-                        // $test1 = $school_pice->last()->rec_school->id;
-                        // $test2 = $school_pice->last()->rid;
-                        // $test3 = $school_pice->last()->rec_school->submission_date;
-                        $submission_date = $school_pice->last()->rec_school->submission_date;
-                        $period = $school_pice->last()->period;
-                    } else {
-                        // $test1 = $school_pice->last()->rec_school->id;
-                        // $test2 = $school_pice->last()->rid;
-                        // $test3 = $school_pice->last()->rec_school->submission_date;
-                        $submission_date = $school_pice->last()->rec_school->submission_date;
-                        $period = $school_pice->last()->period;
+                        $startMonth = Carbon::parse($periodd[0])->format('Y-m');
+                        $endMonth = Carbon::parse($periodd[1])->format('Y-m');
                     }
 
-                    $parts = explode('-', $period);
-                    $parts_submission_date = explode('-', $submission_date);
+                    if ($count_rec > 0) {
 
-                    $lastTwoParts = array_slice($parts, -2);
-                    $firstTwoParts = array_slice($parts, 0, 2);
-                    $first_submission_date = array_slice($parts_submission_date, 0, 2);
+                        $monthsDifference = Carbon::parse($firstEndMonth)->diffInMonths(Carbon::parse($startMonth));
+                    }
 
-                    $start_date = implode('-', $firstTwoParts);
-                    $end_date = implode('-', $lastTwoParts);
-                    $submissionDate = implode('-', $first_submission_date);
+                    if ($monthsDifference > 1) {
 
-                    $currentReceiptStatDate = Carbon::parse($start_date);
-                    $currentReceiptEndDate = Carbon::parse($end_date);
-                    $currentReceiptsubmission_date = Carbon::parse($submissionDate);
+                        $dateDrop = $firstEndMonth;
+                        $dateResume = $startMonth;
+                    }
+                    $firstEndMonth = $endMonth;
+                    $count_rec++;
 
-                    if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate)) {
+                    $currentReceiptStatDate = Carbon::parse($startMonth);
+                    // $currentReceiptEndDate = Carbon::parse($endMonth);
+                    $currentReceiptEndDate = Carbon::parse($firstEndMonth);
+                    $currentReceiptsubmission_date = Carbon::parse($submission_date)->firstOfMonth();
+
+                    if ($count_qty == 1 && $currentMonth->diffInMonths($currentReceiptStatDate) <= 0) {
+                        $status[$group] = [
+                            'status' => 'New Student',
+                            'schoolprice_id' => $school_pice_II->id
+                        ];
+                        // dd('test',$group_scp, $school_pice, $school_pice_II, $status);
+                    } elseif ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate)) {
                         //พ้นสภาพนักเรียน
-                        // $status = 'พ้นสภาพนักเรียน';
-                        $status[$group] = 'drop';
+                        $status[$group] = [
+                            'status' => 'drop',
+                            'schoolprice_id' => $school_pice_II->id
+                        ]; // ['drop', $school_pice_I->id];
+
                     } else {
                         if ($currentMonth->greaterThan($currentReceiptEndDate)) {
                             //กำลังยุติการการเรียน
-                            // dd($end_date);
-                            $status[$group] = 'Termination of study';
+                            $status[$group] = [
+                                'status' => 'Termination of study',
+                                'schoolprice_id' => $school_pice_II->id
+                            ]; // ['Termination of study', $school_pice_I->id];
+
                         } else {
                             //กำลังเรียนอยู่
-                            $resume_month = date('m');
-                            // $resume_month = '10';
-                            // $resume_month = Carbon::createFromFormat('Y-m', '2023-10');
-                            $resume_year = date('Y');
-
-                            // dd($check_resume);
-                            // if (count($check_resume) > 0 && $check_resume->first()->status == 'resume') {
-
-                            //     $status[$group] = 'resume';
-                            // } elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
-                            //     //แก้บัค 22/09/2023
-                            //     if ($check_resume->first()->status == 'studying . . .') {
-                            //         $status[$group] = 'studying . . .';
-                            //     } else {
-                            //     }
-                            //     // $status[$group] = 'waitting . . .';
-
-                            //     // dd($check_resume,$stdId,$status,$school_pice);
-                            // } else {
-                            //     // dd($check_resume,$check_resume->first()->status);
-
-                            //     // if ($check_resume && $check_resume->first() && property_exists($check_resume->first(), 'status')) {
-                            //     if ($check_resume->first()->status == 'waiting . . .') {
-                            //         $status[$group] = 'waiting . . .';
-                            //     } else {
-                            //         $status[$group] = 'studying . . .';
-                            //     }
-                            //     // } else {
-                            //     // dd($stdId, $check_resume);
-                            //     // }
-                            // }
                             $check_resume = Statuslog::where('student_id', $stdId)
                                 ->where('group', $group)
                                 // ->whereMonth('status_date', $resume_month)
                                 // ->whereYear('status_date', $resume_year)
                                 ->latest()
                                 ->get();
+
+
                             if (count($check_resume) > 0) {
                                 $firstLog = $check_resume->first();
+                                if ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
 
-                                if ($firstLog->status == 'resume') {
-                                    $status[$group] = 'resume';
-                                }elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
-                                    if ($firstLog->status == 'studying . . .') {
-                                        $status[$group] = 'studying . . .';
-                                    }
+                                    $status[$group] = [
+                                        'status' => 'waitting . . .',
+                                        'schoolprice_id' => $school_pice_II->id
+                                    ]; // ['waitting . . .', $school_pice_I->id];
+
                                 } else {
-                                    if ($firstLog->status == 'waiting . . .') {
-                                        $status[$group] = 'waiting . . .';
+                                    if ($dateResume) {
+                                        $submissionDateResume = Carbon::parse($dateResume);
+
+                                        if ($currentMonth->diffInMonths($submissionDateResume) > 0) {
+                                            $status[$group] = [
+                                                'status' => 'studying . . .',
+                                                'schoolprice_id' => $school_pice_II->id
+                                            ]; // ['studying . . .', $school_pice_I->id];
+
+                                        } else {
+                                            $status[$group] = [
+                                                'status' => 'resume',
+                                                'schoolprice_id' => $school_pice_II->id
+                                            ]; // ['resume', $school_pice_I->id];
+
+                                        }
                                     } else {
-                                        $status[$group] = 'studying . . .';
+                                        $status[$group] = [
+                                            'status' => 'studying . . .',
+                                            'schoolprice_id' => $school_pice_II->id
+                                        ];
                                     }
                                 }
                             }
                         }
                     }
-                    // dd( $end_date,$school_pice,$student);
+                    $statusss[] = $status;
                 }
             }
         } else {
-            $status['N'] = 'None Receipt';
+            $status['N'] = [
+                'status' => 'None Receipt',
+                'schoolprice_id' => null
+            ];
+            $statusss[] = $status;
         }
+
+        $status = $statusss;
 
         return $status;
     }
@@ -411,4 +334,6 @@ class HomeController extends Controller
 
         return view('addexcel');
     }
+    //save code
+
 }
