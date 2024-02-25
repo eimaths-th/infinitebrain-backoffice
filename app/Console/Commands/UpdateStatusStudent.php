@@ -20,7 +20,6 @@ class UpdateStatusStudent extends Command
         // Your logic to update student status
         $students = Student::with('rec_school')->get();
 
-
         $this->updateStatus($students);
 
         $this->info('Student status updated successfully.');
