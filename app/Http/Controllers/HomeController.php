@@ -72,8 +72,8 @@ class HomeController extends Controller
             ->get();
         // dd($latestStatusCounts);
 
-        // $students = Student::with('rec_school')->get();
-        $students = Student::where('id', 161)->get();
+        $students = Student::with('rec_school')->get();
+        // $students = Student::where('id', 161)->get();
         $updateStatus = $this->updateStatus($students);
         return view('admin.dashboard', [
 
