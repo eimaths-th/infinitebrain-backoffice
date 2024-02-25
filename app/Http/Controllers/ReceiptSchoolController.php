@@ -1767,6 +1767,9 @@ class ReceiptSchoolController extends Controller
             // print_r($rrtype);
             // exit();
             $rdata->save();
+            $students = Student::where('id', $std_id[$xx])->get();
+
+            $updateStatus = $this->updateStatus($students);
         }
 
         return response()->json(['success' => 'Receipt updated successfully']);
@@ -1921,11 +1924,20 @@ class ReceiptSchoolController extends Controller
                                 $firstLog = $check_resume->first();
                                 if ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
 
-                                    $status[$group] = [
-                                        'status' => 'waitting . . .',
-                                        'schoolprice_id' => $school_pice_II->id
-                                    ]; // ['waitting . . .', $school_pice_I->id];
+                                    if ($firstLog->status === 'studying . . .') {
+                                        # code...
+                                        $status[$group] = [
+                                            'status' => 'studying . . .',
+                                            'schoolprice_id' => $school_pice_II->id
+                                        ]; // ['studying . . .', $school_pice_I->id];
 
+                                    } else {
+                                        $status[$group] = [
+                                            'status' => 'waitting . . .',
+                                            'schoolprice_id' => $school_pice_II->id
+
+                                        ]; // ['waitting . . .', $school_pice_I->id];
+                                    }
                                 } else {
                                     if ($dateResume) {
                                         $submissionDateResume = Carbon::parse($dateResume);

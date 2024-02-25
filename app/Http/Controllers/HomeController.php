@@ -73,6 +73,7 @@ class HomeController extends Controller
         // dd($latestStatusCounts);
 
         $students = Student::with('rec_school')->get();
+        // $students = Student::where('id', 362)->get();
         $updateStatus = $this->updateStatus($students);
         return view('admin.dashboard', [
 
@@ -245,16 +246,24 @@ class HomeController extends Controller
                                 ->latest()
                                 ->get();
 
-
                             if (count($check_resume) > 0) {
+
                                 $firstLog = $check_resume->first();
                                 if ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+                                    if ($firstLog->status === 'studying . . .') {
+                                        # code...
+                                        $status[$group] = [
+                                            'status' => 'studying . . .',
+                                            'schoolprice_id' => $school_pice_II->id
+                                        ]; // ['studying . . .', $school_pice_I->id];
 
-                                    $status[$group] = [
-                                        'status' => 'waitting . . .',
-                                        'schoolprice_id' => $school_pice_II->id
-                                    ]; // ['waitting . . .', $school_pice_I->id];
+                                    } else {
+                                        $status[$group] = [
+                                            'status' => 'waitting . . .',
+                                            'schoolprice_id' => $school_pice_II->id
 
+                                        ]; // ['waitting . . .', $school_pice_I->id];
+                                    }
                                 } else {
                                     if ($dateResume) {
                                         $submissionDateResume = Carbon::parse($dateResume);
