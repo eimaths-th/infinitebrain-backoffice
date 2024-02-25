@@ -24,8 +24,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         //$schedule->command('export:database')->dailyAt('16:45');//now 16.10
-        // $schedule->command('export:database')->everyMinute();
-        $schedule->command('export:database')->dailyAt('19.00');
+        $schedule->command('export:database')->everyMinute();
+        // $schedule->command('export:database')->dailyAt('19.00');
         // $schedule->command('updateStatus:student')->everyMinute(); // for test
         // $schedule->command('updateStatus2:student')->everyMinute(); // for test
 
