@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('export:database')->everyTwoMinutes();
         // $schedule->command('export:database')->dailyAt('19.00');
         // $schedule->command('updateStatus:student')->everyTwoMinutes()->appendOutputTo('/storage/logs/worker.log'); // for test
-        $schedule->command('updateStatus:student')->everyTwoMinutes(); // for test
+        $schedule->command('updateStatus:student')->everyThreeMinutes(); // for test
         // $schedule->command('updateStatus2:student')->everyMinute(); // for test
 
         // })->dailyAt('7:00');
