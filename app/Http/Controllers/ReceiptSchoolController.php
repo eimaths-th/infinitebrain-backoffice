@@ -1919,11 +1919,11 @@ class ReceiptSchoolController extends Controller
                                 ->latest()
                                 ->get();
 
-
                             if (count($check_resume) > 0) {
+
                                 $firstLog = $check_resume->first();
                                 if ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
-
+                                    //จ่ายในเดือนปัจจุบัน                                                      //วันที่จ่ายน้อยกว่าวันที่เริ่มเรียน
                                     if ($monthsDifference == 1) {
                                         $status[$group] = [
                                             'status' => 'studying . . .',
@@ -1934,22 +1934,16 @@ class ReceiptSchoolController extends Controller
                                         $status[$group] = [
                                             'status' => 'waitting . . .',
                                             'schoolprice_id' => $school_pice_II->id
-                                        ]; // ['waitting . . .', $school_pice_I->id];
+
+                                        ];
                                     }
-                                    // if ($firstLog->status == 'studying . . .') {
-                                    //     # code...
-                                    //     $status[$group] = [
-                                    //         'status' => 'studying . . .',
-                                    //         'schoolprice_id' => $school_pice_II->id
-                                    //     ]; // ['studying . . .', $school_pice_I->id];
 
-                                    // } else {
-                                    //     $status[$group] = [
-                                    //         'status' => 'waitting . . .',
-                                    //         'schoolprice_id' => $school_pice_II->id
+                                    // dd($check_resume, $firstLog, $firstLog->status, $status, $currentReceiptEndDate);
 
-                                    //     ]; // ['waitting . . .', $school_pice_I->id];
-                                    // }
+                                    // $status[$group] = [
+                                    //     'schoolprice_id' => $school_pice_II->id
+
+                                    // ];
                                 } else {
                                     if ($dateResume) {
                                         $submissionDateResume = Carbon::parse($dateResume);

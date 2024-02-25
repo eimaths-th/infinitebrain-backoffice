@@ -73,7 +73,7 @@ class HomeController extends Controller
         // dd($latestStatusCounts);
 
         $students = Student::with('rec_school')->get();
-        // $students = Student::where('id', 161)->get();
+        // $students = Student::where('id', 362)->get();
         $updateStatus = $this->updateStatus($students);
         return view('admin.dashboard', [
 
@@ -250,7 +250,7 @@ class HomeController extends Controller
 
                                 $firstLog = $check_resume->first();
                                 if ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
-                                    //จ่ายในเดือนปัจจุบัน                                                                วันที่จ่ายน้อยกว่าวันที่เริ่มเรียน
+                                    //จ่ายในเดือนปัจจุบัน                                                      //วันที่จ่ายน้อยกว่าวันที่เริ่มเรียน
                                     if ($monthsDifference == 1) {
                                         $status[$group] = [
                                             'status' => 'studying . . .',
@@ -262,12 +262,12 @@ class HomeController extends Controller
                                             'status' => 'waitting . . .',
                                             'schoolprice_id' => $school_pice_II->id
 
-                                        ]; // ['waitting . . .', $school_pice_I->id];
+                                        ];
                                     }
+
                                     // dd($check_resume, $firstLog, $firstLog->status, $status, $currentReceiptEndDate);
 
                                     // $status[$group] = [
-                                    //     'status' => 'waitting . . .',
                                     //     'schoolprice_id' => $school_pice_II->id
 
                                     // ];
