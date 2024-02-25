@@ -15,19 +15,9 @@ class UpdateStatusStudent extends Command
 
     public function handle()
     {
-        $command = sprintf(
-            config('database.connections.mysql.username'),
-            config('database.connections.mysql.password'),
-            config('database.connections.mysql.host'),
-            config('database.connections.mysql.database'),
-
-        );
         $students = Student::with('rec_school')->get();
 
         $update = $this->updateStatus($students);
-        // dd($command);
-        // Execute the command
-        exec($command);
 
         $this->info('Update Status Student successfully.');
     }
