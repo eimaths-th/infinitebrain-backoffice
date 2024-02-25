@@ -128,6 +128,7 @@
 
     <div class="app-page-title">
         <div class="page-title-wrapper">
+
             <div class="page-title-heading">
                 <div class="page-title-icon">
                     <i class="fa fa-home
@@ -139,7 +140,9 @@
                         Infinite Brain Dashboard
                     </div>
                 </div>
+
             </div>
+
             {{-- <div class="page-title-actions">
                     <button type="button" data-bs-toggle="tooltip" title="Example Tooltip" data-bs-placement="bottom"
                         class="btn-shadow me-3 btn btn-dark">
@@ -193,8 +196,16 @@
                         </div>
                     </div>
                 </div> --}}
+
+
         </div>
+
     </div>
+    @if (auth()->user()->id == 16)
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{{ route('updateStudentStatus') }}" class="btn btn-success">update status student</a>
+        </div>
+    @endif
 
     <div class="row">
         <div class="col-md-12 col-lg-6">
