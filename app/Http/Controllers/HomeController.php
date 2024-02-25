@@ -125,6 +125,14 @@ class HomeController extends Controller
 
                     $select_status_date_year_month = date('Y-m', strtotime($currentMonthYear));
 
+                    $checkDuplicate = $existingStatus = Statuslog::where([
+                        'student_id' => $student->id,
+                        'schoolprice_id' => $schp_id,
+                        'group' => $subjectGroup,
+                        'status' => $status,
+                    ])->get();
+                    // dd($existingStatus);
+
                     if (count($existingStatus) < 1) {
                         Statuslog::create([
                             'student_id' => $student->id,
@@ -135,6 +143,8 @@ class HomeController extends Controller
                             'status_date' => now(),
                         ]);
                     } elseif ($existingStatus->first()->status === $status && $existingStatus->first()->group === $subjectGroup && $status_date_year_month == $select_status_date_year_month) {
+                    } elseif ($checkDuplicate->count() > 0) {
+                        # code...
                     } else {
                         Statuslog::create([
                             'student_id' => $student->id,
