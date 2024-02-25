@@ -14,10 +14,17 @@ class ExportDatabase extends Command
         // Use your preferred method to export the database
         // For example, using mysqldump
         $datetime = now()->format('Y-m-d_H-i-s');
-        $outputPath = storage_path("app/database_backup_$datetime.sql");
+        $date = now()->format('Y-m');
+
+        // Create a new directory based on the current date
+        $backupDirectory = storage_path("app/$date");
+        if (!file_exists($backupDirectory)) {
+            mkdir($backupDirectory, 0777, true);
+        }
+
+        $outputPath = "$backupDirectory/database_backup_$datetime.sql";
 
         $command = sprintf(
-            //'"C:\xampp\mysql\bin\mysqldump.exe" -u%s -p%s --skip-password -h %s %s > %s',
             'mysqldump --user=%s --password=%s --host=%s %s > %s',
             config('database.connections.mysql.username'),
             config('database.connections.mysql.password'),
@@ -32,4 +39,5 @@ class ExportDatabase extends Command
 
         $this->info('Database exported successfully.');
     }
+
 }
