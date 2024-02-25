@@ -8,18 +8,22 @@ use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
-class UpdateStatusStudent extends Command
+
+
+class UpdateStudentStatus extends Command
 {
-    protected $signature = 'updateStatus:student';
-    protected $description = 'Update Status Student';
+    protected $signature = 'update:student-status';
+    protected $description = 'Update student status';
 
     public function handle()
     {
+        // Your logic to update student status
         $students = Student::with('rec_school')->get();
 
-        $update = $this->updateStatus($students);
 
-        $this->info('Update Status Student successfully.');
+        $this->updateStatus($students);
+
+        $this->info('Student status updated successfully.');
     }
     public function updateStatus($students)
     {

@@ -15,13 +15,18 @@ class Kernel extends ConsoleKernel
      * @return void
      */
 
+
+    protected $commands = [
+        Commands\UpdateStudentStatus::class,
+    ];
+
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
         //$schedule->command('export:database')->dailyAt('16:45');//now 16.10
         // $schedule->command('export:database')->everyMinute();
         $schedule->command('export:database')->dailyAt('19.00');
-        $schedule->command('updateStatus:student')->everyMinute();// for test
+        $schedule->command('update:student-status')->everyMinute(); // for test
 
         // })->dailyAt('7:00');
     }
