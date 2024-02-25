@@ -25,7 +25,7 @@ class UpdateStatusStudent extends Command
 
         $this->info('Student status updated successfully.');
     }
-    public function updateStatus($students)
+    private function updateStatus($students)
     {
         foreach ($students as $student) {
             $statuses = $this->determineStatus($student);
@@ -76,7 +76,7 @@ class UpdateStatusStudent extends Command
             }
         }
     }
-    public function determineStatus($student)
+    private function determineStatus($student)
     {
         $stdId = $student->id;
 
@@ -168,16 +168,31 @@ class UpdateStatusStudent extends Command
                                 ->latest()
                                 ->get();
 
-
                             if (count($check_resume) > 0) {
+
                                 $firstLog = $check_resume->first();
                                 if ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+                                    //จ่ายในเดือนปัจจุบัน                                                      //วันที่จ่ายน้อยกว่าวันที่เริ่มเรียน
+                                    if ($monthsDifference == 1) {
+                                        $status[$group] = [
+                                            'status' => 'studying . . .',
+                                            'schoolprice_id' => $school_pice_II->id
+                                        ]; // ['studying . . .', $school_pice_I->id];
 
-                                    $status[$group] = [
-                                        'status' => 'waitting . . .',
-                                        'schoolprice_id' => $school_pice_II->id
-                                    ]; // ['waitting . . .', $school_pice_I->id];
+                                    } else {
+                                        $status[$group] = [
+                                            'status' => 'waitting . . .',
+                                            'schoolprice_id' => $school_pice_II->id
 
+                                        ];
+                                    }
+
+                                    // dd($check_resume, $firstLog, $firstLog->status, $status, $currentReceiptEndDate);
+
+                                    // $status[$group] = [
+                                    //     'schoolprice_id' => $school_pice_II->id
+
+                                    // ];
                                 } else {
                                     if ($dateResume) {
                                         $submissionDateResume = Carbon::parse($dateResume);
@@ -220,4 +235,5 @@ class UpdateStatusStudent extends Command
 
         return $status;
     }
+
 }
