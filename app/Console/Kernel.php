@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
 
 
     protected $commands = [
-        Commands\UpdateStudentStatus::class,
+        Commands\UpdateStudentStatusCommand ::class,
     ];
 
     protected function schedule(Schedule $schedule)

@@ -10,7 +10,7 @@ use Illuminate\Console\Command;
 
 
 
-class UpdateStudentStatus extends Command
+class UpdateStudentStatusCommand extends Command
 {
     protected $signature = 'update:student-status';
     protected $description = 'Update student status';
