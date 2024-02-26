@@ -64,6 +64,10 @@
             border-right: 1px solid rgb(7, 7, 7);
         }
 
+        .tbr table td.activedright {
+            border-right: 1px solid rgb(7, 7, 7);
+        }
+
         .tbr table td.active_left {
             border-left: 2px solid rgb(138, 175, 61);
         }
@@ -78,6 +82,10 @@
 
         .tbr table td.activebottomd {
             border-bottom: 1px solid rgb(7, 7, 7);
+        }
+
+        .text-right {
+            text-align: right;
         }
     </style>
     {{-- <style>
@@ -119,7 +127,8 @@
                             <td align="center" width="10%" class="active_left grey"></td>
                             <td align="center" width="80%" colspan="5">
 
-                                <font class="grey">Record Time Infinite Brain </font> {{ $name }} {{ date('F-Y', strtotime("$year-$month")) }}<b>
+                                <font class="grey"> Record Time Infinite Brain </font> {{ $name }}
+                                {{ date('F-Y', strtotime("$year-$month")) }}<b>
                                 </b>
                             </td>
                             {{-- <td align="center" width="10%"><b></b></td>
@@ -155,6 +164,12 @@
                         {{-- </thead> --}}
 
                         {{-- <tbody> --}}
+                        @php
+                            $resul_late_time = 0;
+                            $resul_late = 0;
+                            $resul_missing = 0;
+
+                        @endphp
                         @foreach ($rec_times as $key => $rec_time)
                             @php
 
@@ -248,14 +263,30 @@
                                                 if ($rec_time->late_time) {
                                                     $text_late = '| สาย : ' . $rec_time->late_time . ' นาที';
                                                 }
+                                                $resul_late_time += $rec_time->late_time;
+
+                                                // $resul_missing = 0;
+
                                             @endphp
                                             {{ $rec_time->explain }} {{ $text_late }}
                                         </font>
                                     </b>
                                 </td>
                             </tr>
+                            @php
+                                if ($rec_time->status == 5) {
+                                    # code...
+                                    $resul_late++;
+                                }
+                                if ($rec_time->status == 13) {
+                                    # code...
+                                    // $resul_late++;
+                                    $resul_missing++;
+                                }
+                            @endphp
                         @endforeach
-                        <tr class="activeda" height="15">
+
+                        {{-- <tr class="activeda" height="15">
                             <td align="center" width="1%" class="activeda">
 
                             </td>
@@ -277,7 +308,7 @@
                             <td align="center" class="activeda">
 
                             </td>
-                        </tr>
+                        </tr> --}}
                         {{-- </tbody> --}}
 
 
@@ -293,6 +324,38 @@
                             </td>
                         </tr> --}}
 
+                    </table>
+
+                    <table align="center" width="98%" cellpadding="0" cellspacing="0">
+                        <tr class="activedab" height="30">
+                            <td width="15%" class="actived" align='left'>ลาป่วย : </td>
+
+                            <td width="15%" align='left'> ลากิจ : </td>
+                            <td width="15%" align='left'> ลาพักร้อน : </td>
+                            <td width="15%" align='left'> ขาดงาน : {{ $resul_missing }}</td>
+                            <td align='right' width="15%"> สาย : {{ $resul_late }} ครั้ง</td>
+                            <td align='center' width="15%" class="activedright">
+                                <span align="left">{{ $resul_late_time }}</span>
+                                <span align="right">นาที</span>
+                            </td>
+
+                        </tr>
+                        <tr class="actived" align='left' height="30">
+                            {{-- <td>ไม่สแกนเข้า</td>
+                            <td>ไม่สแกนออก</td>
+                            <td>ออกก่อน</td>
+                            <td>ลาครึ่งวัน</td>
+                            <td>OT</td>
+                            <td>ชดเชย</td> --}}
+
+                            <td width="15%" class="actived" align='left'>ไม่สแกนเข้า : </td>
+                            <td width="15%" align='left'> ไม่สแกนออก : </td>
+                            <td width="15%" align='left'> ออกก่อน : </td>
+                            <td width="15%" align='left'> ลาครึ่งวัน : </td>
+                            <td align='center' width="15%"> OT : </td>
+                            <td align='center' width="15%" class="activedright"> ชดเชย :
+                            </td>
+                        </tr>
                     </table>
 
                     <br><br><br>

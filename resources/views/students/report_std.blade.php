@@ -249,10 +249,13 @@
                             <tr>
                                 <td class="text-center">{{ $key + 1 }}</td>
                                 <td class="text-center">{{ $status->student->code }}</td>
-                                <td>{{ $status->nick_name }}</td>
                                 <td>
-
-
+                                    <a target="_blank" class="text-dark" href="{{ route('students.show', $status->student_id) }}">
+                                        {{ $status->student->full_name }} ( {{ $status->nick_name }} )
+                                    </a>
+                                    {{-- {{ $status->nick_name }} --}}
+                                </td>
+                                <td>
 
                                     @if ($status->group === 'M')
                                         Math
