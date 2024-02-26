@@ -35,6 +35,7 @@ class Receipt_Customer_RunningNumber extends Model
         '17',
         '18',
         '19',
+        '20',
         '21',
 
     ];
