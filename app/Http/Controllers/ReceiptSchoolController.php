@@ -1073,7 +1073,7 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['quantity'] =  $qty; //$dresult['qty'];
                 $receipt_detail_arr[$x]['discount'] = number_format($dresult['discount'], 2);
                 $receipt_detail_arr[$x]['book'] = ($dresult['book']);
-                $receipt_detail_arr[$x]['bookprice'] = number_format($dresult['bookprice'], 2);
+                $receipt_detail_arr[$x]['bookprice'] = $dresult['bookprice'];
                 $receipt_detail_arr[$x]['receipt_number'] = ($dresult['receipt_number']);
                 $receipt_detail_arr[$x]['period'] = $dresult['period'];
             }
@@ -1325,7 +1325,10 @@ class ReceiptSchoolController extends Controller
 
         // dd($data);
 
-        if ($course_type == '1' && $sub_id < 7) {
+        if (
+            $course_type == '1'
+            // && $sub_id < 7
+        ) {
             # code...
             $output = "";
             $output = '<input type="text" id="book_price" name="book_price" class="form-control has-feedback-left" value="' . ((int)$select_list * (int)$book) * $booklet . ' "readonly >
@@ -1735,6 +1738,9 @@ class ReceiptSchoolController extends Controller
                     'media_name' => $media_name[$xx],
                     'media_price' => $media_price[$xx],
                     'entrance_fee' => $entrance_fee[$xx],
+                    'approv_id' => auth()->user()->id,
+                    'approv_name' => auth()->user()->name,
+
                     //'amount' => $request->get('book_old_price'),
                 ]);
             } else {
@@ -1758,6 +1764,8 @@ class ReceiptSchoolController extends Controller
                     'media_name' => $media_name[$xx],
                     'media_price' => $media_price[$xx],
                     'entrance_fee' => $entrance_fee[$xx],
+                    'approv_id' => auth()->user()->id,
+                    'approv_name' => auth()->user()->name,
 
                     //'amount' => $request->get('book_old_price'),
                 ]);
@@ -1816,7 +1824,7 @@ class ReceiptSchoolController extends Controller
                     } elseif ($existingStatus->first()->status === $status && $existingStatus->first()->group === $subjectGroup && $status_date_year_month == $select_status_date_year_month) {
                     } elseif ($checkDuplicate->count() > 0) {
                         # code...
-                        
+
                     } else {
                         Statuslog::create([
                             'student_id' => $student->id,
