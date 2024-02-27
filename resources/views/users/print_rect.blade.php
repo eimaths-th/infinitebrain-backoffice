@@ -168,7 +168,9 @@
                             $resul_late_time = 0;
                             $resul_late = 0;
                             $resul_missing = 0;
-
+                            $resul_notIn = 0;
+                            $resul_notOut = 0;
+                            $resul_leaveFirst = 0;
                         @endphp
                         @foreach ($rec_times as $key => $rec_time)
                             @php
@@ -283,6 +285,21 @@
                                     // $resul_late++;
                                     $resul_missing++;
                                 }
+                                if ($rec_time->status == 6) {
+                                    # code...
+                                    // $resul_late++;
+                                    $resul_notIn++;
+                                }
+                                if ($rec_time->status == 7) {
+                                    # code...
+                                    // $resul_late++;
+                                    $resul_notOut++;
+                                }
+                                if ($rec_time->status == 9) {
+                                    # code...
+                                    // $resul_late++;
+                                    $resul_leaveFirst++;
+                                }
                             @endphp
                         @endforeach
 
@@ -328,13 +345,16 @@
 
                     <table align="center" width="98%" cellpadding="0" cellspacing="0">
                         <tr class="activedab" height="30">
-                            <td width="15%" class="actived" align='left'>ลาป่วย : </td>
+                            <td width="15%" class="actived" align='center'> ขาดงาน : {{ $resul_missing }} &nbsp;=
+                            </td>
+
+                            <td width="15%" align='left'>ลาป่วย : </td>
 
                             <td width="15%" align='left'> ลากิจ : </td>
                             <td width="15%" align='left'> ลาพักร้อน : </td>
-                            <td width="15%" align='left'> ขาดงาน : {{ $resul_missing }}</td>
-                            <td align='right' width="15%"> สาย : {{ $resul_late }} ครั้ง</td>
-                            <td align='center' width="15%" class="activedright">
+                            <td align='right' width="15%"> สาย : {{ $resul_late }} ครั้ง &nbsp;=</td>
+                            <td align='left' width="15%" class="activedright">
+                                &nbsp;
                                 <span align="left">{{ $resul_late_time }}</span>
                                 <span align="right">นาที</span>
                             </td>
@@ -348,12 +368,12 @@
                             <td>OT</td>
                             <td>ชดเชย</td> --}}
 
-                            <td width="15%" class="actived" align='left'>ไม่สแกนเข้า : </td>
-                            <td width="15%" align='left'> ไม่สแกนออก : </td>
-                            <td width="15%" align='left'> ออกก่อน : </td>
+                            <td width="15%" class="actived" align='center'>ไม่สแกนเข้า : {{ $resul_notIn }}</td>
+                            <td width="15%" align='left'> ไม่สแกนออก : {{ $resul_notOut }}</td>
+                            <td width="15%" align='left'> ออกก่อน : {{ $resul_leaveFirst }}</td>
                             <td width="15%" align='left'> ลาครึ่งวัน : </td>
                             <td align='center' width="15%"> OT : </td>
-                            <td align='center' width="15%" class="activedright"> ชดเชย :
+                            <td align='left' width="15%" class="activedright"> &nbsp;&nbsp;ชดเชย :
                             </td>
                         </tr>
                     </table>
@@ -364,9 +384,21 @@
                         <tr>
                             <td></td>
                             <td></td>
+                            <td align="center">ลงชื่อ.. {{ auth()->user()->name }} ....</td>
+                            <td></td>
+                            <td></td>
+                            <td align="center"></td>
+                            <td></td>
+                            <td></td>
                             <td align="center">ลงชื่อ...................................</td>
                         </tr>
                         <tr>
+                            <td></td>
+                            <td></td>
+                            <td align="center">ผู้ดำเนินการ</td>
+                            <td></td>
+                            <td></td>
+                            <td align="center"></td>
                             <td></td>
                             <td></td>
                             <td align="center">ผู้จัดการ</td>
