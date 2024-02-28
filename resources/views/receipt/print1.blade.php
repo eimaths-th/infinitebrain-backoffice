@@ -117,14 +117,19 @@
                     </tr>
                     <tr>
                         <td width="25%" class="grey">นามลูกค้า,ที่อยู่/Client,Address</td>
-                        <td width="25%" style="padding-left:20px;" align="right" class="grey"> รหัสลูกค้า/Customer's Code</td>
-                        <td width="20%" style="padding-left:15px;"> <b>{{--  {{ $data2->code }}  --}} {{ $student_code }}</b> </td>
+                        <td width="25%" style="padding-left:20px;" align="right" class="grey">
+                            รหัสลูกค้า/Customer's Code</td>
+                        <td width="20%" style="padding-left:15px;"> <b>{{--  {{ $data2->code }}  --}} {{ $student_code }}</b>
+                        </td>
                         <td width="20%" align="right" class="grey">เลขที่ / Document No.</td>
                         <td width="10%" style="padding-left:10px;"> <b> {{ $data->receipt_number }} </b></td>
                     </tr>
                     <tr>
-                        <td width="25%">  <font class="grey">K.</font> <b> {{ $data2->name_parent }} </b> </td>
-                        <td width="25%" align="right" style="padding-left:20px;" class="grey">ชื่อนักเรียน/Nickname</td>
+                        <td width="25%">
+                            <font class="grey">K.</font> <b> {{ $data2->name_parent }} </b>
+                        </td>
+                        <td width="25%" align="right" style="padding-left:20px;" class="grey">
+                            ชื่อนักเรียน/Nickname</td>
                         <td width="20%" align="left" style="padding-left:15px;"> <b>{{ $student }} </b></td>
                         <td width="20%" align="right" class="grey">วันที่ / Date</td>
                         <td width="10%" style="padding-left:10px;"> <b>{{ $data->submission_date }}</b></td>
@@ -198,15 +203,33 @@
                                         <td align="left">ค่าหนังสือ {!! $receipt_detail['description'] !!}</td>
                                         <td align="left"></td>
                                         <td align="center">{{ $receipt_detail['book'] }}</td>
-                                        <td align="center">
-                                            {{-- เล่ม --}}
-                                            ชุด
-                                        </td>
-                                        <td align="center">{{ number_format($receipt_detail['books']*15, 2) }}</td>
+                                        {{-- <td align="center">
+                                        เล่ม
+                                        ชุด
+                                    </td> --}}
+                                        @php
+                                            $startDate = new DateTime('2024-02-07');
+                                            $currentDate = new DateTime($data->submission_date); //2024-02-08
+                                            $checkDate = $currentDate > $startDate;
+                                            $unitBook = $receipt_detail['bookprice'] / $receipt_detail['book'];
+                                        @endphp
+                                        @if ($checkDate)
+                                            <td align="center">
+                                                {{-- เล่ม --}}
+                                                ชุด
+                                            </td>
+                                            <td align="center">{{ number_format($unitBook, 2) }}</td>
+                                        @else
+                                            <td align="center">
+                                                เล่ม
+                                                {{-- ชุด --}}
+                                            </td>
+                                            <td align="center">{{ number_format($unitBook, 2) }}</td>
+                                        @endif
                                         <td align="center">
                                         </td>
                                         <td align="center" style="vertical-align: top;">
-                                            {{ $receipt_detail['bookprice'] }}</td>
+                                            {{ number_format($receipt_detail['bookprice'], 2) }}</td>
                                     @endif
 
                                 </tr>
