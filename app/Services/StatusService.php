@@ -41,8 +41,10 @@ class StatusService
                         'student_id' => $student->id,
                         'schoolprice_id' => $schp_id,
                         'group' => $subjectGroup,
-                        'status' => $status,
-                    ])->get();
+                        // 'status' => $status,
+                    ])->orderBy('id', 'desc')->get();
+                    // dd($checkDuplicate);
+
                     if (count($existingStatus) < 1) {
                         Statuslog::create([
                             'student_id' => $student->id,
@@ -53,8 +55,9 @@ class StatusService
                             'status_date' => now(),
                         ]);
                     } elseif ($existingStatus->first()->status === $status && $existingStatus->first()->group === $subjectGroup && $status_date_year_month == $select_status_date_year_month) {
-                    } elseif ($checkDuplicate->count() > 0) {
+                    } elseif ($checkDuplicate->count() > 0 && $checkDuplicate->first()->status === $status) {
                         # code...
+                        // dd($checkDuplicate->first()->status, $status);
                     } else {
                         Statuslog::create([
                             'student_id' => $student->id,
@@ -74,7 +77,7 @@ class StatusService
             }
         }
     }
-    public function determineStatus($student)
+    private function determineStatus($student)
     {
         $stdId = $student->id;
 
@@ -142,6 +145,55 @@ class StatusService
                             'schoolprice_id' => $school_pice_II->id
                         ];
                         // dd('test',$group_scp, $school_pice, $school_pice_II, $status);
+                    } elseif ($count_qty == 1 && $currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+                        # code...
+                        $status[$group] = [
+                            'status' => 'waitting . . .',
+                            'schoolprice_id' => $school_pice_II->id
+
+                        ];
+                    }
+                    if ($count_qty == 1) {
+                        # code...
+                        if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate)) {
+                            # code...
+                            $status[$group] = [
+                                'status' => 'drop',
+                                'schoolprice_id' => $school_pice_II->id
+                            ]; // ['drop', $school_pice_I->id];
+
+                        } else {
+                            if ($currentMonth->greaterThan($currentReceiptEndDate)) {
+                                //กำลังยุติการการเรียน
+                                $status[$group] = [
+                                    'status' => 'Termination of study',
+                                    'schoolprice_id' => $school_pice_II->id
+                                ]; // ['Termination of study', $school_pice_I->id];
+
+                            } else {
+                                # code...
+                                if ($currentMonth->diffInMonths($currentReceiptStatDate) <= 0) {
+                                    # code...
+                                    $status[$group] = [
+                                        'status' => 'New Student',
+                                        'schoolprice_id' => $school_pice_II->id
+                                    ];
+                                } elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+                                    # code...
+                                    $status[$group] = [
+                                        'status' => 'waitting . . .',
+                                        'schoolprice_id' => $school_pice_II->id
+
+                                    ];
+                                } else {
+                                    # code...
+                                    $status[$group] = [
+                                        'status' => 'studying . . .',
+                                        'schoolprice_id' => $school_pice_II->id
+                                    ];
+                                }
+                            }
+                        }
                     } elseif ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate)) {
                         //พ้นสภาพนักเรียน
                         $status[$group] = [
@@ -166,16 +218,31 @@ class StatusService
                                 ->latest()
                                 ->get();
 
-
                             if (count($check_resume) > 0) {
+
                                 $firstLog = $check_resume->first();
                                 if ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+                                    //จ่ายในเดือนปัจจุบัน                                                      //วันที่จ่ายน้อยกว่าวันที่เริ่มเรียน
+                                    if ($monthsDifference == 1) {
+                                        $status[$group] = [
+                                            'status' => 'studying . . .',
+                                            'schoolprice_id' => $school_pice_II->id
+                                        ]; // ['studying . . .', $school_pice_I->id];
 
-                                    $status[$group] = [
-                                        'status' => 'waitting . . .',
-                                        'schoolprice_id' => $school_pice_II->id
-                                    ]; // ['waitting . . .', $school_pice_I->id];
+                                    } else {
+                                        $status[$group] = [
+                                            'status' => 'waitting . . .',
+                                            'schoolprice_id' => $school_pice_II->id
 
+                                        ];
+                                    }
+
+                                    // dd($check_resume, $firstLog, $firstLog->status, $status, $currentReceiptEndDate);
+
+                                    // $status[$group] = [
+                                    //     'schoolprice_id' => $school_pice_II->id
+
+                                    // ];
                                 } else {
                                     if ($dateResume) {
                                         $submissionDateResume = Carbon::parse($dateResume);
