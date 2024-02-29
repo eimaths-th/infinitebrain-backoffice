@@ -76,6 +76,9 @@
                         <option value="test_field">test_field</option>
                         <option value="neos">neo-science-olympiad</option>
                         <option value="neos-2">neo-science-school</option>
+                        <option value="neos-2">neo-science-school</option>
+                        <option value="huaxiacup-final-round">China-Mathematical-Olympiad-Final</option>
+
 
                     </select>
 

@@ -1,16 +1,35 @@
 @extends('layouts.main_template')
 
 @section('style')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link href="../assets/plugins/nvd3/build/nv.d3.css" rel="stylesheet" />
+    <link href="/assets/plugins/switchery/dist/switchery.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://malsup.github.io/jquery.blockUI.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <link href="../assets/plugins/nvd3/build/nv.d3.css" rel="stylesheet" />
-    <link href="/assets/plugins/switchery/dist/switchery.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{-- <script src="https://d3js.org/d3.v7.min.js"></script> --}}
+    <script src="../assets/plugins/d3/d3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    {{-- <script src="../assets/plugins/nvd3/build/nv.d3.min.js"></script> --}}
+    {{-- <script src="../assets/plugins/chart.js/dist/Chart.min.js"></script> --}}
+    <script src="../assets/plugins/flot/source/jquery.canvaswrapper.js"></script>
+    <script src="../assets/plugins/flot/source/jquery.colorhelpers.js"></script>
+    <script src="../assets/plugins/flot/source/jquery.flot.js"></script>
+    <script src="../assets/plugins/flot/source/jquery.flot.saturated.js"></script>
+    <script src="../assets/plugins/flot/source/jquery.flot.browser.js"></script>
+    <script src="../assets/plugins/flot/source/jquery.flot.drawSeries.js"></script>
+    <script src="../assets/plugins/flot/source/jquery.flot.uiConstants.js"></script>
+    <script src="/assets/plugins/switchery/dist/switchery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <style>
         .screen-auto {
             max-width: 100%;
@@ -18,14 +37,14 @@
         }
 
         /* .switchery {
-                                                                                                                                                            width: 30px;
-                                                                                                                                                            height: 16px;
-                                                                                                                                                        }
+                                                                                                                                                                                                                            width: 30px;
+                                                                                                                                                                                                                            height: 16px;
+                                                                                                                                                                                                                        }
 
-                                                                                                                                                        .switchery-small {
-                                                                                                                                                            width: 12px;
-                                                                                                                                                            height: 12px;
-                                                                                                                                                        } */
+                                                                                                                                                                                                                        .switchery-small {
+                                                                                                                                                                                                                            width: 12px;
+                                                                                                                                                                                                                            height: 12px;
+                                                                                                                                                                                                                        } */
     </style>
 @endsection
 
@@ -205,6 +224,39 @@
 
                         <div class="col-lg-2">
                             <div class="row">
+                                <label for="month" class="col-lg-4">subjects :</label>
+                                <div class="col-lg-8">
+                                    <select name="group" id="selectSubjects" class="form-select">
+                                        <option value="">select subjects</option>
+                                        @foreach ($subjects as $subjectGroup => $subject)
+                                            @php
+                                                $name = '';
+                                                if ($subjectGroup === 'M') {
+                                                    # code...
+                                                    $name = 'Math';
+                                                } elseif ($subjectGroup === 'E') {
+                                                    # code...
+                                                    $name = 'English';
+                                                } elseif ($subjectGroup === 'Sci') {
+                                                    # code...
+                                                    $name = 'Science';
+                                                } elseif ($subjectGroup === 'Sci') {
+                                                    # code...
+                                                    $name = 'Chinese';
+                                                } else {
+                                                    # code...
+                                                    $name = $subject->first()->title;
+                                                }
+                                            @endphp
+                                            <option value="{{ $subjectGroup }}">{{ $name }}</option>
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="row">
                                 <label for="month" class="col-lg-3">เดือน : </label>
                                 <div class="col-lg-9">
                                     <select name="month" id="selectMonth" class="form-select">
@@ -239,12 +291,12 @@
                         </div>
                         <div class="col-lg-2">
                         </div>
-                        <div class="col-lg-2">
-                        </div>
+                        {{-- <div class="col-lg-2">
+                        </div> --}}
                         <div class="col-lg-2 text-end">
-                            <a href="#" onclick="formModal('{{ route('stdlog_create') }}')" class="btn btn-success"
-                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
-                                data-bs-title="ใบปะหน้า"> <i class="fa fa-plus"></i>
+                            <a href="#" onclick="formModalBonus('{{ route('stdlog_create') }}')"
+                                class="btn btn-success" data-bs-toggle="tooltip" data-bs-trigger="hover"
+                                data-bs-container="body" data-bs-title="ใบปะหน้า"> <i class="fa fa-plus"></i>
                                 ใบปะหน้า</a>
                         </div>
 
@@ -342,11 +394,75 @@
                                                 $class = 'text-muted'; // You can set a default class for null or empty status
                                                 $statusValue = 'Null';
                                             }
+                                            // dd($checkStatus);
                                         @endphp
+                                        {{-- @if ($checkStatus === 'all')
+                                            <tr>
+                                                <td class="text-center">{{ $key + 1 }}</td>
+                                                <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
+                                                <td class="{{ $class }}">{{ $data->std->nick_name ?? 'Null' }}
+                                                </td>
+                                                <td>{{ $data->rec_school->submission_date }}</td>
+                                                <td>{{ $data->period }}</td>
+
+                                                <td>{{ $data->rec_school->receipt_number }}</td>
+                                                <td>{{ $data->group }}</td>
+
+
+                                                <td class="{{ $class }}">
+                                                    {{ $statusValue }}
+                                                </td>
+                                                <td>{{ $data->course_type }}</td>
+                                                <td class="text-end">{{ number_format($data->total) }} บาท</td>
+                                                <td class="text-center">
+                                                    <div class="form-check form-switch form-switch-sm">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="flexSwitchCheckChecked-{{ $data->rec_school->receipt_number }}">
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                            @php
+                                                $sum += $data->total;
+                                            @endphp
+                                        @else
+                                            @if ($checkStatus && $checkStatus === $statusValue)
+                                                <tr>
+                                                    <td class="text-center">{{ $key + 1 }}</td>
+                                                    <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
+                                                    <td class="{{ $class }}">{{ $data->std->nick_name ?? 'Null' }}
+                                                    </td>
+                                                    <td>{{ $data->rec_school->submission_date }}</td>
+                                                    <td>{{ $data->period }}</td>
+
+                                                    <td>{{ $data->rec_school->receipt_number }}</td>
+                                                    <td>{{ $data->group }}</td>
+
+
+                                                    <td class="{{ $class }}">
+                                                        {{ $statusValue }}
+                                                    </td>
+                                                    <td>{{ $data->course_type }}</td>
+                                                    <td class="text-end">{{ number_format($data->total) }} บาท</td>
+                                                    <td class="text-center">
+                                                        <div class="form-check form-switch form-switch-sm">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                id="flexSwitchCheckChecked-{{ $data->rec_school->receipt_number }}">
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+                                                @php
+                                                    $sum += $data->total;
+                                                @endphp
+                                            @else
+                                            @endif
+                                        @endif --}}
                                         <tr>
                                             <td class="text-center">{{ $key + 1 }}</td>
                                             <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
-                                            <td class="{{ $class }}">{{ $data->std->nick_name ?? 'Null' }}</td>
+                                            <td class="{{ $class }}">{{ $data->std->nick_name ?? 'Null' }}
+                                            </td>
                                             <td>{{ $data->rec_school->submission_date }}</td>
                                             <td>{{ $data->period }}</td>
 
@@ -378,30 +494,14 @@
                                 @endforeach
 
                             </tbody>
-                            <tbody>
-
+                            <tfoot>
                                 <tr>
                                     <td class="text-center">#</td>
-                                    {{-- <td class="text-center" colspan="2"></td> <!-- Merged cell --> --}}
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" colspan="8">Sum Total</td> <!-- Merged cell -->
+                                    <td class="text-center text-black" colspan="8">Sum Total</td> <!-- Merged cell -->
                                     <td class="text-end">{{ number_format($sum) }} บาท</td>
                                     <td></td>
                                 </tr>
-
-                                {{-- @foreach ($totalForAllMonths as $month => $total)
-                            <tr>
-                                <td colspan="6" class="text-center">{{ $month }}</td>
-                                <td class="text-end">{{ number_format($total) }} บาท</td>
-                            </tr>
-                            @endforeach --}}
-
-                            </tbody>
+                            </tfoot>
 
                         </table>
                     </div>
@@ -584,23 +684,6 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    {{-- <script src="https://d3js.org/d3.v7.min.js"></script> --}}
-    <script src="../assets/plugins/d3/d3.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    {{-- <script src="../assets/plugins/nvd3/build/nv.d3.min.js"></script> --}}
-    {{-- <script src="../assets/plugins/chart.js/dist/Chart.min.js"></script> --}}
-    <script src="../assets/plugins/flot/source/jquery.canvaswrapper.js"></script>
-    <script src="../assets/plugins/flot/source/jquery.colorhelpers.js"></script>
-    <script src="../assets/plugins/flot/source/jquery.flot.js"></script>
-    <script src="../assets/plugins/flot/source/jquery.flot.saturated.js"></script>
-    <script src="../assets/plugins/flot/source/jquery.flot.browser.js"></script>
-    <script src="../assets/plugins/flot/source/jquery.flot.drawSeries.js"></script>
-    <script src="../assets/plugins/flot/source/jquery.flot.uiConstants.js"></script>
-    <script src="/assets/plugins/switchery/dist/switchery.min.js"></script>
-
-    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
-    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     {{-- <script>
     var checkboxes = document.querySelectorAll('input[id^="switchery-default-"]');
     checkboxes.forEach(function(checkbox) {
@@ -611,6 +694,25 @@
 </script> --}}
     <script>
         $(document).ready(function() {
+            $(".select2_single_paper").select2({
+                // maximumSelectionLength: 1,
+                allowClear: true
+            });
+            $(".select2_single").select2({
+                maximumSelectionLength: 1,
+                allowClear: true
+            });
+
+            $(".select3_single").select2({
+                maximumSelectionLength: 1,
+                // allowClear: true
+            });
+
+            $(".select2_single2").select2({
+                maximumSelectionLength: 2,
+                //placeholder: "With Max Selection limit 4",
+                allowClear: true
+            });
             var selectMonth1 = document.getElementById('selectMonth1');
 
             if (selectMonth1) {
@@ -656,6 +758,7 @@
 
         });
     </script>
+
 
     {{-- <script>
         var checkboxes = document.querySelectorAll('input[id^="switchery-default-"]');

@@ -10,6 +10,7 @@ use App\Models\Receipt_School;
 use App\Models\SchoolPrice;
 use App\Models\Statuslog;
 use App\Models\Student;
+use App\Models\Subject;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -220,6 +221,8 @@ class StdlogController extends Controller
         $test_scp = SchoolPrice::all();
         $month = $request->month;
         $year = $request->year;
+        $status = $request->status;
+        $groupSubject = $request->group;
         // dd($request, $month);
 
         if (!$month) {
@@ -228,19 +231,17 @@ class StdlogController extends Controller
         $months = date('F', strtotime('2023-' . $month . '-25'));
 
         // $months = date('F', strtotime('2023-' . $month . '-25'));
-
         // dd($request, $month);
 
-        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year);
-        $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year);
-
-
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year, $groupSubject);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year, null);
 
         $totalForAllMonths = $this->queryGrafgh($test_scp);
         $paper = PaperReport::whereMonth('submission_date', $month)
             ->whereYear('submission_date', $year)
             ->orderBy('rec_id', 'desc')
             ->get();
+        $subjects = Subject::all()->groupBy('group');
 
 
         // dd($reportMonth_schoolPrice,$reportYear_schoolPrice);
@@ -251,57 +252,77 @@ class StdlogController extends Controller
             'paper' => $paper,
             'month' => $months,
             'year' => $year,
+            'checkStatus' => $status,
+            'subjects' => $subjects,
 
         ]);
     }
 
 
-    private function getMatchingSchoolPrices($month, $year)
+    private function getMatchingSchoolPrices($month, $year, $groupSubject)
     {
-        $matchingSchoolPrices = [];
-        $schoolPrice_id = [];
-        $test_scp = SchoolPrice::all();
 
-        // dd($year);
+        // if ($month) {
+        //     $reciept_school = Receipt_School::whereMonth('submission_date', $month)
+        //         ->whereYear('submission_date', $year)
+        //         ->get();
+        // } else {
+        //     $reciept_school = Receipt_School::whereYear('submission_date', $year)->get();
+        // }
+        // $receiptSchoolIds = $reciept_school->pluck('id')->toArray();
 
-        foreach ($test_scp as $schoolPrice) {
-            if ($schoolPrice->rec_school && $schoolPrice->rec_school->submission_date) {
-                if ($month) {
-                    $currentMonth = Carbon::parse($year . '-' . $month)->format('Y-m');
-                    $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y-m');
-                } else {
-                    $currentMonth = $year;
-                    // $currentMonth = Carbon::parse($year)->format('Y');
-                    $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y');
-                    // dd($year,$currentMonth,$submissionDate);
-                }
-                // if ($submissionDate == $currentMonth) {
-                if ($submissionDate == $currentMonth && $schoolPrice->course_type == 1) {
-                    $matchingSchoolPrices[] = [
-                        'id' => $schoolPrice->id,
-                        'course_type' => $schoolPrice->course_type,
-                        'reciept_id' => $schoolPrice->rid,
-                        'std_id' => $schoolPrice->student_id,
-                        'submission_date' => $schoolPrice->rec_school->submission_date
-                    ];
-                    $schoolPrice_id[] = $schoolPrice->id;
-                }
-            }
-        }
+        // if ($month) {
+        //     if ($groupSubject) {
+        //         $reportMonth_schoolPrice = SchoolPrice::whereIn('rid', $receiptSchoolIds)
+        //             ->where('course_type', 1)
+        //             ->where('group', $groupSubject)
+        //             ->orderBy('rid', 'desc')
+        //             ->get()
+        //             ->groupBy('student_id', 'group');
+        //     } else {
+        //         $reportMonth_schoolPrice = SchoolPrice::whereIn('rid', $receiptSchoolIds)
+        //             ->where('course_type', 1)
+        //             ->orderBy('rid', 'desc')
+        //             ->get()
+        //             ->groupBy('student_id', 'group');
+        //     }
+        // } else {
+        //     if ($groupSubject) {
+        //         $reportMonth_schoolPrice = SchoolPrice::whereIn('rid', $receiptSchoolIds)
+        //             ->where('course_type', 1)
+        //             ->where('group', $groupSubject)
+        //             ->orderBy('rid', 'desc')
+        //             ->get();
+        //     } else {
+        //         $reportMonth_schoolPrice = SchoolPrice::whereIn('rid', $receiptSchoolIds)
+        //             ->where('course_type', 1)
+        //             ->orderBy('rid', 'desc')
+        //             ->get();
+        //     }
 
-        if ($month) {
-            # code...
-            $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
-                ->orderBy('rid', 'desc')
-                ->get()
-                ->groupBy('student_id', 'group');
-        } else {
-            # code...
-            $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
-                ->orderBy('rid', 'desc')
-                ->get();
-            // ->groupBy('student_id', 'group');
-        }
+        //     // ->groupBy('student_id', 'group');
+        // }
+
+        $reciept_school = Receipt_School::when($month, function ($query) use ($month, $year) {
+            $query->whereMonth('submission_date', $month)
+                ->whereYear('submission_date', $year);
+        })->when(!$month, function ($query) use ($year) {
+            $query->whereYear('submission_date', $year);
+        })->get();
+
+        $receiptSchoolIds = $reciept_school->pluck('id')->toArray();
+
+        $schoolPriceQuery = SchoolPrice::whereIn('rid', $receiptSchoolIds)
+            ->where('course_type', 1)
+            ->when($groupSubject, function ($query) use ($groupSubject) {
+                $query->where('group', $groupSubject);
+            })
+            ->orderBy('rid', 'desc');
+
+        $reportMonth_schoolPrice = $month ?
+            $schoolPriceQuery->get()->groupBy('student_id', 'group') :
+            $schoolPriceQuery->get();
+
         return $reportMonth_schoolPrice;
     }
 
@@ -361,12 +382,14 @@ class StdlogController extends Controller
         $month = date('m');
         $months = date('F');
         $year = date('Y');
-
-        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year);
-        $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year);
+        $groupSubject = null;
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year, $groupSubject);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year, $groupSubject);
         $totalForAllMonths = $this->queryGrafgh($test_scp);
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
-
+        // $subjects = Subject::all();
+        $subjects = Subject::all()->groupBy('group');
+        // dd($subjects);
         $paper = PaperReport::whereMonth('submission_date', $month)
             ->whereYear('submission_date', $year)
             ->orderBy('rec_id', 'desc')
@@ -381,6 +404,9 @@ class StdlogController extends Controller
             'paper' => $paper,
             'year' => $year,
             'month' => $months,
+            'subjects' => $subjects,
+            'checkStatus' => 'all',
+
         ]);
     }
     public function reportRecieptStd()
@@ -1148,11 +1174,40 @@ class StdlogController extends Controller
         // dd('test');
         $test_scp = SchoolPrice::all();
         $currentMonth = Carbon::now()->format('Y-m');
-        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($test_scp, $currentMonth, $currentMonth);
+        $month = date('m');
+        $year = date('Y');
+        $reportMonth_schoolPrice = $this->getRecieptSchool($month, $year, null);
+        // $reportMonth_schoolPrice = '';
         return view('students.paper_report', [
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
 
         ]);
+    }
+    private function getRecieptSchool($month, $year, $groupSubject)
+    {
+
+
+        $reciept_school = Receipt_School::when($month, function ($query) use ($month, $year) {
+            $query->whereMonth('submission_date', $month)
+                ->whereYear('submission_date', $year);
+        })->when(!$month, function ($query) use ($year) {
+            $query->whereYear('submission_date', $year);
+        })->get();
+
+        $receiptSchoolIds = $reciept_school->pluck('id')->toArray();
+
+        $schoolPriceQuery = SchoolPrice::whereIn('rid', $receiptSchoolIds)
+            ->where('course_type', 1)
+            ->when($groupSubject, function ($query) use ($groupSubject) {
+                $query->where('group', $groupSubject);
+            })
+            ->orderBy('rid', 'desc');
+
+        $reportMonth_schoolPrice = $month ?
+            $schoolPriceQuery->get()->groupBy('student_id', 'group') :
+            $schoolPriceQuery->get();
+
+        return $reportMonth_schoolPrice;
     }
 
     /**

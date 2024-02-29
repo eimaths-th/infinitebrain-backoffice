@@ -241,6 +241,8 @@
                                                                             $message = 'Thanks for your order!';
                                                                         } elseif ($data->sfield == '20' || $data->sfield == '21') {
                                                                             $message = 'NEO Science Olympiad';
+                                                                        } elseif ($data->sfield == '22') {
+                                                                            $message = 'China Mathematical Olympiad Final Round';
                                                                         }
                                                                         ?>
                                                                         {{ $message }}</span>
@@ -2618,6 +2620,8 @@
                                                                                 $message1 = 'Test Field';
                                                                             } elseif ($data->sfield == '20' || $data->sfield == '21') {
                                                                                 $message1 = 'NEO Science Olympiad';
+                                                                            } elseif ($data->sfield == '22') {
+                                                                                $message1 = 'China Mathematical Olympiad Final Round';
                                                                             }
                                                                             ?>
                                                                             สอบ {{ $message1 }}

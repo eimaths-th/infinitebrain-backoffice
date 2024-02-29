@@ -49,6 +49,7 @@ class ReceiptController extends Controller
         '19' => 'Huaxiacup-II',
         '20' => 'Neo science',
         '21' => 'Neo science',
+        '22' => 'chai-Final',
 
 
 
@@ -73,6 +74,7 @@ class ReceiptController extends Controller
         '19' => 'Huaxiacup-II',
         '20' => 'neos',
         '21' => 'neos-2',
+        '22' => 'chai-Final',
 
     );
     const thmonth = array(

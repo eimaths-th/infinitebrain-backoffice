@@ -22,6 +22,7 @@ class ReceiptForm extends Model
         'gender',
         'email',
         'school_name',
+        'award',
         'birth_date',
         'street_address',
         'street_address2',

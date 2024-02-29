@@ -47,7 +47,10 @@ function formModalBonus(route) {
         $("#modal_form").modal("show");
         // var std = $('#student_id').val();
         // console.log(std);
-
+        $(".select2_single_paper").select2({
+            // maximumSelectionLength: 1,
+            allowClear: true
+        });
 
         $(".select2_single").select2({
             maximumSelectionLength: 1,

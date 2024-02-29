@@ -48,6 +48,7 @@ class ReceiptFormController extends Controller
         '19' => 'Huaxiacup-II',
         '20' => 'neos',
         '21' => 'neos-2',
+        '22' => 'huaxiacup-final-round',
     );
 
     public function gmec()
@@ -81,6 +82,10 @@ class ReceiptFormController extends Controller
     public function huaxiacup()
     {
         return view("receipt_form.huaxiacup");
+    }
+    public function huaxiacupFinalRound()
+    {
+        return view("receipt_form.huaxiacup_III");
     }
     public function neos()
     {
@@ -570,7 +575,6 @@ class ReceiptFormController extends Controller
     public function store(Request $request)
     {
         //
-        // dd($request->get('sfield'),$request);
 
         if ($request->get('sfield') == '17') {
             # code...
@@ -676,6 +680,15 @@ class ReceiptFormController extends Controller
             $filebs = rtrim($filebs, "|");
         }
 
+        if ($request->get('sfield') == 22) {
+            # code...
+            $award = $request->get('award');
+        }else {
+            # code...
+            $award = '';
+        }
+        // dd($request);
+        // $receiptForm = ReceiptForm::create([
 
         $receiptForm = new ReceiptForm([
             'sfield' => $request->get('sfield'),
@@ -687,6 +700,7 @@ class ReceiptFormController extends Controller
             'gender' => $request->get('gender'),
             'birth_date' => $request->get('birthdate'),
             'school_name' => $request->get('schoolname'),
+            'award' => $award,
             'grade' => $request->get('grade'),
             'package' => $request->get('package'),
             'contest' => $request->get('contest'),
@@ -704,7 +718,6 @@ class ReceiptFormController extends Controller
         // print_r (['sfielda' =>  self::sfielda]);
         // print_r (['sfield' => $request->sfield]);
         // exit();
-
         $adminEmail = $request->get('email');
 
         if ($request->get('sfield') == 0 || $request->get('sfield') == 17) {

@@ -66,6 +66,7 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
     Route::get('/test_field', [ReceiptFormController::class, 'test_field'])->name('test_field');
     Route::get('/mathleague', [ReceiptFormController::class, 'mathleague'])->name('mathleague');
     Route::get('/huaxiacup', [ReceiptFormController::class, 'huaxiacup'])->name('huaxiacup');
+    Route::get('/huaxiacup-final-round', [ReceiptFormController::class, 'huaxiacupFinalRound'])->name('huaxiacup-final-round');
     Route::get('/mathleague-ii', [ReceiptFormController::class, 'mathleague_II'])->name('mathleague-ii');
     Route::get('/huaxiacup-ii', [ReceiptFormController::class, 'huaxiacup_II'])->name('huaxiacup-ii');
     Route::get('/neo-science-olympiad', [ReceiptFormController::class, 'neos'])->name('neos');

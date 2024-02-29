@@ -40,7 +40,7 @@
         </div>
         <div class="form-group">
             <label for="Parent">Name student:</label><br>
-            <select style="width: 100%;" class="select2-paper_report form-control" name="std_receipt[]"
+            <select style="width: 100%;" class="select2 select2_single_paper form-control" name="std_receipt[]"
                 multiple="multiple">
                 <!-- <option value="" selected>Select Student</option>
                     <option value="" selected>Select Parent</option>-->
@@ -48,7 +48,7 @@
                     @foreach ($groupedData as $key => $data)
                         <option
                             value="{{ $data->std->id }},{{ $data->rec_school->id }},{{ $data->id }},{{ $data->rec_school->receipt_number }},{{ $data->rec_school->submission_date }}">
-                            {{ $data->std->code ?? 'Null' }} {{ $data->std->nick_name ?? 'Null' }} | RecNo. : {{ $data->rec_school->receipt_number }}</option>
+                            {{ $data->std->code ?? 'Null' }} {{ $data->std->nick_name ?? 'Null' }} | RecNo. : {{ $data->rec_school->receipt_number }} | Group : {{ $data->group }}</option>
                     @endforeach
                 @endforeach
 
