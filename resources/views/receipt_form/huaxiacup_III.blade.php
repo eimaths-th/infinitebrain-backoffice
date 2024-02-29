@@ -630,7 +630,7 @@
                                         </div>
                                     </div> --}}
 
-                                    <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร China Mathematical Olympiad
+                                    {{-- <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร China Mathematical Olympiad
                                                 2023</b> <br>
 
                                             รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
@@ -640,7 +640,7 @@
                                             รร.นานาชาติใช้ระดับชั้นตามปีการศึกษาปัจจุบัน <br>
 
                                             ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
-                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p>
+                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p> --}}
                                 </div>
                             </div>
 
@@ -819,7 +819,6 @@
                                                 name="grade" data-component="dropdown" aria-label="Grade / ระดับชั้น"
                                                 required>
                                                 <option value="">Please Select</option>
-                                                <option value="Kindergarten">Kindergarten</option>
                                                 <option value="Grade 1">Grade 1</option>
                                                 <option value="Grade 2">Grade 2</option>
                                                 <option value="Grade 3">Grade 3</option>
@@ -829,9 +828,7 @@
                                                 <option value="Grade 7">Grade 7</option>
                                                 <option value="Grade 8">Grade 8</option>
                                                 <option value="Grade 9">Grade 9</option>
-                                                <option value="Grade 10">Grade 10</option>
-                                                <option value="Grade 11">Grade 11</option>
-                                                <option value="Grade 12">Grade 12</option>
+
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">{{-- Grade as per Academic Year 2022 --}}</label>
@@ -878,7 +875,7 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="package">รางวัล / Award <span
+                                                for="package">รางวัลที่ได้รับ / Award <span
                                                     class="form-required">*</span></label>
                                             <select class="form-control" id="Award" name="award"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
