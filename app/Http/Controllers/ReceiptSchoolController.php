@@ -458,7 +458,7 @@ class ReceiptSchoolController extends Controller
     protected $statusService;
     public function __construct(StatusService $statusService)
     {
-        parent::__construct();
+        // parent::__construct();
         $this->statusService = $statusService;
     }
     public function index(Request $request)
