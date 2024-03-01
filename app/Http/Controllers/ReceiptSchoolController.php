@@ -24,6 +24,7 @@ use App\Models\ParentRegister;
 use App\Models\Receipt_School_RunningNumber;
 use App\Models\Statuslog;
 use Carbon\Carbon;
+use App\Services\StatusService;
 
 class ReceiptSchoolController extends Controller
 {
@@ -454,7 +455,12 @@ class ReceiptSchoolController extends Controller
         return  $new_image;
     }
 
-
+    protected $statusService;
+    public function __construct(StatusService $statusService)
+    {
+        parent::__construct();
+        $this->statusService = $statusService;
+    }
     public function index(Request $request)
     {
 
@@ -1527,7 +1533,8 @@ class ReceiptSchoolController extends Controller
             //update status
             $students = Student::where('id', $value['std_id'])->get();
 
-            $updateStatus = $this->updateStatus($students);
+            // $updateStatus = $this->updateStatus($students);
+            $updateStatus = $this->statusService->updateStatus($students);
 
 
 
@@ -1777,281 +1784,281 @@ class ReceiptSchoolController extends Controller
             $rdata->save();
             $students = Student::where('id', $std_id[$xx])->get();
 
-            $updateStatus = $this->updateStatus($students);
+            $updateStatus = $this->statusService->updateStatus($students);
         }
 
         return response()->json(['success' => 'Receipt updated successfully']);
     }
 
 
-    private function updateStatus($students)
-    {
-        foreach ($students as $student) {
-            $statuses = $this->determineStatus($student);
-            $cl = 0;
-            foreach ($statuses as $statuse) {
-                foreach ($statuse as $subjectGroup => $statu) {
+    // private function updateStatus($students)
+    // {
+    //     foreach ($students as $student) {
+    //         $statuses = $this->determineStatus($student);
+    //         $cl = 0;
+    //         foreach ($statuses as $statuse) {
+    //             foreach ($statuse as $subjectGroup => $statu) {
 
-                    $schp_id = $statu['schoolprice_id'];
-                    $status = $statu['status'];
+    //                 $schp_id = $statu['schoolprice_id'];
+    //                 $status = $statu['status'];
 
-                    $existingStatus = Statuslog::where('student_id', $student->id)
-                        ->where('group', $subjectGroup)
-                        ->latest()
-                        ->get();
-                    $currentMonthYear = date('Y-m');
+    //                 $existingStatus = Statuslog::where('student_id', $student->id)
+    //                     ->where('group', $subjectGroup)
+    //                     ->latest()
+    //                     ->get();
+    //                 $currentMonthYear = date('Y-m');
 
-                    $status_date = $existingStatus->first()->status_date ?? '';
-                    $status_date_year_month = date('Y-m', strtotime($status_date));
+    //                 $status_date = $existingStatus->first()->status_date ?? '';
+    //                 $status_date_year_month = date('Y-m', strtotime($status_date));
 
-                    $select_status_date_year_month = date('Y-m', strtotime($currentMonthYear));
+    //                 $select_status_date_year_month = date('Y-m', strtotime($currentMonthYear));
 
-                    $checkDuplicate = $existingStatus = Statuslog::where([
-                        'student_id' => $student->id,
-                        'schoolprice_id' => $schp_id,
-                        'group' => $subjectGroup,
-                        // 'status' => $status,
-                    ])->orderBy('id', 'desc')->get();
-                    // dd($checkDuplicate);
+    //                 $checkDuplicate = $existingStatus = Statuslog::where([
+    //                     'student_id' => $student->id,
+    //                     'schoolprice_id' => $schp_id,
+    //                     'group' => $subjectGroup,
+    //                     // 'status' => $status,
+    //                 ])->orderBy('id', 'desc')->get();
+    //                 // dd($checkDuplicate);
 
-                    if (count($existingStatus) < 1) {
-                        Statuslog::create([
-                            'student_id' => $student->id,
-                            'schoolprice_id' => $schp_id,
-                            'nick_name' => $student->nick_name,
-                            'group' => $subjectGroup,
-                            'status' => $status,
-                            'status_date' => now(),
-                        ]);
-                    } elseif ($existingStatus->first()->status === $status && $existingStatus->first()->group === $subjectGroup && $status_date_year_month == $select_status_date_year_month) {
-                    } elseif ($checkDuplicate->count() > 0 && $checkDuplicate->first()->status === $status) {
-                        # code...
-                        // dd($checkDuplicate->first()->status, $status);
-                    } else {
-                        Statuslog::create([
-                            'student_id' => $student->id,
-                            'schoolprice_id' => $schp_id,
-                            'nick_name' => $student->nick_name,
-                            'group' => $subjectGroup,
-                            'status' => $status,
-                            'status_date' => now(),
-                        ]);
-                    }
-                    $lastStatusLog = $student->status_log->last();
-                    if ($lastStatusLog) {
-                        $student->update(['status' => $lastStatusLog->status]);
-                    }
-                }
-                $cl++;
-            }
-        }
-    }
-    private function determineStatus($student)
-    {
-        $stdId = $student->id;
+    //                 if (count($existingStatus) < 1) {
+    //                     Statuslog::create([
+    //                         'student_id' => $student->id,
+    //                         'schoolprice_id' => $schp_id,
+    //                         'nick_name' => $student->nick_name,
+    //                         'group' => $subjectGroup,
+    //                         'status' => $status,
+    //                         'status_date' => now(),
+    //                     ]);
+    //                 } elseif ($existingStatus->first()->status === $status && $existingStatus->first()->group === $subjectGroup && $status_date_year_month == $select_status_date_year_month) {
+    //                 } elseif ($checkDuplicate->count() > 0 && $checkDuplicate->first()->status === $status) {
+    //                     # code...
+    //                     // dd($checkDuplicate->first()->status, $status);
+    //                 } else {
+    //                     Statuslog::create([
+    //                         'student_id' => $student->id,
+    //                         'schoolprice_id' => $schp_id,
+    //                         'nick_name' => $student->nick_name,
+    //                         'group' => $subjectGroup,
+    //                         'status' => $status,
+    //                         'status_date' => now(),
+    //                     ]);
+    //                 }
+    //                 $lastStatusLog = $student->status_log->last();
+    //                 if ($lastStatusLog) {
+    //                     $student->update(['status' => $lastStatusLog->status]);
+    //                 }
+    //             }
+    //             $cl++;
+    //         }
+    //     }
+    // }
+    // private function determineStatus($student)
+    // {
+    //     $stdId = $student->id;
 
-        $ssss = SchoolPrice::where('student_id', $stdId)
-            ->where('course_type', 1)
-            ->where('qty', '>', 0)
-            ->orderBy('rid')
-            ->get();
-        $group_scp = $ssss->groupBy('group');
-        $status = [];
-        $statusss = [];
+    //     $ssss = SchoolPrice::where('student_id', $stdId)
+    //         ->where('course_type', 1)
+    //         ->where('qty', '>', 0)
+    //         ->orderBy('rid')
+    //         ->get();
+    //     $group_scp = $ssss->groupBy('group');
+    //     $status = [];
+    //     $statusss = [];
 
-        if (!$group_scp->isEmpty()) {
+    //     if (!$group_scp->isEmpty()) {
 
-            foreach ($group_scp as $group => $school_pice) {
-                // $current_Month = Carbon::createFromFormat('Y-m', '2024-05');
-                $current_Month = date('Y-m');
-                $currentMonth = Carbon::parse($current_Month)->firstOfMonth();
-                $count_qty = count($school_pice);
-                $count_rec = 0;
-                $monthsDifference = 0;
-                $datepr = [];
-                $dateDrop = '';
-                $dateResume = '';
-                $firstEndMonth = '';
-                $count_qty = count($school_pice);
+    //         foreach ($group_scp as $group => $school_pice) {
+    //             // $current_Month = Carbon::createFromFormat('Y-m', '2024-05');
+    //             $current_Month = date('Y-m');
+    //             $currentMonth = Carbon::parse($current_Month)->firstOfMonth();
+    //             $count_qty = count($school_pice);
+    //             $count_rec = 0;
+    //             $monthsDifference = 0;
+    //             $datepr = [];
+    //             $dateDrop = '';
+    //             $dateResume = '';
+    //             $firstEndMonth = '';
+    //             $count_qty = count($school_pice);
 
-                foreach ($school_pice as $school_pice_II) {
-                    # code...
-                    $submission_date = $school_pice_II->rec_school->submission_date;
-                    $period = $school_pice_II->period;
+    //             foreach ($school_pice as $school_pice_II) {
+    //                 # code...
+    //                 $submission_date = $school_pice_II->rec_school->submission_date;
+    //                 $period = $school_pice_II->period;
 
-                    $periodd = explode(' - ', $period);
-                    if (count($periodd) == 1) {
-                        $periods = explode('-', $period);
-                        $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
-                        $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
-                    } else {
+    //                 $periodd = explode(' - ', $period);
+    //                 if (count($periodd) == 1) {
+    //                     $periods = explode('-', $period);
+    //                     $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
+    //                     $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
+    //                 } else {
 
-                        $startMonth = Carbon::parse($periodd[0])->format('Y-m');
-                        $endMonth = Carbon::parse($periodd[1])->format('Y-m');
-                    }
+    //                     $startMonth = Carbon::parse($periodd[0])->format('Y-m');
+    //                     $endMonth = Carbon::parse($periodd[1])->format('Y-m');
+    //                 }
 
-                    if ($count_rec > 0) {
+    //                 if ($count_rec > 0) {
 
-                        $monthsDifference = Carbon::parse($firstEndMonth)->diffInMonths(Carbon::parse($startMonth));
-                    }
+    //                     $monthsDifference = Carbon::parse($firstEndMonth)->diffInMonths(Carbon::parse($startMonth));
+    //                 }
 
-                    if ($monthsDifference > 1) {
+    //                 if ($monthsDifference > 1) {
 
-                        $dateDrop = $firstEndMonth;
-                        $dateResume = $startMonth;
-                    }
-                    $firstEndMonth = $endMonth;
-                    $count_rec++;
+    //                     $dateDrop = $firstEndMonth;
+    //                     $dateResume = $startMonth;
+    //                 }
+    //                 $firstEndMonth = $endMonth;
+    //                 $count_rec++;
 
-                    $currentReceiptStatDate = Carbon::parse($startMonth);
-                    // $currentReceiptEndDate = Carbon::parse($endMonth);
-                    $currentReceiptEndDate = Carbon::parse($firstEndMonth);
-                    $currentReceiptsubmission_date = Carbon::parse($submission_date)->firstOfMonth();
+    //                 $currentReceiptStatDate = Carbon::parse($startMonth);
+    //                 // $currentReceiptEndDate = Carbon::parse($endMonth);
+    //                 $currentReceiptEndDate = Carbon::parse($firstEndMonth);
+    //                 $currentReceiptsubmission_date = Carbon::parse($submission_date)->firstOfMonth();
 
-                    if ($count_qty == 1 && $currentMonth->diffInMonths($currentReceiptStatDate) <= 0) {
-                        $status[$group] = [
-                            'status' => 'New Student',
-                            'schoolprice_id' => $school_pice_II->id
-                        ];
-                        // dd('test',$group_scp, $school_pice, $school_pice_II, $status);
-                    } elseif ($count_qty == 1 && $currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
-                        # code...
-                        $status[$group] = [
-                            'status' => 'waitting . . .',
-                            'schoolprice_id' => $school_pice_II->id
+    //                 if ($count_qty == 1 && $currentMonth->diffInMonths($currentReceiptStatDate) <= 0) {
+    //                     $status[$group] = [
+    //                         'status' => 'New Student',
+    //                         'schoolprice_id' => $school_pice_II->id
+    //                     ];
+    //                     // dd('test',$group_scp, $school_pice, $school_pice_II, $status);
+    //                 } elseif ($count_qty == 1 && $currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+    //                     # code...
+    //                     $status[$group] = [
+    //                         'status' => 'waitting . . .',
+    //                         'schoolprice_id' => $school_pice_II->id
 
-                        ];
-                    }
-                    if ($count_qty == 1) {
-                        # code...
-                        if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate)) {
-                            # code...
-                            $status[$group] = [
-                                'status' => 'drop',
-                                'schoolprice_id' => $school_pice_II->id
-                            ]; // ['drop', $school_pice_I->id];
+    //                     ];
+    //                 }
+    //                 if ($count_qty == 1) {
+    //                     # code...
+    //                     if ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate)) {
+    //                         # code...
+    //                         $status[$group] = [
+    //                             'status' => 'drop',
+    //                             'schoolprice_id' => $school_pice_II->id
+    //                         ]; // ['drop', $school_pice_I->id];
 
-                        } else {
-                            if ($currentMonth->greaterThan($currentReceiptEndDate)) {
-                                //กำลังยุติการการเรียน
-                                $status[$group] = [
-                                    'status' => 'Termination of study',
-                                    'schoolprice_id' => $school_pice_II->id
-                                ]; // ['Termination of study', $school_pice_I->id];
+    //                     } else {
+    //                         if ($currentMonth->greaterThan($currentReceiptEndDate)) {
+    //                             //กำลังยุติการการเรียน
+    //                             $status[$group] = [
+    //                                 'status' => 'Termination of study',
+    //                                 'schoolprice_id' => $school_pice_II->id
+    //                             ]; // ['Termination of study', $school_pice_I->id];
 
-                            } else {
-                                # code...
-                                if ($currentMonth->diffInMonths($currentReceiptStatDate) <= 0) {
-                                    # code...
-                                    $status[$group] = [
-                                        'status' => 'New Student',
-                                        'schoolprice_id' => $school_pice_II->id
-                                    ];
-                                } elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
-                                    # code...
-                                    $status[$group] = [
-                                        'status' => 'waitting . . .',
-                                        'schoolprice_id' => $school_pice_II->id
+    //                         } else {
+    //                             # code...
+    //                             if ($currentMonth->diffInMonths($currentReceiptStatDate) <= 0) {
+    //                                 # code...
+    //                                 $status[$group] = [
+    //                                     'status' => 'New Student',
+    //                                     'schoolprice_id' => $school_pice_II->id
+    //                                 ];
+    //                             } elseif ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+    //                                 # code...
+    //                                 $status[$group] = [
+    //                                     'status' => 'waitting . . .',
+    //                                     'schoolprice_id' => $school_pice_II->id
 
-                                    ];
-                                } else {
-                                    # code...
-                                    $status[$group] = [
-                                        'status' => 'studying . . .',
-                                        'schoolprice_id' => $school_pice_II->id
-                                    ];
-                                }
-                            }
-                        }
-                    } elseif ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate)) {
-                        //พ้นสภาพนักเรียน
-                        $status[$group] = [
-                            'status' => 'drop',
-                            'schoolprice_id' => $school_pice_II->id
-                        ]; // ['drop', $school_pice_I->id];
+    //                                 ];
+    //                             } else {
+    //                                 # code...
+    //                                 $status[$group] = [
+    //                                     'status' => 'studying . . .',
+    //                                     'schoolprice_id' => $school_pice_II->id
+    //                                 ];
+    //                             }
+    //                         }
+    //                     }
+    //                 } elseif ($currentMonth->diffInMonths($currentReceiptEndDate) > 1 && $currentMonth->greaterThan($currentReceiptEndDate)) {
+    //                     //พ้นสภาพนักเรียน
+    //                     $status[$group] = [
+    //                         'status' => 'drop',
+    //                         'schoolprice_id' => $school_pice_II->id
+    //                     ]; // ['drop', $school_pice_I->id];
 
-                    } else {
-                        if ($currentMonth->greaterThan($currentReceiptEndDate)) {
-                            //กำลังยุติการการเรียน
-                            $status[$group] = [
-                                'status' => 'Termination of study',
-                                'schoolprice_id' => $school_pice_II->id
-                            ]; // ['Termination of study', $school_pice_I->id];
+    //                 } else {
+    //                     if ($currentMonth->greaterThan($currentReceiptEndDate)) {
+    //                         //กำลังยุติการการเรียน
+    //                         $status[$group] = [
+    //                             'status' => 'Termination of study',
+    //                             'schoolprice_id' => $school_pice_II->id
+    //                         ]; // ['Termination of study', $school_pice_I->id];
 
-                        } else {
-                            //กำลังเรียนอยู่
-                            $check_resume = Statuslog::where('student_id', $stdId)
-                                ->where('group', $group)
-                                // ->whereMonth('status_date', $resume_month)
-                                // ->whereYear('status_date', $resume_year)
-                                ->latest()
-                                ->get();
+    //                     } else {
+    //                         //กำลังเรียนอยู่
+    //                         $check_resume = Statuslog::where('student_id', $stdId)
+    //                             ->where('group', $group)
+    //                             // ->whereMonth('status_date', $resume_month)
+    //                             // ->whereYear('status_date', $resume_year)
+    //                             ->latest()
+    //                             ->get();
 
-                            if (count($check_resume) > 0) {
+    //                         if (count($check_resume) > 0) {
 
-                                $firstLog = $check_resume->first();
-                                if ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
-                                    //จ่ายในเดือนปัจจุบัน                                                      //วันที่จ่ายน้อยกว่าวันที่เริ่มเรียน
-                                    if ($monthsDifference == 1) {
-                                        $status[$group] = [
-                                            'status' => 'studying . . .',
-                                            'schoolprice_id' => $school_pice_II->id
-                                        ]; // ['studying . . .', $school_pice_I->id];
+    //                             $firstLog = $check_resume->first();
+    //                             if ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
+    //                                 //จ่ายในเดือนปัจจุบัน                                                      //วันที่จ่ายน้อยกว่าวันที่เริ่มเรียน
+    //                                 if ($monthsDifference == 1) {
+    //                                     $status[$group] = [
+    //                                         'status' => 'studying . . .',
+    //                                         'schoolprice_id' => $school_pice_II->id
+    //                                     ]; // ['studying . . .', $school_pice_I->id];
 
-                                    } else {
-                                        $status[$group] = [
-                                            'status' => 'waitting . . .',
-                                            'schoolprice_id' => $school_pice_II->id
+    //                                 } else {
+    //                                     $status[$group] = [
+    //                                         'status' => 'waitting . . .',
+    //                                         'schoolprice_id' => $school_pice_II->id
 
-                                        ];
-                                    }
+    //                                     ];
+    //                                 }
 
-                                    // dd($check_resume, $firstLog, $firstLog->status, $status, $currentReceiptEndDate);
+    //                                 // dd($check_resume, $firstLog, $firstLog->status, $status, $currentReceiptEndDate);
 
-                                    // $status[$group] = [
-                                    //     'schoolprice_id' => $school_pice_II->id
+    //                                 // $status[$group] = [
+    //                                 //     'schoolprice_id' => $school_pice_II->id
 
-                                    // ];
-                                } else {
-                                    if ($dateResume) {
-                                        $submissionDateResume = Carbon::parse($dateResume);
+    //                                 // ];
+    //                             } else {
+    //                                 if ($dateResume) {
+    //                                     $submissionDateResume = Carbon::parse($dateResume);
 
-                                        if ($currentMonth->diffInMonths($submissionDateResume) > 0) {
-                                            $status[$group] = [
-                                                'status' => 'studying . . .',
-                                                'schoolprice_id' => $school_pice_II->id
-                                            ]; // ['studying . . .', $school_pice_I->id];
+    //                                     if ($currentMonth->diffInMonths($submissionDateResume) > 0) {
+    //                                         $status[$group] = [
+    //                                             'status' => 'studying . . .',
+    //                                             'schoolprice_id' => $school_pice_II->id
+    //                                         ]; // ['studying . . .', $school_pice_I->id];
 
-                                        } else {
-                                            $status[$group] = [
-                                                'status' => 'resume',
-                                                'schoolprice_id' => $school_pice_II->id
-                                            ]; // ['resume', $school_pice_I->id];
+    //                                     } else {
+    //                                         $status[$group] = [
+    //                                             'status' => 'resume',
+    //                                             'schoolprice_id' => $school_pice_II->id
+    //                                         ]; // ['resume', $school_pice_I->id];
 
-                                        }
-                                    } else {
-                                        $status[$group] = [
-                                            'status' => 'studying . . .',
-                                            'schoolprice_id' => $school_pice_II->id
-                                        ];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    $statusss[] = $status;
-                }
-            }
-        } else {
-            $status['N'] = [
-                'status' => 'None Receipt',
-                'schoolprice_id' => null
-            ];
-            $statusss[] = $status;
-        }
+    //                                     }
+    //                                 } else {
+    //                                     $status[$group] = [
+    //                                         'status' => 'studying . . .',
+    //                                         'schoolprice_id' => $school_pice_II->id
+    //                                     ];
+    //                                 }
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //                 $statusss[] = $status;
+    //             }
+    //         }
+    //     } else {
+    //         $status['N'] = [
+    //             'status' => 'None Receipt',
+    //             'schoolprice_id' => null
+    //         ];
+    //         $statusss[] = $status;
+    //     }
 
-        $status = $statusss;
+    //     $status = $statusss;
 
-        return $status;
-    }
+    //     return $status;
+    // }
 }

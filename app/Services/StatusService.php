@@ -15,8 +15,9 @@ class StatusService
         $updateStatus = $this->updateStatus($students);
         // return redirect()->route('home');
     }
-    private function updateStatus($students)
+    public function updateStatus($students)
     {
+        // dd($students);
         foreach ($students as $student) {
             $statuses = $this->determineStatus($student);
             $cl = 0;
@@ -37,13 +38,53 @@ class StatusService
 
                     $select_status_date_year_month = date('Y-m', strtotime($currentMonthYear));
 
-                    $checkDuplicate = $existingStatus = Statuslog::where([
+                    $cMonth = date('m');
+                    $cYear = date('Y');
+                    $checkDuplicate = Statuslog::where([
                         'student_id' => $student->id,
                         'schoolprice_id' => $schp_id,
                         'group' => $subjectGroup,
                         // 'status' => $status,
-                    ])->orderBy('id', 'desc')->get();
-                    // dd($checkDuplicate);
+                    ])
+                        ->whereMonth('status_date', $cMonth)
+                        ->whereYear('status_date', $cYear)
+                        ->orderBy('id', 'desc')->get();
+                    $check_schp = SchoolPrice::find($schp_id);
+
+                    if ($check_schp) {
+                        # code...
+                        $period = $check_schp->period;
+
+
+                        $periodd = explode(' - ', $period);
+                        if (count($periodd) == 1) {
+                            $periods = explode('-', $period);
+                            $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
+                            $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
+                        } else {
+
+                            $startMonth = Carbon::parse($periodd[0])->format('Y-m');
+                            $endMonth = Carbon::parse($periodd[1])->format('Y-m');
+                        }
+                        $cMonthYear = Carbon::parse($currentMonthYear)->firstOfMonth();
+                        $endMonthYear = Carbon::parse($endMonth);
+                        $checkDrop = $endMonthYear->diffInMonths($cMonthYear) > 2 && $endMonthYear->lessThan($cMonthYear) || $subjectGroup === 'N';
+                    } else {
+                        # code...
+                        $checkDrop = $subjectGroup === 'N';
+                        // dd($student->id, $schp_id, $check_schp, $subjectGroup, $status,$checkDrop);
+                    }
+
+
+                    // dd(
+                    //     $student->id,
+                    //     $schp_id,
+                    //     $check_schp,
+                    //     $checkDuplicate,
+                    //     $status,
+                    //     $endMonth,
+                    //     $checkDrop,
+                    // );
 
                     if (count($existingStatus) < 1) {
                         Statuslog::create([
@@ -59,14 +100,19 @@ class StatusService
                         # code...
                         // dd($checkDuplicate->first()->status, $status);
                     } else {
-                        Statuslog::create([
-                            'student_id' => $student->id,
-                            'schoolprice_id' => $schp_id,
-                            'nick_name' => $student->nick_name,
-                            'group' => $subjectGroup,
-                            'status' => $status,
-                            'status_date' => now(),
-                        ]);
+                        if ($checkDrop) {
+                            # code...
+                        } else {
+                            # code...
+                            Statuslog::create([
+                                'student_id' => $student->id,
+                                'schoolprice_id' => $schp_id,
+                                'nick_name' => $student->nick_name,
+                                'group' => $subjectGroup,
+                                'status' => $status,
+                                'status_date' => now(),
+                            ]);
+                        }
                     }
                     $lastStatusLog = $student->status_log->last();
                     if ($lastStatusLog) {
@@ -77,7 +123,7 @@ class StatusService
             }
         }
     }
-    private function determineStatus($student)
+    public function determineStatus($student)
     {
         $stdId = $student->id;
 
