@@ -585,7 +585,7 @@
                                         </span>
                                     </p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong> 1 Dec 2023 – 31 Jan 2024</span></p>
+                                                Date:</strong> 1 Mar 2024 - 30 Apr 2024</span></p>
                                     <p><span style="color: #6351a2;"><strong>Competition Date: </strong>&nbsp;12 May 2024 (Online)</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April

@@ -48,6 +48,12 @@
         </div>
 
         <div class="main-card mb-3 card " id="x_content">
+            <div class="card-header-tab card-header-tab-animation card-header">
+                <div class="card-header-title">
+                    <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                    Current Month Report
+                </div>
+            </div>
             <div class="card-body">
                 <form action="{{ route('search_status') }}" method="GET">
                     @csrf
@@ -125,10 +131,21 @@
 
                     </div>
                 </div>
+            </div>
+        </div>
 
-                {{-- <canvas id="bar-chart777"></canvas> --}}
-                {{-- <canvas id="line-charttest" height="100px"></canvas> --}}
-                {{-- <canvas id="line-charttest" width="600" height="150"></canvas> --}}
+
+        {{-- <canvas id="bar-chart777"></canvas> --}}
+        {{-- <canvas id="line-charttest" height="100px"></canvas> --}}
+        {{-- <canvas id="line-charttest" width="600" height="150"></canvas> --}}
+        <div class="main-card mb-3 card " id="x_content">
+            <div class="card-header-tab card-header-tab-animation card-header">
+                <div class="card-header-title">
+                    <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                    RESULT STUDENT {{ date('F-Y') }}
+                </div>
+            </div>
+            <div class="card-body">
                 <table style="width: 100%;" id="Listview"
                     class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">
                     <thead>
@@ -204,13 +221,23 @@
 
                             </tr>
                             @php
-                                $totalNewStudents += isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0;
-                                $totalStudying += isset($statusCounts['studying . . .']) ? $statusCounts['studying . . .'] : 0;
-                                $totalTermination += isset($statusCounts['Termination of study']) ? $statusCounts['Termination of study'] : 0;
+                                $totalNewStudents += isset($statusCounts['New Student'])
+                                    ? $statusCounts['New Student']
+                                    : 0;
+                                $totalStudying += isset($statusCounts['studying . . .'])
+                                    ? $statusCounts['studying . . .']
+                                    : 0;
+                                $totalTermination += isset($statusCounts['Termination of study'])
+                                    ? $statusCounts['Termination of study']
+                                    : 0;
                                 $totalDrop += isset($statusCounts['drop']) ? $statusCounts['drop'] : 0;
                                 $totalResume += isset($statusCounts['resume']) ? $statusCounts['resume'] : 0;
-                                $totalWait += isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0;
-                                $totalNoneReceipt += isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0;
+                                $totalWait += isset($statusCounts['waitting . . .'])
+                                    ? $statusCounts['waitting . . .']
+                                    : 0;
+                                $totalNoneReceipt += isset($statusCounts['None Receipt'])
+                                    ? $statusCounts['None Receipt']
+                                    : 0;
                             @endphp
                         @endforeach
                         <tr>
@@ -230,7 +257,16 @@
 
 
                 </table>
-
+            </div>
+        </div>
+        <div class="main-card mb-3 card " id="x_content">
+            <div class="card-header-tab card-header-tab-animation card-header">
+                <div class="card-header-title">
+                    <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                    STUDENT LIST {{ date('F-Y') }}
+                </div>
+            </div>
+            <div class="card-body">
                 <table style="width: 100%;" id="Listview1"
                     class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
 
@@ -250,7 +286,8 @@
                                 <td class="text-center">{{ $key + 1 }}</td>
                                 <td class="text-center">{{ $status->student->code }}</td>
                                 <td>
-                                    <a target="_blank" class="text-dark" href="{{ route('students.show', $status->student_id) }}">
+                                    <a target="_blank" class="text-dark"
+                                        href="{{ route('students.show', $status->student_id) }}">
                                         {{ $status->student->full_name }} ( {{ $status->nick_name }} )
                                     </a>
                                     {{-- {{ $status->nick_name }} --}}
@@ -640,7 +677,7 @@
             type: 'bar',
             data: {
                 labels: groupLabels,
-                datasets: data.map(function(item,index) {
+                datasets: data.map(function(item, index) {
                     // var groupColors = {
                     //     'M': 'rgba(52, 143, 226,.65)',
                     //     'E': 'rgba(0, 172, 172,.65)',
