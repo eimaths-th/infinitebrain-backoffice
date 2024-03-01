@@ -596,7 +596,7 @@
                                     <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
                                     <p><span style="color: #6351a2;"><strong>Test:</strong> 1850 baht</span>
                                     </p>
-                                    <p>
+                                    {{-- <p>
                                         <span style="color: #6351a2;">
                                             <strong>Awards :</strong>
                                         </span>
@@ -611,7 +611,7 @@
                                             And Next 30% students get bronze honor.<br>
                                         </span>
                                         <br>
-                                    </p>
+                                    </p> --}}
                                     <p>
                                         &nbsp;
                                     </p>
