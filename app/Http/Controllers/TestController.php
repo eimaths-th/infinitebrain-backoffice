@@ -40,7 +40,7 @@ class TestController extends Controller
         $testfn = '';
         if ($input) {
             # code...
-            $testfn = TestFn::create(['fntest' => $input]);
+            $testfn = TestFn::create(['fntest' => json_encode($input)]);
         }
         dd($testfn);
     }
