@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TestFn;
 use Illuminate\Http\Request;
 
 class TestController extends Controller
@@ -35,7 +36,13 @@ class TestController extends Controller
     public function store(Request $request)
     {
         //
-        dd($request);
+        $input = $request->all();
+        $testfn = '';
+        if ($input) {
+            # code...
+            $testfn = TestFn::create(['fntest' => $input]);
+        }
+        dd($testfn);
     }
 
     /**
