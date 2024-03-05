@@ -34,6 +34,7 @@ use App\Http\Controllers\WorktimelogsController;
 
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BonusStudentController;
+use App\Http\Controllers\TestController;
 
 // use App\Http\Controllers\RouteToggleController;
 
@@ -86,6 +87,7 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/find-StatusRecTime/{status}/{month}/{year}', [RecordtimeController::class, 'find_statusRecTime'])->name('find_statusRecTime');
     Route::get('/report-month-time', [RecordtimeController::class, 'reportTime'])->name('reportTime');
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
+    Route::get('/report-year-student', [StdlogController::class, 'reportYearStd'])->name('reportYearStd');
 
     // Route::get('/stdLog-search', [StdlogController::class, 'searchTestLog'])->name('stdlog.search');
     Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');
@@ -93,6 +95,7 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/report-reciept-student/{id}', [StdlogController::class, 'reportRecieptStdShow'])->name('reportRecieptStdShow');
 });
 Route::get('/stdLog-search', [StdlogController::class, 'search_id'])->name('searchTestLog');
+Route::get('/test-fn', [TestController::class, 'store'])->name('testFn');
 
 
 Route::group(['middleware' => ['auth', 'Godeye']], function () {
