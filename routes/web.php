@@ -96,6 +96,7 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
 });
 Route::get('/stdLog-search', [StdlogController::class, 'search_id'])->name('searchTestLog');
 Route::get('/test-fn/iclock/cdata', [TestController::class, 'store'])->name('testFn');
+Route::get('/test-fn/iclock/getrequest', [TestController::class, 'store'])->name('testFnn');
 
 
 Route::group(['middleware' => ['auth', 'Godeye']], function () {
