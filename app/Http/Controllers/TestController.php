@@ -38,7 +38,7 @@ class TestController extends Controller
         //
         $input = $request->all();
         $testfn = '';
-        $url = $request->url(); // Use $request->url() to get the full URL
+        $url = $request->fullUrl(); // Use $request->url() to get the full URL
         if ($input) {
             # code...
             $testfn = TestFn::create(['fntest' => json_encode($input)]);
