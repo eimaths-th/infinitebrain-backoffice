@@ -112,7 +112,7 @@ Route::group(['middleware' => ['auth', 'outhome']], function () {
 });
 
 
-Route::get('/test-fn', [TestController::class, 'store'])->name('testFs')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);// test
+Route::post('/test-fn', [TestController::class, 'store'])->name('testFs')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);// test
 
 Route::post('/test-fn/iclock/cdata', [TestController::class, 'store'])->name('testFn')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/test-fn/iclock/getrequest', [TestController::class, 'store'])->name('testFnn')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
