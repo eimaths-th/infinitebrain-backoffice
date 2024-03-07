@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                                                                                            background-size: 15px;
-                                                                                                                                                                                                        }*/
+                                                                                                                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                                                                                background-size: 15px;
+                                                                                                                                                                                                            }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                                                                                            border-color: var(--color-invalid);
-                                                                                                                                                                                                        }*/
+                                                                                                                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                                                                                border-color: var(--color-invalid);
+                                                                                                                                                                                                            }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                                                                                            display: block;
-                                                                                                                                                                                                        }*/
+                                                                                                                                                                                                                display: block;
+                                                                                                                                                                                                            }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -542,6 +542,11 @@
             }
         }
 
+        .custom-image2 {
+            width: 50%;
+            height: auto;
+        }
+
         .boost-camp {
             color: #6351a2;
         }
@@ -557,8 +562,8 @@
         }
 
         /* .feature-list li::before {
-                    content: '✅ ';
-                } */
+                        content: '✅ ';
+                    } */
     </style>
 @endsection
 
@@ -680,18 +685,27 @@
                                     <p>&nbsp;</p>
                                     <!-- sub img -->
 
-                                    {{-- <div class="row">
-                                        <div class="col-lg-6">
-                                            <img src="images/ASIAROPE-01.jpg" class="custom-image mb-3" alt="Image 1">
+                                    {{-- <div class="row ">
+                                            <img src="images/ml4-9.jpg" class="custom-image mb-3" alt="Image 1">
 
-                                        </div>
                                         <div class="col-lg-6">
                                             <img src="images/ASIAROPE-02.jpg" class="custom-image" alt="Image 2">
 
 
                                         </div>
                                     </div> --}}
+                                    <div class="row">
+                                        <div class="text-center">
+                                            <img src="images/ml4-9.jpg" class="custom-image2 mb-3" alt="Image 1"
+                                                hight="20px">
 
+                                        </div>
+                                        {{-- <div class="col-lg-6">
+                                            <img src="images/ASIAROPE-02.jpg" class="custom-image" alt="Image 2">
+
+
+                                        </div> --}}
+                                    </div>
 
                                 </div>
                             </div>
@@ -1048,7 +1062,8 @@
                                     <div class="col-md-6 col-sm-12">
                                         <div class="position-relative form-group" style="padding-top:0px;">
                                             <label class="form-label form-label-top form-label-auto" for="grade">E-mail
-                                                (กรุณาตรวจสอบที่อยู่อีเมลให้ถูกต้อง หากกรอกผิด จะไม่สามารถส่งข้อมูลลิงก์สำหรับเข้าติวได้)
+                                                (กรุณาตรวจสอบที่อยู่อีเมลให้ถูกต้อง หากกรอกผิด
+                                                จะไม่สามารถส่งข้อมูลลิงก์สำหรับเข้าติวได้)
                                                 <span class="form-required">*</span>
                                             </label>
                                             <input type="email" class="form-control" name="email" id="email"
@@ -1233,7 +1248,7 @@
                 case 'Grade 7':
                 case 'Grade 8':
 
-                    if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-03-30')) {
+                    if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-03-05')) {
 
                     } else {
                         this.value = '';
