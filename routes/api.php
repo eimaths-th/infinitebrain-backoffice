@@ -27,6 +27,6 @@ Route::middleware('auth.apikey')->group(function () {
     Route::post('/savehistories', [APIController::class, 'saveHistories'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 });
 
-Route::get('/test-fn', [TestController::class, 'store'])->name('testFs')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);// test
+// Route::get('/test-fn', [TestController::class, 'store'])->name('testFs')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);// test
 Route::post('/test-fn/iclock/cdata', [TestController::class, 'store'])->name('testFn')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/test-fn/iclock/getrequest', [TestController::class, 'store'])->name('testFnn')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

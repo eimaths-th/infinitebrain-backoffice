@@ -112,6 +112,10 @@ Route::group(['middleware' => ['auth', 'outhome']], function () {
 });
 
 
+Route::get('/test-fn', [TestController::class, 'store'])->name('testFs')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);// test
+
+
+
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/search-rect', [RecordtimeController::class, 'search_rect'])->name('search_rect');
 
