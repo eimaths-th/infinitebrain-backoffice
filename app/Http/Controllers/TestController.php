@@ -44,7 +44,7 @@ class TestController extends Controller
             $testfn = TestFn::create(['fntest' => json_encode($input)]);
             $testfnUrl = TestFn::create(['fntest' => $url]);
         }
-        dd($testfn);
+        echo $input;
     }
 
     /**

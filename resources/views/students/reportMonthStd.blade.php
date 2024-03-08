@@ -37,14 +37,14 @@
         }
 
         /* .switchery {
-                                                                                                                                                                                                                            width: 30px;
-                                                                                                                                                                                                                            height: 16px;
-                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                width: 30px;
+                                                                                                                                                                                                                                                                height: 16px;
+                                                                                                                                                                                                                                                            }
 
-                                                                                                                                                                                                                        .switchery-small {
-                                                                                                                                                                                                                            width: 12px;
-                                                                                                                                                                                                                            height: 12px;
-                                                                                                                                                                                                                        } */
+                                                                                                                                                                                                                                                            .switchery-small {
+                                                                                                                                                                                                                                                                width: 12px;
+                                                                                                                                                                                                                                                                height: 12px;
+                                                                                                                                                                                                                                                            } */
     </style>
 @endsection
 
@@ -63,7 +63,7 @@
                     <div class="page-title-icon">
                         <i class="pe-7s-users icon-gradient bg-tempting-azure"></i>
                     </div>
-                    <div>Students
+                    <div>Report Month Students
                         <div class="page-title-subheading">Infinite Brain Student Data</div>
                     </div>
                 </div>
@@ -310,12 +310,12 @@
                             <span class="d-sm-block d-none">ตรวจสอบรายเดือน</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
-                            {{-- <span class="d-sm-none">Tab 1</span> --}}
+                            <span class="d-sm-none">Tab 1</span>
                             <span class="d-sm-block d-none">ตรวจสอบรายปี</span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
                             {{-- <span class="d-sm-none">Tab 2</span> --}}
@@ -332,9 +332,17 @@
                 <div class="tab-content panel m-0 rounded-0 p-3">
                     <!-- BEGIN tab-pane -->
                     <div class="tab-pane fade active show" id="default-tab-1">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนเดือน
+                                    {{ thaidate('F', $month) }}
+                                    {{ $year }}</h3>
+                            </div>
+                            <div class="col-lg-6 text-end">
+                                <a href="#" onclick="export_report();" class="btn btn-success ">Print</a>
 
-                        <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนเดือน {{ thaidate('F', $month) }}
-                            {{ $year }}</h3>
+                            </div>
+                        </div>
                         <table style="width: 100%;" id="Listview"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
 
@@ -357,7 +365,7 @@
                             <tbody>
                                 @php
                                     use App\Models\Statuslog;
-
+                                    // dd($cMonth);
                                     $sum = 0;
                                     $sum1 = 0;
                                 @endphp
@@ -469,7 +477,6 @@
                                             <td>{{ $data->rec_school->receipt_number }}</td>
                                             <td>{{ $data->group }}</td>
 
-
                                             <td class="{{ $class }}">
                                                 {{-- @if ($data->std->status_log && $data->std->status_log->count() > 0 && $status->last()->group == $data->group) --}}
                                                 {{ $statusValue }}
@@ -505,118 +512,6 @@
 
                         </table>
                     </div>
-                    <div class="tab-pane fade" id="default-tab-2">
-
-                        <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนปี {{ $year }}</h3>
-                        <table style="width: 100%;" id="Listview3"
-                            class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
-
-                            <thead>
-                                <tr>
-                                    <th width='1%' class="text-center">no.</th>
-                                    <th width='1%'>Code</th>
-                                    <th>Student Nickname</th>
-                                    <th>Submission Date</th>
-                                    <th>Period</th>
-                                    <th>Reciept Number</th>
-                                    <th>Group</th>
-                                    <th>Stutus</th>
-                                    <th>Tpye</th>
-                                    <th>total</th>
-                                    <th>Check</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-
-                                @foreach ($reportYear_schoolPrice as $key => $data1)
-                                    {{-- @foreach ($reportYear_schoolPrice as $studentId1 => $groupedData1) --}}
-                                    {{-- @foreach ($groupedData1 as $key => $data1) --}}
-                                    @php
-                                        $class = '';
-
-                                        $cMonth = date('m');
-                                        $cYear = date('Y');
-                                        $status = Statuslog::where('student_id', optional($data1->std)->id)
-                                            ->where('group', $data1->group)
-                                            ->whereMonth('status_date', $cMonth)
-                                            ->whereYear('status_date', $cYear)
-                                            ->get();
-
-                                        if ($status->last() && $status->last()->status === 'None Receipt') {
-                                            $class = 'text-info';
-                                        } elseif ($status->last() && $status->last()->status === 'drop') {
-                                            $class = 'text-black';
-                                        } elseif ($status->last() && $status->last()->status === 'waitting . . .') {
-                                            $class = 'text-primary';
-                                        } elseif ($status->last() && $status->last()->status === 'Termination of study') {
-                                            $class = 'text-warning';
-                                        } elseif ($status->last() && $status->last()->status === 'New Student') {
-                                            $class = 'text-red';
-                                        } else {
-                                            $class = 'text-blue';
-                                        }
-                                    @endphp
-                                    <tr>
-                                        <td class="text-center">{{ $key + 1 }}</td>
-                                        <td class="text-center">{{ $data1->std->code ?? 'Null' }}</td>
-                                        <td class="{{ $class }}">{{ $data1->std->nick_name ?? 'Null' }}</td>
-                                        <td>{{ $data1->rec_school->submission_date }}</td>
-                                        <td>{{ $data1->period }}</td>
-
-                                        <td>{{ $data1->rec_school->receipt_number }}</td>
-                                        <td>{{ $data1->group }}</td>
-
-
-                                        <td class="{{ $class }}">
-                                            @if (
-                                                $data1->std &&
-                                                    $data1->std->status_log &&
-                                                    $data1->std->status_log->count() > 0 &&
-                                                    $status->last() &&
-                                                    $status->last()->group == $data1->group)
-                                                {{ $status->last()->status ?? 'Null' }}
-                                            @else
-                                                null
-                                            @endif
-                                        </td>
-                                        <td>{{ $data1->course_type }}</td>
-                                        <td class="text-end">{{ number_format($data1->total) }} บาท</td>
-                                        <td class="text-center">
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <input class="form-check-input" type="checkbox"
-                                                    id="flexSwitchCheckChecked-{{ $data1->rec_school->receipt_number }}">
-                                            </div>
-                                        </td>
-
-                                    </tr>
-                                    @php
-                                        $sum1 += $data1->total;
-                                    @endphp
-                                    {{-- @endforeach --}}
-                                @endforeach
-
-                            </tbody>
-                            <tbody>
-
-                                <tr>
-                                    <td class="text-center">#</td>
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" hidden></td> <!-- Merged cell -->
-                                    <td class="text-center" colspan="8">Sum Total</td> <!-- Merged cell -->
-                                    <td class="text-end">{{ number_format($sum1) }} บาท</td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-
-                        </table>
-                    </div>
-                    <!-- END tab-pane -->
-                    <!-- BEGIN tab-pane -->
                     <div class="tab-pane fade" id="default-tab-3">
                         <blockquote class="blockquote">
                             <div class="d-flex justify-content-between align-items-center">
@@ -668,14 +563,7 @@
 
                         </table>
                     </div>
-                    <!-- END tab-pane -->
-                    <!-- BEGIN tab-pane -->
-
-                    <!-- END tab-pane -->
                 </div>
-
-
-
 
             </div>
         </div>
@@ -770,6 +658,15 @@
     </script> --}}
 
     <script>
+        function export_report() {
+
+            url =
+                '{{ route('reportMonthStd', ['type' => 'print', 'tap' => '1', 'month' => $cMonth, 'year' => $year]) }}';
+
+            window.open(
+                url.replace(/&amp;/g, "&")
+            );
+        }
         var groupLabels = [
             @foreach ($totalForAllMonths as $month => $total)
 

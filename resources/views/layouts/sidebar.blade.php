@@ -167,9 +167,7 @@
                         <ul>
                             @php
                                 $data = Subject::orderBy('id', 'asc')->get();
-                                $dataGroup = SubjectPrice::orderBy('id', 'asc')
-                                    ->get()
-                                    ->groupBy('subject_id');
+                                $dataGroup = SubjectPrice::orderBy('id', 'asc')->get()->groupBy('subject_id');
                             @endphp
                             @foreach ($data as $key)
                                 <li>
@@ -730,15 +728,25 @@
                                 <li>
                                     <a href="{{ route('reportMonthStd') }}">
                                         <i class="metismenu-icon"></i>
-                                        รายงานประจำเดือน
+                                        ค่าสมัครเรียนประจำเดือน
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('reportRecieptStd') }}">
+                                    <a href="{{ route('reportYearStd') }}">
                                         <i class="metismenu-icon"></i>
-                                        Report Student Recieept
+                                        ค่าสมัครเรียนประจำปี
                                     </a>
                                 </li>
+                                @if (Auth::user()->id == 16)
+                                    <li>
+                                        <a href="{{ route('reportRecieptStd') }}">
+                                            <i class="metismenu-icon"></i>
+                                            Report Student Recieept
+                                        </a>
+                                    </li>
+                                @endif
+
+
                                 <li>
                                     <a href="{{ route('reportTime') }}">
                                         <i class="metismenu-icon"></i>

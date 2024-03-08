@@ -206,10 +206,10 @@
                             <td align="left" width="30%" class="activeda">&nbsp;
 
                             </td>
-                            <td align="center"  width="30%" class="activeda">
+                            <td align="center" width="30%" class="activeda">
 
                             </td>
-                            <td align="center"  width="20%" class="activeda">
+                            <td align="center" width="20%" class="activeda">
 
                             </td>
                             {{-- <td align="center" class="activeda ">
@@ -267,3 +267,5 @@
         window.close();
     }, 4000);
 </script>
+
+</html>

@@ -1468,8 +1468,12 @@ class ReceiptSchoolController extends Controller
             } else {
                 $entranceFee = null;
             }
+
+            $grp = Subject::find($value['subject']);
+
             $data2 = new SchoolPrice([
                 'subject' => $value['subject'],
+                'group' => $grp->group,
                 'course_type' => $value['course_type'],
                 'student_id' => $value['std_id'],
                 'level' => $value['level'],

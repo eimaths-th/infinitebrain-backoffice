@@ -144,24 +144,9 @@ class StdlogController extends Controller
 
 
 
-    private function queryGrafgh($test_scp)
+    private function queryGrafgh()
     {
-        $schoolPrice_id_all = [];
-        foreach ($test_scp as $schoolPrice) {
-            if ($schoolPrice->rec_school) {
-                if ($schoolPrice->rec_school && $schoolPrice->course_type == 1) {
-                    $matchingSchoolPrices[] = [
-                        'id' => $schoolPrice->id,
-                        'course_type' => $schoolPrice->course_type,
-                        'reciept_id' => $schoolPrice->rid,
-                        'std_id' => $schoolPrice->student_id,
-                        'submission_date' => $schoolPrice->rec_school->submission_date
-                    ];
-                    $schoolPrice_id_all[] = $schoolPrice->id;
-                }
-            }
-        }
-        $reportMonth_schoolPrice_all = SchoolPrice::whereIn('id', $schoolPrice_id_all)
+        $reportMonth_schoolPrice_all = SchoolPrice::where('course_type', 1)
             ->orderBy('rid')
             ->get()
             ->groupBy('student_id', 'group');
@@ -173,10 +158,10 @@ class StdlogController extends Controller
                 if (!isset($totalForAllMonths[$month])) {
                     $totalForAllMonths[$month] = 0;
                 }
+
                 $totalForAllMonths[$month] += $data->total;
             }
         }
-        // dd($totalForAllMonths);
 
         uksort($totalForAllMonths, function ($a, $b) {
             $dateA = DateTime::createFromFormat('F-Y', $a);
@@ -184,7 +169,37 @@ class StdlogController extends Controller
 
             return $dateA <=> $dateB;
         });
+
         return $totalForAllMonths;
+    }
+    private function queryGrafghYear()
+    {
+
+        $reportMonth_schoolPrice_all = SchoolPrice::where('course_type', 1)
+            ->orderBy('rid')
+            ->get()
+            ->groupBy('student_id', 'group');
+
+        $totalForAllYears = [];
+        foreach ($reportMonth_schoolPrice_all as $studentId => $groupedData) {
+            foreach ($groupedData as $key => $data) {
+                $year = Carbon::parse($data->rec_school->submission_date)->format('Y');
+
+                if (!isset($totalForAllYears[$year])) {
+                    $totalForAllYears[$year] = 0;
+                }
+                $totalForAllYears[$year] += $data->total;
+            }
+        }
+
+        uksort($totalForAllYears, function ($a, $b) {
+            $dateA = DateTime::createFromFormat('Y', $a);
+            $dateB = DateTime::createFromFormat('Y', $b);
+
+            return $dateA <=> $dateB;
+        });
+
+        return $totalForAllYears;
     }
 
     private function calculatePercentageChange($totalForAllMonths)
@@ -375,8 +390,15 @@ class StdlogController extends Controller
         }
         return $reportMonth_schoolPrice;
     }
-    public function reportMonthStd()
+    public function reportMonthStd(Request $request)
     {
+        // dd($request->all());
+        if ($request->type === 'print') {
+
+            $view = 'students.print_reportMonthStd';
+        } else {
+            $view = 'students.reportMonthStd';
+        }
         $test_scp = SchoolPrice::all();
         $currentMonth = Carbon::now()->format('Y-m');
         $month = date('m');
@@ -385,7 +407,7 @@ class StdlogController extends Controller
         $groupSubject = null;
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year, $groupSubject);
         $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year, $groupSubject);
-        $totalForAllMonths = $this->queryGrafgh($test_scp);
+        $totalForAllMonths = $this->queryGrafgh();
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
         // $subjects = Subject::all();
         $subjects = Subject::all()->groupBy('group');
@@ -394,9 +416,11 @@ class StdlogController extends Controller
             ->whereYear('submission_date', $year)
             ->orderBy('rec_id', 'desc')
             ->get();
+        // dd($request->all(),$view);
+
         // ksort($totalForAllMonths);
         // dd($totalForAllMonths,  $reportMonth_schoolPrice);
-        return view('students.reportMonthStd', [
+        return view($view, [
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
             'reportYear_schoolPrice' => $reportYear_schoolPrice,
             'totalForAllMonths' => $totalForAllMonths,
@@ -404,7 +428,53 @@ class StdlogController extends Controller
             'paper' => $paper,
             'year' => $year,
             'month' => $months,
+            'cMonth' => $month,
             'subjects' => $subjects,
+            'checkStatus' => 'all',
+
+        ]);
+    }
+    public function reportYearStd(Request $request)
+    {
+        // dd($request->all());
+        if ($request->type === 'print') {
+
+            $view = 'students.print_reportYearStd';
+        } else {
+            $view = 'students.reportYearStd';
+        }
+        $test_scp = SchoolPrice::all();
+        $currentMonth = Carbon::now()->format('Y-m');
+        $month = date('m');
+        $months = date('F');
+        $year = date('Y');
+        $groupSubject = null;
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year, $groupSubject);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year, $groupSubject);
+        $totalForAllMonths = $this->queryGrafghYear();
+        $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
+        // $subjects = Subject::all();
+        $subjects = Subject::all()->groupBy('group');
+        // dd($subjects);
+        $paper = PaperReport::whereMonth('submission_date', $month)
+            ->whereYear('submission_date', $year)
+            ->orderBy('rec_id', 'desc')
+            ->get();
+        // dd($request->all(),$view);
+        $status = Statuslog::all();
+        // ksort($totalForAllMonths);
+        // dd($totalForAllMonths,  $reportMonth_schoolPrice);
+        return view($view, [
+            'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
+            'reportYear_schoolPrice' => $reportYear_schoolPrice,
+            'totalForAllMonths' => $totalForAllMonths,
+            'percentageChangeForAllMonths' => $percentageChangeForAllMonths,
+            'paper' => $paper,
+            'year' => $year,
+            'month' => $months,
+            'cMonth' => $month,
+            'subjects' => $subjects,
+            'status' => $status,
             'checkStatus' => 'all',
 
         ]);
