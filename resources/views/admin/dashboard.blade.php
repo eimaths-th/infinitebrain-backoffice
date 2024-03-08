@@ -946,8 +946,9 @@
         <div class="g-0 row">
             @php
 
-                $count_group = count($groupStatusCounts) - 1;
+                $count_group = count($groupStatusCounts);
                 $line = '<li class="list-group-item"> </li>';
+                // dd($groupStatusCounts);
             @endphp
             @foreach ($groupStatusCounts as $group => $groupData)
                 @if ($group != 'N')
