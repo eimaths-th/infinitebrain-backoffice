@@ -201,6 +201,39 @@ class StdlogController extends Controller
 
         return $totalForAllYears;
     }
+    private function queryGrafghGroupYear()
+    {
+
+        $reportMonth_schoolPrice_all = SchoolPrice::where('course_type', 1)
+            ->orderBy('rid')
+            ->get()
+            ->groupBy('group');
+        // dd($reportMonth_schoolPrice_all);
+        $totalForAllGroupYear = [];
+        foreach ($reportMonth_schoolPrice_all as $group => $groupedData) {
+
+            foreach ($groupedData as $data) {
+
+                $year = Carbon::parse($data->rec_school->submission_date)->format('Y');
+                $group2 = $data->group;
+
+                if (!isset($totalForAllGroupYear[$group2][$year])) {
+                    $totalForAllGroupYear[$group2][$year] = 0;
+                }
+
+                $totalForAllGroupYear[$group2][$year] += $data->total;
+            }
+        }
+
+        uksort($totalForAllGroupYear, function ($a, $b) {
+            $dateA = DateTime::createFromFormat('Y', $a);
+            $dateB = DateTime::createFromFormat('Y', $b);
+
+            return $dateA <=> $dateB;
+        });
+        // dd('test g y', $totalForAllGroupYear);
+        return $totalForAllGroupYear;
+    }
 
     private function calculatePercentageChange($totalForAllMonths)
     {
@@ -334,10 +367,14 @@ class StdlogController extends Controller
             })
             ->orderBy('rid', 'desc');
 
-        $reportMonth_schoolPrice = $month ?
-            $schoolPriceQuery->get()->groupBy('student_id', 'group') :
-            $schoolPriceQuery->get();
+        // $reportMonth_schoolPrice = $month ?
+        //     $schoolPriceQuery->get()->groupBy('student_id', 'group') :
+        //     $schoolPriceQuery->get();
 
+        $reportMonth_schoolPrice = $schoolPriceQuery->get()->groupBy('group', 'student_id');
+
+
+        // dd($reportMonth_schoolPrice);
         return $reportMonth_schoolPrice;
     }
 
@@ -452,6 +489,7 @@ class StdlogController extends Controller
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices($month, $year, $groupSubject);
         $reportYear_schoolPrice = $this->getMatchingSchoolPrices(null, $year, $groupSubject);
         $totalForAllMonths = $this->queryGrafghYear();
+        $totalForAllGroupYear = $this->queryGrafghGroupYear();
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
         // $subjects = Subject::all();
         $subjects = Subject::all()->groupBy('group');
@@ -463,8 +501,10 @@ class StdlogController extends Controller
         // dd($request->all(),$view);
         $status = Statuslog::all();
         // ksort($totalForAllMonths);
-        // dd($totalForAllMonths,  $reportMonth_schoolPrice);
+        // dd($totalForAllGroupYear);
+
         return view($view, [
+            'totalForAllGroupYear' => $totalForAllGroupYear,
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
             'reportYear_schoolPrice' => $reportYear_schoolPrice,
             'totalForAllMonths' => $totalForAllMonths,
