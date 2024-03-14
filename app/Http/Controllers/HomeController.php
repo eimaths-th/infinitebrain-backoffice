@@ -464,8 +464,7 @@ class HomeController extends Controller
             // ->whereYear('date', $currentYear)
             ->get();
         // dd($rec_times_year2);
-        // dd($rec_times_year2);test add.
-        
+
 
         return view('users.working_report', [
             // 'rec_timess' => $rec_timess,

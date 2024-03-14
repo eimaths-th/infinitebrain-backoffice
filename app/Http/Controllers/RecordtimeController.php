@@ -28,9 +28,11 @@ class RecordtimeController extends Controller
         //
         $users = User::all();
         $rec_times = Recordtime::orderBy('id', 'desc')->get();
+        $checkCd = 0;
         return view('users.def_working', [
             'rec_times' => $rec_times,
             'users' => $users,
+            'checkCd' => $checkCd,
 
         ]);
     }
@@ -322,6 +324,9 @@ class RecordtimeController extends Controller
                 ->get();
             $user_name = User::find($user_id);
             $name = $user_name->name;
+            $rec_times_year2 = Recordtime::where('user_id', $user_id)
+                // ->whereYear('date', $currentYear)
+                ->get();
         } else {
 
             $rec_times = Recordtime::whereMonth('date', $month)
@@ -329,6 +334,7 @@ class RecordtimeController extends Controller
                 ->orderBy('id', 'desc')
                 ->get();
             $name = '';
+            $rec_times_year2 = [];
         }
 
         if ($request->type === 'print') {
@@ -340,8 +346,9 @@ class RecordtimeController extends Controller
         $users = User::all();
 
         // dd($name);
+        $checkCd = 1;
 
-
+        $date = Carbon::create($year, $month)->format('Y-m');
         return view($view, [
             'rec_times' => $rec_times,
             'users' => $users,
@@ -350,6 +357,11 @@ class RecordtimeController extends Controller
             'year' => $year,
             'name' => $name,
             'fontsize' => 1,
+            'checkCd' => $checkCd,
+            'date' => $date,
+
+            'rec_times_year2' => $rec_times_year2,
+
 
         ]);
     }

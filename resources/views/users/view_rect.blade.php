@@ -79,8 +79,10 @@
             </div>
         </div>
         <div class="main-card mb-3 card " id="x_content">
-            <div class="card-body">
 
+
+
+            <div class="card-body">
                 <form action="{{ route('search_rect') }}" method="GET" data-parsley-validate="true">
                     @csrf
                     <div class="row mb-3">
@@ -154,6 +156,26 @@
                         </div>
                     </div>
                 </form>
+            </div>
+            <div id="calendar2">
+
+                <div class="card-header-tab card-header-tab-animation card-header mb-3">
+                    <div class="card-header-title">
+                        <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                        Work record of {{ auth()->user()->name }}
+                    </div>
+                </div>
+
+                <div class="col-lg">
+                    <div class="pt-0 pb-0 card-body mb-5">
+
+                        <div id="calendar" class="calendar " style="max-height: 600px;"></div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+
                 <table style="width: 100%;" id="Listview"
                     class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">
                     <thead>
@@ -293,6 +315,13 @@
 @section('script')
     <script src="/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
     <script src="/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.11/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.11/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.11/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.11/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.11/index.global.min.js'></script>
     <script>
         var table = $('#Listview').DataTable({
             // serverSide: true,
@@ -316,7 +345,8 @@
         // });
         function export_report() {
 
-            url = '{{ route('search_rect', ['type' => 'print', 'user_id' => $user_id, 'month' => $month, 'year' => $year ])}}';
+            url =
+                '{{ route('search_rect', ['type' => 'print', 'user_id' => $user_id, 'month' => $month, 'year' => $year]) }}';
 
             window.open(
                 url.replace(/&amp;/g, "&")
@@ -324,30 +354,100 @@
         }
     </script>
 
-    {{-- <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Attach a click event to the delete button
-            document.querySelector('.delete-button').addEventListener('click', function() {
-                // Display a confirmation dialog
-                var confirmDelete = window.confirm('Are you sure you want to delete this record?');
+            console.log('hello world !!');
 
-                // If the user confirms, send an AJAX request
-                if (confirmDelete) {
-                    var recordId = this.getAttribute('data-recordid');
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                initialDate: '{{ $date }}',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth'
+                },
+                events: [
 
-                    // Send an AJAX request to the delete route
-                    axios.delete('{{ route('recordtime.destroy', ['recordtime' => ':recordId']) }}'
-                            .replace(':recordId', recordId))
-                        .then(function(response) {
-                            // Handle success, e.g., remove the deleted record from the UI
-                            console.log(response.data);
-                        })
-                        .catch(function(error) {
-                            // Handle error
-                            console.error(error);
-                        });
-                }
+                    @php
+                        foreach ($rec_times_year2 as $rec_years) {
+                            $class = '';
+                            switch ($rec_years->status) {
+                                case 1:
+                                    $color = 'rgba(58, 196, 125, 0.8)';
+                                    break;
+
+                                case 2:
+                                case 3:
+                                case 4:
+                                case 13:
+                                    $color = 'rgba(247, 185, 36, 0.8)';
+
+                                    break;
+
+                                case 5:
+                                case 6:
+                                case 7:
+                                case 8:
+                                case 9:
+                                    $color = 'rgba(255, 91, 87,0.8)';
+
+                                    break;
+
+                                case 11:
+                                case 12:
+                                    $color = 'rgba(63, 106, 216, 0.8)';
+                                    break;
+
+                                case 10:
+                                    $color = 'rgba(52, 58, 64, 0.8)';
+
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                            $text_late = '';
+                            if ($rec_years->late_time) {
+                                $text_late = ' : ' . $rec_years->late_time . ' นาที';
+                            }
+
+                            echo '{';
+                            echo "title: '{$rec_years->status_name} {$text_late}',";
+                            echo "start: '{$rec_years->date}',";
+                            echo "color: '{$color}'";
+                            echo '},';
+                        }
+                    @endphp
+
+                    // {
+                    //     title: 'สาย : 5 นาที',
+                    //     start: '2024-03-10',
+                    //     color: 'rgba(255, 91, 87,0.8)',
+                    // },
+
+                ]
             });
+            calendar.render();
+
+            document.getElementById('clearEventsButton').addEventListener('click', function() {
+                console.log('Event listener triggered');
+                clearAllEvents();
+            });
+
+            // Function to clear all events
+            function clearAllEvents() {
+                calendar.getEvents().forEach(function(event) {
+                    event.remove();
+                });
+
+                // Clear the events array and re-render the calendar
+                calendar.setOption('events', []);
+                calendar.render();
+            }
+
+            // Render the calendar
+            // calendar.render();
         });
-    </script> --}}
+    </script>
 @endsection
