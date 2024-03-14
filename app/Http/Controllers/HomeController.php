@@ -460,11 +460,16 @@ class HomeController extends Controller
         //     ->groupBy('user_id');
 
         // dd($rec_times_year);
+        $rec_times_year2 = Recordtime::where('user_id', Auth::user()->id)
+            // ->whereYear('date', $currentYear)
+            ->get();
+        // dd($rec_times_year2);
 
         return view('users.working_report', [
             // 'rec_timess' => $rec_timess,
             'rec_times' => $rec_times,
             'rec_times_year' => $rec_times_year,
+            'rec_times_years' => $rec_times_year2,
             'currentYear' => $currentYear,
             'currentMonth' => $currentMonth,
 
