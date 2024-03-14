@@ -157,23 +157,26 @@
                     </div>
                 </form>
             </div>
-            <div id="calendar2">
+            {{-- @if (auth()->user()->id == 16) --}}
+                <div id="calendar2">
 
-                <div class="card-header-tab card-header-tab-animation card-header mb-3">
-                    <div class="card-header-title">
-                        <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
-                        Work record of {{ auth()->user()->name }}
+                    <div class="card-header-tab card-header-tab-animation card-header mb-3">
+                        <div class="card-header-title">
+                            <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                            Work record of {{ $name }}
+                        </div>
+                    </div>
+
+                    <div class="col-lg">
+                        <div class="pt-0 pb-0 card-body mb-5">
+
+                            <div id="calendar" class="calendar " style="max-height: 600px;"></div>
+
+                        </div>
                     </div>
                 </div>
+            {{-- @endif --}}
 
-                <div class="col-lg">
-                    <div class="pt-0 pb-0 card-body mb-5">
-
-                        <div id="calendar" class="calendar " style="max-height: 600px;"></div>
-
-                    </div>
-                </div>
-            </div>
             <div class="card-body">
 
                 <table style="width: 100%;" id="Listview"
