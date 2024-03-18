@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                            background-size: 15px;
-                                                                                                                                        }*/
+                                                                                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                    background-size: 15px;
+                                                                                                                                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                            border-color: var(--color-invalid);
-                                                                                                                                        }*/
+                                                                                                                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                    border-color: var(--color-invalid);
+                                                                                                                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                            display: block;
-                                                                                                                                        }*/
+                                                                                                                                                    display: block;
+                                                                                                                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,9 +531,9 @@
     </style>
     <style>
         /* .custom-image {
-                                                                                        width: 395px;
-                                                                                        height: 395px;
-                                                                                    } */
+                                                                                                width: 395px;
+                                                                                                height: 395px;
+                                                                                            } */
 
         .custom-image {
             width: 100%;
@@ -684,7 +684,7 @@
                                 </div>
                                 <input type="hidden" id="contest" name="contest" value=" ">
                                 <input type="hidden" id="subject" name="subject" value=" ">
-                                <input type="hidden" id="birthdate" name="birthdate" value="null">
+                                {{-- <input type="hidden" id="birthdate" name="birthdate" value="null"> --}}
                                 <input type="hidden" name="sfield" id="sfield" value="20">
 
                                 {{-- <div class="form-row form-focus">
@@ -773,6 +773,26 @@
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Nick
                                                 Name</label>
+                                            <div class="form-error-message" role="alert"><img
+                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                    height="10"> <span class="error-navigation-message">This field is
+                                                    required.</span>
+                                                <div class="form-error-arrow">
+                                                    <div class="form-error-arrow-inner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="position-relative form-group">
+                                            <label class="form-label form-label-top form-label-auto" for="birthdate">Birth
+                                                Date / วันเกิด <span class="form-required">*</span>
+                                                <div style="width: 270px"></div>
+                                            </label>
+                                            <input type="date" class="AddDate form-control" name="birthdate"
+                                                id="birthdate" value="" required>
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Date</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
                                                     height="10"> <span class="error-navigation-message">This field is
@@ -951,20 +971,22 @@
                                 </div>
 
                                 <div class="form-row form-focus">
-                                    <div class="col-md-12 col-sm-12">
+                                    <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="address">Address : <span class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="address" id="address"
-                                                maxlength="150" minlength="2" required>
+                                            {{-- <input type="text" class="form-control" name="address" id="address"
+                                                maxlength="150" minlength="2" required> --}}
+                                            <textarea class="form-control" name="address" id="address"
+                                            maxlength="150" minlength="2" cols="30" rows="5"></textarea>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Street Address</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-12 col-sm-12">
+                                    <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto" for="postcode">
-                                                <div style="width: 270px"></div>
+                                                <div style="width: 270px"> Zip Code / รหัสไปรษณีย์ : </div>
                                             </label>
                                             <input type="text" class="form-control" name="postcode" id="postcode"
                                                 maxlength="50" minlength="2" required>

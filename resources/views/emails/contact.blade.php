@@ -1988,7 +1988,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        @if ($data->sfield == '20' || $data->sfield == '21')
+                        @if ($data->sfield == '21')
                         @else
                             <table align="center" border="0" cellpadding="0" cellspacing="0"
                                 class="row row-6" role="presentation"
