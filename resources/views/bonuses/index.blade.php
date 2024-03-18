@@ -67,7 +67,7 @@
 
                         <div class="col-lg-3">
                             <div class="row">
-                                <label for="month" class="col-lg-3">ผนักงาน :</label>
+                                <label for="month" class="col-lg-3">พนักงาน :</label>
                                 <div class="col-lg-9">
                                     <select name="user_id" class="select2 select2_single form-control" multiple="multiple" required>
                                         <option value="">เลือกผนักงาน</option>

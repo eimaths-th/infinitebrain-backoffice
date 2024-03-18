@@ -72,7 +72,7 @@ class RecordtimeController extends Controller
 
         if ($checkdate->count() > 0) {
             return redirect()->route('recordtime.index')
-                ->with('error', 'ผนักงานคนนี้มีข้อมูลทำงานของวันนี้แล้ว');
+                ->with('error', 'พนักงานคนนี้มีข้อมูลทำงานของวันนี้แล้ว');
         }
 
 
@@ -711,7 +711,7 @@ class RecordtimeController extends Controller
             ->exists();
 
         if ($checkdate) {
-            return redirect()->route('recordtime.index')->with('error', 'ผนักงานคนนี้มีข้อมูลทำงานของวันนี้แล้ว');
+            return redirect()->route('recordtime.index')->with('error', 'พนักงานคนนี้มีข้อมูลทำงานของวันนี้แล้ว');
         }
 
         $originalAttributes = $oldData->getAttributes();

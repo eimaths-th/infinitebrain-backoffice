@@ -285,7 +285,7 @@
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td class="text-center">{{ $records->first()->user->code ?? 'code' }}</td>
-                                        <td>{{ $records->first()->user->name }}</td>
+                                        <td>{{ $records->first()->user->name 'ไม่พบพนักงาน' }}</td>
 
                                         @foreach ($stwork as $status)
                                             <td>

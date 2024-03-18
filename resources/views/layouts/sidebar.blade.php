@@ -636,7 +636,7 @@
                     </li>
                 @endif
                 @if (Auth::user()->level != 3)
-                    <li class="app-sidebar__heading"> ผนักงาน </li>
+                    <li class="app-sidebar__heading"> พนักงาน </li>
 
                     <li>
                         <a href="{{ route('home2') }}">

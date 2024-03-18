@@ -94,7 +94,7 @@
 
                         <div class="col-lg-3">
                             <div class="row">
-                                <label for="month" class="col-lg-3">ผนักงาน :</label>
+                                <label for="month" class="col-lg-3">พนักงาน :</label>
                                 <div class="col-lg-9">
 
                                     {{-- <select id="select2test" class="form-select-lg" name="user_id">
@@ -104,7 +104,7 @@
 
                                     </select> --}}
                                     <select name="user_id" class="form-select form-control">
-                                        <option value="">เลือกผนักงาน</option>
+                                        <option value="">เลือกพนักงาน</option>
 
                                         @foreach ($users as $user_name)
                                             <option value="{{ $user_name->id }}">{{ $user_name->name }}</option>
@@ -173,7 +173,7 @@
                                 <td align="center"> {{ $key + 1 }}</td>
                                 <td>INF{{ $rec_time->user->code ?? 'NUll'}}</td>
 
-                                <td> {{ $rec_time->user->name ?? 'ไม่พบผนักงาน'}} </td>
+                                <td> {{ $rec_time->user->name ?? 'ไม่พบพนักงาน'}} </td>
                                 <td>
                                     {{ date('D d-M-Y', strtotime($rec_time->date)) }}
                                 </td>
