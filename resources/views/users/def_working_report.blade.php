@@ -289,7 +289,7 @@
 
                                         @foreach ($stwork as $status)
                                             <td>
-                                                <a href="{{ route('find_UserRecTime', ['user_id' => $records->first()->user->id, 'status' => $status->id, 'month' => 'null', 'year' => $year]) }}"
+                                                <a href="{{ route('find_UserRecTime', ['user_id' => $records->first()->user->id ?? '9999', 'status' => $status->id, 'month' => 'null', 'year' => $year]) }}"
                                                     class="text-dark">
                                                     @php
                                                         $statusName = $status->name;
