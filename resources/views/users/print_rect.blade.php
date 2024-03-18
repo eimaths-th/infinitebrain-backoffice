@@ -87,6 +87,22 @@
         .text-right {
             text-align: right;
         }
+
+        .text-success {
+            color: rgb(97, 240, 166) !important;
+        }
+        .text-danger {
+            color: #d92550 !important;
+        }
+        .text-warning {
+            color: #f8d821 !important;
+        }
+        .text-primary {
+            color: #3f6ad8 !important;
+        }
+        .text-dark {
+            color: rgb(22, 22, 22) !important;
+        }
     </style>
     {{-- <style>
         @media print {
@@ -247,13 +263,12 @@
                                             break;
                                     }
                                 @endphp
-                                <td align="center" class="actived grey">
+                                <td align="center" class="actived">
                                     <b>
                                         <font size="{{ $fontsize }}">
                                             <span
-                                                class="badge border border-{{ $class }} text-{{ $class }} px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i
-                                                    class="fa fa-circle fs-9px fa-fw me-5px"></i>
-                                                {{ $rec_time->status_name }}</span>
+                                                class="text-{{ $class }} align-items-center">
+                                                {{ $rec_time->status_name }} test</span>
                                         </font>
                                     </b>
                                 </td>
@@ -387,10 +402,21 @@
                             <td align="center">ลงชื่อ.. {{ auth()->user()->name }} ....</td>
                             <td></td>
                             <td></td>
+                            <td align="center">ลงชื่อ...............................</td>
+                            <td></td>
+                            <td></td>
+                            <td align="center">ลงชื่อ................................</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
                             <td align="center"></td>
                             <td></td>
                             <td></td>
-                            <td align="center">ลงชื่อ...................................</td>
+                            <td align="center">(....{{ $name }}....)</td>
+                            <td></td>
+                            <td></td>
+                            <td align="center"></td>
                         </tr>
                         <tr>
                             <td></td>
@@ -398,10 +424,10 @@
                             <td align="center">ผู้ดำเนินการ</td>
                             <td></td>
                             <td></td>
-                            <td align="center"></td>
+                            <td align="center">พนักงาน</td>
                             <td></td>
                             <td></td>
-                            <td align="center">ผู้จัดการ</td>
+                            <td align="center">ฝ่ายบัญชี</td>
                         </tr>
                     </table>
 

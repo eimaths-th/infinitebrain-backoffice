@@ -117,8 +117,8 @@ class RecordtimeController extends Controller
                 } elseif ($starttime->gt($startOfWorkday)) {
                     if ($starttime->diffInMinutes($startOfWorkday) > $lateThreshold) {
                         # code...
-                        $status_id = "8"; // เข้างานสายมากกว่า 35 นาที
-                        $explain .= ' | ลาครึ่งวันเช้า';
+                        $status_id = "5"; // เข้างานสายมากกว่า 35 นาที
+                        // $explain .= ' | ลาครึ่งวันเช้า';
                     } else {
                         # code...
                         $status_id = "5"; //เข้างานสาย
