@@ -171,9 +171,9 @@
                         @foreach ($rec_times as $key => $rec_time)
                             <tr>
                                 <td align="center"> {{ $key + 1 }}</td>
-                                <td>INF{{ $rec_time->user->code }}</td>
+                                <td>INF{{ $rec_time->user->code ?? 'NUll'}}</td>
 
-                                <td> {{ $rec_time->user->name }} </td>
+                                <td> {{ $rec_time->user->name ?? 'ไม่พบผนักงาน'}} </td>
                                 <td>
                                     {{ date('D d-M-Y', strtotime($rec_time->date)) }}
                                 </td>
