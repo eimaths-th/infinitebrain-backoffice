@@ -268,7 +268,7 @@
                                         <font size="{{ $fontsize }}">
                                             <span
                                                 class="text-{{ $class }} align-items-center">
-                                                {{ $rec_time->status_name }} test</span>
+                                                {{ $rec_time->status_name }}</span>
                                         </font>
                                     </b>
                                 </td>
