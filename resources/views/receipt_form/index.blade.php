@@ -378,7 +378,7 @@
                     <div class="page-title-icon">
                         <i class="pe-7s-note2 icon-gradient bg-tempting-azure"></i>
                     </div>
-                   
+
                     <div>
                         @if ($sfielda[request()->get('sfield')] === 'neos')
                             Neo science Online Form
@@ -527,6 +527,13 @@
                                     <div class="position-relative form-group">
                                         <label for="Nickname">Nick Name:</label>
                                         <input type="text" class="form-control" name="nickname" id="AddNickname"
+                                            value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="AddGender">Gender:</label>
+                                        <input type="text" class="form-control" name="gender" id="AddGender"
                                             value="">
                                     </div>
                                 </div>
@@ -839,6 +846,7 @@
                         $('#AddFirstname').val(res.data.first_name);
                         $('#AddLastname').val(res.data.last_name);
                         $('#AddNickname').val(res.data.nick_name);
+                        $('#AddGender').val(res.data.gender);
                         $('#AddBirthdate').val(res.data.birth_date);
                         $('#AddSchoolname').val(res.data.school_name);
                         $('#AddtDes').val(res.data.description);
