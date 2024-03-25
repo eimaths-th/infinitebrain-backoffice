@@ -10,7 +10,7 @@
 /public/storage
 /storage/*.key
 /vendor
-
+/storage
 composer.json
 composer.lock
 .env
