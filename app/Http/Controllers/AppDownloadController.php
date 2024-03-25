@@ -113,8 +113,8 @@ class AppDownloadController extends Controller
         //
         $appDownload = AppDownload::findOrFail($id);
         // Delete the associated file from storage
-        $filePath = storage_path("app_download\\" . $appDownload->file_name);
-        dd($filePath);
+        $filePath = storage_path("app_download/" . $appDownload->file_name);
+        // dd($filePath);
         if (file_exists($filePath)) {
             // Storage::delete($filePath);
             if (Storage::delete($filePath)) {
