@@ -115,11 +115,11 @@ class AppDownloadController extends Controller
 
         // Construct the file path
         $filePath = public_path('app_download/' . $appDownload->file_name);
-        // dd($filePath);
+
         // Check if the file exists
-        if (Storage::exists($filePath)) {
+        if (file_exists($filePath)) {
             // Attempt to delete the file
-            if (Storage::delete($filePath)) {
+            if (unlink($filePath)) {
                 // If deletion successful, delete the record from the database
                 $appDownload->delete();
                 return redirect()->route('app-down-load.index')->with('success', 'File and record deleted successfully');

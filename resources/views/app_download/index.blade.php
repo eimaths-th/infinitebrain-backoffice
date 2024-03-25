@@ -15,7 +15,7 @@
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
                     <div class="page-title-icon">
-                        <i class="pe-7s-user icon-gradient bg-tempting-azure"></i>
+                        <i class="fa fa-mobile-screen-button icon-gradient bg-tempting-azure"></i>
                     </div>
                     <div>Infinite Brain App
                         <div class="page-title-subheading">Infinite Brain App Data</div>
@@ -28,11 +28,13 @@
                             User</a>
                         <a class="btn btn-danger delete_all_button" href="#"><i class="fa fa-trash"></i> Delete
                             All</a> --}}
-                        <a href="#" class="btn btn-success"
-                            onclick="formModal_app('{{ route('app-down-load.create') }}')" data-bs-toggle="tooltip"
-                            data-bs-trigger="hover" data-bs-container="body" data-bs-title="Create New App">
-                            <i class="fa fa-plus"></i> Create New App
-                        </a>
+                        @if (auth()->user()->id == 16 || auth()->user()->id < 3)
+                            <a href="#" class="btn btn-success"
+                                onclick="formModal_app('{{ route('app-down-load.create') }}')">
+                                <i class="fa fa-upload"></i> Upload App
+                            </a>
+                        @endif
+
 
                     </div>
                 </div>
@@ -62,30 +64,34 @@
                             <th>Version</th>
                             <th>Type</th>
                             <th>Upload By</th>
+                            <th>Date</th>
                             <th width="280px">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($apps as $key => $app)
                             <tr>
-                                <td>{{ $key+1 }}</td>
+                                <td>{{ $key + 1 }}</td>
                                 <td>{{ $app->name }}</td>
                                 <td>{{ $app->file_name }}</td>
                                 <td>{{ $app->version }}</td>
                                 <td>{{ $app->type }}</td>
                                 <td>{{ $app->upload_by }}</td>
+                                <td>{{ $app->updated_at->format('Y-m-d') }}</td>
                                 <td>
-                                    <a href="{{ asset('app_download/' . $app->file_name) }}"
-                                        class="btn btn-primary">Download</a>
+                                    <a href="{{ asset('app_download/' . $app->file_name) }}" class="btn btn-primary"><i
+                                            class="fa fa-download"></i> Download App</a>
                                     {{-- Delete btn --}}
-                                    <form action="{{ route('app-down-load.destroy', $app->id) }}" method="POST"
-                                        style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger"
-                                            onclick="return confirm('Are you sure you want to delete this file?')">Delete</button>
-                                    </form>
 
+                                    @if (auth()->user()->id == 16 || auth()->user()->id < 3)
+                                        <form action="{{ route('app-down-load.destroy', $app->id) }}" method="POST"
+                                            style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger"
+                                                onclick="return confirm('Are you sure you want to delete this file?')">Delete</button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

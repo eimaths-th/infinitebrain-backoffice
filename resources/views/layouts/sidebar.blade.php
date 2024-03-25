@@ -664,6 +664,14 @@
                                     </a>
                                 </li>
                             </ul>
+                            <ul>
+                                <li>
+                                    <a href="{{ route('app-down-load.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        App Download
+                                    </a>
+                                </li>
+                            </ul>
                         @endif
                         <ul>
                             <li>
