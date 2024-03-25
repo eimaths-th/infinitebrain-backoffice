@@ -52,7 +52,7 @@ class AppDownloadController extends Controller
         $file = $request->file('file');
         $version = $request->version;
         $fileName = 'v.' . $version . '_' . $date . '_' . $file->getClientOriginalName();
-        $file->move(storage_path('app_download'), $fileName);
+        $file->move(public_path('app_download'), $fileName);
 
         // Store file information in the database
         AppDownload::create([
@@ -110,20 +110,25 @@ class AppDownloadController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Find the AppDownload record by ID
         $appDownload = AppDownload::findOrFail($id);
-        // Delete the associated file from storage
-        $filePath = storage_path("app_download/" . $appDownload->file_name);
-        // dd($filePath);
-        if (file_exists($filePath)) {
-            // Storage::delete($filePath);
+
+        // Construct the file path
+        $filePath = public_path('app_download/' . $appDownload->file_name);
+        dd($filePath);
+        // Check if the file exists
+        if (Storage::exists($filePath)) {
+            // Attempt to delete the file
             if (Storage::delete($filePath)) {
+                // If deletion successful, delete the record from the database
                 $appDownload->delete();
                 return redirect()->route('app-down-load.index')->with('success', 'File and record deleted successfully');
             } else {
-                return redirect()->route('app-down-load.index')->with('error', 'File could not be deleted from storage');
+                // If deletion failed, return error message
+                return redirect()->route('app-down-load.index')->with('error', 'File could not be deleted');
             }
         } else {
+            // If file not found, return error message
             return redirect()->route('app-down-load.index')->with('error', 'File not found');
         }
     }
