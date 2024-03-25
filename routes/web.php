@@ -2,6 +2,7 @@
 
 // namespace App\Http\Controllers;
 
+use App\Http\Controllers\AppDownloadController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\EmployeeController;
@@ -72,8 +73,6 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
     Route::get('/huaxiacup-ii', [ReceiptFormController::class, 'huaxiacup_II'])->name('huaxiacup-ii');
     Route::get('/neo-science-olympiad', [ReceiptFormController::class, 'neos'])->name('neos');
     Route::get('/neo-science-olympiad-II', [ReceiptFormController::class, 'neos2'])->name('neos-2');
-
-
 });
 
 Route::group(['middleware' => ['auth', 'checkUserId']], function () {
@@ -112,7 +111,7 @@ Route::group(['middleware' => ['auth', 'outhome']], function () {
 });
 
 
-Route::get('/test-fn', [TestController::class, 'store'])->name('testFs')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);// test
+Route::get('/test-fn', [TestController::class, 'store'])->name('testFs')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]); // test
 
 //Route::post('/test-fn/iclock/cdata', [TestController::class, 'store'])->name('testFn')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 //Route::post('/test-fn/iclock/getrequest', [TestController::class, 'store'])->name('testFnn')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
@@ -122,6 +121,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/search-rect', [RecordtimeController::class, 'search_rect'])->name('search_rect');
 
     Route::resource('recordtime', RecordtimeController::class);
+    Route::resource('app-down-load', AppDownloadController::class);
+    // Route::delete('/app-down-load/{id}', AppDownloadController::class,'destroy')->name('app-down-load.delete');
+
     // Route::delete('/recordtime/{id}', [RecordtimeController::class, 'destroy'])->name('recordtimes.destroy');
 
     //settime
