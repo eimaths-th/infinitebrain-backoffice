@@ -115,7 +115,7 @@ class AppDownloadController extends Controller
 
         // Construct the file path
         $filePath = public_path('app_download/' . $appDownload->file_name);
-        dd($filePath);
+        // dd($filePath);
         // Check if the file exists
         if (Storage::exists($filePath)) {
             // Attempt to delete the file
