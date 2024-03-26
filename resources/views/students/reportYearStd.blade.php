@@ -40,14 +40,14 @@
         }
 
         /* .switchery {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            width: 30px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            height: 16px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        width: 30px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        height: 16px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        .switchery-small {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            width: 12px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            height: 12px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    .switchery-small {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        width: 12px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        height: 12px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } */
     </style>
 @endsection
 
@@ -364,11 +364,12 @@
                                     <th>Submission Date</th>
                                     <th>Period</th>
                                     <th>Reciept Number</th>
-                                    <th>Group</th>
-                                    <th>Stutus</th>
-                                    <th>Tpye</th>
+                                    <th width='1%' class="text-center">Group</th>
+                                    <th class="text-center">Stutus</th>
+                                    <th width='1%' class="text-center">Tpye</th>
                                     <th>total</th>
                                     <th>Check</th>
+                                    <th>Date Check</th>
                                 </tr>
                             </thead>
                             @php
@@ -419,10 +420,10 @@
                                             <td>{{ $data1->period }}</td>
 
                                             <td>{{ $data1->rec_school->receipt_number }}</td>
-                                            <td>{{ $data1->group }}</td>
+                                            <td class="text-center">{{ $data1->group }}</td>
 
 
-                                            <td class="{{ $class }}">
+                                            <td class="{{ $class }} text-center">
                                                 @if (
                                                     $data1->std &&
                                                         $data1->std->status_log &&
@@ -434,13 +435,17 @@
                                                     null
                                                 @endif
                                             </td>
-                                            <td>{{ $data1->course_type }}</td>
+                                            <td class="text-center">{{ $data1->course_type }}</td>
                                             <td class="text-end">{{ number_format($data1->total) }} บาท</td>
-                                            <td class="text-center">
+                                            <td class="text-center" width='1%'>
                                                 <div class="form-check form-switch form-switch-sm">
                                                     <input class="form-check-input" type="checkbox"
                                                         id="flexSwitchCheckChecked-{{ $data1->rec_school->receipt_number }}">
+                                                    <label class="label-text" for="">Date: </label>
                                                 </div>
+                                            </td>
+                                            <td>
+
                                             </td>
 
                                         </tr>
@@ -598,29 +603,64 @@
                 lengthMenu: [-1],
             });
 
+            // $('input[type="checkbox"]').change(function() {
+            //     var isChecked = $(this).is(":checked");
+            //     console.log(isChecked);
+            //     if (isChecked) {
+            //         $(this).closest('tr').addClass('bg-success');
+            //         var id = $(this).attr('id');
+            //         localStorage.setItem(id, 'checked');
+            //     } else {
+            //         $(this).closest('tr').removeClass('bg-success');
+            //         var id = $(this).attr('id');
+            //         localStorage.setItem(id, 'unchecked');
+            //     }
+            // });
+
+            // $('input[type="checkbox"]').each(function() {
+
+            //     var id = $(this).attr('id');
+            //     var state = localStorage.getItem(id);
+            //     // console.log(id);
+
+            //     if (state === 'checked') {
+            //         $(this).prop('checked', true);
+            //         $(this).closest('tr').addClass('bg-success');
+            //     }
+            // });
+
             $('input[type="checkbox"]').change(function() {
                 var isChecked = $(this).is(":checked");
                 console.log(isChecked);
                 if (isChecked) {
                     $(this).closest('tr').addClass('bg-success');
                     var id = $(this).attr('id');
-                    localStorage.setItem(id, 'checked');
+
+                    // Store the current date when the checkbox is checked
+                    var currentDate = new Date().toLocaleDateString();
+                    localStorage.setItem(id, currentDate);
+
+                    // Update label text with the stored date
+                    $(this).siblings('.label-text').text(currentDate);
                 } else {
                     $(this).closest('tr').removeClass('bg-success');
                     var id = $(this).attr('id');
-                    localStorage.setItem(id, 'unchecked');
+                    localStorage.setItem(id, '');
+
+                    // Reset label text
+                    $(this).siblings('.label-text').text("Date :");
                 }
             });
 
             $('input[type="checkbox"]').each(function() {
-
                 var id = $(this).attr('id');
-                var state = localStorage.getItem(id);
-                // console.log(id);
+                var storedDate = localStorage.getItem(id);
 
-                if (state === 'checked') {
+                if (storedDate) {
                     $(this).prop('checked', true);
                     $(this).closest('tr').addClass('bg-success');
+                    // Update label text with stored date
+                    $(this).siblings('.label-text').text( storedDate);
                 }
             });
 
@@ -838,8 +878,7 @@
                     } else {
                         $text_g = 'null_group';
                     }
-                @endphp
-                {
+                @endphp {
                     label: '{{ $text_g }}',
                     data: [
                         @foreach ($uniqueYears as $year)
