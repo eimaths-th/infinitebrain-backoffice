@@ -369,7 +369,7 @@
                                     <th width='1%' class="text-center">Tpye</th>
                                     <th>total</th>
                                     <th>Check</th>
-                                    <th>Date Check</th>
+                                    {{-- <th>Date Check</th> --}}
                                 </tr>
                             </thead>
                             @php
@@ -444,9 +444,9 @@
                                                     <label class="label-text" for="">Date: </label>
                                                 </div>
                                             </td>
-                                            <td>
+                                            {{-- <td>
 
-                                            </td>
+                                            </td> --}}
 
                                         </tr>
                                         @php
