@@ -40,14 +40,19 @@
         }
 
         /* .switchery {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        width: 30px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        height: 16px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+            width: 30px;
+            height: 16px;
+        }
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    .switchery-small {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        width: 12px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        height: 12px;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } */
+        .switchery-small {
+            width: 12px;
+            height: 12px;
+
+        } */
+
+        .bg-success2 {
+            background-color: #4ffca2 !important;
+        }
     </style>
 @endsection
 
@@ -633,7 +638,7 @@
                 var isChecked = $(this).is(":checked");
                 console.log(isChecked);
                 if (isChecked) {
-                    $(this).closest('tr').addClass('bg-success');
+                    $(this).closest('tr').addClass('bg-success2');
                     var id = $(this).attr('id');
 
                     // Store the current date when the checkbox is checked
@@ -643,7 +648,7 @@
                     // Update label text with the stored date
                     $(this).siblings('.label-text').text(currentDate);
                 } else {
-                    $(this).closest('tr').removeClass('bg-success');
+                    $(this).closest('tr').removeClass('bg-success2');
                     var id = $(this).attr('id');
                     localStorage.setItem(id, '');
 
@@ -658,9 +663,9 @@
 
                 if (storedDate) {
                     $(this).prop('checked', true);
-                    $(this).closest('tr').addClass('bg-success');
+                    $(this).closest('tr').addClass('bg-success2');
                     // Update label text with stored date
-                    $(this).siblings('.label-text').text( storedDate);
+                    $(this).siblings('.label-text').text(storedDate);
                 }
             });
 
