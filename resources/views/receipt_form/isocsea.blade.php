@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                    background-size: 15px;
-                                                                }*/
+                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                background-size: 15px;
+                                                                            }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                                    border-color: var(--color-invalid);
-                                                                }*/
+                                                                            input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                border-color: var(--color-invalid);
+                                                                            }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                    display: block;
-                                                                }*/
+                                                                                display: block;
+                                                                            }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -540,14 +540,14 @@
             <div class="col-md-9">
                 <div class="card bg-light2 mb-3 ">
                     {{-- <div class="card-header">{{ __('Login') }}</div> --}}
-                    <div align="center"><img {{-- class="card-img" --}} src="{{ asset('images/ISOCSEA_Logo.png') }}" alt="..."
-                            width="50%"></div>
+                    <div align="center"><img {{-- class="card-img" --}} src="{{ asset('images/ISOCSEA_Logo.png') }}"
+                            alt="..." width="50%"></div>
                     <form id="infinite" method="POST" action="{{ route('form.store') }}" onsubmit="return check_input();">
                         @csrf
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h4 class="card-title form_header">ISOCSEA 2023 Registration test ISS</h4>
+                                <h4 class="card-title form_header">ISOCSEA 2023 Registration</h4>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -580,8 +580,9 @@
 
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>
                                                 Registration
-                                                Date:</strong> 1 August - 30 September</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 15 October 2023</span>
+                                                Date:</strong> 9 April - 30 June 2024</span></p>
+                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; **wait for
+                                            data</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -708,8 +709,8 @@
                                     </div>
                                     <div class="col-md-6 col-sm-12">
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="birthdate">Birth
-                                                Date / วันเกิด <span class="form-required">*</span>
+                                            <label class="form-label form-label-top form-label-auto" for="birthdate">Date of Birth / วัน/เดือน/ปีเกิด
+                                                 <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
                                             <input type="date" class="AddDate form-control" name="birthdate"
@@ -738,8 +739,9 @@
                                                     class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="schoolname" id="schoolname"
                                                 value="" maxlength="100" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">School Name</label>
+                                            <label class="form-sub-label text-danger" style="min-height:13px"
+                                                aria-hidden="false">ห้ามใช้อักษรย่อ / Do not fill in abbreviations"
+                                            </label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
                                                     height="10"> <span class="error-navigation-message">This field is
@@ -800,9 +802,10 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Test:  850 Baht">Test:  850 Baht</option>
-                                              {{--   <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250 bath
-                                                </option> --}}
+                                                <option value="Test:  850 Baht">Test: 850 Baht</option>
+                                                <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250
+                                                    bath
+                                                </option>
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -834,11 +837,12 @@
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="address">Address <span class="form-required">*</span></label>
+                                                for="address">Address : / ที่อยู่ภาษาไทย :<span
+                                                    class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="address" id="address"
                                                 maxlength="150" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Street Address</label>
+                                            <label class="form-sub-label text-danger" style="min-height:13px"
+                                                aria-hidden="false">**ที่อยู่ภาษาไทย</label>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-sm-12">
@@ -908,9 +912,13 @@
                                     <div class="col-md-6 col-sm-12">
                                         <div class="position-relative form-group" style="padding-top:0px;">
                                             <label class="form-label form-label-top form-label-auto" for="grade">E-mail
+                                                <br>
                                                 (กรุณาใช้ @gmail.com เท่านั้น เพื่อที่จะสามารถส่งข้อมูลสำหรับเข้าสอบได้)
-                                                **สำหรับผู้ที่สมัครมากกว่า 1 คน รบกวนไม่ใช้อีเมลเดิมในการสมัครสอบ <span
-                                                    class="form-required">*</span></label>
+                                                <br>
+                                                <span class="form-required">**</span>
+                                                สำหรับผู้ที่สมัครมากกว่า 1 คน รบกวนไม่ใช้อีเมลเดิมในการสมัครสอบ
+                                                <span class="form-required">**</span>
+                                            </label>
                                             <input type="email" class="form-control" name="email" id="email"
                                                 value="" maxlength="70" required>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -1042,7 +1050,7 @@
                         <div class="card-footer text-center">
                             <br>
                             <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
-                            ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี **</div>
+                                ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี **</div>
                             <br>
                             <input type="submit" id="send_data" class="btn btn-lg btn-primary"
                                 value="Submit Application">
@@ -1580,13 +1588,16 @@
         //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
     </script>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2EMF2S1GBP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2EMF2S1GBP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
         gtag('config', 'G-2EMF2S1GBP');
-        </script>
+    </script>
 @endsection
