@@ -547,7 +547,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h4 class="card-title form_header">IMOCSEA 2023 Registration</h4>
+                                <h4 class="card-title form_header">IMOCSEA 2023 Registration test IMS </h4>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -580,7 +580,7 @@
 
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>
                                                 Registration
-                                                Date:</strong> 1 August - 30 September</span></p>
+                                                Date:</strong> 9 April - 30 June 2024</span></p>
                                     <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 15 October 2023</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
@@ -738,8 +738,7 @@
                                                     class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="schoolname" id="schoolname"
                                                 value="" maxlength="100" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">School Name</label>
+                                            <label class="form-sub-label text-danger" style="min-height:13px" aria-hidden="false">ห้ามใช้อักษรย่อ / Do not fill in abbreviations" </label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
                                                     height="10"> <span class="error-navigation-message">This field is
@@ -802,8 +801,8 @@
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test:  850 Baht">Test:  850 Baht</option>
-                                               {{--  <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250 bath
-                                                </option> --}}
+                                                <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250 bath
+                                                </option>
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -835,11 +834,11 @@
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="address">Address <span class="form-required">*</span></label>
+                                                for="address">Address : / ที่อยู่ภาษาไทย :<span class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="address" id="address"
                                                 maxlength="150" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Street Address</label>
+                                                aria-hidden="false">ที่อยู่ภาษาไทย</label>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-sm-12">
@@ -908,10 +907,12 @@
                                 <div class="form-row form-focus">
                                     <div class="col-md-6 col-sm-12">
                                         <div class="position-relative form-group" style="padding-top:0px;">
-                                            <label class="form-label form-label-top form-label-auto" for="grade">E-mail
-                                                (กรุณาใช้ @gmail.com เท่านั้น เพื่อที่จะสามารถส่งข้อมูลสำหรับเข้าสอบได้)
-                                                **สำหรับผู้ที่สมัครมากกว่า 1 คน รบกวนไม่ใช้อีเมลเดิมในการสมัครสอบ <span
-                                                    class="form-required">*</span></label>
+                                            <label class="form-label form-label-top form-label-auto" for="grade">E-mail <br>
+                                                (กรุณาใช้ @gmail.com เท่านั้น เพื่อที่จะสามารถส่งข้อมูลสำหรับเข้าสอบได้) <br>
+                                                <span
+                                                    class="form-required">**</span>
+                                                สำหรับผู้ที่สมัครมากกว่า 1 คน รบกวนไม่ใช้อีเมลเดิมในการสมัครสอบ <span
+                                                    class="form-required">**</span></label>
                                             <input type="email" class="form-control" name="email" id="email"
                                                 value="" maxlength="70" required>
                                             <label class="form-sub-label" style="min-height:13px"

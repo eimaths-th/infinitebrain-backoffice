@@ -547,7 +547,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h4 class="card-title form_header">ISOCSEA 2023 Registration</h4>
+                                <h4 class="card-title form_header">ISOCSEA 2023 Registration test ISS</h4>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
