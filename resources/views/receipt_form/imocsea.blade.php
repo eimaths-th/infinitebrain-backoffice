@@ -547,7 +547,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h4 class="card-title form_header">IMOCSEA 2023 Registration</h4>
+                                <h4 class="card-title form_header">IMOCSEA 2024 Registration</h4>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -556,7 +556,7 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">IMOCSEA 2023 Registration
+                                                    style="text-decoration: underline;">IMOCSEA 2024 Registration
                                                     Form</span></strong></span></p>
                                     {{--  <p><strong><span style="color: #6351a2;"> โค้ดส่วนลดค่ะ ใช้ได้ตั้งแต่วันที่ 1 ก.ค. - 31
                                                 ก.ค.</span></strong></p>
