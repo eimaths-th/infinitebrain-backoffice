@@ -1222,7 +1222,7 @@
             // var sdate = new Date('2023-12-01');
             // var edate = new Date('2023-12-2');
             var sdate = new Date('2023-12-01');
-            var edate = new Date('2024-03-30');
+            var edate = new Date('2024-04-01');
 
             var options = {
                 day: 'numeric',
