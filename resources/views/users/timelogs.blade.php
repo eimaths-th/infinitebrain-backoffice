@@ -101,8 +101,8 @@
                             @foreach ($timelogs as $key => $rec_time)
                                 <tr>
                                     <td align="center"> {{ $key + 1 }}</td>
-                                    <td>{{ $rec_time->user->code }}</td>
-                                    <td> {{ $rec_time->user->name }} </td>
+                                    <td>{{ $rec_time->user->code ?? 'null'}}</td>
+                                    <td> {{ $rec_time->user->name ?? 'null'}} </td>
 
                                     <td> {{ $rec_time->old_date }} </td>
                                     <td> {{ $rec_time->old_full_time }}</td>
