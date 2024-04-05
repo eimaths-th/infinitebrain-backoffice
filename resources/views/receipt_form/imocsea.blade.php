@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                    background-size: 15px;
-                                                                }*/
+                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                    background-size: 15px;
+                                                                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                                    border-color: var(--color-invalid);
-                                                                }*/
+                                                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                    border-color: var(--color-invalid);
+                                                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                    display: block;
-                                                                }*/
+                                                                                    display: block;
+                                                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -540,8 +540,8 @@
             <div class="col-md-9">
                 <div class="card bg-light2 mb-3 ">
                     {{-- <div class="card-header">{{ __('Login') }}</div> --}}
-                    <div align="center"><img {{-- class="card-img" --}} src="{{ asset('images/IMOCSEA_Logo.png') }}" alt="..."
-                            width="50%"></div>
+                    <div align="center"><img {{-- class="card-img" --}} src="{{ asset('images/IMOCSEA_Logo.png') }}"
+                            alt="..." width="50%"></div>
                     <form id="infinite" method="POST" action="{{ route('form.store') }}" onsubmit="return check_input();">
                         @csrf
                         <div class="card-body">
@@ -558,7 +558,8 @@
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
                                                     style="text-decoration: underline;">IMOCSEA 2024 Registration
                                                     Form</span></strong></span></p>
-                                    {{--  <p><strong><span style="color: #6351a2;"> โค้ดส่วนลดค่ะ ใช้ได้ตั้งแต่วันที่ 1 ก.ค. - 31
+                                    {{--
+                                        <p><strong><span style="color: #6351a2;"> โค้ดส่วนลดค่ะ ใช้ได้ตั้งแต่วันที่ 1 ก.ค. - 31
                                                 ก.ค.</span></strong></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;">CEM100 ลด 100 บาท</span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;">META200 ลด 200 บาท</span>
@@ -573,7 +574,8 @@
                                     </p>
 
 
-                                    <br> --}}
+                                    <br>
+                                    --}}
 
 
 
@@ -581,7 +583,9 @@
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>
                                                 Registration
                                                 Date:</strong> 9 April - 30 June 2024</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;  **wait for data</span>
+                                    <p>
+                                        <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 14 July 2024
+                                        </span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -598,16 +602,31 @@
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1,250 bath</span><br></p>
                                     <p>&nbsp;</p>
-                                    {{--  <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร GELOSEA</b> <br>
+                                    <p>
+                                        <span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร IMOCSEA</b>
+                                            <br>
 
-                                        รร.ไทยใช้ระดับชั้นปัจจุบัน ณ วันสอบเท่านั้น <br>
+                                            โรงเรียนไทย<br>
+                                            หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันสอบ) ใช้ระดับชั้นปีการศึกษาที่ผ่านมา<br>
+                                            หากเปิดเทอมครบ 3 เดือน (นับจากวันสอบ) ใช้ระดับชั้นปีการศึกษาปัจจุบัน<br>
+                                            โรงเรียนนานาชาติ ใช้ระดับชั้นปีการศึกษาปัจจุบันในการสมัครสอบเท่านั้น<br>
+                                            <br>
+                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วตรวจสอบพบ<br>
+                                            ทาง META Knowledge จะยึดตามเกณฑ์นี้<br>
+                                            หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ในการสอบ<br>
 
 
-                                        รร.นานาชาติที่พึ่งเปิดเทอม August/ September อนุญาตให้ลงทะเบียนเป็นระดับชั้นสำหรับปีการศึกษาที่แล้ว หรือ สามารถเลือกลงตามระดับชั้นปัจจุบันได้ <br>
+                                            รร.ไทยใช้ระดับชั้นปัจจุบัน ณ วันสอบเท่านั้น <br>
 
-                                        ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
-                                        เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span>
-                                    </p> --}}
+
+                                            {{-- รร.นานาชาติที่พึ่งเปิดเทอม August/ September
+                                            อนุญาตให้ลงทะเบียนเป็นระดับชั้นสำหรับปีการศึกษาที่แล้ว หรือ
+                                            สามารถเลือกลงตามระดับชั้นปัจจุบันได้ <br>
+
+                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
+                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ --}}
+                                        </span>
+                                    </p>
                                     {{-- <p style="text-align: center;"><span style="color: #6351a2;"><b><a target="_blank"
                                                     href="https://cem-th.com/compare-education-system/"><i
                                                         class="fa fa-paper-plane"></i> วิธีการเทียบระดับชั้น</a>
@@ -708,7 +727,8 @@
                                     </div>
                                     <div class="col-md-6 col-sm-12">
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="birthdate">Date of Birth / วัน/เดือน/ปีเกิด <span class="form-required">*</span>
+                                            <label class="form-label form-label-top form-label-auto" for="birthdate">Date
+                                                of Birth / วัน/เดือน/ปีเกิด <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
                                             <input type="date" class="AddDate form-control" name="birthdate"
@@ -737,7 +757,9 @@
                                                     class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="schoolname" id="schoolname"
                                                 value="" maxlength="100" required>
-                                            <label class="form-sub-label text-danger" style="min-height:13px" aria-hidden="false">ห้ามใช้อักษรย่อ / Do not fill in abbreviations" </label>
+                                            <label class="form-sub-label text-danger" style="min-height:13px"
+                                                aria-hidden="false">ห้ามใช้อักษรย่อ / Do not fill in abbreviations"
+                                            </label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
                                                     height="10"> <span class="error-navigation-message">This field is
@@ -799,8 +821,9 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Test:  850 Baht">Test:  850 Baht</option>
-                                                <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250 bath
+                                                <option value="Test:  850 Baht">Test: 850 Baht</option>
+                                                <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250
+                                                    bath
                                                 </option>
 
                                             </select>
@@ -833,7 +856,8 @@
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="address">Address : / ที่อยู่ภาษาไทย :<span class="form-required">*</span></label>
+                                                for="address">Address : / ที่อยู่ภาษาไทย :<span
+                                                    class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="address" id="address"
                                                 maxlength="150" minlength="2" required>
                                             <label class="form-sub-label text-danger" style="min-height:13px"
@@ -906,10 +930,11 @@
                                 <div class="form-row form-focus">
                                     <div class="col-md-6 col-sm-12">
                                         <div class="position-relative form-group" style="padding-top:0px;">
-                                            <label class="form-label form-label-top form-label-auto" for="grade">E-mail <br>
-                                                (กรุณาใช้ @gmail.com เท่านั้น เพื่อที่จะสามารถส่งข้อมูลสำหรับเข้าสอบได้) <br>
-                                                <span
-                                                    class="form-required">**</span>
+                                            <label class="form-label form-label-top form-label-auto" for="grade">E-mail
+                                                <br>
+                                                (กรุณาใช้ @gmail.com เท่านั้น เพื่อที่จะสามารถส่งข้อมูลสำหรับเข้าสอบได้)
+                                                <br>
+                                                <span class="form-required">**</span>
                                                 สำหรับผู้ที่สมัครมากกว่า 1 คน รบกวนไม่ใช้อีเมลเดิมในการสมัครสอบ <span
                                                     class="form-required">**</span></label>
                                             <input type="email" class="form-control" name="email" id="email"
@@ -1043,7 +1068,7 @@
                         <div class="card-footer text-center">
                             <br>
                             <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
-                            ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี **</div>
+                                ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี **</div>
                             <br>
                             <input type="submit" id="send_data" class="btn btn-lg btn-primary"
                                 value="Submit Application">
@@ -1581,13 +1606,16 @@
         //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
     </script>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2EMF2S1GBP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2EMF2S1GBP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
         gtag('config', 'G-2EMF2S1GBP');
-        </script>
+    </script>
 @endsection

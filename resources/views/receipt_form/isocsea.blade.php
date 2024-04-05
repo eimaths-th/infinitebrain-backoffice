@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                background-size: 15px;
-                                                                            }*/
+                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                    background-size: 15px;
+                                                                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                border-color: var(--color-invalid);
-                                                                            }*/
+                                                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                    border-color: var(--color-invalid);
+                                                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                display: block;
-                                                                            }*/
+                                                                                    display: block;
+                                                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -581,8 +581,9 @@
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>
                                                 Registration
                                                 Date:</strong> 9 April - 30 June 2024</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; **wait for
-                                            data</span>
+                                    <p>
+                                        <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 14 July 2024
+                                        </span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2024</span>
@@ -599,6 +600,31 @@
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1,250 bath</span><br></p>
                                     <p>&nbsp;</p>
+                                    <p>
+                                        <span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร ISOCSEA</b>
+                                            <br>
+
+                                            โรงเรียนไทย<br>
+                                            หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันสอบ) ใช้ระดับชั้นปีการศึกษาที่ผ่านมา<br>
+                                            หากเปิดเทอมครบ 3 เดือน (นับจากวันสอบ) ใช้ระดับชั้นปีการศึกษาปัจจุบัน<br>
+                                            โรงเรียนนานาชาติ ใช้ระดับชั้นปีการศึกษาปัจจุบันในการสมัครสอบเท่านั้น<br>
+                                            <br>
+                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วตรวจสอบพบ<br>
+                                            ทาง META Knowledge จะยึดตามเกณฑ์นี้<br>
+                                            หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ในการสอบ<br>
+
+
+                                            รร.ไทยใช้ระดับชั้นปัจจุบัน ณ วันสอบเท่านั้น <br>
+
+
+                                            {{-- รร.นานาชาติที่พึ่งเปิดเทอม August/ September
+                                            อนุญาตให้ลงทะเบียนเป็นระดับชั้นสำหรับปีการศึกษาที่แล้ว หรือ
+                                            สามารถเลือกลงตามระดับชั้นปัจจุบันได้ <br>
+
+                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
+                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ --}}
+                                        </span>
+                                    </p>
                                     {{--  <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร GELOSEA</b> <br>
 
                                         รร.ไทยใช้ระดับชั้นปัจจุบัน ณ วันสอบเท่านั้น <br>
@@ -709,8 +735,9 @@
                                     </div>
                                     <div class="col-md-6 col-sm-12">
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="birthdate">Date of Birth / วัน/เดือน/ปีเกิด
-                                                 <span class="form-required">*</span>
+                                            <label class="form-label form-label-top form-label-auto" for="birthdate">Date
+                                                of Birth / วัน/เดือน/ปีเกิด
+                                                <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
                                             <input type="date" class="AddDate form-control" name="birthdate"
