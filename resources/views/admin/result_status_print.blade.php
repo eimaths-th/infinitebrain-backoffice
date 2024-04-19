@@ -113,6 +113,7 @@
                             <td align="center" width="80%" colspan="5">
                                 <font class="grey">รายชื่อนักเรียน </font> <b> {{ $title }}
                                 </b>
+                                {{ $monthf }} - {{ $year }}
                             </td>
                             {{-- <td align="center" width="10%"><b></b></td>
                             <td align="center" width="10%">

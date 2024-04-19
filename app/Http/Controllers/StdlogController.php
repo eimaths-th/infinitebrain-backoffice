@@ -23,11 +23,20 @@ class StdlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->type === 'print') {
+
+            $view = 'students.print_report_std';
+        } else {
+            $view = 'students.report_std';
+        }
+
         $month  = date('m');
+        $monthf  = date('F');
         $year   = date('Y');
-        $latestStatusCounts = Statuslog::select('group', 'student_id', 'status')
+
+        $latestStatusCounts = Statuslog::select('id', 'group', 'student_id', 'status')
             ->whereIn('id', function ($query) {
                 $query->select(DB::raw('MAX(id)'))
                     ->from('status_log')
@@ -36,8 +45,8 @@ class StdlogController extends Controller
             ->whereYear('status_date', $year)
             ->whereMonth('status_date', $month)
             ->orderBy('group')
-
             ->get();
+
         $latestStatusByStudent = Statuslog::select('status_log.student_id', 'status_log.group', 'status_log.status', 'status_log.status_date', 'status_log.nick_name')
             ->whereIn('status_log.id', function ($query) {
                 $query->select(DB::raw('MAX(id)'))
@@ -50,10 +59,13 @@ class StdlogController extends Controller
             ->orderBy('students.code')
             ->get();
 
-        return view('students.report_std', [
+        return view($view, [
 
             'latestStatusCounts' => $latestStatusCounts,
             'latestStatusByStudent' => $latestStatusByStudent,
+            'month' => $month,
+            'monthf' => $monthf,
+            'year' => $year,
             // 'select_status' => $select_status,
             // 'select_status' => $select_status,
             // 'select_status' => $select_status,
@@ -72,9 +84,12 @@ class StdlogController extends Controller
             'year.required' => 'Pls. Select year !!'
         ]);
         $month = $request->month;
+        // $monthf = date('F',$request->month);
+        $month_format = DateTime::createFromFormat('!m', $request->month);
+        $monthf = $month_format->format('F');
         $year = $request->year;
         if ($month == null) {
-            $latestStatusCounts = Statuslog::select('group', 'student_id', 'status')
+            $latestStatusCounts = Statuslog::select('id', 'group', 'student_id', 'status')
                 ->whereIn('id', function ($query) {
                     $query->select(DB::raw('MAX(id)'))
                         ->from('status_log')
@@ -95,6 +110,7 @@ class StdlogController extends Controller
                 ->get();
         } else {
             $latestStatusCounts = Statuslog::select(
+                'status_log.id',
                 'status_log.student_id',
                 'status_log.group',
                 'status_log.status',
@@ -114,6 +130,7 @@ class StdlogController extends Controller
 
 
             $latestStatusByStudent = Statuslog::select(
+                'status_log.id',
                 'status_log.student_id',
                 'status_log.group',
                 'status_log.status',
@@ -137,9 +154,13 @@ class StdlogController extends Controller
 
             'latestStatusCounts' => $latestStatusCounts,
             'latestStatusByStudent' => $latestStatusByStudent,
+            'month' => $month,
+            'monthf' => $monthf,
+            'year' => $year,
 
         ]);
     }
+
 
 
 
@@ -735,6 +756,7 @@ class StdlogController extends Controller
     public function search_id(Request $request)
     {
         //
+        // dd($request);
         if (!empty($request['ids'])) {
 
             $lists = Statuslog::whereIn('id', $request['ids'])->get();
@@ -772,10 +794,23 @@ class StdlogController extends Controller
                 $title = 'ที่กำลังเรียนอยู่ ' . $input['title'];
             }
         }
-
+        if ($request->month && $request->year) {
+            # code...
+            $month = $request->month;
+            $year = $request->year;
+        } else {
+            # code...
+            $month = date('m');
+            $year = date('Y');
+        }
+        $month_format = Carbon::createFromFormat('m-Y', $month . '-' . $year);
+        $monthf = $month_format->format('F');
         return view($view, [
             'lists' => $lists,
             'title' => $title,
+            'month' => $month,
+            'monthf' => $monthf,
+            'year' => $year,
             'fontsize' => 1,
 
         ]);

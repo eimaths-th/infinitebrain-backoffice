@@ -540,6 +540,10 @@
                 width: 100%;
                 height: auto;
             }
+            .custom-image2 {
+                width: 50%;
+                height: auto;
+            }
         }
 
         .custom-image2 {

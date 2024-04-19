@@ -66,6 +66,12 @@
             </div>
         </div>
         <div class="main-card mb-3 card " id="x_content">
+            <div class="card-header-tab card-header-tab-animation card-header">
+                <div class="card-header-title">
+                    <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                    RESULT STUDENT {{ $monthf }} - {{ $year }}
+                </div>
+            </div>
             <div class="card-body">
                 <form method="post" action="#" name="delete_all" id="delete_all">
                     @csrf

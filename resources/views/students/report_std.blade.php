@@ -142,10 +142,14 @@
             <div class="card-header-tab card-header-tab-animation card-header">
                 <div class="card-header-title">
                     <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
-                    RESULT STUDENT {{ date('F-Y') }}
+                    RESULT STUDENT {{ $monthf }} - {{ $year }}
                 </div>
             </div>
             <div class="card-body">
+                <div class="col-lg-12 mb-3 text-end">
+                    <a href="#" onclick="export_report();" class="btn btn-success ">Print</a>
+
+                </div>
                 <table style="width: 100%;" id="Listview"
                     class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">
                     <thead>
@@ -169,6 +173,8 @@
                             foreach ($latestStatusCounts as $record) {
                                 $group = $record->group;
                                 $status = $record->status;
+                                $status_log_ids = 'ids';
+                                // $ids = [];
 
                                 if (!isset($groupStatusCounts[$group])) {
                                     $groupStatusCounts[$group] = [];
@@ -176,7 +182,11 @@
                                 if (!isset($groupStatusCounts[$group][$status])) {
                                     $groupStatusCounts[$group][$status] = 0;
                                 }
+                                if (!isset($groupStatusCounts[$group][$status_log_ids][$status])) {
+                                    $groupStatusCounts[$group][$status_log_ids][$status] = [];
+                                }
                                 $groupStatusCounts[$group][$status]++;
+                                $groupStatusCounts[$group][$status_log_ids][$status][] = $record->id;
                             }
                             $totalNewStudents = 0;
                             $totalStudying = 0;
@@ -185,6 +195,7 @@
                             $totalResume = 0;
                             $totalWait = 0;
                             $totalNoneReceipt = 0;
+                            // dd($groupStatusCounts);
                         @endphp
                         @foreach ($groupStatusCounts as $group => $statusCounts)
                             <tr>
@@ -201,19 +212,188 @@
                                     @endif
 
                                 </td>
-                                <td>{{ isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0 }} คน</td>
-                                <td>{{ isset($statusCounts['studying . . .']) ? $statusCounts['studying . . .'] : 0 }} คน
+
+                                <td>
+                                    @php
+                                        $routeParameters = [
+                                            'type' => 'view',
+                                            'paraCheck' => 'all',
+                                            'month' => $month,
+                                            'year' => $year,
+                                            'group' => $group,
+                                            'New Student' => isset($statusCounts['ids']['New Student'])
+                                                ? $statusCounts['ids']['New Student']
+                                                : '',
+                                            'ids' => [],
+                                        ];
+                                        if (isset($statusCounts['ids']['New Student'])) {
+                                            $routeParameters['ids'][] = $statusCounts['ids']['New Student'];
+                                        }
+                                        $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                    @endphp
+                                    <a class="text-dark" href="{{ route('searchTestLog', $routeParameters) }}">
+                                        {{ isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0 }} คน
+                                    </a>
                                 </td>
-                                <td>{{ isset($statusCounts['Termination of study']) ? $statusCounts['Termination of study'] : 0 }}
-                                    คน</td>
-                                <td>{{ isset($statusCounts['drop']) ? $statusCounts['drop'] : 0 }} คน</td>
-                                <td>{{ isset($statusCounts['resume']) ? $statusCounts['resume'] : 0 }} คน</td>
-                                <td>{{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }} คน
+                                <td>
+                                    @php
+                                        $routeParameters = [
+                                            'type' => 'view',
+                                            'paraCheck' => 'all',
+                                            'month' => $month,
+                                            'year' => $year,
+                                            'group' => $group,
+                                            'studying . . .' => isset($statusCounts['ids']['studying . . .'])
+                                                ? $statusCounts['ids']['studying . . .']
+                                                : '',
+                                            'ids' => [],
+                                        ];
+                                        if (isset($statusCounts['ids']['studying . . .'])) {
+                                            $routeParameters['ids'][] = $statusCounts['ids']['studying . . .'];
+                                        }
+                                        $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                    @endphp
+                                    <a class="text-dark" href="{{ route('searchTestLog', $routeParameters) }}">
+                                        {{ isset($statusCounts['studying . . .']) ? $statusCounts['studying . . .'] : 0 }}
+                                        คน
+                                    </a>
+
                                 </td>
-                                <td>{{ (isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0) +
-                                    (isset($statusCounts['studying . . .']) ? $statusCounts['studying . . .'] : 0) +
-                                    (isset($statusCounts['resume']) ? $statusCounts['resume'] : 0) }}
-                                    คน
+                                <td>
+                                    @php
+                                        $routeParameters = [
+                                            'type' => 'view',
+                                            'paraCheck' => 'all',
+                                            'month' => $month,
+                                            'year' => $year,
+                                            'group' => $group,
+                                            'Termination of study' => isset(
+                                                $statusCounts['ids']['Termination of study'],
+                                            )
+                                                ? $statusCounts['ids']['Termination of study']
+                                                : '',
+                                            'ids' => [],
+                                        ];
+                                        if (isset($statusCounts['ids']['Termination of study'])) {
+                                            $routeParameters['ids'][] = $statusCounts['ids']['Termination of study'];
+                                        }
+                                        $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                    @endphp
+                                    <a class="text-dark" href="{{ route('searchTestLog', $routeParameters) }}">
+                                        {{ isset($statusCounts['Termination of study']) ? $statusCounts['Termination of study'] : 0 }}
+                                        คน
+                                    </a>
+                                </td>
+                                <td>
+                                    @php
+                                        $routeParameters = [
+                                            'type' => 'view',
+                                            'paraCheck' => 'all',
+                                            'month' => $month,
+                                            'year' => $year,
+                                            'group' => $group,
+                                            'drop' => isset($statusCounts['ids']['drop'])
+                                                ? $statusCounts['ids']['drop']
+                                                : '',
+                                            'ids' => [],
+                                        ];
+                                        if (isset($statusCounts['ids']['drop'])) {
+                                            $routeParameters['ids'][] = $statusCounts['ids']['drop'];
+                                        }
+                                        $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                    @endphp
+                                    <a class="text-dark" href="{{ route('searchTestLog', $routeParameters) }}">
+                                        {{ isset($statusCounts['drop']) ? $statusCounts['drop'] : 0 }}
+                                        คน
+                                    </a>
+                                </td>
+                                <td>
+                                    @php
+                                        $routeParameters = [
+                                            'type' => 'view',
+                                            'paraCheck' => 'all',
+                                            'month' => $month,
+                                            'year' => $year,
+                                            'group' => $group,
+                                            'resume' => isset($statusCounts['ids']['resume'])
+                                                ? $statusCounts['ids']['resume']
+                                                : '',
+                                            'ids' => [],
+                                        ];
+                                        if (isset($statusCounts['ids']['resume'])) {
+                                            $routeParameters['ids'][] = $statusCounts['ids']['resume'];
+                                        }
+                                        $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                    @endphp
+                                    <a class="text-dark" href="{{ route('searchTestLog', $routeParameters) }}">
+                                        {{ isset($statusCounts['resume']) ? $statusCounts['resume'] : 0 }}
+                                        คน
+                                    </a>
+                                </td>
+                                <td>
+                                    @php
+                                        $routeParameters = [
+                                            'type' => 'view',
+                                            'paraCheck' => 'all',
+                                            'month' => $month,
+                                            'year' => $year,
+                                            'group' => $group,
+                                            'waitting . . .' => isset($statusCounts['ids']['waitting . . .'])
+                                                ? $statusCounts['ids']['waitting . . .']
+                                                : '',
+                                            'ids' => [],
+                                        ];
+                                        if (isset($statusCounts['ids']['waitting . . .'])) {
+                                            $routeParameters['ids'][] = $statusCounts['ids']['waitting . . .'];
+                                        }
+                                        $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                    @endphp
+                                    <a class="text-dark" href="{{ route('searchTestLog', $routeParameters) }}">
+                                        {{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }}
+                                        คน
+                                    </a>
+                                    {{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }} คน
+                                </td>
+                                <td>
+                                    @php
+                                        // dd($groupData);
+                                        $routeParameters = [
+                                            'type' => 'view',
+                                            'paraCheck' => 'all',
+                                            'month' => $month,
+                                            'year' => $year,
+                                            'group' => $group,
+                                            'resume' => isset($statusCounts['ids']['resume'])
+                                                ? $statusCounts['ids']['resume']
+                                                : '',
+                                            'New Student' => isset($statusCounts['ids']['New Student'])
+                                                ? $statusCounts['ids']['New Student']
+                                                : '',
+                                            'studying . . .' => isset($statusCounts['ids']['studying . . .'])
+                                                ? $statusCounts['ids']['studying . . .']
+                                                : '',
+                                            'ids' => [],
+                                        ];
+                                        if (isset($statusCounts['ids']['resume'])) {
+                                            $routeParameters['ids'][] = $statusCounts['ids']['resume'];
+                                        }
+
+                                        if (isset($statusCounts['ids']['New Student'])) {
+                                            $routeParameters['ids'][] = $statusCounts['ids']['New Student'];
+                                        }
+
+                                        if (isset($statusCounts['ids']['studying . . .'])) {
+                                            $routeParameters['ids'][] = $statusCounts['ids']['studying . . .'];
+                                        }
+                                        $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                        // dd($groupData, $routeParameters);
+                                    @endphp
+                                    <a class="text-dark" href="{{ route('searchTestLog', $routeParameters) }}">
+                                        {{ (isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0) +
+                                            (isset($statusCounts['studying . . .']) ? $statusCounts['studying . . .'] : 0) +
+                                            (isset($statusCounts['resume']) ? $statusCounts['resume'] : 0) }}
+                                        คน
+                                    </a>
                                 </td>
                                 <td>{{ isset($statusCounts['None Receipt']) ? $statusCounts['None Receipt'] : 0 }} คน</td>
 
@@ -248,7 +428,7 @@
                             <td>{{ $totalDrop }} คน</td>
                             <td>{{ $totalResume }} คน</td>
                             <td>{{ $totalWait }} คน</td>
-                            <td>{{ $totalNewStudents + $totalStudying + $totalResume }} คน</td>
+                            <td> <b>{{ $totalNewStudents + $totalStudying + $totalResume }} คน</b> </td>
                             <td>{{ $totalNoneReceipt }} คน</td>
                             <td>{{ now() }}</td>
                         </tr>
@@ -259,6 +439,7 @@
                 </table>
             </div>
         </div>
+
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-header-tab card-header-tab-animation card-header">
                 <div class="card-header-title">
@@ -347,6 +528,15 @@
     <script src="../assets/plugins/flot/source/jquery.flot.uiConstants.js"></script>
 
     <script>
+        function export_report() {
+
+            url =
+                '{{ route('report-student', ['type' => 'print', 'month' => $month, 'year' => $year]) }}';
+
+            window.open(
+                url.replace(/&amp;/g, "&")
+            );
+        }
         $(document).ready(function() {
             //$.noConflict();
             // var token = ''

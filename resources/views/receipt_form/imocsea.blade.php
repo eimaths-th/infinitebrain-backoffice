@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                    background-size: 15px;
-                                                                                }*/
+                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                            background-size: 15px;
+                                                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                    border-color: var(--color-invalid);
-                                                                                }*/
+                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                            border-color: var(--color-invalid);
+                                                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                    display: block;
-                                                                                }*/
+                                                                                            display: block;
+                                                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -610,7 +610,14 @@
                                             หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันสอบ) ใช้ระดับชั้นปีการศึกษาที่ผ่านมา<br>
                                             หากเปิดเทอมครบ 3 เดือน (นับจากวันสอบ) ใช้ระดับชั้นปีการศึกษาปัจจุบัน<br>
                                             โรงเรียนนานาชาติ ใช้ระดับชั้นปีการศึกษาปัจจุบันในการสมัครสอบเท่านั้น<br>
-                                            <br>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="text-center">
+                                                        <img src="images/condition-01.jpg" class="custom-image2 my-3"
+                                                            alt="Image 2" hight="20px">
+                                                    </div>
+                                                </div>
+                                            </div>
                                             ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วตรวจสอบพบ<br>
                                             ทาง META Knowledge จะยึดตามเกณฑ์นี้<br>
                                             หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ในการสอบ<br>
@@ -706,7 +713,8 @@
                                     <div class="col-md-6 col-sm-12">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="nickname">Nickname
                                                 (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
