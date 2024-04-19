@@ -352,7 +352,6 @@
                                         {{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }}
                                         คน
                                     </a>
-                                    {{ isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0 }} คน
                                 </td>
                                 <td>
                                     @php
@@ -531,7 +530,7 @@
         function export_report() {
 
             url =
-                '{{ route('report-student', ['type' => 'print', 'month' => $month, 'year' => $year]) }}';
+                '{{ route('search_status', ['type' => 'print', 'month' => $month, 'year' => $year]) }}';
 
             window.open(
                 url.replace(/&amp;/g, "&")

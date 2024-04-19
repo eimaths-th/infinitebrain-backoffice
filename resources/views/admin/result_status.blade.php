@@ -44,6 +44,8 @@
                             $listIds = array_column($listArray, 'id');
                             $routeParameters = [
                                 'type' => 'print',
+                                'month' => $month,
+                                'year' => $year,
                                 'ids' => $listIds,
                                 'title' => $title,
                             ];

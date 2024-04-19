@@ -29,13 +29,12 @@ class StdlogController extends Controller
 
             $view = 'students.print_report_std';
         } else {
+
             $view = 'students.report_std';
         }
-
-        $month  = date('m');
+        $month = date('m');
+        $year = date('Y');
         $monthf  = date('F');
-        $year   = date('Y');
-
         $latestStatusCounts = Statuslog::select('id', 'group', 'student_id', 'status')
             ->whereIn('id', function ($query) {
                 $query->select(DB::raw('MAX(id)'))
@@ -76,6 +75,13 @@ class StdlogController extends Controller
 
     public function search_status(Request $request)
     {
+        if ($request->type === 'print') {
+
+            $view = 'students.print_report_std';
+        } else {
+
+            $view = 'students.report_std';
+        }
         $request->validate([
             'month' => 'required',
             'year' => 'required',
@@ -150,7 +156,7 @@ class StdlogController extends Controller
         }
 
         // dd($latestStatusByStudent);
-        return view('students.report_std', [
+        return view($view, [
 
             'latestStatusCounts' => $latestStatusCounts,
             'latestStatusByStudent' => $latestStatusByStudent,
