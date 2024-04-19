@@ -127,7 +127,7 @@
                             <td>{{ $totalDrop }} คน</td>
                             <td>{{ $totalResume }} คน</td>
                             <td>{{ $totalWait }} คน</td>
-                            <td>{{ $totalNewStudents + $totalStudying + $totalResume }} คน</td>
+                            <td> <b>{{ $totalNewStudents + $totalStudying + $totalResume }} คน</b> </td>
                             <td>{{ $totalNoneReceipt }} คน</td>
                             <td>{{ now() }}</td>
                         </tr>
