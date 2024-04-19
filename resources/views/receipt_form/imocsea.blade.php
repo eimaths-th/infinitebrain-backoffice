@@ -610,14 +610,7 @@
                                             หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันสอบ) ใช้ระดับชั้นปีการศึกษาที่ผ่านมา<br>
                                             หากเปิดเทอมครบ 3 เดือน (นับจากวันสอบ) ใช้ระดับชั้นปีการศึกษาปัจจุบัน<br>
                                             โรงเรียนนานาชาติ ใช้ระดับชั้นปีการศึกษาปัจจุบันในการสมัครสอบเท่านั้น<br>
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="text-center">
-                                                        <img src="images/condition-01.jpg" class="custom-image2 my-3"
-                                                            alt="Image 2" hight="20px">
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                             ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วตรวจสอบพบ<br>
                                             ทาง META Knowledge จะยึดตามเกณฑ์นี้<br>
                                             หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ในการสอบ<br>
@@ -632,6 +625,20 @@
 
                                             ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
                                             เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ --}}
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <span style="color: #6351a2;"><b>เกณฑ์การเทียบระดับชั้น IMOCSEA</b>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="text-center">
+                                                        <img src="images/condition-01.jpg" class="custom-image2 my-3"
+                                                            alt="Image 2" hight="20px">
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </span>
                                     </p>
                                     {{-- <p style="text-align: center;"><span style="color: #6351a2;"><b><a target="_blank"

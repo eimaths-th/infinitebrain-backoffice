@@ -639,6 +639,20 @@
                                             เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ --}}
                                         </span>
                                     </p>
+                                    <p>
+                                        <span style="color: #6351a2;"><b>เกณฑ์การเทียบระดับชั้น ISOCSEA</b>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="text-center">
+                                                        <img src="images/condition-01.jpg" class="custom-image2 my-3"
+                                                            alt="Image 2" hight="20px">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </span>
+                                    </p>
                                     {{--  <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร GELOSEA</b> <br>
 
                                         รร.ไทยใช้ระดับชั้นปัจจุบัน ณ วันสอบเท่านั้น <br>
