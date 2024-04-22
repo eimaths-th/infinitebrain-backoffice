@@ -2502,13 +2502,15 @@
                 var sub_id = parent.find('#rrsub').val();
                 var level_id = parent.find('#rrlevel').val();
                 var book = parent.find('#rrbook').val();
+                var week = parent.find('#rrweek').val();
                 // console.log(book);
                 if (course_type != 3) {
                     $.ajax({
                         type: "GET",
                         async: false,
                         dataType: 'JSON',
-                        url: "receipt_school/" + sub_id + "/" + level_id + "/" + book + "/" + course_type ,
+                        // url: "receipt_school/" + sub_id + "/" + level_id + "/" + book + "/" + course_type ,
+                        url: "receipt_school/" + sub_id + "/" + level_id + "/" + book + "/" + week + "/" + course_type,
                         success: function(res) {
                             parent.find('#rrbookprice').val(res.bp);
                             // $('.pp').html(res.html);
@@ -2645,6 +2647,7 @@
                 var course_type = parent.find('#course_type').val();
                 var level_id = parent.find('#level_id').val();
                 var book = parent.find('#book').val();
+                var week = parent.find('#week').val();
                 // var sub_id = $('#subject_id').val();
                 // var level_id = $('#level_id').val();
                 // var book = $('#book').val();
@@ -2657,7 +2660,7 @@
                         type: "GET",
                         dataType: 'JSON',
                         async: false,
-                        url: "receipt_school/" + sub_id + "/" + level_id + "/" + book + "/" + course_type ,
+                        url: "receipt_school/" + sub_id + "/" + level_id + "/" + book + "/" + week + "/" + course_type,
                         success: function(res) {
                             // console.log(res);
                             parseInt(parent.find('#book_price').val(res.bp));
