@@ -87,6 +87,7 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/report-month-time', [RecordtimeController::class, 'reportTime'])->name('reportTime');
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
     Route::get('/report-year-student', [StdlogController::class, 'reportYearStd'])->name('reportYearStd');
+    Route::get('/saveCheck', [StdlogController::class, 'CheckReportStdController'])->name('saveCheck');
 
     // Route::get('/stdLog-search', [StdlogController::class, 'searchTestLog'])->name('stdlog.search');
     Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');

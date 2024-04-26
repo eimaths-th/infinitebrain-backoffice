@@ -497,10 +497,18 @@
                                                         id="flexSwitchCheckChecked-{{ $data->rec_school->receipt_number }}">
                                                 </div>
                                             </td> --}}
+                                            @php
+
+                                                $routeParameters = [
+                                                        'student_id' => $data->std->id,
+                                                        'receipt_school_id' => $data->rec_school->id,
+                                                        'school_price_id' => $data->id,
+                                                    ];
+                                            @endphp
                                             <td class="text-center" width='1%'>
                                                 <div class="form-check form-switch form-switch-sm">
                                                     <input class="form-check-input" type="checkbox"
-                                                        id="flexSwitchCheckChecked-{{ $data->rec_school->receipt_number }}">
+                                                        id="flexSwitchCheckChecked-{{ $data->id }}">
                                                     <label class="label-text" for="">Date: </label>
                                                 </div>
                                             </td>

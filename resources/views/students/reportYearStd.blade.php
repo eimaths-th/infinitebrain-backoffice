@@ -445,7 +445,7 @@
                                             <td class="text-center" width='1%'>
                                                 <div class="form-check form-switch form-switch-sm">
                                                     <input class="form-check-input" type="checkbox"
-                                                        id="flexSwitchCheckChecked-{{ $data1->rec_school->receipt_number }}">
+                                                        id="flexSwitchCheckChecked-{{ $data1->id }}">
                                                     <label class="label-text" for="">Date: </label>
                                                 </div>
                                             </td>
