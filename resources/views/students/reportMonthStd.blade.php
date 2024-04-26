@@ -37,14 +37,19 @@
         }
 
         /* .switchery {
-                                                                                                                                                                                                                                                                width: 30px;
-                                                                                                                                                                                                                                                                height: 16px;
-                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                    width: 30px;
+                                                                                                                                                                                                                                                                    height: 16px;
+                                                                                                                                                                                                                                                                }
 
-                                                                                                                                                                                                                                                            .switchery-small {
-                                                                                                                                                                                                                                                                width: 12px;
-                                                                                                                                                                                                                                                                height: 12px;
-                                                                                                                                                                                                                                                            } */
+                                                                                                                                                                                                                                                                .switchery-small {
+                                                                                                                                                                                                                                                                    width: 12px;
+                                                                                                                                                                                                                                                                    height: 12px;
+                                                                                                                                                                                                                                                                } */
+    </style>
+    <style>
+        .bg-success2 {
+            background-color: #4ffca2 !important;
+        }
     </style>
 @endsection
 
@@ -485,11 +490,18 @@
                                             {{-- <td class="text-end">{{ number_format($data->total) }} บาท</td> --}}
                                             <td class="text-end">{{ number_format($data->total) }} บาท</td>
                                             {{-- <td class="text-end"><input type="checkbox" id="switchery-default" checked /></td> --}}
-                                            <td class="text-center">
-                                                {{-- <input type="checkbox" class="switchery-small" id="switchery-default-{{ $loop->index }}" checked /> --}}
+                                            {{-- <td class="text-center">
+                                                <input type="checkbox" class="switchery-small" id="switchery-default-{{ $loop->index }}" checked />
                                                 <div class="form-check form-switch form-switch-sm">
                                                     <input class="form-check-input" type="checkbox"
                                                         id="flexSwitchCheckChecked-{{ $data->rec_school->receipt_number }}">
+                                                </div>
+                                            </td> --}}
+                                            <td class="text-center" width='1%'>
+                                                <div class="form-check form-switch form-switch-sm">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="flexSwitchCheckChecked-{{ $data->rec_school->receipt_number }}">
+                                                    <label class="label-text" for="">Date: </label>
                                                 </div>
                                             </td>
 
@@ -622,27 +634,37 @@
                 var isChecked = $(this).is(":checked");
                 console.log(isChecked);
                 if (isChecked) {
-                    $(this).closest('tr').addClass('bg-success');
+                    $(this).closest('tr').addClass('bg-success2');
                     var id = $(this).attr('id');
-                    localStorage.setItem(id, 'checked');
+
+                    // Store the current date when the checkbox is checked
+                    var currentDate = new Date().toLocaleDateString();
+                    localStorage.setItem(id, currentDate);
+
+                    // Update label text with the stored date
+                    $(this).siblings('.label-text').text(currentDate);
                 } else {
-                    $(this).closest('tr').removeClass('bg-success');
+                    $(this).closest('tr').removeClass('bg-success2');
                     var id = $(this).attr('id');
-                    localStorage.setItem(id, 'unchecked');
+                    localStorage.setItem(id, '');
+
+                    // Reset label text
+                    $(this).siblings('.label-text').text("Date :");
                 }
             });
 
             $('input[type="checkbox"]').each(function() {
-
                 var id = $(this).attr('id');
-                var state = localStorage.getItem(id);
-                // console.log(id);
+                var storedDate = localStorage.getItem(id);
 
-                if (state === 'checked') {
+                if (storedDate) {
                     $(this).prop('checked', true);
-                    $(this).closest('tr').addClass('bg-success');
+                    $(this).closest('tr').addClass('bg-success2');
+                    // Update label text with stored date
+                    $(this).siblings('.label-text').text(storedDate);
                 }
             });
+
 
         });
     </script>
