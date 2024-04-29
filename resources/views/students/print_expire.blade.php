@@ -111,7 +111,13 @@
                         <tr class="active" height="30">
                             <td align="center" width="10%" class="active_left grey"></td>
                             <td align="center" width="80%" colspan="5">
-                                <font class="grey">RESULT EXPIRE STUDENT </font>
+                                <font class="grey">RESULT EXPIRE STUDENT
+                                    @if ($selectGroup)
+                                        GROUP {{ $selectGroup }}
+                                    @else
+                                    @endif
+                                </font>
+
                                 {{ $currentMonthf }} - {{ $currentYear }}
                             </td>
                             {{-- <td align="center" width="10%"><b></b></td>
@@ -127,111 +133,111 @@
 
                     <table align="center" width="98%" cellpadding="0" cellspacing="0">
                         {{-- <thead> --}}
-                            <tr class=" activebg" height="30">
-                                <td class="actived grey" align="center">No.</td>
-                                <td class="actived grey" align="center" >ระยะเวลา</td>
-                                <td class="actived grey" align="center" >Code</td>
-                                <td class="actived" align="center">
-                                    <font class="grey">ชื่อนักเรียน</font>
-                                </td>
-                                <td class="actived" align="center" >
-                                    <font class="grey">ชื่อ ผู้ปกครอง</font>
-                                </td>
-                                <td align="center" class="grey actived">เบอร์</td>
-                                {{-- <td class="actived" align="activedr gray" >
+                        <tr class=" activebg" height="30">
+                            <td class="actived grey" align="center">No.</td>
+                            <td class="actived grey" align="center">ระยะเวลา</td>
+                            <td class="actived grey" align="center">Code</td>
+                            <td class="actived" align="center">
+                                <font class="grey">ชื่อนักเรียน</font>
+                            </td>
+                            <td class="actived" align="center">
+                                <font class="grey">ชื่อ ผู้ปกครอง</font>
+                            </td>
+                            <td align="center" class="grey actived">เบอร์</td>
+                            {{-- <td class="actived" align="activedr gray" >
                                     <font class="grey">Group</font>
                                 </td> --}}
-                                <td align="center" class="activedr gray">Group</td>
-                            </tr>
+                            <td align="center" class="activedr gray">Group</td>
+                        </tr>
                         {{-- </thead> --}}
 
                         {{-- <tbody> --}}
-                            @foreach ($StudentExpireCurrentMonth as $key => $list)
-                                @php
+                        @foreach ($StudentExpireCurrentMonth as $key => $list)
+                            @php
 
-                                @endphp
-                                <tr class="activeda " height="15">
-                                    <td align="center" class="actived">
-                                        <b>
-                                            <font size="{{ $fontsize }}">
-                                                {{ $key + 1 }}
-                                            </font>
-                                        </b>
-                                    </td>
-                                    <td align="center" class="actived">
-                                        <b>
-                                            <font size="{{ $fontsize }}">
-                                                {{ $list->period }}
-                                            </font>
-                                        </b>
-                                    </td>
-                                    <td align="center" class="actived">
-                                        <b>
-                                            <font size="{{ $fontsize }}">
-                                                {{ $list->std->code }}
-                                            </font>
-                                        </b>
-                                    </td>
-                                    <td align="left" class="actived">&nbsp;
-                                        <b>
-                                            <font size="{{ $fontsize }}">{{ $list->std->full_name }}
-                                                ({{ $list->std->nick_name }})
-                                            </font>
-                                        </b>
-                                    </td>
-                                    <td align="center" class="actived">
-                                        <b>
-                                            <font size="{{ $fontsize }}">
-                                                {{ $list->std->parent->name_parent }}
-                                            </font>
-                                        </b>
-                                    </td>
-                                    <td align="center"class="actived">
-                                        <b>
-                                            <font size="{{ $fontsize }}">
-                                                {{ $list->std->parent->mobile }}
-                                            </font>
-                                        </b>
-                                    </td>
-                                    <td align="center" class="activedr grey">
-                                        <b>
-                                            <font size="{{ $fontsize }}">
-                                                {{ $list->group }}
-                                            </font>
-                                        </b>
-                                    </td>
-                                    {{-- <td align="center" class="activedr grey">
+                            @endphp
+                            <tr class="activeda " height="15">
+                                <td align="center" class="actived">
+                                    <b>
+                                        <font size="{{ $fontsize }}">
+                                            {{ $key + 1 }}
+                                        </font>
+                                    </b>
+                                </td>
+                                <td align="center" class="actived">
+                                    <b>
+                                        <font size="{{ $fontsize }}">
+                                            {{ $list->period }}
+                                        </font>
+                                    </b>
+                                </td>
+                                <td align="center" class="actived">
+                                    <b>
+                                        <font size="{{ $fontsize }}">
+                                            {{ $list->std->code }}
+                                        </font>
+                                    </b>
+                                </td>
+                                <td align="left" class="actived">&nbsp;
+                                    <b>
+                                        <font size="{{ $fontsize }}">{{ $list->std->full_name }}
+                                            ({{ $list->std->nick_name }})
+                                        </font>
+                                    </b>
+                                </td>
+                                <td align="center" class="actived">
+                                    <b>
+                                        <font size="{{ $fontsize }}">
+                                            {{ $list->std->parent->name_parent }}
+                                        </font>
+                                    </b>
+                                </td>
+                                <td align="center"class="actived">
+                                    <b>
+                                        <font size="{{ $fontsize }}">
+                                            {{ $list->std->parent->mobile }}
+                                        </font>
+                                    </b>
+                                </td>
+                                <td align="center" class="activedr grey">
+                                    <b>
+                                        <font size="{{ $fontsize }}">
+                                            {{ $list->group }}
+                                        </font>
+                                    </b>
+                                </td>
+                                {{-- <td align="center" class="activedr grey">
                                         <b>
                                             <font size="{{ $fontsize }}">
                                                 {{ $list->status }}
                                             </font>
                                         </b>
                                     </td> --}}
-                                </tr>
-                            @endforeach
-                            <tr class="activeda" height="15">
-                                <td align="center" width="1%" class="activeda">
-
-                                </td>
-                                <td align="center" class="activeda">
-
-                                </td>
-                                <td align="left"  class="activeda">&nbsp;
-
-                                </td>
-                                <td align="center"  class="activeda">
-
-                                </td>
-                                <td align="center"  class="activeda">
-
-                                </td>
-                                <td align="center"  class="activeda ">
-
-                                </td>
-                                <td align="center"  class="activeda">
-
-                                </td>
                             </tr>
+                        @endforeach
+                        <tr class="activeda" height="15">
+                            <td align="center" width="1%" class="activeda">
+
+                            </td>
+                            <td align="center" class="activeda">
+
+                            </td>
+                            <td align="left" class="activeda">&nbsp;
+
+                            </td>
+                            <td align="center" class="activeda">
+
+                            </td>
+                            <td align="center" class="activeda">
+
+                            </td>
+                            <td align="center" class="activeda ">
+
+                            </td>
+                            <td align="center" class="activeda">
+
+                            </td>
+                        </tr>
                         {{-- </tbody> --}}
 
 
@@ -280,4 +286,5 @@
         window.close();
     }, 4000);
 </script>
+
 </html>
