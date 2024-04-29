@@ -67,12 +67,7 @@
                                     รายชื่อผู้ปกครอง
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ route('students.expire') }}">
-                                    <i class="metismenu-icon"></i>
-                                    Students-Expire
-                                </a>
-                            </li>
+
 
                         </ul>
 
@@ -740,6 +735,12 @@
                                     $godEye = Godeye::where('user_id', $user_id)->get();
                                 @endphp
                                 <li>
+                                    <a href="{{ route('students.expire') }}">
+                                        <i class="metismenu-icon"></i>
+                                        Students-Expire
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="{{ route('reportMonthStd') }}">
                                         <i class="metismenu-icon"></i>
                                         ค่าสมัครเรียนประจำเดือน
@@ -751,14 +752,7 @@
                                         ค่าสมัครเรียนประจำปี
                                     </a>
                                 </li>
-                                @if (Auth::user()->id == 16)
-                                    <li>
-                                        <a href="{{ route('reportRecieptStd') }}">
-                                            <i class="metismenu-icon"></i>
-                                            Report Student Recieept
-                                        </a>
-                                    </li>
-                                @endif
+
 
 
                                 <li>
@@ -779,7 +773,14 @@
                                         Bonus Student
                                     </a>
                                 </li>
-
+                                @if (Auth::user()->id == 16)
+                                    <li>
+                                        <a href="{{ route('reportRecieptStd') }}">
+                                            <i class="metismenu-icon"></i>
+                                            Report Student Recieept
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     @endif
