@@ -67,6 +67,12 @@
                                     รายชื่อผู้ปกครอง
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('students.expire') }}">
+                                    <i class="metismenu-icon"></i>
+                                    Students-Expire
+                                </a>
+                            </li>
 
                         </ul>
 

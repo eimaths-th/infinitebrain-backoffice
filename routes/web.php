@@ -195,6 +195,7 @@ Route::group(['middleware' => ['auth']], function () {
     //student
 
     Route::get('/students', [StudentController::class, 'index'])->name('students');
+    Route::get('/students/expire', [StudentController::class, 'expire'])->name('students.expire');
     Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
     Route::get('/students/show/{id}', [StudentController::class, 'show'])->name('students.show');
     Route::get('/students/view/{id}', [StudentController::class, 'view'])->name('students.view');

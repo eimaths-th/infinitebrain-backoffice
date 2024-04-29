@@ -155,7 +155,89 @@ class StudentController extends Controller
     {
         //
     }
+    public function expire(Request $request)
+    {
+        // dd($request);
+        // $currentMonth = date('m');
+        $currentMonth = '04';
+        $currentYear = date('Y');
+        $month_format = Carbon::createFromFormat('m-Y', $currentMonth . '-' . $currentYear);
+        $currentMonthf = $month_format->format('F');
+        $groups = SchoolPrice::all()->groupBy('group');
+        if ($request->group) {
+            # code...
+            $selectGroup = $request->group;
+            $StudentExpireCurrentMonth = SchoolPrice::whereRaw("SUBSTRING_INDEX(period, ' - ', -1) = ?", [$currentYear . '-' . str_pad($currentMonth, 2, '0', STR_PAD_LEFT)])
+                // ->groupBy('student_id')
+                ->where('group', $selectGroup)
+                ->orderBy('group')
+                ->get();
+        } else {
+            # code...
+            $selectGroup = '';
+            $StudentExpireCurrentMonth = SchoolPrice::whereRaw("SUBSTRING_INDEX(period, ' - ', -1) = ?", [$currentYear . '-' . str_pad($currentMonth, 2, '0', STR_PAD_LEFT)])
+                // ->groupBy('student_id')
+                ->orderBy('group')
+                ->get();
+        }
 
+
+        // foreach ($StudentExpireCurrentMonth as $record) {
+        //     // Process each record as needed
+        //     echo "period: " . $record->period . ", Record ID: " . $record->id . ", STD ID: " . $record->student_id . ", group: " . $record->group . ", Rid: " . $record->rid  . " | " . "<br/>";
+        // }
+
+        // dd($group);
+
+        if ($request->type == 'print') {
+            # code...
+            $view = 'students.print_expire';
+        } else {
+            $view = 'students.expire';
+        }
+
+        return view($view, [
+            'StudentExpireCurrentMonth' => $StudentExpireCurrentMonth,
+            'currentMonth' => $currentMonth,
+            'currentMonthf' => $currentMonthf,
+            'currentYear' => $currentYear,
+            'groups' => $groups,
+            'selectGroup' => $selectGroup,
+            'fontsize' => 1,
+            // 'currentMonth' => $currentMonth,
+        ]);
+    }
+
+    public function search_expire(Request $request)
+    {
+        // dd($request);
+        // $currentMonth = date('m');
+        $currentMonth = '04';
+        $currentYear = date('Y');
+        $month_format = Carbon::createFromFormat('m-Y', $currentMonth . '-' . $currentYear);
+        $currentMonthf = $month_format->format('F');
+        $groups = SchoolPrice::all()->groupBy('group');
+        $StudentExpireCurrentMonth = SchoolPrice::whereRaw("SUBSTRING_INDEX(period, ' - ', -1) = ?", [$currentYear . '-' . str_pad($currentMonth, 2, '0', STR_PAD_LEFT)])
+            // ->groupBy('student_id')
+            ->orderBy('group')
+            ->get();
+
+        // foreach ($StudentExpireCurrentMonth as $record) {
+        //     // Process each record as needed
+        //     echo "period: " . $record->period . ", Record ID: " . $record->id . ", STD ID: " . $record->student_id . ", group: " . $record->group . ", Rid: " . $record->rid  . " | " . "<br/>";
+        // }
+
+        // dd($group);
+
+        return view('students.expire', [
+            'StudentExpireCurrentMonth' => $StudentExpireCurrentMonth,
+            'currentMonth' => $currentMonth,
+            'currentMonthf' => $currentMonthf,
+            'currentYear' => $currentYear,
+            'groups' => $groups,
+            // 'currentMonth' => $currentMonth,
+        ]);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -739,7 +821,7 @@ class StudentController extends Controller
             if ($hist->status === 'non-reciept') {
                 # code...
                 $class = 'danger';
-            }else {
+            } else {
                 # code...
                 $class = 'success';
             }
