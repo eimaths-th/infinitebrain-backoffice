@@ -138,10 +138,10 @@
                                     <font class="grey">ชื่อ ผู้ปกครอง</font>
                                 </td>
                                 <td align="center" class="grey actived">เบอร์</td>
-                                <td class="actived" align="center" >
+                                {{-- <td class="actived" align="activedr gray" >
                                     <font class="grey">Group</font>
-                                </td>
-                                {{-- <td align="center" class="activedr gray">Status</td> --}}
+                                </td> --}}
+                                <td align="center" class="activedr gray">Group</td>
                             </tr>
                         {{-- </thead> --}}
 
@@ -155,6 +155,13 @@
                                         <b>
                                             <font size="{{ $fontsize }}">
                                                 {{ $key + 1 }}
+                                            </font>
+                                        </b>
+                                    </td>
+                                    <td align="center" class="actived">
+                                        <b>
+                                            <font size="{{ $fontsize }}">
+                                                {{ $list->period }}
                                             </font>
                                         </b>
                                     </td>
@@ -186,27 +193,27 @@
                                             </font>
                                         </b>
                                     </td>
-                                    <td align="center" class="actived grey">
+                                    <td align="center" class="activedr grey">
                                         <b>
                                             <font size="{{ $fontsize }}">
                                                 {{ $list->group }}
                                             </font>
                                         </b>
                                     </td>
-                                    <td align="center" class="activedr grey">
+                                    {{-- <td align="center" class="activedr grey">
                                         <b>
                                             <font size="{{ $fontsize }}">
                                                 {{ $list->status }}
                                             </font>
                                         </b>
-                                    </td>
+                                    </td> --}}
                                 </tr>
                             @endforeach
                             <tr class="activeda" height="15">
                                 <td align="center" width="1%" class="activeda">
 
                                 </td>
-                                <td align="center" width="1%"  class="activeda">
+                                <td align="center" class="activeda">
 
                                 </td>
                                 <td align="left"  class="activeda">&nbsp;
