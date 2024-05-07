@@ -991,12 +991,21 @@ class ReceiptSchoolController extends Controller
             $viewr = "receipt.print1";
         }
         $mes = "";
+        $mes2 = "";
         $text = "";
+        $text2 = "";
         $file_att = "";
+        $typeRec = $data->type ;
 
         if ($data->type == 2) {
             $mes = "ใบลดหนี้";
             $text = "Credit Note";
+        } elseif ($data->type == 9) {
+            # code...
+            $mes = "ใบกำกับภาษี/ใบแจ้งหนี้";
+            $mes2 = "ใบเสร็จรับเงิน";
+            $text = "Tax Invoice/Invoice";
+            $text2 = "Invoice";
         } else {
 
             $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
@@ -1136,10 +1145,6 @@ class ReceiptSchoolController extends Controller
 
         $price_val = number_format(($vat_price + $vat_total) + $booksum, 2);
 
-
-
-
-
         $student = "";
         $student_code = "";
         $stu = explode('|', $data->pid);
@@ -1206,13 +1211,16 @@ class ReceiptSchoolController extends Controller
             ->with(['receipt_detail_arr' => $receipt_detail_arr])
             ->with(['price_val' => $price_val])
             ->with(['mes' => $mes])
+            ->with(['mes2' => $mes2])
             ->with(['text' => $text])
+            ->with(['text2' => $text2])
             ->with(['price_texten' => $price_texten])
             ->with(['price_text' => $price_text])
             ->with(['vat_price_val' => $vat_price_val])
             ->with(['vat_val' => $vat_val])
             ->with(['payment' => $payment])
             ->with(['course_type' => $data->course_type])
+            ->with(['typeRec' => $typeRec])
             ->with(['file_att' => $file_att]);
     }
 
@@ -1360,9 +1368,6 @@ class ReceiptSchoolController extends Controller
 
 
         $subjects = collect($request->input('receipt'))->pluck('subject')->toArray();
-        $groupsub = Subject::whereIn('id', $subjects)->get();
-        $group = $groupsub->first()->group;
-        // dd($request,$subjects, $groupsub,$group);
 
 
         $validator =  Validator::make(
@@ -1414,8 +1419,20 @@ class ReceiptSchoolController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
+        $groupsub = Subject::whereIn('id', $subjects)->get();
 
+        $hasPromotion = $groupsub->contains('promotion', 'yes');
+        $hasNonPromotion = $groupsub->contains('promotion', 'no');
 
+        if ($hasPromotion && $hasNonPromotion) {
+            # code...
+            return response()->json(['errors' => ["ไม่สามารถทำรายการโปรโมชั่นร่วมกับรายการปกติได้"]]);
+        }
+
+        $typeRec = (bool)$hasPromotion ? 9 : 0;
+
+        $group = $groupsub->first()->group;
+        // dd($typeRec);
         $filesb = $request->get('img');
 
         $filebs = "";
@@ -1439,6 +1456,8 @@ class ReceiptSchoolController extends Controller
         }
         $stu = rtrim($stu, "|");
         $rnumber = Receipt_School_RunningNumber::generate($group);
+
+
         $data = new Receipt_School([
             'submission_date' => $request->get('submission_date'),
             'payment_type' => $request->get('payment_type'),
@@ -1447,7 +1466,7 @@ class ReceiptSchoolController extends Controller
             'mobile' => $request->get('mobile'),
             'pid' => $stu,
             'name_parent' => $request->get('name_parent'),
-            'type' => 0,
+            'type' => $typeRec,
             // 'sid' => $request->get('student'),
             'receipt_number' => $rnumber,
             'file_att' => $filebs,

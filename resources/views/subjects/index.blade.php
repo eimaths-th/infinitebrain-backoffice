@@ -104,6 +104,14 @@
                             <label for="Title">Title Thai:</label>
                             <input type="text" class="form-control" name="title_th" id="AddTitleTh" value="">
                         </div>
+                        <div class="form-group">
+                            <label for="Title">Promotion:</label>
+                            {{-- <input type="text" class="form-control" name="promotion" id="AddPromotion" value=""> --}}
+                            <select name="promotion" id="AddPromotion" class="form-control">
+                                <option value="no">no</option>
+                                <option value="yes">yes</option>
+                            </select>
+                        </div>
 
                         <div class="form-group">
                             <label for="Book">Book:</label>
@@ -367,6 +375,7 @@
                         group: $('#AddGroup').val(),
                         title: $('#AddTitle').val(),
                         title_th: $('#AddTitleTh').val(),
+                        promotion: $('#AddPromotion').val(),
                         book: $('#AddBook').val(),
                         book_per_month: $('#AddBookP').val(),
                         hr_per_course: $('#AddHr').val(),

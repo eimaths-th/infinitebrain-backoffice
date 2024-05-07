@@ -13,6 +13,7 @@ class Subject extends Model
         'group',
         'title',
         'title_th',
+        'promotion',
         'hr_per_course',
         'book',
         'book_per_month',
