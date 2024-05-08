@@ -995,7 +995,7 @@ class ReceiptSchoolController extends Controller
         $text = "";
         $text2 = "";
         $file_att = "";
-        $typeRec = $data->type ;
+        $typeRec = $data->type;
 
         if ($data->type == 2) {
             $mes = "ใบลดหนี้";
@@ -1367,7 +1367,6 @@ class ReceiptSchoolController extends Controller
     {
 
 
-        $subjects = collect($request->input('receipt'))->pluck('subject')->toArray();
 
 
         $validator =  Validator::make(
@@ -1415,11 +1414,13 @@ class ReceiptSchoolController extends Controller
 
             ]
         );
+        $subjects = collect($request->input('receipt'))->pluck('subject')->toArray();
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
         $groupsub = Subject::whereIn('id', $subjects)->get();
+        $group = $groupsub->first()->group;
 
         $hasPromotion = $groupsub->contains('promotion', 'yes');
         $hasNonPromotion = $groupsub->contains('promotion', 'no');
@@ -1431,7 +1432,6 @@ class ReceiptSchoolController extends Controller
 
         $typeRec = (bool)$hasPromotion ? 9 : 0;
 
-        $group = $groupsub->first()->group;
         // dd($typeRec);
         $filesb = $request->get('img');
 
@@ -1648,6 +1648,7 @@ class ReceiptSchoolController extends Controller
         }
 
 
+
         $img = $request->get('img');
         $stu = "";
         if ($img != Null || $img != "") {
@@ -1674,15 +1675,39 @@ class ReceiptSchoolController extends Controller
 
         $stud = rtrim($stud, "|");
         //$id_parent = $request->get('name_parent');
+        $subjects = collect($request->get('rrsub', []))->toArray();
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        $groupsub = Subject::whereIn('id', $subjects)->get();
+
+        $hasPromotion = $groupsub->contains('promotion', 'yes');
+        $hasNonPromotion = $groupsub->contains('promotion', 'no');
+        $typeRec = (bool)$hasPromotion ? 9 : 0;
+        // dd(
+        //     // $request,
+        //     $subjects,
+        //     $groupsub,
+        //     $hasNonPromotion,
+        //     $hasPromotion,
+        //     $typeRec
+        // );
+        if ($hasPromotion && $hasNonPromotion) {
+            # code...
+            return response()->json(['errors' => ["ไม่สามารถทำรายการโปรโมชั่นร่วมกับรายการปกติได้"]]);
+        }
+
 
         $dataimg = Receipt_School::find($id_parent);
         if ($dataimg->file_att != Null && $dataimg->file_att != "") {
             $stu = $dataimg->file_att . "|" . $stu;
 
             $stu = rtrim($stu, "|");
-            Receipt_School::find($id_parent)->update(['file_att' => $stu]);
+            Receipt_School::find($id_parent)->update(['file_att' => $stu,'type' => $typeRec]);
         } else {
-            Receipt_School::find($id_parent)->update(['file_att' => $stu]);
+            Receipt_School::find($id_parent)->update(['file_att' => $stu,'type' => $typeRec]);
             return response()->json(['success' => 'Receipt updated successfully']);
         }
         // echo($dataimg->file_att);
@@ -1744,6 +1769,7 @@ class ReceiptSchoolController extends Controller
 
         SchoolPrice::where('rid', $id)->delete();
         for ($xx = 0; $xx < count($rrsub); $xx++) {
+            $grp = Subject::find($rrsub[$xx]);
 
             if ($rrtype[$xx] != "" && $rrtype[$xx] != NULL) {
 
@@ -1752,6 +1778,7 @@ class ReceiptSchoolController extends Controller
                     'student_id' => $std_id[$xx],
                     'subject' => $rrsub[$xx],
                     'course_type' => $rrcourse[$xx],
+                    'group' => $grp->group,
                     'level' => $rrlevel[$xx],
                     'week' => $rrweek[$xx],
                     'qty' => $rrqty[$xx],
@@ -1779,6 +1806,7 @@ class ReceiptSchoolController extends Controller
                     'subject' => $rrsub[$xx],
                     'course_type' => $rrcourse[$xx],
                     'level' => $rrlevel[$xx],
+                    'group' => $grp->group,
                     'week' => $rrweek[$xx],
                     'qty' => $rrqty[$xx],
                     'book' => $rrbook[$xx],
