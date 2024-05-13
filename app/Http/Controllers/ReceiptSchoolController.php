@@ -553,6 +553,15 @@ class ReceiptSchoolController extends Controller
                     }
                     return $mes;
                 })
+                ->editColumn('type2', function (Receipt_School $receipt) {
+                    if ($receipt->type == 9) {
+                        $mes = "yes";
+                    } else {
+
+                        $mes = "no";
+                    }
+                    return $mes;
+                })
 
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
@@ -578,7 +587,6 @@ class ReceiptSchoolController extends Controller
             $group = $upg->school_sub->group;
             $upg->update(['group' => $group]);
         }
-        // dd($upg, $group);
 
         return view('receipt_school.receipt')->with(['data2' => $student])->with(['data3' => $subject])->with(['data4' => $parent])
             ->with(['datap' => self::datap]);
