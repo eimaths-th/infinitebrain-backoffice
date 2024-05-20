@@ -1307,7 +1307,7 @@
     {{-- <script src="https://d3js.org/d3.v7.min.js"></script> --}}
     <script src="../assets/plugins/d3/d3.min.js"></script>
     <script src="../assets/plugins/nvd3/build/nv.d3.min.js"></script>
-    {{-- <script src="../assets/plugins/chart.js/dist/Chart.min.js"></script> --}}
+    <script src="../assets/plugins/chart.js/dist/Chart.min.js"></script>
     <script src="../assets/plugins/flot/source/jquery.canvaswrapper.js"></script>
     <script src="../assets/plugins/flot/source/jquery.colorhelpers.js"></script>
     <script src="../assets/plugins/flot/source/jquery.flot.js"></script>
