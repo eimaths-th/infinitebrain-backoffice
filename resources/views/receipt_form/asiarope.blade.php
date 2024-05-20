@@ -864,14 +864,14 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="contest">Choose Date Exam / เลือกวันสอบ
+                                            <label class="form-label form-label-top form-label-auto" for="contest">Choose Exam Date / เลือกวันสอบ
                                                 <span class="form-required">*</span>
                                             </label>
                                             <select class="form-control" id="contest" name="contest"
                                                 aria-label="Choose Contest Category" required>
                                                 <option value="">Please Select</option>
                                                 <option value="May 26, 2024 at 5:00 PM (HK Time)">May 26, 2024 at 5:00 PM (HK Time)</option>
-                                                <option value="May 28, 2024 at 3:00 PM. (HK Time)">May 28, 2024 at 3:00 PM. (HK Time)</option>
+                                                <option value="May 28, 2024 at 3:00 PM. (HK Time)">May 28, 2024 at 3:00 PM (HK Time)</option>
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
