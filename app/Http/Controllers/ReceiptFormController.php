@@ -538,14 +538,15 @@ class ReceiptFormController extends Controller
                 } else {
                     $sdes = 'สมัครติว';
                 }
-            }elseif ($request->get('sfield') == 20 ||$request->get('sfield') == 21) {
+            } elseif ($request->get('sfield') == 20 || $request->get('sfield') == 21) {
                 # code...
                 $sdes = 'สมัครสอบปกติ';
-
-            }
-            else {
+            } else {
                 if (str_contains($request->get('description'), 'tutoring')) {
                     $sdes = 'สมัครสอบรวมติว';
+                } elseif ($request->get('sfield') == 10 ) {
+                    # code...
+                    $sdes = '';
                 } else {
                     $sdes = 'สมัครสอบไม่รวมติว';
                 }
@@ -575,7 +576,7 @@ class ReceiptFormController extends Controller
     public function store(Request $request)
     {
         //
-
+        // dd($request);
         if ($request->get('sfield') == '17') {
             # code...
             $validator =  Validator::make($request->all(), [
@@ -683,7 +684,7 @@ class ReceiptFormController extends Controller
         if ($request->get('sfield') == 22) {
             # code...
             $award = $request->get('award');
-        }else {
+        } else {
             # code...
             $award = '';
         }

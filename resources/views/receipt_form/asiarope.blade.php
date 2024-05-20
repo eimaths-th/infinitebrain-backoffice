@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                    background-size: 15px;
-                                                                                }*/
+                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                        background-size: 15px;
+                                                                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                    border-color: var(--color-invalid);
-                                                                                }*/
+                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                        border-color: var(--color-invalid);
+                                                                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                    display: block;
-                                                                                }*/
+                                                                                        display: block;
+                                                                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,9 +531,9 @@
     </style>
     <style>
         /* .custom-image {
-                                width: 395px;
-                                height: 395px;
-                            } */
+                                    width: 395px;
+                                    height: 395px;
+                                } */
 
         .custom-image {
             width: 100%;
@@ -566,7 +566,8 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h2 class="card-title form_header">ASIAROPE 2023 Registration Form</h2>
+                                <h2 class="card-title form_header">ASIAROPE Olympiad
+                                    International Round Registration Form</h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -577,23 +578,34 @@
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
                                                     style="text-decoration: underline;">Asiarope 2023 Registration
                                                     Form</span></strong></span></p>
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong> 14 Oct- 30 Nov</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;16 DEC 2023</span>
+                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Deadline of
+                                                Registration:</strong> May 25, 2024 at 10:00 AM (TH Time)</span></p>
+                                    <p><span style="color: #6351a2;"><strong>Online Exam:</strong>&nbsp;
+                                            May 26, 2024 at 5:00 PM
+                                            and/or May 28, 2024 at 3:00 PM. (HK Time)
+
+                                        </span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
                                     </p> --}}
                                     {{-- <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
                                     </p> --}}
-                                    <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
-                                    <p><span style="color: #6351a2;"><strong>Test:</strong> 850 baht</span>
+                                    <p>
+                                        <span style="color: #6351a2;">
+                                            <strong>
+
+                                                Registration Fee:&nbsp;
+                                            </strong> 3,850/Subject
+                                        </span>
+                                    </p>
+                                    {{-- <p><span style="color: #6351a2;"><strong>Test:</strong> 850 baht</span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1250 bath (1 class 2 hours)</span><br></p>
-                                    <p>&nbsp;</p>
+                                    <p>&nbsp;</p> --}}
 
-                                    <div class="row">
+                                    {{-- <div class="row">
                                         <div class="col-lg-6">
                                             <img src="images/ASIAROPE-01.jpg" class="custom-image mb-3" alt="Image 1">
 
@@ -603,7 +615,7 @@
 
 
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร ASIAROPE</b> <br>
 
@@ -640,7 +652,9 @@
                                     </div>
                                 </div>
 
-                                <div class="form-row form-focus">
+                                <input type="hidden" class="form-control" name="subject" id="subject"
+                                                value="" maxlength="50" minlength="2" required>
+                                {{-- <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Select Subject /
                                         เลือก รายวิชา <span class="form-required">*</span></label>
@@ -650,12 +664,12 @@
                                             <label class="form-label form-label-top form-label-auto" for="subject">
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            {{-- <input type="text" class="form-control" name="subject" id="subject"
-                                                value="" maxlength="50" minlength="2" required> --}}
+
                                             <select name="subject" id="subject" class="form-control">
 
                                                 <option value="">Please Select</option>
-                                                <option value="M">Math</option>
+                                                <option value="Mathematics">Mathematics</option>
+                                                <option value="Science">Science</option>
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -671,7 +685,7 @@
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> --}}
 
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
@@ -827,14 +841,13 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="package">แพคเกจในการสอบ / Packages <span
+                                                for="package">Choose Subject / เลือกวิชาที่สอบ <span
                                                     class="form-required">*</span></label>
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Test: 850 baht">Test: 850 baht</option>
-                                                <option value="Test + tutoring class: 1250 bath (1 class 2 hours)">Test +
-                                                    tutoring class: 1250 bath (1 class 2 hours)</option>
+                                                <option value="Mathematics: 3850 baht">Mathematics 3,850฿</option>
+                                                <option value=" Science: 3850 baht">Science 3,850฿</option>
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -851,23 +864,15 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="contest">Choose
-                                                Contest Category<span class="form-required">*</span></label>
+                                            <label class="form-label form-label-top form-label-auto" for="contest">Choose Date Exam / เลือกวันสอบ
+                                                <span class="form-required">*</span>
+                                            </label>
                                             <select class="form-control" id="contest" name="contest"
                                                 aria-label="Choose Contest Category" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Science Category 1 (Kindergarten ,Grades 1)">Math Category 1
-                                                    (Kindergarten ,Grades 1) </option>
-                                                <option value="Science Category 2 (Grades 2-3)">Math Category 2 (Grades
-                                                    2-3)</option>
-                                                <option value="Science Category 3 (Grades 4-5)">Math Category 3 (Grades
-                                                    4-5)</option>
-                                                <option value="Science Category 4 (Grades 6-7)">Math Category 4 (Grades6-7)
-                                                </option>
-                                                <option value="Science Category 5 (Grades 8-9)">Math Category 5 (Grades
-                                                    8-9)</option>
-                                                <option value="Science Category 6 (Grades 10-12)">Math Category 6 (Grades
-                                                    10-12)</option>
+                                                <option value="May 26, 2024 at 5:00 PM (HK Time)">May 26, 2024 at 5:00 PM (HK Time)</option>
+                                                <option value="May 28, 2024 at 3:00 PM. (HK Time)">May 28, 2024 at 3:00 PM. (HK Time)</option>
+
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Contest Category</label>

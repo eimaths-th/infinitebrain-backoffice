@@ -218,7 +218,7 @@
                                                                     <span class="tinyMce-placeholder">
                                                                         <?php
                                                                         if ($data->sfield == 10) {
-                                                                            $message = 'ASIAROPE 2023 Registration Form';
+                                                                            $message = 'ASIAROPE Olympiad Registration Form';
                                                                         } elseif ($data->sfield == 6) {
                                                                             $message = 'GELOSEA 2023 Registration Form';
                                                                         } elseif ($data->sfield == 9) {
