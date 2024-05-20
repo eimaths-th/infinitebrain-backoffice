@@ -395,7 +395,7 @@ class ReceiptFormController extends Controller
             if (str_contains($request->get('description'), 'tutoring')) {
                 $sdes = 'สมัครสอบรวมติว';
             } else {
-                $sdes = 'สมัครสอบไม่รวมติว';
+                $sdes = '';
             }
         }
 
