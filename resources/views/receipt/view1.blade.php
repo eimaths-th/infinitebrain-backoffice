@@ -49,6 +49,16 @@
         .aaa {
             color: rgb(138, 175, 61);
         }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 50px 0;
+        }
+
+        .image-container img {
+            height: 450px;
+        }
     </style>
 @endsection
 
