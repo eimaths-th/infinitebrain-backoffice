@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                        background-size: 15px;
-                                                                                    }*/
+                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                            background-size: 15px;
+                                                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                        border-color: var(--color-invalid);
-                                                                                    }*/
+                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                            border-color: var(--color-invalid);
+                                                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                        display: block;
-                                                                                    }*/
+                                                                                            display: block;
+                                                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,9 +531,9 @@
     </style>
     <style>
         /* .custom-image {
-                                    width: 395px;
-                                    height: 395px;
-                                } */
+                                        width: 395px;
+                                        height: 395px;
+                                    } */
 
         .custom-image {
             width: 100%;
@@ -617,16 +617,17 @@
                                         </div>
                                     </div> --}}
 
-                                    <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร ASIAROPE</b> <br>
+                                    <p>
+                                        <span style="color: #6351a2;">
+                                            <b>เกณฑ์การรับสมัคร ASIAROPE Olympiad
+                                                International Round</b> <br>
 
-                                            รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
-                                            ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน
-                                            ให้ใช้ระดับชั้นปัจจุบัน <br>
+                                            การสมัครสอบสำหรับผู้ได้รับรางวัลเหรียญทอง เงิน ทองแดง<br>
+                                            จากการแข่งขัน ASIAROPE Olympiad ในวิชาคณิตศาสตร์<br>
+                                            และวิทยาศาสตร์ รอบ National เท่านั้น<br>
+                                        </span>
+                                    </p>
 
-                                            รร.นานาชาติใช้ระดับชั้นตามปีการศึกษาปัจจุบัน <br>
-
-                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
-                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p>
                                 </div>
                             </div>
 
@@ -652,8 +653,8 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" class="form-control" name="subject" id="subject"
-                                                value="" maxlength="50" minlength="2" required>
+                                <input type="hidden" class="form-control" name="subject" id="subject" value=""
+                                    maxlength="50" minlength="2" required>
                                 {{-- <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Select Subject /
@@ -699,8 +700,7 @@
                                             </label>
                                             <input type="text" class="form-control" name="firstname" id="firstname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">First
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">First
                                                 Name</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -719,8 +719,7 @@
                                             </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Last
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
                                                 Name</label>
 
                                         </div>
@@ -732,8 +731,7 @@
                                     <div class="col-md-6 col-sm-12">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="nickname">Nickname
+                                            <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
                                                 (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
@@ -840,9 +838,8 @@
                                     <div class="col-md-6">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="package">Choose Subject / เลือกวิชาที่สอบ <span
-                                                    class="form-required">*</span></label>
+                                            <label class="form-label form-label-top form-label-auto" for="package">Choose
+                                                Subject / เลือกวิชาที่สอบ <span class="form-required">*</span></label>
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
@@ -864,14 +861,17 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="contest">Choose Exam Date / เลือกวันสอบ
+                                            <label class="form-label form-label-top form-label-auto" for="contest">Choose
+                                                Exam Date / เลือกวันสอบ
                                                 <span class="form-required">*</span>
                                             </label>
                                             <select class="form-control" id="contest" name="contest"
                                                 aria-label="Choose Contest Category" required>
                                                 <option value="">Please Select</option>
-                                                <option value="May 26, 2024 at 5:00 PM (HK Time)">May 26, 2024 at 5:00 PM (HK Time)</option>
-                                                <option value="May 28, 2024 at 3:00 PM. (HK Time)">May 28, 2024 at 3:00 PM (HK Time)</option>
+                                                <option value="May 26, 2024 at 5:00 PM (HK Time)">May 26, 2024 at 5:00 PM
+                                                    (HK Time)</option>
+                                                <option value="May 28, 2024 at 3:00 PM. (HK Time)">May 28, 2024 at 3:00 PM
+                                                    (HK Time)</option>
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
