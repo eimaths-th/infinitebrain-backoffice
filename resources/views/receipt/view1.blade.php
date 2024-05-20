@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        @if ($typeRec == 9)
+        @if ($typeRec == 9 || $group_rec)
             <div class="main-card mb-3 card " id="x_content">
                 <div class="card-body">
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">

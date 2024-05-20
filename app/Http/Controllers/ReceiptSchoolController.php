@@ -1004,11 +1004,25 @@ class ReceiptSchoolController extends Controller
         $text2 = "";
         $file_att = "";
         $typeRec = $data->type;
+        $recNumber = $data->receipt_number; // its 012405001
+        $firstTwoDigits = substr($recNumber, 0, 2);
+        $group_rec = '';
+
+        if ($firstTwoDigits === '01') {
+            # code...
+            $group_rec = 'chn';
+        } elseif ($firstTwoDigits === '03') {
+            # code...
+            $group_rec = 'sci';
+        } else {
+            # code...
+            $group_rec = '';
+        }
 
         if ($data->type == 2) {
             $mes = "ใบลดหนี้";
             $text = "Credit Note";
-        } elseif ($data->type == 9) {
+        } elseif ($data->type == 9 || $group_rec) {
             # code...
             $mes = "ใบกำกับภาษี/ใบแจ้งหนี้";
             $mes2 = "ใบเสร็จรับเงิน";
@@ -1036,11 +1050,14 @@ class ReceiptSchoolController extends Controller
         foreach ($receipts_detail as $dresult) {
             if ($dresult['course_type'] == 2) {
                 $price = $dresult['bookprice'];
+                $group_rec = '';
             } elseif ($dresult['course_type'] == 3) {
                 $price = $dresult['media_price'];
+                $group_rec = '';
             } else {
                 $price = ($dresult['total'] - $dresult['bookprice']);
             }
+
             // dd($dresult->total);
             $message = "";
 
@@ -1177,7 +1194,11 @@ class ReceiptSchoolController extends Controller
             //$this->textWatermark($pics, 'Receipt Number : ' . $data->receipt_number);
 
             //$retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
-            $html .= '<img src="' . url('/') . '/receipts_form_school/' . $pics . '" class="me-3 mt-5 mb-5" height="400" >';
+
+            // $html .= '<img src="' . url('/') . '/receipts_form_school/' . $pics . '" class="me-3 mt-5 mb-5" height="400" >';
+            $html .= '<div class="image-container">
+            <img src="' . url('/') . '/receipts_form_school/' . $pics . '">
+          </div>';
         }
 
         $payment = '';
@@ -1229,6 +1250,7 @@ class ReceiptSchoolController extends Controller
             ->with(['payment' => $payment])
             ->with(['course_type' => $data->course_type])
             ->with(['typeRec' => $typeRec])
+            ->with(['group_rec' => $group_rec])
             ->with(['file_att' => $file_att]);
     }
 
@@ -1713,9 +1735,9 @@ class ReceiptSchoolController extends Controller
             $stu = $dataimg->file_att . "|" . $stu;
 
             $stu = rtrim($stu, "|");
-            Receipt_School::find($id_parent)->update(['file_att' => $stu,'type' => $typeRec]);
+            Receipt_School::find($id_parent)->update(['file_att' => $stu, 'type' => $typeRec]);
         } else {
-            Receipt_School::find($id_parent)->update(['file_att' => $stu,'type' => $typeRec]);
+            Receipt_School::find($id_parent)->update(['file_att' => $stu, 'type' => $typeRec]);
             return response()->json(['success' => 'Receipt updated successfully']);
         }
         // echo($dataimg->file_att);

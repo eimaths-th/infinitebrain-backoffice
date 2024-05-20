@@ -68,12 +68,34 @@
             color: rgb(138, 175, 61);
         }
     </style>
+    <style>
+        /* .image-container {
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .image-container img {
+            height: 400px;
+            display: inline-block;
+        } */
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 50px 0;
+        }
+
+        .image-container img {
+            height: 450px;
+        }
+    </style>
 </head>
 
 <body>
     <div class="row">
 
-        @if ($typeRec == 9)
+        @if ($typeRec == 9 || $group_rec)
             <div class="main-card mb-3 card " id="x_content">
                 <div class="card-body">
                     <table align="center" width="99%" cellpadding="0" cellspacing="0">
@@ -108,7 +130,8 @@
                             <td width="25%" class="grey">นามลูกค้า,ที่อยู่/Client,Address</td>
                             <td width="25%" style="padding-left:20px;" align="right" class="grey">
                                 รหัสลูกค้า/Customer's Code</td>
-                            <td width="20%" style="padding-left:15px;"> <b>{{--  {{ $data2->code }}  --}} {{ $student_code }}</b>
+                            <td width="20%" style="padding-left:15px;"> <b>{{--  {{ $data2->code }}  --}}
+                                    {{ $student_code }}</b>
                             </td>
                             <td width="20%" align="right" class="grey">เลขที่ / Document No.</td>
                             <td width="10%" style="padding-left:10px;"> <b> {{ $data->receipt_number }} </b></td>
@@ -119,7 +142,8 @@
                             </td>
                             <td width="25%" align="right" style="padding-left:20px;" class="grey">
                                 ชื่อนักเรียน/Nickname</td>
-                            <td width="20%" align="left" style="padding-left:15px;"> <b>{{ $student }} </b></td>
+                            <td width="20%" align="left" style="padding-left:15px;"> <b>{{ $student }} </b>
+                            </td>
                             <td width="20%" align="right" class="grey">วันที่ / Date</td>
                             <td width="10%" style="padding-left:10px;"> <b>{{ $data->submission_date }}</b></td>
                         </tr>
@@ -183,14 +207,16 @@
                                         // dd($unitpriceQuantity,$receipt_detail['unitprice'],$unitpriceBook,$unitBook,$receipt_detail['price']);
                                     @endphp
                                     <tr>
-                                        <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
+                                        <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}
+                                        </td>
                                         <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
                                         <td align="center"> {{ $receipt_detail['period'] }}</td>
                                         <td align="center">{{ $receipt_detail['quantity'] }}</td>
                                         <td align="center">{{ $receipt_detail['unit'] }}</td>
-                                        <td align="center">{{ number_format($unitpriceBook,2)}}</td>
+                                        <td align="center">{{ number_format($unitpriceBook, 2) }}</td>
                                         <td align="center">{{ $receipt_detail['discount'] }}</td>
-                                        <td align="center" style="vertical-align: top;">{{ number_format($unitpriceBook,2) }}</td>
+                                        <td align="center" style="vertical-align: top;">
+                                            {{ number_format($unitpriceBook, 2) }}</td>
                                     </tr>
 
                                     @if ($receipt_detail['entrance_fee'] > 0)
@@ -199,7 +225,8 @@
                                         <td align="left"> </td>
                                         <td align="center"> 1</td>
                                         <td align="center">ครั้ง</td>
-                                        <td align="center">{{ number_format($receipt_detail['entrance_fee'], 2) }}</td>
+                                        <td align="center">{{ number_format($receipt_detail['entrance_fee'], 2) }}
+                                        </td>
                                         <td align="center"></td>
                                         <td align="center" style="vertical-align: top;">
                                             {{ number_format($receipt_detail['entrance_fee'], 2) }}</td>
@@ -232,7 +259,8 @@
                                     <td align="center">{{ $receipt_detail['unit'] }}</td>
                                     <td align="center">{{ $receipt_detail['unitprice'] }}</td>
                                     <td align="center">{{ $receipt_detail['discount'] }}</td>
-                                    <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}</td>
+                                    <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}
+                                    </td>
                                 @endif
                             @endforeach
 
@@ -330,7 +358,8 @@
                                                                                                                         </tr>
                                                                                                                     </table> -->
 
-                        <table align="center" width="99%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
+                        <table align="center" width="99%" cellpadding="0" cellspacing="0"
+                            style="margin-top:30px;">
                             <tr>
                                 <td></td>
                                 <td></td>
@@ -368,12 +397,13 @@
 
 
                         <center>{!! $html !!}</center>
+                        {{-- <br>
                         <br>
                         <br>
                         <br>
                         <br>
                         <br>
-                        <br>
+                        <br> --}}
 
                     </div>
 
@@ -417,7 +447,8 @@
                             <td width="25%" class="grey">นามลูกค้า,ที่อยู่/Client,Address</td>
                             <td width="25%" style="padding-left:20px;" align="right" class="grey">
                                 รหัสลูกค้า/Customer's Code</td>
-                            <td width="20%" style="padding-left:15px;"> <b>{{--  {{ $data2->code }}  --}} {{ $student_code }}</b>
+                            <td width="20%" style="padding-left:15px;"> <b>{{--  {{ $data2->code }}  --}}
+                                    {{ $student_code }}</b>
                             </td>
                             <td width="20%" align="right" class="grey">เลขที่ / Document No.</td>
                             <td width="10%" style="padding-left:10px;"> <b> {{ $data->receipt_number }} </b></td>
@@ -428,7 +459,8 @@
                             </td>
                             <td width="25%" align="right" style="padding-left:20px;" class="grey">
                                 ชื่อนักเรียน/Nickname</td>
-                            <td width="20%" align="left" style="padding-left:15px;"> <b>{{ $student }} </b></td>
+                            <td width="20%" align="left" style="padding-left:15px;"> <b>{{ $student }}
+                                </b></td>
                             <td width="20%" align="right" class="grey">วันที่ / Date</td>
                             <td width="10%" style="padding-left:10px;"> <b>{{ $data->submission_date }}</b></td>
                         </tr>
@@ -444,7 +476,8 @@
                             <td colspan="3"></td>
 
                             <td align="right" width="45%" class="grey">ครบกำหนด / Due Date</td>
-                            <td align="right" width="30%" style="padding-left:10px;">..........................</td>
+                            <td align="right" width="30%" style="padding-left:10px;">..........................
+                            </td>
                         </tr>
                         <!-- <tr>
                             <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
@@ -470,14 +503,16 @@
                             @foreach ($receipt_detail_arr as $receipt_detail)
                                 @if ($receipt_detail['course_type'] == 1)
                                     <tr>
-                                        <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
+                                        <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}
+                                        </td>
                                         <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
                                         <td align="center"> {{ $receipt_detail['period'] }}</td>
                                         <td align="center">{{ $receipt_detail['quantity'] }}</td>
                                         <td align="center">{{ $receipt_detail['unit'] }}</td>
                                         <td align="center">{{ $receipt_detail['unitprice'] }}</td>
                                         <td align="center">{{ $receipt_detail['discount'] }}</td>
-                                        <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}
+                                        <td align="center" style="vertical-align: top;">
+                                            {{ $receipt_detail['price'] }}
                                         </td>
                                     </tr>
 
@@ -487,7 +522,8 @@
                                         <td align="left"> </td>
                                         <td align="center"> 1</td>
                                         <td align="center">ครั้ง</td>
-                                        <td align="center">{{ number_format($receipt_detail['entrance_fee'], 2) }}</td>
+                                        <td align="center">{{ number_format($receipt_detail['entrance_fee'], 2) }}
+                                        </td>
                                         <td align="center"></td>
                                         <td align="center" style="vertical-align: top;">
                                             {{ number_format($receipt_detail['entrance_fee'], 2) }}</td>
@@ -561,7 +597,8 @@
                                     <td align="center">{{ $receipt_detail['unit'] }}</td>
                                     <td align="center">{{ $receipt_detail['unitprice'] }}</td>
                                     <td align="center">{{ $receipt_detail['discount'] }}</td>
-                                    <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}</td>
+                                    <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}
+                                    </td>
                                 @endif
                             @endforeach
 
@@ -660,7 +697,8 @@
                                                                                                                         </tr>
                                                                                                                     </table> -->
 
-                        <table align="center" width="99%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
+                        <table align="center" width="99%" cellpadding="0" cellspacing="0"
+                            style="margin-top:30px;">
                             <tr>
                                 <td></td>
                                 <td></td>
@@ -725,61 +763,54 @@
 
                     <table align="center" width="99%" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td colspan="4" align="center"><b>
+                            <td colspan="4" align="center" style="padding-left:50px;"><b>
                                     {{ $mes }}<br>
                                     {{ $text }}
                                 </b></td>
 
-                            <td align="center" class="aaa"><b>ต้นฉบับ<br> Original <br>สำหรับลูกค้า</b></td>
+                            <td align="center" class="aaa"><b>ต้นฉบับ <br> Original <br>สำหรับลูกค้า</b></td>
 
                         </tr>
-
                         <tr>
-                            <td class="grey">นามลูกค้า,ที่อยู่/Client,Address</td>
-                            <td align="right" class="grey">รหัสลูกค้า/Customer's Code</td>
-                            <td> <b> {{-- {{ $data2->code }} --}} {{ $student_code }}</b></td>
-                            <td align="right" class="grey">เลขที่ / Document No.</td>
-                            <td> <b> {{ $data->receipt_number }} </b></td>
+                            <td width="25%" class="grey">นามลูกค้า,ที่อยู่/Client,Address</td>
+                            <td width="25%" style="padding-left:20px;" align="right" class="grey">
+                                รหัสลูกค้า/Customer's Code</td>
+                            <td width="20%" style="padding-left:15px;"> <b>{{--  {{ $data2->code }}  --}}
+                                    {{ $student_code }}</b>
+                            </td>
+                            <td width="20%" align="right" class="grey">เลขที่ / Document No.</td>
+                            <td width="10%" style="padding-left:10px;"> <b> {{ $data->receipt_number }} </b></td>
                         </tr>
                         <tr>
-                            <td>
+                            <td width="25%">
                                 <font class="grey">K.</font> <b> {{ $data2->name_parent }} </b>
                             </td>
-                            <td align="right" class="grey">ชื่อนักเรียน/Nickname</td>
-                            <td align="left" width="30%"> <b> {{ $student }} </b></td>
-                            <td align="right" class="grey">วันที่ / Date</td>
-                            <td> <b>{{ $data->submission_date }}</b></td>
+                            <td width="25%" align="right" style="padding-left:20px;" class="grey">
+                                ชื่อนักเรียน/Nickname</td>
+                            <td width="20%" align="left" style="padding-left:15px;"> <b>{{ $student }}
+                                </b></td>
+                            <td width="20%" align="right" class="grey">วันที่ / Date</td>
+                            <td width="10%" style="padding-left:10px;"> <b>{{ $data->submission_date }}</b></td>
                         </tr>
                         <tr>
-                            {{-- <td>
-                            <font class="grey">ที่อยู่ <br> </font>
-                            <b>{{ $data->street_address }}
-                                 {{ $data->postcode }}
-                                </b>
-                        </td> --}}
-                            {{-- <td colspan="3" width="1%">
-                            <font class="grey">ที่อยู่ </font>
-                            <b>{{ $data->street_address }} {{ $data->city }} {{ $data->province }} {{ $data->postcode }} </b>
-                        </td> --}}
-                            @php
-                                // dd($data);
-                            @endphp
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td align="right" class="grey">เงื่อนไขการชำระเงิน / Credit Term</td>
-                            <td>..........................</td>
+                            <!-- <td colspan="3"><font class="grey">ที่อยู่</font> <b>{{ $data->street_address }} {{ $data->street_address2 }}
+                                    {{ $data->city }} {{ $data->province }} {{ $data->postcode }} </b></td> -->
+                            <td colspan="3"></td>
+
+                            <td width="45%" align="right" class="grey">เงื่อนไขการชำระเงิน / Credit Term</td>
+                            <td width="30%" style="padding-left:10px;">..........................</td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>
 
-                            <td align="right" class="grey">ครบกำหนด / Due Date</td>
-                            <td>..........................</td>
+                            <td align="right" width="45%" class="grey">ครบกำหนด / Due Date</td>
+                            <td align="right" width="30%" style="padding-left:10px;">..........................
+                            </td>
                         </tr>
                         <!-- <tr>
-                                                                                                                        <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
+                            <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
 
-                                                                                                                    </tr> -->
+                        </tr> -->
                     </table>
                     <div class="tbr">
                         <table align="center" width="99%" cellpadding="0" cellspacing="0">
@@ -800,14 +831,16 @@
                             @foreach ($receipt_detail_arr as $receipt_detail)
                                 @if ($receipt_detail['course_type'] == 1)
                                     <tr>
-                                        <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}</td>
+                                        <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}
+                                        </td>
                                         <td align="left">ค่าคอร์สเรียน {!! $receipt_detail['description'] !!}</td>
                                         <td align="center"> {{ $receipt_detail['period'] }}</td>
                                         <td align="center">{{ $receipt_detail['quantity'] }}</td>
                                         <td align="center">{{ $receipt_detail['unit'] }}</td>
                                         <td align="center">{{ $receipt_detail['unitprice'] }}</td>
                                         <td align="center">{{ $receipt_detail['discount'] }}</td>
-                                        <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}
+                                        <td align="center" style="vertical-align: top;">
+                                            {{ $receipt_detail['price'] }}
                                         </td>
                                     </tr>
 
@@ -817,7 +850,8 @@
                                         <td align="left"> </td>
                                         <td align="center"> 1</td>
                                         <td align="center">ครั้ง</td>
-                                        <td align="center">{{ number_format($receipt_detail['entrance_fee'], 2) }}</td>
+                                        <td align="center">{{ number_format($receipt_detail['entrance_fee'], 2) }}
+                                        </td>
                                         <td align="center"></td>
                                         <td align="center" style="vertical-align: top;">
                                             {{ number_format($receipt_detail['entrance_fee'], 2) }}</td>
@@ -901,7 +935,8 @@
                                     <td align="center">{{ $receipt_detail['unit'] }}</td>
                                     <td align="center">{{ $receipt_detail['unitprice'] }}</td>
                                     <td align="center">{{ $receipt_detail['discount'] }}</td>
-                                    <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}</td>
+                                    <td align="center" style="vertical-align: top;">{{ $receipt_detail['price'] }}
+                                    </td>
                                 @endif
                             @endforeach
 
@@ -1000,7 +1035,8 @@
                                                                                                                         </tr>
                                                                                                                     </table> -->
 
-                        <table align="center" width="99%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
+                        <table align="center" width="99%" cellpadding="0" cellspacing="0"
+                            style="margin-top:30px;">
                             <tr>
                                 <td></td>
                                 <td></td>
