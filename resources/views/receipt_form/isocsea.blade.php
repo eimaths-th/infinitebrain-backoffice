@@ -607,6 +607,19 @@
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1,250 bath</span><br></p>
                                     <p>&nbsp;</p>
+
+                                    <div class="row mb-5">
+                                        <div class="col-lg-6">
+                                            <div class="text-center">
+                                                <img src="images/ISOCSEA_0_L.jpg" alt="Image 2" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="text-center">
+                                                <img src="images/ISOCSEA_0_T.jpg" alt="Image 2" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <p>
                                         <span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร ISOCSEA</b>
                                             <br>

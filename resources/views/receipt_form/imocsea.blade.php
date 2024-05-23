@@ -602,6 +602,18 @@
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1,250 bath</span><br></p>
                                     <p>&nbsp;</p>
+                                    <div class="row mb-5">
+                                        <div class="col-lg-6">
+                                            <div class="text-center">
+                                                <img src="images/IMOCSEA_0_L.jpg" alt="Image 2" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="text-center">
+                                                <img src="images/IMOCSEA_0_T.jpg" alt="Image 2" style="max-width: 100%; height: auto;">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <p>
                                         <span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร IMOCSEA</b>
                                             <br>
@@ -612,7 +624,7 @@
                                             โรงเรียนนานาชาติ ใช้ระดับชั้นปีการศึกษาปัจจุบันในการสมัครสอบเท่านั้น<br>
 
                                             <br>
-                                            
+
                                             ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วตรวจสอบพบ<br>
                                             ทาง META Knowledge จะยึดตามเกณฑ์นี้<br>
                                             หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ในการสอบ<br>
