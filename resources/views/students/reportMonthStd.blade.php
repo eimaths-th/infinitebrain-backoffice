@@ -506,9 +506,7 @@
                                                 $routeUrl = htmlspecialchars_decode(
                                                     route('saveCheck', $routeParameters),
                                                 );
-                                                if ($data->check_reciept) {
-                                                } else {
-                                                }
+                                                
                                             @endphp
                                             <td class="text-center" width='1%'>
                                                 <div class="form-check form-switch form-switch-sm">

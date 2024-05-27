@@ -442,11 +442,26 @@
                                             </td>
                                             <td class="text-center">{{ $data1->course_type }}</td>
                                             <td class="text-end">{{ number_format($data1->total) }} บาท</td>
+                                            @php
+                                                $routeParameters = [
+                                                    'student_id' => $data1->std->id,
+                                                    'receipt_school_id' => $data1->rec_school->id,
+                                                    'school_price_id' => $data1->id,
+                                                ];
+                                                $routeUrl = htmlspecialchars_decode(
+                                                    route('saveCheck', $routeParameters),
+                                                );
+
+                                            @endphp
                                             <td class="text-center" width='1%'>
                                                 <div class="form-check form-switch form-switch-sm">
                                                     <input class="form-check-input" type="checkbox"
-                                                        id="flexSwitchCheckChecked-{{ $data1->id }}">
-                                                    <label class="label-text" for="">Date: </label>
+                                                        id="flexSwitchCheckChecked-{{ $data1->id }}"
+                                                        data-route="{{ $routeUrl }}"
+                                                        data-token="{{ csrf_token() }}"
+                                                        data-input='@json($routeParameters)'>
+                                                    <label class="label-text" id="label-check-{{ $data1->id }}"
+                                                        for="">Date: </label>
                                                 </div>
                                             </td>
                                             {{-- <td>
@@ -635,37 +650,92 @@
             // });
 
             $('input[type="checkbox"]').change(function() {
-                var isChecked = $(this).is(":checked");
+                var checkbox = $(this); // Store reference to the checkbox element
+
+                var isChecked = checkbox.is(":checked");
+                var route = checkbox.data('route');
+                var input = checkbox.data('input');
+                var token = checkbox.data('token');
+                var id = checkbox.attr('id');
+                var labelElement = checkbox.siblings('.label-text');
                 console.log(isChecked);
-                if (isChecked) {
-                    $(this).closest('tr').addClass('bg-success2');
-                    var id = $(this).attr('id');
-
-                    // Store the current date when the checkbox is checked
-                    var currentDate = new Date().toLocaleDateString();
-                    localStorage.setItem(id, currentDate);
-
-                    // Update label text with the stored date
-                    $(this).siblings('.label-text').text(currentDate);
-                } else {
-                    $(this).closest('tr').removeClass('bg-success2');
-                    var id = $(this).attr('id');
-                    localStorage.setItem(id, '');
-
-                    // Reset label text
-                    $(this).siblings('.label-text').text("Date:");
-                }
+                $.ajax({
+                    url: '{{ route('saveCheck') }}',
+                    method: 'POST',
+                    data: {
+                        isChecked: isChecked,
+                        input: input,
+                        _token: token // CSRF token
+                    },
+                    success: function(response) {
+                        console.log(response.isChecked);
+                        console.log('Request successful:', response.message);
+                        console.log('Request successful:', response.label);
+                        labelElement.text(response.label);
+                        if (isChecked) {
+                            checkbox.closest('tr').addClass('bg-success2');
+                        } else {
+                            checkbox.closest('tr').removeClass('bg-success2');
+                        }
+                        // $(this).closest('tr').addClass('bg-success2');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Request failed:', status, error);
+                    }
+                });
             });
 
-            $('input[type="checkbox"]').each(function() {
-                var id = $(this).attr('id');
-                var storedDate = localStorage.getItem(id);
+            // if (isChecked) {
+            //         $(this).closest('tr').addClass('bg-success2');
+            //         var id = $(this).attr('id');
 
-                if (storedDate) {
-                    $(this).prop('checked', true);
-                    $(this).closest('tr').addClass('bg-success2');
-                    // Update label text with stored date
-                    $(this).siblings('.label-text').text(storedDate);
+            //         // Store the current date when the checkbox is checked
+            //         var currentDate = new Date().toLocaleDateString();
+            //         localStorage.setItem(id, currentDate);
+
+            //         // Update label text with the stored date
+            //         $(this).siblings('.label-text').text(currentDate);
+            //     } else {
+            //         $(this).closest('tr').removeClass('bg-success2');
+            //         var id = $(this).attr('id');
+            //         localStorage.setItem(id, '');
+
+            //         // Reset label text
+            //         $(this).siblings('.label-text').text("Date:");
+            //     }
+
+            // $('input[type="checkbox"]').each(function() {
+            //     var id = $(this).attr('id');
+            //     var storedDate = localStorage.getItem(id);
+
+            //     if (storedDate) {
+            //         $(this).prop('checked', true);
+            //         $(this).closest('tr').addClass('bg-success2');
+            //         // Update label text with stored date
+            //         $(this).siblings('.label-text').text(storedDate);
+            //     }
+            // });
+
+            $.ajax({
+                url: '{{ route('fetchCheckboxStates') }}',
+                method: 'GET',
+                success: function(response) {
+                    console.log(response);
+
+                    $.each(response, function(id, date) {
+                        // Use isChecked to set the checkbox state
+
+                        $('#flexSwitchCheckChecked-' + id).prop('checked', id);
+                        $('#label-check-' + id).text(date);
+                        // checkbox.closest('tr').addClass('bg-success2');
+                        $('#flexSwitchCheckChecked-' + id).closest('tr').addClass(
+                        'bg-success2');
+                        console.log(id, date);
+                        console.log('flexSwitchCheckChecked-' + id);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to fetch checkbox states:', error);
                 }
             });
 
