@@ -329,6 +329,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="#default-tab-4" data-bs-toggle="tab" class="nav-link">
+                            {{-- <span class="d-sm-none">Tab 2</span> --}}
+                            <span class="d-sm-block d-none">ตรวจสอบแล้ว</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
                             {{-- <span class="d-sm-none">Tab 2</span> --}}
                             <span class="d-sm-block d-none">บันทึกใบปะหน้า</span>
@@ -515,6 +521,53 @@
                         </table>
                     </div>
                     <!-- END tab-pane -->
+                    <div class="tab-pane fade" id="default-tab-4">
+                        <blockquote class="blockquote">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="mb-0">รายการใบเสร็จที่ตรวจสอบแล้ว
+                                </p>
+
+                            </div>
+
+                        </blockquote>
+                        <table style="width: 100%;" id="Listview2"
+                            class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
+
+                            <thead>
+                                <tr>
+                                    <th width='1%' class="text-center">no.</th>
+                                    <th width='1%'>Code</th>
+                                    <th>Student Nickname</th>
+                                    <th>Submission Date</th>
+                                    <th>Reciept Number</th>
+                                    <th>Period</th>
+                                    <th>Group</th>
+                                    <th>Check Date</th>
+                                    <th>User</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($check_recp as $key => $check)
+                                    <tr>
+                                        <td  width='1%'>{{ $key+1 }}</td>
+                                        <td  width='1%'>{{ $check->student->code }}</td>
+                                        <td>{{ $check->student->nick_name }} / {{ $check->student->full_name }}</td>
+                                        <td>{{ $check->receiptSchool->submission_date }}</td>
+                                        <td>{{ $check->receiptSchool->receipt_number }}</td>
+                                        <td>{{ $check->school_price->period }}</td>
+                                        <td>{{ $check->school_price->group }}</td>
+                                        <td>{{ $check->date_check }}</td>
+                                        <td>{{ $check->user->name }}</td>
+                                    </tr>
+                                @endforeach
+
+
+                            </tbody>
+
+
+                        </table>
+                    </div>
                     <!-- BEGIN tab-pane -->
                     <div class="tab-pane fade" id="default-tab-3">
                         <blockquote class="blockquote">
@@ -525,7 +578,7 @@
                             </div>
 
                         </blockquote>
-                        <table style="width: 100%;" id="Listview2"
+                        <table style="width: 100%;" id="Listview3"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
 
                             <thead>

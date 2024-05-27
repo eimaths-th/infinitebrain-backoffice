@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // use App\Models\Receipt_School;
 
+use App\Models\CheckRecieptSchool;
 use App\Models\FutureStd;
 use App\Models\PaperReport;
 use App\Models\Receipt_School;
@@ -454,7 +455,7 @@ class StdlogController extends Controller
         }
         return $reportMonth_schoolPrice;
     }
-    
+
     public function reportMonthStd(Request $request)
     {
         // dd($request->all());
@@ -481,6 +482,7 @@ class StdlogController extends Controller
             ->whereYear('submission_date', $year)
             ->orderBy('rec_id', 'desc')
             ->get();
+        $check_recp = CheckRecieptSchool::all();
         // dd($request->all(),$view);
 
         // ksort($totalForAllMonths);
@@ -495,6 +497,7 @@ class StdlogController extends Controller
             'month' => $months,
             'cMonth' => $month,
             'subjects' => $subjects,
+            'check_recp' => $check_recp,
             'checkStatus' => 'all',
 
         ]);
@@ -530,6 +533,7 @@ class StdlogController extends Controller
         $status = Statuslog::all();
         // ksort($totalForAllMonths);
         // dd($totalForAllGroupYear);
+        $check_recp = CheckRecieptSchool::all();
 
         return view($view, [
             'totalForAllGroupYear' => $totalForAllGroupYear,
@@ -544,6 +548,7 @@ class StdlogController extends Controller
             'subjects' => $subjects,
             'status' => $status,
             'checkStatus' => 'all',
+            'check_recp' => $check_recp,
 
         ]);
     }

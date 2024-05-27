@@ -18,7 +18,7 @@ class CheckRecieptSchool extends Model
 {
     /**
      * The table associated with the model.
-     * 
+     *
      * @var string
      */
     protected $table = 'check_reciept_school';
@@ -27,4 +27,21 @@ class CheckRecieptSchool extends Model
      * @var array
      */
     protected $fillable = ['student_id', 'receipt_school_id', 'school_price_id', 'date_check', 'check_by', 'created_at', 'updated_at'];
+
+    public function school_price()
+    {
+        return $this->belongsTo(SchoolPrice::class, 'school_price_id');
+    }
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'student_id', 'id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'check_by', 'id');
+    }
+    public function receiptSchool()
+    {
+        return $this->belongsTo(Receipt_School::class, 'receipt_school_id', 'id');
+    }
 }

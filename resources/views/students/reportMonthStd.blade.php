@@ -37,14 +37,14 @@
         }
 
         /* .switchery {
-                                                                                                                                                                                                                                                                                                                            width: 30px;
-                                                                                                                                                                                                                                                                                                                            height: 16px;
-                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                    width: 30px;
+                                                                                                                                                                                                                                                                                                                                    height: 16px;
+                                                                                                                                                                                                                                                                                                                                }
 
-                                                                                                                                                                                                                                                                                                                        .switchery-small {
-                                                                                                                                                                                                                                                                                                                            width: 12px;
-                                                                                                                                                                                                                                                                                                                            height: 12px;
-                                                                                                                                                                                                                                                                                                                        } */
+                                                                                                                                                                                                                                                                                                                                .switchery-small {
+                                                                                                                                                                                                                                                                                                                                    width: 12px;
+                                                                                                                                                                                                                                                                                                                                    height: 12px;
+                                                                                                                                                                                                                                                                                                                                } */
     </style>
     <style>
         .bg-success2 {
@@ -322,11 +322,18 @@
                         </a>
                     </li> --}}
                     <li class="nav-item">
+                        <a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
+                            {{-- <span class="d-sm-none">Tab 2</span> --}}
+                            <span class="d-sm-block d-none">ตรวจสอบแล้ว</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
                             {{-- <span class="d-sm-none">Tab 2</span> --}}
                             <span class="d-sm-block d-none">บันทึกใบปะหน้า</span>
                         </a>
                     </li>
+
                     {{-- <li class="nav-item">
                         <a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
                             <span class="d-sm-none">Tab 3</span>
@@ -361,7 +368,7 @@
                                     <th>Reciept Number</th>
                                     <th>Group</th>
                                     <th>Stutus</th>
-                                    <th>Tpye</th>
+                                    <th>Type</th>
                                     <th>total</th>
                                     <th>Check</th>
                                 </tr>
@@ -506,7 +513,7 @@
                                                 $routeUrl = htmlspecialchars_decode(
                                                     route('saveCheck', $routeParameters),
                                                 );
-                                                
+
                                             @endphp
                                             <td class="text-center" width='1%'>
                                                 <div class="form-check form-switch form-switch-sm">
@@ -539,6 +546,53 @@
 
                         </table>
                     </div>
+                    <div class="tab-pane fade" id="default-tab-2">
+                        <blockquote class="blockquote">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="mb-0">รายการใบเสร็จที่ตรวจสอบแล้ว
+                                </p>
+
+                            </div>
+
+                        </blockquote>
+                        <table style="width: 100%;" id="Listview2"
+                            class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
+
+                            <thead>
+                                <tr>
+                                    <th width='1%' class="text-center">no.</th>
+                                    <th width='1%'>Code</th>
+                                    <th>Student Nickname</th>
+                                    <th>Submission Date</th>
+                                    <th>Reciept Number</th>
+                                    <th>Period</th>
+                                    <th>Group</th>
+                                    <th>Check Date</th>
+                                    <th>User</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($check_recp as $key => $check)
+                                    <tr>
+                                        <td  width='1%'>{{ $key+1 }}</td>
+                                        <td  width='1%'>{{ $check->student->code }}</td>
+                                        <td>{{ $check->student->nick_name }} / {{ $check->student->full_name }}</td>
+                                        <td>{{ $check->receiptSchool->submission_date }}</td>
+                                        <td>{{ $check->receiptSchool->receipt_number }}</td>
+                                        <td>{{ $check->school_price->period }}</td>
+                                        <td>{{ $check->school_price->group }}</td>
+                                        <td>{{ $check->date_check }}</td>
+                                        <td>{{ $check->user->name }}</td>
+                                    </tr>
+                                @endforeach
+
+
+                            </tbody>
+
+
+                        </table>
+                    </div>
                     <div class="tab-pane fade" id="default-tab-3">
                         <blockquote class="blockquote">
                             <div class="d-flex justify-content-between align-items-center">
@@ -548,7 +602,7 @@
                             </div>
 
                         </blockquote>
-                        <table style="width: 100%;" id="Listview2"
+                        <table style="width: 100%;" id="Listview3"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
 
                             <thead>
@@ -725,7 +779,7 @@
                         $('#label-check-' + id).text(date);
                         // checkbox.closest('tr').addClass('bg-success2');
                         $('#flexSwitchCheckChecked-' + id).closest('tr').addClass(
-                        'bg-success2');
+                            'bg-success2');
                         console.log(id, date);
                         console.log('flexSwitchCheckChecked-' + id);
                     });
