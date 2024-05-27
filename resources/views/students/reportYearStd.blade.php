@@ -653,7 +653,7 @@
                     localStorage.setItem(id, '');
 
                     // Reset label text
-                    $(this).siblings('.label-text').text("Date :");
+                    $(this).siblings('.label-text').text("Date:");
                 }
             });
 

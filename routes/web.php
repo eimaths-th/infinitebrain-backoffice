@@ -35,6 +35,7 @@ use App\Http\Controllers\WorktimelogsController;
 
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BonusStudentController;
+use App\Http\Controllers\CheckReportStdController;
 use App\Http\Controllers\TestController;
 
 // use App\Http\Controllers\RouteToggleController;
@@ -87,7 +88,8 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/report-month-time', [RecordtimeController::class, 'reportTime'])->name('reportTime');
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
     Route::get('/report-year-student', [StdlogController::class, 'reportYearStd'])->name('reportYearStd');
-    Route::get('/saveCheck', [StdlogController::class, 'CheckReportStdController'])->name('saveCheck');
+    Route::POST('/saveCheck', [CheckReportStdController::class, 'store'])->name('saveCheck');
+    Route::get('/fetch-checkbox-states', [CheckReportStdController::class, 'fetchCheckboxStates'])->name('fetchCheckboxStates');
 
     // Route::get('/stdLog-search', [StdlogController::class, 'searchTestLog'])->name('stdlog.search');
     Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');

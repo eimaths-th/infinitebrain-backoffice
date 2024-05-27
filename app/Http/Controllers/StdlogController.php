@@ -454,6 +454,7 @@ class StdlogController extends Controller
         }
         return $reportMonth_schoolPrice;
     }
+    
     public function reportMonthStd(Request $request)
     {
         // dd($request->all());
