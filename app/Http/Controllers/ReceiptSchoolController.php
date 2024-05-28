@@ -1791,7 +1791,7 @@ class ReceiptSchoolController extends Controller
 
 
         //add student to request
-
+        // media_price
         $request->request->add(['pid' => $stud]);
 
         Receipt_School::find($id)->update($request->all());
@@ -1800,6 +1800,13 @@ class ReceiptSchoolController extends Controller
         SchoolPrice::where('rid', $id)->delete();
         for ($xx = 0; $xx < count($rrsub); $xx++) {
             $grp = Subject::find($rrsub[$xx]);
+
+            if ($rrcourse[$xx] === '3') {
+                $rrbookprice[$xx] = null;
+            } else {
+                $media_name[$xx] = null;
+                $media_price[$xx] = null;
+            }
 
             if ($rrtype[$xx] != "" && $rrtype[$xx] != NULL) {
 
