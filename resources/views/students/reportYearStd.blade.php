@@ -450,9 +450,9 @@
                                             <td class="text-end">{{ number_format($data1->total) ?? 'Null'}} บาท</td>
                                             @php
                                                 $routeParameters = [
-                                                    'student_id' => $data1->std->id,
-                                                    'receipt_school_id' => $data1->rec_school->id,
-                                                    'school_price_id' => $data1->id,
+                                                    'student_id' => $data1->std->id ?? 'Null',
+                                                    'receipt_school_id' => $data1->rec_school->id ?? 'Null',
+                                                    'school_price_id' => $data1->id ?? 'Null',
                                                 ];
                                                 $routeUrl = htmlspecialchars_decode(
                                                     route('saveCheck', $routeParameters),
