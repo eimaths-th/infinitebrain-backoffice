@@ -427,11 +427,11 @@
                                             <td class="text-center">{{ $key + 1 }}</td>
                                             <td class="text-center">{{ $data1->std->code ?? 'Null' }}</td>
                                             <td class="{{ $class }}">{{ $data1->std->nick_name ?? 'Null' }}</td>
-                                            <td>{{ $data1->rec_school->submission_date }}</td>
-                                            <td>{{ $data1->period }}</td>
+                                            <td>{{ $data1->rec_school->submission_date ?? 'Null'}}</td>
+                                            <td>{{ $data1->period ?? 'Null'}}</td>
 
-                                            <td>{{ $data1->rec_school->receipt_number }}</td>
-                                            <td class="text-center">{{ $data1->group }}</td>
+                                            <td>{{ $data1->rec_school->receipt_number ?? 'Null'}}</td>
+                                            <td class="text-center">{{ $data1->group ?? 'Null'}}</td>
 
 
                                             <td class="{{ $class }} text-center">
@@ -446,8 +446,8 @@
                                                     null
                                                 @endif
                                             </td>
-                                            <td class="text-center">{{ $data1->course_type }}</td>
-                                            <td class="text-end">{{ number_format($data1->total) }} บาท</td>
+                                            <td class="text-center">{{ $data1->course_type ?? 'Null'}}</td>
+                                            <td class="text-end">{{ number_format($data1->total) ?? 'Null'}} บาท</td>
                                             @php
                                                 $routeParameters = [
                                                     'student_id' => $data1->std->id,
@@ -496,7 +496,7 @@
                                         <td class="text-center" hidden></td> <!-- Merged cell -->
                                         <td class="text-center" colspan="8">Sum {{ $keyG }}</td>
                                         <!-- Merged cell -->
-                                        <td class="text-end">{{ number_format($subg) }} บาท</td>
+                                        <td class="text-end">{{ number_format($subg) ?? 'Null'}} บาท</td>
                                         <td></td>
                                     </tr>
                                 </tbody>

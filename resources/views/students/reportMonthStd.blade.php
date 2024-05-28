@@ -483,19 +483,19 @@
                                             <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
                                             <td class="{{ $class }}">{{ $data->std->nick_name ?? 'Null' }}
                                             </td>
-                                            <td>{{ $data->rec_school->submission_date }}</td>
-                                            <td>{{ $data->period }}</td>
+                                            <td>{{ $data->rec_school->submission_date ?? 'Null'}}</td>
+                                            <td>{{ $data->period ?? 'Null'}}</td>
 
-                                            <td>{{ $data->rec_school->receipt_number }}</td>
+                                            <td>{{ $data->rec_school->receipt_number ?? 'Null'}}</td>
                                             <td>{{ $data->group }}</td>
 
                                             <td class="{{ $class }}">
                                                 {{-- @if ($data->std->status_log && $data->std->status_log->count() > 0 && $status->last()->group == $data->group) --}}
-                                                {{ $statusValue }}
+                                                {{ $statusValue ?? 'Null'}}
                                             </td>
-                                            <td>{{ $data->course_type }}</td>
+                                            <td>{{ $data->course_type ?? 'Null'}}</td>
                                             {{-- <td class="text-end">{{ number_format($data->total) }} บาท</td> --}}
-                                            <td class="text-end">{{ number_format($data->total) }} บาท</td>
+                                            <td class="text-end">{{ number_format($data->total) ?? 'Null'}} บาท</td>
                                             {{-- <td class="text-end"><input type="checkbox" id="switchery-default" checked /></td> --}}
                                             {{-- <td class="text-center">
                                                 <input type="checkbox" class="switchery-small" id="switchery-default-{{ $loop->index }}" checked />
