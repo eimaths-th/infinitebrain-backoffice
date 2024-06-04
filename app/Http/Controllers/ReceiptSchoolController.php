@@ -1050,9 +1050,13 @@ class ReceiptSchoolController extends Controller
         foreach ($receipts_detail as $dresult) {
             if ($dresult['course_type'] == 2) {
                 $price = $dresult['bookprice'];
+                $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+
                 $group_rec = '';
             } elseif ($dresult['course_type'] == 3) {
                 $price = $dresult['media_price'];
+                $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+
                 $group_rec = '';
             } else {
                 $price = ($dresult['total'] - $dresult['bookprice']);
@@ -1359,7 +1363,7 @@ class ReceiptSchoolController extends Controller
 
         // dd($sub_id, $level_id, $book, $course_type);
         $data = SubjectPrice::where(['subject_id' => $sub_id, 'level_id' => $level_id, 'week' => $week])->get();
-        // dd($data);
+        // dd($sub_id, $level_id, $week, $course_type,$data);
         // $select_list = "";
         // $booklet = "";
         // foreach ($data as $key) {
