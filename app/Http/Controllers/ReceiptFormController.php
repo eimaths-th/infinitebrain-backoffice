@@ -142,9 +142,9 @@ class ReceiptFormController extends Controller
             'file.*' => 'required|image',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()->all()]);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => $validator->errors()->all()]);
+        // }
         $filecount = count($request->file('file'));
         //return response()->json(['success'=>$x]);
         //print_r($request->file('file'));
