@@ -175,7 +175,7 @@ class ReceiptFormController extends Controller
             //test
             //$newnamea[$i] = $newname;
         }
-        dd($newname);
+        // dd($newname);
         return response()->json(['success' => $newname]);
     }
 
