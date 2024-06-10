@@ -106,14 +106,14 @@
                 </div>
             </div>
         </div>
+        @foreach ($data as $receipt_info => $receipt_val)
+            <div class="main-card mb-3 card " id="x_content">
 
-        <div class="main-card mb-3 card " id="x_content">
-            <div class="card-body">
-                @php
-                    //var_dump($data);
-                    //exit();
-                @endphp
-                @foreach ($data as $receipt_info => $receipt_val)
+                <div class="card-body">
+                    @php
+                        //var_dump($data);
+                        //exit();
+                    @endphp
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
                         <thead>
                             <tr>
@@ -176,9 +176,9 @@
                             <td>..........................</td>
                         </tr>
                         <!-- <tr>
-                                                        <td colspan="5"><font class="grey">โทร.</font> <b>  </b></td>
+                                                                <td colspan="5"><font class="grey">โทร.</font> <b>  </b></td>
 
-                                                    </tr> -->
+                                                            </tr> -->
                     </table>
                     <div class="tbr">
                         <table align="center" width="85%" cellpadding="0" cellspacing="0">
@@ -322,11 +322,11 @@
                         </table>
 
                         <!-- <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                                                        <tr>
-                                                            <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
-                                                            <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
-                                                        </tr>
-                                                    </table> -->
+                                                                <tr>
+                                                                    <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
+                                                                    <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
+                                                                </tr>
+                                                            </table> -->
 
                         <table align="center" width="85%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
                             <tr>
@@ -367,13 +367,12 @@
                         <br>
                         <br>
                     </div>
-                @endforeach
 
+                </div>
 
             </div>
+        @endforeach
 
-
-        </div>
     </div>
 @endsection
 
