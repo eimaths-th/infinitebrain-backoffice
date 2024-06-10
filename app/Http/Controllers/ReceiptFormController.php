@@ -146,7 +146,7 @@ class ReceiptFormController extends Controller
         //return response()->json(['success'=>$x]);
         //print_r($request->file('file'));
         //exit();
-        // dd($request);
+        dd($request);
 
         $newname = "";
         for ($i = 0; $i <= ($filecount - 1); $i++) {
