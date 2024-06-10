@@ -1302,6 +1302,7 @@
                 this.removeAllFiles();
                 this.addFile(file);
             },
+            //test
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
             maxFilesize: 10, // MB
             previewsContainer: "#dropzone_preview", // ระบุ element เป้าหลาย
