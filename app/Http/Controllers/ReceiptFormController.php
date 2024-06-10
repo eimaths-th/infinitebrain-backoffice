@@ -134,7 +134,10 @@ class ReceiptFormController extends Controller
     }
 
     public function fileStore(Request $request)
+
     {
+        dd($request);
+
         $validator =  Validator::make($request->all(), [
             'file.*' => 'required|image',
         ]);
@@ -146,7 +149,6 @@ class ReceiptFormController extends Controller
         //return response()->json(['success'=>$x]);
         //print_r($request->file('file'));
         //exit();
-        dd($request);
 
         $newname = "";
         for ($i = 0; $i <= ($filecount - 1); $i++) {
