@@ -1060,7 +1060,9 @@ class ReceiptController extends Controller
 
 
                     //if ($this->URL_exists($retu)) {
-                    $file_att .= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
+                    // $file_att .= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
+                    $file_att .= "<img src=\"" . $retu . "\" height=\"400\" class=\"my-5\">&nbsp;&nbsp;";
+
                     //}
                 }
             }
