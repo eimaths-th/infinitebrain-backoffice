@@ -168,10 +168,6 @@ class StdlogController extends Controller
         ]);
     }
 
-
-
-
-
     private function queryGrafgh()
     {
         $reportMonth_schoolPrice_all = SchoolPrice::where('course_type', 1)
@@ -318,6 +314,7 @@ class StdlogController extends Controller
             ->orderBy('rec_id', 'desc')
             ->get();
         $subjects = Subject::all()->groupBy('group');
+        $check_recp = CheckRecieptSchool::all();
 
 
         // dd($reportMonth_schoolPrice,$reportYear_schoolPrice);
@@ -330,6 +327,8 @@ class StdlogController extends Controller
             'year' => $year,
             'checkStatus' => $status,
             'subjects' => $subjects,
+            'check_recp' => $check_recp,
+
 
         ]);
     }

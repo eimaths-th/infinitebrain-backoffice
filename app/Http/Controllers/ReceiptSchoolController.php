@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
-use File;
+// use File;
 use Illuminate\Support\Str;
 use App\Models\FileUpload;
 use App\Models\History;
@@ -25,6 +25,7 @@ use App\Models\Receipt_School_RunningNumber;
 use App\Models\Statuslog;
 use Carbon\Carbon;
 use App\Services\StatusService;
+use Illuminate\Support\Facades\File;
 
 class ReceiptSchoolController extends Controller
 {

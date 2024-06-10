@@ -575,15 +575,15 @@
                             <tbody>
                                 @foreach ($check_recp as $key => $check)
                                     <tr>
-                                        <td  width='1%'>{{ $key+1 }}</td>
-                                        <td  width='1%'>{{ $check->student->code }}</td>
-                                        <td>{{ $check->student->nick_name }} / {{ $check->student->full_name }}</td>
-                                        <td>{{ $check->receiptSchool->submission_date }}</td>
-                                        <td>{{ $check->receiptSchool->receipt_number }}</td>
-                                        <td>{{ $check->school_price->period }}</td>
-                                        <td>{{ $check->school_price->group }}</td>
-                                        <td>{{ $check->date_check }}</td>
-                                        <td>{{ $check->user->name }}</td>
+                                        <td  width='1%'>{{ $key+1 ?? 'null'}}</td>
+                                        <td  width='1%'>{{ $check->student->code ?? 'null'}}</td>
+                                        <td>{{ $check->student->nick_name ?? 'null'}} / {{ $check->student->full_name ?? 'null'}}</td>
+                                        <td>{{ $check->receiptSchool->submission_date ?? 'null' }}</td>
+                                        <td>{{ $check->receiptSchool->receipt_number ?? 'null'}}</td>
+                                        <td>{{ $check->school_price->period ?? 'null'}}</td>
+                                        <td>{{ $check->school_price->group ?? 'null'}}</td>
+                                        <td>{{ $check->date_check ?? 'null'}}</td>
+                                        <td>{{ $check->user->name ?? 'null'}}</td>
                                     </tr>
                                 @endforeach
 
@@ -708,7 +708,7 @@
                 var token = checkbox.data('token');
                 var id = checkbox.attr('id');
                 var labelElement = checkbox.siblings('.label-text');
-                console.log(isChecked);
+                // console.log(isChecked);
                 $.ajax({
                     url: '{{ route('saveCheck') }}',
                     method: 'POST',
@@ -718,9 +718,9 @@
                         _token: token // CSRF token
                     },
                     success: function(response) {
-                        console.log(response.isChecked);
-                        console.log('Request successful:', response.message);
-                        console.log('Request successful:', response.label);
+                        // console.log(response.isChecked);
+                        // console.log('Request successful:', response.message);
+                        // console.log('Request successful:', response.label);
                         labelElement.text(response.label);
                         if (isChecked) {
                             checkbox.closest('tr').addClass('bg-success2');
@@ -770,7 +770,7 @@
                 url: '{{ route('fetchCheckboxStates') }}',
                 method: 'GET',
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
 
                     $.each(response, function(id, date) {
                         // Use isChecked to set the checkbox state
@@ -780,12 +780,12 @@
                         // checkbox.closest('tr').addClass('bg-success2');
                         $('#flexSwitchCheckChecked-' + id).closest('tr').addClass(
                             'bg-success2');
-                        console.log(id, date);
-                        console.log('flexSwitchCheckChecked-' + id);
+                        // console.log(id, date);
+                        // console.log('flexSwitchCheckChecked-' + id);
                     });
                 },
                 error: function(xhr, status, error) {
-                    console.error('Failed to fetch checkbox states:', error);
+                    // console.error('Failed to fetch checkbox states:', error);
                 }
             });
 
