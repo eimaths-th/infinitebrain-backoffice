@@ -50,17 +50,6 @@
             color: rgb(138, 175, 61);
         }
 
-        .my-5 {
-            margin-top: 3rem;
-            /* or any value you prefer */
-            margin-bottom: 3rem;
-            /* or any value you prefer */
-        }
-
-        .img-space {
-            margin: 5rem;
-            /* Adjust this value as needed */
-        }
         .img-my-5 {
             margin-top: 3rem;
             margin-bottom: 3rem;
@@ -69,6 +58,18 @@
         .img-mx-5 {
             margin-left: 3rem;
             margin-right: 3rem;
+        }
+
+        .img-m-5 {
+            margin: 3rem;
+            /* or any value you prefer */
+        }
+
+        .my-5 {
+            margin-top: 3rem;
+            /* or any value you prefer */
+            margin-bottom: 3rem;
+            /* or any value you prefer */
         }
     </style>
 @endsection
@@ -178,9 +179,9 @@
                             <td>..........................</td>
                         </tr>
                         <!-- <tr>
-                                                                    <td colspan="5"><font class="grey">โทร.</font> <b>  </b></td>
+                                                <td colspan="5"><font class="grey">โทร.</font> <b>  </b></td>
 
-                                                                </tr> -->
+                                            </tr> -->
                     </table>
                     <div class="tbr">
                         <table align="center" width="85%" cellpadding="0" cellspacing="0">
@@ -217,8 +218,8 @@
                             <td ></td>
                             <td ></td>
                             <td align="center" style="vertical-align: top;">{{ $price_val }}</td>
-                            </tr>
-                            <tr>
+                        </tr>
+                        <tr>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -227,7 +228,7 @@
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
 
-                            </tr> --}}
+                        </tr> --}}
                             <tr>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
@@ -324,11 +325,11 @@
                         </table>
 
                         <!-- <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                                                                    <tr>
-                                                                        <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
-                                                                        <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
-                                                                    </tr>
-                                                                </table> -->
+                                                <tr>
+                                                    <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
+                                                    <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
+                                                </tr>
+                                            </table> -->
 
                         <table align="center" width="85%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
                             <tr>
@@ -365,10 +366,7 @@
                             </tr>
 
                         </table>
-                        <div class="my-5">
-                            <center>{!! $receipt_val['file_att'] !!}</center>
-
-                        </div>
+                        <center>{!! $receipt_val['file_att'] !!}</center>
                         <br>
                         <br>
                 @endforeach
