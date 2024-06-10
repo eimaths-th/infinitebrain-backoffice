@@ -330,7 +330,13 @@
                             </tr>
 
                         </table>
-                        <center>{!! $receipt_val['file_att'] !!}</center>
+                        <center>
+                            @if (!empty($receipt_val['file_att']))
+                                {!! $receipt_val['file_att'] !!}
+                            @else
+                                <img src="{{ asset('images/infinite-c.png') }}" alt="" height="400" class="my-5">
+                            @endif
+                        </center>
                     </div>
                 </div>
             </div>
