@@ -67,6 +67,25 @@
         .aaa {
             color: rgb(138, 175, 61);
         }
+
+        .img-my-5 {
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .img-mx-5 {
+            margin-left: 3rem;
+            margin-right: 3rem;
+        }
+
+        .img-m-5 {
+            margin: 3rem;
+        }
+
+        .my-5 {
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
     </style>
 </head>
 
