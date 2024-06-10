@@ -62,14 +62,11 @@
 
         .img-m-5 {
             margin: 3rem;
-            /* or any value you prefer */
         }
 
         .my-5 {
             margin-top: 3rem;
-            /* or any value you prefer */
             margin-bottom: 3rem;
-            /* or any value you prefer */
         }
     </style>
 @endsection
