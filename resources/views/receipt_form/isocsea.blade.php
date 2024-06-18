@@ -860,8 +860,7 @@
                                             <label class="form-label form-label-top form-label-auto"
                                                 for="package">แพคเกจในการสอบ / Packages <span
                                                     class="form-required">*</span></label>
-                                            <select class="form-control" id="package" name="package"
-                                                aria-label="แพคเกจในการสอบ / Packages" required>
+                                            <select class="form-control" id="package" name="package" id="package" aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test:  850 Baht">Test: 850 Baht</option>
                                                 <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250
@@ -1124,6 +1123,34 @@
         </div>
     </div>
     <script>
+        var currentDate = new Date();
+        document.getElementById('package').onchange = function() {
+            var selectedOption = this.value;
+            var sdate = new Date('2023-12-01');
+            var edate = new Date('2024-06-20');
+            var options = {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            };
+            var formattedSDate = sdate.toLocaleDateString('en-GB', options);
+            var formattedEDate = edate.toLocaleDateString('en-GB', options);
+            switch (selectedOption) {
+                case 'Test+tutoring class: 1250 bath':
+                    if (currentDate >= sdate && currentDate <= edate) {
+                        alert('ปิดสมัครสอบพร้อมติววันที่ 20 มิ.ย. 2567 23.59 น.');
+                    } else {
+                        this.value = '';
+                        alert('สมัครสอบพร้อมติวเกินระยะเวลาที่กำหนด' + formattedEDate);
+                        // alert('Registration Date: ' + formattedSDate + ' – ' + formattedEDate);
+                    }
+                    break;
+                default:
+            }
+        };
+    </script>
+    <script>
+
         $(document).ready(function() {
             $('#dcode').on('keyup', function(event) {
                 var otherFieldValue = $('#package').val();
