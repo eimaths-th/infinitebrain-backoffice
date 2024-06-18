@@ -1127,7 +1127,7 @@
         document.getElementById('package').onchange = function() {
             var selectedOption = this.value;
             var sdate = new Date('2023-12-01');
-            var edate = new Date('2024-06-20');
+            var edate = new Date('2024-06-21');
             var options = {
                 day: 'numeric',
                 month: 'short',
