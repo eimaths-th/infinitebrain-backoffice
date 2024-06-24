@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                        background-size: 15px;
-                                                    }*/
+                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                        background-size: 15px;
+                                                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                        border-color: var(--color-invalid);
-                                                    }*/
+                                                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                                                        border-color: var(--color-invalid);
+                                                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                        display: block;
-                                                    }*/
+                                                                        display: block;
+                                                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -560,7 +560,8 @@
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
                                                 Date:</strong> 1 July 2024 - 15 September 2024</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;29 September 2024</span>
+                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;29 September
+                                            2024</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -568,11 +569,14 @@
                                     {{-- <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
                                     </p> --}}
                                     <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
-                                    <p><span style="color: #6351a2;"><strong>Test:</strong> 850 baht</span>
+                                    <p>
+                                        <span style="color: #6351a2;">
+                                            <strong>Test:</strong>
+                                            850 baht
+                                        </span>
                                     </p>
                                     {{-- <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1250 bath</span><br></p> --}}
-                                    <p>&nbsp;</p>
                                     {{-- <p>
                                         <span style="color: #6351a2;">
                                             <b>เกณฑ์การรับสมัคร GELOSEA</b> <br>
@@ -588,6 +592,22 @@
                                             เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์
                                         </span>
                                     </p> --}}
+                                    <span style="color: #6351a2;">
+                                        <strong>เวลาสอบ:</strong>
+                                        <ul>
+                                            <li>
+                                                <span class="color: #6351a2;">
+                                                    10.30-12.00 Kindergarten - Grade 6
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="color: #6351a2;">
+                                                    13.30-15.00 Grade 7 - 12
+                                                </span>
+                                            </li>
+                                        </ul>
+
+                                    </span>
                                     <p>
                                         <span style="color: #6351a2;"><b>เกณฑ์การเทียบระดับชั้น GELOSEA</b>
                                             <br>
@@ -602,6 +622,8 @@
 
                                         </span>
                                     </p>
+                                    <p>&nbsp;</p>
+
                                 </div>
                             </div>
 
@@ -677,7 +699,8 @@
                                     <div class="col-md-6 col-sm-12">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="nickname">Nickname
                                                 (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
@@ -1053,9 +1076,10 @@
                         </div>
                         <div class="card-footer text-center">
                             <br>
-                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
-                                หากตรวจสอบข้อมูล และ พบว่าผู้สมัครไม่มีสิทธิ์เข้าสอบตามกฎ ของสนามสอบ **
-                                **ทางบริษัทจะมีค่าดำเนินการทางบัญชี 100 บาท ในกรณีที่ต้องโอนค่าสมัครคืน**</div>
+                            <div class="text-danger">
+                                **กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ หากตรวจสอบข้อมูล และ พบว่าผู้สมัครไม่มีสิทธิ์เข้าสอบตามกฎ** <br>
+                                **ของสนามสอบหรือด้วยสาเหตุอื่นๆของทางผู้สมัคร ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี** <br>
+                            </div>
                             <br>
                             <input type="submit" id="send_data" class="btn btn-lg btn-primary"
                                 value="Submit Application">
