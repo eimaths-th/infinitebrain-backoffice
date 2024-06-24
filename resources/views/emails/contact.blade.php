@@ -220,7 +220,7 @@
                                                                         if ($data->sfield == 10) {
                                                                             $message = 'ASIAROPE Olympiad Registration Form';
                                                                         } elseif ($data->sfield == 6) {
-                                                                            $message = 'GELOSEA 2023 Registration Form';
+                                                                            $message = 'GELOSEA 2024 Registration Form';
                                                                         } elseif ($data->sfield == 9) {
                                                                             $message = 'OLPCS 2023 Registration Form';
                                                                         } elseif ($data->sfield == 11) {
