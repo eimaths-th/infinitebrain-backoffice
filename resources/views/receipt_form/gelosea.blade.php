@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                background-size: 15px;
-                                            }*/
+                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                        background-size: 15px;
+                                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                border-color: var(--color-invalid);
-                                            }*/
+                                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                                        border-color: var(--color-invalid);
+                                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                display: block;
-                                            }*/
+                                                        display: block;
+                                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -540,14 +540,14 @@
             <div class="col-md-9">
                 <div class="card bg-light2 mb-3 ">
                     {{-- <div class="card-header">{{ __('Login') }}</div> --}}
-                    <div align="center"><img class="card-img" src="{{ asset('images/Banner-01.jpg') }}"
-                            alt="..." height="360"></div>
+                    <div align="center"><img class="card-img" src="{{ asset('images/Banner-01.jpg') }}" alt="..."
+                            height="360"></div>
                     <form id="infinite" method="POST" action="{{ route('form.store') }}" onsubmit="return check_input();">
                         @csrf
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h2 class="card-title form_header">GELOSEA 2023 Registration Form</h2>
+                                <h2 class="card-title form_header">GELOSEA 2024 Registration Form</h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -556,11 +556,11 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">GELOSEA 2023 Registration
+                                                    style="text-decoration: underline;">GELOSEA 2024 Registration
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong> 1 June- 6 August</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;26th August 2023</span>
+                                                Date:</strong> 1 July 2024 - 15 September 2024</span></p>
+                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;29 September 2024</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -570,18 +570,38 @@
                                     <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
                                     <p><span style="color: #6351a2;"><strong>Test:</strong> 850 baht</span>
                                     </p>
-                                    {{--<p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1250 bath</span><br></p>--}}
+                                    {{-- <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
+                                            style="color: #6351a2;">1250 bath</span><br></p> --}}
                                     <p>&nbsp;</p>
-                                    <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร GELOSEA</b> <br>
+                                    {{-- <p>
+                                        <span style="color: #6351a2;">
+                                            <b>เกณฑ์การรับสมัคร GELOSEA</b> <br>
 
-                                        รร.ไทยใช้ระดับชั้นปัจจุบัน ณ วันสอบเท่านั้น <br>
+                                            รร.ไทยใช้ระดับชั้นปัจจุบัน ณ วันสอบเท่านั้น <br>
 
 
-                                        รร.นานาชาติที่พึ่งเปิดเทอม August/ September อนุญาตให้ลงทะเบียนเป็นระดับชั้นสำหรับปีการศึกษาที่แล้ว หรือ สามารถเลือกลงตามระดับชั้นปัจจุบันได้ <br>
+                                            รร.นานาชาติที่พึ่งเปิดเทอม August/ September
+                                            อนุญาตให้ลงทะเบียนเป็นระดับชั้นสำหรับปีการศึกษาที่แล้ว หรือ
+                                            สามารถเลือกลงตามระดับชั้นปัจจุบันได้ <br>
 
-                                        ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
-                                        เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์</span></p>
+                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
+                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์
+                                        </span>
+                                    </p> --}}
+                                    <p>
+                                        <span style="color: #6351a2;"><b>เกณฑ์การเทียบระดับชั้น GELOSEA</b>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="text-center">
+                                                        <img src="images/condition-01.jpg" class="custom-image2 my-3"
+                                                            alt="Image 2" hight="20px">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </span>
+                                    </p>
                                 </div>
                             </div>
 
@@ -663,7 +683,8 @@
                                             </label>
                                             <input type="text" class="form-control" name="nickname" id="nickname"
                                                 value="" maxlength="50" minlength="1" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Nick
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Nick
                                                 Name</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -770,8 +791,8 @@
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test: 850 baht">Test: 850 baht</option>
-                                                {{--<option value="Test + tutoring class: 1250 bath (1 class 2 hours)">Test +
-                                                    tutoring class: 1250 bath (1 class 2 hours)</option>--}}
+                                                {{-- <option value="Test + tutoring class: 1250 bath (1 class 2 hours)">Test +
+                                                    tutoring class: 1250 bath (1 class 2 hours)</option> --}}
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -1032,7 +1053,8 @@
                         </div>
                         <div class="card-footer text-center">
                             <br>
-                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ** หากตรวจสอบข้อมูล และ พบว่าผู้สมัครไม่มีสิทธิ์เข้าสอบตามกฎ ของสนามสอบ **
+                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
+                                หากตรวจสอบข้อมูล และ พบว่าผู้สมัครไม่มีสิทธิ์เข้าสอบตามกฎ ของสนามสอบ **
                                 **ทางบริษัทจะมีค่าดำเนินการทางบัญชี 100 บาท ในกรณีที่ต้องโอนค่าสมัครคืน**</div>
                             <br>
                             <input type="submit" id="send_data" class="btn btn-lg btn-primary"
