@@ -500,6 +500,7 @@ class StdlogController extends Controller
             'subjects' => $subjects,
             'check_recp' => $check_recp,
             'checkStatus' => 'all',
+            'groupSubject' => $groupSubject,
 
         ]);
     }
