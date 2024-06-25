@@ -496,6 +496,7 @@ class StdlogController extends Controller
             'paper' => $paper,
             'year' => $year,
             'month' => $months,
+            'monthf' => null,
             'cMonth' => $month,
             'subjects' => $subjects,
             'check_recp' => $check_recp,
