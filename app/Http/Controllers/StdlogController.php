@@ -324,10 +324,12 @@ class StdlogController extends Controller
             'totalForAllMonths' => $totalForAllMonths,
             'paper' => $paper,
             'month' => $months,
+            'monthf' => $month,
             'year' => $year,
             'checkStatus' => $status,
             'subjects' => $subjects,
             'check_recp' => $check_recp,
+            'groupSubject' => $groupSubject,
 
 
         ]);

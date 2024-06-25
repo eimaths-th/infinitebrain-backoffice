@@ -33,9 +33,10 @@ class Kernel extends ConsoleKernel
         //test
         // $schedule->command('updateStatus:student')->everyTwoMinutes()->appendOutputTo('/storage/logs/worker.log'); // for test
         // $schedule->command('updateStatus2:student')->everyMinute(); // for test
-
-        // })->dailyAt('7:00');
     }
+    // chmod -R 775 /var/www/html/infinite_backoffice/storage/logs
+    // chown -R manon:manon /var/www/html/infinite_backoffice/storage/logs
+    // touch /var/www/html/infinite_backoffice/storage/logs/worker.log
     // nohup /usr/bin/php /var/www/html/infinite_backoffice/artisan schedule:work > /var/www/html/infinite_backoffice/storage/logs/worker.log 2>&1 &
     // nohup /usr/bin/php /var/www/html/infinite_backoffice/artisan schedule:work > /var/www/html/infinite_backoffice/storage/logs/worker.log 2>&1 &
 

@@ -37,14 +37,14 @@
         }
 
         /* .switchery {
-                                                                                                                                                                                                                                                                                                                                    width: 30px;
-                                                                                                                                                                                                                                                                                                                                    height: 16px;
-                                                                                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                                                                                                                        width: 30px;
+                                                                                                                                                                                                                                                                                                                                                                        height: 16px;
+                                                                                                                                                                                                                                                                                                                                                                    }
 
-                                                                                                                                                                                                                                                                                                                                .switchery-small {
-                                                                                                                                                                                                                                                                                                                                    width: 12px;
-                                                                                                                                                                                                                                                                                                                                    height: 12px;
-                                                                                                                                                                                                                                                                                                                                } */
+                                                                                                                                                                                                                                                                                                                                                                    .switchery-small {
+                                                                                                                                                                                                                                                                                                                                                                        width: 12px;
+                                                                                                                                                                                                                                                                                                                                                                        height: 12px;
+                                                                                                                                                                                                                                                                                                                                                                    } */
     </style>
     <style>
         .bg-success2 {
@@ -236,38 +236,42 @@
                                         @foreach ($subjects as $subjectGroup => $subject)
                                             @php
                                                 $name = '';
-                                                if ($subjectGroup === 'M') {
-                                                    # code...
-                                                    $name = 'Math';
-                                                } elseif ($subjectGroup === 'E') {
-                                                    # code...
-                                                    $name = 'English';
-                                                } elseif ($subjectGroup === 'Sci') {
-                                                    # code...
-                                                    $name = 'Science';
-                                                } elseif ($subjectGroup === 'Sci') {
-                                                    # code...
-                                                    $name = 'Chinese';
-                                                } else {
-                                                    # code...
-                                                    $name = $subject->first()->title;
+                                                switch ($subjectGroup) {
+                                                    case 'M':
+                                                        $name = 'Math';
+                                                        break;
+                                                    case 'E':
+                                                        $name = 'English';
+                                                        break;
+                                                    case 'Sci':
+                                                        $name = 'Science';
+                                                        break;
+                                                    case 'C':
+                                                        $name = 'Chinese';
+                                                        break;
+                                                    default:
+                                                        $name = $subject->first()->title ?? 'Unknown';
                                                 }
                                             @endphp
-                                            <option value="{{ $subjectGroup }}">{{ $name }}</option>
+                                            <option value="{{ $subjectGroup }}" {{ $groupSubject === $subjectGroup ? 'selected' : '' }}>{{ $name }}
+                                            </option>
                                         @endforeach
 
                                     </select>
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-lg-2">
                             <div class="row">
                                 <label for="month" class="col-lg-3">เดือน : </label>
                                 <div class="col-lg-9">
                                     <select name="month" id="selectMonth" class="form-select">
                                         <option value="">เลือกเดือน</option>
+
+
                                         @for ($i = 1; $i <= 12; $i++)
-                                            <option value="{{ $i }}">
+                                            <option value="{{ $i }}" {{ $i == $monthf ? 'selected' : '' }}>
                                                 {{ date('F', mktime(0, 0, 0, $i, 1)) }}
                                             </option>
                                         @endfor
@@ -377,17 +381,17 @@
                             <tbody>
                                 @php
                                     use App\Models\Statuslog;
-                                    // dd($cMonth);
                                     $sum = 0;
                                     $sum1 = 0;
+                                    $cMonth = date('m');
+                                    $cYear = date('Y');
                                 @endphp
                                 @foreach ($reportMonth_schoolPrice as $studentId => $groupedData)
                                     @foreach ($groupedData as $key => $data)
                                         @php
                                             $class = '';
 
-                                            $cMonth = date('m');
-                                            $cYear = date('Y');
+
                                             $status = Statuslog::where('student_id', $data->std->id)
                                                 ->where('group', $data->group)
                                                 ->whereMonth('status_date', $cMonth)
@@ -483,19 +487,19 @@
                                             <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
                                             <td class="{{ $class }}">{{ $data->std->nick_name ?? 'Null' }}
                                             </td>
-                                            <td>{{ $data->rec_school->submission_date ?? 'Null'}}</td>
-                                            <td>{{ $data->period ?? 'Null'}}</td>
+                                            <td>{{ $data->rec_school->submission_date ?? 'Null' }}</td>
+                                            <td>{{ $data->period ?? 'Null' }}</td>
 
-                                            <td>{{ $data->rec_school->receipt_number ?? 'Null'}}</td>
+                                            <td>{{ $data->rec_school->receipt_number ?? 'Null' }}</td>
                                             <td>{{ $data->group }}</td>
 
                                             <td class="{{ $class }}">
                                                 {{-- @if ($data->std->status_log && $data->std->status_log->count() > 0 && $status->last()->group == $data->group) --}}
-                                                {{ $statusValue ?? 'Null'}}
+                                                {{ $statusValue ?? 'Null' }}
                                             </td>
-                                            <td>{{ $data->course_type ?? 'Null'}}</td>
+                                            <td>{{ $data->course_type ?? 'Null' }}</td>
                                             {{-- <td class="text-end">{{ number_format($data->total) }} บาท</td> --}}
-                                            <td class="text-end">{{ number_format($data->total) ?? 'Null'}} บาท</td>
+                                            <td class="text-end">{{ number_format($data->total) ?? 'Null' }} บาท</td>
                                             {{-- <td class="text-end"><input type="checkbox" id="switchery-default" checked /></td> --}}
                                             {{-- <td class="text-center">
                                                 <input type="checkbox" class="switchery-small" id="switchery-default-{{ $loop->index }}" checked />
@@ -575,15 +579,16 @@
                             <tbody>
                                 @foreach ($check_recp as $key => $check)
                                     <tr>
-                                        <td  width='1%'>{{ $key+1 ?? 'null'}}</td>
-                                        <td  width='1%'>{{ $check->student->code ?? 'null'}}</td>
-                                        <td>{{ $check->student->nick_name ?? 'null'}} / {{ $check->student->full_name ?? 'null'}}</td>
+                                        <td width='1%'>{{ $key + 1 ?? 'null' }}</td>
+                                        <td width='1%'>{{ $check->student->code ?? 'null' }}</td>
+                                        <td>{{ $check->student->nick_name ?? 'null' }} /
+                                            {{ $check->student->full_name ?? 'null' }}</td>
                                         <td>{{ $check->receiptSchool->submission_date ?? 'null' }}</td>
-                                        <td>{{ $check->receiptSchool->receipt_number ?? 'null'}}</td>
-                                        <td>{{ $check->school_price->period ?? 'null'}}</td>
-                                        <td>{{ $check->school_price->group ?? 'null'}}</td>
-                                        <td>{{ $check->date_check ?? 'null'}}</td>
-                                        <td>{{ $check->user->name ?? 'null'}}</td>
+                                        <td>{{ $check->receiptSchool->receipt_number ?? 'null' }}</td>
+                                        <td>{{ $check->school_price->period ?? 'null' }}</td>
+                                        <td>{{ $check->school_price->group ?? 'null' }}</td>
+                                        <td>{{ $check->date_check ?? 'null' }}</td>
+                                        <td>{{ $check->user->name ?? 'null' }}</td>
                                     </tr>
                                 @endforeach
 

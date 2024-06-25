@@ -87,6 +87,7 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/find-StatusRecTime/{status}/{month}/{year}', [RecordtimeController::class, 'find_statusRecTime'])->name('find_statusRecTime');
     Route::get('/report-month-time', [RecordtimeController::class, 'reportTime'])->name('reportTime');
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
+    Route::get('/searchr_reportMonthStd', [StdlogController::class, 'searchr_reportMonthStd'])->name('searchr_reportMonthStd');
     Route::get('/report-year-student', [StdlogController::class, 'reportYearStd'])->name('reportYearStd');
     Route::POST('/saveCheck', [CheckReportStdController::class, 'store'])->name('saveCheck');
     Route::get('/fetch-checkbox-states', [CheckReportStdController::class, 'fetchCheckboxStates'])->name('fetchCheckboxStates');
@@ -142,7 +143,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/search_future', [StdlogController::class, 'search_future'])->name('search_future');
     Route::get('/report-student', [StdlogController::class, 'index'])->name('report-student');
     Route::get('/search_status', [StdlogController::class, 'search_status'])->name('search_status');
-    Route::get('/searchr_reportMonthStd', [StdlogController::class, 'searchr_reportMonthStd'])->name('searchr_reportMonthStd');
     route::get('/Super-Master', [SuperMasterContrller::class, 'index'])->name('sm');
     route::get('/testmodal', [SuperMasterContrller::class, 'testModal'])->name('test_modal');
     route::get('/testReq', [SuperMasterContrller::class, 'testReq'])->name('testReq');
