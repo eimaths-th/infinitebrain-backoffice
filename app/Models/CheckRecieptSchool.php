@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $id
  * @property string $student_id
+ * @property string $note
  * @property string $receipt_school_id
  * @property string $school_price_id
  * @property string $date_check
@@ -26,7 +27,7 @@ class CheckRecieptSchool extends Model
     /**
      * @var array
      */
-    protected $fillable = ['student_id', 'receipt_school_id', 'school_price_id', 'date_check', 'check_by', 'created_at', 'updated_at'];
+    protected $fillable = ['student_id','note', 'receipt_school_id', 'school_price_id', 'date_check', 'check_by', 'created_at', 'updated_at'];
 
     public function school_price()
     {

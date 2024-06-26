@@ -40,15 +40,15 @@
         }
 
         /* .switchery {
-            width: 30px;
-            height: 16px;
-        }
+                    width: 30px;
+                    height: 16px;
+                }
 
-        .switchery-small {
-            width: 12px;
-            height: 12px;
+                .switchery-small {
+                    width: 12px;
+                    height: 12px;
 
-        } */
+                } */
 
         .bg-success2 {
             background-color: #4ffca2 !important;
@@ -380,6 +380,7 @@
                                     <th width='1%' class="text-center">Tpye</th>
                                     <th>total</th>
                                     <th>Check</th>
+                                    <th>Note</th>
                                     {{-- <th>Date Check</th> --}}
                                 </tr>
                             </thead>
@@ -427,11 +428,11 @@
                                             <td class="text-center">{{ $key + 1 }}</td>
                                             <td class="text-center">{{ $data1->std->code ?? 'Null' }}</td>
                                             <td class="{{ $class }}">{{ $data1->std->nick_name ?? 'Null' }}</td>
-                                            <td>{{ $data1->rec_school->submission_date ?? 'Null'}}</td>
-                                            <td>{{ $data1->period ?? 'Null'}}</td>
+                                            <td>{{ $data1->rec_school->submission_date ?? 'Null' }}</td>
+                                            <td>{{ $data1->period ?? 'Null' }}</td>
 
-                                            <td>{{ $data1->rec_school->receipt_number ?? 'Null'}}</td>
-                                            <td class="text-center">{{ $data1->group ?? 'Null'}}</td>
+                                            <td>{{ $data1->rec_school->receipt_number ?? 'Null' }}</td>
+                                            <td class="text-center">{{ $data1->group ?? 'Null' }}</td>
 
 
                                             <td class="{{ $class }} text-center">
@@ -446,8 +447,8 @@
                                                     null
                                                 @endif
                                             </td>
-                                            <td class="text-center">{{ $data1->course_type ?? 'Null'}}</td>
-                                            <td class="text-end">{{ number_format($data1->total) ?? 'Null'}} บาท</td>
+                                            <td class="text-center">{{ $data1->course_type ?? 'Null' }}</td>
+                                            <td class="text-end">{{ number_format($data1->total) ?? 'Null' }} บาท</td>
                                             @php
                                                 $routeParameters = [
                                                     'student_id' => $data1->std->id ?? 'Null',
@@ -463,6 +464,7 @@
                                                 <div class="form-check form-switch form-switch-sm">
                                                     <input class="form-check-input" type="checkbox"
                                                         id="flexSwitchCheckChecked-{{ $data1->id }}"
+                                                        data-id="{{ $data1->id }}"
                                                         data-route="{{ $routeUrl }}"
                                                         data-token="{{ csrf_token() }}"
                                                         data-input='@json($routeParameters)'>
@@ -470,6 +472,8 @@
                                                         for="">Date: </label>
                                                 </div>
                                             </td>
+                                            <td id="note-{{ $data1->id }}"></td>
+
                                             {{-- <td>
 
                                             </td> --}}
@@ -496,7 +500,7 @@
                                         <td class="text-center" hidden></td> <!-- Merged cell -->
                                         <td class="text-center" colspan="8">Sum {{ $keyG }}</td>
                                         <!-- Merged cell -->
-                                        <td class="text-end">{{ number_format($subg) ?? 'Null'}} บาท</td>
+                                        <td class="text-end">{{ number_format($subg) ?? 'Null' }} บาท</td>
                                         <td></td>
                                     </tr>
                                 </tbody>
@@ -543,6 +547,7 @@
                                     <th>Period</th>
                                     <th>Group</th>
                                     <th>Check Date</th>
+                                    <th>Note</th>
                                     <th>User</th>
                                 </tr>
                             </thead>
@@ -550,15 +555,17 @@
                             <tbody>
                                 @foreach ($check_recp as $key => $check)
                                     <tr>
-                                        <td  width='1%'>{{ $key+1 }}</td>
-                                        <td  width='1%'>{{ $check->student->code }}</td>
-                                        <td>{{ $check->student->nick_name }} / {{ $check->student->full_name }}</td>
-                                        <td>{{ $check->receiptSchool->submission_date }}</td>
-                                        <td>{{ $check->receiptSchool->receipt_number }}</td>
-                                        <td>{{ $check->school_price->period }}</td>
-                                        <td>{{ $check->school_price->group }}</td>
-                                        <td>{{ $check->date_check }}</td>
-                                        <td>{{ $check->user->name }}</td>
+                                        <td width='1%'>{{ $key + 1 ?? 'null' }}</td>
+                                        <td width='1%'>{{ $check->student->code ?? 'null' }}</td>
+                                        <td>{{ $check->student->nick_name ?? 'null' }} /
+                                            {{ $check->student->full_name ?? 'null' }}</td>
+                                        <td>{{ $check->receiptSchool->submission_date ?? 'null' }}</td>
+                                        <td>{{ $check->receiptSchool->receipt_number ?? 'null' }}</td>
+                                        <td>{{ $check->school_price->period ?? 'null' }}</td>
+                                        <td>{{ $check->school_price->group ?? 'null' }}</td>
+                                        <td>{{ $check->date_check ?? 'null' }}</td>
+                                        <td>{{ $check->note ?? 'null' }}</td>
+                                        <td>{{ $check->user->name ?? 'null' }}</td>
                                     </tr>
                                 @endforeach
 
@@ -627,6 +634,8 @@
     @php
         // dd($totalForAllGroupYear);
     @endphp
+    @include('students.modal')
+
 @endsection
 
 @section('script')
@@ -701,97 +710,129 @@
             //         $(this).closest('tr').addClass('bg-success');
             //     }
             // });
-
+            let id;
+            let isChecked;
+            let checkbox;
             $('input[type="checkbox"]').change(function() {
-                var checkbox = $(this); // Store reference to the checkbox element
-
-                var isChecked = checkbox.is(":checked");
+                checkbox = $(this);
+                isChecked = checkbox.is(":checked");
+                id = checkbox.data('id');
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
                 var route = checkbox.data('route');
                 var input = checkbox.data('input');
                 var token = checkbox.data('token');
-                var id = checkbox.attr('id');
+                // var id = checkbox.attr('id');
                 var labelElement = checkbox.siblings('.label-text');
-                console.log(isChecked);
+                // showModal()
+                // console.log(id);
+                var note2 = $('#note2').val();
+                if (isChecked) {
+                    $.ajax({
+                        url: "getDataRec/" + id,
+                        method: 'GET',
+                        success: function(res) {
+                            // console.log(res);
+                            $('#EditModalBody').html(res.html);
+                            $('#EditModal').modal('show');
+                        }
+                    });
+
+                } else {
+                    $.ajax({
+                        url: '{{ route('saveCheck') }}',
+                        method: 'POST',
+                        data: {
+                            isChecked: isChecked,
+                            input: input,
+                            note: note2,
+                            _token: token
+                        },
+                        success: function(response) {
+
+                            labelElement.text(response.label);
+                            $('#note-' + id).text(response.note);
+
+                            if (isChecked) {
+                                checkbox.closest('tr').addClass('bg-success2');
+                            } else {
+                                checkbox.closest('tr').removeClass('bg-success2');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Request failed:', status, error);
+                        }
+                    });
+                }
+
+
+            });
+
+            $(document).on('click', '#SubmitEditForm', function(e) {
+                if (!confirm("Are you sure?")) return;
+                e.preventDefault();
+
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+                var route = checkbox.data('route');
+                var input = checkbox.data('input');
+                var token = checkbox.data('token');
+                var labelElement = checkbox.siblings('.label-text');
+                var note2 = $('#note2').val();
                 $.ajax({
                     url: '{{ route('saveCheck') }}',
                     method: 'POST',
                     data: {
                         isChecked: isChecked,
                         input: input,
+                        note: note2,
+                        // note: $('#note').val(),
                         _token: token // CSRF token
                     },
                     success: function(response) {
-                        console.log(response.isChecked);
-                        console.log('Request successful:', response.message);
-                        console.log('Request successful:', response.label);
+                        // console.log(response);
+                        $('#EditModal').modal('hide');
+
                         labelElement.text(response.label);
+                        $('#note-' + id).text(response.note);
                         if (isChecked) {
                             checkbox.closest('tr').addClass('bg-success2');
                         } else {
                             checkbox.closest('tr').removeClass('bg-success2');
                         }
-                        // $(this).closest('tr').addClass('bg-success2');
                     },
                     error: function(xhr, status, error) {
                         console.error('Request failed:', status, error);
                     }
                 });
+
             });
-
-            // if (isChecked) {
-            //         $(this).closest('tr').addClass('bg-success2');
-            //         var id = $(this).attr('id');
-
-            //         // Store the current date when the checkbox is checked
-            //         var currentDate = new Date().toLocaleDateString();
-            //         localStorage.setItem(id, currentDate);
-
-            //         // Update label text with the stored date
-            //         $(this).siblings('.label-text').text(currentDate);
-            //     } else {
-            //         $(this).closest('tr').removeClass('bg-success2');
-            //         var id = $(this).attr('id');
-            //         localStorage.setItem(id, '');
-
-            //         // Reset label text
-            //         $(this).siblings('.label-text').text("Date:");
-            //     }
-
-            // $('input[type="checkbox"]').each(function() {
-            //     var id = $(this).attr('id');
-            //     var storedDate = localStorage.getItem(id);
-
-            //     if (storedDate) {
-            //         $(this).prop('checked', true);
-            //         $(this).closest('tr').addClass('bg-success2');
-            //         // Update label text with stored date
-            //         $(this).siblings('.label-text').text(storedDate);
-            //     }
-            // });
-
             $.ajax({
                 url: '{{ route('fetchCheckboxStates') }}',
                 method: 'GET',
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
 
-                    $.each(response, function(id, date) {
-                        // Use isChecked to set the checkbox state
+                    $.each(response, function(index, item) {
+                        var id = item.school_price_id;
+                        var date = item.date_check;
+                        var note = item.note;
 
-                        $('#flexSwitchCheckChecked-' + id).prop('checked', id);
+                        $('#flexSwitchCheckChecked-' + id).prop('checked', true);
                         $('#label-check-' + id).text(date);
-                        // checkbox.closest('tr').addClass('bg-success2');
+                        $('#note-' + id).text(note);
                         $('#flexSwitchCheckChecked-' + id).closest('tr').addClass(
-                        'bg-success2');
-                        console.log(id, date);
-                        console.log('flexSwitchCheckChecked-' + id);
+                            'bg-success2');
                     });
                 },
                 error: function(xhr, status, error) {
                     console.error('Failed to fetch checkbox states:', error);
                 }
             });
-
         });
 
         function export_report() {

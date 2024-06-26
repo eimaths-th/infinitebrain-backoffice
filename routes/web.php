@@ -90,6 +90,7 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/searchr_reportMonthStd', [StdlogController::class, 'searchr_reportMonthStd'])->name('searchr_reportMonthStd');
     Route::get('/report-year-student', [StdlogController::class, 'reportYearStd'])->name('reportYearStd');
     Route::POST('/saveCheck', [CheckReportStdController::class, 'store'])->name('saveCheck');
+    Route::get('/getDataRec/{id}', [CheckReportStdController::class, 'DataRec'])->name('getDataRec');
     Route::get('/fetch-checkbox-states', [CheckReportStdController::class, 'fetchCheckboxStates'])->name('fetchCheckboxStates');
 
     // Route::get('/stdLog-search', [StdlogController::class, 'searchTestLog'])->name('stdlog.search');

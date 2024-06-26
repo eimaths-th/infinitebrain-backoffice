@@ -37,14 +37,14 @@
         }
 
         /* .switchery {
-                                                                                                                                                                                                                                                                                                                                                                        width: 30px;
-                                                                                                                                                                                                                                                                                                                                                                        height: 16px;
-                                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    width: 30px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    height: 16px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                }
 
-                                                                                                                                                                                                                                                                                                                                                                    .switchery-small {
-                                                                                                                                                                                                                                                                                                                                                                        width: 12px;
-                                                                                                                                                                                                                                                                                                                                                                        height: 12px;
-                                                                                                                                                                                                                                                                                                                                                                    } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                .switchery-small {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    width: 12px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    height: 12px;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                } */
     </style>
     <style>
         .bg-success2 {
@@ -253,7 +253,8 @@
                                                         $name = $subject->first()->title ?? 'Unknown';
                                                 }
                                             @endphp
-                                            <option value="{{ $subjectGroup }}" {{ $groupSubject === $subjectGroup ? 'selected' : '' }}>{{ $name }}
+                                            <option value="{{ $subjectGroup }}"
+                                                {{ $groupSubject === $subjectGroup ? 'selected' : '' }}>{{ $name }}
                                             </option>
                                         @endforeach
 
@@ -370,11 +371,13 @@
                                     <th>Submission Date</th>
                                     <th>Period</th>
                                     <th>Reciept Number</th>
+                                    <th>Subject</th>
                                     <th>Group</th>
                                     <th>Stutus</th>
                                     <th>Type</th>
                                     <th>total</th>
                                     <th>Check</th>
+                                    <th>Note</th>
                                 </tr>
                             </thead>
 
@@ -390,7 +393,6 @@
                                     @foreach ($groupedData as $key => $data)
                                         @php
                                             $class = '';
-
 
                                             $status = Statuslog::where('student_id', $data->std->id)
                                                 ->where('group', $data->group)
@@ -491,6 +493,7 @@
                                             <td>{{ $data->period ?? 'Null' }}</td>
 
                                             <td>{{ $data->rec_school->receipt_number ?? 'Null' }}</td>
+                                            <td>{{ $data->school_sub->title }}</td>
                                             <td>{{ $data->group }}</td>
 
                                             <td class="{{ $class }}">
@@ -523,13 +526,14 @@
                                                 <div class="form-check form-switch form-switch-sm">
                                                     <input class="form-check-input" type="checkbox"
                                                         id="flexSwitchCheckChecked-{{ $data->id }}"
-                                                        data-route="{{ $routeUrl }}"
+                                                        data-id="{{ $data->id }}" data-route="{{ $routeUrl }}"
                                                         data-token="{{ csrf_token() }}"
                                                         data-input='@json($routeParameters)'>
                                                     <label class="label-text" id="label-check-{{ $data->id }}"
                                                         for="">Date: </label>
                                                 </div>
                                             </td>
+                                            <td id="note-{{ $data->id }}"></td>
 
                                         </tr>
                                         @php
@@ -572,6 +576,7 @@
                                     <th>Period</th>
                                     <th>Group</th>
                                     <th>Check Date</th>
+                                    <th>Note</th>
                                     <th>User</th>
                                 </tr>
                             </thead>
@@ -588,6 +593,7 @@
                                         <td>{{ $check->school_price->period ?? 'null' }}</td>
                                         <td>{{ $check->school_price->group ?? 'null' }}</td>
                                         <td>{{ $check->date_check ?? 'null' }}</td>
+                                        <td>{{ $check->note ?? 'null' }}</td>
                                         <td>{{ $check->user->name ?? 'null' }}</td>
                                     </tr>
                                 @endforeach
@@ -655,6 +661,7 @@
         </div>
 
     </div>
+    @include('students.modal')
 @endsection
 
 @section('script')
@@ -704,97 +711,216 @@
                 lengthMenu: [-1],
             });
 
-            $('input[type="checkbox"]').change(function() {
-                var checkbox = $(this); // Store reference to the checkbox element
+            let id;
+            let isChecked;
+            let checkbox;
+            // function showModal() {
+            //     console.log('test');
+            //     $('.alert-danger').html('');
+            //     $('.alert-danger').hide();
+            //     $('.alert-success').html('');
+            //     $('.alert-success').hide();
 
-                var isChecked = checkbox.is(":checked");
+            //     id = $(this).data('id');
+            //     $.ajax({
+            //         url: "users/edit/" + id,
+            //         method: 'GET',
+            //         success: function(res) {
+            //             $('#EditModalBody').html(res.html);
+            //             $('#EditModal').modal('show');
+            //         }
+            //     });
+
+
+            // }
+
+            $('input[type="checkbox"]').change(function() {
+                checkbox = $(this);
+                isChecked = checkbox.is(":checked");
+                id = checkbox.data('id');
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
                 var route = checkbox.data('route');
                 var input = checkbox.data('input');
                 var token = checkbox.data('token');
-                var id = checkbox.attr('id');
+                // var id = checkbox.attr('id');
                 var labelElement = checkbox.siblings('.label-text');
-                // console.log(isChecked);
+                // showModal()
+                var note2 = $('#note2').val();
+                if (isChecked) {
+                    $.ajax({
+                        url: "getDataRec/" + id,
+                        method: 'GET',
+                        success: function(res) {
+                            console.log(res);
+                            $('#EditModalBody').html(res.html);
+                            $('#EditModal').modal('show');
+                        }
+                    });
+
+                } else {
+                    $.ajax({
+                        url: '{{ route('saveCheck') }}',
+                        method: 'POST',
+                        data: {
+                            isChecked: isChecked,
+                            input: input,
+                            note: note2,
+                            // note: $('#note').val(),
+                            _token: token // CSRF token
+                        },
+                        success: function(response) {
+
+                            labelElement.text(response.label);
+                            $('#note-' + id).text(response.note);
+
+                            if (isChecked) {
+                                checkbox.closest('tr').addClass('bg-success2');
+                            } else {
+                                checkbox.closest('tr').removeClass('bg-success2');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Request failed:', status, error);
+                        }
+                    });
+                }
+
+
+            });
+
+            $(document).on('click', '#SubmitEditForm', function(e) {
+                // if (!confirm("Are you sure?")) return;
+                e.preventDefault();
+
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+                var route = checkbox.data('route');
+                var input = checkbox.data('input');
+                var token = checkbox.data('token');
+                var labelElement = checkbox.siblings('.label-text');
+                var note2 = $('#note2').val();
                 $.ajax({
                     url: '{{ route('saveCheck') }}',
                     method: 'POST',
                     data: {
                         isChecked: isChecked,
                         input: input,
+                        note: note2,
+                        // note: $('#note').val(),
                         _token: token // CSRF token
                     },
                     success: function(response) {
-                        // console.log(response.isChecked);
-                        // console.log('Request successful:', response.message);
-                        // console.log('Request successful:', response.label);
+                        console.log(response);
+                        $('#EditModal').modal('hide');
+
                         labelElement.text(response.label);
+                        $('#note-' + id).text(response.note);
                         if (isChecked) {
                             checkbox.closest('tr').addClass('bg-success2');
                         } else {
                             checkbox.closest('tr').removeClass('bg-success2');
                         }
-                        // $(this).closest('tr').addClass('bg-success2');
                     },
                     error: function(xhr, status, error) {
                         console.error('Request failed:', status, error);
                     }
                 });
+
+
+                // $.ajax({
+                //     url: "users/save/" + id,
+                //     method: 'PUT',
+                //     data: {
+                //         name: $('#editName').val(),
+                //         password: $('#EditPassword').val(),
+                //         password_confirmation: $('#EditPasswordC').val(),
+                //         email: $('#editEmail').val(),
+                //         level: $('#editLevel').val(),
+                //     },
+
+                //     success: function(result) {
+                //         //console.log(result);
+                //         if (result.errors) {
+                //             $('.alert-danger').html('');
+                //             $.each(result.errors, function(key, value) {
+                //                 $('.alert-danger').show();
+                //                 $('.alert-danger').append('<strong><li>' + value +
+                //                     '</li></strong>');
+                //             });
+                //         } else {
+                //             $('.alert-danger').hide();
+                //             $('.alert-success').show();
+                //             $('.alert-success').append('<strong><li>' + result.success +
+                //                 '</li></strong>');
+                //             $('#Listview').DataTable().ajax.reload();
+                //             //setTimeout(function() {
+                //             //$('.alert-success').hide();
+                //             //   $('#EditModal').modal('hide');
+                //             //}, 10000);
+
+                //         }
+                //     }
+                // });
             });
-
-            // if (isChecked) {
-            //         $(this).closest('tr').addClass('bg-success2');
-            //         var id = $(this).attr('id');
-
-            //         // Store the current date when the checkbox is checked
-            //         var currentDate = new Date().toLocaleDateString();
-            //         localStorage.setItem(id, currentDate);
-
-            //         // Update label text with the stored date
-            //         $(this).siblings('.label-text').text(currentDate);
-            //     } else {
-            //         $(this).closest('tr').removeClass('bg-success2');
-            //         var id = $(this).attr('id');
-            //         localStorage.setItem(id, '');
-
-            //         // Reset label text
-            //         $(this).siblings('.label-text').text("Date:");
-            //     }
-
-            // $('input[type="checkbox"]').each(function() {
-            //     var id = $(this).attr('id');
-            //     var storedDate = localStorage.getItem(id);
-
-            //     if (storedDate) {
-            //         $(this).prop('checked', true);
-            //         $(this).closest('tr').addClass('bg-success2');
-            //         // Update label text with stored date
-            //         $(this).siblings('.label-text').text(storedDate);
-            //     }
-            // });
-
             $.ajax({
                 url: '{{ route('fetchCheckboxStates') }}',
                 method: 'GET',
                 success: function(response) {
                     // console.log(response);
 
-                    $.each(response, function(id, date) {
-                        // Use isChecked to set the checkbox state
+                    $.each(response, function(index, item) {
+                        var id = item.school_price_id;
+                        var date = item.date_check;
+                        var note = item.note;
 
-                        $('#flexSwitchCheckChecked-' + id).prop('checked', id);
+                        $('#flexSwitchCheckChecked-' + id).prop('checked', true);
                         $('#label-check-' + id).text(date);
-                        // checkbox.closest('tr').addClass('bg-success2');
+                        $('#note-' + id).text(note);
                         $('#flexSwitchCheckChecked-' + id).closest('tr').addClass(
-                            'bg-success2');
-                        // console.log(id, date);
-                        // console.log('flexSwitchCheckChecked-' + id);
+                        'bg-success2');
                     });
                 },
                 error: function(xhr, status, error) {
-                    // console.error('Failed to fetch checkbox states:', error);
+                    console.error('Failed to fetch checkbox states:', error);
                 }
             });
 
         });
+        // if (isChecked) {
+        //         $(this).closest('tr').addClass('bg-success2');
+        //         var id = $(this).attr('id');
+
+        //         // Store the current date when the checkbox is checked
+        //         var currentDate = new Date().toLocaleDateString();
+        //         localStorage.setItem(id, currentDate);
+
+        //         // Update label text with the stored date
+        //         $(this).siblings('.label-text').text(currentDate);
+        //     } else {
+        //         $(this).closest('tr').removeClass('bg-success2');
+        //         var id = $(this).attr('id');
+        //         localStorage.setItem(id, '');
+
+        //         // Reset label text
+        //         $(this).siblings('.label-text').text("Date:");
+        //     }
+
+        // $('input[type="checkbox"]').each(function() {
+        //     var id = $(this).attr('id');
+        //     var storedDate = localStorage.getItem(id);
+
+        //     if (storedDate) {
+        //         $(this).prop('checked', true);
+        //         $(this).closest('tr').addClass('bg-success2');
+        //         // Update label text with stored date
+        //         $(this).siblings('.label-text').text(storedDate);
+        //     }
+        // });
     </script>
 
 
