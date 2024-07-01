@@ -575,8 +575,8 @@
                                             850 baht
                                         </span>
                                     </p>
-                                    {{-- <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1250 bath</span><br></p> --}}
+                                    <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
+                                            style="color: #6351a2;">1250 baht</span><br></p>
                                     {{-- <p>
                                         <span style="color: #6351a2;">
                                             <b>เกณฑ์การรับสมัคร GELOSEA</b> <br>
