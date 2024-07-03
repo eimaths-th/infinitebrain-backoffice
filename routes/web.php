@@ -56,6 +56,7 @@ Route::post('/attendance/import', [AttendanceController::class, 'import']);
 
 Route::group(['middleware' => 'check.opening.date.time'], function () {
 
+    Route::get('/international-hope-cup-mathematic-invitational', [ReceiptFormController::class, 'ihcmi'])->name('ihcmi');
     Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
     Route::get('/olpcs', [ReceiptFormController::class, 'olpcs'])->name('olpcs');
     Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
@@ -152,7 +153,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('stdlog/create', [StdlogController::class, 'create'])->name('stdlog_create');
 
     //user
-
 
     Route::get('/users', [EmployeeController::class, 'index'])->name('users');
     Route::get('/users/create', [EmployeeController::class, 'create'])->name('users.create');

@@ -418,6 +418,12 @@
                                     China-Final
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '23']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    International hope
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>

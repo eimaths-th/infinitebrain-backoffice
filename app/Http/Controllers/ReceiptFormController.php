@@ -49,11 +49,16 @@ class ReceiptFormController extends Controller
         '20' => 'neos',
         '21' => 'neos-2',
         '22' => 'huaxiacup-final-round',
+        '23' => 'International hope up mathematic invitational',
     );
 
     public function gmec()
     {
         return view("receipt_form.gmec");
+    }
+    public function ihcmi()
+    {
+        return view("receipt_form.ihcmi");
     }
 
     public function olpcs()
@@ -134,31 +139,24 @@ class ReceiptFormController extends Controller
     }
 
     public function fileStore(Request $request)
-
     {
         // dd($request);
 
-        $validator =  Validator::make($request->all(), [
-            'file.*' => 'required|image',
+        $validator = Validator::make($request->all(), [
+            'file.*' => 'required', // max:10240 is 10 MB
+            // 'file.*' => 'required|mimes:jpeg,png,pdf,doc,docx|max:10240', // max:10240 is 10 MB
         ]);
 
-        // if ($validator->fails()) {
-        //     return response()->json(['errors' => $validator->errors()->all()]);
-        // }
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()->first()], 400);
+        }
         $filecount = count($request->file('file'));
-        //return response()->json(['success'=>$x]);
-        //print_r($request->file('file'));
-        //exit();
 
         $newname = "";
         for ($i = 0; $i <= ($filecount - 1); $i++) {
             $image = $request->file('file')[$i];
-            //print_r($image);
-            //exit();
             $imageName = $image->getClientOriginalName();
             $oldfile = FileUpload::where('oldname', $imageName)->get();
-
-
             if (!is_array($oldfile)) {
 
                 $newname = Str::random(40) . "_" . $imageName;
@@ -169,13 +167,7 @@ class ReceiptFormController extends Controller
                 $imageUpload->oldname = $imageName;
                 $imageUpload->save();
             }
-
-            //return response()->json(['success' => $newname]);
-
-            //test
-            //$newnamea[$i] = $newname;
         }
-        // dd($newname);
         return response()->json(['success' => $newname]);
     }
 
@@ -273,17 +265,15 @@ class ReceiptFormController extends Controller
             //sleep(2);
             $receipt = ReceiptForm::select(
                 "receipt_forms.id as receipt_id",
+                "receipt_forms.sfield as receipt_sfield",
                 "receipt_forms.submission_date as receipt_submission_date",
                 "receipt_forms.first_name as receipt_firstname",
                 "receipt_forms.last_name as receipt_lastname",
                 "receipt_forms.name_parent as receipt_parent_name",
                 "receipt_forms.mobile as receipt_mobile",
                 "receipt_forms.generate as receipt_generate",
+                "receipt_forms.photo_att as file",
             )
-                //->join("students", "students.id", "=", "receipts.student_id")
-                //->join("subjects", "subjects.id", "=", "receipts.subject_id")
-                //->join("levels", "levels.id", "=", "receipts.level_id")
-
                 ->where('receipt_forms.sfield', $request->sfield)
                 ->orderBy("receipt_forms.id", "desc")
                 ->get();
@@ -293,10 +283,10 @@ class ReceiptFormController extends Controller
                 /* ->editColumn('student_name', function (Receipt $receipt) {
                     return $receipt->student_name . ' ' . $receipt->student_lastname;
                 })*/
-
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->receipt_id . '" class="flat" name="table_records[]" value="' . $row->receipt_id . '" >';
                 })
+
                 ->addColumn('receipt_status', function ($row) {
                     if ($row->receipt_generate == 0) {
                         $html = '<i class="text-danger fa fa-edit"></i> ยังไม่ได้ออกใบเสร็จ ';
@@ -306,19 +296,37 @@ class ReceiptFormController extends Controller
                     return $html;
                 })
                 ->addColumn('action', function ($row) {
+                    $html = '';
+                    if ($row->receipt_sfield == '23' && $row->file) {
+                        $files = explode('|', $row->file);
 
+                        foreach ($files as $file) {
+                            if (!empty($file)) {
+                                $filePath = public_path('receipt_form_images/' . $file);
+
+                                if (file_exists($filePath)) {
+                                    $html .= '<a href="' . asset('receipt_form_images/' . $file) . '" class="btn btn-xs btn-info btn-edit"><i class="fa fa-download"></i> Download file</a> ';
+                                } else {
+                                    $html .= '<p class="text-danger">File ' . htmlspecialchars($file) . ' does not exist.</p>';
+                                }
+                            }
+                        }
+                    }
                     if ($row->receipt_generate == 0) {
-                        $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Generate Receipt</a> ';
+                        // $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Generate Receipt</a> ';
                         $html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     } else {
-                        $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Edit</a> ';
+                        // $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Edit</a> ';
                         $html .= '<a href="#" onclick="toastr.success(\'ออก Receive แล้วไม่สามารถลบได้\', {
                             timeOut: 5000
                         });" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</a>';
                     }
+
+
                     return $html;
                 })->rawColumns(['checkbox', 'receipt_status', 'action'])->toJson();
         }
+
 
         //get subject
         //$subject = Subject::orderBy("id", "asc")->get();
@@ -391,7 +399,7 @@ class ReceiptFormController extends Controller
         $form = ReceiptForm::find($id);
 
         if ($request->get('sfield') === "17") {
-            # code...
+
             $adminEmail = $request->get('email');
             Mail::to($adminEmail)->send(new ContactMail($form));
         }
@@ -548,7 +556,7 @@ class ReceiptFormController extends Controller
             } else {
                 if (str_contains($request->get('description'), 'tutoring')) {
                     $sdes = 'สมัครสอบรวมติว';
-                } elseif ($request->get('sfield') == 10 ) {
+                } elseif ($request->get('sfield') == 10) {
                     # code...
                     $sdes = '';
                 } else {
@@ -580,7 +588,6 @@ class ReceiptFormController extends Controller
     public function store(Request $request)
     {
         //
-        // dd($request);
         if ($request->get('sfield') == '17') {
             # code...
             $validator =  Validator::make($request->all(), [
@@ -598,6 +605,24 @@ class ReceiptFormController extends Controller
                 'phone' => 'required|string',
                 'email' => 'required|email',
                 // 'newsf' => 'required|string',
+            ]);
+        } elseif ($request->get('sfield') == '23') {
+            # code...
+            $validator =  Validator::make($request->all(), [
+                // 'firstname' => 'required|string',
+                'firstname' => 'required|string',
+                'lastname' => 'required|string',
+                'nickname' => 'required|string',
+                'birthdate' => 'required|string',
+                'schoolname' => 'required|string',
+                'grade' => 'required|string',
+                'address' => 'required|string',
+                'postcode' => 'required|string',
+                'phone' => 'required|string',
+                'email' => 'required|email',
+                'package' => 'required|string',
+                'newsf' => 'required|string',
+
             ]);
         } else {
             # code...
@@ -619,24 +644,17 @@ class ReceiptFormController extends Controller
             ]);
         }
 
-
         if ($validator->fails()) {
             //return response()->json(['errors' => $validator->errors()->all()]);
             return back()->withErrors(['errors' => $validator->errors()->all()]);
         }
-
-        //print_r($filesa);
-        //print_r($filesb);
-        //exit();
+        // dd($request);
 
         if ($request->get('sfield') == '17') {
-
             $filesa = $request->get('imgFiles');
+            $filesb = $request->get('imgFiles2');
 
             $fileas = "";
-
-
-            $filesb = $request->get('imgFiles2');
             $filebs = "";
             foreach ($filesb as $fileb) {
                 //echo $fileb;
@@ -655,34 +673,27 @@ class ReceiptFormController extends Controller
                 //echo $filea;
                 $oldfile = FileUpload::where('oldname', $filea)->get();
                 $fileas .= $oldfile[0]->filename . "|";
-
-                // $sourcePath = public_path() . '/form_images/' . $oldfile[0]->filename;
-                // $destinationPath = public_path() . '/receipt_form_images/' . $oldfile[0]->filename;
-
-                // if (file_exists($sourcePath)) {
-                //     // Continue with the rename operation
-                //     dd('true',$sourcePath);
-                // } else {
-                //     echo 'Source file does not exist.';
                 // }
                 File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
 
                 FileUpload::where('filename', $oldfile[0]->filename)->delete();
             }
-            $fileas = rtrim($fileas, "|");
-
-
-            $filesb = $request->get('imgFiles2');
-            $filebs = "";
-            foreach ($filesb as $fileb) {
-                //echo $fileb;
-
-                $oldfile = FileUpload::where('oldname', $fileb)->get();
-                $filebs .= $oldfile[0]->filename . "|";
-                File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
-                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            if ($request->get('sfield') == '23') {
+                # code...
+                $filebs = '';
+            } else {
+                $fileas = rtrim($fileas, "|");
+                $filesb = $request->get('imgFiles2');
+                $filebs = "";
+                foreach ($filesb as $fileb) {
+                    //echo $fileb;
+                    $oldfile = FileUpload::where('oldname', $fileb)->get();
+                    $filebs .= $oldfile[0]->filename . "|";
+                    File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+                    FileUpload::where('filename', $oldfile[0]->filename)->delete();
+                }
+                $filebs = rtrim($filebs, "|");
             }
-            $filebs = rtrim($filebs, "|");
         }
 
         if ($request->get('sfield') == 22) {
