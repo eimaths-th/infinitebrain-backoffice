@@ -54,6 +54,7 @@ use App\Http\Controllers\TestController;
 Route::get('/home3', [HomeController::class, 'home3']);
 Route::post('/attendance/import', [AttendanceController::class, 'import']);
 
+
 Route::group(['middleware' => 'check.opening.date.time'], function () {
 
     Route::get('/international-hope-cup-mathematic-invitational', [ReceiptFormController::class, 'ihcmi'])->name('ihcmi');
@@ -313,9 +314,7 @@ Route::group(array('domain' => 'form.infinitebrain.co.th'), function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 });
 
-Route::group(array('domain' => 'school.infinitebrain.co.th'), function () {
-    Route::get('/', [App\Http\Controllers\SchoolController::class, 'index']);
-});
+
 
 //Route::get('/', [EmployeeController::class, 'index']);
 
@@ -381,6 +380,10 @@ Route::get('/login/parent/logout', [LoginController::class, 'ParentsignOut'])->n
 // Route::view('/home', 'home')->middleware('auth');
 ////Route::view('/parent', 'parent')->middleware('auth');
 Route::get('/parent', [SchoolController::class, 'index'])->name('parent');
+Route::group(array('domain' => 'school.infinitebrain.co.th'), function () {
+    Route::get('/', [App\Http\Controllers\SchoolController::class, 'index']);
+});
+
 Route::post('/parent/save', [SchoolController::class, 'update'])->name('parent.save');
 Route::post('/parent/saveparent', [SchoolController::class, 'updateParent'])->name('parent.saveparent');
 
@@ -394,8 +397,6 @@ Route::post('/comment/upload', [CommentController::class, 'fileStore'])->name('c
 Route::post('/comment/upload/delete', [CommentController::class, 'fileDestroy'])->name('comment.delete');
 Route::delete('/comment/destroy/{id}', [CommentController::class, 'destroy'])->name('comment.destroy');
 Route::delete('/comment/destroy_all', [CommentController::class, 'destroy_all'])->name('comment.destroy_all');
-
-
 
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
 Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');

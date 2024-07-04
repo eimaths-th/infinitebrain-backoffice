@@ -40,8 +40,6 @@ class SchoolController extends Controller
 
         $parent = ParentRegister::find($id);
 
-
-
         $parent_html = '<div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
             <div class="col-md-4 border-right">
@@ -109,10 +107,11 @@ class SchoolController extends Controller
                             class="btn btn-primary profile-button"
                             type="submit">บันทึกข้อมูล</button></div>
                 </div>
+                </div>
+                </div>
             </div>
-        </div>
-    </div>
-            ';
+        ';
+
         $course_html = '';
         $student_html = "";
         $student = Student::where('pid', $id)
@@ -121,18 +120,14 @@ class SchoolController extends Controller
 
         $i = 1;
 
-
         $std_check = count($student);
-
 
         if ($std_check < 1) {
             // echo 'แตก1';
-
             $student_html = 'ไม่พบ ! ข้อมูลนักเรียน';
             $histories_html = 'ไม่พบ ! ประวัติการเรียน';
             $comment_html = 'ไม่พบ ! ความคิดเห็น';
             $course_html = [];
-
 
             return view('register.home')->with(['parent_html' =>  $parent_html])
                 ->with(['student_html' =>  $student_html])
@@ -140,8 +135,6 @@ class SchoolController extends Controller
                 ->with(['comment_html' =>  $comment_html])
                 ->with(['student_chart' =>  $course_html]);
         }
-
-
 
         // dd($student,$std_check);
 
@@ -158,7 +151,6 @@ class SchoolController extends Controller
                     $select_grade .= '<option value="' . $key_grade . '" >' . $value_grade . '</option>';
                 }
             }
-
 
             $select_sex = "";
             $sex = array("Male" => "Male", "Female" => "Female");
@@ -185,12 +177,10 @@ class SchoolController extends Controller
                 $class = 'info';
             }
 
-
             //detail std
             $stdId = $stu_result->id;
 
             // $rec = Receipt_School::whereRaw("FIND_IN_SET($stdId, REPLACE(pid, '|', ','))")->get();
-
             // dd($rec);
             $startcourse = null;
 
