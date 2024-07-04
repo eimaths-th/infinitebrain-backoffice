@@ -49,7 +49,7 @@ class ReceiptFormController extends Controller
         '20' => 'neos',
         '21' => 'neos-2',
         '22' => 'huaxiacup-final-round',
-        '23' => 'International hope up mathematic invitational',
+        '23' => 'international-hope-cup-mathematic-invitational',
     );
 
     public function gmec()
