@@ -547,7 +547,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h4 class="card-title form_header">International hope up mathematic invitational</h4>
+                                <h4 class="card-title form_header">International hope cup  mathematic invitational</h4>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -556,7 +556,7 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">International hope up mathematic
+                                                    style="text-decoration: underline;">International hope cup  mathematic
                                                     invitational Registration
                                                     Form</span></strong></span></p>
 
