@@ -244,7 +244,7 @@
                                                                         } elseif ($data->sfield == '22') {
                                                                             $message = 'China Mathematical Olympiad Final Round';
                                                                         } elseif ($data->sfield == '23') {
-                                                                            $message = 'International hope up mathematic invitational';
+                                                                            $message = 'International hope cup mathematic invitational';
                                                                         }
                                                                         ?>
                                                                         {{ $message }}</span>
@@ -2413,7 +2413,7 @@
                                                                                 } elseif ($data->sfield == '22') {
                                                                                     $message1 = 'China Mathematical Olympiad Final Round';
                                                                                 } elseif ($data->sfield == '23') {
-                                                                                    $message1 = 'International hope up mathematic invitational';
+                                                                                    $message1 = 'International hope cup mathematic invitational';
                                                                                 }
                                                                                 ?>
                                                                                 สอบ {{ $message1 }}
