@@ -297,6 +297,7 @@ class ReceiptFormController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $html = '';
+
                     if ($row->receipt_sfield == '23' && $row->file) {
                         $files = explode('|', $row->file);
 
@@ -312,16 +313,29 @@ class ReceiptFormController extends Controller
                             }
                         }
                     }
+
                     if ($row->receipt_generate == 0) {
-                        // $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Generate Receipt</a> ';
+
+                        if ($row->receipt_sfield == '23') {
+                            # code...
+                        } else {
+                            # code...
+                            $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Generate Receipt</a> ';
+                        }
+
                         $html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     } else {
-                        // $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Edit</a> ';
+
+                        if ($row->receipt_sfield == '23') {
+                            # code...
+                        } else {
+                            # code...
+                            $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Edit</a> ';
+                        }
                         $html .= '<a href="#" onclick="toastr.success(\'ออก Receive แล้วไม่สามารถลบได้\', {
                             timeOut: 5000
                         });" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</a>';
                     }
-
 
                     return $html;
                 })->rawColumns(['checkbox', 'receipt_status', 'action'])->toJson();

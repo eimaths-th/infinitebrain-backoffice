@@ -727,8 +727,6 @@
                                                 name="grade" data-component="dropdown" aria-label="Grade / ระดับชั้น"
                                                 required>
                                                 <option value="">Please Select</option>
-                                                <option value="Kindergarten">Kindergarten</option>
-                                                <option value="Grade 1">Grade 1</option>
                                                 <option value="Grade 2">Grade 2</option>
                                                 <option value="Grade 3">Grade 3</option>
                                                 <option value="Grade 4">Grade 4</option>
@@ -867,7 +865,7 @@
                                         <a id="dphoto"></a>
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="photo">อัพโหลดรูปภาพผู้สมัคร <span class="form-required">*</span>
+                                                for="photo">อัพโหลดไฟล์รางวัลคณิตศาสตร์ <span class="form-required">*</span>
                                                 <div style="width: 280px"></div>
                                             </label>
                                             <input type="text" id="drop1" name="drop1"
@@ -878,7 +876,7 @@
                                                 </div>
                                             </div>
                                             <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Photo</label>
+                                                aria-hidden="false">.doc/ .pdf/ .png/ .jpeg/</label>
                                             <div id="dropzone-photo-error" class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
                                                     height="10">
