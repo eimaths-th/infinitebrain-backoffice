@@ -985,23 +985,41 @@ class ReceiptFormController extends Controller
     public function destroy_func($id)
     {
         //
-        $oldfile = ReceiptForm::where('id', $id)->get();
-        if ($oldfile[0]->generate == 0) {
-            $arrl = explode('|', $oldfile[0]->photo_att);
-            for ($i = 0; $i <= count($arrl) - 1; $i++) {
+        // dd($id);
+
+        $oldfile = ReceiptForm::find($id);
+        // dd($oldfile);
+
+        if ($oldfile->generate == 0) {
+            $arrl = explode('|', $oldfile->photo_att);
+            for ($i = 0; $i < count($arrl); $i++) {
                 $path = public_path() . '/receipt_form_images/' . $arrl[$i];
+                // echo "Attempting to delete: $path\n"; // Debug output
+
                 if (file_exists($path)) {
-                    unlink($path);
+                    if (!is_dir($path)) {
+                        unlink($path);
+                        // echo "Deleted: $path\n"; // Debug output
+                    } else {
+                        // echo "Skipping directory: $path\n"; // Debug output
+                    }
+                } else {
+                    // echo "File does not exist: $path\n"; // Debug output
+                }
+            }
+            if ($oldfile->sfield === '23') {
+                # code...
+            } else {
+                # code...
+                $arrb = explode('|', $oldfile->file_att);
+                for ($j = 0; $j <= count($arrb) - 1; $j++) {
+                    $path = public_path() . '/receipt_form_images/' . $arrb[$j];
+                    if (file_exists($path)) {
+                        unlink($path);
+                    }
                 }
             }
 
-            $arrb = explode('|', $oldfile[0]->file_att);
-            for ($j = 0; $j <= count($arrb) - 1; $j++) {
-                $path = public_path() . '/receipt_form_images/' . $arrb[$j];
-                if (file_exists($path)) {
-                    unlink($path);
-                }
-            }
             //print_r($oldfile);
 
             ReceiptForm::where('id', $id)->delete();
@@ -1011,6 +1029,7 @@ class ReceiptFormController extends Controller
     public function destroy($id)
     {
         //
+        // dd($id);
         $this->check_permission();
         $this->destroy_func($id);
         return ['success' => true, 'message' => 'Deleted Successfully'];
