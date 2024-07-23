@@ -424,6 +424,12 @@
                                     International hope
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '24']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    International STEM
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -554,6 +560,12 @@
                                 <a href="{{ route('receipts', ['sfield' => '22']) }}">
                                     <i class="metismenu-icon"></i>
                                     China-Final
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '24']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    International STEM
                                 </a>
                             </li>
 

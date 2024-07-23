@@ -50,8 +50,13 @@ class ReceiptFormController extends Controller
         '21' => 'neos-2',
         '22' => 'huaxiacup-final-round',
         '23' => 'ihcmi',
+        '24' => 'isc',
     );
 
+    public function isc()
+    {
+        return view("receipt_form.isc");
+    }
     public function gmec()
     {
         return view("receipt_form.gmec");
@@ -555,7 +560,7 @@ class ReceiptFormController extends Controller
                 $sdes = 'ค่าลงทะเบียนระดับมัธยม';
             }
         } else {
-            if ($request->get('sfield') == 16 || $request->get('sfield') == 17) {
+            if ($request->get('sfield') == 16 || $request->get('sfield') == 17|| $request->get('sfield') == 24) {
                 $sdes = '';
             } elseif ($request->get('sfield') == 18 || $request->get('sfield') == 19) {
 

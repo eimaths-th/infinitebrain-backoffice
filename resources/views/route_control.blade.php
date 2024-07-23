@@ -79,7 +79,8 @@
                         <option value="neos-2">neo-science-school</option>
                         <option value="huaxiacup-final-round">China-Mathematical-Olympiad-Final</option>
                         <option value="ihcmi">international-hope-cup-mathematic-invitational</option>
-                        
+                        <option value="isc">International STEM competitions</option>
+
                     </select>
 
                 </div>

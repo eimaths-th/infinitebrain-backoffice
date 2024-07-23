@@ -50,6 +50,7 @@ class ReceiptController extends Controller
         '20' => 'Neo science',
         '21' => 'Neo science',
         '22' => 'chai-Final',
+        '24' => 'isc',
 
 
 
@@ -75,6 +76,7 @@ class ReceiptController extends Controller
         '20' => 'neos',
         '21' => 'neos-2',
         '22' => 'chai-Final',
+        '24' => 'isc',
 
     );
     const thmonth = array(

@@ -246,6 +246,9 @@
                                                                         } elseif ($data->sfield == '23') {
                                                                             $message = 'International Hope cup mathematic invitational';
                                                                         }
+                                                                         elseif ($data->sfield == '24') {
+                                                                            $message = 'International STEM Competitions 2024';
+                                                                        }
                                                                         ?>
                                                                         {{ $message }}</span>
                                                                 </h2>
@@ -2414,6 +2417,9 @@
                                                                                     $message1 = 'China Mathematical Olympiad Final Round';
                                                                                 } elseif ($data->sfield == '23') {
                                                                                     $message1 = 'International Hope cup mathematic invitational';
+                                                                                }
+                                                                                elseif ($data->sfield == '24') {
+                                                                                    $message1 = 'International STEM Competitions 2024';
                                                                                 }
                                                                                 ?>
                                                                                 สอบ {{ $message1 }}
