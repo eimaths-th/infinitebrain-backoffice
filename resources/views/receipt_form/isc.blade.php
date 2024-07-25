@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                            background-size: 15px;
-                                                                        }*/
+                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                    background-size: 15px;
+                                                                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                        input:not(:focus):not(:placeholder-shown):invalid {
-                                                                            border-color: var(--color-invalid);
-                                                                        }*/
+                                                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                    border-color: var(--color-invalid);
+                                                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                            display: block;
-                                                                        }*/
+                                                                                    display: block;
+                                                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -548,7 +548,8 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h2 class="card-title form_header">International STEM Competitions 2024 Registration Form</h2>
+                                <h2 class="card-title form_header">International STEM Competitions 2024 Registration Form
+                                </h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -557,11 +558,13 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">International STEM Competitions 2024 Registration
+                                                    style="text-decoration: underline;">International STEM Competitions 2024
+                                                    Registration
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong>  วันนี้ - 25 สิงหาคม 2567</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;วันอาทิตย์ที่ 31 สิงหาคม 2567</span>
+                                                Date:</strong> วันนี้ - 25 สิงหาคม 2567</span></p>
+                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;วันอาทิตย์ที่ 31
+                                            สิงหาคม 2567</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -775,7 +778,7 @@
                                                 name="grade" data-component="dropdown" aria-label="Grade / ระดับชั้น"
                                                 required>
                                                 <option value="">Please Select</option>
-                                                <option value="Kindergarten">Kindergarten</option>
+                                                {{-- <option value="Kindergarten">Kindergarten</option> --}}
                                                 <option value="Grade 1">Grade 1</option>
                                                 <option value="Grade 2">Grade 2</option>
                                                 <option value="Grade 3">Grade 3</option>
@@ -815,8 +818,21 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Grade I-IIX: 650 baht">Grade1-8 (คณิต+วิทย์ 650 บาท)</option>
+                                                <option value="Grade I-IIX: 650 baht">Grade1-8 (คณิต+วิทย์ 650 บาท)
+                                                </option>
+                                                <option value="Grade IX-XII:คณิต+เคมี 650 bath">Grade 9-12 (คณิต+เคมี)
+                                                </option>
+                                                <option value="Grade IX-XII:คณิต+ชีวะ 650 bath">Grade 9-12 (คณิต+ชีวะ)
+                                                </option>
+                                                <option value="Grade IX-XII:คณิต+ฟิสิกต์ 650 bath">Grade 9-12 (คณิต+ฟิสิกต์)</option>
+                                                <option value="Grade IX-XII:เคมี+ชีวะ 650 bath">Grade 9-12 (เคมี+ชีวะ)</option>
+                                                <option value="Grade IX-XII:เคมี+ฟิสิกต์ 650 bath">Grade 9-12 (เคมี+ฟิสิกต์)</option>
+                                                <option value="Grade IX-XII:ชีวะ+ฟิสิกต์ 650 bath">Grade 9-12 (ชีวะ+ฟิสิกต์)</option>
+
+                                                {{--
                                                 <option value="Grade IX-XII: 650 bath">Grade 9-12 (เลือกได้ 2 วิชา จาก คณิต/เคมี/ชีวะ/ฟิสิกต์ 650 บาท)</option>
+                                                <option value="Grade IX-XII: 650 bath">Grade 9-12 (เลือกได้ 2 วิชา จาก คณิต/เคมี/ชีวะ/ฟิสิกต์ 650 บาท)</option>
+                                                --}}
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Packages</label>
@@ -1048,8 +1064,8 @@
                                     <div class="col-md-6 ">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="newsf">ท่านทราบข่าวสารการจัดสอบ International STEM Competitions จากช่องทางใด <span
-                                                    class="form-required">*</span></label>
+                                                for="newsf">ท่านทราบข่าวสารการจัดสอบ International STEM Competitions
+                                                จากช่องทางใด <span class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="newsf" id="newsf"
                                                 value="" maxlength="50" required>
                                             <label class="form-sub-label" style="min-height:13px"
