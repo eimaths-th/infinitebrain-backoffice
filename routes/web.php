@@ -36,6 +36,7 @@ use App\Http\Controllers\WorktimelogsController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BonusStudentController;
 use App\Http\Controllers\CheckReportStdController;
+use App\Http\Controllers\LottoController;
 use App\Http\Controllers\TestController;
 
 // use App\Http\Controllers\RouteToggleController;
@@ -236,6 +237,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/course/store', [CourseController::class, 'store'])->name('course.store');
     Route::delete('/course/destroy/{id}', [CourseController::class, 'destroy'])->name('course.destroy');
     Route::delete('/course/destroy_all', [CourseController::class, 'destroy_all'])->name('course.destroy_all');
+
+    //lotto
+    Route::get('/lotto-main', [LottoController::class, 'index'])->name('lotto.main');
+    Route::post('/lotto-store', [LottoController::class, 'store'])->name('lotto.store');
+    Route::get('/lotto-income', [LottoController::class, 'income'])->name('lotto.income');
+    Route::get('/lotto-result', [LottoController::class, 'result'])->name('lotto.result');
+    Route::post('/lotto-addresult', [LottoController::class, 'addresult'])->name('lotto.addresult');
+    Route::get('/lotto-report', [LottoController::class, 'report'])->name('lotto.report');
+
 
     //reciept
 
