@@ -548,7 +548,8 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h2 class="card-title form_header">International STEM Competitions 2024 Registration Form
+                                <h2 class="card-title form_header">
+                                    International STEM Competitions 2024 Registration Form
                                 </h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
@@ -563,7 +564,7 @@
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
                                                 Date:</strong> วันนี้ - 25 สิงหาคม 2567</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;วันอาทิตย์ที่ 31
+                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;วันเสาร์ที่ 31
                                             สิงหาคม 2567</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April

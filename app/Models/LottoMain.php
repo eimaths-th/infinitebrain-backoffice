@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $length
  * @property string $type
  * @property string $max
+ * @property string $remain
  * @property string $date
  * @property string $created_at
  * @property string $updated_at
@@ -26,5 +27,5 @@ class LottoMain extends Model
     /**
      * @var array
      */
-    protected $fillable = ['numbers', 'length', 'type', 'max', 'date', 'created_at', 'updated_at'];
+    protected $fillable = ['numbers', 'length', 'type', 'max','remain', 'date', 'created_at', 'updated_at'];
 }

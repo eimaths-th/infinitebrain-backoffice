@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property string $name
  * @property string $3numbers
+ * @property string $type
+ * @property string $status
  * @property string $value
+ * @property string $remain
  * @property string $created_at
  * @property string $updated_at
  */
@@ -16,7 +19,7 @@ class LottoRecord extends Model
 {
     /**
      * The table associated with the model.
-     * 
+     *
      * @var string
      */
     protected $table = 'lotto_record';
@@ -24,5 +27,5 @@ class LottoRecord extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', '3numbers', 'value', 'created_at', 'updated_at'];
+    protected $fillable = ['name', '3numbers','type', 'value','status','remain', 'created_at', 'updated_at'];
 }

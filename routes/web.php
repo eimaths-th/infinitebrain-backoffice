@@ -242,6 +242,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/lotto-main', [LottoController::class, 'index'])->name('lotto.main');
     Route::post('/lotto-store', [LottoController::class, 'store'])->name('lotto.store');
     Route::get('/lotto-income', [LottoController::class, 'income'])->name('lotto.income');
+    Route::get('/lotto-income-create', [LottoController::class, 'income_create'])->name('lotto.income.create');
+    Route::post('/lotto-income-store', [LottoController::class, 'income_store'])->name('lotto.income.store');
+    Route::post('/lotto-income-store-all', [LottoController::class, 'income_storeAll'])->name('lotto.income.store-all');
     Route::get('/lotto-result', [LottoController::class, 'result'])->name('lotto.result');
     Route::post('/lotto-addresult', [LottoController::class, 'addresult'])->name('lotto.addresult');
     Route::get('/lotto-report', [LottoController::class, 'report'])->name('lotto.report');

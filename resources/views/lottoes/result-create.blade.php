@@ -24,32 +24,31 @@
                         </div>
                         <div class="form-group">
                             <label for="Name">date:</label>
-                            <input type="text" class="form-control" name="date" required autocomplete="date"
-                                id="AddDate" value="">
+                            <input type="text" class="form-control" name="date" required autocomplete="off"  id="AddDate2">
                         </div>
                         <div class="form-group">
                             <label for="1st">1st:</label>
-                            <input type="text" class="form-control number" name="1st" id="add1st" maxlength="3" value="" pattern="\d*" title="Please enter only numbers">
+                            <input type="text" class="form-control numeric-only" name="1st" id="add1st" maxlength="6" value="" pattern="\d*" title="Please enter only numbers">
                         </div>
                         <div class="form-group">
                             <label for="3front_1">3front_1:</label>
-                            <input type="text" class="form-control" name="3front_1" id="add3front_1" value="">
+                            <input type="text" class="form-control numeric-only" maxlength="3" pattern="\d*" name="3front_1" id="add3front_1"   value="">
                         </div>
                         <div class="form-group">
                             <label for="3front_2">3front_2:</label>
-                            <input type="text" class="form-control" name="3front_2" id="add3front_2" value="">
+                            <input type="text" class="form-control numeric-only" maxlength="3" pattern="\d*" name="3front_2" id="add3front_2" value="">
                         </div>
                         <div class="form-group">
                             <label for="3back_1">3back_1:</label>
-                            <input type="text" class="form-control" name="3back_1" id="add3back_1" value="">
+                            <input type="text" class="form-control numeric-only" maxlength="3" pattern="\d*" name="3back_1" id="add3back_1" value="">
                         </div>
                         <div class="form-group">
                             <label for="3back_2">3back_2:</label>
-                            <input type="text" class="form-control" name="3back_2" id="add3back_2" value="">
+                            <input type="text" class="form-control numeric-only" maxlength="3" pattern="\d*" name="3back_2" id="add3back_2" value="">
                         </div>
                         <div class="form-group">
                             <label for="2numbers">2numbers:</label>
-                            <input type="text" class="form-control" name="2numbers" id="add2numbers" value="">
+                            <input type="text" class="form-control numeric-only" maxlength="2" pattern="\d*" name="2numbers" id="add2numbers" value="">
                         </div>
 
 
@@ -63,7 +62,7 @@
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="SubmitCreateForm">Save</button>
+                        <button type="button" class="btn btn-success" id="SubmitCreateForm2">Save</button>
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>

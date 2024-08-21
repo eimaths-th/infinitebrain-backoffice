@@ -46,10 +46,12 @@
                             <tr>
                                 {{-- <th width="10px"><input type="checkbox" id="check-all" class="flat"></th> --}}
                                 <th width="1%">No</th>
+                                <th>Date</th>
                                 <th>Numbers</th>
                                 <th>Length</th>
                                 <th>Type</th>
                                 <th>Max</th>
+                                <th>Remain</th>
                                 <th  width="1%" class="text-nowrap">Action</th>
                             </tr>
                         </thead>
