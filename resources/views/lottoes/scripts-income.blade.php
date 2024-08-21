@@ -8,7 +8,7 @@
                     this.value = this.value.replace(/[^0-9]/g, '');
                 });
             });
-            
+
             var table = $('#Listview3').DataTable({
                 ajax: '', // Provide the correct route or URL
                 serverSide: true,
@@ -183,7 +183,6 @@
                     data: data,
                     success: function(response) {
                         console.log(response);
-
                         $(`#status-${index}`).text(response.status);
                         $(`#remain-${index}`).text(response.remain);
                         $(`#note-${index}`).text(response.note);
@@ -196,7 +195,7 @@
             });
 
 
-            $('#submitBtn-all').click(function() {
+            $('#all-submitBtn').click(function() {
                 let allData = [];
 
                 for (let index = 0; index < numberOfItem; index++) {
@@ -220,6 +219,8 @@
                     },
                     success: function(response) {
                         // Handle success (e.g., update all status columns)
+                        console.log(response.results);
+
                         for (let index = 0; index < numberOfItem; index++) {
                             $(`#status-${index}`).text('Submitted');
                         }

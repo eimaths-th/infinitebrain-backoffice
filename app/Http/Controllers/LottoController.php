@@ -178,7 +178,6 @@ class LottoController extends Controller
             ]);
         }
 
-        // Get the maximum value of the 'max' field
         $max = $check_main->max('remain');
         $income_remain = (int) $max - (int) $income_value;
         $remain_lotto = 0;
@@ -186,7 +185,6 @@ class LottoController extends Controller
         $income_remain_out = 0;
         $status = '';
 
-        // Update the 'remain' field based on the remaining value
         foreach ($check_main as $item) {
             if ($item->remain > 0) {
                 # code...
@@ -227,8 +225,87 @@ class LottoController extends Controller
     {
         //'
 
-        dd($request->all());
+        // dd($request->all());
+        $rows = $request['rows'];
+        $results = [];
+        foreach ($rows as $key => $row) {
+            // dd($row);
+
+            $name = $row['name'];
+            $income_numbers = $row['numbers'];
+            $income_type = $row['type'];
+            $income_value = $row['value'];
+            $income_length = strlen($income_numbers);
+            $note = '';
+            $status = '';
+            $remain_lotto = 0;
+            $income_remain_out = 0;
+            $success = null;
+
+            $sorted_income_numbers = implode('', collect(str_split($income_numbers))->sort()->toArray());
+
+            $check_main = LottoMain::where('type', $income_type)
+                ->where('length', $income_length)
+                ->get()
+                ->filter(function ($item) use ($sorted_income_numbers) {
+
+                    $sorted_numbers_in_db = implode('', collect(str_split($item->numbers))->sort()->toArray());
+                    return $sorted_income_numbers === $sorted_numbers_in_db;
+                });
+            if ($check_main->isEmpty()) {
+                $success = false;
+                $status = 'Error';
+                $note = 'ไม่พบหมายเลขนี้';
+            }
+
+            $max = $check_main->max('remain');
+            $income_remain = (int) $max - (int) $income_value;
+
+            foreach ($check_main as $item) {
+                if ($item->remain > 0) {
+                    # code...
+                    if ($income_remain > 0) {
+                        $item->update(['remain' => $income_remain]);
+                        $status = 'สำเร็จ';
+                    } else {
+                        $item->update(['remain' => $remain_lotto]);
+                        $income_remain_out = abs((int) $income_remain);
+                        $note = 'ยอดเกิน : ' . $income_remain_out . ' บาท';
+                        $status = 'ยอดเกิน';
+                    }
+                } else {
+
+                    $status = 'ไม่รับ';
+                    $income_remain_out = abs((int) $income_remain);
+                    $note = 'ยอดเต็มจำนวน';
+                }
+            }
+
+            LottoRecord::create([
+                'name' => $name,
+                '3numbers' => $income_numbers,
+                'type' => $income_type,
+                'status' => $status,
+                'value' => $income_value,
+                'remain' => $income_remain_out,
+            ]);
+            $success = true;
+            $results[$key][] = [
+                'success' => $success,
+                'status' => $status,
+                'remain' => $income_remain_out,
+                'note' => $note,
+                'row' => $key
+            ];
+        }
+        return response()->json(['results' => $results]);
         return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'status' => $status,
+            'note' => $note,
+            'remain' => $income_remain_out
+        ]);
     }
 
     /**

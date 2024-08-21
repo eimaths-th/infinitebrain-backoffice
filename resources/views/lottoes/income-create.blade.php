@@ -60,7 +60,7 @@
 
                     </tbody>
                 </table>
-                <button class="btn btn-success" id="submitBtn-all">submit all</button>
+                <button class="btn btn-success" id="all-submitBtn">submit all</button>
 
             </div>
         </div>
