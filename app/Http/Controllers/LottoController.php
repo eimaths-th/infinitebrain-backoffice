@@ -221,16 +221,14 @@ class LottoController extends Controller
             'remain' => $income_remain_out
         ]);
     }
+
+
     public function income_storeAll(Request $request)
     {
-        //'
-
-        // dd($request->all());
         $rows = $request['rows'];
         $results = [];
-        foreach ($rows as $key => $row) {
-            // dd($row);
 
+        foreach ($rows as $key => $row) {
             $name = $row['name'];
             $income_numbers = $row['numbers'];
             $income_type = $row['type'];
@@ -248,14 +246,19 @@ class LottoController extends Controller
                 ->where('length', $income_length)
                 ->get()
                 ->filter(function ($item) use ($sorted_income_numbers) {
-
                     $sorted_numbers_in_db = implode('', collect(str_split($item->numbers))->sort()->toArray());
                     return $sorted_income_numbers === $sorted_numbers_in_db;
                 });
+
             if ($check_main->isEmpty()) {
-                $success = false;
-                $status = 'Error';
-                $note = 'ไม่พบหมายเลขนี้';
+                $results[$key] = [
+                    'success' => false,
+                    'status' => 'Error',
+                    'remain' => 0,
+                    'note' => 'ไม่พบหมายเลขนี้',
+                    'row' => $key
+                ];
+                continue; // Skip to the next iteration if no matching record is found
             }
 
             $max = $check_main->max('remain');
@@ -263,20 +266,18 @@ class LottoController extends Controller
 
             foreach ($check_main as $item) {
                 if ($item->remain > 0) {
-                    # code...
                     if ($income_remain > 0) {
                         $item->update(['remain' => $income_remain]);
                         $status = 'สำเร็จ';
                     } else {
                         $item->update(['remain' => $remain_lotto]);
-                        $income_remain_out = abs((int) $income_remain);
+                        $income_remain_out = abs($income_remain);
                         $note = 'ยอดเกิน : ' . $income_remain_out . ' บาท';
                         $status = 'ยอดเกิน';
                     }
                 } else {
-
                     $status = 'ไม่รับ';
-                    $income_remain_out = abs((int) $income_remain);
+                    $income_remain_out = abs($income_remain);
                     $note = 'ยอดเต็มจำนวน';
                 }
             }
@@ -289,24 +290,19 @@ class LottoController extends Controller
                 'value' => $income_value,
                 'remain' => $income_remain_out,
             ]);
-            $success = true;
-            $results[$key][] = [
-                'success' => $success,
+
+            $results[$key] = [
+                'success' => true,
                 'status' => $status,
                 'remain' => $income_remain_out,
                 'note' => $note,
                 'row' => $key
             ];
         }
+
         return response()->json(['results' => $results]);
-        return response()->json(['success' => true]);
-        return response()->json([
-            'success' => true,
-            'status' => $status,
-            'note' => $note,
-            'remain' => $income_remain_out
-        ]);
     }
+
 
     /**
      * Show the form for editing the specified resource.

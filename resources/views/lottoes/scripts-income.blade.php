@@ -207,7 +207,6 @@
                     };
                     allData.push(rowData);
                 }
-
                 // Send all data to the controller
                 $.ajax({
                     url: '{{ route('lotto.income.store-all') }}', // Replace with your route
@@ -221,9 +220,11 @@
                         // Handle success (e.g., update all status columns)
                         console.log(response.results);
 
-                        for (let index = 0; index < numberOfItem; index++) {
-                            $(`#status-${index}`).text('Submitted');
-                        }
+                        response.results.forEach(function(result, index) {
+                            $(`#status-${index}`).text(result.status);
+                            $(`#remain-${index}`).text(result.remain);
+                            $(`#note-${index}`).text(result.note);
+                        });
                     },
                     error: function(response) {
                         // Handle error
