@@ -1440,7 +1440,7 @@
                     //console.log(response); // console should show the ID you pointed to
                     // do stuff with file.id ...
                 }).on("error", function(file) {
-                    alert("please check file format or file size");
+                    alert("ไม่อนุญาตให้อัพโหลดไฟล์เกิน 1 MB");
                     while (imgFiles.length > 0) {
                         imgFiles[0].parentNode.removeChild(imgFiles[0]);
                     }
@@ -1568,7 +1568,7 @@
                         imgFiles2[0].parentNode.removeChild(imgFiles2[0]);
                     }
                     // document.getElementsByName('imgFiles2[]').length = 0;
-                    alert("please check file format or file size");
+                    alert("ไม่อนุญาตให้อัพโหลดไฟล์เกิน 1 MB");
                 });
                 /*this.on("addedfile", function(file) {
 
