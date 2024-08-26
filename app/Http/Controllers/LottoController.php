@@ -27,6 +27,9 @@ class LottoController extends Controller
                 ->editColumn('max', function (LottoMain $max) {
                     return number_format($max->max) . ' บาท';
                 })
+                ->editColumn('remain', function (LottoMain $remain) {
+                    return number_format($remain->remain) . ' บาท';
+                })
                 ->addColumn('action', function ($row) {
                     $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
@@ -228,6 +231,7 @@ class LottoController extends Controller
         $rows = $request['rows'];
         $results = [];
 
+        // dd($rows);
         foreach ($rows as $key => $row) {
             $name = $row['name'];
             $income_numbers = $row['numbers'];
@@ -238,7 +242,6 @@ class LottoController extends Controller
             $status = '';
             $remain_lotto = 0;
             $income_remain_out = 0;
-            $success = null;
 
             $sorted_income_numbers = implode('', collect(str_split($income_numbers))->sort()->toArray());
 
@@ -249,17 +252,6 @@ class LottoController extends Controller
                     $sorted_numbers_in_db = implode('', collect(str_split($item->numbers))->sort()->toArray());
                     return $sorted_income_numbers === $sorted_numbers_in_db;
                 });
-
-            if ($check_main->isEmpty()) {
-                $results[$key] = [
-                    'success' => false,
-                    'status' => 'Error',
-                    'remain' => 0,
-                    'note' => 'ไม่พบหมายเลขนี้',
-                    'row' => $key
-                ];
-                continue; // Skip to the next iteration if no matching record is found
-            }
 
             $max = $check_main->max('remain');
             $income_remain = (int) $max - (int) $income_value;
@@ -281,15 +273,28 @@ class LottoController extends Controller
                     $note = 'ยอดเต็มจำนวน';
                 }
             }
+            if ($name && $income_numbers && $income_value) {
+                # code...
+                LottoRecord::create([
+                    'name' => $name,
+                    '3numbers' => $income_numbers,
+                    'type' => $income_type,
+                    'status' => $status,
+                    'value' => $income_value,
+                    'remain' => $income_remain_out,
+                ]);
+            }
 
-            LottoRecord::create([
-                'name' => $name,
-                '3numbers' => $income_numbers,
-                'type' => $income_type,
-                'status' => $status,
-                'value' => $income_value,
-                'remain' => $income_remain_out,
-            ]);
+            if ($check_main->isEmpty()) {
+                $results[$key] = [
+                    'success' => false,
+                    'status' => 'Error',
+                    'remain' => 0,
+                    'note' => 'ไม่พบหมายเลขนี้',
+                    'row' => $key
+                ];
+                continue; // Skip to the next iteration if no matching record is found
+            }
 
             $results[$key] = [
                 'success' => true,

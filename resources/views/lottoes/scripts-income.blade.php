@@ -182,7 +182,7 @@
                     method: 'POST',
                     data: data,
                     success: function(response) {
-                        console.log(response);
+                        
                         $(`#status-${index}`).text(response.status);
                         $(`#remain-${index}`).text(response.remain);
                         $(`#note-${index}`).text(response.note);
@@ -207,19 +207,14 @@
                     };
                     allData.push(rowData);
                 }
-                // Send all data to the controller
                 $.ajax({
-                    url: '{{ route('lotto.income.store-all') }}', // Replace with your route
+                    url: '{{ route('lotto.income.store-all') }}',
                     method: 'POST',
                     data: {
                         rows: allData,
-                        _token: $('meta[name="csrf-token"]').attr(
-                            'content') // Assuming you have CSRF token in your meta tag
+                        _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        // Handle success (e.g., update all status columns)
-                        console.log(response.results);
-
                         response.results.forEach(function(result, index) {
                             $(`#status-${index}`).text(result.status);
                             $(`#remain-${index}`).text(result.remain);

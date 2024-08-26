@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                        background-size: 15px;
-                                                                                                                    }*/
+                                                                                                                                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                                                                    background-size: 15px;
+                                                                                                                                                                                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                        border-color: var(--color-invalid);
-                                                                                                                    }*/
+                                                                                                                                                                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                                                                    border-color: var(--color-invalid);
+                                                                                                                                                                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                        display: block;
-                                                                                                                    }*/
+                                                                                                                                                                                                    display: block;
+                                                                                                                                                                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -517,23 +517,67 @@
             width: 100%;
         }
 
-        #loader {
-            display: none;
+        /* #loader {
+                                                                            display: none;
+                                                                            position: fixed;
+                                                                            top: 0;
+                                                                            left: 0;
+                                                                            right: 0;
+                                                                            bottom: 0;
+                                                                            width: 100%;
+                                                                            background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
+                                                                            z-index: 10000;
+                                                                        } */
+        #loader-container {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
             width: 100%;
-            background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
-            z-index: 10000;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent background */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #loading-message {
+            font-size: 18px;
+            color: #fff;
+            /* White color for the message to contrast with the dark background */
         }
     </style>
 @endsection
 
 
 @section('content')
-    <div id="loader"></div>
+    <div id="loader-container" style="display: none;">
+        <div id="loader" class="spinner"></div>
+        <p id="loading-message">Please wait, your request is being processed...</p>
+    </div>
     <div class="error_div" id="error_div"><br>There are errors in this page. Please correct them before moving on.</div>
     <div class="container">
         <div class="row justify-content-center">
@@ -561,7 +605,7 @@
 
                             <br>
 
-                            <hr/>
+                            <hr />
 
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
@@ -720,7 +764,8 @@
                                             </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Last
                                                 Name</label>
                                             {{-- <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -1058,15 +1103,15 @@
                                                     class="form-required">*</span>
                                                 <div style="width: 280px"></div>
                                             </label>
-                                            <input type="text" id="drop2" name="drop2" class="form-control form_none" value="" required>
+                                            <input type="text" id="drop2" name="drop2"
+                                                class="form-control form_none" value="" required>
                                             <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
                                                 <div class="fallback">
                                                     {{--  <input name="file2" id="file2" type="file" multiple
                                                         class="form-control" /> --}}
                                                 </div>
                                             </div>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">
                                                 Receipt Photo
                                             </label>
                                             <div id="dropzone-att-error" class="form-error-message" role="alert"><img
@@ -1297,6 +1342,9 @@
     </script>
     <script type="text/javascript">
         var myDropzone = {};
+        let imgFiles = document.getElementsByName('imgFiles[]');
+        let imgFiles2 = document.getElementsByName('imgFiles2[]');
+
         Dropzone.options.myAwesomeDropzone = {
             url: '{{ route('form.upload') }}',
             headers: {
@@ -1312,7 +1360,7 @@
                 this.addFile(file);
             },
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
-            maxFilesize: 10, // MB
+            maxFilesize: 1, // MB
             previewsContainer: "#dropzone_preview", // ระบุ element เป้าหลาย
             //previewTemplate: $('#template-preview').html(),
             dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
@@ -1392,8 +1440,12 @@
                     //console.log(response); // console should show the ID you pointed to
                     // do stuff with file.id ...
                 }).on("error", function(file) {
-                    this.removeFile(file);
                     alert("please check file format or file size");
+                    while (imgFiles.length > 0) {
+                        imgFiles[0].parentNode.removeChild(imgFiles[0]);
+                    }
+                    this.removeFile(file);
+                    // alert(dictFileTooBig);
                 });
                 /*this.on("addedfile", function(file) {
 
@@ -1421,13 +1473,13 @@
             autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
             uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
             parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
-            maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+            maxFiles: 1, // ไฟล์สูงสุด 5 ไฟล์
             maxfilesexceeded: function(file) {
                 this.removeAllFiles();
                 this.addFile(file);
             },
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
-            maxFilesize: 10, // MB
+            maxFilesize: 2, // MB
             renameFile: function(file) {
                 let newName = new Date().getTime() + '_' + file.name;
                 file.newName = newName;
@@ -1509,6 +1561,13 @@
                     // do stuff with file.id ...
                 }).on("error", function(file) {
                     this.removeFile(file);
+                    // this.removeFile(file);
+                    console.log(file);
+                    $('#imgFiles2').val('');
+                    while (imgFiles2.length > 0) {
+                        imgFiles2[0].parentNode.removeChild(imgFiles2[0]);
+                    }
+                    // document.getElementsByName('imgFiles2[]').length = 0;
                     alert("please check file format or file size");
                 });
                 /*this.on("addedfile", function(file) {
@@ -1550,17 +1609,26 @@
 
                 }
                 this.defaultShowErrors();
+                console.log('img1 : ' + document.getElementsByName('imgFiles[]').length);
+                console.log('img2 : ' + document.getElementsByName('imgFiles2[]').length);
+
             },
-            submitHandler: function() {
-                //var spinner = $('#loader');
-                //spinner.show();
+
+            submitHandler: function(form) {
+                // $('#loader-container').show();
+                $('#loader-container').show();
+
+                $('#send_data').attr('disabled', true);
+
                 if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]')
                     .length) {
-                    $('#send_data').attr('disabled', true);
                     $(form).submit();
                     return true;
                 }
 
+                $('#loader-container').hide();
+                $('#send_data').attr('disabled', false);
+                return false;
             }
         }
 
@@ -1609,8 +1677,6 @@
             }
 
         }
-
-
 
         function jumpTo(id) {
             var get = location.href;
