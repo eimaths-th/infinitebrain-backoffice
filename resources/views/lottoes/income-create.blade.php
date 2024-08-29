@@ -33,7 +33,7 @@
             <div class="card-body">
                 <div class="col-lg-1">
                     <select name="number_of_item" id="numberOfItem" class="form-control mb-5">
-                        @for ($i = 5; $i <= 50; $i += 5)
+                        @for ($i = 10; $i <= 50; $i += 5)
                             <option value="{{ $i }}">{{ $i }}</option>
                         @endfor
 
@@ -47,13 +47,15 @@
                             {{-- <th width="10px"><input type="checkbox" id="check-all" class="flat"></th> --}}
                             <th width="1%">No</th>
                             <th>name</th>
-                            <th>numbers</th>
-                            <th>type</th>
+                            <th>numbers of type1</th>
+                            <th>numbers of type2</th>
+                            <!-- <th>type</th> -->
                             <th>value</th>
                             <th>status</th>
                             <th>remain</th>
                             <th>note</th>
                             <th width="1%" class="text-nowrap">Action</th>
+
                         </tr>
                     </thead>
                     <tbody id="newtr">

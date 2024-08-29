@@ -22,7 +22,19 @@ class LottoController extends Controller
             $types = LottoMain::orderBy("id", "desc")->get();
             return datatables()->of($types)
                 ->editColumn('type', function (LottoMain $type) {
-                    return $type->type == 0 ? "โต๊ด" : "Normal";
+                    $text = '';
+                    if ($type->type === '0') {
+                        # code...
+                        $text = 'โต๊ด';
+                    } elseif ($type->type === '1') {
+                        # code...
+                        $text = 'เต็ง';
+                    } else {
+                        # code...
+                        $text = 'Normal';
+                    }
+
+                    return $text;
                 })
                 ->editColumn('max', function (LottoMain $max) {
                     return number_format($max->max) . ' บาท';
@@ -74,19 +86,75 @@ class LottoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    function normalizeNumber($number)
+    {
+        $digits = str_split($number);
+        sort($digits);
+        return implode('', $digits);
+    }
+
     public function store(Request $request)
     {
         //
-        // dd($request->all());
-        $length = strlen($request->numbers);
-        $lotto = LottoMain::create([
-            'numbers' => $request->numbers,
-            'length' => $length,
-            'max' => $request->max,
-            'remain' => $request->max,
-            'date' => $request->date,
-            'type' => $request->type,
-        ]);
+        $type = $request->type;
+        if ($type === '0') {
+
+            $validatedData = $request->validate([
+                'type' => 'required',
+                'max' => 'required',
+            ]);
+        } else {
+
+            $validatedData = $request->validate([
+                'type' => 'required',
+                'max' => 'required',
+                'numbers' => 'required',
+            ]);
+        }
+
+
+        if ($type === '0') {
+
+            $uniqueNumbers = array();
+
+            for ($i = 0; $i < 1000; $i++) {
+                $number = str_pad($i, 3, '0', STR_PAD_LEFT);
+                $normalized = $this->normalizeNumber($number); // Use method call with $this
+                $uniqueNumbers[$normalized] = true;
+            }
+
+            // Get the array keys to show results
+            $uniqueNumbers = array_keys($uniqueNumbers);
+            sort($uniqueNumbers); // Sort numbers
+
+            // dd('bug');
+            foreach ($uniqueNumbers as $key => $uniqueNumber) {
+                # code...
+                $length = strlen($uniqueNumber);
+
+                $lotto = LottoMain::create([
+                    'numbers' => $uniqueNumber,
+                    'length' => $length,
+                    'max' => $request->max,
+                    'remain' => $request->max,
+                    'date' => $request->date,
+                    'type' => $request->type,
+                ]);
+            }
+        } else {
+            $length = strlen($request->numbers);
+            $lotto = LottoMain::create([
+                'numbers' => $request->numbers,
+                'length' => $length,
+                'max' => $request->max,
+                'remain' => $request->max,
+                'date' => $request->date,
+                'type' => $request->type,
+            ]);
+        }
+
+
         return response()->json(['success' => 'success !']);
     }
     public function addresult(Request $request)
@@ -132,6 +200,21 @@ class LottoController extends Controller
         if ($request->ajax()) {
             $types = LottoRecord::orderBy("id", "desc")->get();
             return datatables()->of($types)
+                ->editColumn('type', function (LottoRecord $type) {
+                    $text = '';
+                    if ($type->type === '0') {
+                        # code...
+                        $text = 'โต๊ด';
+                    } elseif ($type->type === '1') {
+                        # code...
+                        $text = 'เต็ง';
+                    } else {
+                        # code...
+                        $text = 'Normal';
+                    }
+
+                    return $text;
+                })
 
                 ->addColumn('action', function ($row) {
                     $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';

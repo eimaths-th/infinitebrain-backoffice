@@ -129,52 +129,82 @@
                 newTr()
             });
 
+            let numbersOfType = [];
+
             function newTr() {
+
                 for (let index = 0; index < numberOfItem; index++) {
 
                     let newtr = `
-                        <tr>
-                            <td id="index-${index}">${index + 1}</td>
-                            <td>
-                                <input type="text" name="name-${index}" id="name-${index}" class="form-control ">
-                            </td>
+            <tr>
+                <td id="index-${index}">${index + 1}</td>
+                <td>
+                    <input type="text" name="name-${index}" id="name-${index}" class="form-control">
+                </td>
 
-                            <td>
-                                <input type="text" name="numbers-${index}" id="numbers-${index}" class="form-control numeric-only">
-                            </td>
-                            <td>
-                                <select name="type-${index}" id="type-${index}" class="form-control">
-                                    <option value="0">โต๊ด</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" name="value-${index}" id="value-${index}" class="form-control numeric-only">
-                            </td>
-                            <td id="status-${index}"></td>
-                            <td id="remain-${index}"></td>
-                            <td id="note-${index}"></td>
-                            <td>
-                                <button class="btn btn-info" id="submitBtn-${index}">submmit</button>
-                            </td>
-                        </tr>
-
-                    `;
+                <td>
+                    <input type="text" name="numbers-of-type_0-${index}" id="numbers-of-type_0-${index}" class="form-control numeric-only">
+                </td>
+                <td>
+                    <input type="text" name="numbers-of-type_1-${index}" id="numbers-of-type_1-${index}" class="form-control numeric-only">
+                </td>
+                <td>
+                    <input type="text" name="value-${index}" id="value-${index}" class="form-control numeric-only">
+                </td>
+                <td id="status-${index}"></td>
+                <td id="remain-${index}"></td>
+                <td id="note-${index}"></td>
+                <td>
+                    <button class="btn btn-info" id="submitBtn-${index}">submit</button>
+                </td>
+            </tr>
+        `;
 
                     $('#newtr').append(newtr);
                 }
             }
 
+            // Example function to populate numbersOfType after inputs are populated
+            function populateNumbersOfType() {
+
+
+                let numbersOfType = {}; // Initialize an empty object
+
+                for (let index = 0; index < numberOfItem; index++) {
+                    let numbersType0 = $(`#numbers-of-type_0-${index}`).val();
+                    let numbersType1 = $(`#numbers-of-type_1-${index}`).val();
+
+                    // Ensure the index exists in the object, then add the objects
+                    if (!numbersOfType[index]) {
+                        numbersOfType[index] = [];
+                    }
+
+                    // Push the objects for each type
+                    numbersOfType[index].push({
+                        numbers: numbersType0,
+                        type: 0
+                    });
+
+                    numbersOfType[index].push({
+                        numbers: numbersType1,
+                        type: 1
+                    });
+                }
+
+                console.log(numbersOfType); // Check the populated object
+            }
+
             $(document).on('click', '[id^=submitBtn-]', function() {
-                // Get the index from the button ID
+
+                populateNumbersOfType();
                 let index = $(this).attr('id').split('-')[1];
 
-                // Collect data from the row
                 let data = {
                     name: $(`#name-${index}`).val(),
                     numbers: $(`#numbers-${index}`).val(),
                     type: $(`#type-${index}`).val(),
                     value: $(`#value-${index}`).val(),
-                    _token: $('meta[name="csrf-token"]').attr('content')
+                    _token: $('meta[name="csrf-token"]').attr('content'),
                 };
 
                 $.ajax({
@@ -182,7 +212,7 @@
                     method: 'POST',
                     data: data,
                     success: function(response) {
-                        
+
                         $(`#status-${index}`).text(response.status);
                         $(`#remain-${index}`).text(response.remain);
                         $(`#note-${index}`).text(response.note);

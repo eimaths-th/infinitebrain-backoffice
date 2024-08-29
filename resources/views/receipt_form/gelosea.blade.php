@@ -1609,8 +1609,6 @@
 
                 }
                 this.defaultShowErrors();
-                console.log('img1 : ' + document.getElementsByName('imgFiles[]').length);
-                console.log('img2 : ' + document.getElementsByName('imgFiles2[]').length);
 
             },
 

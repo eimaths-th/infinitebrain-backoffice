@@ -77,11 +77,22 @@
                 $('.alert-success').hide();
                 $('#CreateModal').modal('show');
             });
+            let Add_Numbers = '';
+            let type = '';
+            $(document).on('change', '#AddType', function() {
+
+                type = this.value;
+                if (type === '0') {
+                    $('#number-contrainer').hide();
+                } else {
+                    $('#number-contrainer').show();
+                }
+
+            });
 
             let id;
             $(document).on('click', '#getEditData', function(e) {
                 e.preventDefault();
-
 
                 $('.alert-danger').html('');
                 $('.alert-danger').hide();
@@ -100,7 +111,6 @@
 
             })
 
-
             // Create product Ajax request.
             $('#SubmitCreateForm').click(function(e) {
                 e.preventDefault();
@@ -109,17 +119,30 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
 
+                console.log(Add_Numbers);
+
+                if (type === '0') {
+                    $('#AddNumbers').val('');
+                    Add_Numbers = '';
+
+                } else {
+                    Add_Numbers = $('#AddNumbers').val();
+
+                }
+
+
                 $.ajax({
                     url: "{{ route('lotto.store') }}",
                     method: 'post',
                     data: {
-                        numbers: $('#AddNumbers').val(),
+                        numbers: Add_Numbers,
                         max: $('#AddMax').val(),
                         date: $('#AddDate').val(),
                         type: $('#AddType').val(),
                         _token: token,
                     },
                     success: function(result) {
+                        console.log(result);
 
                         if (result.errors) {
                             $('.alert-danger').html('');
@@ -135,13 +158,22 @@
                                 '</li></strong>');
                             $('#Listview').DataTable().ajax.reload();
                             $('.form').trigger('reset');
-                            //$('#SubmitCreateForm').hide();
-                            //setTimeout(function() {
-                            //$('.alert-success').hide();
-                            //$('#CreateModal').modal('hide');
-                            //}, 10000);
 
                         }
+                    },
+                    error: function(xhr) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorList = '';
+                        $.each(errors, function(key, messages) {
+                            $.each(messages, function(index, message) {
+                                errorList += '<li>' + message + '</li>';
+                            });
+                        });
+                        $('.alert-danger').show().html('<strong>' + errorList +
+                            '</strong>');
+                        toastr.error(errorList, {
+                            timeOut: 5000
+                        });
                     }
                 });
             });
@@ -188,6 +220,20 @@
                             //}, 10000);
 
                         }
+                    },
+                    error: function(xhr) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorList = '';
+                        $.each(errors, function(key, messages) {
+                            $.each(messages, function(index, message) {
+                                errorList += '<li>' + message + '</li>';
+                            });
+                        });
+                        $('.alert-danger').show().html('<strong>' + errorList +
+                            '</strong>');
+                        toastr.error(errorList, {
+                            timeOut: 5000
+                        });
                     }
                 });
             });
@@ -326,5 +372,4 @@
             });
         });
     </script>
-
 @endsection
