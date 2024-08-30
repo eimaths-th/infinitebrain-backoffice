@@ -21,11 +21,15 @@
                     <div class="page-title-icon">
                         <i class="pe-7s-user icon-gradient bg-tempting-azure"></i>
                     </div>
-                    <div>Lotto
+                    <div>
+                        Lotto
                         <div class="page-title-subheading">{{ date('d-m-Y') }}</div>
+
                     </div>
+
                 </div>
                 <div class="page-title-actions">
+
                     <div class="d-inline-block dropdown">
                         {{-- <a href="{{ route('lotto.income.create') }}" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
                             id="CreateButton3"><i class="fa fa-plus"></i> เพิ่มรายการ</a> --}}
@@ -36,6 +40,17 @@
             </div>
         </div>
         <div class="main-card mb-3 card " id="x_content">
+            <div class="card-body">
+                <p>ผลสลากกินแบ่ง วันที่ {{ $result->date ?? ''}} </P>
+                @if ($result)
+                    <p>รางวัลที่ 1 {{ $result->{'1st'} }}</P>
+                    <p> เลขหน้า 3 ตัว {{ $result->{'3front_1'} }} , {{ $result->{'3front_2'} }} </p>
+                    <p> เลขท้าย 3 ตัว {{ $result->{'3back_1'} }} , {{ $result->{'3back_2'} }} </p>
+                    <p> เลขท้าย 2 ตัว {{ $result->{'2numbers'} }}</p>
+                @else
+                    <p>กำลังรอผล</p>
+                @endif
+            </div>
             <div class="card-body">
                 <form method="post" action="#" name="delete_all" id="delete_all">
                     @csrf
@@ -55,7 +70,7 @@
                                 <th>win/lose</th>
                                 <th>result</th>
                                 {{-- <th>remain</th> --}}
-                                <th  width="1%" class="text-nowrap">Action</th>
+                                <th width="1%" class="text-nowrap">Action</th>
                             </tr>
                         </thead>
 
@@ -68,7 +83,6 @@
         </div>
 
     </div>
-
 @endsection
 
 

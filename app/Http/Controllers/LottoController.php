@@ -256,6 +256,19 @@ class LottoController extends Controller
             }
         }
 
+        $lottMains = LottoMain::all();
+
+        foreach ($lottMains as $key => $lottMain) {
+            # code...
+            $max = $lottMain->max;
+            $remain = $lottMain->remain;
+            $sum = (int)$max - (int)$remain;
+            if ($sum == 0) {
+                # code...
+                $lottMain->delete();
+            }
+        }
+
         return response()->json(['success' => 'success!']);
     }
 
@@ -550,7 +563,7 @@ class LottoController extends Controller
     public function report(Request $request)
     {
         //
-
+        $LottoResult = LottoResult::orderBy("id", "desc")->first();
         if ($request->ajax()) {
             $types = lottoReport::orderBy("id", "desc")->get();
             return datatables()->of($types)
@@ -600,7 +613,9 @@ class LottoController extends Controller
                 ->toJson();
         }
 
-        return view('lottoes.report');
+        return view('lottoes.report', [
+            'result' => $LottoResult
+        ]);
     }
 
     /**
