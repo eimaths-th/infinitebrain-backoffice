@@ -210,7 +210,7 @@ class LottoController extends Controller
                     $record->update([
                         'status' => 1,
                         'win_lose' => 'win',
-                        'result' => $record->bet * 65,
+                        'result' => $record->bet * 100,
                     ]);
                 } else {
                     $record->update([
@@ -226,7 +226,7 @@ class LottoController extends Controller
                             $record->update([
                                 'status' => 1,
                                 'win_lose' => 'win',
-                                'result' => $record->bet * 65,
+                                'result' => $record->bet * 500,
                             ]);
                             break; // Exit the loop since we've found a match
                         }
@@ -236,7 +236,7 @@ class LottoController extends Controller
                         $record->update([
                             'status' => 1,
                             'win_lose' => 'win',
-                            'result' => $record->bet * 65,
+                            'result' => $record->bet * 70,
                         ]);
                     } else {
                         $record->update([
