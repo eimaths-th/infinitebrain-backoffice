@@ -165,44 +165,50 @@
             }
 
             // Example function to populate numbersOfType after inputs are populated
-            function populateNumbersOfType() {
+            function populateNumbersOfType(index) {
 
 
-                let numbersOfType = {}; // Initialize an empty object
+                let numbersOfType = [];
 
-                for (let index = 0; index < numberOfItem; index++) {
-                    let numbersType0 = $(`#numbers-of-type_0-${index}`).val();
-                    let numbersType1 = $(`#numbers-of-type_1-${index}`).val();
+                let numbersType0 = $(`#numbers-of-type_0-${index}`).val();
+                let numbersType1 = $(`#numbers-of-type_1-${index}`).val();
 
-                    // Ensure the index exists in the object, then add the objects
-                    if (!numbersOfType[index]) {
-                        numbersOfType[index] = [];
-                    }
+                numbersOfType.push({
+                    numbers: numbersType0,
+                    type: 0
+                });
 
-                    // Push the objects for each type
-                    numbersOfType[index].push({
-                        numbers: numbersType0,
-                        type: 0
-                    });
+                numbersOfType.push({
+                    numbers: numbersType1,
+                    type: 1
+                });
+                // if (!numbersOfType[index]) {
+                //     numbersOfType[index] = [];
+                // }
 
-                    numbersOfType[index].push({
-                        numbers: numbersType1,
-                        type: 1
-                    });
-                }
+                // numbersOfType[index].push({
+                //     numbers: numbersType0,
+                //     type: 0
+                // });
 
-                console.log(numbersOfType); // Check the populated object
+                // numbersOfType[index].push({
+                //     numbers: numbersType1,
+                //     type: 1
+                // });
+
+                console.log(numbersOfType);
+                return numbersOfType;
             }
 
             $(document).on('click', '[id^=submitBtn-]', function() {
-
-                populateNumbersOfType();
                 let index = $(this).attr('id').split('-')[1];
+
+                var NumbersOfType = populateNumbersOfType(index);
 
                 let data = {
                     name: $(`#name-${index}`).val(),
-                    numbers: $(`#numbers-${index}`).val(),
-                    type: $(`#type-${index}`).val(),
+                    numbers: NumbersOfType,
+                    // type: $(`#type-${index}`).val(),
                     value: $(`#value-${index}`).val(),
                     _token: $('meta[name="csrf-token"]').attr('content'),
                 };
@@ -229,9 +235,11 @@
                 let allData = [];
 
                 for (let index = 0; index < numberOfItem; index++) {
+                    var NumbersOfType = populateNumbersOfType(index);
+
                     let rowData = {
                         name: $(`#name-${index}`).val(),
-                        numbers: $(`#numbers-${index}`).val(),
+                        numbers: NumbersOfType,
                         type: $(`#type-${index}`).val(),
                         value: $(`#value-${index}`).val()
                     };

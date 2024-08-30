@@ -236,156 +236,187 @@ class LottoController extends Controller
     {
         //'
 
+        // dd($request->all());
+        $note = '';
         $name = $request->name;
         $income_numbers = $request->numbers;
-        $income_type = $request->type;
         $income_value = $request->value;
-        $income_length = strlen($income_numbers);
+        // dd(
+        //     $request->all(),
+        //     $income_numbers
+        // );
 
-        $sorted_income_numbers = implode('', collect(str_split($income_numbers))->sort()->toArray());
+        foreach ($income_numbers as $key => $income_number) {
+            # code...
 
-        // Query the LottoMain table
-        $check_main = LottoMain::where('type', $income_type)
-            ->where('length', $income_length)
-            ->get()
-            ->filter(function ($item) use ($sorted_income_numbers) {
-                // Sort the digits of each number in the database and compare
-                $sorted_numbers_in_db = implode('', collect(str_split($item->numbers))->sort()->toArray());
-                return $sorted_income_numbers === $sorted_numbers_in_db;
-            });
-        if ($check_main->isEmpty()) {
+            $number = $income_number['numbers'];
+            $income_type = $income_number['type'];
 
-            return response()->json([
-                'success' => false,
-                'status' => 'Error',
-                'remain' => '0',
-                'note' => 'ไม่พบหมายเลขนี้',
-
-            ]);
-        }
-
-        $max = $check_main->max('remain');
-        $income_remain = (int) $max - (int) $income_value;
-        $remain_lotto = 0;
-        $note = '';
-        $income_remain_out = 0;
-        $status = '';
-
-        foreach ($check_main as $item) {
-            if ($item->remain > 0) {
+            if ($number) {
                 # code...
-                if ($income_remain > 0) {
-                    $item->update(['remain' => $income_remain]);
-                    $status = 'สำเร็จ';
-                } else {
-                    $item->update(['remain' => $remain_lotto]);
-                    $income_remain_out = abs((int) $income_remain);
-                    $note = 'ยอดเกิน : ' . $income_remain_out . ' บาท';
-                    $status = 'ยอดเกิน';
+                $income_length = strlen($number);
+
+                $sorted_income_numbers = implode('', collect(str_split($number))->sort()->toArray());
+
+                // Query the LottoMain table
+                $check_main = LottoMain::where('type', $income_type)
+                    ->where('length', $income_length)
+                    ->get()
+                    ->filter(function ($item) use ($sorted_income_numbers) {
+                        // Sort the digits of each number in the database and compare
+                        $sorted_numbers_in_db = implode('', collect(str_split($item->numbers))->sort()->toArray());
+                        return $sorted_income_numbers === $sorted_numbers_in_db;
+                    });
+
+                if ($check_main->isEmpty()) {
+
+                    $note .= 'ไม่พบหมายเลขนี้ : ' . $number . ' | ';
+
+                    return response()->json([
+                        'success' => false,
+                        'status' => 'Error',
+                        'remain' => '0',
+                        'note' => $note,
+
+                    ]);
                 }
-            } else {
 
-                $status = 'ไม่รับ';
-                $income_remain_out = abs((int) $income_remain);
-                $note = 'ยอดเต็มจำนวน';
-            }
-        }
+                $max = $check_main->max('remain');
+                $income_remain = (int) $max - (int) $income_value;
+                $remain_lotto = 0;
+                $income_remain_out = 0;
+                $status = '';
 
-        LottoRecord::create([
-            'name' => $name,
-            '3numbers' => $income_numbers,
-            'type' => $income_type,
-            'status' => $status,
-            'value' => $income_value,
-            'remain' => $income_remain_out,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'status' => $status,
-            'note' => $note,
-            'remain' => $income_remain_out
-        ]);
-    }
-
-
-    public function income_storeAll(Request $request)
-    {
-        $rows = $request['rows'];
-        $results = [];
-
-        // dd($rows);
-        foreach ($rows as $key => $row) {
-            $name = $row['name'];
-            $income_numbers = $row['numbers'];
-            $income_type = $row['type'];
-            $income_value = $row['value'];
-            $income_length = strlen($income_numbers);
-            $note = '';
-            $status = '';
-            $remain_lotto = 0;
-            $income_remain_out = 0;
-
-            $sorted_income_numbers = implode('', collect(str_split($income_numbers))->sort()->toArray());
-
-            $check_main = LottoMain::where('type', $income_type)
-                ->where('length', $income_length)
-                ->get()
-                ->filter(function ($item) use ($sorted_income_numbers) {
-                    $sorted_numbers_in_db = implode('', collect(str_split($item->numbers))->sort()->toArray());
-                    return $sorted_income_numbers === $sorted_numbers_in_db;
-                });
-
-            $max = $check_main->max('remain');
-            $income_remain = (int) $max - (int) $income_value;
-
-            foreach ($check_main as $item) {
-                if ($item->remain > 0) {
-                    if ($income_remain > 0) {
-                        $item->update(['remain' => $income_remain]);
-                        $status = 'สำเร็จ';
+                foreach ($check_main as $item) {
+                    if ($item->remain > 0) {
+                        # code...
+                        if ($income_remain > 0) {
+                            $item->update(['remain' => $income_remain]);
+                            $status = 'สำเร็จ';
+                            $note .= $number . ': สำเร็จ | ';
+                        } else {
+                            $item->update(['remain' => $remain_lotto]);
+                            $income_remain_out = abs((int) $income_remain);
+                            $note .= $number . ' ยอดเกิน : ' . $income_remain_out . ' บาท | ';
+                            $status = 'ยอดเกิน';
+                        }
                     } else {
-                        $item->update(['remain' => $remain_lotto]);
-                        $income_remain_out = abs($income_remain);
-                        $note = 'ยอดเกิน : ' . $income_remain_out . ' บาท';
-                        $status = 'ยอดเกิน';
+
+                        $status = 'ไม่รับ';
+                        $income_remain_out = abs((int) $income_remain);
+                        $note .=  $number . ' : ยอดเต็มจำนวน | ';
                     }
-                } else {
-                    $status = 'ไม่รับ';
-                    $income_remain_out = abs($income_remain);
-                    $note = 'ยอดเต็มจำนวน';
                 }
-            }
-            if ($name && $income_numbers && $income_value) {
-                # code...
+
                 LottoRecord::create([
                     'name' => $name,
-                    '3numbers' => $income_numbers,
+                    '3numbers' => $number,
                     'type' => $income_type,
                     'status' => $status,
                     'value' => $income_value,
                     'remain' => $income_remain_out,
                 ]);
             }
+        }
 
-            if ($check_main->isEmpty()) {
-                $results[$key] = [
-                    'success' => false,
-                    'status' => 'Error',
-                    'remain' => 0,
-                    'note' => 'ไม่พบหมายเลขนี้',
-                    'row' => $key
-                ];
-                continue; // Skip to the next iteration if no matching record is found
+        return response()->json([
+            'success' => true,
+            'status' => $status,
+            'note' => $note,
+            'remain' => $income_remain_out,
+        ]);
+    }
+
+
+    public function income_storeAll(Request $request)
+    {
+        // dd($request->all());
+        $rows = $request['rows'];
+        $results = [];
+
+        // dd($rows);
+        foreach ($rows as $key => $row) {
+            $name = $row['name'];
+            $income_value = $row['value'];
+            $note = '';
+            $status = '';
+            $remain_lotto = 0;
+            $income_remain_out = 0;
+
+            $income_numbers = $row['numbers'];
+
+            foreach ($income_numbers as $income_number) {
+                # code...
+                $number = $income_number['numbers'];
+                $income_type = $income_number['type'];
+                if ($number) {
+                    # code...
+
+                    $income_length = strlen($number);
+                    $sorted_income_numbers = implode('', collect(str_split($number))->sort()->toArray());
+
+                    $check_main = LottoMain::where('type', $income_type)
+                        ->where('length', $income_length)
+                        ->get()
+                        ->filter(function ($item) use ($sorted_income_numbers) {
+                            $sorted_numbers_in_db = implode('', collect(str_split($item->numbers))->sort()->toArray());
+                            return $sorted_income_numbers === $sorted_numbers_in_db;
+                        });
+
+                    $max = $check_main->max('remain');
+                    $income_remain = (int) $max - (int) $income_value;
+
+                    foreach ($check_main as $item) {
+                        if ($item->remain > 0) {
+                            if ($income_remain > 0) {
+                                $item->update(['remain' => $income_remain]);
+                                $status = 'สำเร็จ';
+                                $note .= $number . ': สำเร็จ | ';
+                            } else {
+                                $item->update(['remain' => $remain_lotto]);
+                                $income_remain_out = abs($income_remain);
+                                $note = $number . ' ยอดเกิน : ' . $income_remain_out . ' บาท | ';
+                                $status = 'ยอดเกิน';
+                            }
+                        } else {
+                            $status = 'ไม่รับ';
+                            $income_remain_out = abs($income_remain);
+                            $note .=  $number . ' : ยอดเต็มจำนวน | ';
+                        }
+                    }
+                    if ($name && $number && $income_value) {
+                        # code...
+                        LottoRecord::create([
+                            'name' => $name,
+                            '3numbers' => $number,
+                            'type' => $income_type,
+                            'status' => $status,
+                            'value' => $income_value,
+                            'remain' => $income_remain_out,
+                        ]);
+                    }
+
+                    if ($check_main->isEmpty()) {
+                        $note .= 'ไม่พบหมายเลขนี้ : ' . $number . ' | ';
+                        $results[$key] = [
+                            'success' => false,
+                            'status' => 'Error',
+                            'remain' => 0,
+                            'note' => $note,
+                            'row' => $key
+                        ];
+                        continue; // Skip to the next iteration if no matching record is found
+                    }
+
+                    $results[$key] = [
+                        'success' => true,
+                        'status' => $status,
+                        'remain' => $income_remain_out,
+                        'note' => $note,
+                        'row' => $key
+                    ];
+                }
             }
-
-            $results[$key] = [
-                'success' => true,
-                'status' => $status,
-                'remain' => $income_remain_out,
-                'note' => $note,
-                'row' => $key
-            ];
         }
 
         return response()->json(['results' => $results]);
