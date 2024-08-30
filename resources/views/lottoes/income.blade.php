@@ -46,6 +46,7 @@
                             <tr>
                                 {{-- <th width="10px"><input type="checkbox" id="check-all" class="flat"></th> --}}
                                 <th width="1%">No</th>
+                                <th>date</th>
                                 <th>name</th>
                                 <th>numbers</th>
                                 <th>type</th>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LottoMain;
 use App\Models\LottoRecord;
+use App\Models\lottoReport;
 use App\Models\LottoResult;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Http\Request;
@@ -175,23 +176,87 @@ class LottoController extends Controller
             'add2numbers' => 'required|digits:2',
         ]);
 
-        try {
-            // Insert the validated data into the database
-            $lotto = LottoResult::create([
-                'date' => $validatedData['date'],
-                '1st' => $validatedData['add1st'],
-                '3front_1' => $validatedData['add3front_1'],
-                '3front_2' => $validatedData['add3front_2'],
-                '3back_1' => $validatedData['add3back_1'],
-                '3back_2' => $validatedData['add3back_2'],
-                '2numbers' => $validatedData['add2numbers'],
-            ]);
 
-            return response()->json(['success' => 'success!']);
-        } catch (\Exception $e) {
-            // Handle any errors that might occur
-            return response()->json(['error' => 'Failed to save result.'], 500);
+        $lotto = LottoResult::create([
+            'date' => $validatedData['date'],
+            '1st' => $validatedData['add1st'],
+            '3front_1' => $validatedData['add3front_1'],
+            '3front_2' => $validatedData['add3front_2'],
+            '3back_1' => $validatedData['add3back_1'],
+            '3back_2' => $validatedData['add3back_2'],
+            '2numbers' => $validatedData['add2numbers'],
+        ]);
+
+        // Extract the last 3 digits of the 1st prize
+        $lastThreeDigits = substr($lotto->{'1st'}, -3);
+
+        $treeNumbersType1 = [
+            '0' => $validatedData['add3front_1'],
+            '1' => $validatedData['add3front_2'],
+            '2' => $validatedData['add3back_1'],
+            '3' => $validatedData['add3back_2'],
+        ];
+
+        $twoNumbersType1 = $validatedData['add2numbers'];
+
+        // Retrieve all lotto reports where the status is 0
+        $lottoReport = lottoReport::where('status', 0)->get();
+
+        foreach ($lottoReport as $record) {
+            $length = strlen($record->numbers);
+
+            if ($record->type === '0' && $length === 3) {
+                if ($record->numbers === $lastThreeDigits) {
+                    $record->update([
+                        'status' => 1,
+                        'win_lose' => 'win',
+                        'result' => $record->bet * 65,
+                    ]);
+                } else {
+                    $record->update([
+                        'status' => 1,
+                        'win_lose' => 'lose',
+                        'result' => ($record->bet) - ($record->bet * 2),
+                    ]);
+                }
+            } elseif ($record->type === '1') {
+                if ($length === 3) {
+                    foreach ($treeNumbersType1 as $checktreeNumbersType1) {
+                        if ($record->numbers === $checktreeNumbersType1) {
+                            $record->update([
+                                'status' => 1,
+                                'win_lose' => 'win',
+                                'result' => $record->bet * 65,
+                            ]);
+                            break; // Exit the loop since we've found a match
+                        }
+                    }
+                } elseif ($length === 2) {
+                    if ($record->numbers === $twoNumbersType1) {
+                        $record->update([
+                            'status' => 1,
+                            'win_lose' => 'win',
+                            'result' => $record->bet * 65,
+                        ]);
+                    } else {
+                        $record->update([
+                            'status' => 1,
+                            'win_lose' => 'lose',
+                            'result' => ($record->bet) - ($record->bet * 2),
+                        ]);
+                    }
+                } else {
+                    // Handle case where length is not 2 or 3
+                    $record->update([
+                        'status' => 1,
+                        'win_lose' => 'lose',
+                        'result' => ($record->bet) - ($record->bet * 2),
+                    ]);
+                }
+            }
         }
+
+        return response()->json(['success' => 'success!']);
     }
 
     /**
@@ -220,6 +285,12 @@ class LottoController extends Controller
                     }
 
                     return $text;
+                })
+                ->editColumn('create_at', function (LottoRecord $create_at) {
+                    $date = date('d-m-Y', $create_at->create_at);
+
+
+                    return $date;
                 })
 
                 ->addColumn('action', function ($row) {
@@ -329,6 +400,18 @@ class LottoController extends Controller
                     'value' => $income_value,
                     'remain' => $income_remain_out,
                 ]);
+
+                if ($status === 'success' || $status === 'over') {
+                    # code...
+                    lottoReport::create([
+                        'name' => $name,
+                        'numbers' => $number,
+                        'type' => $income_type,
+                        'bet' => $bet,
+                        'status' => 0,
+                        'result' => 0,
+                    ]);
+                }
             }
         }
 
@@ -353,6 +436,8 @@ class LottoController extends Controller
             $income_value = $row['value'];
             $note = '';
             $status = '';
+            $statusText = '';
+
             $remain_lotto = 0;
             $income_remain_out = 0;
 
@@ -383,16 +468,19 @@ class LottoController extends Controller
                         if ($item->remain > 0) {
                             if ($income_remain >= 0) {
                                 $item->update(['remain' => $income_remain]);
-                                $status = 'สำเร็จ';
+                                $status = 'success';
+                                $statusText = 'สำเร็จ';
                                 $note .= $number . ': สำเร็จ | ';
                             } else {
                                 $item->update(['remain' => $remain_lotto]);
                                 $income_remain_out = abs($income_remain);
                                 $note = $number . ' ยอดเกิน : ' . $income_remain_out . ' บาท | ';
-                                $status = 'ยอดเกิน';
+                                $statusText = 'ยอดเกิน';
+                                $status = 'over';
                             }
                         } else {
-                            $status = 'ไม่รับ';
+                            $status = 'not';
+                            $statusText = 'ไม่รับ';
                             $income_remain_out = abs($income_remain);
                             $note .=  $number . ' : ยอดเต็มจำนวน | ';
                         }
@@ -425,11 +513,22 @@ class LottoController extends Controller
 
                     $results[$key] = [
                         'success' => true,
-                        'status' => $status,
+                        'status' => $statusText,
                         'remain' => $income_remain_out,
                         'note' => $note,
                         'row' => $key
                     ];
+                    if ($status === 'success' || $status === 'over') {
+                        # code...
+                        lottoReport::create([
+                            'name' => $name,
+                            'numbers' => $number,
+                            'type' => $income_type,
+                            'bet' => $bet,
+                            'status' => 0,
+                            'result' => 0,
+                        ]);
+                    }
                 }
             }
         }
@@ -447,6 +546,61 @@ class LottoController extends Controller
     public function edit($id)
     {
         //
+    }
+    public function report(Request $request)
+    {
+        //
+
+        if ($request->ajax()) {
+            $types = lottoReport::orderBy("id", "desc")->get();
+            return datatables()->of($types)
+                ->editColumn('type', function (lottoReport $type) {
+                    $text = '';
+                    if ($type->type === '0') {
+                        # code...
+                        $text = 'โต๊ด';
+                    } elseif ($type->type === '1') {
+                        # code...
+                        $text = 'เต็ง';
+                    } else {
+                        # code...
+                        $text = 'Normal';
+                    }
+
+                    return $text;
+                })
+                ->editColumn('create_at', function (lottoReport $create_at) {
+                    $date = date('d-m-Y', $create_at->create_at);
+
+
+                    return $date;
+                })
+                ->editColumn('status', function (lottoReport $status) {
+                    $text = '';
+                    if ($status->status === '0') {
+                        # code...
+                        $text = 'รอผล';
+                    } elseif ($status->status === '1') {
+                        # code...
+                        $text = 'สำเร็จ';
+                    } else {
+                        # code...
+                        $text = 'error';
+                    }
+
+                    return $text;
+                })
+
+                ->addColumn('action', function ($row) {
+                    $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
+                    $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
+                    $html = '';
+                    return $html;
+                })
+                ->toJson();
+        }
+
+        return view('lottoes.report');
     }
 
     /**
