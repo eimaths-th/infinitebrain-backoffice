@@ -49,6 +49,10 @@
                         name: 'value'
                     },
                     {
+                        data: 'bet',
+                        name: 'bet'
+                    },
+                    {
                         data: 'remain',
                         name: 'remain'
                     },

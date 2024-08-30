@@ -29,6 +29,12 @@
                             <option value="1">เต็ง</option>
                         </select>
                     </div>
+                    <div id="length-contrainer">
+                        <div class="form-group">
+                            <label for="length">length:</label>
+                            <input type="number" class="form-control" name="length" id="Addlength" min="0" max="3" step="1"title="Please enter only numbers">
+                        </div>
+                    </div>
                     <div id="number-contrainer">
                         <div class="form-group">
                             <label for="3numbers">numbers:</label>

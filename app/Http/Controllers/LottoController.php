@@ -98,11 +98,13 @@ class LottoController extends Controller
     {
         //
         $type = $request->type;
+
         if ($type === '0') {
 
             $validatedData = $request->validate([
                 'type' => 'required',
                 'max' => 'required',
+                'length' => 'required|integer|min:0|max:3',
             ]);
         } else {
 
@@ -117,9 +119,13 @@ class LottoController extends Controller
         if ($type === '0') {
 
             $uniqueNumbers = array();
+            $lengthNumbers = $request->length;
 
-            for ($i = 0; $i < 1000; $i++) {
-                $number = str_pad($i, 3, '0', STR_PAD_LEFT);
+            // $loop = 10 ** $lengthNumbers;
+            $loop = pow(10, $lengthNumbers);
+
+            for ($i = 0; $i < $loop; $i++) {
+                $number = str_pad($i, $lengthNumbers, '0', STR_PAD_LEFT);
                 $normalized = $this->normalizeNumber($number); // Use method call with $this
                 $uniqueNumbers[$normalized] = true;
             }
@@ -286,33 +292,40 @@ class LottoController extends Controller
                 $remain_lotto = 0;
                 $income_remain_out = 0;
                 $status = '';
+                $statusText = '';
 
                 foreach ($check_main as $item) {
                     if ($item->remain > 0) {
                         # code...
-                        if ($income_remain > 0) {
+                        if ($income_remain >= 0) {
                             $item->update(['remain' => $income_remain]);
-                            $status = 'สำเร็จ';
+                            $status = 'success';
+                            $statusText = 'สำเร็จ';
                             $note .= $number . ': สำเร็จ | ';
                         } else {
                             $item->update(['remain' => $remain_lotto]);
                             $income_remain_out = abs((int) $income_remain);
                             $note .= $number . ' ยอดเกิน : ' . $income_remain_out . ' บาท | ';
-                            $status = 'ยอดเกิน';
+                            $statusText = 'ยอดเกิน';
+                            $status = 'over';
                         }
                     } else {
 
-                        $status = 'ไม่รับ';
+                        $status = 'not';
+                        $statusText = 'ไม่รับ';
+
                         $income_remain_out = abs((int) $income_remain);
                         $note .=  $number . ' : ยอดเต็มจำนวน | ';
                     }
                 }
 
+                $bet = $income_value - $income_remain_out;
                 LottoRecord::create([
                     'name' => $name,
                     '3numbers' => $number,
                     'type' => $income_type,
                     'status' => $status,
+                    'bet' => $bet,
                     'value' => $income_value,
                     'remain' => $income_remain_out,
                 ]);
@@ -321,7 +334,7 @@ class LottoController extends Controller
 
         return response()->json([
             'success' => true,
-            'status' => $status,
+            'status' => $statusText,
             'note' => $note,
             'remain' => $income_remain_out,
         ]);
@@ -368,7 +381,7 @@ class LottoController extends Controller
 
                     foreach ($check_main as $item) {
                         if ($item->remain > 0) {
-                            if ($income_remain > 0) {
+                            if ($income_remain >= 0) {
                                 $item->update(['remain' => $income_remain]);
                                 $status = 'สำเร็จ';
                                 $note .= $number . ': สำเร็จ | ';
@@ -384,6 +397,7 @@ class LottoController extends Controller
                             $note .=  $number . ' : ยอดเต็มจำนวน | ';
                         }
                     }
+                    $bet = $income_value - $income_remain_out;
                     if ($name && $number && $income_value) {
                         # code...
                         LottoRecord::create([
@@ -392,6 +406,7 @@ class LottoController extends Controller
                             'type' => $income_type,
                             'status' => $status,
                             'value' => $income_value,
+                            'bet' => $bet,
                             'remain' => $income_remain_out,
                         ]);
                     }

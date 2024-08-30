@@ -49,8 +49,9 @@
                                 <th>name</th>
                                 <th>numbers</th>
                                 <th>type</th>
-                                <th>value</th>
                                 <th>status</th>
+                                <th>value</th>
+                                <th>bet</th>
                                 <th>remain</th>
                                 <th  width="1%" class="text-nowrap">Action</th>
                             </tr>

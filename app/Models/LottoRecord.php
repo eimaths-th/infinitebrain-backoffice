@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $type
  * @property string $status
  * @property string $value
+ * @property int $bet
  * @property string $remain
  * @property string $created_at
  * @property string $updated_at
@@ -27,5 +28,5 @@ class LottoRecord extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', '3numbers','type', 'value','status','remain', 'created_at', 'updated_at'];
+    protected $fillable = ['name', '3numbers','type', 'value','bet','status','remain', 'created_at', 'updated_at'];
 }

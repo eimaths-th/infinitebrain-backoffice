@@ -1,6 +1,7 @@
 @section('script')
     <script>
         $(document).ready(function() {
+
             document.getElementById('AddNumbers').addEventListener('input', function(e) {
                 // Remove any non-numeric characters
                 this.value = this.value.replace(/[^0-9]/g, '');
@@ -75,17 +76,22 @@
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
+                $('#length-contrainer').hide();
+                $('#number-contrainer').hide();
                 $('#CreateModal').modal('show');
             });
             let Add_Numbers = '';
             let type = '';
+            let lengthNumber = '';
             $(document).on('change', '#AddType', function() {
 
                 type = this.value;
                 if (type === '0') {
                     $('#number-contrainer').hide();
+                    $('#length-contrainer').show();
                 } else {
                     $('#number-contrainer').show();
+                    $('#length-contrainer').hide();
                 }
 
             });
@@ -119,15 +125,16 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
 
-                console.log(Add_Numbers);
+                // console.log(Add_Numbers);
 
                 if (type === '0') {
                     $('#AddNumbers').val('');
                     Add_Numbers = '';
-
+                    lengthNumber =  $('#Addlength').val();
                 } else {
                     Add_Numbers = $('#AddNumbers').val();
-
+                    lengthNumber =  '';
+                    lengthNumber =  $('#Addlength').val('');
                 }
 
 
@@ -136,6 +143,7 @@
                     method: 'post',
                     data: {
                         numbers: Add_Numbers,
+                        length: lengthNumber,
                         max: $('#AddMax').val(),
                         date: $('#AddDate').val(),
                         type: $('#AddType').val(),
