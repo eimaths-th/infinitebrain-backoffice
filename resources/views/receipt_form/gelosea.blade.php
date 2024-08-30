@@ -1360,7 +1360,7 @@
                 this.addFile(file);
             },
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
-            maxFilesize: 1, // MB
+            maxFilesize: 5, // MB
             previewsContainer: "#dropzone_preview", // ระบุ element เป้าหลาย
             //previewTemplate: $('#template-preview').html(),
             dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
@@ -1440,7 +1440,7 @@
                     //console.log(response); // console should show the ID you pointed to
                     // do stuff with file.id ...
                 }).on("error", function(file) {
-                    alert("ไม่อนุญาตให้อัพโหลดไฟล์เกิน 1 MB");
+                    alert("ไม่อนุญาตให้อัพโหลดไฟล์เกิน 5 MB");
                     while (imgFiles.length > 0) {
                         imgFiles[0].parentNode.removeChild(imgFiles[0]);
                     }
@@ -1479,7 +1479,7 @@
                 this.addFile(file);
             },
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
-            maxFilesize: 2, // MB
+            maxFilesize: 5, // MB
             renameFile: function(file) {
                 let newName = new Date().getTime() + '_' + file.name;
                 file.newName = newName;
@@ -1568,7 +1568,7 @@
                         imgFiles2[0].parentNode.removeChild(imgFiles2[0]);
                     }
                     // document.getElementsByName('imgFiles2[]').length = 0;
-                    alert("ไม่อนุญาตให้อัพโหลดไฟล์เกิน 1 MB");
+                    alert("ไม่อนุญาตให้อัพโหลดไฟล์เกิน 5 MB");
                 });
                 /*this.on("addedfile", function(file) {
 
