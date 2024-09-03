@@ -66,6 +66,7 @@
                                 <th>numbers</th>
                                 <th>type</th>
                                 <th>bet</th>
+                                <th>net</th>
                                 <th>status</th>
                                 <th>win/lose</th>
                                 <th>result</th>

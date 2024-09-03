@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                            background-size: 15px;
-                                                                                        }*/
+                                                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                            background-size: 15px;
+                                                                                                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                            border-color: var(--color-invalid);
-                                                                                        }*/
+                                                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                            border-color: var(--color-invalid);
+                                                                                                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                            display: block;
-                                                                                        }*/
+                                                                                                                                            display: block;
+                                                                                                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -517,7 +517,7 @@
             width: 100%;
         }
 
-        #loader {
+        /* #loader {
             display: none;
             position: fixed;
             top: 0;
@@ -527,13 +527,13 @@
             width: 100%;
             background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
             z-index: 10000;
-        }
+        } */
     </style>
     <style>
         /* .custom-image {
-                                        width: 395px;
-                                        height: 395px;
-                                    } */
+                                                                                        width: 395px;
+                                                                                        height: 395px;
+                                                                                    } */
 
         .custom-image {
             width: 100%;
@@ -546,12 +546,58 @@
                 height: auto;
             }
         }
+
+        #loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent background */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #loading-message {
+            font-size: 18px;
+            color: #fff;
+            /* White color for the message to contrast with the dark background */
+        }
     </style>
 @endsection
 
 
 @section('content')
-    <div id="loader"></div>
+    <div id="loader-container" style="display: none;">
+        <div id="loader" class="spinner"></div>
+        <p id="loading-message">Please wait, your request is being processed...</p>
+    </div>
+    {{-- <div id="loader"></div> --}}
     <div class="error_div" id="error_div"><br>There are errors in this page. Please correct them before moving on.</div>
     <div class="container">
         <div class="row justify-content-center">
@@ -578,11 +624,14 @@
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
                                                     style="text-decoration: underline;">Asiarope 2024 Registration
                                                     Form</span></strong></span></p>
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Deadline of
-                                                Registration:</strong> May 25, 2024 at 10:00 AM (TH Time)</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Online Exam:</strong>&nbsp;
-                                            May 26, 2024 at 5:00 PM
-                                            and/or May 28, 2024 at 3:00 PM. (HK Time)
+                                    <p style="text-align: left;">
+                                        <span style="color: #6351a2;">
+                                            <strong>รับสมัคร:</strong>
+                                            15/09/2024 - 17/11/2024
+                                        </span>
+                                    </p>
+                                    <p><span style="color: #6351a2;"><strong>สอบวันที่ :</strong>&nbsp;
+                                            01/12/2024
 
                                         </span>
                                     </p>
@@ -596,7 +645,13 @@
                                             <strong>
 
                                                 Registration Fee:&nbsp;
-                                            </strong> 3,850/Subject
+                                            </strong>
+                                            <br>
+                                            ค่าสมัครสอบแบบปกติ 850 บาท
+                                            <br>
+
+                                            ค่าสมัครสอบพร้อมติว 1250 บาท
+
                                         </span>
                                     </p>
                                     {{-- <p><span style="color: #6351a2;"><strong>Test:</strong> 850 baht</span>
@@ -622,9 +677,9 @@
                                             <b>เกณฑ์การรับสมัคร ASIAROPE Olympiad
                                                 International Round</b> <br>
 
-                                                การสมัครสอบสำหรับผู้ได้รับรางวัลเหรียญเพชร ทอง เงิน ทองแดง<br>
-                                                จากการแข่งขัน ASIAROPE Olympiad ในวิชาคณิตศาสตร์<br>
-                                                และวิทยาศาสตร์ รอบ National เท่านั้น<br>
+                                            การสมัครสอบสำหรับผู้ได้รับรางวัลเหรียญเพชร ทอง เงิน ทองแดง<br>
+                                            จากการแข่งขัน ASIAROPE Olympiad ในวิชาคณิตศาสตร์<br>
+                                            และวิทยาศาสตร์ รอบ National เท่านั้น<br>
                                         </span>
                                     </p>
 
@@ -731,7 +786,8 @@
                                     <div class="col-md-6 col-sm-12">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="nickname">Nickname
                                                 (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
@@ -838,44 +894,19 @@
                                     <div class="col-md-6">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="package">Choose
-                                                Subject / เลือกวิชาที่สอบ <span class="form-required">*</span></label>
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="package">แพคเกจในการสอบ / Packages <span
+                                                    class="form-required">*</span></label>
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Mathematics: 3850 baht">Mathematics 3,850฿</option>
-                                                <option value=" Science: 3850 baht">Science 3,850฿</option>
+                                                <option value="Test: 850 baht">Test: 850 baht</option>
+                                                <option value="Test + tutoring class: 1250 bath">Test +
+                                                    tutoring class: 1250 bath</option>
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Packages</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="contest">Choose
-                                                Exam Date / เลือกวันสอบ
-                                                <span class="form-required">*</span>
-                                            </label>
-                                            <select class="form-control" id="contest" name="contest"
-                                                aria-label="Choose Contest Category" required>
-                                                <option value="">Please Select</option>
-                                                <option value="May 26, 2024 at 5:00 PM (HK Time)">May 26, 2024 at 5:00 PM
-                                                    (HK Time)</option>
-                                                <option value="May 28, 2024 at 3:00 PM. (HK Time)">May 28, 2024 at 3:00 PM
-                                                    (HK Time)</option>
-
-                                            </select>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Contest Category</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
                                                     height="10"> <span class="error-navigation-message">This field is
@@ -1282,6 +1313,9 @@
     </script>
     <script type="text/javascript">
         var myDropzone = {};
+        let imgFiles = document.getElementsByName('imgFiles[]');
+        let imgFiles2 = document.getElementsByName('imgFiles2[]');
+
         Dropzone.options.myAwesomeDropzone = {
             url: '{{ route('form.upload') }}',
             headers: {
@@ -1297,7 +1331,7 @@
                 this.addFile(file);
             },
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
-            maxFilesize: 10, // MB
+            maxFilesize: 5, // MB
             previewsContainer: "#dropzone_preview", // ระบุ element เป้าหลาย
             //previewTemplate: $('#template-preview').html(),
             dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
@@ -1377,8 +1411,12 @@
                     //console.log(response); // console should show the ID you pointed to
                     // do stuff with file.id ...
                 }).on("error", function(file) {
+                    alert("ไม่อนุญาตให้อัพโหลดไฟล์เกิน 5 MB");
+                    while (imgFiles.length > 0) {
+                        imgFiles[0].parentNode.removeChild(imgFiles[0]);
+                    }
                     this.removeFile(file);
-                    alert("please check file format or file size");
+                    // alert(dictFileTooBig);
                 });
                 /*this.on("addedfile", function(file) {
 
@@ -1406,13 +1444,13 @@
             autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
             uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
             parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
-            maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+            maxFiles: 1, // ไฟล์สูงสุด 5 ไฟล์
             maxfilesexceeded: function(file) {
                 this.removeAllFiles();
                 this.addFile(file);
             },
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
-            maxFilesize: 10, // MB
+            maxFilesize: 5, // MB
             renameFile: function(file) {
                 let newName = new Date().getTime() + '_' + file.name;
                 file.newName = newName;
@@ -1494,7 +1532,14 @@
                     // do stuff with file.id ...
                 }).on("error", function(file) {
                     this.removeFile(file);
-                    alert("please check file format or file size");
+                    // this.removeFile(file);
+                    console.log(file);
+                    $('#imgFiles2').val('');
+                    while (imgFiles2.length > 0) {
+                        imgFiles2[0].parentNode.removeChild(imgFiles2[0]);
+                    }
+                    // document.getElementsByName('imgFiles2[]').length = 0;
+                    alert("ไม่อนุญาตให้อัพโหลดไฟล์เกิน 5 MB");
                 });
                 /*this.on("addedfile", function(file) {
 
@@ -1535,21 +1580,28 @@
 
                 }
                 this.defaultShowErrors();
+
             },
-            submitHandler: function() {
-                //var spinner = $('#loader');
-                //spinner.show();
+
+            submitHandler: function(form) {
+                $('#loader-container').show();
+
+                $('#send_data').attr('disabled', true);
+
                 if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]')
                     .length) {
-                    $('#send_data').attr('disabled', true);
                     $(form).submit();
                     return true;
                 }
 
+                $('#loader-container').hide();
+                $('#send_data').attr('disabled', false);
+                return false;
             }
         }
 
         $(document).ready(function() {
+            // $('#loader-container').show();
 
             $(".AddDate").inputmask("99-99-9999");
             $(".AddPhone").inputmask("(999) 999-9999");
@@ -1594,8 +1646,6 @@
             }
 
         }
-
-
 
         function jumpTo(id) {
             var get = location.href;

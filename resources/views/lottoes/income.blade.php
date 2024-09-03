@@ -27,8 +27,8 @@
                 </div>
                 <div class="page-title-actions">
                     <div class="d-inline-block dropdown">
-                        <a href="{{ route('lotto.income.create') }}" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
-                            id="CreateButton3"><i class="fa fa-plus"></i> เพิ่มรายการ</a>
+                        <a href="{{ route('lotto.income.create') }}" class="btn btn-success" data-toggle="modal"
+                            data-target=".bd-example-modal-lg" id="CreateButton3"><i class="fa fa-plus"></i> เพิ่มรายการ</a>
 
 
                     </div>
@@ -53,10 +53,24 @@
                                 <th>status</th>
                                 <th>value</th>
                                 <th>bet</th>
+                                <th>net-20%</th>
                                 <th>remain</th>
-                                <th  width="1%" class="text-nowrap">Action</th>
+                                <th width="1%" class="text-nowrap">Action</th>
                             </tr>
                         </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>#</td>
+                                <td rowspan="5"> รวม </td>
+                                <td> {{ $sum_value }} </td>
+                                <td> {{ $sum_bet }} </td>
+                                <td> {{ $sum_remain }} </td>
+                                <td> {{ $sum_net }} </td>
+                                <td>#</td>
+
+                            </tr>
+                        </tbody>
 
                     </table>
                 </form>
@@ -67,7 +81,6 @@
         </div>
 
     </div>
-
 @endsection
 
 

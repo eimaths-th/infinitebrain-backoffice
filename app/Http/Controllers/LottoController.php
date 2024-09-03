@@ -9,6 +9,7 @@ use App\Models\LottoResult;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Validators\Failure;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
 
 class LottoController extends Controller
 {
@@ -281,6 +282,18 @@ class LottoController extends Controller
     public function income(Request $request)
     {
 
+        $lottoes = LottoRecord::all();
+        $sum_value = 0;
+        $sum_bet = 0;
+        $sum_remain = 0;
+        foreach ($lottoes as $key => $lottoe) {
+            # code...
+            $sum_value += $lottoe->value;
+            $sum_bet += $lottoe->bet;
+            $sum_remain += $lottoe->remain;
+        }
+        $sum_net =  $sum_bet - ($sum_bet * 0.2);
+
         if ($request->ajax()) {
             $types = LottoRecord::orderBy("id", "desc")->get();
             return datatables()->of($types)
@@ -301,11 +314,25 @@ class LottoController extends Controller
                 })
                 ->editColumn('create_at', function (LottoRecord $create_at) {
                     $date = date('d-m-Y', $create_at->create_at);
-
-
                     return $date;
                 })
-
+                ->editColumn('value', function (LottoRecord $lotto) {
+                    $value = $lotto->value;
+                    return number_format($value) . ' บาท';
+                })
+                ->editColumn('bet', function (LottoRecord $lotto) {
+                    $bet = $lotto->bet;
+                    return number_format($bet) . ' บาท';
+                })
+                ->editColumn('remain', function (LottoRecord $lotto) {
+                    $remain = $lotto->remain;
+                    return number_format($remain) . ' บาท';
+                })
+                ->editColumn('net', function (LottoRecord $lotto) {
+                    $bet = $lotto->bet;
+                    $net = $bet - ($bet * 0.2);
+                    return number_format($net) . ' บาท';
+                })
                 ->addColumn('action', function ($row) {
                     $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
@@ -315,7 +342,12 @@ class LottoController extends Controller
                 ->toJson();
         }
 
-        return view('lottoes.income');
+        return view('lottoes.income', [
+            'sum_value' => $sum_value,
+            'sum_bet' => $sum_bet,
+            'sum_remain' => $sum_remain,
+            'sum_net' => $sum_net,
+        ]);
     }
     public function income_create()
     {
@@ -564,6 +596,19 @@ class LottoController extends Controller
     {
         //
         $LottoResult = LottoResult::orderBy("id", "desc")->first();
+
+        $lottoess = lottoReport::all();
+
+        $sum_value = 0;
+        $sum_bet = 0;
+        $sum_remain = 0;
+        foreach ($lottoess as $key => $lottoes) {
+            # code...
+            $sum_value += $lottoes->value;
+            $sum_bet += $lottoes->bet;
+            $sum_remain += $lottoes->result;
+        }
+        $sum_net =  $sum_bet - ($sum_bet * 0.2);
         if ($request->ajax()) {
             $types = lottoReport::orderBy("id", "desc")->get();
             return datatables()->of($types)
@@ -579,14 +624,24 @@ class LottoController extends Controller
                         # code...
                         $text = 'Normal';
                     }
-
                     return $text;
                 })
                 ->editColumn('create_at', function (lottoReport $create_at) {
                     $date = date('d-m-Y', $create_at->create_at);
-
-
                     return $date;
+                })
+                ->editColumn('bet', function (lottoReport $lotto) {
+                    $bet = $lotto->bet;
+                    return number_format($bet) . ' บาท';
+                })
+                ->editColumn('result', function (lottoReport $lotto) {
+                    $result = $lotto->result;
+                    return number_format($result) . ' บาท';
+                })
+                ->editColumn('net', function (lottoReport $lotto) {
+                    $bet = $lotto->bet;
+                    $net = $bet - ($bet * 0.2);
+                    return number_format($net) . ' บาท';
                 })
                 ->editColumn('status', function (lottoReport $status) {
                     $text = '';
@@ -614,7 +669,11 @@ class LottoController extends Controller
         }
 
         return view('lottoes.report', [
-            'result' => $LottoResult
+            'result' => $LottoResult,
+            'sum_value' => $sum_value,
+            'sum_bet' => $sum_bet,
+            'sum_remain' => $sum_remain,
+            'sum_net' => $sum_net,
         ]);
     }
 

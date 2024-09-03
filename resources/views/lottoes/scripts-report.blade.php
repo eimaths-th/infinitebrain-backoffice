@@ -49,6 +49,10 @@
                         name: 'bet'
                     },
                     {
+                        data: 'net',
+                        name: 'net'
+                    },
+                    {
                         data: 'status',
                         name: 'status'
                     },
@@ -65,7 +69,25 @@
                         name: 'action',
                         className: 'text-nowrap'
                     },
-                ]
+                ],
+                drawCallback: function(settings) {
+                    var api = this.api();
+                    var $tbody = $(api.table().body());
+
+                    // Insert the custom HTML at the end of the table body
+                    $tbody.append(`
+            <tr>
+                <td>#</td>
+                <td colspan="4" class ="text-center">รวม</td>
+                <td>{{ number_format($sum_bet) }} บาท</td>
+                <td>{{ number_format($sum_net) }} บาท</td>
+                <td colspan="2" class ="text-center"> </td>
+
+                <td>{{ number_format($sum_remain) }} บาท</td>
+                <td>#</td>
+            </tr>
+        `);
+                }
             });
 
 

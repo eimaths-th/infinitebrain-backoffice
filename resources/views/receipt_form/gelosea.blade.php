@@ -1613,7 +1613,6 @@
             },
 
             submitHandler: function(form) {
-                // $('#loader-container').show();
                 $('#loader-container').show();
 
                 $('#send_data').attr('disabled', true);
@@ -1631,6 +1630,7 @@
         }
 
         $(document).ready(function() {
+            // $('#loader-container').show();
 
             $(".AddDate").inputmask("99-99-9999");
             $(".AddPhone").inputmask("(999) 999-9999");
