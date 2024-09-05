@@ -79,10 +79,10 @@
             <tr>
                 <td>#</td>
                 <td colspan="5" class ="text-center">รวม</td>
-                <td>{{ number_format($sum_value) }} บาท</td>
-                <td>{{ number_format($sum_bet) }} บาท</td>
-                <td>{{ number_format($sum_net) }} บาท</td>
-                <td>{{ number_format($sum_remain) }} บาท</td>
+                <td>{{ number_format($sum_value ?? '0') }} บาท</td>
+                <td>{{ number_format($sum_bet ?? '0') }} บาท</td>
+                <td>{{ number_format($sum_net ?? '0') }} บาท</td>
+                <td>{{ number_format($sum_remain ?? '0') }} บาท</td>
                 <td>#</td>
             </tr>
         `);
