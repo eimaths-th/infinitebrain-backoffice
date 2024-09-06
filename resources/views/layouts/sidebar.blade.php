@@ -801,51 +801,7 @@
                         </li>
                     @endif
 
-                    @if (Auth::user()->level == 0 && (Auth::user()->id == 4 || Auth::user()->id == 16))
-                        <li>
-                            <a href="#">
-                                <i class="metismenu-icon pe-7s-users"></i>
-                                Lotto
-                                <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                            </a>
-
-                            <ul>
-
-                                <!-- แก้ เช็คชื่อ พี่หนึ่ง && me -->
-                                @php
-                                    $user_id = Auth::user()->id;
-
-                                    $godEye = Godeye::where('user_id', $user_id)->get();
-                                @endphp
-                                <li>
-                                    <a href="{{ route('lotto.main') }}">
-                                        <i class="metismenu-icon"></i>
-                                        รับยอด
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('lotto.income') }}">
-                                        <i class="metismenu-icon"></i>
-                                        Income
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('lotto.result') }}">
-                                        <i class="metismenu-icon"></i>
-                                        ผล
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="{{ route('lotto.report') }}">
-                                        <i class="metismenu-icon"></i>
-                                        รายงาน
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </li>
-                    @endif
+                    
 
                 @endif
 
