@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                            background-size: 15px;
-                                                                                                                                        }*/
+                                                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                background-size: 15px;
+                                                                                                                                            }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                            border-color: var(--color-invalid);
-                                                                                                                                        }*/
+                                                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                border-color: var(--color-invalid);
+                                                                                                                                            }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                            display: block;
-                                                                                                                                        }*/
+                                                                                                                                                display: block;
+                                                                                                                                            }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -518,22 +518,22 @@
         }
 
         /* #loader {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
-            z-index: 10000;
-        } */
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
+                z-index: 10000;
+            } */
     </style>
     <style>
         /* .custom-image {
-                                                                                        width: 395px;
-                                                                                        height: 395px;
-                                                                                    } */
+                                                                                            width: 395px;
+                                                                                            height: 395px;
+                                                                                        } */
 
         .custom-image {
             width: 100%;
@@ -612,8 +612,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h2 class="card-title form_header">ASIAROPE Olympiad
-                                    International Round Registration Form</h2>
+                                <h2 class="card-title form_header">Asiarope Olympiad Mathematics Registration Form</h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -672,7 +671,7 @@
                                         </div>
                                     </div> --}}
 
-                                    <p>
+                                    {{-- <p>
                                         <span style="color: #6351a2;">
                                             <b>เกณฑ์การรับสมัคร ASIAROPE Olympiad
                                                 International Round</b> <br>
@@ -680,6 +679,21 @@
                                             การสมัครสอบสำหรับผู้ได้รับรางวัลเหรียญเพชร ทอง เงิน ทองแดง<br>
                                             จากการแข่งขัน ASIAROPE Olympiad ในวิชาคณิตศาสตร์<br>
                                             และวิทยาศาสตร์ รอบ National เท่านั้น<br>
+                                        </span>
+                                    </p> --}}
+
+                                    <p>
+                                        <span style="color: #6351a2;"><b>เกณฑ์การเทียบระดับชั้น GELOSEA</b>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="text-center">
+                                                        <img src="images/condition-01.jpg" class="custom-image2 my-3"
+                                                            alt="Image 2" hight="20px">
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </span>
                                     </p>
 
@@ -774,7 +788,8 @@
                                             </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Last
                                                 Name</label>
 
                                         </div>
