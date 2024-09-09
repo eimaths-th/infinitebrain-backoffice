@@ -683,7 +683,7 @@
                                     </p> --}}
 
                                     <p>
-                                        <span style="color: #6351a2;"><b>เกณฑ์การเทียบระดับชั้น GELOSEA</b>
+                                        <span style="color: #6351a2;"><b>เกณฑ์การเทียบระดับชั้น Asiarope Olympiad</b>
                                             <br>
                                             <div class="row">
                                                 <div class="col-lg-12">
