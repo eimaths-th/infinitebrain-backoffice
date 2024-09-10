@@ -411,6 +411,12 @@
                         _token: token
                     },
                     success: function(data) {
+                    
+                        toastr.success(data.message, {
+                            timeOut: 5000
+                        });
+
+                        $('#Listview').DataTable().ajax.reload();
                         if (data.success) {
                             table.row(el.parents('tr'))
                                 .remove()

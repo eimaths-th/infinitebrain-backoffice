@@ -177,7 +177,7 @@
                                 </td>
                                 <td align="left" class="actived">&nbsp;
                                     <b>
-                                        <font size="{{ $fontsize }}">{{ $records->first()->user->name }}
+                                        <font size="{{ $fontsize }}">{{ $records->first()->user->name ?? '404 not fond'}}
                                         </font>
                                     </b>
                                 </td>

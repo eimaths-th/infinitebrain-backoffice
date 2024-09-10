@@ -90,6 +90,7 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/find-UserRecTime/{user_id}/{status}/{month}/{year}', [RecordtimeController::class, 'find_UserRecTime'])->name('find_UserRecTime');
     Route::get('/find-StatusRecTime/{status}/{month}/{year}', [RecordtimeController::class, 'find_statusRecTime'])->name('find_statusRecTime');
     Route::get('/report-month-time', [RecordtimeController::class, 'reportTime'])->name('reportTime');
+    Route::get('/testrec', [RecordtimeController::class, 'testrec'])->name('testrec');
     Route::get('/report-month-student', [StdlogController::class, 'reportMonthStd'])->name('reportMonthStd');
     Route::get('/searchr_reportMonthStd', [StdlogController::class, 'searchr_reportMonthStd'])->name('searchr_reportMonthStd');
     Route::get('/report-year-student', [StdlogController::class, 'reportYearStd'])->name('reportYearStd');
@@ -237,7 +238,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/course/destroy/{id}', [CourseController::class, 'destroy'])->name('course.destroy');
     Route::delete('/course/destroy_all', [CourseController::class, 'destroy_all'])->name('course.destroy_all');
 
-    
+
 
 
     //reciept

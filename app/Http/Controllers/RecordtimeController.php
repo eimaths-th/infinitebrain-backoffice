@@ -483,6 +483,14 @@ class RecordtimeController extends Controller
         ]);
     }
 
+    public function testrec()
+    {
+        $users = User::all();
+        $ids = User::pluck('id')->toArray();
+        $recordtime = Recordtime::whereNotIn('user_id', $ids)->delete();
+        // $ids_rec = $recordtime->pluck('user_id')->toArray();
+      
+    }
     public function search_reportMonthTime(Request $request)
     {
         $month = $request->month;

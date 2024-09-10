@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Recordtime;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -324,6 +325,8 @@ class EmployeeController extends Controller
     {
         //
         $this->check_permission();
+
+        Recordtime::where('user_id', $id)->delete();
         User::find($id)->delete();
         return ['success' => true, 'message' => 'Deleted Successfully'];
     }
