@@ -983,7 +983,12 @@ class ReceiptSchoolController extends Controller
         }
 
         return response()->json([
-            'data' =>  $data, 'data2' => $data2, 'student' => $student,  'data_html' => $data_html, 'imgs' => $html, 'payment' => $payment,
+            'data' =>  $data,
+            'data2' => $data2,
+            'student' => $student,
+            'data_html' => $data_html,
+            'imgs' => $html,
+            'payment' => $payment,
             'select_list_parent' => $select_list_parent
         ]);
     }
@@ -993,6 +998,11 @@ class ReceiptSchoolController extends Controller
         // $url = route('receipt_school.show', ['type' => 'view', 'id' => $id]);
         // dd($url);
         $data = Receipt_School::find($id);
+
+        // dd($data);
+
+        $payment_type = $data->payment_type;
+
 
         if ($type == "view") {
             $viewr = "receipt.view1";
@@ -1020,20 +1030,7 @@ class ReceiptSchoolController extends Controller
             $group_rec = '';
         }
 
-        if ($data->type == 2) {
-            $mes = "ใบลดหนี้";
-            $text = "Credit Note";
-        } elseif ($data->type == 9 || $group_rec) {
-            # code...
-            $mes = "ใบกำกับภาษี/ใบแจ้งหนี้";
-            $mes2 = "ใบเสร็จรับเงิน";
-            $text = "Tax Invoice/Invoice";
-            $text2 = "Invoice";
-        } else {
 
-            $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
-            $text = "Tax Invoice/Receipt";
-        }
 
         $receipts_detail = SchoolPrice::where('rid', $data->id)
             ->orderBy("rid", "asc")
@@ -1231,6 +1228,36 @@ class ReceiptSchoolController extends Controller
             $i++;
         }
 
+        if ($data->type == 2) {
+            $mes = "ใบลดหนี้";
+            $text = "Credit Note";
+        } elseif ($data->type == 9 || $group_rec) {
+            # code...
+            $mes = "ใบกำกับภาษี/ใบแจ้งหนี้";
+            $mes2 = "ใบเสร็จรับเงิน";
+            $text = "Tax Invoice/Invoice";
+            $text2 = "Invoice";
+        } else {
+            if ($payment_type == 1) {
+                # code...
+                $mes = "ใบเสร็จรับเงิน";
+                $text = "Receipt";
+                $vat_price_val = number_format(0, 2);
+                $vat_val = number_format(0, 2);
+                $booksum = $booksum + $pricesub;
+            } else {
+                # code...
+                $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+                $text = "Tax Invoice/Receipt";
+            }
+        }
+
+        // if ($payment_type == 1) {
+        //     # code...
+        //     $vat_price_val = number_format(0, 2);
+        //     $vat_val = number_format(0, 2);
+        //     $booksum = $booksum + $pricesub;
+        // }
 
         return view($viewr)->with(['id' => $id])
             ->with(['discount' => $discount])
@@ -1288,7 +1315,11 @@ class ReceiptSchoolController extends Controller
         }
 
         return response()->json([
-            'html' =>  $select_list, 'html2' => $mobile, 'html3' => $address, 'html4' => $postcode, 'html5' => $select_list1
+            'html' =>  $select_list,
+            'html2' => $mobile,
+            'html3' => $address,
+            'html4' => $postcode,
+            'html5' => $select_list1
         ]);
     }
 
@@ -1354,7 +1385,8 @@ class ReceiptSchoolController extends Controller
             //
         }
         return response()->json([
-            'html' =>  $output, 'outputsum' => $outputsum,
+            'html' =>  $output,
+            'outputsum' => $outputsum,
             // 'entrace_edit' => $entrace_edit
         ]);
     }
@@ -1394,7 +1426,9 @@ class ReceiptSchoolController extends Controller
         $sum = '' . (int)$select_list * (int)$book . ' ';
         // dd($sub_id, $level_id, $book,$sum);
         return response()->json([
-            'html' =>  $output, 'sum' => $sum, 'bp' => $bp
+            'html' =>  $output,
+            'sum' => $sum,
+            'bp' => $bp
         ]);
     }
 

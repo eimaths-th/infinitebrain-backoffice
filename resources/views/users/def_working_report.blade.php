@@ -158,7 +158,9 @@
                                                     class="text-dark">
                                                     @php
                                                         $statusName = $status->name;
-                                                        $statusCount = $records->where('status_name', $status->name)->count();
+                                                        $statusCount = $records
+                                                            ->where('status_name', $status->name)
+                                                            ->count();
                                                         $text = '';
 
                                                         // if ($status->name === 'ลากิจ') {
@@ -273,6 +275,7 @@
                                     <th>User</th>
                                     @foreach ($stwork as $status)
                                         <th>
+
                                             {{ $status->name }}
                                         </th>
                                     @endforeach
@@ -285,7 +288,12 @@
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td class="text-center">{{ $records->first()->user->code ?? 'code' }}</td>
-                                        <td>{{ $records->first()->user->name ?? 'ไม่พบพนักงาน' }}</td>
+                                        <td>
+                                            <a href="#"
+                                                onclick="export_report_user('{{ $records->first()->user->id }}');"
+                                                class="text-dark">{{ $records->first()->user->name ?? 'ไม่พบพนักงาน' }}</a>
+                                            {{-- {{ $records->first()->user->name ?? 'ไม่พบพนักงาน' }} --}}
+                                        </td>
 
                                         @foreach ($stwork as $status)
                                             <td>
@@ -293,7 +301,9 @@
                                                     class="text-dark">
                                                     @php
                                                         $statusName = $status->name;
-                                                        $statusCount = $records->where('status_name', $status->name)->count();
+                                                        $statusCount = $records
+                                                            ->where('status_name', $status->name)
+                                                            ->count();
                                                         $text = '';
 
                                                         if ($status->name === 'ลากิจ') {
@@ -306,7 +316,11 @@
                                                             # code...
                                                             $remain = 6;
                                                         }
-                                                        if ($status->name === 'ลากิจ' || $status->name === 'ลาป่วย' || $status->name === 'ลาพักร้อน') {
+                                                        if (
+                                                            $status->name === 'ลากิจ' ||
+                                                            $status->name === 'ลาป่วย' ||
+                                                            $status->name === 'ลาพักร้อน'
+                                                        ) {
                                                             # code...
                                                             $text = 'remain : ' . $remain - $statusCount ?? '';
                                                         }
@@ -361,7 +375,8 @@
                             </div>
                         </form> --}}
 
-                        <h3 class=""><i class="fa fa-cog"></i> รวม เวลามาสาย & ขาดงาน <a href="#" onclick="export_report3();" class="btn btn-success">Print</a></h3>
+                        <h3 class=""><i class="fa fa-cog"></i> รวม เวลามาสาย & ขาดงาน <a href="#"
+                                onclick="export_report3();" class="btn btn-success">Print</a></h3>
 
                         <table id="Listview4"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-4 Listview3">
@@ -447,7 +462,8 @@
     <script>
         function export_report1() {
 
-            url = '{{ route('search_reportMonthTime', ['type' => 'print', 'tap' => '1', 'month' => $month, 'year' => $year]) }}';
+            url =
+                '{{ route('search_reportMonthTime', ['type' => 'print', 'tap' => '1', 'month' => $month, 'year' => $year]) }}';
 
             window.open(
                 url.replace(/&amp;/g, "&")
@@ -462,6 +478,7 @@
                 url.replace(/&amp;/g, "&")
             );
         }
+
         function export_report3() {
 
             url = '{{ route('search_reportMonthTime', ['type' => 'print', 'tap' => '3']) }}';
@@ -469,6 +486,15 @@
             window.open(
                 url.replace(/&amp;/g, "&")
             );
+        }
+        let baseUrl = '{{ route('search_reportMonthTime', ['type' => 'print', 'tap' => '4', 'year' => $year]) }}';
+
+        function export_report_user(user_id) {
+
+            let url = `${baseUrl}&user_id=${user_id}`;
+
+
+            window.open(url.replace(/&amp;/g, "&"));
         }
         $(document).ready(function() {
             // var selectMonth1 = document.getElementById('selectMonth1');

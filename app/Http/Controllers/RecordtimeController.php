@@ -489,10 +489,11 @@ class RecordtimeController extends Controller
         $ids = User::pluck('id')->toArray();
         $recordtime = Recordtime::whereNotIn('user_id', $ids)->delete();
         // $ids_rec = $recordtime->pluck('user_id')->toArray();
-      
+
     }
     public function search_reportMonthTime(Request $request)
     {
+        // dd($request);
         $month = $request->month;
         $year = $request->year;
         if ($month) {
@@ -524,8 +525,6 @@ class RecordtimeController extends Controller
         }
 
         $rec_times_5 = Recordtime::where('status', 5)
-
-
             ->orderBy('date')
             ->get()
             ->groupBy(function ($date) {
@@ -603,6 +602,7 @@ class RecordtimeController extends Controller
 
         $type = $request->type;
         $tap = $request->tap;
+        $recTap4 = '';
         if ($type === "print") {
             # code...
             if ($tap === '1') {
@@ -614,12 +614,25 @@ class RecordtimeController extends Controller
             } elseif ($tap === '3') {
                 # code...
                 $view = 'users.rect_tap_3_print';
+            } elseif ($tap === '4') {
+                # code...
+                $recTap4 = Recordtime::whereYear('date', $year)
+                    ->where('user_id', $request->user_id)
+                    ->get();
+                $view = 'users.rect_tap_2_print_user';
+                // dd(
+                //     $request,
+                //     $recTap4,
+                // );
             }
         } else {
             # code...
             $view = 'users.def_working_report';
         }
-
+        // dd(
+        //     $request,
+        //     $recTap4,
+        // );
         return view($view, [
             'rec_timess' => $rec_timess,
             // 'rec_times' => $rec_times,
@@ -628,6 +641,7 @@ class RecordtimeController extends Controller
             'month' => $month,
             'stwork' => $stwork,
             'overlates' => $overlates,
+            'recTap4' => $recTap4,
             'fontsize' => 1,
 
 
