@@ -1019,10 +1019,10 @@ class ReceiptSchoolController extends Controller
         $firstTwoDigits = substr($recNumber, 0, 2);
         $group_rec = '';
 
-        if ($firstTwoDigits === '01') {
+        if ($firstTwoDigits === '01' || $firstTwoDigits === '71') {
             # code...
             $group_rec = 'chn';
-        } elseif ($firstTwoDigits === '03') {
+        } elseif ($firstTwoDigits === '03' || $firstTwoDigits === '73' ) {
             # code...
             $group_rec = 'sci';
         } else {
@@ -1435,8 +1435,11 @@ class ReceiptSchoolController extends Controller
     public function store(Request $request)
     {
 
-
-
+        // dd(
+        //     $request->payment_type,
+        //     $request
+        // );
+        $payment_type = $request->payment_type;
 
         $validator =  Validator::make(
             $request->all(),
@@ -1524,7 +1527,7 @@ class ReceiptSchoolController extends Controller
             $stu .= $sss . "|";
         }
         $stu = rtrim($stu, "|");
-        $rnumber = Receipt_School_RunningNumber::generate($group);
+        $rnumber = Receipt_School_RunningNumber::generate($group,$payment_type);
 
 
         $data = new Receipt_School([

@@ -2075,11 +2075,11 @@
                     var type = data.type2;
                     console.log('type:' +type);
 
-                    if (firstTwoDigits === '01') {
+                    if (firstTwoDigits === '01' || firstTwoDigits === '71') {
                         // $(row).find('td:eq(3)').addClass('bg-danger');
                         // $(row).addClass('bg-cyan');
                         $(row).addClass('bg-red');
-                    } else if (firstTwoDigits === '03') {
+                    } else if (firstTwoDigits === '03' || firstTwoDigits === '73') {
                         // $(row).find('td:eq(3)').addClass('bg-danger');
                         $(row).addClass('bg-cyan');
                         // $(row).addClass('bg-red');

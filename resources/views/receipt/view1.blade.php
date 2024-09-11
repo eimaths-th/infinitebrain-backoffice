@@ -96,6 +96,9 @@
                 </div>
             </div>
         </div>
+        @php
+            // dd($group_rec);
+        @endphp
         @if ($typeRec == 9 || $group_rec)
             <div class="main-card mb-3 card " id="x_content">
                 <div class="card-body">
@@ -223,7 +226,7 @@
                                         <td align="center">{{ $receipt_detail['unit'] }}</td>
                                         <td align="center">{{ number_format($unitpriceBook,2)}}</td>
                                         <td align="center">{{ $receipt_detail['discount'] }}</td>
-                                        <td align="center" style="vertical-align: top;">{{ number_format($unitpriceBook,2) }}</td>
+                                        <td align="center" style="vertical-align: top;">{{ number_format($unitpriceBook * $receipt_detail['quantity'],2) }}</td>
                                     </tr>
 
                                     @if ($receipt_detail['entrance_fee'] > 0)
