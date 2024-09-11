@@ -1022,7 +1022,7 @@ class ReceiptSchoolController extends Controller
         if ($firstTwoDigits === '01' || $firstTwoDigits === '71') {
             # code...
             $group_rec = 'chn';
-        } elseif ($firstTwoDigits === '03' || $firstTwoDigits === '73' ) {
+        } elseif ($firstTwoDigits === '03' || $firstTwoDigits === '73') {
             # code...
             $group_rec = 'sci';
         } else {
@@ -1233,10 +1233,21 @@ class ReceiptSchoolController extends Controller
             $text = "Credit Note";
         } elseif ($data->type == 9 || $group_rec) {
             # code...
-            $mes = "ใบกำกับภาษี/ใบแจ้งหนี้";
-            $mes2 = "ใบเสร็จรับเงิน";
-            $text = "Tax Invoice/Invoice";
-            $text2 = "Invoice";
+
+            if ($payment_type == 1) {
+                # code...
+                $mes = "ใบเสร็จรับเงิน";
+                $text = "Receipt";
+                $vat_price_val = number_format(0, 2);
+                $vat_val = number_format(0, 2);
+                $booksum = $booksum + $pricesub;
+            } else {
+                # code...
+                $mes = "ใบกำกับภาษี/ใบแจ้งหนี้";
+                $mes2 = "ใบเสร็จรับเงิน";
+                $text = "Tax Invoice/Invoice";
+                $text2 = "Invoice";
+            }
         } else {
             if ($payment_type == 1) {
                 # code...
@@ -1527,7 +1538,7 @@ class ReceiptSchoolController extends Controller
             $stu .= $sss . "|";
         }
         $stu = rtrim($stu, "|");
-        $rnumber = Receipt_School_RunningNumber::generate($group,$payment_type);
+        $rnumber = Receipt_School_RunningNumber::generate($group, $payment_type);
 
 
         $data = new Receipt_School([
