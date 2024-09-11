@@ -999,9 +999,17 @@ class ReceiptSchoolController extends Controller
         // dd($url);
         $data = Receipt_School::find($id);
 
-        // dd($data);
 
+
+        $dataDate = date('Y-m-d', strtotime($data->created_at));
+        $fixDate = date('Y-m-d', strtotime('2024-09-09'));
         $payment_type = $data->payment_type;
+        // dd(
+        //     $data,
+        //     $dataDate,
+        //     $fixDate,
+        //     $payment_type,
+        // );
 
 
         if ($type == "view") {
@@ -1234,7 +1242,7 @@ class ReceiptSchoolController extends Controller
         } elseif ($data->type == 9 || $group_rec) {
             # code...
 
-            if ($payment_type == 1) {
+            if ($payment_type == 1 && $fixDate < $dataDate) {
                 # code...
                 $mes = "ใบเสร็จรับเงิน";
                 $text = "Receipt";
@@ -1249,7 +1257,7 @@ class ReceiptSchoolController extends Controller
                 $text2 = "Invoice";
             }
         } else {
-            if ($payment_type == 1) {
+            if ($payment_type == 1 && $fixDate < $dataDate) {
                 # code...
                 $mes = "ใบเสร็จรับเงิน";
                 $text = "Receipt";
