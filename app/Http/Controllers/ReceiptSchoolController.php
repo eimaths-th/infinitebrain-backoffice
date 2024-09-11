@@ -1546,7 +1546,8 @@ class ReceiptSchoolController extends Controller
             $stu .= $sss . "|";
         }
         $stu = rtrim($stu, "|");
-        $rnumber = Receipt_School_RunningNumber::generate($group, $payment_type);
+        // dd($payment_type);
+        $rnumber = Receipt_School_RunningNumber::generate($group, $payment_type == 1 ? '1' : '0');
 
 
         $data = new Receipt_School([
