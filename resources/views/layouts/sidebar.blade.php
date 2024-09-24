@@ -430,6 +430,12 @@
                                     International STEM
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '25']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    SEACSO
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -566,6 +572,12 @@
                                 <a href="{{ route('receipts', ['sfield' => '24']) }}">
                                     <i class="metismenu-icon"></i>
                                     International STEM
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '25']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    SEACSO
                                 </a>
                             </li>
 
@@ -800,9 +812,6 @@
                             </ul>
                         </li>
                     @endif
-
-                    
-
                 @endif
 
             </ul>

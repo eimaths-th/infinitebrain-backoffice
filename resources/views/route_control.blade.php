@@ -80,6 +80,7 @@
                         <option value="huaxiacup-final-round">China-Mathematical-Olympiad-Final</option>
                         <option value="ihcmi">international-hope-cup-mathematic-invitational</option>
                         <option value="isc">International STEM competitions</option>
+                        <option value="seacso">seacso</option>
 
                     </select>
 

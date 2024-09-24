@@ -51,6 +51,7 @@ class ReceiptFormController extends Controller
         '22' => 'huaxiacup-final-round',
         '23' => 'ihcmi',
         '24' => 'isc',
+        '25' => 'seacso',
     );
 
     public function isc()
@@ -141,6 +142,12 @@ class ReceiptFormController extends Controller
     public function cambridge()
     {
         return view("receipt_form.cambridge");
+    }
+    public function seacso()
+    {
+
+        //'25' => 'seacso',
+        return view("receipt_form.seacso");
     }
 
     public function fileStore(Request $request)
@@ -560,7 +567,7 @@ class ReceiptFormController extends Controller
                 $sdes = 'ค่าลงทะเบียนระดับมัธยม';
             }
         } else {
-            if ($request->get('sfield') == 16 || $request->get('sfield') == 17|| $request->get('sfield') == 24) {
+            if ($request->get('sfield') == 16 || $request->get('sfield') == 17 || $request->get('sfield') == 24 || $request->get('sfield') == 25) {
                 $sdes = '';
             } elseif ($request->get('sfield') == 18 || $request->get('sfield') == 19) {
 

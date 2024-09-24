@@ -51,7 +51,7 @@ class ReceiptController extends Controller
         '21' => 'Neo science',
         '22' => 'chai-Final',
         '24' => 'isc',
-
+        '25' => 'seacso',
 
 
     );
@@ -77,7 +77,7 @@ class ReceiptController extends Controller
         '21' => 'neos-2',
         '22' => 'chai-Final',
         '24' => 'isc',
-
+        '25' => 'seacso',
     );
     const thmonth = array(
         "",
@@ -938,7 +938,8 @@ class ReceiptController extends Controller
             //->join("levels", "levels.id", "=", "receipts.level_id")
 
             ->where([
-                ['receipts.sfield', $sfield], ['submission_date', $request->get('print_rdate')],
+                ['receipts.sfield', $sfield],
+                ['submission_date', $request->get('print_rdate')],
                 ['cancle', '!=', 1]
             ])
             /* ->whereNull('cancle') */
@@ -1229,7 +1230,8 @@ class ReceiptController extends Controller
             ->with(['fontsize' => $request->get('fontsize')])
             ->with(['total_price' => number_format($total_price, 2)])
             ->with(['print_number' =>  $request->get('print_number')])
-            ->with(['fprint_number' =>  sprintf("%02d", $request->get('print_number'))]
+            ->with(
+                ['fprint_number' =>  sprintf("%02d", $request->get('print_number'))]
             );
     }
 
