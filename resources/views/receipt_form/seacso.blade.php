@@ -1137,7 +1137,7 @@
                                     <div class="col-md-6 ">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="newsf">ท่านทราบข่าวสารการจัดสอบ GELOSEA จากช่องทางใด <span
+                                                for="newsf">ท่านทราบข่าวสารการจัดสอบ SEACSO จากช่องทางใด <span
                                                     class="form-required">*</span>
                                             </label>
                                             <input type="text" class="form-control" name="newsf" id="newsf"
