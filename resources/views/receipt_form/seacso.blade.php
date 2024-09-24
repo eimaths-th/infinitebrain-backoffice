@@ -1028,9 +1028,9 @@
                                 <div class="form-row form-focus">
                                     <div class="col-md-6 col-sm-12">
                                         <div class="position-relative form-group" style="padding-top:0px;">
-                                            <label class="form-label form-label-top form-label-auto" for="grade">E-mail
-                                                (กรุณาตรวจสอบที่อยู่อีเมลให้ถูกต้อง หากกรอกผิด
-                                                จะไม่สามารถส่งข้อมูลในการเข้าสอบได้)
+                                            <label class="form-label form-label-top form-label-auto" for="grade">
+                                                E-mail (กรุณาใช้ @gmail.com เท่านั้น เพื่อที่จะสามารถส่งข้อมูลสำหรับเข้าสอบได้)
+                                                **สำหรับผู้ที่สมัครมากกว่า 1 คน รบกวนไม่ใช้อีเมลเดิมในการสมัครสอบ**
                                                 <span class="form-required">*</span>
                                             </label>
                                             <input type="email" class="form-control" name="email" id="email"
