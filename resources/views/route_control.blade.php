@@ -81,6 +81,7 @@
                         <option value="ihcmi">international-hope-cup-mathematic-invitational</option>
                         <option value="isc">International STEM competitions</option>
                         <option value="seacso">seacso</option>
+                        <option value="copernicus">COPERNICUS OLYMPIAD</option>
 
                     </select>
 

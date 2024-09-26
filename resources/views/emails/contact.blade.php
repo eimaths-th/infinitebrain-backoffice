@@ -249,6 +249,8 @@
                                                                             $message = 'International STEM Competitions 2024';
                                                                         } elseif ($data->sfield == '25') {
                                                                             $message = 'Southeast Asia Computer Science Olympiad 2024';
+                                                                        } elseif ($data->sfield == '26') {
+                                                                            $message = 'COPERNICUS OLYMPIAD 2024';
                                                                         }
                                                                         ?>
                                                                         {{ $message }}</span>
@@ -2422,6 +2424,8 @@
                                                                                     $message1 = 'International STEM Competitions 2024';
                                                                                 } elseif ($data->sfield == '25') {
                                                                                     $message1 = 'Southeast Asia Computer Science Olympiad 2024';
+                                                                                } elseif ($data->sfield == '26') {
+                                                                                    $message1 = 'COPERNICUS OLYMPIAD 2024';
                                                                                 }
                                                                                 ?>
                                                                                 สอบ {{ $message1 }}

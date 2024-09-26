@@ -52,6 +52,7 @@ class ReceiptFormController extends Controller
         '23' => 'ihcmi',
         '24' => 'isc',
         '25' => 'seacso',
+        '26' => 'copernicus',
     );
 
     public function isc()
@@ -148,6 +149,12 @@ class ReceiptFormController extends Controller
 
         //'25' => 'seacso',
         return view("receipt_form.seacso");
+    }
+    public function copernicus()
+    {
+
+        //'25' => 'seacso',
+        return view("receipt_form.copernicus");
     }
 
     public function fileStore(Request $request)

@@ -52,6 +52,7 @@ class ReceiptController extends Controller
         '22' => 'chai-Final',
         '24' => 'isc',
         '25' => 'seacso',
+        '26' => 'copernicus',
 
 
     );
@@ -78,6 +79,7 @@ class ReceiptController extends Controller
         '22' => 'chai-Final',
         '24' => 'isc',
         '25' => 'seacso',
+        '26' => 'copernicus',
     );
     const thmonth = array(
         "",

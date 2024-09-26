@@ -40,6 +40,7 @@ class Receipt_Customer_RunningNumber extends Model
         '22',
         '24',
         '25',
+        '26',
 
     ];
 
@@ -64,6 +65,8 @@ class Receipt_Customer_RunningNumber extends Model
         '20' => '20',
         '24' => '24',
         '25' => '25',
+        '26' => '26',
+
 
     ];
 

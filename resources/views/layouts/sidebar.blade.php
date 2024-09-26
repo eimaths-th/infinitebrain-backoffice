@@ -436,6 +436,12 @@
                                     SEACSO
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '26']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Copernicus
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -578,6 +584,12 @@
                                 <a href="{{ route('receipts', ['sfield' => '25']) }}">
                                     <i class="metismenu-icon"></i>
                                     SEACSO
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '26']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Copernicus
                                 </a>
                             </li>
 
