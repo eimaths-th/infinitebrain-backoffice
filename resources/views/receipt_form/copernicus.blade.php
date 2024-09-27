@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                                                                                            background-size: 15px;
-                                                                                                                                                                                                        }*/
+                                                                                                                                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                                                                                            background-size: 15px;
+                                                                                                                                                                                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                                                                                            border-color: var(--color-invalid);
-                                                                                                                                                                                                        }*/
+                                                                                                                                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                                                                                            border-color: var(--color-invalid);
+                                                                                                                                                                                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                                                                                            display: block;
-                                                                                                                                                                                                        }*/
+                                                                                                                                                                                                                            display: block;
+                                                                                                                                                                                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -518,16 +518,16 @@
         }
 
         /* #loader {
-                                                                                    display: none;
-                                                                                    position: fixed;
-                                                                                    top: 0;
-                                                                                    left: 0;
-                                                                                    right: 0;
-                                                                                    bottom: 0;
-                                                                                    width: 100%;
-                                                                                    background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
-                                                                                    z-index: 10000;
-                                                                                } */
+                                                                                                    display: none;
+                                                                                                    position: fixed;
+                                                                                                    top: 0;
+                                                                                                    left: 0;
+                                                                                                    right: 0;
+                                                                                                    bottom: 0;
+                                                                                                    width: 100%;
+                                                                                                    background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
+                                                                                                    z-index: 10000;
+                                                                                                } */
         #loader-container {
             position: fixed;
             top: 0;
@@ -906,6 +906,8 @@
                                                 <option value="Math First: 950 baht">Math First: 950 baht</option>
                                                 <option value="Math Second: 950 baht">Math Second: 950 baht</option>
                                                 <option value="Science: 950 baht">Science: 950 baht</option>
+                                                <option value="Physics and Astronomy: 950 baht">Physics and Astronomy (Only
+                                                    Grade 7-12)</option>
                                                 {{-- <option value="Test + tutoring class: 1250 bath">Test +
                                                     tutoring class: 1250 bath</option> --}}
 
@@ -1146,8 +1148,8 @@
                                     <div class="col-md-6 ">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="newsf">ท่านทราบข่าวสารการจัดสอบ COPERNICUS OLYMPIAD จากช่องทางใด <span
-                                                    class="form-required">*</span>
+                                                for="newsf">ท่านทราบข่าวสารการจัดสอบ COPERNICUS OLYMPIAD จากช่องทางใด
+                                                <span class="form-required">*</span>
                                             </label>
                                             <input type="text" class="form-control" name="newsf" id="newsf"
                                                 value="" maxlength="50" required>
@@ -1189,6 +1191,56 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('package').onchange = function() {
+            var selectedPackage = this.value;
+            var selectGrade = $('#grade').val();
+
+            if (selectGrade) {
+
+                switch (selectGrade) {
+                    case 'Grade 3':
+                    case 'Grade 4':
+                    case 'Grade 5':
+                    case 'Grade 6':
+                        if (selectedPackage == 'Physics and Astronomy: 950 baht') {
+                            $('#package').val('');
+                            alert('Physics and Astronomy its Only Grade 7-12');
+
+                        }
+                        break;
+                    default:
+                        // Add default behavior here if needed
+                        break;
+                }
+            } else {
+                alert('Pls. Select Grade');
+            }
+        };
+        document.getElementById('grade').onchange = function() {
+            var selectedGrade = this.value;
+            var selectedPackage = $('#package').val();
+
+            if (selectedPackage) {
+
+                switch (selectedGrade) {
+                    case 'Grade 3':
+                    case 'Grade 4':
+                    case 'Grade 5':
+                    case 'Grade 6':
+                        if (selectedPackage == 'Physics and Astronomy: 950 baht') {
+                            $('#package').val('');
+                            alert('Physics and Astronomy its Only Grade 7-12');
+
+                        }
+                        break;
+                    default:
+                        // Add default behavior here if needed
+                        break;
+                }
+            }
+        };
+    </script>
     <script>
         $(document).ready(function() {
             var inputlist = ["firstname", "lastname", "address", "postcode"];
