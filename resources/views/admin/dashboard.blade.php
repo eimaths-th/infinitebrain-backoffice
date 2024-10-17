@@ -23,6 +23,23 @@
             max-width: 800;
             height: 200;
         }
+
+        .line-contact-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background-color: #00B900;
+            /* Line's green color */
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
     </style>
 @endsection
 
@@ -103,7 +120,9 @@
                 @php
                     $totalNewStudents += isset($statusCounts['New Student']) ? $statusCounts['New Student'] : 0;
                     $totalStudying += isset($statusCounts['studying . . .']) ? $statusCounts['studying . . .'] : 0;
-                    $totalTermination += isset($statusCounts['Termination of study']) ? $statusCounts['Termination of study'] : 0;
+                    $totalTermination += isset($statusCounts['Termination of study'])
+                        ? $statusCounts['Termination of study']
+                        : 0;
                     $totalDrop += isset($statusCounts['drop']) ? $statusCounts['drop'] : 0;
                     $totalResume += isset($statusCounts['resume']) ? $statusCounts['resume'] : 0;
                     $totalWait += isset($statusCounts['waitting . . .']) ? $statusCounts['waitting . . .'] : 0;
@@ -991,9 +1010,15 @@
                                                         'type' => 'view',
                                                         'paraCheck' => 'all',
                                                         'group' => $group,
-                                                        'resume' => isset($groupData['ids']['resume']) ? $groupData['ids']['resume'] : '',
-                                                        'New Student' => isset($groupData['ids']['New Student']) ? $groupData['ids']['New Student'] : '',
-                                                        'studying . . .' => isset($groupData['ids']['studying . . .']) ? $groupData['ids']['studying . . .'] : '',
+                                                        'resume' => isset($groupData['ids']['resume'])
+                                                            ? $groupData['ids']['resume']
+                                                            : '',
+                                                        'New Student' => isset($groupData['ids']['New Student'])
+                                                            ? $groupData['ids']['New Student']
+                                                            : '',
+                                                        'studying . . .' => isset($groupData['ids']['studying . . .'])
+                                                            ? $groupData['ids']['studying . . .']
+                                                            : '',
                                                         'ids' => [],
                                                     ];
                                                     if (isset($groupData['ids']['resume'])) {
@@ -1007,7 +1032,9 @@
                                                     if (isset($groupData['ids']['studying . . .'])) {
                                                         $routeParameters['ids'][] = $groupData['ids']['studying . . .'];
                                                     }
-                                                    $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                                    $routeParameters['ids'] = array_unique(
+                                                        array_merge(...$routeParameters['ids']),
+                                                    );
                                                     // dd($groupData, $routeParameters);
                                                 @endphp
 
@@ -1056,7 +1083,9 @@
                                                         'paraCheck' => 'New Student',
                                                         'group' => $group,
                                                         // 'resume' => isset($groupData['ids']['resume']) ? $groupData['ids']['resume'] : '',
-                                                        'New Student' => isset($groupData['ids']['New Student']) ? $groupData['ids']['New Student'] : '',
+                                                        'New Student' => isset($groupData['ids']['New Student'])
+                                                            ? $groupData['ids']['New Student']
+                                                            : '',
                                                         // 'studying . . .' => isset($groupData['ids']['studying . . .']) ? $groupData['ids']['studying . . .'] : '',
                                                         'ids' => [],
                                                     ];
@@ -1071,7 +1100,9 @@
                                                     // if (isset($groupData['ids']['studying . . .'])) {
                                                     //     $routeParameters['ids'][] = $groupData['ids']['studying . . .'];
                                                     // }
-                                                    $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                                    $routeParameters['ids'] = array_unique(
+                                                        array_merge(...$routeParameters['ids']),
+                                                    );
                                                     // dd($groupData, $routeParameters);
                                                 @endphp
 
@@ -1120,13 +1151,17 @@
                                                         'type' => 'view',
                                                         'paraCheck' => 'studying',
                                                         'group' => $group,
-                                                        'studying . . .' => isset($groupData['ids']['studying . . .']) ? $groupData['ids']['studying . . .'] : '',
+                                                        'studying . . .' => isset($groupData['ids']['studying . . .'])
+                                                            ? $groupData['ids']['studying . . .']
+                                                            : '',
                                                         'ids' => [],
                                                     ];
                                                     if (isset($groupData['ids']['studying . . .'])) {
                                                         $routeParameters['ids'][] = $groupData['ids']['studying . . .'];
                                                     }
-                                                    $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                                    $routeParameters['ids'] = array_unique(
+                                                        array_merge(...$routeParameters['ids']),
+                                                    );
                                                 @endphp
                                                 <div class="widget-content-right">
                                                     <div class="widget-heading">
@@ -1165,13 +1200,20 @@
                                                         'type' => 'view',
                                                         'paraCheck' => 'Termination of study',
                                                         'group' => $group,
-                                                        'Termination of study' => isset($groupData['ids']['Termination of study']) ? $groupData['ids']['Termination of study'] : '',
+                                                        'Termination of study' => isset(
+                                                            $groupData['ids']['Termination of study'],
+                                                        )
+                                                            ? $groupData['ids']['Termination of study']
+                                                            : '',
                                                         'ids' => [],
                                                     ];
                                                     if (isset($groupData['ids']['Termination of study'])) {
-                                                        $routeParameters['ids'][] = $groupData['ids']['Termination of study'];
+                                                        $routeParameters['ids'][] =
+                                                            $groupData['ids']['Termination of study'];
                                                     }
-                                                    $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                                    $routeParameters['ids'] = array_unique(
+                                                        array_merge(...$routeParameters['ids']),
+                                                    );
                                                 @endphp
                                                 <div class="widget-content-right">
                                                     <div class="widget-heading">
@@ -1208,13 +1250,17 @@
                                                         'type' => 'view',
                                                         'paraCheck' => 'drop',
                                                         'group' => $group,
-                                                        'drop' => isset($groupData['ids']['drop']) ? $groupData['ids']['drop'] : '',
+                                                        'drop' => isset($groupData['ids']['drop'])
+                                                            ? $groupData['ids']['drop']
+                                                            : '',
                                                         'ids' => [],
                                                     ];
                                                     if (isset($groupData['ids']['drop'])) {
                                                         $routeParameters['ids'][] = $groupData['ids']['drop'];
                                                     }
-                                                    $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                                    $routeParameters['ids'] = array_unique(
+                                                        array_merge(...$routeParameters['ids']),
+                                                    );
                                                 @endphp
                                                 <div class="widget-content-right">
                                                     <div class="widget-heading">
@@ -1252,13 +1298,17 @@
                                                         'type' => 'view',
                                                         'paraCheck' => 'resume',
                                                         'group' => $group,
-                                                        'resume' => isset($groupData['ids']['resume']) ? $groupData['ids']['resume'] : '',
+                                                        'resume' => isset($groupData['ids']['resume'])
+                                                            ? $groupData['ids']['resume']
+                                                            : '',
                                                         'ids' => [],
                                                     ];
                                                     if (isset($groupData['ids']['resume'])) {
                                                         $routeParameters['ids'][] = $groupData['ids']['resume'];
                                                     }
-                                                    $routeParameters['ids'] = array_unique(array_merge(...$routeParameters['ids']));
+                                                    $routeParameters['ids'] = array_unique(
+                                                        array_merge(...$routeParameters['ids']),
+                                                    );
                                                 @endphp
                                                 <div class="widget-content-right">
                                                     <div class="widget-heading">
@@ -1301,6 +1351,20 @@
             </ul>
         @endif
     @endforeach --}}
+    @php
+        // dd(request('ref'));
+        $ref = 'uaLPxKcg9Y';
+        $url = url()->full();
+    @endphp
+
+    {{-- <a href="https://line.me/R/ti/p/@352vgbrf?ref={{ $ref }}" target="_blank" class="line-contact-btn">
+
+        Contact Admin on Line OA
+    </a> --}}
+
+    <a href="{{ route('send.line.message', ['ref' => $ref,'url' => $url]) }}" target="_blank" class="line-contact-btn">
+        Contact Admin on Line OA
+    </a>
 @endsection
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

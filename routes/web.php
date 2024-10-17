@@ -36,6 +36,7 @@ use App\Http\Controllers\WorktimelogsController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BonusStudentController;
 use App\Http\Controllers\CheckReportStdController;
+use App\Http\Controllers\LineController;
 use App\Http\Controllers\TestController;
 
 // use App\Http\Controllers\RouteToggleController;
@@ -321,7 +322,9 @@ Route::post('/receipts_form/update', [ReceiptFormController::class, 'update'])->
 Route::group(array('domain' => 'form.infinitebrain.co.th'), function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 });
-
+Route::get('/send-line-message', [LineController::class, 'sendMessage'])->name('send.line.message');
+Route::get('/test-view', [LineController::class, 'testView'])->name('line.testView');
+Route::post('/webhook/line', [LineController::class, 'webhook'])->name('line.webhook');
 
 
 //Route::get('/', [EmployeeController::class, 'index']);
