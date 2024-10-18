@@ -112,7 +112,7 @@ class LineController extends Controller
                                 [
                                     'type' => 'uri', // Link to a website
                                     'label' => 'URL for your order',
-                                    'uri' => $url // Use the captured URL from the request
+                                    // 'uri' => $url // Use the captured URL from the request
                                 ],
                             ]
                         ]
