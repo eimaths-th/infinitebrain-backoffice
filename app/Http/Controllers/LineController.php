@@ -67,21 +67,16 @@ class LineController extends Controller
 
     public function webhook(Request $request)
     {
-        // Get the events from the webhook request (Line sends multiple events)
         $events = $request->input('events');
-        $ref = $request->input('ref'); // Capture the ref parameter from the URL
-        // dd($ref);
-        foreach ($events as $event) {
-            // Only process 'follow' events (when a user adds your Line OA)
-            if ($event['type'] === 'follow') {
-                $lineUserId = $event['source']['userId']; // Get the user's Line ID
-                // $ref = $request->input('ref'); // Capture the ref parameter from the URL
+        $ref = $request->input('ref'); // Capture the ref parameter if sent
 
-                // If there's a ref in the request, send a message with the referral code
-                if ($ref) {
-                    $this->sendReferralMessage($lineUserId, $ref);
-                }
-                $this->sendReferralMessage($lineUserId, $ref);
+        foreach ($events as $event) {
+            if ($event['type'] === 'follow') {
+                $userId = $event['source']['userId']; // Get the user's Line ID
+                // $ref = $request->input('ref'); // Capture the ref parameter if sent
+
+                // Now send a reply with the referral code
+                $this->sendReferralMessage($userId, $ref);
             }
         }
 
@@ -98,7 +93,7 @@ class LineController extends Controller
         $httpClient = new Client();
         $response = $httpClient->post('https://api.line.me/v2/bot/message/push', [
             'headers' => [
-                'Authorization' => 'Bearer ' . env('LINE_ACCESS_TOKEN'), // Line Access Token from .env
+                'Authorization' => 'Bearer ' . env('LINE_ACCESS_TOKEN'),
                 'Content-Type' => 'application/json',
             ],
             'json' => [
@@ -117,7 +112,7 @@ class LineController extends Controller
                                 [
                                     'type' => 'uri', // Link to a website
                                     'label' => 'URL for your order',
-                                    // 'uri' => $url // Use the captured URL from the request
+                                    'uri' => $url // Use the captured URL from the request
                                 ],
                             ]
                         ]
