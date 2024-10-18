@@ -70,6 +70,12 @@ class LineController extends Controller
         $events = $request->input('events');
         $ref = $request->input('ref');
 
+        Log::info('Webhook received:', [
+            'events' => $events,
+            'ref' => $ref,
+        ]);
+        dd($events, $ref);
+        
         foreach ($events as $event) {
             if ($event['type'] === 'follow') {
                 $userId = $event['source']['userId'];
