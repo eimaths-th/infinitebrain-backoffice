@@ -79,7 +79,7 @@ class LineController extends Controller
                 $userId = $event['source']['userId'];
 
                 if ($ref) {
-                    $this->sendReferralMessage($userId, $ref,);
+                    $this->sendReferralMessage($userId, $ref,$request);
                 } else {
                     $ref_error = 'null';
                     $this->sendReferralMessage($userId, $ref_error,$request);
