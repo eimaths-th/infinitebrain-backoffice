@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LineController extends Controller
 {
@@ -74,8 +75,7 @@ class LineController extends Controller
             'events' => $events,
             'ref' => $ref,
         ]);
-        dd($events, $ref);
-        
+
         foreach ($events as $event) {
             if ($event['type'] === 'follow') {
                 $userId = $event['source']['userId'];
