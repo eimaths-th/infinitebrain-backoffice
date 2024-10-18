@@ -70,21 +70,18 @@ class LineController extends Controller
     {
         $events = $request->input('events');
 
-
         foreach ($events as $event) {
             if ($event['type'] === 'follow') {
                 $userId = $event['source']['userId'];
 
-                // Retrieve the ref from the session or database
-                $ref = session('ref'); // You may also use a database lookup if required
+                // Retrieve the ref from the query string or session
+                $ref = $request->query('ref', session('ref')); // Try to get from query first, then session
 
                 // Check if ref exists
                 if ($ref) {
                     $this->sendReferralMessage($userId, $ref, $request);
                 } else {
-                    // If no ref is found, send an error message
-                    $ref_error = 'null';
-                    $this->sendReferralMessage($userId, $ref_error, $request);
+                    $this->sendReferralMessage($userId, 'null', $request);
                 }
             }
         }

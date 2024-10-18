@@ -151,8 +151,9 @@
 <body>
 
     @php
-        $ref = 'uaLPxKcg9Y'; // This would be dynamically set
+        $ref = 'uaLPxKcg9Y'; // Dynamically set this
         session(['ref' => $ref]);
+        \Log::info('Referral code stored in session:', ['ref' => session('ref')]);
     @endphp
 
     <a href="https://line.me/R/ti/p/@352vgbrf?ref={{ $ref }}" target="_blank" class="line-contact-btn">
