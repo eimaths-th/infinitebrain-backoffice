@@ -152,12 +152,12 @@
 
     @php
         $ref = 'uaLPxKcg9Y'; // Dynamically set this
-        session(['ref' => $ref]);
-        \Log::info('Referral code stored in session:', ['ref' => session('ref')]);
+        // session(['ref' => $ref]);
+        // \Log::info('Referral code stored in session:', ['ref' => session('ref')]);
     @endphp
 
     <a href="https://line.me/R/ti/p/@352vgbrf?ref={{ $ref }}" target="_blank" class="line-contact-btn">
-        Contact Admin on Line OA
+        Contact Admin
     </a>
 
     {{-- <a href="https://line.me/R/ti/p/@352vgbrf?ref={{ $ref }}" target="_blank" class="line-contact-btn">

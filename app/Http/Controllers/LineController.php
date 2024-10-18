@@ -70,18 +70,19 @@ class LineController extends Controller
     {
         $events = $request->input('events');
 
+        // Extract ref from query parameters or event payload
+        $ref = $request->query('ref'); // Ensure the ref is passed correctly
+        // \Log::info('Received ref:', ['ref' => $ref]);
+
         foreach ($events as $event) {
             if ($event['type'] === 'follow') {
                 $userId = $event['source']['userId'];
 
-                // Retrieve the ref from the query string or session
-                $ref = $request->query('ref', session('ref')); // Try to get from query first, then session
-
-                // Check if ref exists
                 if ($ref) {
-                    $this->sendReferralMessage($userId, $ref, $request);
+                    $this->sendReferralMessage($userId, $ref,);
                 } else {
-                    $this->sendReferralMessage($userId, 'null', $request);
+                    $ref_error = 'null';
+                    $this->sendReferralMessage($userId, $ref_error,$request);
                 }
             }
         }
