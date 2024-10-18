@@ -84,11 +84,9 @@ class LineController extends Controller
 
     public function webhook(Request $request)
     {
-        // Handle the webhook event data here
-
-        return response()->json(['status' => 'Webhook received'], 200);
+        return response()->json(['ok']);
     }
-    
+
     public function sendReferralMessage($lineUserId, $ref)
     {
         $httpClient = new Client();
