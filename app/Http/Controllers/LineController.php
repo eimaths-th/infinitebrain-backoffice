@@ -69,7 +69,7 @@ class LineController extends Controller
     public function webhook(Request $request)
     {
         $events = $request->input('events');
-        $ref = $request;
+        $ref = $request->all();
 
         // Log::info('Webhook received:', [
         //     'events' => $events,
