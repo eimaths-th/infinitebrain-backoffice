@@ -76,19 +76,19 @@ class LineController extends Controller
         //     'ref' => $ref,
         // ]);
 
-        // foreach ($events as $event) {
-        //     if ($event['type'] === 'follow') {
-        //         $userId = $event['source']['userId'];
-        //         if ($ref) {
-        //             # code...
-        //             $this->sendReferralMessage($userId, $ref);
-        //         }else {
-        //             # code...
-        //             $ref_error = 'null' ;
-        //             $this->sendReferralMessage($userId, $ref_error);
-        //         }
-        //     }
-        // }
+        foreach ($events as $event) {
+            if ($event['type'] === 'follow') {
+                $userId = $event['source']['userId'];
+                if ($ref) {
+                    # code...
+                    $this->sendReferralMessage($userId, $ref);
+                }else {
+                    # code...
+                    $ref_error = 'null' ;
+                    $this->sendReferralMessage($userId, $ref_error);
+                }
+            }
+        }
 
         return response()->json(['status' => $ref]);
     }

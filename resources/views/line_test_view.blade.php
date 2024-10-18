@@ -43,7 +43,7 @@
     <script defer src="{{ asset('architectui/assets/scripts/demo.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/toastr.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/scrollbar.js') }}"></script>
-    <script defer src="{{ asset('architectui/assets/scripts/fullcalendar.js') }}"></script>
+    {{-- <script defer src="{{ asset('architectui/assets/scripts/fullcalendar.js') }}"></script> --}}
     <script defer src="{{ asset('architectui/assets/scripts/maps.js') }}"></script>
     <script defer src="{{ asset('architectui/assets/scripts/chart_js.js') }}"></script>
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
