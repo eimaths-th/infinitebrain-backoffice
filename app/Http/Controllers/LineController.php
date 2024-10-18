@@ -96,28 +96,37 @@ class LineController extends Controller
                 'Authorization' => 'Bearer ' . env('LINE_ACCESS_TOKEN'),
                 'Content-Type' => 'application/json',
             ],
+            // 'json' => [
+            //     'to' => $lineUserId,
+            //     'messages' => [
+            //         [
+            //             'type' => 'template',
+            //             'altText' => 'Contact Admin',
+            //             'template' => [
+            //                 'type' => 'buttons',
+            //                 'thumbnailImageUrl' => 'https://form.infinitebrain.co.th/images/infinite-c.png', // Thumbnail image URL
+            //                 // 'thumbnailImageUrl' => asset('images/infinite-c.png'), // Thumbnail image URL
+            //                 'title' => 'Contact Admin', // Title of the message
+            //                 'text' => 'your ref : ' . $ref, // Text in the message
+            //                 'actions' => [
+            //                     [
+            //                         'type' => 'uri', // Link to a website
+            //                         'label' => 'URL for your order',
+            //                         // 'uri' => $url // Use the captured URL from the request
+            //                     ],
+            //                 ]
+            //             ]
+            //         ]
+            //     ]
+            // ]
             'json' => [
-                'to' => $lineUserId,
+                'to' => $lineUserId, // The user's Line ID
                 'messages' => [
                     [
-                        'type' => 'template',
-                        'altText' => 'Contact Admin',
-                        'template' => [
-                            'type' => 'buttons',
-                            'thumbnailImageUrl' => 'https://form.infinitebrain.co.th/images/infinite-c.png', // Thumbnail image URL
-                            // 'thumbnailImageUrl' => asset('images/infinite-c.png'), // Thumbnail image URL
-                            'title' => 'Contact Admin', // Title of the message
-                            'text' => 'your ref : ' . $ref, // Text in the message
-                            'actions' => [
-                                [
-                                    'type' => 'uri', // Link to a website
-                                    'label' => 'URL for your order',
-                                    // 'uri' => $url // Use the captured URL from the request
-                                ],
-                            ]
-                        ]
-                    ]
-                ]
+                        'type' => 'text',
+                        'text' => 'Thank you for adding us! Your referral code is: ' . $ref,
+                    ],
+                ],
             ]
         ]);
 
