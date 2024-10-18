@@ -68,14 +68,11 @@ class LineController extends Controller
     public function webhook(Request $request)
     {
         $events = $request->input('events');
-        $ref = $request->input('ref'); // Capture the ref parameter if sent
+        $ref = $request->input('ref');
 
         foreach ($events as $event) {
             if ($event['type'] === 'follow') {
-                $userId = $event['source']['userId']; // Get the user's Line ID
-                // $ref = $request->input('ref'); // Capture the ref parameter if sent
-
-                // Now send a reply with the referral code
+                $userId = $event['source']['userId'];
                 if ($ref) {
                     # code...
                     $this->sendReferralMessage($userId, $ref);
@@ -90,11 +87,6 @@ class LineController extends Controller
         return response()->json(['status' => 'Webhook received']);
     }
 
-    // public function webhook(Request $request)
-    // {
-    //     return response()->json(['status' => 'Webhook received'], 200);
-    // }
-
     public function sendReferralMessage($lineUserId, $ref)
     {
         $httpClient = new Client();
@@ -103,7 +95,21 @@ class LineController extends Controller
                 'Authorization' => 'Bearer ' . env('LINE_ACCESS_TOKEN'),
                 'Content-Type' => 'application/json',
             ],
-            // 'json' => [
+
+            'json' => [
+                'to' => $lineUserId, // The user's Line ID
+                'messages' => [
+                    [
+                        'type' => 'text',
+                        'text' => 'Thank you for adding us! Your referral code is: ' . $ref,
+                    ],
+                ],
+            ]
+        ]);
+
+        return response()->json(['status' => 'Referral message sent']);
+    }
+    // 'json' => [
             //     'to' => $lineUserId,
             //     'messages' => [
             //         [
@@ -126,19 +132,6 @@ class LineController extends Controller
             //         ]
             //     ]
             // ],
-            'json' => [
-                'to' => $lineUserId, // The user's Line ID
-                'messages' => [
-                    [
-                        'type' => 'text',
-                        'text' => 'Thank you for adding us! Your referral code is: ' . $ref,
-                    ],
-                ],
-            ]
-        ]);
-
-        return response()->json(['status' => 'Referral message sent']);
-    }
     /**
      * Show the form for creating a new resource.
      *
