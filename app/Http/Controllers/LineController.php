@@ -71,26 +71,26 @@ class LineController extends Controller
         $events = $request->input('events');
         $ref = $request->input('ref');
 
-        Log::info('Webhook received:', [
-            'events' => $events,
-            'ref' => $ref,
-        ]);
+        // Log::info('Webhook received:', [
+        //     'events' => $events,
+        //     'ref' => $ref,
+        // ]);
 
-        foreach ($events as $event) {
-            if ($event['type'] === 'follow') {
-                $userId = $event['source']['userId'];
-                if ($ref) {
-                    # code...
-                    $this->sendReferralMessage($userId, $ref);
-                }else {
-                    # code...
-                    $ref_error = 'null' ;
-                    $this->sendReferralMessage($userId, $ref_error);
-                }
-            }
-        }
+        // foreach ($events as $event) {
+        //     if ($event['type'] === 'follow') {
+        //         $userId = $event['source']['userId'];
+        //         if ($ref) {
+        //             # code...
+        //             $this->sendReferralMessage($userId, $ref);
+        //         }else {
+        //             # code...
+        //             $ref_error = 'null' ;
+        //             $this->sendReferralMessage($userId, $ref_error);
+        //         }
+        //     }
+        // }
 
-        return response()->json(['status' => 'Webhook received']);
+        return response()->json(['status' => $ref]);
     }
 
     public function sendReferralMessage($lineUserId, $ref)
@@ -109,6 +109,24 @@ class LineController extends Controller
                         'type' => 'text',
                         'text' => 'Thank you for adding us! Your referral code is: ' . $ref,
                     ],
+                    [
+                        'type' => 'template',
+                        'altText' => 'Contact Admin',
+                        'template' => [
+                            'type' => 'buttons',
+                            'thumbnailImageUrl' => 'https://form.infinitebrain.co.th/images/infinite-c.png', // Thumbnail image URL
+                            // 'thumbnailImageUrl' => asset('images/infinite-c.png'), // Thumbnail image URL
+                            'title' => 'Contact Admin', // Title of the message
+                            'text' => 'your ref : ' . $ref, // Text in the message
+                            'actions' => [
+                                [
+                                    'type' => 'uri', // Link to a website
+                                    'label' => 'URL for your order',
+                                    // 'uri' => $url // Use the captured URL from the request
+                                ],
+                            ]
+                        ]
+                    ]
                 ],
             ]
         ]);
@@ -116,28 +134,28 @@ class LineController extends Controller
         return response()->json(['status' => 'Referral message sent']);
     }
     // 'json' => [
-            //     'to' => $lineUserId,
-            //     'messages' => [
-            //         [
-            //             'type' => 'template',
-            //             'altText' => 'Contact Admin',
-            //             'template' => [
-            //                 'type' => 'buttons',
-            //                 'thumbnailImageUrl' => 'https://form.infinitebrain.co.th/images/infinite-c.png', // Thumbnail image URL
-            //                 // 'thumbnailImageUrl' => asset('images/infinite-c.png'), // Thumbnail image URL
-            //                 'title' => 'Contact Admin', // Title of the message
-            //                 'text' => 'your ref : ' . $ref, // Text in the message
-            //                 'actions' => [
-            //                     [
-            //                         'type' => 'uri', // Link to a website
-            //                         'label' => 'URL for your order',
-            //                         // 'uri' => $url // Use the captured URL from the request
-            //                     ],
-            //                 ]
-            //             ]
-            //         ]
-            //     ]
-            // ],
+    //     'to' => $lineUserId,
+    //     'messages' => [
+    //         [
+    //             'type' => 'template',
+    //             'altText' => 'Contact Admin',
+    //             'template' => [
+    //                 'type' => 'buttons',
+    //                 'thumbnailImageUrl' => 'https://form.infinitebrain.co.th/images/infinite-c.png', // Thumbnail image URL
+    //                 // 'thumbnailImageUrl' => asset('images/infinite-c.png'), // Thumbnail image URL
+    //                 'title' => 'Contact Admin', // Title of the message
+    //                 'text' => 'your ref : ' . $ref, // Text in the message
+    //                 'actions' => [
+    //                     [
+    //                         'type' => 'uri', // Link to a website
+    //                         'label' => 'URL for your order',
+    //                         // 'uri' => $url // Use the captured URL from the request
+    //                     ],
+    //                 ]
+    //             ]
+    //         ]
+    //     ]
+    // ],
     /**
      * Show the form for creating a new resource.
      *
