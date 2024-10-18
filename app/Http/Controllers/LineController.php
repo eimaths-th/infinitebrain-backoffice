@@ -65,27 +65,27 @@ class LineController extends Controller
         return redirect($addLineUrl);
     }
 
-    // public function webhook(Request $request)
-    // {
-    //     $events = $request->input('events');
-
-    //     foreach ($events as $event) {
-    //         if ($event['type'] === 'follow') {
-    //             $userId = $event['source']['userId']; // Get the user's Line ID
-    //             $ref = $request->input('ref'); // Capture the ref parameter if sent
-
-    //             // Now send a reply with the referral code
-    //             $this->sendReferralMessage($userId, $ref);
-    //         }
-    //     }
-
-    //     return response()->json(['status' => 'Webhook received']);
-    // }
-
     public function webhook(Request $request)
     {
-        return response()->json(['ok']);
+        $events = $request->input('events');
+
+        foreach ($events as $event) {
+            if ($event['type'] === 'follow') {
+                $userId = $event['source']['userId']; // Get the user's Line ID
+                $ref = $request->input('ref'); // Capture the ref parameter if sent
+
+                // Now send a reply with the referral code
+                $this->sendReferralMessage($userId, $ref);
+            }
+        }
+
+        return response()->json(['status' => 'Webhook received']);
     }
+
+    // public function webhook(Request $request)
+    // {
+    //     return response()->json(['status' => 'Webhook received'], 200);
+    // }
 
     public function sendReferralMessage($lineUserId, $ref)
     {
