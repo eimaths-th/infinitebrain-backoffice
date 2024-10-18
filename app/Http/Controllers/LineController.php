@@ -69,7 +69,7 @@ class LineController extends Controller
     public function webhook(Request $request)
     {
         $events = $request->input('events');
-        $ref = $request->input('ref');
+        $ref = $request;
 
         // Log::info('Webhook received:', [
         //     'events' => $events,
@@ -109,24 +109,24 @@ class LineController extends Controller
                         'type' => 'text',
                         'text' => 'Thank you for adding us! Your referral code is: ' . $ref,
                     ],
-                    [
-                        'type' => 'template',
-                        'altText' => 'Contact Admin',
-                        'template' => [
-                            'type' => 'buttons',
-                            'thumbnailImageUrl' => 'https://form.infinitebrain.co.th/images/infinite-c.png', // Thumbnail image URL
-                            // 'thumbnailImageUrl' => asset('images/infinite-c.png'), // Thumbnail image URL
-                            'title' => 'Contact Admin', // Title of the message
-                            'text' => 'your ref : ' . $ref, // Text in the message
-                            'actions' => [
-                                [
-                                    'type' => 'uri', // Link to a website
-                                    'label' => 'URL for your order',
-                                    // 'uri' => $url // Use the captured URL from the request
-                                ],
-                            ]
-                        ]
-                    ]
+                    // [
+                    //     'type' => 'template',
+                    //     'altText' => 'Contact Admin',
+                    //     'template' => [
+                    //         'type' => 'buttons',
+                    //         'thumbnailImageUrl' => 'https://form.infinitebrain.co.th/images/infinite-c.png', // Thumbnail image URL
+                    //         // 'thumbnailImageUrl' => asset('images/infinite-c.png'), // Thumbnail image URL
+                    //         'title' => 'Contact Admin', // Title of the message
+                    //         'text' => 'your ref : ' . $ref, // Text in the message
+                    //         'actions' => [
+                    //             [
+                    //                 'type' => 'uri', // Link to a website
+                    //                 'label' => 'URL for your order',
+                    //                 // 'uri' => $url // Use the captured URL from the request
+                    //             ],
+                    //         ]
+                    //     ]
+                    // ]
                 ],
             ]
         ]);
