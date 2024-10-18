@@ -53,11 +53,6 @@ class LineController extends Controller
                                     'label' => 'URL for your order',
                                     'uri' => $url // Use the captured URL from the request
                                 ],
-                                // [
-                                //     'type' => 'postback', // Postback action
-                                //     'label' => 'Use Referral Code',
-                                //     'data' => 'action=use_ref&ref=' . $ref // Include referral code in postback data
-                                // ]
                             ]
                         ]
                     ]
@@ -70,21 +65,50 @@ class LineController extends Controller
         return redirect($addLineUrl);
     }
 
+    // public function webhook(Request $request)
+    // {
+    //     $events = $request->input('events');
+
+    //     foreach ($events as $event) {
+    //         if ($event['type'] === 'follow') {
+    //             $userId = $event['source']['userId']; // Get the user's Line ID
+    //             $ref = $request->input('ref'); // Capture the ref parameter if sent
+
+    //             // Now send a reply with the referral code
+    //             $this->sendReferralMessage($userId, $ref);
+    //         }
+    //     }
+
+    //     return response()->json(['status' => 'Webhook received']);
+    // }
+
     public function webhook(Request $request)
     {
-        $events = $request->input('events');
+        // Handle the webhook event data here
 
-        foreach ($events as $event) {
-            if ($event['type'] === 'message') {
-                // Handle message event
-                $userId = $event['source']['userId'];
-                $userMessage = $event['message']['text'];
+        return response()->json(['status' => 'Webhook received'], 200);
+    }
+    
+    public function sendReferralMessage($lineUserId, $ref)
+    {
+        $httpClient = new Client();
+        $response = $httpClient->post('https://api.line.me/v2/bot/message/push', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . env('LINE_ACCESS_TOKEN'),
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'to' => $lineUserId,
+                'messages' => [
+                    [
+                        'type' => 'text',
+                        'text' => 'Thank you for adding us! Your referral code is: ' . $ref,
+                    ],
+                ],
+            ]
+        ]);
 
-                // Store or process the user's message
-            }
-        }
-
-        return response()->json(['status' => 'success']);
+        return response()->json(['status' => 'Referral message sent']);
     }
     /**
      * Show the form for creating a new resource.

@@ -324,8 +324,12 @@ Route::group(array('domain' => 'form.infinitebrain.co.th'), function () {
 });
 Route::get('/send-line-message', [LineController::class, 'sendMessage'])->name('send.line.message');
 Route::get('/test-view', [LineController::class, 'testView'])->name('line.testView');
-Route::post('/webhook/line', [LineController::class, 'webhook'])->name('line.webhook');
 
+Route::post('/webhook', [LineController::class, 'webhook'])->name('line.webhook');
+
+// Route::get('/webhook', function () {
+//     return response('Webhook verified', 200);
+// });
 
 //Route::get('/', [EmployeeController::class, 'index']);
 
