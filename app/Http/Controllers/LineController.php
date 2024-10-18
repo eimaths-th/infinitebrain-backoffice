@@ -76,7 +76,14 @@ class LineController extends Controller
                 // $ref = $request->input('ref'); // Capture the ref parameter if sent
 
                 // Now send a reply with the referral code
-                $this->sendReferralMessage($userId, $ref);
+                if ($ref) {
+                    # code...
+                    $this->sendReferralMessage($userId, $ref);
+                }else {
+                    # code...
+                    $ref_error = 'null' ;
+                    $this->sendReferralMessage($userId, $ref_error);
+                }
             }
         }
 
@@ -118,7 +125,7 @@ class LineController extends Controller
             //             ]
             //         ]
             //     ]
-            // ]
+            // ],
             'json' => [
                 'to' => $lineUserId, // The user's Line ID
                 'messages' => [
