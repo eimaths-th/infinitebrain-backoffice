@@ -69,31 +69,30 @@ class LineController extends Controller
     public function webhook(Request $request)
     {
         $events = $request->input('events');
-        $ref = $request->all();
 
-        // Log::info('Webhook received:', [
-        //     'events' => $events,
-        //     'ref' => $ref,
-        // ]);
 
         foreach ($events as $event) {
             if ($event['type'] === 'follow') {
                 $userId = $event['source']['userId'];
+
+                // Retrieve the ref from the session or database
+                $ref = session('ref'); // You may also use a database lookup if required
+
+                // Check if ref exists
                 if ($ref) {
-                    # code...
-                    $this->sendReferralMessage($userId, $ref);
-                }else {
-                    # code...
-                    $ref_error = 'null' ;
-                    $this->sendReferralMessage($userId, $ref_error);
+                    $this->sendReferralMessage($userId, $ref, $request);
+                } else {
+                    // If no ref is found, send an error message
+                    $ref_error = 'null';
+                    $this->sendReferralMessage($userId, $ref_error, $request);
                 }
             }
         }
 
-        return response()->json(['status' => $ref]);
+        return response()->json(['status' => 'Webhook received']);
     }
 
-    public function sendReferralMessage($lineUserId, $ref)
+    public function sendReferralMessage($lineUserId, $ref, $request)
     {
         $httpClient = new Client();
         $response = $httpClient->post('https://api.line.me/v2/bot/message/push', [
@@ -107,26 +106,8 @@ class LineController extends Controller
                 'messages' => [
                     [
                         'type' => 'text',
-                        'text' => 'Thank you for adding us! Your referral code is: ' . $ref,
+                        'text' => 'Thank you for adding us! Your referral code is: ' . $ref . "\n" . '$request : ' . $request,
                     ],
-                    // [
-                    //     'type' => 'template',
-                    //     'altText' => 'Contact Admin',
-                    //     'template' => [
-                    //         'type' => 'buttons',
-                    //         'thumbnailImageUrl' => 'https://form.infinitebrain.co.th/images/infinite-c.png', // Thumbnail image URL
-                    //         // 'thumbnailImageUrl' => asset('images/infinite-c.png'), // Thumbnail image URL
-                    //         'title' => 'Contact Admin', // Title of the message
-                    //         'text' => 'your ref : ' . $ref, // Text in the message
-                    //         'actions' => [
-                    //             [
-                    //                 'type' => 'uri', // Link to a website
-                    //                 'label' => 'URL for your order',
-                    //                 // 'uri' => $url // Use the captured URL from the request
-                    //             ],
-                    //         ]
-                    //     ]
-                    // ]
                 ],
             ]
         ]);

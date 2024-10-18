@@ -157,14 +157,15 @@
         session(['ref' => $ref]);
     @endphp
 
+    <a href="https://line.me/R/ti/p/@352vgbrf?ref={{ $ref }}" target="_blank" class="line-contact-btn">
+        Contact Admin on Line OA
+    </a>
+
     {{-- <a href="https://line.me/R/ti/p/@352vgbrf?ref={{ $ref }}" target="_blank" class="line-contact-btn">
 
         Contact Admin on Line OA
     </a> --}}
 
-    <a href="https://line.me/R/ti/p/@352vgbrf?ref={{ $ref }}" target="_blank" class="line-contact-btn">
-        Contact Admin on Line OA
-    </a>
     {{-- <a href="{{ route('send.line.message', ['ref' => $ref, 'url' => $url]) }}" target="_blank"
         class="line-contact-btn">
         Contact Admin on Line OA
