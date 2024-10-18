@@ -151,9 +151,7 @@
 <body>
 
     @php
-        // dd(request('ref'));
-        $ref = 'uaLPxKcg9Y';
-        $url = url()->full();
+        $ref = 'uaLPxKcg9Y'; // This would be dynamically set
         session(['ref' => $ref]);
     @endphp
 

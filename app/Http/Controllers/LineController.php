@@ -95,6 +95,8 @@ class LineController extends Controller
     public function sendReferralMessage($lineUserId, $ref, $request)
     {
         $httpClient = new Client();
+
+        $text = 'Thank you for adding us! Your referral code is: ' . ($ref ?? 'null') . "\n" . 'Request: ' . json_encode($request->all());
         $response = $httpClient->post('https://api.line.me/v2/bot/message/push', [
             'headers' => [
                 'Authorization' => 'Bearer ' . env('LINE_ACCESS_TOKEN'),
@@ -106,7 +108,9 @@ class LineController extends Controller
                 'messages' => [
                     [
                         'type' => 'text',
-                        'text' => 'Thank you for adding us! Your referral code is: ' . $ref . "\n" . '$request : ' . $request,
+                        // 'text' => 'Thank you for adding us! Your referral code is: ' . $ref . "\n" . '$request : ' . $request,
+                        'text' => $text,
+
                     ],
                 ],
             ]
