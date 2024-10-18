@@ -69,17 +69,19 @@ class LineController extends Controller
     {
         // Get the events from the webhook request (Line sends multiple events)
         $events = $request->input('events');
-
+        $ref = $request->input('ref'); // Capture the ref parameter from the URL
+        // dd($ref);
         foreach ($events as $event) {
             // Only process 'follow' events (when a user adds your Line OA)
             if ($event['type'] === 'follow') {
                 $lineUserId = $event['source']['userId']; // Get the user's Line ID
-                $ref = $request->input('ref'); // Capture the ref parameter from the URL
+                // $ref = $request->input('ref'); // Capture the ref parameter from the URL
 
                 // If there's a ref in the request, send a message with the referral code
                 if ($ref) {
                     $this->sendReferralMessage($lineUserId, $ref);
                 }
+                $this->sendReferralMessage($lineUserId, $ref);
             }
         }
 
