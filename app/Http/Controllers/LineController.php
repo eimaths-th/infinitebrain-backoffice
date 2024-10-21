@@ -70,19 +70,20 @@ class LineController extends Controller
     {
         $events = $request->input('events');
 
-        // Extract ref from query parameters or event payload
-        $ref = $request->query('ref'); // Ensure the ref is passed correctly
-        // \Log::info('Received ref:', ['ref' => $ref]);
+        // Extract the referral code from query parameters
+        $ref = $request->query('ref'); // Capture referral from the URL parameter
+        Log::info('Referral code from query:', ['ref' => $ref]);
 
         foreach ($events as $event) {
             if ($event['type'] === 'follow') {
                 $userId = $event['source']['userId'];
 
+                // Check if referral code exists
                 if ($ref) {
-                    $this->sendReferralMessage($userId, $ref,$request);
+                    $this->sendReferralMessage($userId, $ref, $request);
                 } else {
                     $ref_error = 'null';
-                    $this->sendReferralMessage($userId, $ref_error,$request);
+                    $this->sendReferralMessage($userId, $ref_error, $request);
                 }
             }
         }
@@ -90,11 +91,9 @@ class LineController extends Controller
         return response()->json(['status' => 'Webhook received']);
     }
 
-    public function sendReferralMessage($lineUserId, $ref, $request)
+    public function sendReferralMessage($lineUserId, $ref,$request)
     {
         $httpClient = new Client();
-
-        $text = 'Thank you for adding us! Your referral code is: ' . ($ref ?? 'null') . "\n" . 'Request: ' . json_encode($request->all());
         $response = $httpClient->post('https://api.line.me/v2/bot/message/push', [
             'headers' => [
                 'Authorization' => 'Bearer ' . env('LINE_ACCESS_TOKEN'),
@@ -106,9 +105,8 @@ class LineController extends Controller
                 'messages' => [
                     [
                         'type' => 'text',
-                        // 'text' => 'Thank you for adding us! Your referral code is: ' . $ref . "\n" . '$request : ' . $request,
-                        'text' => $text,
-
+                        'text' => 'Thank you for following us! Your referral code is: ' . $ref . "\n".
+                        'Request : ' . $request,
                     ],
                 ],
             ]
