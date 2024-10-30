@@ -906,8 +906,7 @@
                                                 <option value="Math First: 950 baht">Math First: 950 baht</option>
                                                 <option value="Math Second: 950 baht">Math Second: 950 baht</option>
                                                 {{-- <option value="Science: 950 baht">Science: 950 baht</option> --}}
-                                                <option value="Physics and Astronomy: 950 baht">Physics and Astronomy (Only
-                                                    Grade 7-12)</option>
+                                                {{-- <option value="Physics and Astronomy: 950 baht">Physics and Astronomy (Only Grade 7-12)</option> --}}
                                                 {{-- <option value="Test + tutoring class: 1250 bath">Test +
                                                     tutoring class: 1250 bath</option> --}}
 
