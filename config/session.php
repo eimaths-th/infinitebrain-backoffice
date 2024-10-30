@@ -199,3 +199,24 @@ return [
     'same_site' => 'lax',
 
 ];
+// return [
+
+//     'driver' => 'database', // Using database session driver
+//     'lifetime' => env('SESSION_LIFETIME', 120), // Session lifetime
+//     'expire_on_close' => false,
+//     'encrypt' => false,
+//     'files' => storage_path('framework/sessions'),
+//     'connection' => env('SESSION_CONNECTION'),
+//     'table' => 'sessions', // Session table
+//     'store' => env('SESSION_STORE'),
+//     'lottery' => [2, 100],
+//     'cookie' => env(
+//         'SESSION_COOKIE',
+//         Str::slug(env('APP_NAME', 'laravel'), '_') . '_session'
+//     ),
+//     'path' => '/',
+//     'domain' => '.infinitebrain.co.th', // Domain for session cookies
+//     'secure' => env('SESSION_SECURE_COOKIE'), // Ensure it's set correctly in .env
+//     'http_only' => true,
+//     'same_site' => 'lax', // Change to 'none' if cross-domain requests require it
+// ];
