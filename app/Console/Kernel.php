@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         //     echo "Scheduled task is running.\n";
         // // })->everyMinute();
         // })->dailyAt('05.00');
+        //comment
         // $schedule->command('inspire')->hourly();
         // $schedule->command('export:database')->dailyAt('16:45');//now 16.10
         // $schedule->command('export:database')->everyTwoMinutes()->appendOutputTo('/storage/logs/worker.log');
