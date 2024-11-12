@@ -977,7 +977,7 @@
                     success: function(result) {
                         console.log(result);
                         if (result.errors) {
-                            // $("#modalLoadingOverlay").hide();
+                            $("#modalLoadingOverlay").hide();
                             $('.alert-danger').html('');
                             $.each(result.errors, function(key, value) {
                                 $('.alert-danger').show();
@@ -986,7 +986,7 @@
                             });
 
                         } else {
-                            // $("#modalLoadingOverlay").hide();
+                            $("#modalLoadingOverlay").hide();
                             // document.getElementById("loadingOverlay").style.display = "none";
                             $('.alert-danger').hide();
                             $('.alert-success').show();
