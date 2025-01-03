@@ -348,12 +348,34 @@
 @endsection
 
 @section('content')
+    <div id="loadingOverlay" style="display: none;">
+        {{-- Loading... </br> --}}
+        <div class="spinner"></div>
+    </div>
+
+    <style>
+        /* Styling for overlay and spinner */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 24px;
+            z-index: 1000;
+        }
+    </style>
     <div class="row">
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                            <p>{{ $message }}</p>
-                                             </div>-->
+                                                        <p>{{ $message }}</p>
+                                                         </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -363,8 +385,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                            <p>{{ $message }}</p>
-                                             </div>-->
+                                                        <p>{{ $message }}</p>
+                                                         </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -464,6 +486,26 @@
         <div class="modal-dialog modal-lg" role="document">
             <form id="infiniteEdit" class="form" action="" method="POST">
                 <div class="modal-content">
+                    <div id="modalLoadingOverlay" style="display: none;">
+                        <div class="spinner"></div>
+                    </div>
+                    <style>
+                        /* Styling for modal loading overlay */
+                        #modalLoadingOverlay {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background: rgba(255, 255, 255, 0.8);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: #000;
+                            font-size: 18px;
+                            z-index: 10;
+                        }
+                    </style>
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Generate Receipt (<span id="rnumber"
                                 style="color: red;"></span>)</h5>
@@ -485,7 +527,7 @@
                         </div>
 
                         <div id="EditModalBody">
-
+                            
                             <div class="form-row">
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
@@ -817,9 +859,6 @@
             });
 
 
-
-
-
             let id;
             $(document).on('click', '#getEditData', function(e) {
                 e.preventDefault();
@@ -829,6 +868,7 @@
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
+                document.getElementById("loadingOverlay").style.display = "flex";
 
                 id = $(this).data('id');
                 $.ajax({
@@ -836,7 +876,8 @@
                     method: 'GET',
                     success: function(res) {
                         console.log(res);
-                        // console.log(res.data.id);
+                        document.getElementById("loadingOverlay").style.display = "none";
+                        console.log('test2');
                         //$('#EditModalBody').html(res.html);
                         $('#AddRecId').val(res.data.id);
                         $('#AddSubmissiondate').val(res.data.submission_date);
@@ -879,6 +920,97 @@
 
             })
 
+            $('#SubmitEditForm').click(function(e) {
+                //if (!confirm("Are you sure?")) return;
+                e.preventDefault();
+                // document.getElementById("loadingOverlay").style.display = "flex";
+                $("#modalLoadingOverlay").show(); 
+                $('.alert-danger').html('');
+                $('.alert-danger').hide();
+                $('.alert-success').html('');
+                $('.alert-success').hide();
+                //alert($('#AddFile').val());
+                var values = $("input[name='imgFiles[]']")
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
+                var sfield = $('#Sfield').val();
+
+                // console.log(sfield);
+                if (sfield == 17) {
+                    // pls .wait
+                    alert("Please wait 2-3 second to send the email. !`");
+                }
+
+                //alert(values);
+                //exit();
+
+                $.ajax({
+                    url: "{{ route('receipts_form.store') }}",
+                    method: 'post',
+                    data: {
+
+                        img: values,
+                        rec_id: $('#AddRecId').val(),
+                        submission_date: $('#AddSubmissiondate').val(),
+                        first_name: $('#AddFirstname').val(),
+                        last_name: $('#AddLastname').val(),
+                        grade: $('#AddGrade').val(),
+                        dcode: $('#AddDcode').val(),
+                        description: $('#AddPackage').val(),
+                        street_address: $('#AddAddress').val(),
+                        //street_address2: $('#AddAddress2').val(),
+                        //city: $('#AddCity').val(),
+                        //province: $('#AddProvince').val(),
+                        postcode: $('#AddPostcode').val(),
+                        name_parent: $('#AddParent').val(),
+                        mobile: $('#AddMobile').val(),
+                        email: $('#AddEmail').val(),
+                        package: $('#AddPackage').val(),
+                        contest: $('#AddContest').val(),
+                        file_att: $('#AddFile').val(),
+                        sfield: $('#Sfield').val(),
+                        fid: $('#fid').val(),
+                        _token: token,
+                    },
+
+                    success: function(result) {
+                        console.log(result);
+                        if (result.errors) {
+                            $("#modalLoadingOverlay").hide();
+                            $('.alert-danger').html('');
+                            $.each(result.errors, function(key, value) {
+                                $('.alert-danger').show();
+                                $('.alert-danger').append('<strong><li>' + value +
+                                    '</li></strong>');
+                            });
+
+                        } else {
+                            $("#modalLoadingOverlay").hide();
+                            // document.getElementById("loadingOverlay").style.display = "none";
+                            $('.alert-danger').hide();
+                            $('.alert-success').show();
+                            $('.alert-success').append('<strong><li>' + result.success +
+                                '</li></strong>');
+                            toastr.success(result.success, {
+                                timeOut: 5000
+                            });
+                            $('.dz-preview').remove();
+                            $(".file_arr").remove();
+                            $('#dropzone_preview').css("display", "none");
+                            $('#EditModal').modal('hide');
+                            $('#Listview').DataTable().ajax.reload(null, false);
+
+                            //setTimeout(function() {
+                            //$('.alert-success').hide();
+                            //   $('#EditModal').modal('hide');
+                            //}, 10000);
+
+                        }
+                    }
+                });
+            });
+
             let rid;
             let rid2;
             $(document).on('click', '#getDeleteData', function(e) {
@@ -901,6 +1033,9 @@
                     })
                 }
             })
+
+
+
 
             // $('#SubmitEditForm').click(function(e) {
             //     //if (!confirm("Are you sure?")) return;
@@ -1109,91 +1244,7 @@
             //     // });
             // });
 
-            $('#SubmitEditForm').click(function(e) {
-                //if (!confirm("Are you sure?")) return;
-                e.preventDefault();
 
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
-                //alert($('#AddFile').val());
-                var values = $("input[name='imgFiles[]']")
-                    .map(function() {
-                        return $(this).val();
-                    }).get();
-                var sfield = $('#Sfield').val();
-
-                // console.log(sfield);
-                if (sfield == 17) {
-                    // pls .wait
-                    alert("Please wait 2-3 second to send the email. !`");
-                }
-
-                //alert(values);
-                //exit();
-
-                $.ajax({
-                    url: "{{ route('receipts_form.store') }}",
-                    method: 'post',
-                    data: {
-
-                        img: values,
-                        rec_id: $('#AddRecId').val(),
-                        submission_date: $('#AddSubmissiondate').val(),
-                        first_name: $('#AddFirstname').val(),
-                        last_name: $('#AddLastname').val(),
-                        grade: $('#AddGrade').val(),
-                        dcode: $('#AddDcode').val(),
-                        description: $('#AddPackage').val(),
-                        street_address: $('#AddAddress').val(),
-                        //street_address2: $('#AddAddress2').val(),
-                        //city: $('#AddCity').val(),
-                        //province: $('#AddProvince').val(),
-                        postcode: $('#AddPostcode').val(),
-                        name_parent: $('#AddParent').val(),
-                        mobile: $('#AddMobile').val(),
-                        email: $('#AddEmail').val(),
-                        package: $('#AddPackage').val(),
-                        contest: $('#AddContest').val(),
-                        file_att: $('#AddFile').val(),
-                        sfield: $('#Sfield').val(),
-                        fid: $('#fid').val(),
-                        _token: token,
-                    },
-
-                    success: function(result) {
-                        console.log(result);
-                        if (result.errors) {
-                            $('.alert-danger').html('');
-                            $.each(result.errors, function(key, value) {
-                                $('.alert-danger').show();
-                                $('.alert-danger').append('<strong><li>' + value +
-                                    '</li></strong>');
-                            });
-                        } else {
-                            $('.alert-danger').hide();
-                            $('.alert-success').show();
-                            $('.alert-success').append('<strong><li>' + result.success +
-                                '</li></strong>');
-                            toastr.success(result.success, {
-                                timeOut: 5000
-                            });
-                            $('.dz-preview').remove();
-                            $(".file_arr").remove();
-                            $('#dropzone_preview').css("display", "none");
-                            $('#EditModal').modal('hide');
-                            $('#Listview').DataTable().ajax.reload(null, false);
-
-                            //setTimeout(function() {
-                            //$('.alert-success').hide();
-                            //   $('#EditModal').modal('hide');
-                            //}, 10000);
-
-                        }
-                    }
-                });
-            });
 
 
             $('#SubmitEditOForm').click(function(e) {

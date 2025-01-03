@@ -22,8 +22,15 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
+
+        // $schedule->call(function () {
+        //     // Print text to stdout (this will show in the cron logs)
+        //     echo "Scheduled task is running.\n";
+        // // })->everyMinute();
+        // })->dailyAt('05.00');
+        //comment
         // $schedule->command('inspire')->hourly();
-        //$schedule->command('export:database')->dailyAt('16:45');//now 16.10
+        // $schedule->command('export:database')->dailyAt('16:45');//now 16.10
         // $schedule->command('export:database')->everyTwoMinutes()->appendOutputTo('/storage/logs/worker.log');
         // $schedule->command('export:database')->everyFiveMinutes();
         $schedule->command('updateStatus:student')->dailyAt('04.00'); // for test

@@ -608,7 +608,7 @@ class ReceiptFormController extends Controller
             //'amount' => $request->get('book_old_price'),
         ]);
         $rtdata->save();
-
+        // dd($rdata);
         return response()->json(['success' => 'Receive Add successfully']);
     }
 
