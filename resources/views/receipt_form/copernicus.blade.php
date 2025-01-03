@@ -623,7 +623,7 @@
                                             <strong>
                                                 Registration Date:
                                             </strong>
-                                            Today - 25 October 2024
+                                            Today - February 12, 2025
                                         </span>
                                     </p>
                                     <p>
@@ -632,8 +632,8 @@
                                                 Contest Date:
                                             </strong>
                                             &nbsp;<br>
-                                            -วิทยาศาสตร์: 2 พฤศจิกายน 2024 (ออนไลน์) <br>
-                                            -คณิตศาสตร์ รอบแรก: 7 ธันวาคม 2024 (ออนไลน์) <br>
+                                            <!---วิทยาศาสตร์: 2 พฤศจิกายน 2024 (ออนไลน์) <br>
+                                            -คณิตศาสตร์ รอบแรก: 7 ธันวาคม 2024 (ออนไลน์) <br>-->
                                             -คณิตศาสตร์ รอบสอง: 22 กุมภาพันธ์ 2025 (ออนไลน์)
 
                                         </span>
@@ -903,7 +903,7 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Math First: 950 baht">Math First: 950 baht</option>
+                                                <!--<option value="Math First: 950 baht">Math First: 950 baht</option>-->
                                                 <option value="Math Second: 950 baht">Math Second: 950 baht</option>
                                                 {{-- <option value="Science: 950 baht">Science: 950 baht</option> --}}
                                                 {{-- <option value="Physics and Astronomy: 950 baht">Physics and Astronomy (Only Grade 7-12)</option> --}}
