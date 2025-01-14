@@ -623,7 +623,7 @@
                                             <strong>
                                                 Registration Date:
                                             </strong>
-                                            Today - February 12, 2025
+                                           
                                             @if ($date)
                                                 {{ $date }}
                                             @else
