@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                background-size: 15px;
-                                                                                            }*/
+                                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                    background-size: 15px;
+                                                                                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                border-color: var(--color-invalid);
-                                                                                            }*/
+                                                                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                    border-color: var(--color-invalid);
+                                                                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                display: block;
-                                                                                            }*/
+                                                                                                    display: block;
+                                                                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,9 +531,9 @@
     </style>
     <style>
         /* .custom-image {
-                                            width: 395px;
-                                            height: 395px;
-                                        } */
+                                                width: 395px;
+                                                height: 395px;
+                                            } */
 
         .custom-image {
             width: 100%;
@@ -579,12 +579,20 @@
                                     <p style="text-align: center;">
                                         <span style="color: #6351a2;">
                                             <strong>
-                                                <span style="text-decoration: underline;">China Mathematical Olympiad 2023 Registration Form </span>
+                                                <span style="text-decoration: underline;">China Mathematical Olympiad 2023
+                                                    Registration Form </span>
                                             </strong>
                                         </span>
                                     </p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong> 1 Dec 2023 – 31 Jan 2024</span></p>
+                                                Date:</strong>
+                                            @if ($date)
+                                                {{ $date }}
+                                            @else
+                                                Today - 25 October 2024 <br>
+                                            @endif
+
+                                        </span></p>
                                     <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;17 Feb 2023</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
@@ -613,7 +621,8 @@
                                         </div>
                                     </div>
 
-                                    <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร China Mathematical Olympiad 2023</b> <br>
+                                    <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร China Mathematical Olympiad
+                                                2023</b> <br>
 
                                             รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
                                             ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน
@@ -1075,8 +1084,8 @@
                                     <div class="col-md-6 ">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="newsf">ท่านทราบข่าวสารการจัดสอบ China Mathematical Olympiad จากช่องทางใด <span
-                                                    class="form-required">*</span></label>
+                                                for="newsf">ท่านทราบข่าวสารการจัดสอบ China Mathematical Olympiad
+                                                จากช่องทางใด <span class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="newsf" id="newsf"
                                                 value="" maxlength="50" required>
                                             <input type="hidden" name="sfield" id="sfield" value="15">
