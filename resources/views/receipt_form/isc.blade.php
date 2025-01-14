@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                    background-size: 15px;
-                                                                                }*/
+                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                        background-size: 15px;
+                                                                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                    border-color: var(--color-invalid);
-                                                                                }*/
+                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                        border-color: var(--color-invalid);
+                                                                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                    display: block;
-                                                                                }*/
+                                                                                        display: block;
+                                                                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -563,7 +563,13 @@
                                                     Registration
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong> วันนี้ - 25 สิงหาคม 2567</span></p>
+                                                Date:</strong>
+                                            @if ($date)
+                                                {{ $date }}
+                                            @else
+                                                Today - 25 October 2024 <br>
+                                            @endif
+                                        </span></p>
                                     <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;วันเสาร์ที่ 31
                                             สิงหาคม 2567</span>
                                     </p>
@@ -825,10 +831,14 @@
                                                 </option>
                                                 <option value="Grade IX-XII:คณิต+ชีวะ 650 bath">Grade 9-12 (คณิต+ชีวะ)
                                                 </option>
-                                                <option value="Grade IX-XII:คณิต+ฟิสิกต์ 650 bath">Grade 9-12 (คณิต+ฟิสิกต์)</option>
-                                                <option value="Grade IX-XII:เคมี+ชีวะ 650 bath">Grade 9-12 (เคมี+ชีวะ)</option>
-                                                <option value="Grade IX-XII:เคมี+ฟิสิกต์ 650 bath">Grade 9-12 (เคมี+ฟิสิกต์)</option>
-                                                <option value="Grade IX-XII:ชีวะ+ฟิสิกต์ 650 bath">Grade 9-12 (ชีวะ+ฟิสิกต์)</option>
+                                                <option value="Grade IX-XII:คณิต+ฟิสิกต์ 650 bath">Grade 9-12
+                                                    (คณิต+ฟิสิกต์)</option>
+                                                <option value="Grade IX-XII:เคมี+ชีวะ 650 bath">Grade 9-12 (เคมี+ชีวะ)
+                                                </option>
+                                                <option value="Grade IX-XII:เคมี+ฟิสิกต์ 650 bath">Grade 9-12
+                                                    (เคมี+ฟิสิกต์)</option>
+                                                <option value="Grade IX-XII:ชีวะ+ฟิสิกต์ 650 bath">Grade 9-12
+                                                    (ชีวะ+ฟิสิกต์)</option>
 
                                                 {{--
                                                 <option value="Grade IX-XII: 650 bath">Grade 9-12 (เลือกได้ 2 วิชา จาก คณิต/เคมี/ชีวะ/ฟิสิกต์ 650 บาท)</option>

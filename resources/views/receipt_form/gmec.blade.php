@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                    background-size: 15px;
-                                }*/
+                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                        background-size: 15px;
+                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                input:not(:focus):not(:placeholder-shown):invalid {
-                                    border-color: var(--color-invalid);
-                                }*/
+                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                        border-color: var(--color-invalid);
+                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                    display: block;
-                                }*/
+                                        display: block;
+                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -198,7 +198,7 @@
         }
 
         .form_none {
-             display: none;
+            display: none;
         }
 
         .dropzone {
@@ -559,7 +559,13 @@
                                                     style="text-decoration: underline;">GMEC 2023 Registration
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong> 15 January - 3 March 2023</span></p>
+                                                Date:</strong>
+                                            @if ($date)
+                                                {{ $date }}
+                                            @else
+                                                Today - 25 October 2024 <br>
+                                            @endif
+                                        </span></p>
                                     <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;25
                                             March&nbsp;2023</span>
                                     </p>
@@ -1186,8 +1192,8 @@
             parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
             maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
             maxfilesexceeded: function(file) {
-            this.removeAllFiles();
-            this.addFile(file);
+                this.removeAllFiles();
+                this.addFile(file);
             },
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
             maxFilesize: 10, // MB
@@ -1210,7 +1216,7 @@
                 this.on("addedfile", function(file) {
                     //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
                     $('#infinite').append("<input type='text' id='" + file.newName +
-                       "' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
+                        "' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
                     file.previewElement.id = file.newName;
                 }).on("removedfile", function(file) {
                     //alert(file.id);
@@ -1301,8 +1307,8 @@
             parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
             maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
             maxfilesexceeded: function(file) {
-            this.removeAllFiles();
-            this.addFile(file);
+                this.removeAllFiles();
+                this.addFile(file);
             },
             addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
             maxFilesize: 10, // MB
@@ -1510,7 +1516,9 @@
         const warningDescCSS = 'font-size: 18px;';
 
         console.log('%cหยุด!', warningTitleCSS);
-        console.log("%cนี่เป็นคุณสมบัติการทำงานของเบราว์เซอร์ที่มีจุดมุ่งหมายให้ใช้สำหรับผู้พัฒนา หากผู้ใดบอกให้คุณคัดลอกแล้ววางข้อความบางอย่างที่นี่เพื่อเปิดใช้งานคุณสมบัติการทำงานของ ระบบ หรือเพื่อเข้าถึงบัญชีของบุคคลใดบุคคลหนึ่ง โดยมิชอบ คำบอกกล่าวเช่นนี้เป็นกลลวงและจะทำให้ผู้นั้นมีสิทธิ์เข้าถึงบัญชี ของคุณ", warningDescCSS);
+        console.log(
+            "%cนี่เป็นคุณสมบัติการทำงานของเบราว์เซอร์ที่มีจุดมุ่งหมายให้ใช้สำหรับผู้พัฒนา หากผู้ใดบอกให้คุณคัดลอกแล้ววางข้อความบางอย่างที่นี่เพื่อเปิดใช้งานคุณสมบัติการทำงานของ ระบบ หรือเพื่อเข้าถึงบัญชีของบุคคลใดบุคคลหนึ่ง โดยมิชอบ คำบอกกล่าวเช่นนี้เป็นกลลวงและจะทำให้ผู้นั้นมีสิทธิ์เข้าถึงบัญชี ของคุณ",
+            warningDescCSS);
         //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
-      </script>
+    </script>
 @endsection

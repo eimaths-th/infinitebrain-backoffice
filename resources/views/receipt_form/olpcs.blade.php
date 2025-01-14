@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                            background-size: 15px;
-                                        }*/
+                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                background-size: 15px;
+                                            }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                        input:not(:focus):not(:placeholder-shown):invalid {
-                                            border-color: var(--color-invalid);
-                                        }*/
+                                            input:not(:focus):not(:placeholder-shown):invalid {
+                                                border-color: var(--color-invalid);
+                                            }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                            display: block;
-                                        }*/
+                                                display: block;
+                                            }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -561,12 +561,18 @@
                                                     Registration
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong> 1 April - 2 June 2023</span></p>
+                                                Date:</strong>
+                                            @if ($date)
+                                                {{ $date }}
+                                            @else
+                                                Today - 25 October 2024 <br>
+                                            @endif
+                                        </span></p>
                                     <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;24 June 2023</span>
                                     </p>
                                     <!-- <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
-                                                    2023</span>
-                                            </p> -->
+                                                        2023</span>
+                                                </p> -->
                                     <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
                                     </p>
                                     <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
@@ -1002,7 +1008,8 @@
                                 ทางบริษัทจะมีค่าดำเนินการทางบัญชี 100 บาท ในกรณีที่ต้องโอนค่าสมัครคืน**
                                 **กรณีเกิดการชำระเงินที่ผิดพลาดจากทางผู้สมัคร บริษัทขอสงวนสิทธิ์การโอนเงินคืนทุกกรณี**</div>
                             <br>
-                            <input type="submit" id="send_data" class="btn btn-lg btn-primary" value="Submit Application">
+                            <input type="submit" id="send_data" class="btn btn-lg btn-primary"
+                                value="Submit Application">
                             <button type="reset" class="btn btn-lg btn-primary">Clear Form</button><br><br><br>
                         </div>
                 </div>

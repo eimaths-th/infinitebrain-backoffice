@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                                        background-size: 15px;
-                                                                                                                                                    }*/
+                                                                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                            background-size: 15px;
+                                                                                                                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                                        border-color: var(--color-invalid);
-                                                                                                                                                    }*/
+                                                                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                            border-color: var(--color-invalid);
+                                                                                                                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                                        display: block;
-                                                                                                                                                    }*/
+                                                                                                                                                            display: block;
+                                                                                                                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -547,7 +547,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h4 class="card-title form_header">International hope cup  mathematic invitational</h4>
+                                <h4 class="card-title form_header">International hope cup mathematic invitational</h4>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -556,14 +556,20 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">International hope cup  mathematic
+                                                    style="text-decoration: underline;">International hope cup mathematic
                                                     invitational Registration
                                                     Form</span></strong></span></p>
 
                                     <p style="text-align: left;"><span style="color: #6351a2;">
                                             <strong>
                                                 Registration Date:
-                                            </strong> Now - 15 July 2024</span>
+                                            </strong>
+                                            @if ($date)
+                                                {{ $date }}
+                                            @else
+                                                Today - 25 October 2024 <br>
+                                            @endif
+                                        </span>
                                     </p>
 
                                     <p>
@@ -865,7 +871,8 @@
                                         <a id="dphoto"></a>
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="photo">อัพโหลดไฟล์รางวัลคณิตศาสตร์ <span class="form-required">*</span>
+                                                for="photo">อัพโหลดไฟล์รางวัลคณิตศาสตร์ <span
+                                                    class="form-required">*</span>
                                                 <div style="width: 280px"></div>
                                             </label>
                                             <input type="text" id="drop1" name="drop1"
