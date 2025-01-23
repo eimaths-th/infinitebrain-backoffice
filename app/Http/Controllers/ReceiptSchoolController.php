@@ -1123,7 +1123,6 @@ class ReceiptSchoolController extends Controller
                 $receipt_detail_arr[$x]['quantity'] =  $qty; //$dresult['qty'];
                 $receipt_detail_arr[$x]['discount'] = number_format($dresult['discount'], 2);
                 $receipt_detail_arr[$x]['book'] = ($dresult['book']);
-                // $receipt_detail_arr[$x]['book'] = ($dresult['book']);
                 $receipt_detail_arr[$x]['bookprice'] = $dresult['bookprice'];
                 $receipt_detail_arr[$x]['receipt_number'] = ($dresult['receipt_number']);
                 $receipt_detail_arr[$x]['period'] = $dresult['period'];
@@ -1153,9 +1152,9 @@ class ReceiptSchoolController extends Controller
 
             $pricesub = $pricesub + (($dresult['total']) - $dresult['bookprice'] - $dresult['media_price']);
             //- $dresult['discount']
-
+            
             // $receipt_detail_arr[$x]['books'] = $bookp->book_price;
-            $receipt_detail_arr[$x]['books'] = $dresult['bookprice'] / $qty;
+            $receipt_detail_arr[$x]['books'] = $dresult['bookprice'] / $dresult['book'];
             $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort;
             $booksum = $booksum + $dresult['bookprice'] + $dresult['media_price'];
             $discount = $discount + $dresult['discount'];
