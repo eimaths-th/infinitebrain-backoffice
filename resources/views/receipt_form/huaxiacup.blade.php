@@ -586,11 +586,12 @@
                                     </p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
                                                 Date:</strong>
-                                            @if ($date)
+                                          {{--   @if ($date)
                                                 {{ $date }}
                                             @else
                                                 25 January 2025 - 20 March 2025 <br>
-                                            @endif
+                                            @endif --}}
+                                            25 January 2025 - 20 March 2025 <br>
 
                                         </span></p>
                                     <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;30 March 2025</span>
