@@ -568,7 +568,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h2 class="card-title form_header">China Mathematical Olympiad 2023 Registration Form</h2>
+                                <h2 class="card-title form_header">China Mathematical Olympiad 2025 Registration Form</h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -589,11 +589,11 @@
                                             @if ($date)
                                                 {{ $date }}
                                             @else
-                                                Today - 25 October 2024 <br>
+                                                25 January 2025 - 20 March 2025 <br>
                                             @endif
 
                                         </span></p>
-                                    <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;17 Feb 2023</span>
+                                    <p><span style="color: #6351a2;"><strong>Exam Date:</strong>&nbsp;30 March 2025</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -604,12 +604,12 @@
                                     <p><span style="color: #6351a2;"><strong>Test:</strong> 850 baht</span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1250 bath (1 class 2 hours)</span><br></p>
+                                            style="color: #6351a2;">1250 bath {{-- (1 class 2 hours) --}}</span><br></p>
                                     <p>&nbsp;</p>
 
                                     <!-- sub img -->
 
-                                    <div class="row">
+                                    {{-- <div class="row">
                                         <div class="col-lg-6">
                                             <img src="images/HuaXiaCup-01_0.png" class="custom-image mb-3" alt="Image 1">
 
@@ -619,10 +619,10 @@
 
 
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <p><span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร China Mathematical Olympiad
-                                                2023</b> <br>
+                                                2025</b> <br>
 
                                             รร.ไทยที่เปิดเทอมมาไม่ถึง 3 เดือน <br>
                                             ให้ใช้ระดับชั้นสำหรับปีการศึกษาที่แล้ว หากเปิดเทอมเกิน 3 เดือน

@@ -302,7 +302,7 @@
                                             <td align="center">
                                             </td>
                                             <td align="center" style="vertical-align: top;">
-                                                {{ $receipt_detail['bookprice'] }}</td>
+                                                {{ number_format($receipt_detail['bookprice'],2) }}</td>
                                         @endif
 
                                     </tr>
@@ -632,7 +632,7 @@
                                             <td align="center">
                                             </td>
                                             <td align="center" style="vertical-align: top;">
-                                                {{ $receipt_detail['bookprice'] }}</td>
+                                                {{ number_format($receipt_detail['bookprice'],2) }}</td>
                                         @endif
 
                                     </tr>
@@ -972,7 +972,7 @@
                                             <td align="center">
                                             </td>
                                             <td align="center" style="vertical-align: top;">
-                                                {{ $receipt_detail['bookprice'] }}</td>
+                                                {{ number_format($receipt_detail['bookprice'],2) }}</td>
                                         @endif
 
                                     </tr>
