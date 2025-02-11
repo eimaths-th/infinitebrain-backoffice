@@ -70,13 +70,23 @@
         <div class="toggle-container">
             <div class="toggle">
                 <div class="toggle-panel toggle-left">
+
                     <img class="logo-brand" src="{{ asset('images/infinite-b-icon-2.png') }}" alt="logo">
+<<<<<<< HEAD
                     <h1>Welcome Back!</h1>
                     <p>Enter your personal details to use all of site features</p>
+=======
+
+>>>>>>> b29b1b8fa9a00da68d59608b2fc46d38dbb22909
                     <button class="hidden" id="login">Sign In</button>
+
                 </div>
                 <div class="toggle-panel toggle-right">
+<<<<<<< HEAD
                     
+=======
+
+>>>>>>> b29b1b8fa9a00da68d59608b2fc46d38dbb22909
                     <img class="logo-brand" src="{{ asset('images/infinite-b-icon-2.png') }}" alt="logo">
                     <button class="hidden" id="register">Sign Up</button>
                 </div>
