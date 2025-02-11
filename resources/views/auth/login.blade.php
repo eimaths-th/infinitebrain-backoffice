@@ -71,8 +71,7 @@
             <div class="toggle">
                 <div class="toggle-panel toggle-left">
                     <img class="logo-brand" src="{{ asset('images/infinite-b-icon-2.png') }}" alt="logo">
-                    <h1>Welcome Back!</h1>
-                    <p>Enter your personal details to use all of site features</p>
+                    
                     <button class="hidden" id="login">Sign In</button>
                 </div>
                 <div class="toggle-panel toggle-right">
