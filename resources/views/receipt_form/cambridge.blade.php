@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                    background-size: 15px;
-                                                                }*/
+                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                background-size: 15px;
+                                                                            }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                                    border-color: var(--color-invalid);
-                                                                }*/
+                                                                            input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                border-color: var(--color-invalid);
+                                                                            }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                    display: block;
-                                                                }*/
+                                                                                display: block;
+                                                                            }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -566,11 +566,14 @@
                                     </p> --}}
                                     <p><strong><span style="color: #6351a2;">Contact Information&nbsp;</span></strong></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> 📩FB:
-                                        <a href="https://m.me/cambridge.thai" target="_blank">m.me/cambridge.thai</a> </span></p>
+                                            <a href="https://m.me/cambridge.thai" target="_blank">m.me/cambridge.thai</a>
+                                        </span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"> 💌Line:
-                                            <a href="https://lin.ee/NUrW1nX" target="_blank">https://lin.ee/NUrW1nX</a></span>
+                                            <a href="https://lin.ee/NUrW1nX"
+                                                target="_blank">https://lin.ee/NUrW1nX</a></span>
                                     </p>
-                                    <p style="text-align: left;"><span style="color: #6351a2;"> 📞<a href="tel:0933586333">Tel: 093 358 6333</a></span>
+                                    <p style="text-align: left;"><span style="color: #6351a2;"> 📞<a
+                                                href="tel:0933586333">Tel: 093 358 6333</a></span>
                                     </p>
 
 
@@ -579,11 +582,21 @@
 
 
 
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>
+                                    <p style="text-align: left;"><span style="color: #6351a2;">
+                                            <strong>
                                                 Registration
-                                                Date:</strong>  1 July - 9 October 2023</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Sitting Date:</strong>&nbsp; Cambridge Primary Insight (Year 1 - 6) 28 October 2023
-                                    MidYIS (Year 7 - 9) 29 October 2023</span>
+                                                Date:</strong>
+
+                                            @if ($date)
+                                                {{ $date }}
+                                            @else
+                                                Today - 25 October 2024 <br>
+                                            @endif
+                                        </span>
+                                    </p>
+                                    <p><span style="color: #6351a2;"><strong>Sitting Date:</strong>&nbsp; Cambridge Primary
+                                            Insight (Year 1 - 6) 28 October 2023
+                                            MidYIS (Year 7 - 9) 29 October 2023</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -595,7 +608,8 @@
                                     <p><strong><span style="color: #6351a2;">Registration
                                                 Fee:&nbsp;</span></strong>
                                     </p>
-                                    <p><span style="color: #6351a2;"><strong>Cambridge Primary Insight (Year 1 - 6) :</strong>2,190  baht</span>
+                                    <p><span style="color: #6351a2;"><strong>Cambridge Primary Insight (Year 1 - 6)
+                                                :</strong>2,190 baht</span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>MidYIS (Year 7 - 9):</strong> </span><span
                                             style="color: #6351a2;">2,390 bath</span><br></p>
@@ -670,7 +684,8 @@
                                             </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Last
                                                 Name</label>
                                             {{-- <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -689,7 +704,8 @@
                                     <div class="col-md-6 col-sm-12">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="nickname">Nickname
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="nickname">Nickname
                                                 (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
@@ -801,7 +817,8 @@
                                                 <option value="">Please Select</option>
                                                 <option value="Cambridge Primary Insight (Year 1 - 6)  2190 Baht">Cambridge
                                                     Primary Insight (Year 1 - 6) 2,190 Bath</option>
-                                                <option value="MidYIS (Year 7 - 9) 2390 Baht">MidYIS (Year 7 - 9): 2,390 Baht
+                                                <option value="MidYIS (Year 7 - 9) 2390 Baht">MidYIS (Year 7 - 9): 2,390
+                                                    Baht
                                                 </option>
 
                                             </select>
@@ -1581,13 +1598,16 @@
         //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
     </script>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2EMF2S1GBP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2EMF2S1GBP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
         gtag('config', 'G-2EMF2S1GBP');
-        </script>
+    </script>
 @endsection

@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                        background-size: 15px;
-                                                                                                    }*/
+                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                            background-size: 15px;
+                                                                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                        border-color: var(--color-invalid);
-                                                                                                    }*/
+                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                            border-color: var(--color-invalid);
+                                                                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                        display: block;
-                                                                                                    }*/
+                                                                                                            display: block;
+                                                                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,9 +531,9 @@
     </style>
     <style>
         /* .custom-image {
-                                                    width: 395px;
-                                                    height: 395px;
-                                                } */
+                                                        width: 395px;
+                                                        height: 395px;
+                                                    } */
 
         .custom-image {
             width: 100%;
@@ -585,8 +585,16 @@
                                         </span>
                                     </p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong> 1 Mar 2024 - 30 Apr 2024</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Competition Date: </strong>&nbsp;12 May 2024 (Online)</span>
+                                                Date:</strong>
+                                            @if ($date)
+                                                {{ $date }}
+                                            @else
+                                                Today - 25 October 2024 <br>
+                                            @endif
+
+                                        </span></p>
+                                    <p><span style="color: #6351a2;"><strong>Competition Date: </strong>&nbsp;12 May 2024
+                                            (Online)</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -732,8 +740,7 @@
                                             </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Last
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
                                                 Name</label>
 
                                         </div>

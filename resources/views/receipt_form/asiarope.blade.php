@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                                background-size: 15px;
-                                                                                                                                            }*/
+                                                                                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                    background-size: 15px;
+                                                                                                                                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                                border-color: var(--color-invalid);
-                                                                                                                                            }*/
+                                                                                                                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                    border-color: var(--color-invalid);
+                                                                                                                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                                display: block;
-                                                                                                                                            }*/
+                                                                                                                                                    display: block;
+                                                                                                                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -518,22 +518,22 @@
         }
 
         /* #loader {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                width: 100%;
-                background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
-                z-index: 10000;
-            } */
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    width: 100%;
+                    background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
+                    z-index: 10000;
+                } */
     </style>
     <style>
         /* .custom-image {
-                                                                                            width: 395px;
-                                                                                            height: 395px;
-                                                                                        } */
+                                                                                                width: 395px;
+                                                                                                height: 395px;
+                                                                                            } */
 
         .custom-image {
             width: 100%;
@@ -612,7 +612,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h2 class="card-title form_header">Asiarope Olympiad Mathematics Registration Form</h2>
+                                <h2 class="card-title form_header">Asiarope Olympiad Science Registration Form</h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -621,16 +621,20 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">Asiarope 2024 Registration
+                                                    style="text-decoration: underline;">Asiarope {{ date('Y') }} Registration
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;">
                                         <span style="color: #6351a2;">
                                             <strong>รับสมัคร:</strong>
-                                            15/09/2024 - 17/11/2024
+                                            @if ($date)
+                                                {{ $date }}
+                                            @else
+                                                Today - 25 October 2024 <br>
+                                            @endif
                                         </span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>สอบวันที่ :</strong>&nbsp;
-                                            01/12/2024
+                                            27 April 2025
 
                                         </span>
                                     </p>

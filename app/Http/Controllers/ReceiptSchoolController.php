@@ -1152,8 +1152,9 @@ class ReceiptSchoolController extends Controller
 
             $pricesub = $pricesub + (($dresult['total']) - $dresult['bookprice'] - $dresult['media_price']);
             //- $dresult['discount']
-
-            $receipt_detail_arr[$x]['books'] = $bookp->book_price;
+            
+            // $receipt_detail_arr[$x]['books'] = $bookp->book_price;
+            $receipt_detail_arr[$x]['books'] = $dresult['bookprice'] / $dresult['book'];
             $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort;
             $booksum = $booksum + $dresult['bookprice'] + $dresult['media_price'];
             $discount = $discount + $dresult['discount'];

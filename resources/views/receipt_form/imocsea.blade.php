@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                            background-size: 15px;
-                                                                                        }*/
+                                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                    background-size: 15px;
+                                                                                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                            border-color: var(--color-invalid);
-                                                                                        }*/
+                                                                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                    border-color: var(--color-invalid);
+                                                                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                            display: block;
-                                                                                        }*/
+                                                                                                    display: block;
+                                                                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -580,9 +580,16 @@
 
 
 
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>
-                                                Registration
-                                                Date:</strong> 9 April - 30 June 2024</span></p>
+                                    <p style="text-align: left;">
+                                        <span style="color: #6351a2;">
+                                            <strong>Registration Date:</strong>
+                                            @if ($date)
+                                                {{ $date }}
+                                            @else
+                                                Today - 25 October 2024 <br>
+                                            @endif
+                                        </span>
+                                    </p>
                                     <p>
                                         <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 14 July 2024
                                         </span>
@@ -605,12 +612,14 @@
                                     <div class="row mb-5">
                                         <div class="col-lg-6">
                                             <div class="text-center">
-                                                <img src="images/IMOCSEA_0_L.jpg" alt="Image 2" style="max-width: 100%; height: auto;">
+                                                <img src="images/IMOCSEA_0_L.jpg" alt="Image 2"
+                                                    style="max-width: 100%; height: auto;">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="text-center">
-                                                <img src="images/IMOCSEA_0_T.jpg" alt="Image 2" style="max-width: 100%; height: auto;">
+                                                <img src="images/IMOCSEA_0_T.jpg" alt="Image 2"
+                                                    style="max-width: 100%; height: auto;">
                                             </div>
                                         </div>
                                     </div>
@@ -715,7 +724,8 @@
                                             </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">Last
                                                 Name</label>
                                             {{-- <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"

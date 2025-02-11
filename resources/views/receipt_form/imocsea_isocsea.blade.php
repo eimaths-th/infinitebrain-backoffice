@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                    background-size: 15px;
-                                                                }*/
+                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                background-size: 15px;
+                                                                            }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                                    border-color: var(--color-invalid);
-                                                                }*/
+                                                                            input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                border-color: var(--color-invalid);
+                                                                            }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                    display: block;
-                                                                }*/
+                                                                                display: block;
+                                                                            }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -540,10 +540,10 @@
             <div class="col-md-9">
                 <div class="card bg-light2 mb-3 ">
                     {{-- <div class="card-header">{{ __('Login') }}</div> --}}
-                    <div align="center"><img {{-- class="card-img" --}} src="{{ asset('images/IMOCSEA_Logo.png') }}" alt="..."
-                            width="50%"></div>
-                            <div align="center"><img {{-- class="card-img" --}} src="{{ asset('images/ISOCSEA_Logo.png') }}" alt="..."
-                                width="50%"></div>
+                    <div align="center"><img {{-- class="card-img" --}} src="{{ asset('images/IMOCSEA_Logo.png') }}"
+                            alt="..." width="50%"></div>
+                    <div align="center"><img {{-- class="card-img" --}} src="{{ asset('images/ISOCSEA_Logo.png') }}"
+                            alt="..." width="50%"></div>
                     <form id="infinite" method="POST" action="{{ route('form.store') }}" onsubmit="return check_input();">
                         @csrf
                         <div class="card-body">
@@ -580,10 +580,18 @@
 
 
 
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>
-                                                Registration
-                                                Date:</strong> 1 August - 30 September</span></p>
-                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 15 October 2023</span>
+                                    <p style="text-align: left;">
+                                        <span style="color: #6351a2;">
+                                            <strong> Registration Date:</strong>
+                                            @if ($date)
+                                                {{ $date }}
+                                            @else
+                                                Today - 25 October 2024 <br>
+                                            @endif
+                                        </span>
+                                    </p>
+                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 15 October
+                                            2023</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -600,8 +608,9 @@
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">2,190 bath</span><br></p>
                                     <p>&nbsp;</p>
-                                    <p><span style="color: #6351a2;"><b>หมายเหตุ</b> <br>สำหรับผู้สมัครระดับชั้น Kindergarten
-                                    ISOCSEA เนื้อหาที่ใช้สอบจะถูกปรับเป็นระดับ Grade 1</span>
+                                    <p><span style="color: #6351a2;"><b>หมายเหตุ</b> <br>สำหรับผู้สมัครระดับชั้น
+                                            Kindergarten
+                                            ISOCSEA เนื้อหาที่ใช้สอบจะถูกปรับเป็นระดับ Grade 1</span>
                                     </p>
                                     {{-- <p style="text-align: center;"><span style="color: #6351a2;"><b><a target="_blank"
                                                     href="https://cem-th.com/compare-education-system/"><i
@@ -796,8 +805,8 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Test:  1500 Baht">Test:  1500 Baht</option>
-                                               {{--  <option value="Test+tutoring class: 2190 bath">Test+tutoring class: 2190 bath
+                                                <option value="Test:  1500 Baht">Test: 1500 Baht</option>
+                                                {{--  <option value="Test+tutoring class: 2190 bath">Test+tutoring class: 2190 bath
                                                 </option> --}}
 
                                             </select>
@@ -1038,7 +1047,7 @@
                         <div class="card-footer text-center">
                             <br>
                             <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
-                            ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี **</div>
+                                ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี **</div>
                             <br>
                             <input type="submit" id="send_data" class="btn btn-lg btn-primary"
                                 value="Submit Application">
@@ -1576,13 +1585,16 @@
         //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
     </script>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2EMF2S1GBP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2EMF2S1GBP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
         gtag('config', 'G-2EMF2S1GBP');
-        </script>
+    </script>
 @endsection

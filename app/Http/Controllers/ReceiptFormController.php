@@ -22,6 +22,7 @@ use App\Models\Receipt_RunningNumber;
 use App\Models\Receipt_Customer_RunningNumber;
 use Mail;
 use App\Mail\ContactMail;
+use App\Models\OpeningClosingTime;
 use Maatwebsite\Excel\Facades\Excel;
 // use App\Exports\ExportUser;
 
@@ -55,27 +56,75 @@ class ReceiptFormController extends Controller
         '26' => 'copernicus',
     );
 
+    public function getDatetime($route)
+    {
+        $set_time = OpeningClosingTime::where('route', $route)->orderBy('id', 'desc')->first();
+        if ($set_time->status === 'Online') {
+            $start = (new \DateTime($set_time->opening_time))->format('d F Y');
+            $closs = (new \DateTime($set_time->closing_time))->format('d F Y');
+            $date = $start . ' - ' . $closs;
+        } else {
+            $start = 'null date';
+            $closs = 'null date';
+            $date = $start . ' to ' . $closs;
+        }
+        return $date;
+    }
     public function isc()
     {
-        return view("receipt_form.isc");
+
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+
+        return view("receipt_form.isc")->with(['date' => $date]);
     }
     public function gmec()
     {
-        return view("receipt_form.gmec");
+        
+        $route = request()->route()->getName();
+
+        $date = $this->getDatetime($route);
+
+        return view("receipt_form.gmec")->with(['date' => $date]);
+
+
+        // return view("receipt_form.gmec");
     }
     public function ihcmi()
     {
-        return view("receipt_form.ihcmi");
+
+        $route = request()->route()->getName();
+
+        $date = $this->getDatetime($route);
+
+        return view("receipt_form.ihcmi")->with(['date' => $date]);
+
+
+        //return view("receipt_form.ihcmi");
     }
 
     public function olpcs()
     {
-        return view("receipt_form.olpcs");
+
+        $route = request()->route()->getName();
+
+        $date = $this->getDatetime($route);
+
+        return view("receipt_form.olpcs")->with(['date' => $date]);
+
+        //return view("receipt_form.olpcs");
     }
 
     public function asiarope()
     {
-        return view("receipt_form.asiarope");
+
+        $route = request()->route()->getName();
+
+        $date = $this->getDatetime($route);
+
+        return view("receipt_form.asiarope")->with(['date' => $date]);
+
+        //return view("receipt_form.asiarope");
     }
     public function test_field()
     {
@@ -83,35 +132,69 @@ class ReceiptFormController extends Controller
     }
     public function mathleague()
     {
-        return view("receipt_form.mathleague");
+
+        $route = request()->route()->getName();
+
+        $date = $this->getDatetime($route);
+
+        return view("receipt_form.mathleague")->with(['date' => $date]);
+
+
+
+        //return view("receipt_form.mathleague");
     }
 
     public function mathleague_II()
     {
-        return view("receipt_form.mathleague_II");
+
+        $route = request()->route()->getName();
+
+        $date = $this->getDatetime($route);
+
+        return view("receipt_form.mathleague_II")->with(['date' => $date]);
+
+
+        //return view("receipt_form.mathleague_II");
     }
 
     public function huaxiacup()
     {
-        return view("receipt_form.huaxiacup");
+        $route = request()->route()->getName();
+
+        $date = $this->getDatetime($route);
+
+
+        return view("receipt_form.huaxiacup")->with(['date' => $date]);
+        //
     }
     public function huaxiacupFinalRound()
     {
-        return view("receipt_form.huaxiacup_III");
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+
+        return view("receipt_form.huaxiacup_III")->with(['date' => $date]);
+        // return view("receipt_form.huaxiacup_III");
     }
     public function neos()
     {
-        return view("receipt_form.neos");
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.neos")->with(['date' => $date]);
     }
 
     public function neos2()
     {
-        return view("receipt_form.neos-II");
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.neos-II")->with(['date' => $date]);
     }
 
     public function huaxiacup_II()
     {
-        return view("receipt_form.huaxiacup_II");
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.huaxiacup_II")->with(['date' => $date]);
+        // return view("receipt_form.huaxiacup_II");
     }
 
     public function img_reward()
@@ -121,41 +204,56 @@ class ReceiptFormController extends Controller
 
     public function gelosea()
     {
-        return view("receipt_form.gelosea");
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.gelosea")->with(['date' => $date]);
     }
 
     public function imocsea()
     {
-        return view("receipt_form.imocsea");
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.imocsea")->with(['date' => $date]);
     }
 
     public function isocsea()
     {
-        return view("receipt_form.isocsea");
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+
+        return view("receipt_form.isocsea")->with(['date' => $date]);
     }
 
     public function imocsea_isocsea()
     {
-        return view("receipt_form.imocsea_isocsea");
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+
+        return view("receipt_form.imocsea_isocsea")->with(['date' => $date]);
     }
 
 
     public function cambridge()
     {
-        return view("receipt_form.cambridge");
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+
+        return view("receipt_form.cambridge")->with(['date' => $date]);
     }
     public function seacso()
     {
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
 
-        //'25' => 'seacso',
-        return view("receipt_form.seacso");
+        return view("receipt_form.seacso")->with(['date' => $date]);
     }
     public function copernicus()
     {
-
-        //'25' => 'seacso',
-        return view("receipt_form.copernicus");
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.copernicus")->with(['date' => $date]);
     }
+
 
     public function fileStore(Request $request)
     {
@@ -608,7 +706,7 @@ class ReceiptFormController extends Controller
             //'amount' => $request->get('book_old_price'),
         ]);
         $rtdata->save();
-
+        // dd($rdata);
         return response()->json(['success' => 'Receive Add successfully']);
     }
 
