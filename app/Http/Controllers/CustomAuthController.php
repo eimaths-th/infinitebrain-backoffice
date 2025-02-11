@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Auth;
 class CustomAuthController extends Controller
 {
     public function index()
-    {
+    {   
+          
+        // dd('test');
         return view('auth.login');
     }
 
