@@ -55,7 +55,7 @@ class LoginController extends Controller
     }
     public function showParentLoginForm()
     {
-        return view('auth.login', ['url' => 'parent']);
+        return view('auth.login_parent', ['url' => 'parent']);
     }
 
     public function parentLogin(Request $request)
