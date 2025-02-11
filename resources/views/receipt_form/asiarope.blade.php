@@ -612,7 +612,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h2 class="card-title form_header">Asiarope Olympiad Mathematics Registration Form</h2>
+                                <h2 class="card-title form_header">Asiarope Olympiad Science Registration Form</h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -621,7 +621,7 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">Asiarope 2024 Registration
+                                                    style="text-decoration: underline;">Asiarope {{ date('Y') }} Registration
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;">
                                         <span style="color: #6351a2;">
