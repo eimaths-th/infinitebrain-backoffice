@@ -1362,11 +1362,17 @@
         Contact Admin on Line OA
     </a> --}}
 
+<<<<<<< HEAD
     {{-- <a href="{{ route('send.line.message', ['ref' => $ref,'url' => $url]) }}" target="_blank" class="line-contact-btn">
         Contact Admin on Line OA
     </a> --}}
 
     <!-- test commit -->
+=======
+    <!-- <a href="{{ route('send.line.message', ['ref' => $ref,'url' => $url]) }}" target="_blank" class="line-contact-btn">
+        Contact Admin on Line OA
+    </a> -->
+>>>>>>> b1175a390c4d737b6ebc1cc520c096d35a46062a
 @endsection
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

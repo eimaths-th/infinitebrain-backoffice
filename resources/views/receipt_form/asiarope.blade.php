@@ -1074,8 +1074,8 @@
                                 </div>
 
                                 <br>
-                                <div align="center"><img src="{{ asset('images/PayMent.png') }}" alt="..."
-                                        height="300"></div>
+                                <div align="center"><img src="{{ asset('images/acc_meta.png') }}" alt="..."
+                                        height="500"></div>
                                 <br>
 
                                 <div class="form-row form-focus" id="dropzone-att">
