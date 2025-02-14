@@ -5,6 +5,7 @@
 
 {{-- <link rel="stylesheet" href="style.css"> --}}
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<link rel="icon" href="{{ asset('images/infinite-b-icon-non-text-2.png') }}" type="image/png">
 
 <title>INF | @yield('title', 'INFINITE BRAIN')</title>
 
