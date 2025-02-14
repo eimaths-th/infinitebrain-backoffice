@@ -88,8 +88,8 @@
     }
 
     .container input {
-        background-color: #eee;
-        border: none;
+        background-color: #ffffff;
+        border: solid 2px #517d0b;
         margin: 8px 0;
         padding: 10px 15px;
         font-size: 13px;
@@ -287,3 +287,4 @@
     }
 </style>
 {{-- @vite(['resources/sass/app.scss']) --}}
+

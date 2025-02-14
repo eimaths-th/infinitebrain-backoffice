@@ -5,7 +5,8 @@
 @section('content')
     <div class="container" id="container">
         <div class="form-container sign-up">
-            <form>
+            <form method="POST" action="{{ route('register.custom') }}">
+                @csrf
                 <h1>Create Account</h1>
                 {{-- <div class="social-icons">
                     <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
@@ -14,9 +15,33 @@
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div> --}}
                 <span>or use your email for registeration</span>
-                <input type="text" placeholder="Name">
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
+                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name"
+                    value="{{ old('name') }}" autocomplete="name" placeholder="Name" autofocus>
+
+                @error('name')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
+                    name="email" value="{{ old('email') }}" placeholder="email" autocomplete="email">
+
+                @error('email')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
+                    name="password" placeholder="password" autocomplete="new-password">
+
+                @error('password')
+                    <span class="invalid-feedback" role="alert">
+                        <strong> <span class="text-danger"> {{ $message }}</span></strong>
+                    </span>
+                @enderror
+                <input id="password-confirm" type="password" class="form-control" name="password_confirmation"
+                    autocomplete="new-password" placeholder="confirm password">
+
                 <button>Sign Up</button>
             </form>
         </div>
@@ -35,16 +60,17 @@
                 </div> --}}
                 {{-- <b class="title-brand"> INFINITE BRAIN</b> --}}
 
-                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
-                    name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
+                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
+                    name="email" value="{{ old('email') }}" placeholder="Email" required autocomplete="email" autofocus>
                 @error('email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
+
                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
-                    name="password" required autocomplete="current-password">
+                    name="password" placeholder="password" required autocomplete="current-password">
 
                 @error('password')
                     <span class="invalid-feedback" role="alert">

@@ -15,6 +15,7 @@ class CustomAuthController extends Controller
           
         // dd('test');
         return view('auth.login');
+        // return view('auth.login_parent');
     }
 
     public function customLogin(Request $request)
@@ -73,6 +74,7 @@ class CustomAuthController extends Controller
 
     public function customRegistration(Request $request)
     {
+        // dd($request);
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
@@ -81,6 +83,7 @@ class CustomAuthController extends Controller
 
         $data = $request->all();
         $check = $this->create($data);
+        $check->update(['level' => 5]);
 
         return redirect("login")->withSuccess('Register Complete. Please Contact Administrator for permission');
         //return redirect("home")->withSuccess('You have signed-in');
