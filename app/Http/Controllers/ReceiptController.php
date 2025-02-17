@@ -350,25 +350,40 @@ class ReceiptController extends Controller
 
     public function textWatermark($image, $text)
     {
-        $img = Image::make(public_path('receipt_form_images/' . $image));
 
-        $img->text($text, 610, 670, function ($font) {
-            $font->file(public_path('font/amandasignature.ttf'));
-            $font->size(60);
-            $font->color('#ff0000');
-            $font->align('center');
-            $font->valign('bottom');
-            $font->angle(80);
-        });
+        $imagePath = public_path('receipt_form_images/' . $image);
 
-        $img->save(public_path('receipt_form_watermark_images/' . $image));
+        if (file_exists($imagePath)) {
+            $img = Image::make($imagePath);
+        } else {
+            $img = null;
+        }
 
-        $img->encode('png');
-        $type = 'png';
-        $new_image = 'data:image/' . $type . ';base64,' . base64_encode($img);
+        // dd($img);
+        if ($img) {
+            # code...
+            $img->text($text, 610, 670, function ($font) {
+                $font->file(public_path('font/amandasignature.ttf'));
+                $font->size(60);
+                $font->color('#ff0000');
+                $font->align('center');
+                $font->valign('bottom');
+                $font->angle(80);
+            });
+
+            $img->save(public_path('receipt_form_watermark_images/' . $image));
+
+            $img->encode('png');
+            $type = 'png';
+            $new_image = 'data:image/' . $type . ';base64,' . base64_encode($img);
+
+            return  $new_image;
+        } else {
+            return null;
+        }
+
 
         //return view('show_watermark', compact('new_image'));
-        return  $new_image;
     }
 
     public function URL_exists($url)
@@ -748,10 +763,18 @@ class ReceiptController extends Controller
      */
     public function show($type, $id)
     {
-
         //
         $this->check_permission();
         $data = Receipt::find($id);
+        $field_id = $data->sfield;
+
+        $date_start = date("Y-m-d", strtotime('2025-02-10'));
+        $date_now = date("Y-m-d");
+        // dd(
+        //     $id,
+        //     $data,
+        //     $field_id
+        // );
 
         //print_r($data);
         //exit();
@@ -764,10 +787,10 @@ class ReceiptController extends Controller
             $text = "Tax Invoice/Receipt";
         }
 
-        if ($type == "view") {
-            $viewr = "receipt.view";
-        } else if ($type == "print") {
-            $viewr = "receipt.print";
+        if ($type === "view") {
+            $viewr = ($date_now > $date_start && $field_id === "10") ? "receipt.view_meta" : "receipt.view";
+        } elseif ($type === "print") {
+            $viewr = ($date_now > $date_start && $field_id === "10") ? "receipt.print_meta" : "receipt.print";
         }
 
         if ($data->package) {
