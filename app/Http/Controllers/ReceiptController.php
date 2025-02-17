@@ -769,7 +769,7 @@ class ReceiptController extends Controller
         $field_id = $data->sfield;
 
         $date_start = date("Y-m-d", strtotime('2025-02-10'));
-        $date_now = date("Y-m-d");
+        $date_submission = date("Y-m-d", strtotime($data->submission_date));
         // dd(
         //     $id,
         //     $data,
@@ -788,9 +788,9 @@ class ReceiptController extends Controller
         }
 
         if ($type === "view") {
-            $viewr = ($date_now > $date_start && $field_id === "10") ? "receipt.view_meta" : "receipt.view";
+            $viewr = ($date_submission > $date_start && $field_id === "10") ? "receipt.view_meta" : "receipt.view";
         } elseif ($type === "print") {
-            $viewr = ($date_now > $date_start && $field_id === "10") ? "receipt.print_meta" : "receipt.print";
+            $viewr = ($date_submission > $date_start && $field_id === "10") ? "receipt.print_meta" : "receipt.print";
         }
 
         if ($data->package) {
