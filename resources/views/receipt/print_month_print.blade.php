@@ -8,66 +8,132 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <style>
-        table td.grey {
-            color: rgb(141, 138, 138);
+    @if ($template === 'meta')
+        <style>
+            /* ------------------- */
+            table td.grey {
+                color: rgb(141, 138, 138);
 
-        }
+            }
 
-        font.grey {
-            color: rgb(141, 138, 138);
+            font.grey {
+                color: rgb(141, 138, 138);
 
-        }
+            }
 
-        .tbr table tr.active td {
-            border-top: 1px solid rgb(138, 175, 61);
-            border-bottom: 1px solid rgb(138, 175, 61);
-        }
+            .tbr table tr.active td {
+                border-top: 2px solid rgb(255, 115, 0);
+                border-bottom: 2px solid rgb(255, 115, 0);
+            }
 
-        .tbr table tr.activebg td {
-           background: #c9fcb9;
-        }
+            .tbr table tr.activebg td {
+                background: rgb(255, 180, 119);
+            }
 
-        .tbr table tr.actived td {
-            border-bottom: 1px solid rgb(7, 7, 7);
+            .tbr table tr.actived td {
+                border-bottom: 1px solid rgb(7, 7, 7);
 
-        }
-        .tbr table tr.activeda td {
-            border-bottom: 1px solid rgb(7, 7, 7);
-            border-top: 1px solid rgb(7, 7, 7);
+            }
 
-        }
+            .tbr table tr.activeda td {
+                border-bottom: 1px solid rgb(7, 7, 7);
+                border-top: 1px solid rgb(7, 7, 7);
 
-        .tbr table td.activetop {
-            border-top: 1px solid rgb(138, 175, 61);
-        }
+            }
 
-        .tbr table td.active {
-            border-left: 1px solid rgb(138, 175, 61);
-            border-right: 1px solid rgb(138, 175, 61);
-        }
+            .tbr table td.activetop {
+                border-top: 2px solid rgb(255, 115, 0);
+            }
 
-        .tbr table td.actived {
-            border-left: 1px solid rgb(7, 7, 7);
-            border-right: 1px solid rgb(7, 7, 7);
-        }
+            .tbr table td.active {
+                border-left: 2px solid rgb(255, 115, 0);
+                border-right: 2px solid rgb(255, 115, 0);
+            }
 
-        .tbr table td.active_left {
-            border-left: 1px solid rgb(138, 175, 61);
-        }
+            .tbr table td.actived {
+                border-left: 1px solid rgb(7, 7, 7);
+                border-right: 1px solid rgb(7, 7, 7);
+            }
 
-        .tbr table td.active_right {
-            border-right: 1px solid rgb(138, 175, 61);
-        }
+            .tbr table td.active_left {
+                border-left: 2px solid rgb(255, 115, 0);
+            }
 
-        .tbr table td.activebottom {
-            border-bottom: 1px solid rgb(138, 175, 61);
-        }
+            .tbr table td.active_right {
+                border-right: 2px solid rgb(255, 115, 0);
+            }
 
-        .tbr table td.activebottomd {
-            border-bottom: 1px solid rgb(7, 7, 7);
-        }
-    </style>
+            .tbr table td.activebottom {
+                border-bottom: 2px solid rgb(255, 115, 0);
+            }
+
+            .tbr table td.activebottomd {
+                border-bottom: 1px solid rgb(7, 7, 7);
+            }
+        </style>
+    @else
+        <style>
+            table td.grey {
+                color: rgb(141, 138, 138);
+
+            }
+
+            font.grey {
+                color: rgb(141, 138, 138);
+
+            }
+
+            .tbr table tr.active td {
+                border-top: 2px solid rgb(138, 175, 61);
+                border-bottom: 2px solid rgb(138, 175, 61);
+            }
+
+            .tbr table tr.activebg td {
+                background: #c9fcb9;
+            }
+
+            .tbr table tr.actived td {
+                border-bottom: 1px solid rgb(7, 7, 7);
+
+            }
+
+            .tbr table tr.activeda td {
+                border-bottom: 1px solid rgb(7, 7, 7);
+                border-top: 1px solid rgb(7, 7, 7);
+
+            }
+
+            .tbr table td.activetop {
+                border-top: 2px solid rgb(138, 175, 61);
+            }
+
+            .tbr table td.active {
+                border-left: 2px solid rgb(138, 175, 61);
+                border-right: 2px solid rgb(138, 175, 61);
+            }
+
+            .tbr table td.actived {
+                border-left: 1px solid rgb(7, 7, 7);
+                border-right: 1px solid rgb(7, 7, 7);
+            }
+
+            .tbr table td.active_left {
+                border-left: 2px solid rgb(138, 175, 61);
+            }
+
+            .tbr table td.active_right {
+                border-right: 2px solid rgb(138, 175, 61);
+            }
+
+            .tbr table td.activebottom {
+                border-bottom: 2px solid rgb(138, 175, 61);
+            }
+
+            .tbr table td.activebottomd {
+                border-bottom: 1px solid rgb(7, 7, 7);
+            }
+        </style>
+    @endif
 </head>
 
 <body>
@@ -80,22 +146,41 @@
 
 
                 <table align="center" width="95%" cellpadding="0" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <td width="15%" rowspan="4"><img src="{{ asset('images/infinite.jpg') }}" alt="..."
-                                    height="106" style="padding-bottom: 5px"></td>
-                            <td><font size="{{ $fontsize }}">บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่) </font></td>
-                        </tr>
-                        <tr>
-                            <td><font size="{{ $fontsize }}">555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</font></td>
-                        </tr>
-                        <tr>
-                            <td><font size="{{ $fontsize }}">เลขประจำตัวผู้เสียภาษี: 0125563031038</font></td>
-                        </tr>
-                        <tr>
-                            <td><font size="{{ $fontsize }}">โทร 098 509 8554</font></td>
-                        </tr>
-                    </thead>
+                    @if ($template === 'meta')
+                        <thead>
+                            <tr>
+                                <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta_2.png') }}"
+                                        alt="..." height="106" style="padding-bottom: 5px"></td>
+                                <td>บริษัท เมต้า2 โนวเลจ จำกัด (สำนักงานใหญ่)</td>
+                            </tr>
+                            <tr>
+                                <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                            </tr>
+                            <tr>
+                                <td>เลขประจำตัวผู้เสียภาษี: 0125567041160</td>
+                            </tr>
+                            <tr>
+                                <td>โทร 093-358-6333</td>
+                            </tr>
+                        </thead>
+                    @else
+                        <thead>
+                            <tr>
+                                <td width="15%" rowspan="4"><img src="{{ asset('images/infinite.jpg') }}"
+                                        alt="..." height="106" style="padding-bottom: 5px"></td>
+                                <td>บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่) </td>
+                            </tr>
+                            <tr>
+                                <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                            </tr>
+                            <tr>
+                                <td>เลขประจำตัวผู้เสียภาษี: 0125563031038</td>
+                            </tr>
+                            <tr>
+                                <td>โทร 098 509 8554</td>
+                            </tr>
+                        </thead>
+                    @endif
                 </table>
 
 
