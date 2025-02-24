@@ -1103,7 +1103,11 @@ class ReceiptController extends Controller
             $ret_receipt[$result->id]['file_att'] = $file_att;
         }
 
+        $app_html = '';
+        
+
         return view($viewr)->with(['print_date' => $request->get('print_rdate')])
+            ->with(['app_html' => $app_html])
             ->with(['data' => $ret_receipt])
             ->with(['receipt_detail_arr' => $receipt_detail_arr])
             ->with(['fontsize' => $request->get('fontsize')])
