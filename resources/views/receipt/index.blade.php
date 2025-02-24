@@ -1,7 +1,6 @@
 @extends('layouts.main_template')
 
 @section('style')
-
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -17,7 +16,8 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
     <script src="plugins/moment/moment.min.js"></script>
     <script src="../plugins/daterangepicker/daterangepicker.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js">
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js">
     </script>
@@ -28,8 +28,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                                    <p>{{ $message }}</p>
-                                    </div>-->
+                                                        <p>{{ $message }}</p>
+                                        </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -39,8 +39,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                                            <p>{{ $message }}</p>
-                                                                </div>-->
+                                                                <p>{{ $message }}</p>
+                                                                    </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -299,6 +299,16 @@
                                 <input type="hidden" name="type" value="view">
                                 <input type="hidden" name="pdsfield" value="{{ request()->get('sfield') }}">
                             </div>
+                            <div class="form-group">
+                                <label for="font">Template:</label>
+                                <select class="form-control" id="printDaysTemplate" name="printDaysTemplate" required>
+                                    <option value="">Select Template</option>
+                                    <option value="inf">Infinite Brain </option>
+                                    <option value="meta"> Meta </option>
+                                </select>
+                                <input type="hidden" name="type" value="view">
+                                <input type="hidden" name="pdsfield" value="{{ request()->get('sfield') }}">
+                            </div>
                         </div>
 
 
@@ -375,6 +385,16 @@
 
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label for="font">Template:</label>
+                                <select class="form-control" id="printMonthTemplate" name="printMonthTemplate" required>
+                                    <option value="">Select Template</option>
+                                    <option value="inf">Infinite Brain </option>
+                                    <option value="meta"> Meta </option>
+                                </select>
+                                <input type="hidden" name="type" value="view">
+                                <input type="hidden" name="pdsfield" value="{{ request()->get('sfield') }}">
+                            </div>
                         </div>
 
 
@@ -441,7 +461,8 @@
                             <div class="form-group">
                                 <label for="Submission Month">Print Month:</label>
                                 {{-- <input type="text" class="datePeriod form-control" name="print_monthYear" autocomplete="off" id="ssss" required> --}}
-                                <input type="text" class="form-control datePeriod float-right" id="period" name="print_monthYear" autocomplete="off"  required>
+                                <input type="text" class="form-control datePeriod float-right" id="period"
+                                    name="print_monthYear" autocomplete="off" required>
                             </div>
                             <div class="form-group">
                                 <label for="font">ขนาดตัวอักษร:</label>
@@ -450,8 +471,17 @@
                                     <option value="2" selected> เล็ก </option>
                                     <option value="3"> ปานกลาง </option>
                                     <option value="4"> ใหญ่ </option>
-
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="font">Template:</label>
+                                <select class="form-control" id="printFieldTemplate" name="printFieldTemplate" required>
+                                    <option value="">Select Template</option>
+                                    <option value="inf">Infinite Brain </option>
+                                    <option value="meta"> Meta </option>
+                                </select>
+                                <input type="hidden" name="type" value="view">
+                                <input type="hidden" name="pdsfield" value="{{ request()->get('sfield') }}">
                             </div>
                         </div>
 
@@ -612,21 +642,21 @@
                         </div>
 
                         <!--<div class="form-row">
-                                                <div class="col-md-6">
-                                                    <div class="position-relative form-group">
-                                                        <label for="City">City:</label>
-                                                        <input type="text" class="form-control" name="city" id="AddCity"
-                                                            value="">
+                                                    <div class="col-md-6">
+                                                        <div class="position-relative form-group">
+                                                            <label for="City">City:</label>
+                                                            <input type="text" class="form-control" name="city" id="AddCity"
+                                                                value="">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="position-relative form-group">
-                                                        <label for="Province">Province:</label>
-                                                        <input type="text" class="form-control" name="province" id="AddProvince"
-                                                            value="">
+                                                    <div class="col-md-6">
+                                                        <div class="position-relative form-group">
+                                                            <label for="Province">Province:</label>
+                                                            <input type="text" class="form-control" name="province" id="AddProvince"
+                                                                value="">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>-->
+                                                </div>-->
                         <div class="col-md-6">
                             <div class="position-relative form-group">
                                 <label for="City">City:</label>
@@ -668,9 +698,9 @@
                         <textarea class="form-control" name="address" id="AddAddress"></textarea>
                     </div>
                     <!--<div class="form-group">
-                                                    <label for="Name">Street Address 2:</label>
-                                                    <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
-                                                </div>-->
+                                                        <label for="Name">Street Address 2:</label>
+                                                        <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                                                    </div>-->
                     <label for="Name">Street Address 2:</label>
                     <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
                 </div>-->
@@ -822,21 +852,21 @@
                                     </div>
 
                                     <!--<div class="form-row">
-                                                        <div class="col-md-6">
-                                                            <div class="position-relative form-group">
-                                                                <label for="City">City:</label>
-                                                                <input type="text" class="form-control" name="city" id="EditCity"
-                                                                    value="">
+                                                            <div class="col-md-6">
+                                                                <div class="position-relative form-group">
+                                                                    <label for="City">City:</label>
+                                                                    <input type="text" class="form-control" name="city" id="EditCity"
+                                                                        value="">
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="position-relative form-group">
-                                                                <label for="Province">Province:</label>
-                                                                <input type="text" class="form-control" name="province" id="EditProvince"
-                                                                    value="">
+                                                            <div class="col-md-6">
+                                                                <div class="position-relative form-group">
+                                                                    <label for="Province">Province:</label>
+                                                                    <input type="text" class="form-control" name="province" id="EditProvince"
+                                                                        value="">
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        </div>-->
+                                                            </div>-->
                                     {{--  <div class="col-md-6">
                                   <div class="position-relative form-group">
                                     <label for="Des">Description:</label>
@@ -849,9 +879,9 @@
                                         <textarea class="form-control" name="address" id="EditAddress"></textarea>
                                     </div>
                                     <!--<div class="form-group">
-                                                            <label for="Name">Street Address 2:</label>
-                                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                        </div>-->
+                                                                <label for="Name">Street Address 2:</label>
+                                                                <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                            </div>-->
 
 
                                     {{-- <div class="form-group">
@@ -1020,7 +1050,8 @@
                                             <div class="position-relative form-group">
                                                 <label for="Submission Date">Submission Date:</label>
                                                 <input type="text" class="AddDate form-control"
-                                                    name="conv_submission_date" id="ConvSubmissiondate" value="">
+                                                    name="conv_submission_date" id="ConvSubmissiondate"
+                                                    value="">
                                             </div>
                                         </div>
                                         <div class="col-md-6">

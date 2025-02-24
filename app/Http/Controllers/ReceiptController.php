@@ -1116,6 +1116,9 @@ class ReceiptController extends Controller
     {
         //
 
+        $template = $request->get('printDaysTemplate');
+
+        // dd($request->all(), $template);
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'pdsfield' => 'required|string',
@@ -1244,7 +1247,7 @@ class ReceiptController extends Controller
 
 
         return view($viewr)->with(['sfield' => $sfield])->with(['sfielda' =>  self::sfielda])
-            // ->with(['mes' =>  $mes])
+            ->with(['template' =>  $template])
             ->with(['sfieldas' =>  self::sfieldas])
             ->with(['ymcode' =>  $ymcode])
             ->with(['thaiyear' =>  $thai_year])
@@ -1262,6 +1265,8 @@ class ReceiptController extends Controller
 
     public function print_month(Request $request)
     {
+        $template = $request->get('printMonthTemplate');
+
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'pmsfield' => 'required|string',
@@ -1439,6 +1444,8 @@ class ReceiptController extends Controller
         return view($viewr)->with(['sfield' => $sfield])->with(['sfielda' =>  self::sfielda])
             ->with(['sfieldas' =>  self::sfieldas])
             ->with(['ymcode' =>  $ymcode])
+            ->with(['template' =>  $template])
+
             ->with(['thaiyear' =>  $thai_year])
             ->with(['thaimonth' =>  $thai_month])
             ->with(['chart_date' =>  $chart_date])
@@ -1456,6 +1463,8 @@ class ReceiptController extends Controller
 
     public function print_field(Request $request)
     {
+        $template = $request->get('printFieldTemplate');
+
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             'pmsfield' => 'required|string',
@@ -1643,6 +1652,7 @@ class ReceiptController extends Controller
                 ->with(['sfielda' =>  self::sfielda])
                 ->with(['sfieldas' =>  self::sfieldas])
                 ->with(['data' => $ret_receipt])
+                ->with(['template' =>  $template])
 
                 ->with(['ymcode' =>  $ymcode])
                 ->with(['thaiyear' =>  $thai_year])
@@ -1674,6 +1684,8 @@ class ReceiptController extends Controller
                 ->with(['fontsize' => $request->get('fontsize')])
                 ->with(['pmsfield' => $request->get('pmsfield')])
                 ->with(['month_year' => $month_year])
+                ->with(['template' =>  $template])
+
 
                 ->with(['pmdes' => $request->get('Pmdescription')])
                 //->with(['print_month' => $request->get('print_month')])
