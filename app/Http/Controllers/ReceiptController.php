@@ -938,20 +938,22 @@ class ReceiptController extends Controller
 
         $sfield = $request->get('pdsfield');
         $type = $request->get('type');
+        $template = $request->get('template');
 
+        if ($type == "view" ) {
+            # code...
+            $viewr = ($template == "meta") ? "receipt.viewr_meta" : "receipt.view";
+        }elseif ($type == "print") {
+            # code...
+            $viewr = ($template == "meta") ? "receipt.printr_meta" : "receipt.print";
+        }
 
         // if ($type == "view") {
         //     $viewr = "receipt.viewr";
         // } else if ($type == "print") {
         //     $viewr = "receipt.printr";
         // }
-
-        if ($type == "view") {
-            $viewr = "receipt.view_meta";
-        } else if ($type == "print") {
-            $viewr = "receipt.print_meta";
-        }
-
+        
         $receipts = Receipt::select(
             "receipts.id as id",
             "receipts.submission_date as receipt_submission_date",
@@ -1103,12 +1105,9 @@ class ReceiptController extends Controller
             $ret_receipt[$result->id]['file_att'] = $file_att;
         }
 
-        $app_html = '';
-        
-
         return view($viewr)->with(['print_date' => $request->get('print_rdate')])
-            ->with(['app_html' => $app_html])
             ->with(['data' => $ret_receipt])
+            ->with(['template' => $template])
             ->with(['receipt_detail_arr' => $receipt_detail_arr])
             ->with(['fontsize' => $request->get('fontsize')])
             ->with(['pdsfield' => $sfield]);
