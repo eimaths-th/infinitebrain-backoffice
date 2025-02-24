@@ -940,10 +940,16 @@ class ReceiptController extends Controller
         $type = $request->get('type');
 
 
+        // if ($type == "view") {
+        //     $viewr = "receipt.viewr";
+        // } else if ($type == "print") {
+        //     $viewr = "receipt.printr";
+        // }
+
         if ($type == "view") {
-            $viewr = "receipt.viewr";
+            $viewr = "receipt.view_meta";
         } else if ($type == "print") {
-            $viewr = "receipt.printr";
+            $viewr = "receipt.print_meta";
         }
 
         $receipts = Receipt::select(
