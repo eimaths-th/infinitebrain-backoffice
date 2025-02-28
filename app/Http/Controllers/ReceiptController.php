@@ -923,7 +923,7 @@ class ReceiptController extends Controller
 
     public function show_day(Request $request)
     {
-
+        // dd($request->all());
         //
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
@@ -942,10 +942,10 @@ class ReceiptController extends Controller
 
         if ($type == "view" ) {
             # code...
-            $viewr = ($template == "meta") ? "receipt.viewr_meta" : "receipt.view";
+            $viewr = ($template == "meta") ? "receipt.viewr_meta" : "receipt.viewr";
         }elseif ($type == "print") {
             # code...
-            $viewr = ($template == "meta") ? "receipt.printr_meta" : "receipt.print";
+            $viewr = ($template == "meta") ? "receipt.printr_meta" : "receitr.printr";
         }
 
         // if ($type == "view") {
