@@ -945,7 +945,7 @@ class ReceiptController extends Controller
             $viewr = ($template == "meta") ? "receipt.viewr_meta" : "receipt.viewr";
         }elseif ($type == "print") {
             # code...
-            $viewr = ($template == "meta") ? "receipt.printr_meta" : "receit.printr";
+            $viewr = ($template == "meta") ? "receipt.printr_meta" : "receipt.printr";
         }
 
         // if ($type == "view") {
