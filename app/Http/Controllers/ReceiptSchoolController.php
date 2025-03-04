@@ -1052,7 +1052,7 @@ class ReceiptSchoolController extends Controller
         $discount = 0;
 
         $test = [];
-        dd($receipts_detail);
+        // dd($receipts_detail);
         foreach ($receipts_detail as $dresult) {
             if ($dresult['course_type'] == 2) {
                 $price = $dresult['bookprice'];
