@@ -570,6 +570,10 @@ class ReceiptSchoolController extends Controller
                 ->addColumn('action', function ($row) {
                     $html = '<a href=" ' . route('receipt_school.show', ['type' => 'view', 'id' => $row->id]) . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->id . '"><i class="fa fa-eye"></i> View </a> ';
                     $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
+                    if (auth()->user()->id === 16) {
+                        # code...
+                        $html .= '<a href="#" class="btn btn-xs btn-danger btn-delete" id="DeleteData" data-id="' . $row->id . '"><i class="fa fa-trash"></i> Delete</a> ';
+                    }
                     //$html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
                 })->toJson();
@@ -1962,6 +1966,22 @@ class ReceiptSchoolController extends Controller
         return response()->json(['success' => 'Receipt updated successfully']);
     }
 
+    public function destroy($id)
+    {
+        $data = Receipt_School::find($id);
+
+        // dd($data);
+
+
+        if (!$data) {
+            return response()->json(['error' => 'Receipt not found'], 404);
+        }
+
+        SchoolPrice::where('rid', $id)->delete(); // Delete related data
+        $data->delete(); // Delete main receipt
+
+        return response()->json(['success' => 'Receipt deleted successfully']);
+    }
 
     // private function updateStatus($students)
     // {

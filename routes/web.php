@@ -296,6 +296,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/receipt_school/upload', [ReceiptSchoolController::class, 'fileStore'])->name('receipt_school.upload');
     Route::post('/receipt_school/upload/delete', [ReceiptSchoolController::class, 'fileDestroy'])->name('receipt_school.delete');
     Route::put('/receipt_school/delete/{id}/{id2}', [ReceiptSchoolController::class, 'deleteImg'])->name('receipt_school.deleteImg');
+    Route::delete('/receipt_school/destroy/{id}', [ReceiptSchoolController::class, 'destroy'])->name('receipt_school.destroy');
+
 });
 
 //form
