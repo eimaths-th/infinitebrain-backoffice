@@ -290,7 +290,7 @@
 @section('script')
     <script>
         function export_report() {
-           url = '{{ route('receipts.print_field', ['type' => 'print', 'pmsfield' => $pmsfield, 'fontsize' => $fontsize, 'Pmdescription' => $pmdes, 'print_monthYear' => $month_year]) }}';
+           url = '{{ route('receipts.print_field', ['type' => 'print', 'pmsfield' => $pmsfield, 'fontsize' => $fontsize, 'Pmdescription' => $pmdes, 'print_monthYear' => $month_year, 'printFieldTemplate' => $template]) }}';
            console.log(url.replace(/&amp;/g, "&"));
            window.open(
                 url.replace(/&amp;/g, "&")

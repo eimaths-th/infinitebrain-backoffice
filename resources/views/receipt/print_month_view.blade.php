@@ -305,7 +305,7 @@
     <script>
         function export_report() {
             url =
-                '{{ route('receipts.print_month', ['type' => 'print', 'pmsfield' => $pmsfield, 'fontsize' => $fontsize, 'print_month' => $print_month, 'Pmdescription' => $pmdes]) }}';
+                '{{ route('receipts.print_month', ['type' => 'print', 'pmsfield' => $pmsfield, 'fontsize' => $fontsize, 'print_month' => $print_month, 'Pmdescription' => $pmdes, 'printMonthTemplate' => $template]) }}';
             console.log(url.replace(/&amp;/g, "&"));
             window.open(
                 url.replace(/&amp;/g, "&")

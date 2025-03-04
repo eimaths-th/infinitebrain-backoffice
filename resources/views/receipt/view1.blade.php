@@ -49,6 +49,7 @@
         .aaa {
             color: rgb(138, 175, 61);
         }
+
         .image-container {
             display: flex;
             justify-content: center;
@@ -175,9 +176,9 @@
                             <td>..........................</td>
                         </tr>
                         <!-- <tr>
-                                                                                                                        <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
+                                                                                                                                        <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
 
-                                                                                                                    </tr> -->
+                                                                                                                                    </tr> -->
                     </table>
                     <div class="tbr">
                         <table align="center" width="85%" cellpadding="0" cellspacing="0">
@@ -224,9 +225,12 @@
                                         <td align="center"> {{ $receipt_detail['period'] }}</td>
                                         <td align="center">{{ $receipt_detail['quantity'] }}</td>
                                         <td align="center">{{ $receipt_detail['unit'] }}</td>
-                                        <td align="center">{{ number_format($unitpriceBook,2)}}</td>
+                                        <td align="center">{{ number_format($unitpriceBook, 2) }}</td>
                                         <td align="center">{{ $receipt_detail['discount'] }}</td>
-                                        <td align="center" style="vertical-align: top;">{{ number_format($unitpriceBook * $receipt_detail['quantity'],2) }}</td>
+                                        <td align="center" style="vertical-align: top;">
+                                          
+                                            {{ number_format($unitpriceBook * $receipt_detail['quantity'], 2) }}
+                                        </td>
                                     </tr>
 
                                     @if ($receipt_detail['entrance_fee'] > 0)
@@ -302,7 +306,7 @@
                                             <td align="center">
                                             </td>
                                             <td align="center" style="vertical-align: top;">
-                                                {{ number_format($receipt_detail['bookprice'],2) }}</td>
+                                                {{ number_format($receipt_detail['bookprice'], 2) }}</td>
                                         @endif
 
                                     </tr>
@@ -406,11 +410,11 @@
                         </table>
 
                         <!-- <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                                                                                                                        <tr>
-                                                                                                                            <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
-                                                                                                                            <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
-                                                                                                                        </tr>
-                                                                                                                    </table> -->
+                                                                                                                                        <tr>
+                                                                                                                                            <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
+                                                                                                                                            <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
+                                                                                                                                        </tr>
+                                                                                                                                    </table> -->
 
                         <table align="center" width="85%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
                             <tr>
@@ -530,9 +534,9 @@
                             <td>..........................</td>
                         </tr>
                         <!-- <tr>
-                                                                                                                        <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
+                                                                                                                                        <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
 
-                                                                                                                    </tr> -->
+                                                                                                                                    </tr> -->
                     </table>
                     <div class="tbr">
                         <table align="center" width="85%" cellpadding="0" cellspacing="0">
@@ -632,7 +636,7 @@
                                             <td align="center">
                                             </td>
                                             <td align="center" style="vertical-align: top;">
-                                                {{ number_format($receipt_detail['bookprice'],2) }}</td>
+                                                {{ number_format($receipt_detail['bookprice'], 2) }}</td>
                                         @endif
 
                                     </tr>
@@ -737,11 +741,11 @@
                         </table>
 
                         <!-- <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                                                                                                                        <tr>
-                                                                                                                            <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
-                                                                                                                            <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
-                                                                                                                        </tr>
-                                                                                                                    </table> -->
+                                                                                                                                        <tr>
+                                                                                                                                            <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
+                                                                                                                                            <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
+                                                                                                                                        </tr>
+                                                                                                                                    </table> -->
 
                         <table align="center" width="85%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
                             <tr>
@@ -860,9 +864,9 @@
                             <td>..........................</td>
                         </tr>
                         <!-- <tr>
-                                                                                                                        <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
+                                                                                                                                        <td colspan="5"><font class="grey">โทร.</font> <b> {{ $data->mobile }} </b></td>
 
-                                                                                                                    </tr> -->
+                                                                                                                                    </tr> -->
                     </table>
                     <div class="tbr">
                         <table align="center" width="85%" cellpadding="0" cellspacing="0">
@@ -972,7 +976,7 @@
                                             <td align="center">
                                             </td>
                                             <td align="center" style="vertical-align: top;">
-                                                {{ number_format($receipt_detail['bookprice'],2) }}</td>
+                                                {{ number_format($receipt_detail['bookprice'], 2) }}</td>
                                         @endif
 
                                     </tr>
@@ -1077,11 +1081,11 @@
                         </table>
 
                         <!-- <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                                                                                                                        <tr>
-                                                                                                                            <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
-                                                                                                                            <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
-                                                                                                                        </tr>
-                                                                                                                    </table> -->
+                                                                                                                                        <tr>
+                                                                                                                                            <td align="center" class="grey">ได้รับริการตามบริการถูกต้องแล้ว</td>
+                                                                                                                                            <td align="center" class="grey">ในนามบริษัท อินฟินิท เบรน จำกัด</td>
+                                                                                                                                        </tr>
+                                                                                                                                    </table> -->
 
                         <table align="center" width="85%" cellpadding="0" cellspacing="0" style="margin-top:30px;">
                             <tr>

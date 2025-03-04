@@ -809,6 +809,7 @@ class ReceiptController extends Controller
         $receipt_detail_arr = array();
         $no = 1;
         $x = 0;
+        // dd($receipts_detail);
         foreach ($receipts_detail as $dresult) {
             $price = ($dresult['unitprice'] * $dresult['quantity']) - $dresult['discount'];
             if ($price == 0) {
@@ -940,10 +941,10 @@ class ReceiptController extends Controller
         $type = $request->get('type');
         $template = $request->get('template');
 
-        if ($type == "view" ) {
+        if ($type == "view") {
             # code...
             $viewr = ($template == "meta") ? "receipt.viewr_meta" : "receipt.viewr";
-        }elseif ($type == "print") {
+        } elseif ($type == "print") {
             # code...
             $viewr = ($template == "meta") ? "receipt.printr_meta" : "receipt.printr";
         }
@@ -953,7 +954,7 @@ class ReceiptController extends Controller
         // } else if ($type == "print") {
         //     $viewr = "receipt.printr";
         // }
-        
+
         $receipts = Receipt::select(
             "receipts.id as id",
             "receipts.submission_date as receipt_submission_date",
@@ -1274,6 +1275,7 @@ class ReceiptController extends Controller
 
     public function print_month(Request $request)
     {
+
         $template = $request->get('printMonthTemplate');
 
         $this->check_permission();
