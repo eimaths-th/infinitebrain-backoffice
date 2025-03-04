@@ -1052,7 +1052,7 @@ class ReceiptSchoolController extends Controller
         $discount = 0;
 
         $test = [];
-        // dd($receipts_detail);
+        dd($receipts_detail);
         foreach ($receipts_detail as $dresult) {
             if ($dresult['course_type'] == 2) {
                 $price = $dresult['bookprice'];
@@ -1073,7 +1073,16 @@ class ReceiptSchoolController extends Controller
 
             if ($dresult['week'] == 1 || $dresult['week'] == 2 || $dresult['week'] == 3) {
                 $message = " สัปดาห์";
-                $qty = $dresult['week'];
+
+                if ($dresult['group'] === 'Sci') {
+                    # code...
+                    $qty = $dresult['qty']; // fix new line
+
+                } else {
+
+                    $qty = $dresult['week']; // fix new line
+                }
+
                 if ($dresult['course_type'] == 3) {
                     # code...
                     $message = "ชุด";
@@ -1087,6 +1096,9 @@ class ReceiptSchoolController extends Controller
                 }
                 $qty = $dresult['qty'];
             }
+
+
+            // dd($qty);
 
             if ($price == 0) {
                 $receipt_detail_arr[$x]['no'] = '';
@@ -1152,7 +1164,7 @@ class ReceiptSchoolController extends Controller
 
             $pricesub = $pricesub + (($dresult['total']) - $dresult['bookprice'] - $dresult['media_price']);
             //- $dresult['discount']
-            
+
             // $receipt_detail_arr[$x]['books'] = $bookp->book_price;
             $receipt_detail_arr[$x]['books'] = $dresult['bookprice'] / $dresult['book'];
             $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort;
@@ -1414,8 +1426,19 @@ class ReceiptSchoolController extends Controller
     public function sumbook($sub_id, $level_id, $book, $week, $course_type)
     {
 
+
         // dd($sub_id, $level_id, $book, $course_type);
         $data = SubjectPrice::where(['subject_id' => $sub_id, 'level_id' => $level_id, 'week' => $week])->get();
+        // $data1 = SubjectPrice::where(['subject_id' => $sub_id, 'level_id' => $level_id])->get();
+        // dd(
+        //     $sub_id,
+        //     $level_id,
+        //     $book,
+        //     $course_type,
+        //     'week : '.$week,
+        //     $data,
+        //     $data1
+        // );
         // dd($sub_id, $level_id, $week, $course_type,$data);
         // $select_list = "";
         // $booklet = "";
