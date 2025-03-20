@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                        background-size: 15px;
-                                                                                    }*/
+                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                        background-size: 15px;
+                                                                                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                        border-color: var(--color-invalid);
-                                                                                    }*/
+                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                        border-color: var(--color-invalid);
+                                                                                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                        display: block;
-                                                                                    }*/
+                                                                                                        display: block;
+                                                                                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -549,7 +549,7 @@
                             <br>
                             <div class="text-center">
                                 <h2 class="card-title form_header">
-                                    International STEM Competitions 2024 Registration Form
+                                    International STEM Competitions {{ date('Y') }} Registration Form
                                 </h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
@@ -559,7 +559,8 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">International STEM Competitions 2024
+                                                    style="text-decoration: underline;">International STEM Competitions
+                                                    {{ date('Y') }}
                                                     Registration
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
@@ -570,8 +571,8 @@
                                                 Today - 25 October 2024 <br>
                                             @endif
                                         </span></p>
-                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;วันเสาร์ที่ 31
-                                            สิงหาคม 2567</span>
+                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp;03 May 2025
+                                        </span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -582,7 +583,7 @@
                                     <p>
                                         <span style="color: #6351a2;">
                                             <strong>Test:</strong>
-                                            650 baht
+                                            790 baht
                                         </span>
                                     </p>
                                     {{-- <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
@@ -825,21 +826,30 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Grade I-IIX: 650 baht">Grade1-8 (คณิต+วิทย์ 650 บาท)
-                                                </option>
-                                                <option value="Grade IX-XII:คณิต+เคมี 650 bath">Grade 9-12 (คณิต+เคมี)
-                                                </option>
-                                                <option value="Grade IX-XII:คณิต+ชีวะ 650 bath">Grade 9-12 (คณิต+ชีวะ)
-                                                </option>
-                                                <option value="Grade IX-XII:คณิต+ฟิสิกต์ 650 bath">Grade 9-12
-                                                    (คณิต+ฟิสิกต์)</option>
-                                                <option value="Grade IX-XII:เคมี+ชีวะ 650 bath">Grade 9-12 (เคมี+ชีวะ)
-                                                </option>
-                                                <option value="Grade IX-XII:เคมี+ฟิสิกต์ 650 bath">Grade 9-12
-                                                    (เคมี+ฟิสิกต์)</option>
-                                                <option value="Grade IX-XII:ชีวะ+ฟิสิกต์ 650 bath">Grade 9-12
-                                                    (ชีวะ+ฟิสิกต์)</option>
-
+                                                @php
+                                                    function toRoman($num)
+                                                    {
+                                                        $map = [
+                                                            1 => 'I',
+                                                            2 => 'II',
+                                                            3 => 'III',
+                                                            4 => 'IV',
+                                                            5 => 'V',
+                                                            6 => 'VI',
+                                                            7 => 'VII',
+                                                            8 => 'VIII',
+                                                            9 => 'IX',
+                                                            10 => 'X',
+                                                            11 => 'XI',
+                                                            12 => 'XII',
+                                                        ];
+                                                        return $map[$num] ?? $num;
+                                                    }
+                                                @endphp
+                                                @for ($i = 1; $i <= 12; $i++)
+                                                    <option value="Grade {{ toRoman($i) }}: 790 bath">Grade {{ $i }}</option>
+                                                @endfor
+                                               
                                                 {{--
                                                 <option value="Grade IX-XII: 650 bath">Grade 9-12 (เลือกได้ 2 วิชา จาก คณิต/เคมี/ชีวะ/ฟิสิกต์ 650 บาท)</option>
                                                 <option value="Grade IX-XII: 650 bath">Grade 9-12 (เลือกได้ 2 วิชา จาก คณิต/เคมี/ชีวะ/ฟิสิกต์ 650 บาท)</option>
