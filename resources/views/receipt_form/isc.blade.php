@@ -851,7 +851,7 @@
                                                 @endfor --}}
                                                
                                                 
-                                                <option value="Grade I-XII: 790 bath">Grade 9-12 (790 บาท)</option>
+                                                <option value="Grade I-XII: 790 bath">Grade 1-12 (790 บาท)</option>
                                                 {{-- <option value="Grade IX-XII: 650 bath">Grade 9-12 (เลือกได้ 2 วิชา จาก คณิต/เคมี/ชีวะ/ฟิสิกต์ 650 บาท)</option> --}}
                                                
                                             </select>
