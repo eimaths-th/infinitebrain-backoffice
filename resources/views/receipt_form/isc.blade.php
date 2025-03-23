@@ -826,7 +826,7 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                @php
+                                                {{-- @php
                                                     function toRoman($num)
                                                     {
                                                         $map = [
@@ -848,12 +848,12 @@
                                                 @endphp
                                                 @for ($i = 1; $i <= 12; $i++)
                                                     <option value="Grade {{ toRoman($i) }}: 790 bath">Grade {{ $i }}</option>
-                                                @endfor
+                                                @endfor --}}
                                                
-                                                {{--
-                                                <option value="Grade IX-XII: 650 bath">Grade 9-12 (เลือกได้ 2 วิชา จาก คณิต/เคมี/ชีวะ/ฟิสิกต์ 650 บาท)</option>
-                                                <option value="Grade IX-XII: 650 bath">Grade 9-12 (เลือกได้ 2 วิชา จาก คณิต/เคมี/ชีวะ/ฟิสิกต์ 650 บาท)</option>
-                                                --}}
+                                                
+                                                <option value="Grade I-XII: 790 bath">Grade 9-12 (790 บาท)</option>
+                                                {{-- <option value="Grade IX-XII: 650 bath">Grade 9-12 (เลือกได้ 2 วิชา จาก คณิต/เคมี/ชีวะ/ฟิสิกต์ 650 บาท)</option> --}}
+                                               
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Packages</label>
@@ -1037,8 +1037,8 @@
                                 </div>
 
                                 <br>
-                                <div align="center"><img src="{{ asset('images/PayMent.png') }}" alt="..."
-                                        height="300"></div>
+                                <div align="center"><img src="{{ asset('images/acc_meta.png') }}" alt="..."
+                                        height="auto"></div>
                                 <br>
 
                                 <div class="form-row form-focus" id="dropzone-att">
