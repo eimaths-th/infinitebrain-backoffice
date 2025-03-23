@@ -850,12 +850,7 @@
                                                     <option value="Grade {{ toRoman($i) }}: 790 bath">Grade {{ $i }}</option>
                                                 @endfor --}}
                                                
-                                                
-<<<<<<< HEAD
-                                                <option value="Grade I-XII: 790 bath">Grade 9-12 (790 บาท)</option>
-=======
                                                 <option value="Grade I-XII: 790 bath">Grade 1-12 (790 บาท)</option>
->>>>>>> 59c4b433b85cf27e8154c8f3d1f52a47428e1308
                                                 {{-- <option value="Grade IX-XII: 650 bath">Grade 9-12 (เลือกได้ 2 วิชา จาก คณิต/เคมี/ชีวะ/ฟิสิกต์ 650 บาท)</option> --}}
                                                
                                             </select>
