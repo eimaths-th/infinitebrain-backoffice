@@ -593,8 +593,8 @@
                                             @endif
 
                                         </span></p>
-                                    <p><span style="color: #6351a2;"><strong>Competition Date: </strong>&nbsp;12 May 2024
-                                            (Online)</span>
+                                    <p><span style="color: #6351a2;"><strong>Competition Date: </strong>&nbsp;
+                                        11 May 2025 (Online)</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -602,7 +602,7 @@
                                     {{-- <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
                                     </p> --}}
                                     <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
-                                    <p><span style="color: #6351a2;"><strong>Test:</strong> 1850 baht</span>
+                                    <p><span style="color: #6351a2;"><strong>Test:</strong> 2300 baht</span>
                                     </p>
                                     {{-- <p>
                                         <span style="color: #6351a2;">
@@ -863,7 +863,7 @@
                                             <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Test: 1850 baht">Test: 1850 baht</option>
+                                                <option value="Test: 2300 baht">Test: 2300 baht</option>
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -1043,8 +1043,8 @@
                                 </div>
 
                                 <br>
-                                <div align="center"><img src="{{ asset('images/PayMent.png') }}" alt="..."
-                                        height="300"></div>
+                                <div align="center"><img src="{{ asset('images/acc_meta.png') }}" alt="..."
+                                    height="auto"></div>
                                 <br>
 
                                 <div class="form-row form-focus" id="dropzone-att">
