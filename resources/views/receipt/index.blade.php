@@ -218,6 +218,7 @@
                                     <option value=""> Select </option>
                                     <option value="inf"> Infinite Brain </option>
                                     <option value="meta" selected> Meta </option>
+                                    <option value="meta2" selected> Meta2 </option>
 
                                 </select>
                             </div>
@@ -314,6 +315,8 @@
                                     <option value="">Select Template</option>
                                     <option value="inf">Infinite Brain </option>
                                     <option value="meta"> Meta </option>
+                                    <option value="meta2" selected> Meta2 </option>
+
                                 </select>
                                 <input type="hidden" name="type" value="view">
                                 <input type="hidden" name="pdsfield" value="{{ request()->get('sfield') }}">
@@ -400,6 +403,8 @@
                                     <option value="">Select Template</option>
                                     <option value="inf">Infinite Brain </option>
                                     <option value="meta"> Meta </option>
+                                    <option value="meta2" selected> Meta2 </option>
+
                                 </select>
                                 <input type="hidden" name="type" value="view">
                                 <input type="hidden" name="pdsfield" value="{{ request()->get('sfield') }}">
@@ -488,6 +493,8 @@
                                     <option value="">Select Template</option>
                                     <option value="inf">Infinite Brain </option>
                                     <option value="meta"> Meta </option>
+                                    <option value="meta2" selected> Meta2 </option>
+
                                 </select>
                                 <input type="hidden" name="type" value="view">
                                 <input type="hidden" name="pdsfield" value="{{ request()->get('sfield') }}">

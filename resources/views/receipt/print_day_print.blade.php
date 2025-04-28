@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    @if ($template === 'meta')
+    @if ($template === 'meta' || $template === 'meta2')
         <style>
             /* ------------------- */
             table td.grey {
@@ -143,23 +143,42 @@
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
                 <table align="center" width="90%" cellpadding="0" cellspacing="0">
-                    @if ($template === 'meta')
-                        <thead>
-                            <tr>
-                                <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta_2.png') }}"
-                                        alt="..." height="106" style="padding-bottom: 5px"></td>
-                                <td>บริษัท เมต้า2 โนวเลจ จำกัด (สำนักงานใหญ่)</td>
-                            </tr>
-                            <tr>
-                                <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
-                            </tr>
-                            <tr>
-                                <td>เลขประจำตัวผู้เสียภาษี: 0125567041160</td>
-                            </tr>
-                            <tr>
-                                <td>โทร 093-358-6333</td>
-                            </tr>
-                        </thead>
+                    @if ($template === 'meta' || $template === 'meta2')
+                        @if ($metaCheck)
+                            <thead>
+                                <tr>
+                                    <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta_2.png') }}"
+                                            alt="..." height="106" style="padding-bottom: 5px"></td>
+                                    <td>บริษัท เมต้า2 โนวเลจ จำกัด (สำนักงานใหญ่)</td>
+                                </tr>
+                                <tr>
+                                    <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                                </tr>
+                                <tr>
+                                    <td>เลขประจำตัวผู้เสียภาษี: 0125567041160</td>
+                                </tr>
+                                <tr>
+                                    <td>โทร 093-358-6333</td>
+                                </tr>
+                            </thead>
+                        @else
+                            <thead>
+                                <tr>
+                                    <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta.png') }}"
+                                            alt="..." height="106" style="padding-bottom: 5px"></td>
+                                    <td>META KNOWLEDGE CO., LTD.</td>
+                                </tr>
+                                <tr>
+                                    <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                                </tr>
+                                <tr>
+                                    <td>เลขประจำตัวผู้เสียภาษี: 0125565026368</td>
+                                </tr>
+                                <tr>
+                                    <td>โทร 093-358-6333</td>
+                                </tr>
+                            </thead>
+                        @endif
                     @else
                         <thead>
                             <tr>
@@ -173,9 +192,9 @@
                             <tr>
                                 <td>เลขประจำตัวผู้เสียภาษี: 0125563031038</td>
                             </tr>
-                            <tr>
+                            {{-- <tr>
                                 <td>โทร 098 509 8554</td>
-                            </tr>
+                            </tr> --}}
                         </thead>
                     @endif
                 </table>
@@ -255,11 +274,6 @@
                             </td>
                         </tr>
                     </table>
-
-
-
-
-                    <br><br><br>
 
                     <table align="center" width="90%" cellpadding="0" cellspacing="0">
                         <tr>

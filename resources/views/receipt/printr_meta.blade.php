@@ -124,33 +124,67 @@
                                 <td style="vertical-align: top;" height="50px"></td>
                             </tr>
                         </thead> --}}
-                        <thead>
-                            <tr>
-                                <td width="25%" rowspan="6" align="center">
-                                    <img src="{{ asset('images/logo_meta_2.png') }}" alt="..." height="150"
-                                        style="padding-bottom: 5px">
-                                </td>
+                        @if ($metaCheck)
+                            <thead>
+                                <tr>
+                                    <td width="25%" rowspan="6" align="center">
+                                        <img src="{{ asset('images/logo_meta_2.png') }}" alt="..." height="150"
+                                            style="padding-bottom: 5px">
+                                    </td>
 
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" height="5px">บริษัท เมต้า2 โนวเลจ จำกัด
-                                    (สำนักงานใหญ่)</td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" height="5px">555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี
-                                    11130</td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" height="5px">เลขประจำตัวผู้เสียภาษี: 0125567041160
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" height="5px">โทร 093-358-6333</td>
-                            </tr>
-                            <tr>
-                                <td style="vertical-align: top;" height="50px"></td>
-                            </tr>
-                        </thead>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top;" height="5px">บริษัท เมต้า2 โนวเลจ จำกัด
+                                        (สำนักงานใหญ่)</td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top;" height="5px">555/9 ม.1 ต.บางขนุน อ.บางกรวย
+                                        จ.นนทบุรี
+                                        11130</td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top;" height="5px">เลขประจำตัวผู้เสียภาษี:
+                                        0125567041160
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top;" height="5px">โทร 093-358-6333</td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top;" height="50px"></td>
+                                </tr>
+                            </thead>
+                        @else
+                            <thead>
+                                <tr>
+                                    <td width="25%" rowspan="6" align="center">
+                                        <img src="{{ asset('images/logo_meta.png') }}" alt="..." height="150"
+                                            style="padding-bottom: 5px">
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top;" height="5px">META KNOWLEDGE CO., LTD.</td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top;" height="5px">555/9 ม.1 ต.บางขนุน อ.บางกรวย
+                                        จ.นนทบุรี
+                                        11130</td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top;" height="5px">เลขประจำตัวผู้เสียภาษี:
+                                        0125565026368
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top;" height="5px">โทร 093-358-6333</td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top;" height="50px"></td>
+                                </tr>
+                            </thead>
+                        @endif
+
                     </table>
                     <table align="center" width="99%" cellpadding="0" cellspacing="0">
                         <tr>
@@ -192,7 +226,8 @@
                             <td colspan="3"></td>
 
                             <td align="right" width="45%" class="grey">ครบกำหนด / Due Date</td>
-                            <td align="right" width="30%" style="padding-left:10px;">..........................</td>
+                            <td align="right" width="30%" style="padding-left:10px;">..........................
+                            </td>
                         </tr>
                         <!-- <tr>
                         <td colspan="5"><font class="grey">โทร.</font> <b>  </b></td>

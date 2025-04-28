@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                    background-size: 15px;
-                                                                                                }*/
+                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                            background-size: 15px;
+                                                                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                    border-color: var(--color-invalid);
-                                                                                                }*/
+                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                            border-color: var(--color-invalid);
+                                                                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                    display: block;
-                                                                                                }*/
+                                                                                                            display: block;
+                                                                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -615,7 +615,7 @@
                                             style="color: #6351a2;">1,250 bath</span><br></p>
                                     <p>&nbsp;</p>
 
-                                    <div class="row mb-5">
+                                    {{-- <div class="row mb-5">
                                         <div class="col-lg-6">
                                             <div class="text-center">
                                                 <img src="images/ISOCSEA_0_L.jpg" alt="Image 2"
@@ -628,7 +628,7 @@
                                                     style="max-width: 100%; height: auto;">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <p>
                                         <span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร ISOCSEA</b>
                                             <br>
@@ -738,8 +738,7 @@
                                             </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Last
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
                                                 Name</label>
                                             {{-- <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -1045,8 +1044,9 @@
                                 </div>
 
                                 <br>
-                                <div align="center"><img src="{{ asset('images/PayMent.png') }}" alt="..."
-                                        height="300"></div>
+                                <div align="center">
+                                    <img src="{{ asset('images/acc_meta.png') }}" alt="..." height="auto">
+                                </div>
                                 <br>
 
                                 <div class="form-row form-focus" id="dropzone-att">

@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-   
-    @if ($template === 'meta')
+
+    @if ($template === 'meta' || $template === 'meta2')
         <style>
             /* ------------------- */
             table td.grey {
@@ -179,23 +179,42 @@
 
 
                 <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                    @if ($template === 'meta')
-                        <thead>
-                            <tr>
-                                <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta_2.png') }}"
-                                        alt="..." height="106" style="padding-bottom: 5px"></td>
-                                <td>บริษัท เมต้า2 โนวเลจ จำกัด (สำนักงานใหญ่)</td>
-                            </tr>
-                            <tr>
-                                <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
-                            </tr>
-                            <tr>
-                                <td>เลขประจำตัวผู้เสียภาษี: 0125567041160</td>
-                            </tr>
-                            <tr>
-                                <td>โทร 093-358-6333</td>
-                            </tr>
-                        </thead>
+                    @if ($template === 'meta' || $template === 'meta2')
+                        @if ($metaCheck)
+                            <thead>
+                                <tr>
+                                    <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta_2.png') }}"
+                                            alt="..." height="106" style="padding-bottom: 5px"></td>
+                                    <td>บริษัท เมต้า2 โนวเลจ จำกัด (สำนักงานใหญ่)</td>
+                                </tr>
+                                <tr>
+                                    <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                                </tr>
+                                <tr>
+                                    <td>เลขประจำตัวผู้เสียภาษี: 0125567041160</td>
+                                </tr>
+                                <tr>
+                                    <td>โทร 093-358-6333</td>
+                                </tr>
+                            </thead>
+                        @else
+                            <thead>
+                                <tr>
+                                    <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta.png') }}"
+                                            alt="..." height="106" style="padding-bottom: 5px"></td>
+                                    <td>META KNOWLEDGE CO., LTD.</td>
+                                </tr>
+                                <tr>
+                                    <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                                </tr>
+                                <tr>
+                                    <td>เลขประจำตัวผู้เสียภาษี: 0125565026368</td>
+                                </tr>
+                                <tr>
+                                    <td>โทร 093-358-6333</td>
+                                </tr>
+                            </thead>
+                        @endif
                     @else
                         <thead>
                             <tr>
@@ -255,7 +274,8 @@
                                     <font size="{{ $fontsize }}"><b>{{ $receipt['receipt_submission_date'] }}</b>
                                     </font>
                                 </td>
-                                <td align="left" width="40%" class="actived">&nbsp; <font size="{{ $fontsize }}">
+                                <td align="left" width="40%" class="actived">&nbsp; <font
+                                        size="{{ $fontsize }}">
                                         <b>{{ $receipt['receipt_firstname'] }} {{ $receipt['receipt_lastname'] }}
                                             {!! $receipt['receipt_des'] !!}</b>
                                     </font>
