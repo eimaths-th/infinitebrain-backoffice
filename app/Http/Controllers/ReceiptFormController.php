@@ -80,7 +80,7 @@ class ReceiptFormController extends Controller
     }
     public function gmec()
     {
-        
+
         $route = request()->route()->getName();
 
         $date = $this->getDatetime($route);
@@ -716,9 +716,54 @@ class ReceiptFormController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    public function checkRegisted($route, $sfield, $firstname, $lastname, $nickname, $email)
+    {
+        $getTime = OpeningClosingTime::where('route', $route)->orderBy('id', 'desc')->first();
+        // dd($route, $getTime);
+        $getTimeOpen = (new \DateTime($getTime->opening_time))->format('Y-m-d');
+        $getTimeClose = (new \DateTime($getTime->closing_time))->format('Y-m-d');
+
+        $receipt = ReceiptForm::where([
+            ['first_name', '=', $firstname],
+            ['last_name', '=', $lastname],
+            ['nick_name', '=', $nickname],
+            ['email', '=', $email],
+            ['sfield', '=', $sfield],
+        ])
+            ->whereBetween('submission_date', [$getTimeOpen, $getTimeClose])
+            ->first();
+
+        if ($receipt) {
+            $checkRegisted = true;
+        } else {
+            $checkRegisted = false;
+        }
+        return [
+            'receipt' => $receipt,
+            'checkRegisted' => $checkRegisted,
+        ];
+    }
+
+
     public function store(Request $request)
     {
         //
+        $route = $request->get('routeName');
+        $result = $this->checkRegisted($route, $request->get('sfield'), $request->get('firstname'), $request->get('lastname'), $request->get('nickname'), $request->get('email'));
+        // dd($request->all(), $checkRegisted);
+        // $receipt = $result['receipt'];
+        // $checkRegisted = $result['checkRegisted'];
+
+        if ($result['checkRegisted']) {
+            # code...
+            // return back()->withErrors(['errors' => 'You have already registered.']);
+            return view('receipt_form.registed')->with([
+                'receipt' => $result['receipt'],
+                'route' => $route,
+            ]);
+        }
+
         if ($request->get('sfield') == '17') {
             # code...
             $validator =  Validator::make($request->all(), [
@@ -774,6 +819,7 @@ class ReceiptFormController extends Controller
                 'newsf' => 'required|string',
             ]);
         }
+
 
         if ($validator->fails()) {
             //return response()->json(['errors' => $validator->errors()->all()]);

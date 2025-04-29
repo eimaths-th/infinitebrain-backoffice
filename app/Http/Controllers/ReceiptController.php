@@ -946,14 +946,19 @@ class ReceiptController extends Controller
         $type = $request->get('type');
         $template = $request->get('template');
 
-        if ($type == "view") {
-            # code...
-            $viewr = ($template == "meta") ? "receipt.viewr_meta" : "receipt.viewr";
-        } elseif ($type == "print") {
-            # code...
-            $viewr = ($template == "meta") ? "receipt.printr_meta" : "receipt.printr";
+        $metaCheck = '';
+
+        if (in_array($template, ['meta', 'meta2'])) {
+            // If template is 'meta2', set metaCheck = '2'
+            $metaCheck = ($template === 'meta2') ? '2' : '';
         }
 
+        if ($type == "view") {
+            $viewr = ($template === 'meta' || $template === 'meta2') ? "receipt.viewr_meta" : "receipt.viewr";
+        } elseif ($type == "print") {
+            $viewr = ($template === 'meta' || $template === 'meta2') ? "receipt.printr_meta" : "receipt.printr";
+        }
+        // dd($metaCheck, $viewr);
         // if ($type == "view") {
         //     $viewr = "receipt.viewr";
         // } else if ($type == "print") {
@@ -1114,6 +1119,7 @@ class ReceiptController extends Controller
         return view($viewr)->with(['print_date' => $request->get('print_rdate')])
             ->with(['data' => $ret_receipt])
             ->with(['template' => $template])
+            ->with(['metaCheck' => $metaCheck])
             ->with(['receipt_detail_arr' => $receipt_detail_arr])
             ->with(['fontsize' => $request->get('fontsize')])
             ->with(['pdsfield' => $sfield]);
@@ -1149,6 +1155,12 @@ class ReceiptController extends Controller
 
         $type = $request->get('type');
 
+        $metaCheck = '';
+
+        if (in_array($template, ['meta', 'meta2'])) {
+            // If template is 'meta2', set metaCheck = '2'
+            $metaCheck = ($template === 'meta2') ? '2' : '';
+        }
         if ($type == "view") {
             $viewr = "receipt.print_day_view";
         } else if ($type == "print") {
@@ -1263,6 +1275,7 @@ class ReceiptController extends Controller
 
         return view($viewr)->with(['sfield' => $sfield])->with(['sfielda' =>  self::sfielda])
             ->with(['template' =>  $template])
+            ->with(['metaCheck' =>  $metaCheck])
             ->with(['sfieldas' =>  self::sfieldas])
             ->with(['ymcode' =>  $ymcode])
             ->with(['thaiyear' =>  $thai_year])
@@ -1297,6 +1310,12 @@ class ReceiptController extends Controller
 
         $type = $request->get('type');
 
+        $metaCheck = '';
+
+        if (in_array($template, ['meta', 'meta2'])) {
+            // If template is 'meta2', set metaCheck = '2'
+            $metaCheck = ($template === 'meta2') ? '2' : '';
+        }
         if ($type == "view") {
             $viewr = "receipt.print_month_view";
         } else if ($type == "print") {
@@ -1461,7 +1480,7 @@ class ReceiptController extends Controller
             ->with(['sfieldas' =>  self::sfieldas])
             ->with(['ymcode' =>  $ymcode])
             ->with(['template' =>  $template])
-
+            ->with(['metaCheck' =>  $metaCheck])
             ->with(['thaiyear' =>  $thai_year])
             ->with(['thaimonth' =>  $thai_month])
             ->with(['chart_date' =>  $chart_date])
@@ -1493,7 +1512,10 @@ class ReceiptController extends Controller
         }
 
         $type = $request->get('type');
-
+        if (in_array($template, ['meta', 'meta2'])) {
+            // If template is 'meta2', set metaCheck = '2'
+            $metaCheck = ($template === 'meta2') ? '2' : '';
+        }
         if ($type == "view") {
             $viewr = "receipt.print_field_view";
         } else if ($type == "print") {
@@ -1669,6 +1691,7 @@ class ReceiptController extends Controller
                 ->with(['sfieldas' =>  self::sfieldas])
                 ->with(['data' => $ret_receipt])
                 ->with(['template' =>  $template])
+                ->with(['metaCheck' =>  $metaCheck])
 
                 ->with(['ymcode' =>  $ymcode])
                 ->with(['thaiyear' =>  $thai_year])
@@ -1701,6 +1724,7 @@ class ReceiptController extends Controller
                 ->with(['pmsfield' => $request->get('pmsfield')])
                 ->with(['month_year' => $month_year])
                 ->with(['template' =>  $template])
+                ->with(['metaCheck' =>  $metaCheck])
 
 
                 ->with(['pmdes' => $request->get('Pmdescription')])

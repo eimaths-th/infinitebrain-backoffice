@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    @if ($template === 'meta')
+    @if ($template === 'meta' || $template === 'meta2')
         <style>
             /* ------------------- */
             table td.grey {
@@ -177,23 +177,42 @@
 
 
                 <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                    @if ($template === 'meta')
-                        <thead>
-                            <tr>
-                                <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta_2.png') }}"
-                                        alt="..." height="106" style="padding-bottom: 5px"></td>
-                                <td>บริษัท เมต้า2 โนวเลจ จำกัด (สำนักงานใหญ่)</td>
-                            </tr>
-                            <tr>
-                                <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
-                            </tr>
-                            <tr>
-                                <td>เลขประจำตัวผู้เสียภาษี: 0125567041160</td>
-                            </tr>
-                            <tr>
-                                <td>โทร 093-358-6333</td>
-                            </tr>
-                        </thead>
+                    @if ($template === 'meta' || $template === 'meta2')
+                        @if ($metaCheck)
+                            <thead>
+                                <tr>
+                                    <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta_2.png') }}"
+                                            alt="..." height="106" style="padding-bottom: 5px"></td>
+                                    <td>บริษัท เมต้า2 โนวเลจ จำกัด (สำนักงานใหญ่)</td>
+                                </tr>
+                                <tr>
+                                    <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                                </tr>
+                                <tr>
+                                    <td>เลขประจำตัวผู้เสียภาษี: 0125567041160</td>
+                                </tr>
+                                <tr>
+                                    <td>โทร 093-358-6333</td>
+                                </tr>
+                            </thead>
+                        @else
+                            <thead>
+                                <tr>
+                                    <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta.png') }}"
+                                            alt="..." height="106" style="padding-bottom: 5px"></td>
+                                    <td>META KNOWLEDGE CO., LTD.</td>
+                                </tr>
+                                <tr>
+                                    <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                                </tr>
+                                <tr>
+                                    <td>เลขประจำตัวผู้เสียภาษี: 0125565026368</td>
+                                </tr>
+                                <tr>
+                                    <td>โทร 093-358-6333</td>
+                                </tr>
+                            </thead>
+                        @endif
                     @else
                         <thead>
                             <tr>
@@ -224,7 +243,7 @@
                             </td>
                             <td align="center" width="15%"></td>
                             <td align="center" width="15%">
-                               {{--  <font class="grey">รหัสเอกสาร</font> --}}
+                                {{--  <font class="grey">รหัสเอกสาร</font> --}}
                             </td>
                             <td align="center" width="15%" class="active_right"><b>{{-- {{ $sfieldas[$sfield] }}{{ $ymcode }} --}}</b></td>
                         </tr>
@@ -244,18 +263,27 @@
                             <td align="center" width="15%" class="actived gray">หน่วย</td>
                         </tr>
                         @foreach ($data as $receipt)
-                        <tr class="activeda" height="30">
-                            <td align="center" width="15%" class="actived"><b>{{ $receipt['receipt_submission_month'] }}</b></td>
-                            <td align="left" width="40%" class="actived">&nbsp; <b>{!! $receipt['description'] !!}</b></td>
-                            <td align="center" width="15%" class="actived"><b>{{ $receipt['field_code'] }}</b></td>
-                            <td align="center" width="15%" class="actived"><b>{{ $receipt['total_price'] }}</b></td>
-                            <td align="center" width="15%" class="actived grey"><b>{{ $receipt['receipt_price_label'] }}</b></td>
-                        </tr>
+                            <tr class="activeda" height="30">
+                                <td align="center" width="15%" class="actived">
+                                    <b>{{ $receipt['receipt_submission_month'] }}</b></td>
+                                <td align="left" width="40%" class="actived">&nbsp; <b>{!! $receipt['description'] !!}</b></td>
+                                <td align="center" width="15%" class="actived"><b>{{ $receipt['field_code'] }}</b>
+                                </td>
+                                <td align="center" width="15%" class="actived"><b>{{ $receipt['total_price'] }}</b>
+                                </td>
+                                <td align="center" width="15%" class="actived grey">
+                                    <b>{{ $receipt['receipt_price_label'] }}</b></td>
+                            </tr>
                         @endforeach
                         <tr class="activebg" height="50">
-                            <td align="center" colspan="3" width="15%" class="actived activebottomd grey"><font size="3"><b>รวมทั้งสิ้น</b></font></td>
-                            <td align="center" width="15%" class="actived activebottomd"><b>{{ $total_price }}</b></td>
-                            <td align="center" width="15%" class="actived activebottomd grey"><font size="3"><b>บาท</b></font></td>
+                            <td align="center" colspan="3" width="15%" class="actived activebottomd grey">
+                                <font size="3"><b>รวมทั้งสิ้น</b></font>
+                            </td>
+                            <td align="center" width="15%" class="actived activebottomd"><b>{{ $total_price }}</b>
+                            </td>
+                            <td align="center" width="15%" class="actived activebottomd grey">
+                                <font size="3"><b>บาท</b></font>
+                            </td>
                         </tr>
                     </table>
 
@@ -290,9 +318,10 @@
 @section('script')
     <script>
         function export_report() {
-           url = '{{ route('receipts.print_field', ['type' => 'print', 'pmsfield' => $pmsfield, 'fontsize' => $fontsize, 'Pmdescription' => $pmdes, 'print_monthYear' => $month_year, 'printFieldTemplate' => $template]) }}';
-           console.log(url.replace(/&amp;/g, "&"));
-           window.open(
+            url =
+                '{{ route('receipts.print_field', ['type' => 'print', 'pmsfield' => $pmsfield, 'fontsize' => $fontsize, 'Pmdescription' => $pmdes, 'print_monthYear' => $month_year, 'printFieldTemplate' => $template]) }}';
+            console.log(url.replace(/&amp;/g, "&"));
+            window.open(
                 url.replace(/&amp;/g, "&")
             );
         }

@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    @if ($template === 'meta')
+    @if ($template === 'meta' || $template === 'meta2')
         <style>
             /* ------------------- */
             table td.grey {
@@ -146,23 +146,42 @@
 
 
                 <table align="center" width="95%" cellpadding="0" cellspacing="0">
-                    @if ($template === 'meta')
-                        <thead>
-                            <tr>
-                                <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta_2.png') }}"
-                                        alt="..." height="106" style="padding-bottom: 5px"></td>
-                                <td>บริษัท เมต้า2 โนวเลจ จำกัด (สำนักงานใหญ่)</td>
-                            </tr>
-                            <tr>
-                                <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
-                            </tr>
-                            <tr>
-                                <td>เลขประจำตัวผู้เสียภาษี: 0125567041160</td>
-                            </tr>
-                            <tr>
-                                <td>โทร 093-358-6333</td>
-                            </tr>
-                        </thead>
+                    @if ($template === 'meta' || $template === 'meta2')
+                        @if ($metaCheck)
+                            <thead>
+                                <tr>
+                                    <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta_2.png') }}"
+                                            alt="..." height="106" style="padding-bottom: 5px"></td>
+                                    <td>บริษัท เมต้า2 โนวเลจ จำกัด (สำนักงานใหญ่)</td>
+                                </tr>
+                                <tr>
+                                    <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                                </tr>
+                                <tr>
+                                    <td>เลขประจำตัวผู้เสียภาษี: 0125567041160</td>
+                                </tr>
+                                <tr>
+                                    <td>โทร 093-358-6333</td>
+                                </tr>
+                            </thead>
+                        @else
+                            <thead>
+                                <tr>
+                                    <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta.png') }}"
+                                            alt="..." height="106" style="padding-bottom: 5px"></td>
+                                    <td>META KNOWLEDGE CO., LTD.</td>
+                                </tr>
+                                <tr>
+                                    <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                                </tr>
+                                <tr>
+                                    <td>เลขประจำตัวผู้เสียภาษี: 0125565026368</td>
+                                </tr>
+                                <tr>
+                                    <td>โทร 093-358-6333</td>
+                                </tr>
+                            </thead>
+                        @endif
                     @else
                         <thead>
                             <tr>
@@ -189,49 +208,72 @@
                         <tr class="active" height="30">
                             <td align="center" width="15%" class="active_left grey"></td>
                             <td align="center" width="40%">
-                                <font size="{{ $fontsize }}" class="grey">รวมรายรับ  <b>{{ $sfielda[$sfield] }}</b> <b>{{ $thaimonth }} {{ $thaiyear }} </b></font>
+                                <font size="{{ $fontsize }}" class="grey">รวมรายรับ <b>{{ $sfielda[$sfield] }}</b>
+                                    <b>{{ $thaimonth }} {{ $thaiyear }} </b></font>
                             </td>
                             <td align="center" width="15%"></td>
                             <td align="center" width="15%">
-                                <font  size="{{ $fontsize }}" class="grey">รหัสเอกสาร</font>
+                                <font size="{{ $fontsize }}" class="grey">รหัสเอกสาร</font>
                             </td>
-                            <td align="center" width="15%" class="active_right"><b><font size="{{ $fontsize }}">{{ $sfieldas[$sfield] }}{{ $ymcode }}</font></b></td>
+                            <td align="center" width="15%" class="active_right"><b>
+                                    <font size="{{ $fontsize }}">{{ $sfieldas[$sfield] }}{{ $ymcode }}</font>
+                                </b></td>
                         </tr>
 
                     </table>
 
                     <table align="center" width="95%" cellpadding="0" cellspacing="0">
                         <tr class="actived activebg" height="25">
-                            <td align="center" width="15%" class="actived grey"><font size="{{ $fontsize }}">วัน / เดือน / ปี</font></td>
+                            <td align="center" width="15%" class="actived grey">
+                                <font size="{{ $fontsize }}">วัน / เดือน / ปี</font>
+                            </td>
                             <td align="center" width="30%">
-                                <font class="actived grey"><font size="{{ $fontsize }}">รายการ</font>
+                                <font class="actived grey">
+                                    <font size="{{ $fontsize }}">รายการ</font>
                             </td>
-                            <td align="center" width="20%" class="grey actived"><font size="{{ $fontsize }}">เอกสารอ้างอิง</td>
+                            <td align="center" width="20%" class="grey actived">
+                                <font size="{{ $fontsize }}">เอกสารอ้างอิง
+                            </td>
                             <td align="center" width="15%">
-                                <font class="grey actived"><font size="{{ $fontsize }}">รายรับ</font>
+                                <font class="grey actived">
+                                    <font size="{{ $fontsize }}">รายรับ</font>
                             </td>
-                            <td align="center" width="15%" class="actived gray"><font size="{{ $fontsize }}">หน่วย</td>
+                            <td align="center" width="15%" class="actived gray">
+                                <font size="{{ $fontsize }}">หน่วย
+                            </td>
                         </tr>
                         @foreach ($data as $receipt)
-                        <tr class="activeda" height="18">
-                            <td align="center" width="15%" class="actived"><b><font size="{{ $fontsize }}">{{ $receipt['receipt_submission_date'] }}</font></b></td>
-                            <td align="left" width="40%" class="actived">&nbsp; <b><font size="{{ $fontsize }}">{!! $receipt['description'] !!}</font></b></td>
-                            <td align="center" width="15%" class="actived"><b><font size="{{ $fontsize }}">{{ $receipt['receipt_numbers'] }}</font></b></td>
-                            <td align="center" width="15%" class="actived"><b><font size="{{ $fontsize }}">{{ $receipt['total_price'] }}</font></b></td>
-                            <td align="center" width="15%" class="actived grey"><b><font size="{{ $fontsize }}">{{ $receipt['receipt_price_label'] }}</font></b></td>
-                        </tr>
+                            <tr class="activeda" height="15">
+                                <td align="center" width="15%" class="actived"><b>
+                                        <font size="{{ $fontsize }}">{{ $receipt['receipt_submission_date'] }}
+                                        </font>
+                                    </b></td>
+                                <td align="left" width="40%" class="actived">&nbsp; <b>
+                                        <font size="{{ $fontsize }}">{!! $receipt['description'] !!}</font>
+                                    </b></td>
+                                <td align="center" width="15%" class="actived"><b>
+                                        <font size="{{ $fontsize }}">{{ $receipt['receipt_numbers'] }}</font>
+                                    </b></td>
+                                <td align="center" width="15%" class="actived"><b>
+                                        <font size="{{ $fontsize }}">{{ $receipt['total_price'] }}</font>
+                                    </b></td>
+                                <td align="center" width="15%" class="actived grey"><b>
+                                        <font size="{{ $fontsize }}">{{ $receipt['receipt_price_label'] }}</font>
+                                    </b></td>
+                            </tr>
                         @endforeach
                         <tr class="activebg" height="40">
-                            <td align="center" colspan="3" width="15%" class="actived activebottomd grey"><font size="{{ $fontsize }}"><b>รวมทั้งสิ้น</b></font></td>
-                            <td align="center" width="15%" class="actived activebottomd"><b><font size="{{ $fontsize }}">{{ $total_price }}</font></b></td>
-                            <td align="center" width="15%" class="actived activebottomd grey"><font size="{{ $fontsize }}"><b>บาท</b></font></td>
+                            <td align="center" colspan="3" width="15%" class="actived activebottomd grey">
+                                <font size="{{ $fontsize }}"><b>รวมทั้งสิ้น</b></font>
+                            </td>
+                            <td align="center" width="15%" class="actived activebottomd"><b>
+                                    <font size="{{ $fontsize }}">{{ $total_price }}</font>
+                                </b></td>
+                            <td align="center" width="15%" class="actived activebottomd grey">
+                                <font size="{{ $fontsize }}"><b>บาท</b></font>
+                            </td>
                         </tr>
                     </table>
-
-
-
-
-                    <br><br><br>
 
                     <table align="center" width="95%" cellpadding="0" cellspacing="0">
                         <tr>
