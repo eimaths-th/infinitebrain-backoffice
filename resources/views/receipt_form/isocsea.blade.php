@@ -547,7 +547,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h4 class="card-title form_header">ISOCSEA 2024 Registration</h4>
+                                <h4 class="card-title form_header">ISOCSEA 2025 Registration</h4>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -559,7 +559,7 @@
                                         <span style="color: #6351a2;">
                                             <strong>
                                                 <span style="text-decoration: underline;">
-                                                    ISOCSEA 2024 Registration Form
+                                                    ISOCSEA 2025 Registration Form
                                                 </span>
                                             </strong>
                                         </span>
@@ -591,12 +591,12 @@
                                             @if ($date)
                                                 {{ $date }}
                                             @else
-                                                Today - 25 October 2024 <br>
+                                                Today - 14 July 2025 <br>
                                             @endif
 
                                         </span></p>
                                     <p>
-                                        <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 14 July 2024
+                                        <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 14 July 2025
                                         </span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April

@@ -547,7 +547,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h4 class="card-title form_header">IMOCSEA 2024 Registration</h4>
+                                <h4 class="card-title form_header">IMOCSEA 2025 Registration</h4>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -556,7 +556,7 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">IMOCSEA 2024 Registration
+                                                    style="text-decoration: underline;">IMOCSEA 2025 Registration
                                                     Form</span></strong></span></p>
                                     {{--
                                         <p><strong><span style="color: #6351a2;"> โค้ดส่วนลดค่ะ ใช้ได้ตั้งแต่วันที่ 1 ก.ค. - 31
@@ -586,12 +586,12 @@
                                             @if ($date)
                                                 {{ $date }}
                                             @else
-                                                Today - 25 October 2024 <br>
+                                                Today - 14 July 2025 <br>
                                             @endif
                                         </span>
                                     </p>
                                     <p>
-                                        <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 14 July 2024
+                                        <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 14 July 2025
                                         </span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
