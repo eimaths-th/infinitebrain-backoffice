@@ -720,7 +720,7 @@ class ReceiptFormController extends Controller
     public function checkRegisted($route, $sfield, $firstname, $lastname, $nickname, $email)
     {
         $getTime = OpeningClosingTime::where('route', $route)->orderBy('id', 'desc')->first();
-        // dd($route, $getTime);
+        dd($route, $getTime);
         $getTimeOpen = (new \DateTime($getTime->opening_time))->format('Y-m-d');
         $getTimeClose = (new \DateTime($getTime->closing_time))->format('Y-m-d');
 
