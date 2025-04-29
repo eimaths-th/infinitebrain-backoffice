@@ -609,7 +609,7 @@
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1,250 bath</span><br></p>
                                     <p>&nbsp;</p>
-                                    <div class="row mb-5">
+                                    {{-- <div class="row mb-5">
                                         <div class="col-lg-6">
                                             <div class="text-center">
                                                 <img src="images/IMOCSEA_0_L.jpg" alt="Image 2"
@@ -622,7 +622,7 @@
                                                     style="max-width: 100%; height: auto;">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <p>
                                         <span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร IMOCSEA</b>
                                             <br>
@@ -692,7 +692,7 @@
                                         @endif
                                     </div>
                                 </div>
-
+                                <input type="hidden" name="routeName" id="routeName" value="{{ request()->route()->getName() }}">
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Name-Surname (English) /
@@ -1030,8 +1030,8 @@
                                 </div>
 
                                 <br>
-                                <div align="center"><img src="{{ asset('images/PayMent.png') }}" alt="..."
-                                        height="300"></div>
+                                <div align="center"><img src="{{ asset('images/acc_meta.png') }}" alt="..."
+                                        ></div>
                                 <br>
 
                                 <div class="form-row form-focus" id="dropzone-att">
