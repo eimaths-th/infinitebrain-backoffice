@@ -591,12 +591,12 @@
                                             @if ($date)
                                                 {{ $date }}
                                             @else
-                                                Today - 20 July 2025 <br>
+                                                Today - 14 July 2025 <br>
                                             @endif
 
                                         </span></p>
                                     <p>
-                                        <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 14 July 2025
+                                        <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 20 July 2025
                                         </span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
