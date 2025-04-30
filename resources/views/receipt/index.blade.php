@@ -28,8 +28,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                                            <p>{{ $message }}</p>
-                                            </div>-->
+                                                                    <p>{{ $message }}</p>
+                                                    </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -39,8 +39,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                                                    <p>{{ $message }}</p>
-                                                                        </div>-->
+                                                                            <p>{{ $message }}</p>
+                                                                                </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -115,6 +115,41 @@
         </div>
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
+                <form action="{{ route('receipts') }}" method="GET">
+                    @csrf
+                    <input type="hidden" name="sfield" value="{{ request()->get('sfield') }}">
+                    <div class="row mb-4">
+                        <div class="col-md-2">
+                            <select name="month" id="month" class="form-control" required>
+                                <option value="">Select Month</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="year" id="year" class="form-control" required>
+                                <option value="">Select Year</option>
+                                @for ($i = 0; $i <= 4; $i++)
+                                    <option value="{{ date('Y') - $i }}">{{ date('Y') - $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">submit</button>
+                        </div>
+                    </div>
+                </form>
+
                 <form method="post" action="{{ route('receipts.destroy_all') }}" name="delete_all" id="delete_all">
                     @csrf
                     @method('DELETE')
@@ -658,21 +693,21 @@
                         </div>
 
                         <!--<div class="form-row">
-                                                        <div class="col-md-6">
-                                                            <div class="position-relative form-group">
-                                                                <label for="City">City:</label>
-                                                                <input type="text" class="form-control" name="city" id="AddCity"
-                                                                    value="">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="position-relative form-group">
-                                                                <label for="Province">Province:</label>
-                                                                <input type="text" class="form-control" name="province" id="AddProvince"
-                                                                    value="">
-                                                            </div>
-                                                        </div>
-                                                    </div>-->
+                                                                <div class="col-md-6">
+                                                                    <div class="position-relative form-group">
+                                                                        <label for="City">City:</label>
+                                                                        <input type="text" class="form-control" name="city" id="AddCity"
+                                                                            value="">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="position-relative form-group">
+                                                                        <label for="Province">Province:</label>
+                                                                        <input type="text" class="form-control" name="province" id="AddProvince"
+                                                                            value="">
+                                                                    </div>
+                                                                </div>
+                                                            </div>-->
                         <div class="col-md-6">
                             <div class="position-relative form-group">
                                 <label for="City">City:</label>
@@ -714,9 +749,9 @@
                         <textarea class="form-control" name="address" id="AddAddress"></textarea>
                     </div>
                     <!--<div class="form-group">
-                                                            <label for="Name">Street Address 2:</label>
-                                                            <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
-                                                        </div>-->
+                                                                    <label for="Name">Street Address 2:</label>
+                                                                    <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                                                                </div>-->
                     <label for="Name">Street Address 2:</label>
                     <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
                 </div>-->
@@ -868,21 +903,21 @@
                                     </div>
 
                                     <!--<div class="form-row">
-                                                                <div class="col-md-6">
-                                                                    <div class="position-relative form-group">
-                                                                        <label for="City">City:</label>
-                                                                        <input type="text" class="form-control" name="city" id="EditCity"
-                                                                            value="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="position-relative form-group">
-                                                                        <label for="Province">Province:</label>
-                                                                        <input type="text" class="form-control" name="province" id="EditProvince"
-                                                                            value="">
-                                                                    </div>
-                                                                </div>
-                                                                </div>-->
+                                                                        <div class="col-md-6">
+                                                                            <div class="position-relative form-group">
+                                                                                <label for="City">City:</label>
+                                                                                <input type="text" class="form-control" name="city" id="EditCity"
+                                                                                    value="">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="position-relative form-group">
+                                                                                <label for="Province">Province:</label>
+                                                                                <input type="text" class="form-control" name="province" id="EditProvince"
+                                                                                    value="">
+                                                                            </div>
+                                                                        </div>
+                                                                        </div>-->
                                     {{--  <div class="col-md-6">
                                   <div class="position-relative form-group">
                                     <label for="Des">Description:</label>
@@ -895,9 +930,9 @@
                                         <textarea class="form-control" name="address" id="EditAddress"></textarea>
                                     </div>
                                     <!--<div class="form-group">
-                                                                    <label for="Name">Street Address 2:</label>
-                                                                    <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                                </div>-->
+                                                                            <label for="Name">Street Address 2:</label>
+                                                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                                        </div>-->
 
 
                                     {{-- <div class="form-group">

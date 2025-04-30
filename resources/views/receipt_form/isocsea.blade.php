@@ -591,7 +591,7 @@
                                             @if ($date)
                                                 {{ $date }}
                                             @else
-                                                Today - 14 July 2025 <br>
+                                                Today - 20 July 2025 <br>
                                             @endif
 
                                         </span></p>

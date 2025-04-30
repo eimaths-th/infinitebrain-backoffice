@@ -571,16 +571,43 @@ class ReceiptController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function searchMonthYear($month , $year,$sfield)
+    {
+        $receipt = Receipt::select(
+            "receipts.id as receipt_id",
+            "receipts.type as receipt_type",
+            "receipts.submission_date as receipt_submission_date",
+            "receipts.receipt_number as receipt_number",
+            "receipts.receipt_customer_number as receipt_customer_number",
+            "receipts.first_name as receipt_firstname",
+            "receipts.last_name as receipt_lastname",
+            "receipts.name_parent as receipt_parent_name",
+            "receipts.mobile as receipt_mobile",
+        )
+            ->where('receipts.sfield', $sfield)
+            ->orderBy("receipts.id", "desc")
+            ->whereMonth('receipts.submission_date', $month)
+            ->whereYear('receipts.submission_date', $year)
+            ->get();
+
+            return $receipt;
+    }
+
     public function index(Request $request)
     {
         //
+        // dd($request->all());
 
         $this->check_permission();
         if ($request->sfield == "") {
             abort(403, 'Please input Field');
         }
+        $month = $request->month;
+        $year = $request->year;
         if ($request->ajax()) {
             //sleep(2);
+
             $receipt = Receipt::select(
                 "receipts.id as receipt_id",
                 "receipts.type as receipt_type",
@@ -599,6 +626,10 @@ class ReceiptController extends Controller
                 ->where('receipts.sfield', $request->sfield)
                 ->orderBy("receipts.id", "desc")
                 ->get();
+            if ($month != "" && $year != "") {
+                # code...
+                $receipt = $this->searchMonthYear($month, $year, $request->sfield);
+            }
             //print_r($levels);
             //exit();
             return datatables()->of($receipt)
