@@ -371,6 +371,28 @@ class ReceiptFormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function searchMonthYear($month , $year,$sfield)
+    {
+        $receipt = ReceiptForm::select(
+            "receipt_forms.id as receipt_id",
+            "receipt_forms.sfield as receipt_sfield",
+            "receipt_forms.submission_date as receipt_submission_date",
+            "receipt_forms.first_name as receipt_firstname",
+            "receipt_forms.last_name as receipt_lastname",
+            "receipt_forms.name_parent as receipt_parent_name",
+            "receipt_forms.mobile as receipt_mobile",
+            "receipt_forms.generate as receipt_generate",
+            "receipt_forms.photo_att as file",
+        )
+            ->where('receipt_forms.sfield', $sfield)
+            ->orderBy("receipt_forms.id", "desc")
+            ->whereMonth('receipt_forms.submission_date', $month)
+            ->whereYear('receipt_forms.submission_date', $year)
+            ->get();
+
+            return $receipt;
+    }
+
     public function index(Request $request)
     {
         //
@@ -378,6 +400,8 @@ class ReceiptFormController extends Controller
         if ($request->sfield == "") {
             abort(403, 'Please input Field');
         }
+        $month = $request->month;
+        $year = $request->year;
         if ($request->ajax()) {
             //sleep(2);
             $receipt = ReceiptForm::select(
@@ -396,6 +420,10 @@ class ReceiptFormController extends Controller
                 ->get();
             //print_r($levels);
             //exit();
+            if ($month != "" && $year != "") {
+                # code...
+                $receipt = $this->searchMonthYear($month, $year, $request->sfield);
+            }
             return datatables()->of($receipt)
                 /* ->editColumn('student_name', function (Receipt $receipt) {
                     return $receipt->student_name . ' ' . $receipt->student_lastname;
