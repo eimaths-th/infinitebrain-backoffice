@@ -1046,7 +1046,7 @@
 
                                 <br>
                                 <div align="center">
-                                    <img src="{{ asset('images/acc_meta.png') }}" alt="..." height="auto">
+                                    <img src="{{ asset('images/scb_meta.png') }}" alt="..." height="auto">
                                 </div>
                                 <br>
 
@@ -1136,31 +1136,31 @@
         </div>
     </div>
     <script>
-        var currentDate = new Date();
-        document.getElementById('package').onchange = function() {
-            var selectedOption = this.value;
-            var sdate = new Date('2023-12-01');
-            var edate = new Date('2024-06-21');
-            var options = {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric'
-            };
-            var formattedSDate = sdate.toLocaleDateString('en-GB', options);
-            var formattedEDate = edate.toLocaleDateString('en-GB', options);
-            switch (selectedOption) {
-                case 'Test+tutoring class: 1250 bath':
-                    if (currentDate >= sdate && currentDate <= edate) {
-                        alert('ปิดสมัครสอบพร้อมติววันที่ 20 มิ.ย. 2567 23.59 น.');
-                    } else {
-                        this.value = '';
-                        alert('สมัครสอบพร้อมติวเกินระยะเวลาที่กำหนด' + formattedEDate);
-                        // alert('Registration Date: ' + formattedSDate + ' – ' + formattedEDate);
-                    }
-                    break;
-                default:
-            }
-        };
+        // var currentDate = new Date();
+        // document.getElementById('package').onchange = function() {
+        //     var selectedOption = this.value;
+        //     var sdate = new Date('2023-12-01');
+        //     var edate = new Date('2024-06-21');
+        //     var options = {
+        //         day: 'numeric',
+        //         month: 'short',
+        //         year: 'numeric'
+        //     };
+        //     var formattedSDate = sdate.toLocaleDateString('en-GB', options);
+        //     var formattedEDate = edate.toLocaleDateString('en-GB', options);
+        //     switch (selectedOption) {
+        //         case 'Test+tutoring class: 1250 bath':
+        //             if (currentDate >= sdate && currentDate <= edate) {
+        //                 alert('ปิดสมัครสอบพร้อมติววันที่ 20 มิ.ย. 2567 23.59 น.');
+        //             } else {
+        //                 this.value = '';
+        //                 alert('สมัครสอบพร้อมติวเกินระยะเวลาที่กำหนด' + formattedEDate);
+        //                 // alert('Registration Date: ' + formattedSDate + ' – ' + formattedEDate);
+        //             }
+        //             break;
+        //         default:
+        //     }
+        // };
     </script>
     <script>
         $(document).ready(function() {
