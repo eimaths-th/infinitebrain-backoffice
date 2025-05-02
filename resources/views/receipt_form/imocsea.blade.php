@@ -1030,7 +1030,7 @@
                                 </div>
 
                                 <br>
-                                <div align="center"><img src="{{ asset('images/acc_meta.png') }}" alt="..."
+                                <div align="center"><img src="{{ asset('images/scb_meta.png') }}" alt="..."
                                         ></div>
                                 <br>
 
