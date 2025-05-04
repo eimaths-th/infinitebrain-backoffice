@@ -374,8 +374,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                                        <p>{{ $message }}</p>
-                                                         </div>-->
+                                                            <p>{{ $message }}</p>
+                                                             </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -385,8 +385,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                                        <p>{{ $message }}</p>
-                                                         </div>-->
+                                                            <p>{{ $message }}</p>
+                                                             </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -429,6 +429,40 @@
         </div>
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
+                <form action="{{ route('receipts_form') }}" method="GET">
+                    @csrf
+                    <input type="hidden" name="sfield" value="{{ request()->get('sfield') }}">
+                    <div class="row mb-4">
+                        <div class="col-md-2">
+                            <select name="month" id="month" class="form-control" required>
+                                <option value="">Select Month</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="year" id="year" class="form-control" required>
+                                <option value="">Select Year</option>
+                                @for ($i = 0; $i <= 4; $i++)
+                                    <option value="{{ date('Y') - $i }}">{{ date('Y') - $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">submit</button>
+                        </div>
+                    </div>
+                </form>
                 <form method="post" action="" name="delete_all" id="delete_all">
                     @csrf
                     @method('DELETE')
@@ -514,12 +548,14 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="display: none;">
                             <strong>Success!</strong> Receipt was generate successfully.
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true"></span>
@@ -527,14 +563,15 @@
                         </div>
 
                         <div id="EditModalBody">
-                            
+
                             <div class="form-row">
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="Submission Date">Submission Date:</label>
                                         <input type="text" class="form-control" name="submission_date"
                                             id="AddSubmissiondate" value="">
-                                        <input type="hidden" name="Sfield" id="Sfield" value="{{ $sfield }}">
+                                        <input type="hidden" name="Sfield" id="Sfield"
+                                            value="{{ $sfield }}">
                                         <input type="hidden" name="fid" id="fid" value="">
                                         <input type="hidden" name="rec_id" id="AddRecId" value="">
                                     </div>
@@ -924,7 +961,7 @@
                 //if (!confirm("Are you sure?")) return;
                 e.preventDefault();
                 // document.getElementById("loadingOverlay").style.display = "flex";
-                $("#modalLoadingOverlay").show(); 
+                $("#modalLoadingOverlay").show();
                 $('.alert-danger').html('');
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
