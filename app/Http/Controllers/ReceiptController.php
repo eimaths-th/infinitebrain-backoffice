@@ -1113,29 +1113,34 @@ class ReceiptController extends Controller
 
 
 
-                $images = explode('|', $result->file_att);
-                $file_att = ''; // Make sure to initialize
+                $file_path = explode("|", $result->file_att);
 
-                foreach ($images as $imgUrl) {
-                    $ck_url = parse_url($imgUrl);
-
-                    if (!isset($ck_url['scheme'])) {
-                        continue; // skip if malformed
-                    }
-
-                    $urlf = $ck_url['scheme'];
-
-                    if (strpos($imgUrl, "jotform")) {
-                        $retu = $this->get_img_url($imgUrl);
+                foreach ($file_path as $key => $path) {
+                    # code...
+                    $ck_url = parse_url($path);
+                    if ($ck_url['scheme'] == 'https') {
+                        $urlf = "https";
                     } else {
-                        // Optional watermark code
-                        // $fileex = explode("/", $imgUrl);
-                        // $this->textWatermark(end($fileex), 'Receipt Number : ' . $result->receipt_number);
-                        $retu = $imgUrl;
+                        $urlf = "http";
                     }
+                    $arrl = explode($urlf, $path);
+                    //dd($arrl);
+                    for ($i = 1; $i <= count($arrl) - 1; $i++) {
+                        $urla = $urlf . $arrl[$i];
+                        if (strpos($urla, "jotform")) {
+                            $retu = $this->get_img_url($urla);
+                        } else {
+                            //watermark
+                            $fileex = explode("/", $urla);
 
-                    // Output each image
-                    $file_att .= "<img src=\"" . $retu . "\" height=\"400\" class=\"my-5\">&nbsp;&nbsp;";
+                            $this->textWatermark(end($fileex), 'Receipt Number : ' . $result->receipt_number);
+
+                            $retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
+                        }
+                        //if ($this->URL_exists($retu)) {
+                        $file_att .= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
+                        //}
+                    }
                 }
             }
             $ret_receipt[$result->id]['file_att'] = $file_att;
