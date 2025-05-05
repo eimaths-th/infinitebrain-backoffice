@@ -572,7 +572,7 @@ class ReceiptController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function searchMonthYear($month , $year,$sfield)
+    public function searchMonthYear($month, $year, $sfield)
     {
         $receipt = Receipt::select(
             "receipts.id as receipt_id",
@@ -591,7 +591,7 @@ class ReceiptController extends Controller
             ->whereYear('receipts.submission_date', $year)
             ->get();
 
-            return $receipt;
+        return $receipt;
     }
 
     public function index(Request $request)
@@ -1113,35 +1113,29 @@ class ReceiptController extends Controller
 
 
 
-                $ck_url = parse_url($result->file_att);
-                if ($ck_url['scheme'] == 'https') {
-                    $urlf = "https";
-                } else {
-                    $urlf = "http";
-                }
+                $images = explode('|', $result->file_att);
+                $file_att = ''; // Make sure to initialize
 
+                foreach ($images as $imgUrl) {
+                    $ck_url = parse_url($imgUrl);
 
-                $arrl = explode($urlf, $result->file_att);
-                for ($i = 1; $i <= count($arrl) - 1; $i++) {
-                    $urla = $urlf . $arrl[$i];
-                    if (strpos($urla, "jotform")) {
-                        $retu = $this->get_img_url($urla);
-                    } else {
-                        //watermark
-                        $fileex = explode("/", $result->file_att);
-                        //$this->textWatermark(end($fileex), 'Receipt Number : ' . $result->receipt_number);
-
-                        //$retu = str_replace('receipt_form_images', 'receipt_form_watermark_images', $urla);
-                        $retu = $urla;
+                    if (!isset($ck_url['scheme'])) {
+                        continue; // skip if malformed
                     }
 
+                    $urlf = $ck_url['scheme'];
 
+                    if (strpos($imgUrl, "jotform")) {
+                        $retu = $this->get_img_url($imgUrl);
+                    } else {
+                        // Optional watermark code
+                        // $fileex = explode("/", $imgUrl);
+                        // $this->textWatermark(end($fileex), 'Receipt Number : ' . $result->receipt_number);
+                        $retu = $imgUrl;
+                    }
 
-                    //if ($this->URL_exists($retu)) {
-                    // $file_att .= "<img src=\"" . $retu . "\" height=\"400\">&nbsp;&nbsp;";
+                    // Output each image
                     $file_att .= "<img src=\"" . $retu . "\" height=\"400\" class=\"my-5\">&nbsp;&nbsp;";
-
-                    //}
                 }
             }
             $ret_receipt[$result->id]['file_att'] = $file_att;
