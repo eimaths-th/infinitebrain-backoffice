@@ -578,7 +578,7 @@
                                 </div> --}}
                             </div>
                             <div class="text-center">
-                                <h2 class="card-title form_header">NEO Science Olympiad 2023 Registration Form</h2>
+                                <h2 class="card-title form_header">NEO Science Olympiad {{ date('Y') }} Registration Form</h2>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
 
                             </div>
@@ -590,7 +590,7 @@
                                     <p style="text-align: center;">
                                         <span style="color: #6351a2;">
                                             <strong>
-                                                <span style="text-decoration: underline;">NEO Science Olympiad 2023
+                                                <span style="text-decoration: underline;">NEO Science Olympiad {{ date('Y') }}
                                                     Registration Form </span> <br>
                                                 <span style="text-decoration: underline;"> โปรโมชั่นแทนคำขอบคุณ
                                                     พิเศษเพียง 500 บาท สามารถสอบได้ถึง 2 วิชา

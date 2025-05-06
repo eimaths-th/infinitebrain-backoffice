@@ -590,7 +590,7 @@
                                     <p style="text-align: center;">
                                         <span style="color: #6351a2;">
                                             <strong>
-                                                <span style="text-decoration: underline;">NEO Science Olympiad 2023
+                                                <span style="text-decoration: underline;">NEO Science Olympiad {{ date('Y') }}
                                                     Registration Form </span> <br>
 
                                             </strong>

@@ -1221,48 +1221,48 @@
     <script>
         var currentDate = new Date();
 
-        document.getElementById('grade').onchange = function() {
-            var selectedOption = this.value;
-            // var sdate = new Date('2023-12-01');
-            // var edate = new Date('2023-12-2');
-            var sdate = new Date('2023-12-01');
-            var edate = new Date('2024-04-18');
+        // document.getElementById('grade').onchange = function() {
+        //     var selectedOption = this.value;
+        //     // var sdate = new Date('2023-12-01');
+        //     // var edate = new Date('2023-12-2');
+        //     var sdate = new Date('2023-12-01');
+        //     var edate = new Date('2024-04-18');
 
-            var options = {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric'
-            };
-            var formattedSDate = sdate.toLocaleDateString('en-GB', options);
-            var formattedEDate = edate.toLocaleDateString('en-GB', options);
-            switch (selectedOption) {
-                case 'Grade 3':
-                case 'Grade 4':
-                case 'Grade 5':
-                case 'Grade 9':
-                    if (currentDate >= sdate && currentDate <= edate) {
+        //     var options = {
+        //         day: 'numeric',
+        //         month: 'short',
+        //         year: 'numeric'
+        //     };
+        //     var formattedSDate = sdate.toLocaleDateString('en-GB', options);
+        //     var formattedEDate = edate.toLocaleDateString('en-GB', options);
+        //     switch (selectedOption) {
+        //         case 'Grade 3':
+        //         case 'Grade 4':
+        //         case 'Grade 5':
+        //         case 'Grade 9':
+        //             if (currentDate >= sdate && currentDate <= edate) {
 
-                    } else {
-                        this.value = '';
-                        alert('Over time Registration for Grade 3-5 and Grade 9.');
-                        alert('Registration Date: ' + formattedSDate + ' – ' + formattedEDate);
-                    }
-                    break;
-                case 'Grade 6':
-                case 'Grade 7':
-                case 'Grade 8':
+        //             } else {
+        //                 this.value = '';
+        //                 alert('Over time Registration for Grade 3-5 and Grade 9.');
+        //                 alert('Registration Date: ' + formattedSDate + ' – ' + formattedEDate);
+        //             }
+        //             break;
+        //         case 'Grade 6':
+        //         case 'Grade 7':
+        //         case 'Grade 8':
 
-                    if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-03-05')) {
+        //             if (currentDate >= new Date('2023-12-01') && currentDate <= new Date('2024-03-05')) {
 
-                    } else {
-                        this.value = '';
-                        alert('Over time Registration for Grade 6-8.');
-                        alert('Registration Date: 1 Dec 2023 – 30 Jan 2024');
-                    }
-                    break;
-                default:
-            }
-        };
+        //             } else {
+        //                 this.value = '';
+        //                 alert('Over time Registration for Grade 6-8.');
+        //                 alert('Registration Date: 1 Dec 2023 – 30 Jan 2024');
+        //             }
+        //             break;
+        //         default:
+        //     }
+        // };
     </script>
     <script>
         $(document).ready(function() {

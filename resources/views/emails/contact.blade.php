@@ -220,17 +220,17 @@
                                                                         if ($data->sfield == 10) {
                                                                             $message = 'ASIAROPE Olympiad Registration Form';
                                                                         } elseif ($data->sfield == 6) {
-                                                                            $message = 'GELOSEA 2025 Registration Form';
+                                                                            $message = 'GELOSEA ' . date('Y') . ' Registration Form';
                                                                         } elseif ($data->sfield == 9) {
-                                                                            $message = 'OLPCS 2025 Registration Form';
+                                                                            $message = 'OLPCS ' . date('Y') . ' Registration Form';
                                                                         } elseif ($data->sfield == 11) {
-                                                                            $message = 'Cambridge 2025 Registration Form';
+                                                                            $message = 'Cambridge ' . date('Y') . ' Registration Form';
                                                                         } elseif ($data->sfield == 4) {
-                                                                            $message = 'IMOCSEA 2025 Registration Form';
+                                                                            $message = 'IMOCSEA ' . date('Y') . ' Registration Form';
                                                                         } elseif ($data->sfield == 13) {
-                                                                            $message = 'ISOCSEA 2025 Registration Form';
+                                                                            $message = 'ISOCSEA ' . date('Y') . ' Registration Form';
                                                                         } elseif ($data->sfield == 14) {
-                                                                            $message = 'IMOCSEA+ISOCSEA 2025 Registration Form';
+                                                                            $message = 'IMOCSEA+ISOCSEA ' . date('Y') . ' Registration Form';
                                                                         } elseif ($data->sfield == 15 || $data->sfield == 19) {
                                                                             $message = 'China Mathematical Olympiad';
                                                                         } elseif ($data->sfield == 16 || $data->sfield == 18) {
@@ -246,11 +246,11 @@
                                                                         } elseif ($data->sfield == '23') {
                                                                             $message = 'International Hope cup mathematic invitational';
                                                                         } elseif ($data->sfield == '24') {
-                                                                            $message = 'International STEM Competitions 2025';
+                                                                            $message = 'International STEM Competitions ' . date('Y') . '';
                                                                         } elseif ($data->sfield == '25') {
-                                                                            $message = 'Southeast Asia Computer Science Olympiad 2025';
+                                                                            $message = 'Southeast Asia Computer Science Olympiad ' . date('Y') . '';
                                                                         } elseif ($data->sfield == '26') {
-                                                                            $message = 'COPERNICUS OLYMPIAD 2025';
+                                                                            $message = 'COPERNICUS OLYMPIAD ' . date('Y') . '';
                                                                         }
                                                                         ?>
                                                                         {{ $message }}</span>

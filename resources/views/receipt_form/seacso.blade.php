@@ -594,7 +594,7 @@
 
                             <div class="text-center">
                                 <h2 class="card-title form_header">
-                                    SEACSO 2024 Registration Form
+                                    SEACSO {{ date('Y') }} Registration Form
                                 </h2>
                                 <p class="card-text form_sub_header">
                                     <b>
@@ -613,7 +613,7 @@
                                         <span style="color: #6351a2;">
                                             <strong>
                                                 <span style="text-decoration: underline;">
-                                                    SEACSO 2024 Registration Form
+                                                    SEACSO {{ date('Y') }} Registration Form
                                                 </span>
                                             </strong>
                                         </span>
