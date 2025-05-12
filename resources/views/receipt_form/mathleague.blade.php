@@ -581,7 +581,7 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">Math League 2023 Registration
+                                                    style="text-decoration: underline;">Math League {{ date('Y') }} Registration
                                                     Form</span></strong></span></p>
                                     <p style="text-align: left;">
                                         <span style="color: #6351a2;">
@@ -1167,7 +1167,7 @@
         </div>
     </div>
 
-    <script>
+    {{-- <script>
         var currentDate = new Date();
 
         document.getElementById('grade').onchange = function() {
@@ -1212,7 +1212,7 @@
                 default:
             }
         };
-    </script>
+    </script> --}}
     <script>
         $(document).ready(function() {
             var inputlist = ["firstname", "lastname", "address", "postcode"];

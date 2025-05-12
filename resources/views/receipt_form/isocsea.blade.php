@@ -547,7 +547,7 @@
                         <div class="card-body">
                             <br>
                             <div class="text-center">
-                                <h4 class="card-title form_header">ISOCSEA 2025 Registration</h4>
+                                <h4 class="card-title form_header">ISOCSEA {{ date('Y') }} Registration</h4>
                                 <p class="card-text form_sub_header"><b>Fill out the form carefully for registration</b></p>
                             </div>
                             <br>
@@ -559,7 +559,7 @@
                                         <span style="color: #6351a2;">
                                             <strong>
                                                 <span style="text-decoration: underline;">
-                                                    ISOCSEA 2025 Registration Form
+                                                    ISOCSEA {{ date('Y') }} Registration Form
                                                 </span>
                                             </strong>
                                         </span>
