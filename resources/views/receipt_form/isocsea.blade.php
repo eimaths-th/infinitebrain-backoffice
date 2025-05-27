@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                            background-size: 15px;
-                                                                                                        }*/
+                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                background-size: 15px;
+                                                                                                            }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                            border-color: var(--color-invalid);
-                                                                                                        }*/
+                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                border-color: var(--color-invalid);
+                                                                                                            }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                            display: block;
-                                                                                                        }*/
+                                                                                                                display: block;
+                                                                                                            }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -634,7 +634,8 @@
                                             <br>
 
                                             โรงเรียนไทย<br>
-                                            หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันสอบ) <br> ให้ใช้ระดับชั้นปีการศึกษาที่ผ่านมา<br>
+                                            หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันสอบ) <br>
+                                            ให้ใช้ระดับชั้นปีการศึกษาที่ผ่านมา<br>
                                             โรงเรียนนานาชาติ <br>
                                             ใช้ระดับชั้นปีการศึกษาปัจจุบันในการสมัครสอบเท่านั้น <br>
 
@@ -708,7 +709,8 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="routeName" id="routeName" value="{{ request()->route()->getName() }}">
+                                <input type="hidden" name="routeName" id="routeName"
+                                    value="{{ request()->route()->getName() }}">
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Name-Surname (English) /
