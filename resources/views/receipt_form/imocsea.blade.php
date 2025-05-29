@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                    background-size: 15px;
-                                                                                                }*/
+                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                        background-size: 15px;
+                                                                                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                    border-color: var(--color-invalid);
-                                                                                                }*/
+                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                        border-color: var(--color-invalid);
+                                                                                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                    display: block;
-                                                                                                }*/
+                                                                                                        display: block;
+                                                                                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -556,7 +556,8 @@
                             <div class="col-md-10 div_center" data-layout="full">
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">IMOCSEA {{ date('Y') }} Registration
+                                                    style="text-decoration: underline;">IMOCSEA {{ date('Y') }}
+                                                    Registration
                                                     Form</span></strong></span></p>
                                     {{--
                                         <p><strong><span style="color: #6351a2;"> โค้ดส่วนลดค่ะ ใช้ได้ตั้งแต่วันที่ 1 ก.ค. - 31
@@ -627,25 +628,15 @@
                                         <span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร IMOCSEA</b>
                                             <br>
 
-                                            {{-- โรงเรียนไทย<br>
-                                            หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันสอบ) ใช้ระดับชั้นปีการศึกษาที่ผ่านมา<br>
-                                            หากเปิดเทอมครบ 3 เดือน (นับจากวันสอบ) ใช้ระดับชั้นปีการศึกษาปัจจุบัน<br>
-                                            โรงเรียนนานาชาติ ใช้ระดับชั้นปีการศึกษาปัจจุบันในการสมัครสอบเท่านั้น<br> --}}
-                                            โรงเรียนไทย<br>
-                                            หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันสอบ) <br> 
+                                            - หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันที่เปิดเทอม - วันสอบ)
                                             ให้ใช้ระดับชั้นปีการศึกษาที่ผ่านมา<br>
-                                            โรงเรียนนานาชาติ <br>
-                                            ใช้ระดับชั้นปีการศึกษาปัจจุบันในการสมัครสอบเท่านั้น<br>
-                                            
-                                            
+                                            - หากเปิดเทอมครบ 3 เดือน ให้ใช้ปีการศึกษาปัจจุบันเท่านั้น<br>
 
-                                            <br>
-
-                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วตรวจสอบพบ<br>
-                                            ทาง META Knowledge จะยึดตามเกณฑ์นี้<br>
+                                            <br><br>
+                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นปีการศึกษาแล้วตรวจสอบพบทาง<br>
+                                            META Knowledge จะยึดตามเกณฑ์นี้<br>
                                             หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ในการสอบ<br>
-
-
+                                            โดยสามารถตรวจสอบเทียบระดับชั้นปีการศึกษาจากเกณฑ์การเทียบระดับชั้น
                                             {{-- รร.ไทยใช้ระดับชั้นปัจจุบัน ณ วันสอบเท่านั้น <br> --}}
 
 
@@ -699,7 +690,8 @@
                                         @endif
                                     </div>
                                 </div>
-                                <input type="hidden" name="routeName" id="routeName" value="{{ request()->route()->getName() }}">
+                                <input type="hidden" name="routeName" id="routeName"
+                                    value="{{ request()->route()->getName() }}">
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Name-Surname (English) /
@@ -731,8 +723,7 @@
                                             </label>
                                             <input type="text" class="form-control" name="lastname" id="lastname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Last
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Last
                                                 Name</label>
                                             {{-- <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -1037,8 +1028,7 @@
                                 </div>
 
                                 <br>
-                                <div align="center"><img src="{{ asset('images/scb_meta.png') }}" alt="..."
-                                        ></div>
+                                <div align="center"><img src="{{ asset('images/scb_meta.png') }}" alt="..."></div>
                                 <br>
 
                                 <div class="form-row form-focus" id="dropzone-att">
