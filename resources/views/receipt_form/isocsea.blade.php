@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                background-size: 15px;
-                                                                                                            }*/
+                                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                            background-size: 15px;
+                                                                                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                border-color: var(--color-invalid);
-                                                                                                            }*/
+                                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                            border-color: var(--color-invalid);
+                                                                                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                display: block;
-                                                                                                            }*/
+                                                                                                                            display: block;
+                                                                                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -633,18 +633,15 @@
                                         <span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร ISOCSEA</b>
                                             <br>
 
-                                            โรงเรียนไทย<br>
-                                            หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันสอบ) <br>
+                                            - หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันที่เปิดเทอม - วันสอบ)
                                             ให้ใช้ระดับชั้นปีการศึกษาที่ผ่านมา<br>
-                                            โรงเรียนนานาชาติ <br>
-                                            ใช้ระดับชั้นปีการศึกษาปัจจุบันในการสมัครสอบเท่านั้น <br>
+                                            - หากเปิดเทอมครบ 3 เดือน ให้ใช้ปีการศึกษาปัจจุบันเท่านั้น<br>
 
-                                            <br>
-                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วตรวจสอบพบ<br>
-                                            ทาง META Knowledge จะยึดตามเกณฑ์นี้<br>
+                                            <br><br>
+                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นปีการศึกษาแล้วตรวจสอบพบทาง<br>
+                                            META Knowledge จะยึดตามเกณฑ์นี้<br>
                                             หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ในการสอบ<br>
-
-
+                                            โดยสามารถตรวจสอบเทียบระดับชั้นปีการศึกษาจากเกณฑ์การเทียบระดับชั้น
                                             {{-- รร.ไทยใช้ระดับชั้นปัจจุบัน ณ วันสอบเท่านั้น <br> --}}
 
 
