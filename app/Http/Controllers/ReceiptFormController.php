@@ -330,25 +330,31 @@ class ReceiptFormController extends Controller
 
     public function textWatermark($image, $text)
     {
-        $img = Image::make(public_path('receipt_form_images/' . $image));
+        $path = public_path('receipt_form_images/' . $image);
+        
+        if (file_exists($path)) {
 
-        $img->text($text, 610, 670, function ($font) {
-            $font->file(public_path('font/amandasignature.ttf'));
-            $font->size(60);
-            $font->color('#ff0000');
-            $font->align('center');
-            $font->valign('bottom');
-            $font->angle(80);
-        });
 
-        $img->save(public_path('receipt_form_watermark_images/' . $image));
+            $img = Image::make(public_path('receipt_form_images/' . $image));
 
-        $img->encode('png');
-        $type = 'png';
-        $new_image = 'data:image/' . $type . ';base64,' . base64_encode($img);
+            $img->text($text, 610, 670, function ($font) {
+                $font->file(public_path('font/amandasignature.ttf'));
+                $font->size(60);
+                $font->color('#ff0000');
+                $font->align('center');
+                $font->valign('bottom');
+                $font->angle(80);
+            });
 
-        //return view('show_watermark', compact('new_image'));
-        return  $new_image;
+            $img->save(public_path('receipt_form_watermark_images/' . $image));
+
+            $img->encode('png');
+            $type = 'png';
+            $new_image = 'data:image/' . $type . ';base64,' . base64_encode($img);
+
+            //return view('show_watermark', compact('new_image'));
+            return  $new_image;
+        }
     }
 
     public function check_permission()
@@ -371,7 +377,7 @@ class ReceiptFormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function searchMonthYear($month , $year,$sfield)
+    public function searchMonthYear($month, $year, $sfield)
     {
         $receipt = ReceiptForm::select(
             "receipt_forms.id as receipt_id",
@@ -390,7 +396,7 @@ class ReceiptFormController extends Controller
             ->whereYear('receipt_forms.submission_date', $year)
             ->get();
 
-            return $receipt;
+        return $receipt;
     }
 
     public function index(Request $request)
@@ -998,6 +1004,7 @@ class ReceiptFormController extends Controller
             }
         }
         // dd($urla);
+        // dd($data);
 
 
         $file_att = '';
@@ -1034,7 +1041,7 @@ class ReceiptFormController extends Controller
             $data->rnumber = '';
         }
 
-        // dd($data->rnumber);
+        // dd($data);
 
 
         return response()->json([
