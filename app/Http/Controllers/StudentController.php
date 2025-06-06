@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogActivity;
 use App\Models\Student;
 use App\Models\History;
 
@@ -49,47 +50,7 @@ class StudentController extends Controller
         $this->check_permission();
 
         $newStudentCode = Student::generateNextStudentCode();
-        // dd($newStudentCode);
-
-
-        // $month = date('m');
-        // // $month = "10";
-        // // $month1 = "09";
-        // $year = date('Y');
-
-        // $latestStatusCounts = Statuslog::select('group', 'student_id', 'status')
-        //     ->whereIn('id', function ($query) {
-        //         $query->select(DB::raw('MAX(id)'))
-        //             ->from('status_log')
-        //             ->groupBy('group', 'student_id');
-        //     })
-        //     ->whereYear('status_date', $year)
-        //     ->whereMonth('status_date', $month)
-        //     ->get();
-
-        // $groupStatusCounts = [];
-
-        // foreach ($latestStatusCounts as $record) {
-
-        //     $group = $record->group;
-        //     $status = $record->status;
-
-        //     if (!isset($groupStatusCounts[$group])) {
-        //         $groupStatusCounts[$group] = [];
-        //     }
-
-        //     if (!isset($groupStatusCounts[$group][$status])) {
-        //         $groupStatusCounts[$group][$status] = 0;
-        //     }
-        //     $groupStatusCounts[$group][$status]++;
-        // }
-        // $cstdlog = Statuslog::all()->count();
-        // dd($latestStatusCounts, $groupStatusCounts, $cstdlog);
-
-
-
-        // dd($i);
-
+      
         if ($request->ajax()) {
             // sleep(2);
             $students = Student::orderBy("code", "asc")
@@ -181,14 +142,6 @@ class StudentController extends Controller
                 ->get();
         }
 
-
-        // foreach ($StudentExpireCurrentMonth as $record) {
-        //     // Process each record as needed
-        //     echo "period: " . $record->period . ", Record ID: " . $record->id . ", STD ID: " . $record->student_id . ", group: " . $record->group . ", Rid: " . $record->rid  . " | " . "<br/>";
-        // }
-
-        // dd($group);
-
         if ($request->type == 'print') {
             # code...
             $view = 'students.print_expire';
@@ -210,24 +163,16 @@ class StudentController extends Controller
 
     public function search_expire(Request $request)
     {
-        // dd($request);
-        // $currentMonth = date('m');
         $currentMonth = '04';
         $currentYear = date('Y');
         $month_format = Carbon::createFromFormat('m-Y', $currentMonth . '-' . $currentYear);
         $currentMonthf = $month_format->format('F');
         $groups = SchoolPrice::all()->groupBy('group');
         $StudentExpireCurrentMonth = SchoolPrice::whereRaw("SUBSTRING_INDEX(period, ' - ', -1) = ?", [$currentYear . '-' . str_pad($currentMonth, 2, '0', STR_PAD_LEFT)])
-            // ->groupBy('student_id')
             ->orderBy('group')
             ->get();
 
-        // foreach ($StudentExpireCurrentMonth as $record) {
-        //     // Process each record as needed
-        //     echo "period: " . $record->period . ", Record ID: " . $record->id . ", STD ID: " . $record->student_id . ", group: " . $record->group . ", Rid: " . $record->rid  . " | " . "<br/>";
-        // }
 
-        // dd($group);
 
         return view('students.expire', [
             'StudentExpireCurrentMonth' => $StudentExpireCurrentMonth,
@@ -235,7 +180,6 @@ class StudentController extends Controller
             'currentMonthf' => $currentMonthf,
             'currentYear' => $currentYear,
             'groups' => $groups,
-            // 'currentMonth' => $currentMonth,
         ]);
     }
     /**
@@ -246,10 +190,6 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        //return response()->json(['success'=>$request->all()]);
-        //exit();
-        // dd($request);
         $this->check_permission();
         $validator =  Validator::make($request->all(), [
             // 'code' => 'required|string|max:5|unique:students',
@@ -281,6 +221,8 @@ class StudentController extends Controller
             'pid' => $request->get('parent'),
         ]);
         $student->save();
+        LogActivity::modelEvent($student, 'created', null, $student->toArray());
+
         return response()->json(['success' => 'Student Add successfully']);
     }
 
@@ -954,7 +896,10 @@ class StudentController extends Controller
         }
         // $input = $request->all();
         // dd($input);
-        Student::find($id)->update($request->all());
+        $std =  Student::find($id);
+        $old = $std->toArray();
+        LogActivity::modelEvent($std, 'updated', $old, $request->all());
+        $std->update($request->all());
         return response()->json(['success' => 'Student updated successfully']);
     }
 
@@ -985,7 +930,10 @@ class StudentController extends Controller
     {
         //
         $this->check_permission();
-        Student::find($id)->delete();
+        $std = Student::find($id);
+        $old = $std->toArray();
+        LogActivity::modelEvent($std, 'deleted', $old, null);
+        $std->delete();
         return ['success' => true, 'message' => 'Deleted Successfully'];
     }
 

@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                            background-size: 15px;
-                                                                                                                        }*/
+                                                                                                                                    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                    background-size: 15px;
+                                                                                                                                }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                            border-color: var(--color-invalid);
-                                                                                                                        }*/
+                                                                                                                                input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                    border-color: var(--color-invalid);
+                                                                                                                                }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                            display: block;
-                                                                                                                        }*/
+                                                                                                                                    display: block;
+                                                                                                                                }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -993,6 +993,8 @@
                                             </label>
                                             <input type="email" class="form-control" name="email" id="email"
                                                 value="" maxlength="70" required>
+                                            <small id="email-msg" style="color: red;"></small>
+
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">example@example.com</label>
                                             <div class="form-error-message" role="alert"><img
@@ -1135,6 +1137,50 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const allowedSuffixes = ['.com', '.net', '.co.th' , '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
+        const emailInput = document.getElementById('email');
+        const msg = document.getElementById('email-msg');
+
+        let timeout;
+
+        emailInput.addEventListener('input', function() {
+            clearTimeout(timeout);
+
+            // รอ 500ms หลังจากผู้ใช้หยุดพิมพ์
+            timeout = setTimeout(() => {
+                const email = emailInput.value.trim();
+
+                if (!email.includes('@')) {
+                    msg.textContent = 'รูปแบบอีเมลไม่ถูกต้อง (ขาด @)';
+                    msg.style.color = 'red';
+                    return;
+                }
+
+                const domain = email.split('@')[1];
+
+                if (!domain) {
+                    msg.textContent = 'กรุณาระบุอีเมล';
+                    msg.style.color = 'red';
+                    return;
+                }
+
+                const isValid = allowedSuffixes.some(suffix => domain.endsWith(suffix));
+
+                if (isValid) {
+                    msg.textContent = '✅ อีเมลนี้รูปแบบถูกต้อง';
+                    msg.style.color = 'green';
+                } else {
+                    msg.textContent = '❌ รูปแบบอีเมลนี้ไม่ถูกต้อง' +  
+                        ' (โปรดใช้รูปแบบเฉพาะ: ' + allowedSuffixes.join(', ') + ')';
+                    msg.style.color = 'red';
+
+                    alert('รูปแบบอีเมลไม่ถูกต้อง (โปรดใช้รูปแบบเฉพาะ: ' + allowedSuffixes.join(', ') + ')');
+                }
+            }, 500);
+        });
+    </script>
     <script>
         // var currentDate = new Date();
         // document.getElementById('package').onchange = function() {

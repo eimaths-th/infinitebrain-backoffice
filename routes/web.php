@@ -2,6 +2,7 @@
 
 // namespace App\Http\Controllers;
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AppDownloadController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -298,6 +299,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('/receipt_school/delete/{id}/{id2}', [ReceiptSchoolController::class, 'deleteImg'])->name('receipt_school.deleteImg');
     Route::delete('/receipt_school/destroy/{id}', [ReceiptSchoolController::class, 'destroy'])->name('receipt_school.destroy');
 
+    Route::get('/admin/activity-logs', [ActivityLogController::class, 'index'])->name('activity.logs');
+    Route::get('/admin/activity-logs/filter', [ActivityLogController::class, 'filter'])->name('logs.filter');
+    Route::get('/admin/activity-logs/full-filter', [ActivityLogController::class, 'fullFilter'])->name('logs.full.filter');
 });
 
 //form
