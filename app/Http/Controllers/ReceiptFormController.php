@@ -331,7 +331,7 @@ class ReceiptFormController extends Controller
     public function textWatermark($image, $text)
     {
         $path = public_path('receipt_form_images/' . $image);
-        
+
         if (file_exists($path)) {
 
 
@@ -783,6 +783,7 @@ class ReceiptFormController extends Controller
     public function store(Request $request)
     {
         //
+        $allowedTLDs = ['.com', '.net', '.co.th' , '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
         $route = $request->get('routeName');
         $result = $this->checkRegisted($route, $request->get('sfield'), $request->get('firstname'), $request->get('lastname'), $request->get('nickname'), $request->get('email'));
         // dd($request->all(), $checkRegisted);
@@ -813,7 +814,17 @@ class ReceiptFormController extends Controller
                 // 'address' => 'required|string',
                 // 'postcode' => 'required|string',
                 'phone' => 'required|string',
-                'email' => 'required|email',
+                'email' => [
+                    'required',
+                    'email',
+                    function ($attribute, $value, $fail) use ($allowedTLDs) {
+                        $domain = substr(strrchr($value, "@"), 1); // get domain part
+                        if (!collect($allowedTLDs)->contains(fn($suffix) => str_ends_with($domain, $suffix))) {
+                            $fail('รูปแบบอีเมลต้องลงท้ายด้วย .com, .net , .co.th , .ac.th, .or.th, .go.th, .edu หรือ .org
+                             เท่านั้น');
+                        }
+                    },
+                ],
                 // 'newsf' => 'required|string',
             ]);
         } elseif ($request->get('sfield') == '23') {
@@ -829,7 +840,17 @@ class ReceiptFormController extends Controller
                 'address' => 'required|string',
                 'postcode' => 'required|string',
                 'phone' => 'required|string',
-                'email' => 'required|email',
+                'email' => [
+                    'required',
+                    'email',
+                    function ($attribute, $value, $fail) use ($allowedTLDs) {
+                        $domain = substr(strrchr($value, "@"), 1); // get domain part
+                        if (!collect($allowedTLDs)->contains(fn($suffix) => str_ends_with($domain, $suffix))) {
+                            $fail('รูปแบบอีเมลต้องลงท้ายด้วย .com, .net , .co.th , .ac.th, .or.th, .go.th, .edu หรือ .org
+                             เท่านั้น');
+                        }
+                    },
+                ],
                 'package' => 'required|string',
                 'newsf' => 'required|string',
 
@@ -849,7 +870,17 @@ class ReceiptFormController extends Controller
                 'address' => 'required|string',
                 'postcode' => 'required|string',
                 'phone' => 'required|string',
-                'email' => 'required|email',
+                'email' => [
+                    'required',
+                    'email',
+                    function ($attribute, $value, $fail) use ($allowedTLDs) {
+                        $domain = substr(strrchr($value, "@"), 1); // get domain part
+                        if (!collect($allowedTLDs)->contains(fn($suffix) => str_ends_with($domain, $suffix))) {
+                            $fail('รูปแบบอีเมลต้องลงท้ายด้วย .com, .net , .co.th , .ac.th, .or.th, .go.th, .edu หรือ .org
+                             เท่านั้น');
+                        }
+                    },
+                ],
                 'newsf' => 'required|string',
             ]);
         }

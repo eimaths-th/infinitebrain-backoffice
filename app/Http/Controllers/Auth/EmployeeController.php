@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\LogActivity;
 use App\Http\Controllers\Controller;
 use App\Models\Recordtime;
 use Illuminate\Http\Request;
@@ -135,6 +136,10 @@ class EmployeeController extends Controller
             'type_user' => $request->get('type_user'),
         ]);
         $level->save();
+
+        LogActivity::modelEvent($level, 'user created', null, $level->toArray());
+        // LogActivity::add('create_user', 'User created their profile');
+
         return response()->json(['success' => 'User Add successfully']);
         //return redirect('/users')->with('success', 'User saved.');   // -> resources/views/users/index.blade.php
     }
@@ -274,7 +279,11 @@ class EmployeeController extends Controller
             $level['password'] = Hash::make($request->get('password'));
         }
 
-        User::find($id)->update($level);
+        $user =  User::find($id);
+        $old = $user->toArray();
+        $user->update($level);
+        LogActivity::modelEvent($user, 'user updated', $old, $user->toArray());
+        // LogActivity::add('update_profile', 'User updated their profile');
 
         return response()->json(['success' => 'User updated successfully']);
     }
@@ -325,9 +334,13 @@ class EmployeeController extends Controller
     {
         //
         $this->check_permission();
-
+        $user = User::find($id);
+        $old = $user->toArray();
         Recordtime::where('user_id', $id)->delete();
-        User::find($id)->delete();
+        $user->delete();
+        LogActivity::modelEvent($user, 'user deleted', $old, null);
+        // LogActivity::add('delete_user', 'User deleted their profile');
+
         return ['success' => true, 'message' => 'Deleted Successfully'];
     }
 
@@ -337,7 +350,10 @@ class EmployeeController extends Controller
         $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {
-            User::find($arr_del[$xx])->delete();
+            $user = User::find($arr_del[$xx]);
+            $old = $user->toArray();
+            $user->delete();
+            LogActivity::modelEvent($user, 'user deleted', $old, null);
         }
         //$ids = $request->get('table_records');
         //User::whereIn('id',explode(",",$ids))->delete();
