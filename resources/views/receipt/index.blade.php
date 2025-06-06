@@ -1584,10 +1584,12 @@
                     url: "receipts/edit/" + id + "/2",
                     method: 'GET',
                     success: function(res) {
+                        console.log(res.data.receipt_number);
+                        console.log(res.data.submission_date);
                         //console.log(res.data_html);
-                        //$('#conv_receipt_number').val(res.data.receipt_number);
+                        $('#conv_receipt_number').val(res.data.receipt_number);
                         $('#conv_customer_code').val(res.data.receipt_customer_number);
-                        //$('#ConvSubmissiondate').val(res.data.submission_date);
+                        $('#ConvSubmissiondate').val(res.data.submission_date);
                         $('#ConvPackage').val(res.data.package);
                         $('#ConvFirstname').val(res.data.first_name);
                         $('#ConvLastname').val(res.data.last_name);

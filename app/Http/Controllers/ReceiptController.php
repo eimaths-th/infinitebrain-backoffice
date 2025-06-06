@@ -819,9 +819,9 @@ class ReceiptController extends Controller
         }
 
         if ($type === "view") {
-            $viewr = ($date_submission >= $date_start && $field_id === "10") ? "receipt.view_meta" : "receipt.view";
+            $viewr = ($date_submission >= $date_start) ? "receipt.view_meta" : "receipt.view";
         } elseif ($type === "print") {
-            $viewr = ($date_submission >= $date_start && $field_id === "10") ? "receipt.print_meta" : "receipt.print";
+            $viewr = ($date_submission >= $date_start) ? "receipt.print_meta" : "receipt.print";
         }
 
         if ($data->package) {
