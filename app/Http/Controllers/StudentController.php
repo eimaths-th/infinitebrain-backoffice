@@ -221,7 +221,8 @@ class StudentController extends Controller
             'pid' => $request->get('parent'),
         ]);
         $student->save();
-        LogActivity::modelEvent($student, 'created', null, $student->toArray());
+
+        LogActivity::modelEvent($student, 'student created', null, $student->toArray());
 
         return response()->json(['success' => 'Student Add successfully']);
     }
@@ -898,7 +899,8 @@ class StudentController extends Controller
         // dd($input);
         $std =  Student::find($id);
         $old = $std->toArray();
-        LogActivity::modelEvent($std, 'updated', $old, $request->all());
+
+        LogActivity::modelEvent($std, 'student updated', $old, $request->all());
         $std->update($request->all());
         return response()->json(['success' => 'Student updated successfully']);
     }
@@ -932,7 +934,8 @@ class StudentController extends Controller
         $this->check_permission();
         $std = Student::find($id);
         $old = $std->toArray();
-        LogActivity::modelEvent($std, 'deleted', $old, null);
+
+        LogActivity::modelEvent($std, 'student deleted', $old, null);
         $std->delete();
         return ['success' => true, 'message' => 'Deleted Successfully'];
     }
@@ -944,7 +947,12 @@ class StudentController extends Controller
         $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {
-            Student::find($arr_del[$xx])->delete();
+           $student = Student::find($arr_del[$xx]);
+            if ($student) {
+                $old = $student->toArray();
+                LogActivity::modelEvent($student, 'student deleted', $old, null);
+                $student->delete();
+            }
         }
         //$ids = $request->get('table_records');
         //User::whereIn('id',explode(",",$ids))->delete();

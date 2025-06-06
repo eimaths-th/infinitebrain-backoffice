@@ -1936,7 +1936,7 @@ class ReceiptSchoolController extends Controller
         $dataMergeNew = array_merge($Receipt_School_arry, ['receipts' => $SchoolPrice_new]);
         LogActivity::modelEvent($Receipt_School, 'receipt updated', $dataMergeOld, $dataMergeNew);
 
-        return response()->json(['success' => 'Receipt updated successfully']);
+        return response()->json(['success' => 'receipt updated successfully']);
     }
 
     public function destroy($id)
@@ -1947,7 +1947,20 @@ class ReceiptSchoolController extends Controller
             return response()->json(['error' => 'Receipt not found'], 404);
         }
 
-        SchoolPrice::where('rid', $id)->delete(); // Delete related data
+        $schoolPrice =  SchoolPrice::where('rid', $id)->get(); // Delete related data
+        $dataArray = $data->toArray();
+        $dataArray2 = [];
+
+        foreach ($schoolPrice as $price) {
+            $dataArray2[] = $price->toArray();
+        }
+
+        $dataMerge = array_merge($dataArray, ['receipts' => $dataArray2]);
+        LogActivity::modelEvent($data, 'receipt deleted', null, $dataMerge);
+
+        foreach ($schoolPrice as $price) {
+            $price->delete(); // Delete related school price records
+        }
         $data->delete(); // Delete main receipt
 
         return response()->json(['success' => 'Receipt deleted successfully']);
