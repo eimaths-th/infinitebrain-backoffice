@@ -14,6 +14,8 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
     <script src="plugins/moment/moment.min.js"></script>
     <script src="../plugins/daterangepicker/daterangepicker.js"></script>
     <script
@@ -21,6 +23,9 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js">
     </script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 @endsection
 
 @section('content')
@@ -28,8 +33,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                                                    <p>{{ $message }}</p>
-                                                    </div>-->
+                                                                                                    <p>{{ $message }}</p>
+                                                                                    </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -39,8 +44,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                                                            <p>{{ $message }}</p>
-                                                                                </div>-->
+                                                                                                            <p>{{ $message }}</p>
+                                                                                                                </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -115,38 +120,35 @@
         </div>
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
-                <form action="{{ route('receipts') }}" method="GET">
+                {{-- <form action="{{ route('receipts') }}" method="GET">
                     @csrf
                     <input type="hidden" name="sfield" value="{{ request()->get('sfield') }}">
                     <div class="row mb-4">
-                        <div class="col-md-2">
-                            <select name="month" id="month" class="form-control" required>
-                                <option value="">Select Month</option>
-                                <option value="01">January</option>
-                                <option value="02">February</option>
-                                <option value="03">March</option>
-                                <option value="04">April</option>
-                                <option value="05">May</option>
-                                <option value="06">June</option>
-                                <option value="07">July</option>
-                                <option value="08">August</option>
-                                <option value="09">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
-                            </select>
+                        <div class="col-md-3">
+                            <label for="start_date">วันที่เริ่มต้น</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control"
+                                value="{{ request('start_date') }}">
                         </div>
-                        <div class="col-md-2">
-                            <select name="year" id="year" class="form-control" required>
-                                <option value="">Select Year</option>
-                                @for ($i = 0; $i <= 4; $i++)
-                                    <option value="{{ date('Y') - $i }}">{{ date('Y') - $i }}</option>
-                                @endfor
-                            </select>
+                        <div class="col-md-3">
+                            <label for="end_date">วันที่สิ้นสุด</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control"
+                                value="{{ request('end_date') }}">
                         </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary">submit</button>
+                        <div class="col-md-2 align-self-end">
+                            <button type="submit" class="btn btn-primary w-100">ค้นหา</button>
                         </div>
+                    </div>
+                </form> --}}
+                <form action="{{ route('receipts') }}" method="GET">
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <input type="hidden" name="sfield" id="sfield" value="{{ request()->get('sfield') }}">
+                            <input type="text" name="date_range" class="form-control" id="daterange"
+                                value="{{ request('date_range') ?? '' }}" autocomplete="off" placeholder="เลือกช่วงวันที่">
+                        </div>
+                        {{-- <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">ค้นหา</button>
+                        </div> --}}
                     </div>
                 </form>
 
@@ -693,21 +695,21 @@
                         </div>
 
                         <!--<div class="form-row">
-                                                                <div class="col-md-6">
-                                                                    <div class="position-relative form-group">
-                                                                        <label for="City">City:</label>
-                                                                        <input type="text" class="form-control" name="city" id="AddCity"
-                                                                            value="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="position-relative form-group">
-                                                                        <label for="Province">Province:</label>
-                                                                        <input type="text" class="form-control" name="province" id="AddProvince"
-                                                                            value="">
-                                                                    </div>
-                                                                </div>
-                                                            </div>-->
+                                                                                                <div class="col-md-6">
+                                                                                                    <div class="position-relative form-group">
+                                                                                                        <label for="City">City:</label>
+                                                                                                        <input type="text" class="form-control" name="city" id="AddCity"
+                                                                                                            value="">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-md-6">
+                                                                                                    <div class="position-relative form-group">
+                                                                                                        <label for="Province">Province:</label>
+                                                                                                        <input type="text" class="form-control" name="province" id="AddProvince"
+                                                                                                            value="">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>-->
                         <div class="col-md-6">
                             <div class="position-relative form-group">
                                 <label for="City">City:</label>
@@ -749,9 +751,9 @@
                         <textarea class="form-control" name="address" id="AddAddress"></textarea>
                     </div>
                     <!--<div class="form-group">
-                                                                    <label for="Name">Street Address 2:</label>
-                                                                    <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
-                                                                </div>-->
+                                                                                                    <label for="Name">Street Address 2:</label>
+                                                                                                    <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                                                                                                </div>-->
                     <label for="Name">Street Address 2:</label>
                     <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
                 </div>-->
@@ -903,21 +905,21 @@
                                     </div>
 
                                     <!--<div class="form-row">
-                                                                        <div class="col-md-6">
-                                                                            <div class="position-relative form-group">
-                                                                                <label for="City">City:</label>
-                                                                                <input type="text" class="form-control" name="city" id="EditCity"
-                                                                                    value="">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="position-relative form-group">
-                                                                                <label for="Province">Province:</label>
-                                                                                <input type="text" class="form-control" name="province" id="EditProvince"
-                                                                                    value="">
-                                                                            </div>
-                                                                        </div>
-                                                                        </div>-->
+                                                                                                        <div class="col-md-6">
+                                                                                                            <div class="position-relative form-group">
+                                                                                                                <label for="City">City:</label>
+                                                                                                                <input type="text" class="form-control" name="city" id="EditCity"
+                                                                                                                    value="">
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-6">
+                                                                                                            <div class="position-relative form-group">
+                                                                                                                <label for="Province">Province:</label>
+                                                                                                                <input type="text" class="form-control" name="province" id="EditProvince"
+                                                                                                                    value="">
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        </div>-->
                                     {{--  <div class="col-md-6">
                                   <div class="position-relative form-group">
                                     <label for="Des">Description:</label>
@@ -930,9 +932,9 @@
                                         <textarea class="form-control" name="address" id="EditAddress"></textarea>
                                     </div>
                                     <!--<div class="form-group">
-                                                                            <label for="Name">Street Address 2:</label>
-                                                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                                        </div>-->
+                                                                                                            <label for="Name">Street Address 2:</label>
+                                                                                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                                                                        </div>-->
 
 
                                     {{-- <div class="form-group">
@@ -1293,6 +1295,32 @@
 
 @section('script')
     <script>
+        $(function() {
+            $('#daterange').daterangepicker({
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    applyLabel: 'ตกลง',
+                    cancelLabel: 'ยกเลิก',
+                    fromLabel: 'จาก',
+                    toLabel: 'ถึง',
+                    customRangeLabel: 'กำหนดเอง',
+                    daysOfWeek: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+                    monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+                        'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+                    ],
+                    firstDay: 0
+                },
+                autoUpdateInput: true
+            });
+            $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+                var startDate = picker.startDate.format('YYYY-MM-DD');
+                var endDate = picker.endDate.format('YYYY-MM-DD');
+                var sfield = $('#Sfield').val();
+                $('#start_date').val(startDate);
+                $('#end_date').val(endDate);
+                $('#Listview').DataTable().ajax.url("{{ route('receipts') }}?start_date=" + startDate + "&end_date=" + endDate + "&sfield=" + sfield).load();
+            });
+        });
         $(document).ready(function() {
 
             $(".nav-tabs a").click(function() {

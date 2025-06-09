@@ -345,6 +345,10 @@
             max-width: 1500px !important;
         }
     </style>
+     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 @endsection
 
 @section('content')
@@ -430,37 +434,15 @@
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
                 <form action="{{ route('receipts_form') }}" method="GET">
-                    @csrf
-                    <input type="hidden" name="sfield" value="{{ request()->get('sfield') }}">
                     <div class="row mb-4">
-                        <div class="col-md-2">
-                            <select name="month" id="month" class="form-control" required>
-                                <option value="">Select Month</option>
-                                <option value="01">January</option>
-                                <option value="02">February</option>
-                                <option value="03">March</option>
-                                <option value="04">April</option>
-                                <option value="05">May</option>
-                                <option value="06">June</option>
-                                <option value="07">July</option>
-                                <option value="08">August</option>
-                                <option value="09">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
-                            </select>
+                        <div class="col-md-4">
+                            <input type="hidden" name="sfield" id="sfield" value="{{ request()->get('sfield') }}">
+                            <input type="text" name="date_range" class="form-control" id="daterange"
+                                value="{{ request('date_range') ?? '' }}" autocomplete="off" placeholder="เลือกช่วงวันที่">
                         </div>
-                        <div class="col-md-2">
-                            <select name="year" id="year" class="form-control" required>
-                                <option value="">Select Year</option>
-                                @for ($i = 0; $i <= 4; $i++)
-                                    <option value="{{ date('Y') - $i }}">{{ date('Y') - $i }}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary">submit</button>
-                        </div>
+                        {{-- <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">ค้นหา</button>
+                        </div> --}}
                     </div>
                 </form>
                 <form method="post" action="" name="delete_all" id="delete_all">
@@ -771,6 +753,32 @@
 
 @section('script')
     <script>
+        $(function() {
+            $('#daterange').daterangepicker({
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    applyLabel: 'ตกลง',
+                    cancelLabel: 'ยกเลิก',
+                    fromLabel: 'จาก',
+                    toLabel: 'ถึง',
+                    customRangeLabel: 'กำหนดเอง',
+                    daysOfWeek: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+                    monthNames: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+                        'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+                    ],
+                    firstDay: 0
+                },
+                autoUpdateInput: true
+            });
+            $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+                var startDate = picker.startDate.format('YYYY-MM-DD');
+                var endDate = picker.endDate.format('YYYY-MM-DD');
+                var sfield = $('#Sfield').val();
+                $('#start_date').val(startDate);
+                $('#end_date').val(endDate);
+                $('#Listview').DataTable().ajax.url("{{ route('receipts_form') }}?start_date=" + startDate + "&end_date=" + endDate + "&sfield=" + sfield).load();
+            });
+        });
         //Dropzone.autoDiscover = false;
         $(document).ready(function() {
 
