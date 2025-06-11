@@ -54,6 +54,7 @@ class ReceiptFormController extends Controller
         '24' => 'isc',
         '25' => 'seacso',
         '26' => 'copernicus',
+        '27' => 'coding-olympics',
     );
 
     public function getDatetime($route)
@@ -252,6 +253,12 @@ class ReceiptFormController extends Controller
         $route = request()->route()->getName();
         $date = $this->getDatetime($route);
         return view("receipt_form.copernicus")->with(['date' => $date]);
+    }
+    public function codingOlympics()
+    {
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.coding")->with(['date' => $date]);
     }
 
 
@@ -721,7 +728,7 @@ class ReceiptFormController extends Controller
             } else {
                 if (str_contains($request->get('description'), 'tutoring')) {
                     $sdes = 'สมัครสอบรวมติว';
-                } elseif ($request->get('sfield') == 10) {
+                } elseif ($request->get('sfield') == 10 || $request->get('sfield') == 27) {
                     # code...
                     $sdes = '';
                 } else {

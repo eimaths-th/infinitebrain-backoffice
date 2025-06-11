@@ -442,6 +442,12 @@
                                     Copernicus
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '27']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    CODING OLYMPICS
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -590,6 +596,12 @@
                                 <a href="{{ route('receipts', ['sfield' => '26']) }}">
                                     <i class="metismenu-icon"></i>
                                     Copernicus
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '27']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    CODING OLYMPICS
                                 </a>
                             </li>
 

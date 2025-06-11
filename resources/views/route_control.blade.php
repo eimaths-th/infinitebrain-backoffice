@@ -82,6 +82,7 @@
                         <option value="isc">International STEM competitions</option>
                         <option value="seacso">seacso</option>
                         <option value="copernicus">COPERNICUS OLYMPIAD</option>
+                        <option value="coding-olympics">CODING OLYMPICS</option>
 
                     </select>
 
