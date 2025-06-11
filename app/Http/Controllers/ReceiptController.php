@@ -631,7 +631,7 @@ class ReceiptController extends Controller
 
             //print_r($levels);
             //exit();
-            $receipt->get();
+            $receipt = $receipt->get();
 
             return datatables()->of($receipt)
                 ->editColumn('receipt_type', function (Receipt $receipt) {

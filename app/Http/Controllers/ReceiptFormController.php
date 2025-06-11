@@ -428,7 +428,7 @@ class ReceiptFormController extends Controller
             }
             //print_r($levels);
             //exit();
-            $receipt->get();
+            $receipt = $receipt->get();
 
             return datatables()->of($receipt)
                 /* ->editColumn('student_name', function (Receipt $receipt) {
