@@ -53,6 +53,8 @@ class ReceiptController extends Controller
         '24' => 'isc',
         '25' => 'seacso',
         '26' => 'copernicus',
+        '27' => 'coding-olympics',
+
 
 
     );
@@ -80,6 +82,8 @@ class ReceiptController extends Controller
         '24' => 'isc',
         '25' => 'seacso',
         '26' => 'copernicus',
+        '27' => 'coding-olympics',
+
     );
     const thmonth = array(
         "",
@@ -706,7 +710,6 @@ class ReceiptController extends Controller
             // 'file_att' => 'required|string
             'description' => 'required|string',
             'grade' => 'required|string',
-
         ]);
 
         if ($validator->fails()) {

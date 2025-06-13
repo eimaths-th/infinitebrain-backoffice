@@ -251,6 +251,8 @@
                                                                             $message = 'Southeast Asia Computer Science Olympiad ' . date('Y') . '';
                                                                         } elseif ($data->sfield == '26') {
                                                                             $message = 'COPERNICUS OLYMPIAD ' . date('Y') . '';
+                                                                        }elseif ($data->sfield == '27') {
+                                                                            $message = 'CODING OLYMPICS ' . date('Y') . '';
                                                                         }
                                                                         ?>
                                                                         {{ $message }}</span>
@@ -2421,11 +2423,13 @@
                                                                                 } elseif ($data->sfield == '23') {
                                                                                     $message1 = 'International Hope cup mathematic invitational';
                                                                                 } elseif ($data->sfield == '24') {
-                                                                                    $message1 = 'International STEM Competitions 2025';
+                                                                                    $message1 = 'International STEM Competitions ' . date('Y') . '';
                                                                                 } elseif ($data->sfield == '25') {
-                                                                                    $message1 = 'Southeast Asia Computer Science Olympiad 2025';
+                                                                                    $message1 = 'Southeast Asia Computer Science Olympiad '. date('Y') . '';
                                                                                 } elseif ($data->sfield == '26') {
-                                                                                    $message1 = 'COPERNICUS OLYMPIAD 2025';
+                                                                                    $message1 = 'COPERNICUS OLYMPIAD '. date('Y') . '';
+                                                                                }elseif ($data->sfield == '27') {
+                                                                                    $message1 = 'CODING OLYMPICS '. date('Y') . '';
                                                                                 }
                                                                                 ?>
                                                                                 สอบ {{ $message1 }}
