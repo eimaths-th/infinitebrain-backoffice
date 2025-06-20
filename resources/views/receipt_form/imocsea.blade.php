@@ -586,12 +586,12 @@
                                             @if ($date)
                                                 {{ $date }}
                                             @else
-                                                Today - 14 July 2025 <br>
+                                                Today - 03 August 2025 <br>
                                             @endif
                                         </span>
                                     </p>
                                     <p>
-                                        <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 14 July 2025
+                                        <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 03 August 2025
                                         </span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
@@ -604,12 +604,16 @@
                                     <p><strong><span style="color: #6351a2;">Registration
                                                 Fee:&nbsp;</span></strong>
                                     </p>
-                                    <p><span style="color: #6351a2;"><strong>Test :</strong>850 baht</span>
+                                    <p><span style="color: #6351a2;"><strong>Test :</strong>850 baht (รอบปกติ)</span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1,250 bath</span><br></p>
+                                            style="color: #6351a2;">1,250 bath (รอบปกติ)</span><br></p>
+                                    <p><span style="color: #6351a2;"><strong>Test :</strong>950 baht (รอบพิเศษ)</span>
+                                    </p>
+                                    <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
+                                            style="color: #6351a2;">1,350 bath (รอบพิเศษ)</span><br></p>
                                     <p>&nbsp;</p>
-                                    <div class="row mb-5">
+                                    <!-- <div class="row mb-5">
                                         <div class="col-lg-6">
                                             <div class="text-center">
                                                 <img src="images/IMOCSEA_0_L.jpg" alt="Image 2"
@@ -622,32 +626,24 @@
                                                     style="max-width: 100%; height: auto;">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <p>
                                         <span style="color: #6351a2;"><b>เกณฑ์การรับสมัคร IMOCSEA</b>
                                             <br>
 
-                                            โรงเรียนไทย<br>
-                                            หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันสอบ) ใช้ระดับชั้นปีการศึกษาที่ผ่านมา<br>
-                                            หากเปิดเทอมครบ 3 เดือน (นับจากวันสอบ) ใช้ระดับชั้นปีการศึกษาปัจจุบัน<br>
-                                            โรงเรียนนานาชาติ ใช้ระดับชั้นปีการศึกษาปัจจุบันในการสมัครสอบเท่านั้น<br>
+                                            - หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันที่เปิดเทอม - วันสอบ)
+                                            ให้ใช้ระดับชั้นปีการศึกษาที่ผ่านมา<br>
+                                            - หากเปิดเทอมครบ 3 เดือน ให้ใช้ปีการศึกษาปัจจุบันเท่านั้น<br>
 
-                                            <br>
-
-                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วตรวจสอบพบ<br>
-                                            ทาง META Knowledge จะยึดตามเกณฑ์นี้<br>
+                                            <br><br>
+                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นปีการศึกษาแล้วตรวจสอบพบทาง<br>
+                                            META Knowledge จะยึดตามเกณฑ์นี้<br>
                                             หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ในการสอบ<br>
+                                            โดยสามารถตรวจสอบเทียบระดับชั้นปีการศึกษาจากเกณฑ์การเทียบระดับชั้น
+                                            
 
 
-                                            {{-- รร.ไทยใช้ระดับชั้นปัจจุบัน ณ วันสอบเท่านั้น <br> --}}
-
-
-                                            {{-- รร.นานาชาติที่พึ่งเปิดเทอม August/ September
-                                            อนุญาตให้ลงทะเบียนเป็นระดับชั้นสำหรับปีการศึกษาที่แล้ว หรือ
-                                            สามารถเลือกลงตามระดับชั้นปัจจุบันได้ <br>
-
-                                            ถ้าได้รับการร้องเรียนเรื่องระดับชั้นแล้วทางเราตรวจสอบ <br>
-                                            เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ --}}
+                                            
                                         </span>
                                     </p>
                                     <p>
@@ -860,9 +856,13 @@
                                             <select class="form-control" id="package" name="package" id="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Test:  850 Baht">Test: 850 Baht</option>
+                                                <option value="Test:  850 Baht">Test: 850 Baht (รอบปกติ)</option>
                                                 <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250
-                                                    bath
+                                                    bath (รอบปกติ)
+                                                </option>
+                                                <option value="Test:  950 Baht">Test: 950 Baht (รอบพิเศษ)</option>
+                                                <option value="Test+tutoring class: 1350 bath">Test+tutoring class: 1350
+                                                    bath (รอบพิเศษ)
                                                 </option>
 
                                             </select>

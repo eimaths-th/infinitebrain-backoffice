@@ -326,6 +326,12 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '28']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    IMOCSEA SPECIAL
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('receipts_form', ['sfield' => '13']) }}">
                                     <i class="metismenu-icon"></i>
                                     ISOCSEA
@@ -480,6 +486,12 @@
                                 <a href="{{ route('receipts', ['sfield' => '4']) }}">
                                     <i class="metismenu-icon"></i>
                                     IMOCSEA
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '28']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    IMOCSEA SPECIAL
                                 </a>
                             </li>
                             <li>
@@ -644,6 +656,13 @@
                                     href="{{ route('receipts.print_month', ['pmsfield' => '4', 'type' => 'report_view', 'print_month' => $ymonth, 'Pmdescription' => 'ค่าสมัคร IMOCSEA รอบแรก ' . $pmd]) }}">
                                     <i class="metismenu-icon"></i>
                                     IMOCSEA
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="{{ route('receipts.print_month', ['pmsfield' => '28', 'type' => 'report_view', 'print_month' => $ymonth, 'Pmdescription' => 'ค่าสมัคร IMOCSEA SPECIAL รอบแรก ' . $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    IMOCSEA SPECIAL
                                 </a>
                             </li>
                             <li>

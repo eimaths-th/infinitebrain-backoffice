@@ -226,7 +226,7 @@
                                                                         } elseif ($data->sfield == 11) {
                                                                             $message = 'Cambridge 2023 Registration Form';
                                                                         } elseif ($data->sfield == 4) {
-                                                                            $message = 'IMOCSEA 2024 Registration Form';
+                                                                            $message = 'IMOCSEA 2025 Registration Form';
                                                                         } elseif ($data->sfield == 13) {
                                                                             $message = 'ISOCSEA 2024 Registration Form';
                                                                         } elseif ($data->sfield == 14) {
@@ -251,6 +251,8 @@
                                                                             $message = 'Southeast Asia Computer Science Olympiad 2024';
                                                                         } elseif ($data->sfield == '26') {
                                                                             $message = 'COPERNICUS OLYMPIAD 2024';
+                                                                        } elseif ($data->sfield == '28') {
+                                                                            $message = 'IMOCSEA SPECIAL 2025 Registration Form';
                                                                         }
                                                                         ?>
                                                                         {{ $message }}</span>
@@ -1630,6 +1632,8 @@
                                                                                 $message1 = 'Test Field';
                                                                             } elseif ($data->sfield == '20' || $data->sfield == '21') {
                                                                                 $message = 'NEO Science Olympiad';
+                                                                            } elseif ($data->sfield == '28') {
+                                                                                $message = 'IMOCSEA SPECIAL';
                                                                             }
                                                                             ?>
                                                                             สอบ {{ $message1 }}
@@ -2426,6 +2430,8 @@
                                                                                     $message1 = 'Southeast Asia Computer Science Olympiad 2024';
                                                                                 } elseif ($data->sfield == '26') {
                                                                                     $message1 = 'COPERNICUS OLYMPIAD 2024';
+                                                                                } elseif ($data->sfield == '28') {
+                                                                                    $message1 = 'IMOCSEA SPECIAL';
                                                                                 }
                                                                                 ?>
                                                                                 สอบ {{ $message1 }}

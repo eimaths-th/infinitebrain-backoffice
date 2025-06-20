@@ -65,6 +65,7 @@
                         <option value="asiarope">asiarope</option>
                         <option value="gelosea">gelosea</option>
                         <option value="imocsea">imocsea</option>
+                        <option value="imocsea_special">imocsea_special</option>
                         <option value="isocsea">isocsea</option>
                         <option value="imocsea+isocsea">imocsea+isocsea</option>
                         <option value="cambridge">cambridge</option>

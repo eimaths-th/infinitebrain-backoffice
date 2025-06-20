@@ -54,6 +54,7 @@ class ReceiptFormController extends Controller
         '24' => 'isc',
         '25' => 'seacso',
         '26' => 'copernicus',
+        '28' => 'IMOCSEA_SPECIAL',
     );
 
     public function getDatetime($route)
@@ -214,6 +215,13 @@ class ReceiptFormController extends Controller
         $route = request()->route()->getName();
         $date = $this->getDatetime($route);
         return view("receipt_form.imocsea")->with(['date' => $date]);
+    }
+
+    public function imocsea_special()
+    {
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.imocsea_special")->with(['date' => $date]);
     }
 
     public function isocsea()
@@ -792,6 +800,9 @@ class ReceiptFormController extends Controller
 
                 $oldfile = FileUpload::where('oldname', $fileb)->get();
                 $filebs .= $oldfile[0]->filename . "|";
+                if (!file_exists(public_path() . '/receipt_form_images/')) {
+                    mkdir(public_path() . '/receipt_form_images/', 0777, true);
+                }
                 File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
                 FileUpload::where('filename', $oldfile[0]->filename)->delete();
             }
@@ -804,7 +815,9 @@ class ReceiptFormController extends Controller
                 //echo $filea;
                 $oldfile = FileUpload::where('oldname', $filea)->get();
                 $fileas .= $oldfile[0]->filename . "|";
-                // }
+                if (!file_exists(public_path() . '/receipt_form_images/')) {
+                    mkdir(public_path() . '/receipt_form_images/', 0777, true);
+                }
                 File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
 
                 FileUpload::where('filename', $oldfile[0]->filename)->delete();
@@ -863,7 +876,9 @@ class ReceiptFormController extends Controller
         ]);
 
         // print_r (['sfielda' =>  self::sfielda]);
+        // echo "<pre>";
         // print_r (['sfield' => $request->sfield]);
+        // echo "</pre>";
         // exit();
         $adminEmail = $request->get('email');
 

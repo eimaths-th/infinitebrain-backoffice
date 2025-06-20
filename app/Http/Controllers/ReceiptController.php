@@ -53,6 +53,7 @@ class ReceiptController extends Controller
         '24' => 'isc',
         '25' => 'seacso',
         '26' => 'copernicus',
+        '28' => 'IMOCSEA_SPECIAL',
 
 
     );
