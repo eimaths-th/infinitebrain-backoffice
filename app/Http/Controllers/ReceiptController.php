@@ -54,9 +54,7 @@ class ReceiptController extends Controller
         '25' => 'seacso',
         '26' => 'copernicus',
         '27' => 'coding-olympics',
-
-
-
+        '28' => 'imocsea_special',
     );
     const sfieldas = array(
         '0' => 'IMG Reward',
@@ -83,7 +81,7 @@ class ReceiptController extends Controller
         '25' => 'seacso',
         '26' => 'copernicus',
         '27' => 'coding-olympics',
-
+        '28' => 'imocsea_special',
     );
     const thmonth = array(
         "",
