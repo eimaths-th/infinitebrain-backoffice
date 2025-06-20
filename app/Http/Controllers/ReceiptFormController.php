@@ -815,6 +815,7 @@ class ReceiptFormController extends Controller
                 //echo $filea;
                 $oldfile = FileUpload::where('oldname', $filea)->get();
                 $fileas .= $oldfile[0]->filename . "|";
+                // }
                 if (!file_exists(public_path() . '/receipt_form_images/')) {
                     mkdir(public_path() . '/receipt_form_images/', 0777, true);
                 }
