@@ -55,6 +55,7 @@ class ReceiptFormController extends Controller
         '25' => 'seacso',
         '26' => 'copernicus',
         '27' => 'coding-olympics',
+        '28' => 'imocsea_special',
     );
 
     public function getDatetime($route)
@@ -259,6 +260,12 @@ class ReceiptFormController extends Controller
         $route = request()->route()->getName();
         $date = $this->getDatetime($route);
         return view("receipt_form.coding")->with(['date' => $date]);
+    }
+    public function imocsea_special()
+    {
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.imocsea_special")->with(['date' => $date]);
     }
 
 
@@ -898,6 +905,14 @@ class ReceiptFormController extends Controller
             return back()->withErrors(['errors' => $validator->errors()->all()]);
         }
         // dd($request);
+
+        if (!file_exists(public_path() .'/receipt_form_images/')) {
+            mkdir(public_path() .'/receipt_form_images/', 0777, true);
+        }
+
+        if (!file_exists(public_path() .'/receipt_form_watermark_images/')) {
+            mkdir(public_path() .'/receipt_form_watermark_images/', 0777, true);
+        }
 
         if ($request->get('sfield') == '17') {
             $filesa = $request->get('imgFiles');

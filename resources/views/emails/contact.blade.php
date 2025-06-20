@@ -225,7 +225,7 @@
                                                                             $message = 'OLPCS ' . date('Y') . ' Registration Form';
                                                                         } elseif ($data->sfield == 11) {
                                                                             $message = 'Cambridge ' . date('Y') . ' Registration Form';
-                                                                        } elseif ($data->sfield == 4) {
+                                                                        } elseif ($data->sfield == 4 || $data->sfield == 28) {
                                                                             $message = 'IMOCSEA ' . date('Y') . ' Registration Form';
                                                                         } elseif ($data->sfield == 13) {
                                                                             $message = 'ISOCSEA ' . date('Y') . ' Registration Form';
@@ -253,8 +253,7 @@
                                                                             $message = 'COPERNICUS OLYMPIAD ' . date('Y') . '';
                                                                         }elseif ($data->sfield == '27') {
                                                                             $message = 'CODING OLYMPICS ' . date('Y') . '';
-                                                                        }
-                                                                        ?>
+                                                                        }                                                                        ?>
                                                                         {{ $message }}</span>
                                                                 </h2>
                                                             </td>
@@ -1616,7 +1615,7 @@
                                                                                 $message1 = 'ASIAROPE';
                                                                             } elseif ($data->sfield == 6) {
                                                                                 $message1 = 'GELOSEA';
-                                                                            } elseif ($data->sfield == 4) {
+                                                                            } elseif ($data->sfield == 4 || $data->sfield == 28) {
                                                                                 $message1 = 'IMOCSEA';
                                                                             } elseif ($data->sfield == 13) {
                                                                                 $message1 = 'ISOCSEA';
@@ -2402,7 +2401,7 @@
                                                                                     $message1 = 'ASIAROPE';
                                                                                 } elseif ($data->sfield == 6) {
                                                                                     $message1 = 'GELOSEA';
-                                                                                } elseif ($data->sfield == 4) {
+                                                                                } elseif ($data->sfield == 4 || $data->sfield == 28) {
                                                                                     $message1 = 'IMOCSEA';
                                                                                 } elseif ($data->sfield == 13) {
                                                                                     $message1 = 'ISOCSEA';

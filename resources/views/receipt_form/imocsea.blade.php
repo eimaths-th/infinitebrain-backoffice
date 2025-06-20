@@ -587,7 +587,7 @@
                                             @if ($date)
                                                 {{ $date }}
                                             @else
-                                                Today - 14 July 2025 <br>
+                                                Today - 03 August 2025 <br>
                                             @endif
                                         </span>
                                     </p>
@@ -605,10 +605,14 @@
                                     <p><strong><span style="color: #6351a2;">Registration
                                                 Fee:&nbsp;</span></strong>
                                     </p>
-                                    <p><span style="color: #6351a2;"><strong>Test :</strong>850 baht</span>
+                                    <p><span style="color: #6351a2;"><strong>Test :</strong>850 baht (รอบปกติ)</span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1,250 bath</span><br></p>
+                                            style="color: #6351a2;">1,250 bath (รอบปกติ)</span><br></p>
+                                    <p><span style="color: #6351a2;"><strong>Test :</strong>950 baht (รอบพิเศษ)</span>
+                                    </p>
+                                    <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
+                                            style="color: #6351a2;">1,350 bath (รอบพิเศษ)</span><br></p>
                                     <p>&nbsp;</p>
                                     {{-- <div class="row mb-5">
                                         <div class="col-lg-6">
@@ -858,11 +862,14 @@
                                             <select class="form-control" id="package" name="package" id="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Test:  850 Baht">Test: 850 Baht</option>
+                                                <option value="Test:  850 Baht">Test: 850 Baht (รอบปกติ)</option>
                                                 <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250
-                                                    bath
+                                                    bath (รอบปกติ)
                                                 </option>
-
+                                                <option value="Test:  950 Baht">Test: 950 Baht (รอบพิเศษ)</option>
+                                                <option value="Test+tutoring class: 1350 bath">Test+tutoring class: 1350
+                                                    bath (รอบพิเศษ)
+                                                </option>
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Packages</label>
