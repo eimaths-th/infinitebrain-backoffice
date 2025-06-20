@@ -226,7 +226,7 @@
                                                                         } elseif ($data->sfield == 11) {
                                                                             $message = 'Cambridge 2023 Registration Form';
                                                                         } elseif ($data->sfield == 4) {
-                                                                            $message = 'IMOCSEA 2025 Registration Form';
+                                                                            $message = 'IMOCSEA 2024 Registration Form';
                                                                         } elseif ($data->sfield == 13) {
                                                                             $message = 'ISOCSEA 2024 Registration Form';
                                                                         } elseif ($data->sfield == 14) {
