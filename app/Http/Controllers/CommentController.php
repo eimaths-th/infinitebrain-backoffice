@@ -15,7 +15,7 @@ use App\Models\FileUpload;
 class CommentController extends Controller
 {
     //
-   public function index(Request $request)
+    public function index(Request $request)
     {
         //
         // $this->check_permission();
@@ -39,7 +39,7 @@ class CommentController extends Controller
                 //->where('levels.subject', $request->id)
                 ->orderBy("comment.id", "desc")
                 ->get();
-                 return datatables()->of($comment)
+            return datatables()->of($comment)
                 /*->editColumn('subject', function (Student $Student) {
                     if ($Student->subject == 1) {
                         $ltext = "Math";
@@ -59,16 +59,16 @@ class CommentController extends Controller
 
                 ->editColumn('photo', function ($row) {
                     $html = "";
-                    $pic = explode('|',$row->photo);
-                    if($row->photo!=""){
+                    $pic = explode('|', $row->photo);
+                    if ($row->photo != "") {
 
 
-                    foreach($pic as $pics){
-                        $html .= '<img src="'.url('/').'/comments_images/'.$pics.'" class="me-2" height="50" width="50">';
+                        foreach ($pic as $pics) {
+                            $html .= '<img src="' . url('/') . '/comments_images/' . $pics . '" class="me-2" height="50" width="50">';
+                        }
+                    } else {
+                        $html = "";
                     }
-                }else{
-                    $html = "";
-                }
                     return $html;
                 })
 
@@ -85,7 +85,7 @@ class CommentController extends Controller
     }
     public function edit($id)
     {
-        $html ="";
+        $html = "";
         //
         // $this->check_permission();
 
@@ -97,17 +97,15 @@ class CommentController extends Controller
             if ($data->sid == $keys->id) {
 
                 $select_list_student .= '<option value="' . $keys->id . '" disabled selected>' . $keys->code . ' ' . $keys->first_name . ' ' . $keys->last_name . '</option>';
-
             } else {
                 $select_list_student .= '<option value="' . $keys->id . '" disabled>' . $keys->code . ' ' . $keys->first_name . ' ' . $keys->last_name . '</option>';
-
             }
         }
         $html = '
         <div class="form-group">
                                 <label for="Student">Student:</label><br>
                                 <select style="width: 100%;" class="select2 select2_single form-control" id="student"
-                                    name="student" value="'.$select_list_student.' " >
+                                    name="student" value="' . $select_list_student . ' " >
 
 
                                 </select>
@@ -127,12 +125,12 @@ class CommentController extends Controller
 
 
     ';
-        $pic = explode('|',$data->photo);
-        foreach($pic as $pics){
+        $pic = explode('|', $data->photo);
+        foreach ($pic as $pics) {
 
-           $html .= '
+            $html .= '
 
-           <img src="'.url('/').'/comments_images/'. $pics .'" class="me-2"  name="photo" id="user" height="100" width="100">
+           <img src="' . url('/') . '/comments_images/' . $pics . '" class="me-2"  name="photo" id="user" height="100" width="100">
            ';
         }
 
@@ -160,40 +158,38 @@ class CommentController extends Controller
         // }
 
 
-        if($request->get('imgFiles')!=""){
+        if ($request->get('imgFiles') != "") {
 
-        $filesa = $request->get('imgFiles');
-        $fileas = "";
-        foreach ($filesa as $filea) {
-            //echo $filea;
-            $oldfile = FileUpload::where('oldname', $filea)->get();
-            $fileas .= $oldfile[0]->filename . "|";
+            $filesa = $request->get('imgFiles');
+            $fileas = "";
+            foreach ($filesa as $filea) {
+                //echo $filea;
+                $oldfile = FileUpload::where('oldname', $filea)->get();
+                $fileas .= $oldfile[0]->filename . "|";
 
-            File::move(public_path() . '/comment_images/' . $oldfile[0]->filename, public_path() . '/comments_images/' . $oldfile[0]->filename);
-            FileUpload::where('filename', $oldfile[0]->filename)->delete();
+                File::move(public_path() . '/comment_images/' . $oldfile[0]->filename, public_path() . '/comments_images/' . $oldfile[0]->filename);
+                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            }
+
+            $fileas = rtrim($fileas, "|");
+            $comment = new Comment([
+                'user' => Auth::user()->name,
+                'comment' => $request->get('comment'),
+                'photo' => $fileas,
+                'sid' => $request->get('student'),
+
+            ]);
+        } else {
+            $comment = new Comment([
+                'user' => Auth::user()->name,
+                'comment' => $request->get('comment'),
+                'sid' => $request->get('student'),
+
+            ]);
         }
+        $comment->save();
 
-        $fileas = rtrim($fileas, "|");
-        $comment = new Comment([
-            'user' => Auth::user()->name,
-            'comment' => $request->get('comment'),
-            'photo' => $fileas,
-            'sid' => $request->get('student'),
-
-        ]);
-
-    }else{
-        $comment = new Comment([
-            'user' => Auth::user()->name,
-            'comment' => $request->get('comment'),
-            'sid' => $request->get('student'),
-
-        ]);
-
-    }
-    $comment->save();
-
-        return redirect('/comment')->with(['sid' => $request->get('student')]) ;
+        return redirect('/comment')->with(['sid' => $request->get('student')]);
     }
     public function update(Request $request, $id)
     {
