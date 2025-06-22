@@ -609,10 +609,10 @@
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1,250 bath (รอบปกติ)</span><br></p>
-                                    <p><span style="color: #6351a2;"><strong>Test :</strong>950 baht (รอบพิเศษ)</span>
+                                    <p><span style="color: #6351a2;"><strong>Test :</strong>950 baht (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)</span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1,350 bath (รอบพิเศษ)</span><br></p>
+                                            style="color: #6351a2;">1,350 bath (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)</span><br></p>
                                     <p>&nbsp;</p>
                                     {{-- <div class="row mb-5">
                                         <div class="col-lg-6">
@@ -866,9 +866,9 @@
                                                 <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250
                                                     bath (รอบปกติ)
                                                 </option>
-                                                <option value="Test:  950 Baht">Test: 950 Baht (รอบพิเศษ)</option>
+                                                <option value="Test:  950 Baht">Test: 950 Baht (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)</option>
                                                 <option value="Test+tutoring class: 1350 bath">Test+tutoring class: 1350
-                                                    bath (รอบพิเศษ)
+                                                    bath (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)
                                                 </option>
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
