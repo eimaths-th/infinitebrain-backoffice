@@ -56,6 +56,7 @@ class ReceiptFormController extends Controller
         '26' => 'copernicus',
         '27' => 'coding-olympics',
         '28' => 'imocsea_special',
+        '29' => 'stemco_science',
     );
 
     public function getDatetime($route)
@@ -266,6 +267,12 @@ class ReceiptFormController extends Controller
         $route = request()->route()->getName();
         $date = $this->getDatetime($route);
         return view("receipt_form.imocsea_special")->with(['date' => $date]);
+    }
+    public function stemco_science()
+    {
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.stemco_science")->with(['date' => $date]);
     }
 
 

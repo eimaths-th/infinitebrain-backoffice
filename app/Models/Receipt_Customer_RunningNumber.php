@@ -43,6 +43,7 @@ class Receipt_Customer_RunningNumber extends Model
         '26',
         '27',
         '28',
+        '29',
     ];
 
     const TYPE_PREFIX = [
@@ -71,6 +72,7 @@ class Receipt_Customer_RunningNumber extends Model
         '26' => '26',
         '27' => '27',
         '28' => '28',
+        '29' => '29',
     ];
 
 

@@ -253,6 +253,8 @@
                                                                             $message = 'COPERNICUS OLYMPIAD ' . date('Y') . '';
                                                                         }elseif ($data->sfield == '27') {
                                                                             $message = 'CODING OLYMPICS ' . date('Y') . '';
+                                                                        }elseif ($data->sfield == '29') {
+                                                                            $message = 'STEMCO Science ' . date('Y') . ' Registration Form';
                                                                         }                                                                        ?>
                                                                         {{ $message }}</span>
                                                                 </h2>
@@ -1631,6 +1633,8 @@
                                                                                 $message1 = 'Test Field';
                                                                             } elseif ($data->sfield == '20' || $data->sfield == '21') {
                                                                                 $message = 'NEO Science Olympiad';
+                                                                            } elseif ($data->sfield == '29') {
+                                                                                $message = 'STEMCO Science';
                                                                             }
                                                                             ?>
                                                                             สอบ {{ $message1 }}
@@ -2429,6 +2433,8 @@
                                                                                     $message1 = 'COPERNICUS OLYMPIAD '. date('Y') . '';
                                                                                 }elseif ($data->sfield == '27') {
                                                                                     $message1 = 'CODING OLYMPICS '. date('Y') . '';
+                                                                                }elseif ($data->sfield == '29') {
+                                                                                    $message1 = 'STEMCO Science';
                                                                                 }
                                                                                 ?>
                                                                                 สอบ {{ $message1 }}

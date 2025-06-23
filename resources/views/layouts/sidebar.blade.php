@@ -454,6 +454,12 @@
                                     CODING OLYMPICS
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '29']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    STEMCO Science
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -616,7 +622,12 @@
                                     CODING OLYMPICS
                                 </a>
                             </li>
-
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '29']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    STEMCO Science
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
@@ -703,6 +714,13 @@
                                     href="{{ route('receipts.print_month', ['pmsfield' => '8', 'type' => 'report_view', 'print_month' => $ymonth, 'Pmdescription' => 'ค่าสมัคร STEM รอบแรก ' . $pmd]) }}">
                                     <i class="metismenu-icon"></i>
                                     STEM
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="{{ route('receipts.print_month', ['pmsfield' => '29', 'type' => 'report_view', 'print_month' => $ymonth, 'Pmdescription' => 'ค่าสมัคร STEMCO Science รอบแรก ' . $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    STEMCO Science
                                 </a>
                             </li>
 

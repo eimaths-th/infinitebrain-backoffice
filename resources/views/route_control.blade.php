@@ -84,6 +84,7 @@
                         <option value="seacso">seacso</option>
                         <option value="copernicus">COPERNICUS OLYMPIAD</option>
                         <option value="coding-olympics">CODING OLYMPICS</option>
+                        <option value="stemco_science">stemco_science</option>
 
                     </select>
 
