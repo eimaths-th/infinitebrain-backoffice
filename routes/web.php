@@ -83,6 +83,7 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
     Route::get('/copernicus', [ReceiptFormController::class, 'copernicus'])->name('copernicus');
     Route::get('/coding-olympics', [ReceiptFormController::class, 'codingOlympics'])->name('coding-olympics');
     Route::get('/imocsea_special', [ReceiptFormController::class, 'imocsea_special'])->name('imocsea_special');
+    Route::get('/stemco_science', [ReceiptFormController::class, 'stemco_science'])->name('stemco_science');
     //'25' => 'seacso',
 });
 
