@@ -825,6 +825,8 @@
                                                 name="grade" data-component="dropdown" aria-label="Grade / ระดับชั้น"
                                                 required>
                                                 <option value="">Please Select</option>
+                                                <option value="Primary 1">Primary 1</option>
+                                                <option value="Primary 2">Primary 2</option>
                                                 <option value="Primary 3">Primary 3</option>
                                                 <option value="Primary 4">Primary 4</option>
                                                 <option value="Primary 5">Primary 5</option>
