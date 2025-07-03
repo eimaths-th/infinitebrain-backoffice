@@ -1,290 +1,290 @@
 @extends('layouts.form')
 
 @section('style')
-    <style>
-        :root {
-            --color-default: grey;
-            --color-invalid: red;
-            --color-valid: green;
-        }
+<style>
+    :root {
+        --color-default: grey;
+        --color-invalid: red;
+        --color-valid: green;
+    }
 
-        input {
-            border: 2px solid var(--color-default);
-            /*text-align: center;*/
-        }
+    input {
+        border: 2px solid var(--color-default);
+        /*text-align: center;*/
+    }
 
-        .error_div {
-            background: rgb(240, 89, 83);
-            color: white;
-            height: 70px;
-            text-align: center;
-            margin: 0;
-            top: 50%;
-            width: 100%;
-            margin-top: 0;
-            margin-left: 0;
-            position: absolute;
-            z-index: 999999;
-            opacity: 0.89;
-            display: none;
-        }
+    .error_div {
+        background: rgb(240, 89, 83);
+        color: white;
+        height: 70px;
+        text-align: center;
+        margin: 0;
+        top: 50%;
+        width: 100%;
+        margin-top: 0;
+        margin-left: 0;
+        position: absolute;
+        z-index: 999999;
+        opacity: 0.89;
+        display: none;
+    }
 
-        .error-rounded-bg {
-            background-clip: padding-box;
-            border-radius: 20px;
-            background-color: #F0F0F0;
-            color: #000000;
-            padding: 5px 10px;
-            display: inline;
-        }
+    .error-rounded-bg {
+        background-clip: padding-box;
+        border-radius: 20px;
+        background-color: #F0F0F0;
+        color: #000000;
+        padding: 5px 10px;
+        display: inline;
+    }
 
 
 
-        .error-message {
-            display: none;
-            font-weight: bold;
-            color: var(--color-invalid);
-        }
+    .error-message {
+        display: none;
+        font-weight: bold;
+        color: var(--color-invalid);
+    }
 
-        /* To demonstrate that the validations only happen on blur, we apply this malpractice */
-        input:focus {
-            outline: none;
-        }
+    /* To demonstrate that the validations only happen on blur, we apply this malpractice */
+    input:focus {
+        outline: none;
+    }
 
-        /*fucus empty color*/
-        /*input:required:focus:invalid {
+    /*fucus empty color*/
+    /*input:required:focus:invalid {
                                                                                                             background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
                                                                                                             background-size: 15px;
                                                                                                         }*/
 
-        input:required:focus:invalid~.form-error-message {
-            display: block;
-        }
+    input:required:focus:invalid~.form-error-message {
+        display: block;
+    }
 
-        /* Only show invalid ring while not focused
+    /* Only show invalid ring while not focused
                                                                                                         input:not(:focus):not(:placeholder-shown):invalid {
                                                                                                             border-color: var(--color-invalid);
                                                                                                         }*/
 
-        /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
+    /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
                                                                                                             display: block;
                                                                                                         }*/
 
-        /* Only show valid ring while not focused and if a value is entered */
-        /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
-        input:not(:focus):not(:placeholder-shown):valid {
-            border-color: var(--color-valid);
-        }
+    /* Only show valid ring while not focused and if a value is entered */
+    /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
+    input:not(:focus):not(:placeholder-shown):valid {
+        border-color: var(--color-valid);
+    }
 
-        body {
-            background-color: #112d53;
-        }
+    body {
+        background-color: #112d53;
+    }
 
-        .form_header {
-            color: #082d5f;
-        }
+    .form_header {
+        color: #082d5f;
+    }
 
-        .form_sub_header {
-            color: #12458D;
-        }
+    .form_sub_header {
+        color: #12458D;
+    }
 
-        hr {
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-            border: 0;
-            border-top: 1px solid #112d53;
-        }
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid #112d53;
+    }
 
-        .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            margin-right: -5px;
-            margin-left: -5px;
-            margin-bottom: 10px;
-        }
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -5px;
+        margin-left: -5px;
+        margin-bottom: 10px;
+    }
 
-        .form-group {
-            margin-bottom: 10px;
-            padding-left: 15px;
-            padding-right: 15px;
-            padding-top: 15px;
-            padding-bottom: 15px;
-        }
+    .form-group {
+        margin-bottom: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
 
-        .form-group>[class*=col-] {
-            padding-right: 5px;
-            padding-left: 5px;
-        }
+    .form-group>[class*=col-] {
+        padding-right: 5px;
+        padding-left: 5px;
+    }
 
-        .form-row>.col,
-        .form-row>[class*=col-] {
-            padding-right: 5px;
-            padding-left: 5px
-        }
+    .form-row>.col,
+    .form-row>[class*=col-] {
+        padding-right: 5px;
+        padding-left: 5px
+    }
 
-        .div_center {
-            margin: auto;
+    .div_center {
+        margin: auto;
 
-        }
+    }
 
-        .form-sub-label {
-            color: #224779;
-        }
+    .form-sub-label {
+        color: #224779;
+    }
 
-        .form-sub-label {
-            font-size: .75em;
-            margin-top: 11px;
-            margin-left: 2px;
-            display: block;
-            word-break: break-word;
-        }
+    .form-sub-label {
+        font-size: .75em;
+        margin-top: 11px;
+        margin-left: 2px;
+        display: block;
+        word-break: break-word;
+    }
 
-        .form-label.form-label-auto {
-            display: block;
-            float: none;
-            text-align: left;
-            width: 100%;
-            color: #082d5f;
-        }
+    .form-label.form-label-auto {
+        display: block;
+        float: none;
+        text-align: left;
+        width: 100%;
+        color: #082d5f;
+    }
 
-        .form-label-top {
-            width: 100%;
-            margin-left: 2px;
-            margin-top: 10px;
-            margin-bottom: 14px;
-        }
+    .form-label-top {
+        width: 100%;
+        margin-left: 2px;
+        margin-top: 10px;
+        margin-bottom: 14px;
+    }
 
-        .form-label {
-            display: inline-block;
-            font-weight: 500;
-            word-break: break-word;
-        }
+    .form-label {
+        display: inline-block;
+        font-weight: 500;
+        word-break: break-word;
+    }
 
-        .form-required {
-            color: #f23a3c;
-        }
+    .form-required {
+        color: #f23a3c;
+    }
 
-        .form-required {
-            margin-left: 4px;
-        }
-
-
-        .form-group:focus-within {
-            background-color: white;
-
-        }
-
-        .form-focus-error {
-            background-color: #f8cccd;
-        }
-
-        .bg-light2 {
-            background-color: #e4efff;
-        }
-
-        .form-error-message {
-            color: #fff;
-            background-color: #f23a3c;
-            background-image: url(data:image/svg+xml;charset=utf-8,%3Csvg width='14' height='15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M7 14.515a7 7 0 110-14 7 7 0 010 14zm-.814-5.86h1.628v-5.21H6.186v5.21zM7 11.259a.82.82 0 00.814-.824A.816.816 0 007 9.631a.813.813 0 100 1.628z' fill='%23fff'/%3E%3C/svg%3E);
-            font-size: .75em;
-            margin-top: 8px;
-            border-radius: 4px;
-            background-size: 0.875em;
-            background-position: 0.375em;
-            background-repeat: no-repeat;
-            display: none;
-            width: 200px;
-            padding: 0.25em 0.5em 0.25em 1.625em;
-        }
-
-        .form_none {
-            display: none;
-        }
-
-        .dropzone {
-            width: 100%;
-            height: 180px;
-            min-height: 0px !important;
-        }
+    .form-required {
+        margin-left: 4px;
+    }
 
 
+    .form-group:focus-within {
+        background-color: white;
 
-        .dropzonex,
-        .dropzonex * {
-            box-sizing: border-box;
-        }
+    }
 
-        .dropzonex {
-            min-height: 150px;
-            background: #e4efff;
-            padding: 20px 20px;
-            display: none;
-        }
+    .form-focus-error {
+        background-color: #f8cccd;
+    }
 
-        .dropzonex.dz-clickable {
-            cursor: pointer;
-        }
+    .bg-light2 {
+        background-color: #e4efff;
+    }
 
-        .dropzonex.dz-clickable * {
-            cursor: default;
-        }
+    .form-error-message {
+        color: #fff;
+        background-color: #f23a3c;
+        background-image: url(data:image/svg+xml;charset=utf-8,%3Csvg width='14' height='15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M7 14.515a7 7 0 110-14 7 7 0 010 14zm-.814-5.86h1.628v-5.21H6.186v5.21zM7 11.259a.82.82 0 00.814-.824A.816.816 0 007 9.631a.813.813 0 100 1.628z' fill='%23fff'/%3E%3C/svg%3E);
+        font-size: .75em;
+        margin-top: 8px;
+        border-radius: 4px;
+        background-size: 0.875em;
+        background-position: 0.375em;
+        background-repeat: no-repeat;
+        display: none;
+        width: 200px;
+        padding: 0.25em 0.5em 0.25em 1.625em;
+    }
 
-        .dropzonex.dz-clickable .dz-message,
-        .dropzonex.dz-clickable .dz-message * {
-            cursor: pointer;
-        }
+    .form_none {
+        display: none;
+    }
 
-        .dropzonex.dz-started .dz-message {
-            display: none;
-        }
+    .dropzone {
+        width: 100%;
+        height: 180px;
+        min-height: 0px !important;
+    }
 
-        .dropzonex.dz-drag-hover {
-            border-style: solid;
-        }
 
-        .dropzonex.dz-drag-hover .dz-message {
-            opacity: 0.5;
-        }
 
-        .dropzonex .dz-message {
-            text-align: center;
-            margin: 2em 0;
-        }
+    .dropzonex,
+    .dropzonex * {
+        box-sizing: border-box;
+    }
 
-        .dropzonex .dz-preview {
-            position: relative;
-            display: inline-block;
-            vertical-align: top;
-            margin: 16px;
-            min-height: 100px;
-        }
+    .dropzonex {
+        min-height: 150px;
+        background: #e4efff;
+        padding: 20px 20px;
+        display: none;
+    }
 
-        .dropzonex .dz-preview:hover {
-            z-index: 1000;
-        }
+    .dropzonex.dz-clickable {
+        cursor: pointer;
+    }
 
-        .dropzonex .dz-preview:hover .dz-details {
-            opacity: 1;
-        }
+    .dropzonex.dz-clickable * {
+        cursor: default;
+    }
 
-        .dropzonex .dz-preview.dz-file-preview .dz-image {
-            border-radius: 20px;
-            background: #999;
-            background: linear-gradient(to bottom, #eee, #ddd);
-        }
+    .dropzonex.dz-clickable .dz-message,
+    .dropzonex.dz-clickable .dz-message * {
+        cursor: pointer;
+    }
 
-        .dropzonex .dz-preview.dz-file-preview .dz-details {
-            opacity: 1;
-        }
+    .dropzonex.dz-started .dz-message {
+        display: none;
+    }
 
-        .dropzonex .dz-preview.dz-image-preview {
-            background: #e4efff;
-        }
+    .dropzonex.dz-drag-hover {
+        border-style: solid;
+    }
 
-        .dropzonex .dz-preview.dz-image-preview .dz-details {
-            -webkit-transition: opacity 0.2s linear;
-            -moz-transition: opacity 0.2s linear;
-            -ms-transition: opacity 0.2s linear;
+    .dropzonex.dz-drag-hover .dz-message {
+        opacity: 0.5;
+    }
+
+    .dropzonex .dz-message {
+        text-align: center;
+        margin: 2em 0;
+    }
+
+    .dropzonex .dz-preview {
+        position: relative;
+        display: inline-block;
+        vertical-align: top;
+        margin: 16px;
+        min-height: 100px;
+    }
+
+    .dropzonex .dz-preview:hover {
+        z-index: 1000;
+    }
+
+    .dropzonex .dz-preview:hover .dz-details {
+        opacity: 1;
+    }
+
+    .dropzonex .dz-preview.dz-file-preview .dz-image {
+        border-radius: 20px;
+        background: #999;
+        background: linear-gradient(to bottom, #eee, #ddd);
+    }
+
+    .dropzonex .dz-preview.dz-file-preview .dz-details {
+        opacity: 1;
+    }
+
+    .dropzonex .dz-preview.dz-image-preview {
+        background: #e4efff;
+    }
+
+    .dropzonex .dz-preview.dz-image-preview .dz-details {
+        -webkit-transition: opacity 0.2s linear;
+        -moz-transition: opacity 0.2s linear;
+        -ms-transition: opacity 0.2s linear;
             -o-transition: opacity 0.2s linear;
             transition: opacity 0.2s linear;
         }
@@ -605,18 +605,18 @@
                                     <p><strong><span style="color: #6351a2;">Registration
                                                 Fee:&nbsp;</span></strong>
                                     </p>
-                                    <p><span style="color: #6351a2;"><strong>Test :</strong>850 baht</span>
+                                    <!-- <p><span style="color: #6351a2;"><strong>Test :</strong>850 baht</span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1,250 bath</span><br></p>
-                                    <!-- <p><span style="color: #6351a2;"><strong>Test :</strong>850 baht (รอบปกติ)</span>
+                                            style="color: #6351a2;">1,250 bath</span><br></p> -->
+                                    <p><span style="color: #6351a2;"><strong>Test :</strong>850 baht (รอบปกติ)</span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1,250 bath (รอบปกติ)</span><br></p>
                                     <p><span style="color: #6351a2;"><strong>Test :</strong>950 baht (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)</span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1,350 bath (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)</span><br></p> -->
+                                            style="color: #6351a2;">1,350 bath (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)</span><br></p>
                                     <p>&nbsp;</p>
                                     {{-- <div class="row mb-5">
                                         <div class="col-lg-6">
@@ -866,18 +866,18 @@
                                             <select class="form-control" id="package" name="package" id="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
-                                                <option value="Test:  850 Baht">Test: 850 Baht</option>
+                                                <!-- <option value="Test:  850 Baht">Test: 850 Baht</option>
                                                 <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250
                                                     bath
-                                                </option>
-                                                <!-- <option value="Test:  850 Baht">Test: 850 Baht (รอบปกติ)</option>
+                                                </option> -->
+                                                <option value="Test:  850 Baht">Test: 850 Baht (รอบปกติ)</option>
                                                 <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250
                                                     bath (รอบปกติ)
                                                 </option>
                                                 <option value="Test:  950 Baht">Test: 950 Baht (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)</option>
                                                 <option value="Test+tutoring class: 1350 bath">Test+tutoring class: 1350
                                                     bath (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)
-                                                </option> -->
+                                                </option>
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Packages</label>
