@@ -1044,7 +1044,8 @@
                                 </div>
 
                                 <br>
-                                <div align="center"><img src="{{ asset('images/scb_meta.png') }}" alt="..."></div>
+                                <div align="center"><img src="{{ asset('images/scb_meta.png') }}" alt="..."
+                                        height="300"></div>
                                 <br>
 
                                 <div class="form-row form-focus" id="dropzone-att">
