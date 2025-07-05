@@ -594,7 +594,7 @@
 
                             <div class="text-center">
                                 <h2 class="card-title form_header">
-                                    GELOSEA 2024 Registration Form
+                                    GELOSEA 2025 Registration Form
                                 </h2>
                                 <p class="card-text form_sub_header">
                                     <b>
@@ -613,7 +613,7 @@
                                         <span style="color: #6351a2;">
                                             <strong>
                                                 <span style="text-decoration: underline;">
-                                                    GELOSEA 2024 Registration Form
+                                                    GELOSEA Registration Form
                                                 </span>
                                             </strong>
                                         </span>
@@ -626,7 +626,7 @@
                                             @if ($date)
                                                 {{ $date }}
                                             @else
-                                                Today - 25 October 2024 <br>
+                                                July 20, 2025 - October 15, 2025 <br>
                                             @endif
                                         </span>
                                     </p>
@@ -635,7 +635,7 @@
                                             <strong>
                                                 Contest Date:
                                             </strong>
-                                            &nbsp;29 September 2024
+                                            &nbsp;October 26, 2025
                                         </span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
@@ -682,6 +682,13 @@
                                             เราจะยึดตามเกณฑ์นี้ หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์
                                         </span>
                                     </p> --}}
+                                    <p>
+                                        <span style="color: #6351a2;">
+                                            <b>เกณฑ์การรับสมัคร</b> <br>
+                                            - หากเปิดเทอมไม่ครบ 3 เดือน (นับจากวันที่เปิดเทอม - วันสอบ) ให้ใช้ระดับชั้นปีการศึกษาที่ผ่านมา <br>
+                                            - หากเปิดเทอมครบ 3 เดือน ให้ใช้ปีการศึกษาปัจจุบันเท่านั้น
+                                        </span>
+                                    </p>
                                     <span style="color: #6351a2;">
                                         <strong>เวลาสอบ:</strong>
                                         <ul>

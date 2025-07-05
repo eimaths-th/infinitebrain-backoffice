@@ -1031,7 +1031,7 @@
                                 </div>
 
                                 <br>
-                                <div align="center"><img src="{{ asset('images/PayMent.png') }}" alt="..."
+                                <div align="center"><img src="{{ asset('images/scb_meta.png') }}" alt="..."
                                         height="300"></div>
                                 <br>
 
