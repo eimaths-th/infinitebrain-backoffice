@@ -689,7 +689,7 @@
                                             - หากเปิดเทอมครบ 3 เดือน ให้ใช้ปีการศึกษาปัจจุบันเท่านั้น
                                         </span>
                                     </p>
-                                    <span style="color: #6351a2;">
+                                    <!-- <span style="color: #6351a2;">
                                         <strong>เวลาสอบ:</strong>
                                         <ul>
                                             <li>
@@ -704,7 +704,7 @@
                                             </li>
                                         </ul>
 
-                                    </span>
+                                    </span> -->
                                     <p>
                                         <span style="color: #6351a2;"><b>เกณฑ์การเทียบระดับชั้น GELOSEA</b>
                                             <br>
@@ -910,8 +910,7 @@
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test: 850 baht">Test: 850 baht</option>
-                                                {{-- <option value="Test + tutoring class: 1250 bath">Test +
-                                                    tutoring class: 1250 bath</option> --}}
+                                                <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250 bath</option>
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
@@ -1101,7 +1100,7 @@
 
                                 <br>
                                 <div align="center">
-                                    <img src="{{ asset('images/PayMent.png') }}" alt="..." height="300">
+                                    <img src="{{ asset('images/scb_meta.png') }}" alt="..." height="300">
                                 </div>
                                 <br>
 
