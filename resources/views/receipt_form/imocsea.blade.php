@@ -584,15 +584,16 @@
                                     <p style="text-align: left;">
                                         <span style="color: #6351a2;">
                                             <strong>Registration Date:</strong>
-                                            @if ($date)
+                                            <!-- @if ($date)
                                                 {{ $date }}
                                             @else
                                                 Today - 03 August 2025 <br>
-                                            @endif
+                                            @endif -->
+                                            03 May 2025 - 25 July 2025
                                         </span>
                                     </p>
                                     <p>
-                                        <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 03 August 2025
+                                        <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 05 August 2025
                                         </span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
@@ -613,10 +614,10 @@
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
                                             style="color: #6351a2;">1,250 bath (รอบปกติ)</span><br></p>
-                                    <p><span style="color: #6351a2;"><strong>Test :</strong>950 baht (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)</span>
+                                    <p><span style="color: #6351a2;"><strong>Test :</strong>950 baht (รอบพิเศษ 17:30 - 19:00)</span>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1,350 bath (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)</span><br></p>
+                                            style="color: #6351a2;">1,350 bath (รอบพิเศษ 17:30 - 19:00)</span><br></p>
                                     <p>&nbsp;</p>
                                     {{-- <div class="row mb-5">
                                         <div class="col-lg-6">
