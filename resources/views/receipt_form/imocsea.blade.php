@@ -875,9 +875,9 @@
                                                 <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250
                                                     bath (รอบปกติ)
                                                 </option>
-                                                <option value="Test:  950 Baht">Test: 950 Baht (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)</option>
+                                                <option value="Test:  950 Baht">Test: 950 Baht (รอบพิเศษ 17:30 - 19:00)</option>
                                                 <option value="Test+tutoring class: 1350 bath">Test+tutoring class: 1350
-                                                    bath (รอบพิเศษ จะมีการแจ้งกำหนดการวันและเวลาอีกครั้ง)
+                                                    bath (รอบพิเศษ 17:30 - 19:00)
                                                 </option>
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
