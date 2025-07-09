@@ -758,7 +758,7 @@ class ReceiptFormController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function checkRegisted($route, $sfield, $firstname, $lastname, $nickname, $email)
+    public function checkRegisted($route, $sfield, $firstname, $lastname)
     {
         $getTime = OpeningClosingTime::where('route', $route)->orderBy('id', 'desc')->first();
         // dd($route, $getTime);
@@ -768,8 +768,8 @@ class ReceiptFormController extends Controller
         $receipt = ReceiptForm::where([
             ['first_name', '=', $firstname],
             ['last_name', '=', $lastname],
-            ['nick_name', '=', $nickname],
-            ['email', '=', $email],
+            // ['nick_name', '=', $nickname],
+            // ['email', '=', $email],
             ['sfield', '=', $sfield],
         ])
             ->whereBetween('submission_date', [$getTimeOpen, $getTimeClose])
@@ -792,7 +792,7 @@ class ReceiptFormController extends Controller
         //
         $allowedTLDs = ['.com', '.net', '.co.th', '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
         $route = $request->get('routeName');
-        $result = $this->checkRegisted($route, $request->get('sfield'), $request->get('firstname'), $request->get('lastname'), $request->get('nickname'), $request->get('email'));
+        $result = $this->checkRegisted($route, $request->get('sfield'), $request->get('firstname'), $request->get('lastname'));
         // dd($request->all(), $checkRegisted);
         // $receipt = $result['receipt'];
         // $checkRegisted = $result['checkRegisted'];
