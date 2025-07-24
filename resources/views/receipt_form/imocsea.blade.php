@@ -612,12 +612,12 @@
                                             style="color: #6351a2;">1,250 bath</span><br></p> -->
                                     <p><span style="color: #6351a2;"><strong>Test :</strong>850 baht (รอบปกติ)</span>
                                     </p>
-                                    <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1,250 bath (รอบปกติ)</span><br></p>
+                                    <!-- <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
+                                            style="color: #6351a2;">1,250 bath (รอบปกติ)</span><br></p> -->
                                     <p><span style="color: #6351a2;"><strong>Test :</strong>950 baht (รอบพิเศษ 17:30 - 19:00)</span>
                                     </p>
-                                    <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
-                                            style="color: #6351a2;">1,350 bath (รอบพิเศษ 17:30 - 19:00)</span><br></p>
+                                    <!-- <p><span style="color: #6351a2;"><strong>Test+tutoring class:</strong> </span><span
+                                            style="color: #6351a2;">1,350 bath (รอบพิเศษ 17:30 - 19:00)</span><br></p> -->
                                     <p>&nbsp;</p>
                                     {{-- <div class="row mb-5">
                                         <div class="col-lg-6">
@@ -872,13 +872,13 @@
                                                     bath
                                                 </option> -->
                                                 <option value="Test:  850 Baht">Test: 850 Baht (รอบปกติ)</option>
-                                                <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250
+                                                <!-- <option value="Test+tutoring class: 1250 bath">Test+tutoring class: 1250
                                                     bath (รอบปกติ)
-                                                </option>
+                                                </option> -->
                                                 <option value="Test:  950 Baht">Test: 950 Baht (รอบพิเศษ 17:30 - 19:00)</option>
-                                                <option value="Test+tutoring class: 1350 bath">Test+tutoring class: 1350
+                                                <!-- <option value="Test+tutoring class: 1350 bath">Test+tutoring class: 1350
                                                     bath (รอบพิเศษ 17:30 - 19:00)
-                                                </option>
+                                                </option> -->
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Packages</label>
