@@ -108,7 +108,7 @@
             <div class="card-body">
 
 
-                <table align="center" width="85%" cellpadding="0" cellspacing="0">
+                <!-- <table align="center" width="85%" cellpadding="0" cellspacing="0">
                     <thead>
                         <tr>
                             <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta_2.png') }}" alt="..."
@@ -125,6 +125,24 @@
                             <td>โทร  093-358-6333</td>
                         </tr>
                     </thead>
+                </table> -->
+                <table align="center" width="85%" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <td width="15%" rowspan="4"><img src="{{ asset('images/logo_meta.png') }}"
+                                        alt="..." height="106" style="padding-bottom: 5px"></td>
+                                <td>META KNOWLEDGE CO., LTD.</td>
+                            </tr>
+                            <tr>
+                                <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
+                            </tr>
+                            <tr>
+                                <td>เลขประจำตัวผู้เสียภาษี: 0125565026368</td>
+                            </tr>
+                            <tr>
+                                <td>โทร 093-358-6333</td>
+                            </tr>
+                        </thead>
                 </table>
 
                 <table align="center" width="85%" cellpadding="0" cellspacing="0">
