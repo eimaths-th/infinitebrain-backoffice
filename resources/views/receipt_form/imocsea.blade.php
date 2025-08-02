@@ -1161,47 +1161,58 @@
     </script>
 
     <script>
-        const allowedSuffixes = ['.com', '.net', '.co.th', '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
-        const emailInput = document.getElementById('email');
-        const msg = document.getElementById('email-msg');
+       const allowedSuffixes = ['.com', '.net', '.co.th', '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
+const emailInput = document.getElementById('email');
+const msg = document.getElementById('email-msg');
 
-        let timeout;
+let timeout;
 
-        emailInput.addEventListener('input', function() {
-            clearTimeout(timeout);
+emailInput.addEventListener('input', function () {
+    clearTimeout(timeout);
 
-            // รอ 500ms หลังจากผู้ใช้หยุดพิมพ์
-            timeout = setTimeout(() => {
-                const email = emailInput.value.trim();
+    timeout = setTimeout(() => {
+        const email = emailInput.value.trim();
 
-                if (!email.includes('@')) {
-                    msg.textContent = 'รูปแบบอีเมลไม่ถูกต้อง (ขาด @)';
-                    msg.style.color = 'red';
-                    return;
-                }
+        if (email.length < 5) {
+            msg.textContent = '';
+            return;
+        }
 
-                const domain = email.split('@')[1];
+        // ยังพิมพ์อยู่ → รอ user ใส่ @ ก่อนค่อยเช็ค
+        if (!email.includes('@')) {
+            msg.textContent = '';
+            return;
+        }
 
-                if (!domain) {
-                    msg.textContent = 'กรุณาระบุอีเมล';
-                    msg.style.color = 'red';
-                    return;
-                }
+        const parts = email.split('@');
 
-                const isValid = allowedSuffixes.some(suffix => domain.endsWith(suffix));
+        // ต้องมีแค่ 2 ส่วน
+        if (parts.length !== 2 || !parts[1]) {
+            msg.textContent = '';
+            return;
+        }
 
-                if (isValid) {
-                    msg.textContent = '✅ อีเมลนี้รูปแบบถูกต้อง';
-                    msg.style.color = 'green';
-                } else {
-                    msg.textContent = '❌ รูปแบบอีเมลนี้ไม่ถูกต้อง' +
-                        ' (โปรดใช้รูปแบบเฉพาะ: ' + allowedSuffixes.join(', ') + ')';
-                    msg.style.color = 'red';
-                    
-                    alert('รูปแบบอีเมลไม่ถูกต้อง (โปรดใช้รูปแบบเฉพาะ: ' + allowedSuffixes.join(', ') + ')');
-                }
-            }, 500);
-        });
+        const domain = parts[1].toLowerCase();
+
+        // ยังพิมพ์ไม่ครบโดเมน → ไม่ต้องแสดง error
+        if (domain.length < 3) {
+            msg.textContent = '';
+            return;
+        }
+
+        const isValid = allowedSuffixes.some(suffix => domain.endsWith(suffix));
+
+        if (isValid) {
+            msg.textContent = '✅ อีเมลนี้รูปแบบถูกต้อง';
+            msg.style.color = 'green';
+        } else {
+            msg.textContent = '❌ รูปแบบอีเมลนี้ไม่ถูกต้อง (อนุญาตเฉพาะ: ' + allowedSuffixes.join(', ') + ')';
+            msg.style.color = 'red';
+        }
+
+    }, 500);
+});
+
     </script>
     <script>
         $(document).ready(function() {
