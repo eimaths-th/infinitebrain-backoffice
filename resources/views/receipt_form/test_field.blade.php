@@ -573,6 +573,16 @@
                             <hr />
 
                             <div class="col-md-10 div_center" data-layout="full">
+                                @if(session('warning'))
+                                <div class="alert alert-warning">
+                                    {!! nl2br(e(session('warning'))) !!}
+                                </div>
+                                @endif
+                                @if(session('error'))
+                                <div class="alert alert-danger">
+                                    {!! nl2br(e(session('error'))) !!}
+                                </div>
+                                @endif
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <h4 style="text-align: center;"><span style="color: #6351a2;">
                                             <strong>
@@ -917,6 +927,10 @@
                                 </h3>
                             </div>
                             <br>
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="agreeCheckbox" required style="float: none; margin-right: 3px;">
+                                <label class="form-check-label" for="agreeCheckbox">ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว</label>
+                            </div>
 
 
                             <input type="submit" id="send_data" class="btn btn-lg btn-primary"
@@ -1374,6 +1388,11 @@
             //$('.form-control').focus({ preventScroll: false });
             //$('input').focus();
             //$('input').focus({ preventScroll: false });
+
+            if (!document.getElementById('agreeCheckbox').checked) {
+                alert('กรุณาติ๊ก "ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว" ก่อนส่งฟอร์ม');
+                return false;
+            }
 
             if (document.getElementsByName('imgFiles2[]').length) {
                 //$('#error_div').css('display', 'none');
