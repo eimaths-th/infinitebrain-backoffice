@@ -94,7 +94,7 @@
                 <div class="form-group">
                     <label for="Name">Opening Time:</label>
                     <input type="datetime-local" class="form-control" name="opening_time" id="opening_time" required>
-
+                    <small class="form-text text-danger">* กรุณาตั้งวันเปิดสนามเป็นวันที่ของเปิดวันแรกของกิจกรรม</small>
                 </div>
             </div>
             <div class="col-lg-4">

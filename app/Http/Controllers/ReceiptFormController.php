@@ -772,38 +772,81 @@ class ReceiptFormController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    /**
+     * Check if user is already registered with similar name (80% or more similarity)
+     *
+     * @param string $route
+     * @param string $sfield
+     * @param string $firstname
+     * @param string $lastname
+     * @return array
+     */
     public function checkRegisted($route, $sfield, $firstname, $lastname)
     {
         $getTime = OpeningClosingTime::where('route', $route)->orderBy('id', 'desc')->first();
-        // dd($route, $getTime);
         $getTimeOpen = (new \DateTime($getTime->opening_time))->format('Y-m-d');
         $getTimeClose = (new \DateTime($getTime->closing_time))->format('Y-m-d');
 
-        $receipt = ReceiptForm::where([
+        // First, check for exact match
+        $exactMatch = ReceiptForm::where([
             ['first_name', '=', $firstname],
             ['last_name', '=', $lastname],
-            // ['nick_name', '=', $nickname],
-            // ['email', '=', $email],
             ['sfield', '=', $sfield],
         ])
-            ->whereBetween('submission_date', [$getTimeOpen, $getTimeClose])
-            ->first();
+        ->whereBetween('submission_date', [$getTimeOpen, $getTimeClose])
+        ->first();
 
-        if ($receipt) {
-            $checkRegisted = true;
-        } else {
-            $checkRegisted = false;
+        if ($exactMatch) {
+            return [
+                'receipt' => $exactMatch,
+                'checkRegisted' => true,
+                'matchType' => 'exact'
+            ];
         }
+
+        // If no exact match, check for similar names
+        $similarRecords = ReceiptForm::where('sfield', $sfield)
+            ->whereBetween('submission_date', [$getTimeOpen, $getTimeClose])
+            ->get();
+
+        $similarityThreshold = 80; // 80% similarity threshold
+        $similarRecord = null;
+
+        foreach ($similarRecords as $record) {
+            $firstNameSimilarity = 0;
+            $lastNameSimilarity = 0;
+            
+            similar_text(strtolower($firstname), strtolower($record->first_name), $firstNameSimilarity);
+            similar_text(strtolower($lastname), strtolower($record->last_name), $lastNameSimilarity);
+
+            // ตรวจสอบทั้งชื่อและนามสกุลต้องคล้ายกันทั้งคู่
+            if ($firstNameSimilarity >= $similarityThreshold && $lastNameSimilarity >= $similarityThreshold) {
+                $similarRecord = $record;
+                // คำนวณค่าเฉลี่ยความคล้ายคลึง
+                $avgSimilarity = ($firstNameSimilarity + $lastNameSimilarity) / 2;
+                break;
+            }
+        }
+
+        if ($similarRecord) {
+            return [
+                'receipt' => $similarRecord,
+                'checkRegisted' => true,
+                'matchType' => 'similar',
+                'similarity' => $avgSimilarity
+            ];
+        }
+
         return [
-            'receipt' => $receipt,
-            'checkRegisted' => $checkRegisted,
+            'receipt' => null,
+            'checkRegisted' => false,
+            'matchType' => 'none'
         ];
     }
 
 
     public function store(Request $request)
     {
-        //
         $allowedTLDs = ['.com', '.net', '.co.th', '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
         $route = $request->get('routeName');
         $result = $this->checkRegisted(
@@ -811,14 +854,30 @@ class ReceiptFormController extends Controller
             $request->get('sfield'),
             $request->get('firstname'),
             $request->get('lastname'),
-            // $request->get('nickname'),
-            // $request->get('email'),
         );
-        // dd($request->all(), $checkRegisted);
-        // $receipt = $result['receipt'];
-        // $checkRegisted = $result['checkRegisted'];
 
         if ($result['checkRegisted']) {
+            $message = 'พบข้อมูลการลงทะเบียนที่ซ้ำกัน';
+            
+            if ($result['matchType'] === 'similar') {
+                if ($result['similarity'] >= 80) {
+                    $similarity = number_format($result['similarity'], 2);
+                    $message = "พบข้อมูลชื่อหรือนามสกุลที่คล้ายกัน ({$similarity}%) กับผู้ลงทะเบียนรายอื่น\n";
+                    $message .= "ชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
+                    $message .= "กรุณาตรวจสอบข้อมูลให้แน่ใจว่าคุณยังไม่เคยลงทะเบียนไปก่อนหน้านี้";
+                    
+                    return back()
+                    ->withInput()
+                    ->with('warning', $message);
+                }
+            } else {
+                $message = "พบข้อมูลการลงทะเบียนซ้ำกับชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
+                $message .= "กรุณาตรวจสอบข้อมูลของคุณ";
+                
+                return back()
+                    ->withInput()
+                    ->with('error', $message);
+            }
             # code...
             // return back()->withErrors(['errors' => 'You have already registered.']);
             return view('receipt_form.registed')->with([

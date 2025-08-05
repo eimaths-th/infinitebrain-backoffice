@@ -1049,6 +1049,11 @@
                             <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
                                 ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี **</div>
                             <br>
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="agreeCheckbox" required style="float: none; margin-right: 3px;">
+                                <label class="form-check-label" for="agreeCheckbox">ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว</label>
+                            </div>
+                            <br>
                             <input type="submit" id="send_data" class="btn btn-lg btn-primary"
                                 value="Submit Application">
                             <button type="reset" class="btn btn-lg btn-primary">Clear Form</button><br><br><br>
@@ -1522,6 +1527,11 @@
             //$('.form-control').focus({ preventScroll: false });
             //$('input').focus();
             //$('input').focus({ preventScroll: false });
+
+            if (!document.getElementById('agreeCheckbox').checked) {
+                alert('กรุณาติ๊ก "ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว" ก่อนส่งฟอร์ม');
+                return false;
+            }
 
             if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]')
                 .length) {

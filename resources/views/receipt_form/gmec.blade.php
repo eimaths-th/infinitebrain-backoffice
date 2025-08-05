@@ -554,6 +554,16 @@
                             <hr />
 
                             <div class="col-md-10 div_center" data-layout="full">
+                                @if(session('warning'))
+                                    <div class="alert alert-warning">
+                                        {!! nl2br(e(session('warning'))) !!}
+                                    </div>
+                                @endif
+                                @if(session('error'))
+                                    <div class="alert alert-danger">
+                                        {!! nl2br(e(session('error'))) !!}
+                                    </div>
+                                @endif
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
                                                     style="text-decoration: underline;">GMEC 2023 Registration
@@ -1009,7 +1019,17 @@
                         </div>
                         <div class="card-footer text-center">
                             <br>
+                            <div class="text-danger">
+                                **กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ หากตรวจสอบข้อมูล และ
+                                พบว่าผู้สมัครไม่มีสิทธิ์เข้าสอบตามกฎ** <br>
+                                **ของสนามสอบหรือด้วยสาเหตุอื่นๆของทางผู้สมัคร ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี**
+                                <br>
+                            </div>
                             <br>
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="agreeCheckbox" required style="float: none; margin-right: 3px;">
+                                <label class="form-check-label" for="agreeCheckbox">ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว</label>
+                            </div>
                             <input type="submit" class="btn btn-lg btn-primary" value="Submit Application">
                             <button type="reset" class="btn btn-lg btn-primary">Clear Form</button><br><br><br>
                         </div>
@@ -1459,6 +1479,11 @@
             //$('.form-control').focus({ preventScroll: false });
             //$('input').focus();
             //$('input').focus({ preventScroll: false });
+
+            if (!document.getElementById('agreeCheckbox').checked) {
+                alert('กรุณาติ๊ก "ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว" ก่อนส่งฟอร์ม');
+                return false;
+            }
 
             if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]')
                 .length) {
