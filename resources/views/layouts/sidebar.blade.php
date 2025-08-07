@@ -460,6 +460,12 @@
                                     STEMCO Science
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '30']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Advance English Grammar
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -628,6 +634,12 @@
                                     STEMCO Science
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '30']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Advance English Grammar
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
@@ -721,6 +733,13 @@
                                     href="{{ route('receipts.print_month', ['pmsfield' => '29', 'type' => 'report_view', 'print_month' => $ymonth, 'Pmdescription' => 'ค่าสมัคร STEMCO Science รอบแรก ' . $pmd]) }}">
                                     <i class="metismenu-icon"></i>
                                     STEMCO Science
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="{{ route('receipts.print_month', ['pmsfield' => '30', 'type' => 'report_view', 'print_month' => $ymonth, 'Pmdescription' => 'ค่าสมัคร Advance English Grammar รอบแรก ' . $pmd]) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Advance English Grammar
                                 </a>
                             </li>
 

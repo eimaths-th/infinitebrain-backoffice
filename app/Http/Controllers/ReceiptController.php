@@ -56,6 +56,7 @@ class ReceiptController extends Controller
         '27' => 'coding-olympics',
         '28' => 'imocsea_special',
         '29' => 'stemco_science',
+        '30' => 'advance_english_grammar',
     );
     const sfieldas = array(
         '0' => 'IMG Reward',
@@ -84,6 +85,7 @@ class ReceiptController extends Controller
         '27' => 'coding-olympics',
         '28' => 'imocsea_special',
         '29' => 'stemco_science',
+        '30' => 'advance_english_grammar',
     );
     const thmonth = array(
         "",
