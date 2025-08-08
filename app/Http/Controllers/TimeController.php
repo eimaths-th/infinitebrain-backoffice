@@ -43,29 +43,37 @@ class TimeController extends Controller
         $controls = OpeningClosingTime::orderBy('id', 'desc')
             ->get()
             ->groupBy('route');
-        // dd($controls);
         $now = now();
 
-        foreach ($controls as $route => $time) {
-            # code...
-
-            $times = OpeningClosingTime::where('route', $route)->latest()->first();
-            //
-
-            $openingDateTime = $now->copy()->setDateTimeFrom($times->opening_time);
-            $closingDateTime = $now->copy()->setDateTimeFrom($times->closing_time);
-
-            if ($now < $openingDateTime || $now > $closingDateTime) {
-                $status = 'Offline';
-                $times->update(['status' => $status]);
-                // return abort(404, 'Route is currently closed.');
+        foreach ($controls as $route => $times) {
+            // หาสนามใหม่ล่าสุด
+            $latestTime = $times->first();
+            
+            // ตรวจสอบว่าสนามใหม่ล่าสุดปิดไปแล้วหรือยัง
+            $closingDateTime = $now->copy()->setDateTimeFrom($latestTime->closing_time);
+            
+            if ($now > $closingDateTime) {
+                // ถ้าสนามใหม่ล่าสุดปิดไปแล้ว ให้ทุกสนามของ route นี้เป็น Offline
+                foreach ($times as $time) {
+                    $time->update(['status' => 'Offline']);
+                }
             } else {
-                # code...
-                $status = 'Online';
-                $times->update(['status' => $status]);
+                // ถ้ายังไม่ปิด ให้ตรวจสอบแต่ละสนามตามเวลาของสนามนั้นๆ
+                foreach ($times as $time) {
+                    $openingDateTime = $now->copy()->setDateTimeFrom($time->opening_time);
+                    $closingDateTime = $now->copy()->setDateTimeFrom($time->closing_time);
+                    
+                    if ($now < $openingDateTime || $now > $closingDateTime) {
+                        $status = 'Offline';
+                        $time->update(['status' => $status]);
+                    } else {
+                        $status = 'Online';
+                        $time->update(['status' => $status]);
+                    }
+                }
             }
         }
-        // dd($controls);
+        
         $control = OpeningClosingTime::orderBy('id', 'desc')
             ->get();
         return view('receipt_form.form_control', [
