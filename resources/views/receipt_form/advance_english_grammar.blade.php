@@ -863,10 +863,10 @@
 
                                 <div class="position-relative form-group">
                                     <label class="form-label form-label-top form-label-auto"
-                                        for="package">แพคเกจในการสอบ / Packages <span
+                                        for="package">แพคเกจในการเรียน / Packages <span
                                             class="form-required">*</span></label>
                                     <select class="form-control" id="package" name="package" id="package"
-                                        aria-label="แพคเกจในการสอบ / Packages" required>
+                                        aria-label="แพคเกจในการเรียน / Packages" required>
                                         <option value="">Please Select</option>
                                         <option value="2500 Bath">Advance English Grammar - 2500 Bath</option>
                                     </select>
