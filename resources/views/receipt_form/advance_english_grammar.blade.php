@@ -587,10 +587,6 @@
 
                                     <br>
                                     --}}
-
-
-
-
                             <p style="text-align: left;">
                                 <span style="color: #6351a2;">
                                     <strong>Registration Date:</strong>
@@ -603,7 +599,7 @@
                                 </span>
                             </p>
                             <p>
-                                <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 04 Oct, 11 Oct, 18 Oct, 25 Oct
+                                <span style="color: #6351a2;"><strong>Class Date:</strong>&nbsp; 04 Oct, 11 Oct, 18 Oct, 25 Oct
                                 </span>
                             </p>
                             <p>
@@ -979,10 +975,10 @@
                                 <div class="position-relative form-group" style="padding-top:0px;">
                                     <label class="form-label form-label-top form-label-auto" for="grade">E-mail
                                         <br>
-                                        (กรุณาใช้ @gmail.com เท่านั้น เพื่อที่จะสามารถส่งข้อมูลสำหรับเข้าสอบได้)
+                                        (กรุณาใช้ @gmail.com เท่านั้น เพื่อที่จะสามารถส่งข้อมูลสำหรับเข้าเรียน)
                                         <br>
                                         <span class="form-required">**</span>
-                                        สำหรับผู้ที่สมัครมากกว่า 1 คน รบกวนไม่ใช้อีเมลเดิมในการสมัครสอบ <span
+                                        สำหรับผู้ที่สมัครมากกว่า 1 คน รบกวนไม่ใช้อีเมลเดิมในการสมัครเรียน <span
                                             class="form-required">**</span></label>
                                     <input type="email" class="form-control" name="email" id="email"
                                         value="" maxlength="70" required>
@@ -1085,7 +1081,7 @@
                                     <div class="col-md-6 ">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="newsf">ท่านทราบข่าวสารการจัดสอบ IMOCSEA จากช่องทางใด <span
+                                                for="newsf">ท่านทราบข่าวสารการสมัครเรียน  จากช่องทางใด <span
                                                     class="form-required">*</span></label>
                                             <input type="text" class="form-control" name="newsf" id="newsf"
                                                 value="" maxlength="50" required>
@@ -1113,7 +1109,7 @@
                         </div>
                         <div class="card-footer text-center">
                             <br>
-                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ**
+                            <div class="text-danger">** กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครเรียน**
                                 ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี **</div>
                             <br>
                             <div class="form-group form-check">
