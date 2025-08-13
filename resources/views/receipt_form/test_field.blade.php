@@ -691,7 +691,7 @@
                                 <input type="hidden" name="postcode" id="postcode" value=" ">
                                 <input type="hidden" name="parent" id="parent" value=" ">
                                 <input type="hidden" name="newsf" id="newsf" value=" ">
-
+                                <input type="hidden" name="routeName" id="routeName" value="{{ request()->route()->getName() }}">
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Name-Surname (English) /
