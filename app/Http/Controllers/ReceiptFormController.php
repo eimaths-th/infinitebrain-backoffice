@@ -1178,6 +1178,7 @@ class ReceiptFormController extends Controller
             'file_att' => $filebs,
             'referent_code' => $request->get('referent_code'),
         ]);
+        $receiptForm->save();
 
         // print_r (['sfielda' =>  self::sfielda]);
         // print_r (['sfield' => $request->sfield]);
