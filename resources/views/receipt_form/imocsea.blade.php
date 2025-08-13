@@ -541,6 +541,10 @@
             <div class="card bg-light2 mb-3 ">
                 {{-- <div class="card-header">{{ __('Login') }}
             </div> --}}
+            @php
+                $referent_code = request()->referent_code;
+                // dd($referent_code);
+            @endphp
             <div align="center"><img {{-- class="card-img" --}} src="{{ asset('images/IMOCSEA_Logo.png') }}"
                     alt="..." width="50%"></div>
             <form id="infinite" method="POST" action="{{ route('form.store') }}" onsubmit="return check_input();">
@@ -710,8 +714,9 @@
                                 @endif
                             </div>
                         </div>
-                        <input type="hidden" name="routeName" id="routeName"
-                            value="{{ request()->route()->getName() }}">
+                        <input type="hidden" name="routeName" id="routeName" value="{{ request()->route()->getName() }}">
+                        <input type="hidden" name="referent_code" id="referent_code" value="{{ request()->referent_code }}">
+
                         <div class="form-row form-focus">
                             <label style="padding-left: 20px"
                                 class="form-label form-label-top form-label-auto">Name-Surname (English) /

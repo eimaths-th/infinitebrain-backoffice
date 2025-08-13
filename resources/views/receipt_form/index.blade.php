@@ -435,10 +435,23 @@
             <div class="card-body">
                 <form action="{{ route('receipts_form') }}" method="GET">
                     <div class="row mb-4">
-                        <div class="col-md-4">
+                        <div class="col-md-2">
+                            <label for="date_range">วันที่</label> 
                             <input type="hidden" name="sfield" id="sfield" value="{{ request()->get('sfield') }}">
                             <input type="text" name="date_range" class="form-control" id="daterange"
                                 value="{{ request('date_range') ?? '' }}" autocomplete="off" placeholder="เลือกช่วงวันที่">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="date_range"> Referent Code</label>
+                            <input type="hidden" name="sfield" id="sfield" value="{{ request()->get('sfield') }}">
+                            <select name="referent_code" id="referent_code" class="form-control">
+                                <option value="">Select Referent Code</option>
+                                @foreach ($referent_codes as $referent_code)
+                                    <option value="{{ $referent_code->referent_code }}"
+                                        {{ request('referent_code') == $referent_code->referent_code ? 'selected' : '' }}>
+                                        {{ $referent_code->referent_code }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         {{-- <div class="col-md-2">
                             <button type="submit" class="btn btn-primary">ค้นหา</button>
@@ -456,6 +469,8 @@
                                 <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>Receipt</th>
                                 <th>Submission Date</th>
+                                <th>Referent Code</th>
+                                <th>Referent Name</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Parent Name</th>
@@ -602,6 +617,13 @@
                                     <div class="position-relative form-group">
                                         <label for="BirthDate">Birth Date:</label>
                                         <input type="text" class="form-control" name="birthdate" id="AddBirthdate"
+                                            value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="referent_code">Referent Code:</label>
+                                        <input type="text" class="form-control" name="referent_code" id="AddReferentCode" readonly
                                             value="">
                                     </div>
                                 </div>
@@ -778,6 +800,12 @@
                 $('#end_date').val(endDate);
                 $('#Listview').DataTable().ajax.url("{{ route('receipts_form') }}?start_date=" + startDate + "&end_date=" + endDate + "&sfield=" + sfield).load();
             });
+            $('#referent_code').on('change', function() {
+                var referent_code = $(this).val();
+                var sfield = $('#sfield').val();
+                $('#Listview').DataTable().ajax.url("{{ route('receipts_form') }}?referent_code=" + referent_code +
+                    "&sfield=" + sfield).load();
+            });
         });
         //Dropzone.autoDiscover = false;
         $(document).ready(function() {
@@ -881,6 +909,14 @@
                         name: 'receipt_submission_date'
                     },
                     {
+                        data: 'referent_code',
+                        name: 'referent_code'
+                    },
+                    {
+                        data: 'referent_name',
+                        name: 'referent_name'
+                    },
+                    {
                         data: 'receipt_firstname',
                         name: 'receipt_firstname'
                     },
@@ -938,6 +974,7 @@
                         $('#AddtDes').val(res.data.description);
                         $('#AddGrade').val(res.data.grade);
                         $('#AddAddress').val(res.data.street_address);
+                        $('#AddReferentCode').val(res.data.referent_code);
                         //$('#EditAddress2').val(res.data.street_address2);
                         //$('#EditCity').val(res.data.city);
                         //$('#EditProvince').val(res.data.province);
@@ -1003,6 +1040,7 @@
                         grade: $('#AddGrade').val(),
                         dcode: $('#AddDcode').val(),
                         description: $('#AddPackage').val(),
+                        referent_code: $('#AddReferentCode').val(),
                         street_address: $('#AddAddress').val(),
                         //street_address2: $('#AddAddress2').val(),
                         //city: $('#AddCity').val(),
