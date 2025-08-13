@@ -956,6 +956,7 @@ class ReceiptFormController extends Controller
 
         $allowedTLDs = ['.com', '.net', '.co.th', '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
         $route = $request->get('routeName');
+
         $result = $this->checkRegisted(
             $route,
             $request->get('sfield'),
