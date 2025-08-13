@@ -705,6 +705,8 @@
                                 </div>
                                 <input type="hidden" name="routeName" id="routeName"
                                     value="{{ request()->route()->getName() }}">
+                        <input type="hidden" name="referent_code" id="referent_code" value="{{ request()->referent_code }}">
+
                                 <input type="hidden" name="sfield" id="sfield" value="27">
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
@@ -867,7 +869,7 @@
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test:  2250 Baht">Test: 2,250 Baht</option>
-                                                
+
 
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"

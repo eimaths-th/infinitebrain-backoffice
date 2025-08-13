@@ -16,6 +16,8 @@ use App\Imports\ReceiptImport;
 use App\Exports\UsersExport;
 use App\Models\Receipt_RunningNumber;
 use App\Models\Receipt_Customer_RunningNumber;
+use App\Models\ReferentCode;
+
 //use Illuminate\Support\Facades\DB;
 
 class ReceiptController extends Controller
@@ -622,6 +624,7 @@ class ReceiptController extends Controller
                 "receipts.last_name as receipt_lastname",
                 "receipts.name_parent as receipt_parent_name",
                 "receipts.mobile as receipt_mobile",
+                "receipts.referent_code as receipt_referent_code",
             )
                 //->join("students", "students.id", "=", "receipts.student_id")
                 //->join("subjects", "subjects.id", "=", "receipts.subject_id")
@@ -633,6 +636,9 @@ class ReceiptController extends Controller
                     # code...
                     $receipt->whereBetween('receipts.submission_date', [$request->start_date, $request->end_date]);
 
+                }
+                if ($request->referent_code) {
+                    $receipt->where('receipts.referent_code', $request->referent_code);
                 }
 
             //print_r($levels);
@@ -651,6 +657,18 @@ class ReceiptController extends Controller
                     }
                     return $mes;
                 })
+                ->editColumn('referent_code', function (Receipt $receipt) {
+                    return $receipt->referent_code;
+                })
+                ->editColumn('receipt_referent_name', function (Receipt $receipt) {
+                    $name = '';
+                    $referent_code = $receipt->referent_code;
+                    $referent_code = ReferentCode::where('referent_code', $referent_code)->first();
+                    if ($referent_code) {
+                        $name = $referent_code->referent_name;
+                    }
+                    return $name;
+                })
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->receipt_id . '" class="flat" name="table_records[]" value="' . $row->receipt_id . '" >';
                 })
@@ -668,10 +686,11 @@ class ReceiptController extends Controller
 
         //get student
         //$student = Student::orderBy("name", "asc")->get();
-
+        $referent_codes = ReferentCode::orderBy("id", "asc")->get();
         return view('receipt.index')
             ->with(['sfielda' =>  self::sfielda])
-            ->with(['sfield' => $request->sfield]);
+            ->with(['sfield' => $request->sfield])
+            ->with(['referent_codes' => $referent_codes]);
     }
 
     /**

@@ -586,7 +586,7 @@
                                 </span>
                             </p>
                             <p>
-                                <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 20 September 2025 
+                                <span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 20 September 2025
                                 </span>
                             </p>
                             <p><strong><span style="color: #6351a2;">Registration Fee:</span></strong></p>
@@ -636,6 +636,8 @@
                             </div>
                         </div>
                         <input type="hidden" name="routeName" id="routeName" value="{{ request()->route()->getName() }}">
+                        <input type="hidden" name="referent_code" id="referent_code" value="{{ request()->referent_code }}">
+
                         <div class="form-row form-focus">
                             <label style="padding-left: 20px"
                                 class="form-label form-label-top form-label-auto">Name-Surname (English) /

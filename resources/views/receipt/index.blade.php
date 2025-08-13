@@ -33,8 +33,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                                                                                    <p>{{ $message }}</p>
-                                                                                    </div>-->
+                                                                                                        <p>{{ $message }}</p>
+                                                                                        </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -44,8 +44,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                                                                                            <p>{{ $message }}</p>
-                                                                                                                </div>-->
+                                                                                                                <p>{{ $message }}</p>
+                                                                                                                    </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -141,11 +141,25 @@
                 </form> --}}
                 <form action="{{ route('receipts') }}" method="GET">
                     <div class="row mb-4">
-                        <div class="col-md-4">
+                        <div class="col-md-2">
+                            <label for="date_range">วันที่</label>
                             <input type="hidden" name="sfield" id="sfield" value="{{ request()->get('sfield') }}">
                             <input type="text" name="date_range" class="form-control" id="daterange"
                                 value="{{ request('date_range') ?? '' }}" autocomplete="off" placeholder="เลือกช่วงวันที่">
                         </div>
+                        <div class="col-md-2">
+                            <label for="date_range"> Referent Code</label>
+                            <input type="hidden" name="sfield" id="sfield" value="{{ request()->get('sfield') }}">
+                            <select name="referent_code" id="referent_code" class="form-control">
+                                <option value="">Select Referent Code</option>
+                                @foreach ($referent_codes as $referent_code)
+                                    <option value="{{ $referent_code->referent_code }}"
+                                        {{ request('referent_code') == $referent_code->referent_code ? 'selected' : '' }}>
+                                        {{ $referent_code->referent_code }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         {{-- <div class="col-md-2">
                             <button type="submit" class="btn btn-primary">ค้นหา</button>
                         </div> --}}
@@ -165,6 +179,8 @@
                                 <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>Type</th>
                                 <th>Submission Date</th>
+                                <th>Referent Code</th>
+                                <th>Referent Name</th>
                                 <th>Voucher Number</th>
                                 <th>Customer Code</th>
 
@@ -695,21 +711,21 @@
                         </div>
 
                         <!--<div class="form-row">
-                                                                                                <div class="col-md-6">
-                                                                                                    <div class="position-relative form-group">
-                                                                                                        <label for="City">City:</label>
-                                                                                                        <input type="text" class="form-control" name="city" id="AddCity"
-                                                                                                            value="">
+                                                                                                    <div class="col-md-6">
+                                                                                                        <div class="position-relative form-group">
+                                                                                                            <label for="City">City:</label>
+                                                                                                            <input type="text" class="form-control" name="city" id="AddCity"
+                                                                                                                value="">
+                                                                                                        </div>
                                                                                                     </div>
-                                                                                                </div>
-                                                                                                <div class="col-md-6">
-                                                                                                    <div class="position-relative form-group">
-                                                                                                        <label for="Province">Province:</label>
-                                                                                                        <input type="text" class="form-control" name="province" id="AddProvince"
-                                                                                                            value="">
+                                                                                                    <div class="col-md-6">
+                                                                                                        <div class="position-relative form-group">
+                                                                                                            <label for="Province">Province:</label>
+                                                                                                            <input type="text" class="form-control" name="province" id="AddProvince"
+                                                                                                                value="">
+                                                                                                        </div>
                                                                                                     </div>
-                                                                                                </div>
-                                                                                            </div>-->
+                                                                                                </div>-->
                         <div class="col-md-6">
                             <div class="position-relative form-group">
                                 <label for="City">City:</label>
@@ -751,9 +767,9 @@
                         <textarea class="form-control" name="address" id="AddAddress"></textarea>
                     </div>
                     <!--<div class="form-group">
-                                                                                                    <label for="Name">Street Address 2:</label>
-                                                                                                    <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
-                                                                                                </div>-->
+                                                                                                        <label for="Name">Street Address 2:</label>
+                                                                                                        <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                                                                                                    </div>-->
                     <label for="Name">Street Address 2:</label>
                     <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
                 </div>-->
@@ -905,21 +921,21 @@
                                     </div>
 
                                     <!--<div class="form-row">
-                                                                                                        <div class="col-md-6">
-                                                                                                            <div class="position-relative form-group">
-                                                                                                                <label for="City">City:</label>
-                                                                                                                <input type="text" class="form-control" name="city" id="EditCity"
-                                                                                                                    value="">
+                                                                                                            <div class="col-md-6">
+                                                                                                                <div class="position-relative form-group">
+                                                                                                                    <label for="City">City:</label>
+                                                                                                                    <input type="text" class="form-control" name="city" id="EditCity"
+                                                                                                                        value="">
+                                                                                                                </div>
                                                                                                             </div>
-                                                                                                        </div>
-                                                                                                        <div class="col-md-6">
-                                                                                                            <div class="position-relative form-group">
-                                                                                                                <label for="Province">Province:</label>
-                                                                                                                <input type="text" class="form-control" name="province" id="EditProvince"
-                                                                                                                    value="">
+                                                                                                            <div class="col-md-6">
+                                                                                                                <div class="position-relative form-group">
+                                                                                                                    <label for="Province">Province:</label>
+                                                                                                                    <input type="text" class="form-control" name="province" id="EditProvince"
+                                                                                                                        value="">
+                                                                                                                </div>
                                                                                                             </div>
-                                                                                                        </div>
-                                                                                                        </div>-->
+                                                                                                            </div>-->
                                     {{--  <div class="col-md-6">
                                   <div class="position-relative form-group">
                                     <label for="Des">Description:</label>
@@ -932,9 +948,9 @@
                                         <textarea class="form-control" name="address" id="EditAddress"></textarea>
                                     </div>
                                     <!--<div class="form-group">
-                                                                                                            <label for="Name">Street Address 2:</label>
-                                                                                                            <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                                                                        </div>-->
+                                                                                                                <label for="Name">Street Address 2:</label>
+                                                                                                                <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                                                                            </div>-->
 
 
                                     {{-- <div class="form-group">
@@ -1318,7 +1334,15 @@
                 var sfield = $('#Sfield').val();
                 $('#start_date').val(startDate);
                 $('#end_date').val(endDate);
-                $('#Listview').DataTable().ajax.url("{{ route('receipts') }}?start_date=" + startDate + "&end_date=" + endDate + "&sfield=" + sfield).load();
+                $('#Listview').DataTable().ajax.url("{{ route('receipts') }}?start_date=" + startDate +
+                    "&end_date=" + endDate + "&sfield=" + sfield).load();
+            });
+
+            $('#referent_code').on('change', function() {
+                var referent_code = $(this).val();
+                var sfield = $('#sfield').val();
+                $('#Listview').DataTable().ajax.url("{{ route('receipts') }}?referent_code=" + referent_code +
+                    "&sfield=" + sfield).load();
             });
         });
         $(document).ready(function() {
@@ -1432,6 +1456,14 @@
                     {
                         data: 'receipt_submission_date',
                         name: 'receipt_submission_date'
+                    },
+                    {
+                        data: 'receipt_referent_code',
+                        name: 'receipt_referent_code'
+                    },
+                    {
+                        data: 'receipt_referent_name',
+                        name: 'receipt_referent_name'
                     },
                     {
                         data: 'receipt_number',

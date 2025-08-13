@@ -23,11 +23,14 @@ use App\Models\Receipt_Customer_RunningNumber;
 use Mail;
 use App\Mail\ContactMail;
 use App\Models\OpeningClosingTime;
+use App\Models\ReferentCode;
+use App\Models\ReferentURL;
 use Maatwebsite\Excel\Facades\Excel;
 // use App\Exports\ExportUser;
 
 class ReceiptFormController extends Controller
 {
+    // not route
     const sfielda = array(
 
         '0' => 'reward',
@@ -59,6 +62,81 @@ class ReceiptFormController extends Controller
         '29' => 'stemco_science',
         '30' => 'advance_english_grammar',
     );
+
+    public function generateUrl()
+    {
+        $referent_code = ReferentCode::all();
+        return view("receipt_form.generate_url")->with(['referent_code' => $referent_code]);
+    }
+    public function referent_url()
+    {
+        $referent_code = ReferentCode::all();
+        $referent_url = ReferentURL::all();
+        return view("receipt_form.referent_url")->with(['referent_code' => $referent_code, 'referent_url' => $referent_url]);
+    }
+    public function referent_code()
+    {
+        $referent_code = ReferentCode::all();
+        return view("receipt_form.referent_code")->with(['referent_code' => $referent_code]);
+    }
+    public function generate_code()
+    {
+        return view("receipt_form.generate_code");
+    }
+
+    public function referent_codeSave(Request $request)
+    {
+        $request->validate([
+            'referent_name' => 'required|string|max:255',
+            'comments' => 'nullable|string|max:500',
+        ]);
+
+        $user_id = Auth::id();
+
+        // สุ่มโค้ดที่ไม่ซ้ำ
+        do {
+            $referent_code = Str::random(10);
+        } while (ReferentCode::where('referent_code', $referent_code)->exists());
+
+        // บันทึกข้อมูล
+        ReferentCode::create([
+            'referent_code' => $referent_code,
+            'user_id' => $user_id,
+            'referent_name' => $request->referent_name,
+            'comments' => $request->comments,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Referent code created successfully',
+            'code' => $referent_code, // เผื่อส่งกลับไปใช้ต่อ
+        ]);
+    }
+
+
+    public function generateUrlSave(Request $request)
+    {
+        $request->validate([
+            'route' => 'required',
+            'referent_code' => 'required',
+            'comments' => 'nullable',
+        ]);
+
+        $route = $request->input('route');
+        $comments = $request->input('comments');
+
+        $url = route($route, ['referent_code' => $request->input('referent_code')]);
+
+        ReferentURL::create([
+            'user_id' => Auth::user()->id,
+            'comments' => $comments,
+            'route' => $route,
+            'referent_url' => $url,
+            'referent_code' => $request->input('referent_code'),
+        ]);
+
+        return redirect(route('referent_url'));
+    }
 
     public function getDatetime($route)
     {
@@ -447,12 +525,17 @@ class ReceiptFormController extends Controller
                 "receipt_forms.mobile as receipt_mobile",
                 "receipt_forms.generate as receipt_generate",
                 "receipt_forms.photo_att as file",
+                "receipt_forms.referent_code as referent_code",
+
             )
                 ->where('receipt_forms.sfield', $request->sfield)
                 ->orderBy("receipt_forms.id", "desc");
             if ($request->start_date && $request->end_date) {
                 # code...
                 $receipt->whereBetween('receipt_forms.submission_date', [$request->start_date, $request->end_date]);
+            }
+            if ($request->referent_code) {
+                $receipt->where('receipt_forms.referent_code', $request->referent_code);
             }
             //print_r($levels);
             //exit();
@@ -473,6 +556,18 @@ class ReceiptFormController extends Controller
                         $html = '<i class="text-success fa fa-edit"></i> ออกใบเสร็จแล้ว ';
                     }
                     return $html;
+                })
+                ->addColumn('referent_code', function ($row) {
+                    return $row->referent_code;
+                })
+                ->addColumn('referent_name', function ($row) {
+                    $name = '';
+                    $referent_code = $row->referent_code;
+                    $referent_code = ReferentCode::where('referent_code', $referent_code)->first();
+                    if ($referent_code) {
+                        $name = $referent_code->referent_name;
+                    }
+                    return $name;
                 })
                 ->addColumn('action', function ($row) {
                     $html = '';
@@ -526,10 +621,12 @@ class ReceiptFormController extends Controller
 
         //get student
         //$student = Student::orderBy("name", "asc")->get();
+        $referent_codes = ReferentCode::orderBy("id", "asc")->get();
 
         return view('receipt_form.index')
             ->with(['sfielda' =>  self::sfielda])
-            ->with(['sfield' => $request->sfield]);
+            ->with(['sfield' => $request->sfield])
+            ->with(['referent_codes' => $referent_codes]);
     }
 
     /**
@@ -612,6 +709,7 @@ class ReceiptFormController extends Controller
 
         $receipt = new Receipt($request->all());
         $receipt->recform_id =  $form->id;
+        $receipt->referent_code = $request->get('referent_code');
         $receipt->save();
         // dd(
         //     $request,
@@ -800,8 +898,8 @@ class ReceiptFormController extends Controller
             ['last_name', '=', $lastname],
             ['sfield', '=', $sfield],
         ])
-        ->whereBetween('submission_date', [$getTimeOpen, $getTimeClose])
-        ->first();
+            ->whereBetween('submission_date', [$getTimeOpen, $getTimeClose])
+            ->first();
 
         if ($exactMatch) {
             return [
@@ -822,7 +920,7 @@ class ReceiptFormController extends Controller
         foreach ($similarRecords as $record) {
             $firstNameSimilarity = 0;
             $lastNameSimilarity = 0;
-            
+
             similar_text(strtolower($firstname), strtolower($record->first_name), $firstNameSimilarity);
             similar_text(strtolower($lastname), strtolower($record->last_name), $lastNameSimilarity);
 
@@ -854,6 +952,8 @@ class ReceiptFormController extends Controller
 
     public function store(Request $request)
     {
+
+
         $allowedTLDs = ['.com', '.net', '.co.th', '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
         $route = $request->get('routeName');
         $result = $this->checkRegisted(
@@ -865,22 +965,22 @@ class ReceiptFormController extends Controller
 
         if ($result['checkRegisted']) {
             $message = 'พบข้อมูลการลงทะเบียนที่ซ้ำกัน';
-            
+
             if ($result['matchType'] === 'similar') {
                 if ($result['similarity'] >= 80) {
                     $similarity = number_format($result['similarity'], 2);
                     $message = "พบข้อมูลชื่อหรือนามสกุลที่คล้ายกัน ({$similarity}%) กับผู้ลงทะเบียนรายอื่น\n";
                     $message .= "ชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
                     $message .= "กรุณาตรวจสอบข้อมูลให้แน่ใจว่าคุณยังไม่เคยลงทะเบียนไปก่อนหน้านี้";
-                    
+
                     return back()
-                    ->withInput()
-                    ->with('warning', $message);
+                        ->withInput()
+                        ->with('warning', $message);
                 }
             } else {
                 $message = "พบข้อมูลการลงทะเบียนซ้ำกับชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
                 $message .= "กรุณาตรวจสอบข้อมูลของคุณ";
-                
+
                 return back()
                     ->withInput()
                     ->with('error', $message);
@@ -892,6 +992,8 @@ class ReceiptFormController extends Controller
                 'route' => $route,
             ]);
         }
+
+        // dd($request->all());
 
         if ($request->get('sfield') == '17') {
             # code...
@@ -1073,6 +1175,7 @@ class ReceiptFormController extends Controller
             'news_form' => $request->get('newsf'),
             'photo_att' => $fileas,
             'file_att' => $filebs,
+            'referent_code' => $request->get('referent_code'),
         ]);
 
         // print_r (['sfielda' =>  self::sfielda]);

@@ -288,6 +288,58 @@
                     </li>
                     <li>
                         <a href="#">
+                            <i class="metismenu-icon pe-7s-network"></i>
+                            Referent
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="{{ route('referent_url') }}">
+                                    <i class="metismenu-icon"></i>
+                                    Referent URL
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('referent_code') }}">
+                                    <i class="metismenu-icon"></i>
+                                    Referent Code
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    @if (Auth::user()->id == 16)
+                        <li>
+                            <a href="#">
+                                {{-- find icon for forms management  --}}
+                                <i class="metismenu-icon pe-7s-display2"></i>
+                                Forms Management
+                                <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="{{ route('form-manage.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        Forms Management
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('form-manage.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        Package Management
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('form-manage.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        Grade Management
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+                    <li>
+                        <a href="#">
                             <i class="metismenu-icon pe-7s-note2"></i>
                             ข้อมูลจาก Online Form
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
@@ -792,7 +844,7 @@
                                 </a>
                             </li>
                         </ul>
-                        @if ((Auth::user()->level == 0 && Auth::user()->id == 4))
+                        @if (Auth::user()->level == 0 && Auth::user()->id == 4)
                             <ul>
                                 <li>
                                     <a href="{{ route('Godeye.index') }}">

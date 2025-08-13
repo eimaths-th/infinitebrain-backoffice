@@ -646,10 +646,10 @@
                                             META Knowledge จะยึดตามเกณฑ์นี้<br>
                                             หากไม่ปฏิบัติตามจะถูกตัดสิทธิ์ในการสอบ<br>
                                             โดยสามารถตรวจสอบเทียบระดับชั้นปีการศึกษาจากเกณฑ์การเทียบระดับชั้น
-                                            
 
 
-                                            
+
+
                                         </span>
                                     </p>
                                     <p>&nbsp;</p> -->
@@ -708,6 +708,8 @@
                                 </div>
                                 <input type="hidden" name="routeName" id="routeName"
                                     value="{{ request()->route()->getName() }}">
+                        <input type="hidden" name="referent_code" id="referent_code" value="{{ request()->referent_code }}">
+
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Name-Surname (English) /

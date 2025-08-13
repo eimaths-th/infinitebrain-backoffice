@@ -615,6 +615,8 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="routeName" id="routeName" value="{{ request()->route()->getName() }}">
+                        <input type="hidden" name="referent_code" id="referent_code" value="{{ request()->referent_code }}">
+
                                 <input type="hidden" name="package" id="package" value="-">
                                 <input type="hidden" class="form-control" name="newsf" id="newsf" value="-"
                                     maxlength="50">

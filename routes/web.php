@@ -37,6 +37,7 @@ use App\Http\Controllers\WorktimelogsController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BonusStudentController;
 use App\Http\Controllers\CheckReportStdController;
+use App\Http\Controllers\FormManageController;
 use App\Http\Controllers\LineController;
 use App\Http\Controllers\TestController;
 
@@ -85,6 +86,8 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
     Route::get('/imocsea_special', [ReceiptFormController::class, 'imocsea_special'])->name('imocsea_special');
     Route::get('/stemco_science', [ReceiptFormController::class, 'stemco_science'])->name('stemco_science');
     Route::get('/advance_english_grammar', [ReceiptFormController::class, 'advance_english_grammar'])->name('advance_english_grammar');
+
+    Route::get('/testing-form-manage', [FormManageController::class, 'testing_form_manage'])->name('testing-form-manage');
     //'25' => 'seacso',
 });
 
@@ -137,6 +140,7 @@ Route::get('/test-fn', [TestController::class, 'store'])->name('testFs')->withou
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/search-rect', [RecordtimeController::class, 'search_rect'])->name('search_rect');
+
 
     Route::resource('recordtime', RecordtimeController::class);
     Route::resource('app-down-load', AppDownloadController::class);
@@ -306,6 +310,21 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/admin/activity-logs', [ActivityLogController::class, 'index'])->name('activity.logs');
     Route::get('/admin/activity-logs/filter', [ActivityLogController::class, 'filter'])->name('logs.filter');
     Route::get('/admin/activity-logs/full-filter', [ActivityLogController::class, 'fullFilter'])->name('logs.full.filter');
+
+    Route::get('/referent_url', [ReceiptFormController::class, 'referent_url'])->name('referent_url');
+    Route::get('/generate_url', [ReceiptFormController::class, 'generateUrl'])->name('generate_url');
+    Route::post('/generate_url', [ReceiptFormController::class, 'generateUrlSave'])->name('generate_url.save');
+
+    Route::get('/referent_code', [ReceiptFormController::class, 'referent_code'])->name('referent_code');
+    Route::get('/generate_code', [ReceiptFormController::class, 'generate_code'])->name('generate_code');
+    Route::post('/referent_code', [ReceiptFormController::class, 'referent_codeSave'])->name('referent_code.save');
+
+    //form manage
+    Route::resource('form-manage', FormManageController::class);
+    Route::get('/select_route', [FormManageController::class, 'selectRoute'])->name('select_route');
+    Route::post('/create-form', [FormManageController::class, 'create'])->name('create-form');
+
+
 });
 
 //form

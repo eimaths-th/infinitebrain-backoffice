@@ -673,6 +673,8 @@
                                 <div class="form-row form-focus">
                                     <input type="hidden" name="sfield" id="sfield" value="24">
                                     <input type="hidden" name="routeName" id="routeName" value="{{ request()->route()->getName() }}">
+                        <input type="hidden" name="referent_code" id="referent_code" value="{{ request()->referent_code }}">
+
 
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Name-Surname (English) /
@@ -860,10 +862,10 @@
                                                 @for ($i = 1; $i <= 12; $i++)
                                                     <option value="Grade {{ toRoman($i) }}: 790 bath">Grade {{ $i }}</option>
                                                 @endfor --}}
-                                               
+
                                                 <option value="Grade I-XII: 790 bath">Grade 1-12 (790 บาท)</option>
                                                 {{-- <option value="Grade IX-XII: 650 bath">Grade 9-12 (เลือกได้ 2 วิชา จาก คณิต/เคมี/ชีวะ/ฟิสิกต์ 650 บาท)</option> --}}
-                                               
+
                                             </select>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Packages</label>
@@ -1590,7 +1592,7 @@
             //$('.form-control').focus({ preventScroll: false });
             //$('input').focus();
             //$('input').focus({ preventScroll: false });
-            
+
             if (!document.getElementById('agreeCheckbox').checked) {
                 alert('กรุณาติ๊ก "ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว" ก่อนส่งฟอร์ม');
                 return false;

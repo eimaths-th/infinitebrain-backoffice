@@ -718,6 +718,8 @@
 
                                 <input type="hidden" name="routeName" id="routeName"
                                     value="{{ request()->route()->getName() }}">
+                        <input type="hidden" name="referent_code" id="referent_code" value="{{ request()->referent_code }}">
+
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Name-Surname (English) /
@@ -1187,7 +1189,7 @@
                     msg.textContent = '✅ อีเมลนี้รูปแบบถูกต้อง';
                     msg.style.color = 'green';
                 } else {
-                    msg.textContent = '❌ รูปแบบอีเมลนี้ไม่ถูกต้อง' +  
+                    msg.textContent = '❌ รูปแบบอีเมลนี้ไม่ถูกต้อง' +
                         ' (โปรดใช้รูปแบบเฉพาะ: ' + allowedSuffixes.join(', ') + ')';
                     msg.style.color = 'red';
 
