@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                        background-size: 15px;
-                                                                                                                    }*/
+                                                                                                                            background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                            background-size: 15px;
+                                                                                                                        }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                        border-color: var(--color-invalid);
-                                                                                                                    }*/
+                                                                                                                        input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                            border-color: var(--color-invalid);
+                                                                                                                        }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                        display: block;
-                                                                                                                    }*/
+                                                                                                                            display: block;
+                                                                                                                        }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -531,9 +531,9 @@
     </style>
     <style>
         /* .custom-image {
-                                                                    width: 395px;
-                                                                    height: 395px;
-                                                                } */
+                                                                        width: 395px;
+                                                                        height: 395px;
+                                                                    } */
 
         .custom-image {
             width: 100%;
@@ -573,15 +573,15 @@
                             <hr />
 
                             <div class="col-md-10 div_center" data-layout="full">
-                                @if(session('warning'))
-                                <div class="alert alert-warning">
-                                    {!! nl2br(e(session('warning'))) !!}
-                                </div>
+                                @if (session('warning'))
+                                    <div class="alert alert-warning">
+                                        {!! nl2br(e(session('warning'))) !!}
+                                    </div>
                                 @endif
-                                @if(session('error'))
-                                <div class="alert alert-danger">
-                                    {!! nl2br(e(session('error'))) !!}
-                                </div>
+                                @if (session('error'))
+                                    <div class="alert alert-danger">
+                                        {!! nl2br(e(session('error'))) !!}
+                                    </div>
                                 @endif
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <h4 style="text-align: center;"><span style="color: #6351a2;">
@@ -692,6 +692,7 @@
                                 <input type="hidden" name="parent" id="parent" value=" ">
                                 <input type="hidden" name="newsf" id="newsf" value=" ">
                                 <input type="hidden" name="routeName" id="routeName" value="{{ request()->route()->getName() }}">
+                                <input type="hidden" name="referent_code" id="referent_code" value="{{ request()->referent_code }}">
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"
                                         class="form-label form-label-top form-label-auto">Name-Surname (English) /
@@ -704,7 +705,8 @@
                                             </label>
                                             <input type="text" class="form-control" name="firstname" id="firstname"
                                                 value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">First
+                                            <label class="form-sub-label" style="min-height:13px"
+                                                aria-hidden="false">First
                                                 Name</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -928,8 +930,10 @@
                             </div>
                             <br>
                             <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="agreeCheckbox" required style="float: none; margin-right: 3px;">
-                                <label class="form-check-label" for="agreeCheckbox">ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว</label>
+                                <input type="checkbox" class="form-check-input" id="agreeCheckbox" required
+                                    style="float: none; margin-right: 3px;">
+                                <label class="form-check-label" for="agreeCheckbox">ตกลงและยอมรับข้อกำหนดและเงื่อนไข
+                                    รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว</label>
                             </div>
 
 
@@ -1390,7 +1394,8 @@
             //$('input').focus({ preventScroll: false });
 
             if (!document.getElementById('agreeCheckbox').checked) {
-                alert('กรุณาติ๊ก "ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว" ก่อนส่งฟอร์ม');
+                alert(
+                    'กรุณาติ๊ก "ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว" ก่อนส่งฟอร์ม');
                 return false;
             }
 
