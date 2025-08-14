@@ -436,7 +436,7 @@
                 <form action="{{ route('receipts_form') }}" method="GET">
                     <div class="row mb-4">
                         <div class="col-md-2">
-                            <label for="date_range">วันที่</label> 
+                            <label for="date_range">วันที่</label>
                             <input type="hidden" name="sfield" id="sfield" value="{{ request()->get('sfield') }}">
                             <input type="text" name="date_range" class="form-control" id="daterange"
                                 value="{{ request('date_range') ?? '' }}" autocomplete="off" placeholder="เลือกช่วงวันที่">
@@ -449,7 +449,7 @@
                                 @foreach ($referent_codes as $referent_code)
                                     <option value="{{ $referent_code->referent_code }}"
                                         {{ request('referent_code') == $referent_code->referent_code ? 'selected' : '' }}>
-                                        {{ $referent_code->referent_code }}</option>
+                                        {{ $referent_code->referent_code }} — ({{ $referent_code->referent_name }})</option>
                                 @endforeach
                             </select>
                         </div>
