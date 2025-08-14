@@ -632,14 +632,13 @@ class ReceiptController extends Controller
 
                 ->where('receipts.sfield', $request->sfield)
                 ->orderBy("receipts.id", "desc");
-                if ($request->start_date && $request->end_date) {
-                    # code...
-                    $receipt->whereBetween('receipts.submission_date', [$request->start_date, $request->end_date]);
-
-                }
-                if ($request->referent_code) {
-                    $receipt->where('receipts.referent_code', $request->referent_code);
-                }
+            if ($request->start_date && $request->end_date) {
+                # code...
+                $receipt->whereBetween('receipts.submission_date', [$request->start_date, $request->end_date]);
+            }
+            if ($request->referent_code) {
+                $receipt->where('receipts.referent_code', $request->referent_code);
+            }
 
             //print_r($levels);
             //exit();
@@ -658,15 +657,18 @@ class ReceiptController extends Controller
                     return $mes;
                 })
                 ->editColumn('referent_code', function (Receipt $receipt) {
-                    return $receipt->referent_code;
+                    // dd($receipt);
+                    return $receipt->receipt_referent_code;
                 })
-                ->editColumn('receipt_referent_name', function (Receipt $receipt) {
+                ->editColumn('referent_name', function (Receipt $receipt) {
                     $name = '';
-                    $referent_code = $receipt->referent_code;
-                    $referent_code = ReferentCode::where('referent_code', $referent_code)->first();
+
+                    $referent_code = ReferentCode::where('referent_code', $receipt->receipt_referent_code)->first();
+
                     if ($referent_code) {
                         $name = $referent_code->referent_name;
                     }
+                    // dd($name,$receipt->referent_code ,$receipt->referent_code);
                     return $name;
                 })
                 ->editColumn('checkbox', function ($row) {

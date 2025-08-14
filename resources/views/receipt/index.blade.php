@@ -155,7 +155,7 @@
                                 @foreach ($referent_codes as $referent_code)
                                     <option value="{{ $referent_code->referent_code }}"
                                         {{ request('referent_code') == $referent_code->referent_code ? 'selected' : '' }}>
-                                        {{ $referent_code->referent_code }}</option>
+                                        {{ $referent_code->referent_code }} — ({{ $referent_code->referent_name }})</option>
                                 @endforeach
                             </select>
                         </div>
@@ -183,7 +183,6 @@
                                 <th>Referent Name</th>
                                 <th>Voucher Number</th>
                                 <th>Customer Code</th>
-
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Parent Name</th>
@@ -1458,12 +1457,12 @@
                         name: 'receipt_submission_date'
                     },
                     {
-                        data: 'receipt_referent_code',
-                        name: 'receipt_referent_code'
+                        data: 'referent_code',
+                        name: 'referent_code'
                     },
                     {
-                        data: 'receipt_referent_name',
-                        name: 'receipt_referent_name'
+                        data: 'referent_name',
+                        name: 'referent_name'
                     },
                     {
                         data: 'receipt_number',
