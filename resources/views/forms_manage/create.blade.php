@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                                                                background-size: 15px;
-                                                                                                                                                                            }*/
+                                                                                                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                                                                background-size: 15px;
+                                                                                                                                                                                            }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                                                                border-color: var(--color-invalid);
-                                                                                                                                                                            }*/
+                                                                                                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                                                                border-color: var(--color-invalid);
+                                                                                                                                                                                            }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                                                                display: block;
-                                                                                                                                                                            }*/
+                                                                                                                                                                                                display: block;
+                                                                                                                                                                                            }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -518,22 +518,22 @@
         }
 
         /* #loader {
-                                                display: none;
-                                                position: fixed;
-                                                top: 0;
-                                                left: 0;
-                                                right: 0;
-                                                bottom: 0;
-                                                width: 100%;
-                                                background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
-                                                z-index: 10000;
-                                            } */
+                                                                display: none;
+                                                                position: fixed;
+                                                                top: 0;
+                                                                left: 0;
+                                                                right: 0;
+                                                                bottom: 0;
+                                                                width: 100%;
+                                                                background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
+                                                                z-index: 10000;
+                                                            } */
     </style>
     <style>
         /* .custom-image {
-                                                                                                                            width: 395px;
-                                                                                                                            height: 395px;
-                                                                                                                        } */
+                                                                                                                                            width: 395px;
+                                                                                                                                            height: 395px;
+                                                                                                                                        } */
 
         .custom-image {
             width: 100%;
@@ -609,7 +609,8 @@
 
                         @if (isset($data->brand))
                             <div class="show-image-brand">
-                                <img class="card-img" src="{{ asset('images/' . $data->brand) }}" alt="..." height="360">
+                                <img class="card-img" src="{{ asset('images/' . $data->brand) }}" alt="..."
+                                    height="360">
                             </div>
                         @else
                             <div class="show-image-brand-default">
@@ -660,7 +661,8 @@
                                             <div class="row">
                                                 <label for="brand"><strong>Brand Image : </strong></label>
                                                 <div class="col-md-6">
-                                                    <input type="file" name="brand" id="brand" class="form-control">
+                                                    <input type="file" name="brand" id="brand"
+                                                        class="form-control">
                                                 </div>
                                             </div>
                                             <label for="registration_date_label">รับสมัคร:</label>
@@ -841,17 +843,20 @@
                                     value="{{ request()->referent_code }}">
 
                                 <div class="form-row form-focus">
-                                    <label style="padding-left: 20px"
-                                        class="form-label form-label-top form-label-auto">Name-Surname (English) /
-                                        ชื่อ - นามสกุล ภาษาอังกฤษ <span class="form-required">*</span></label>
-                                    <div class="col-md-6">
 
+                                    <div class="col-md-6">
+                                        <label style="padding-left: 20px"
+                                            class="form-label form-label-top form-label-auto">Name (English) /
+                                            ชื่อ (ภาษาอังกฤษ) <span class="form-required">*</span></label>
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="firstname">
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="student_first_name">
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            <input type="text" class="form-control" name="firstname" id="firstname"
-                                                value="" maxlength="50" minlength="2" required>
+                                            <input type="text" class="form-control" name="student_first_name"
+                                                id="student_first_name" value="{{ $data->student_first_name }}"
+                                                maxlength="50" minlength="2"
+                                                placeholder="{{ $data->student_first_name }}" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">First
                                                 Name</label>
@@ -866,12 +871,17 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
+                                        <label style="padding-left: 20px"
+                                            class="form-label form-label-top form-label-auto">Last Name (English) /
+                                            นามสกุล (ภาษาอังกฤษ) <span class="form-required">*</span></label>
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto" for="lastname">
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            <input type="text" class="form-control" name="lastname" id="lastname"
-                                                value="" maxlength="50" minlength="2" required>
+                                            <input type="text" class="form-control" name="student_last_name"
+                                                id="student_last_name" value="{{ $data->student_last_name }}"
+                                                maxlength="50" minlength="2"
+                                                placeholder="{{ $data->student_last_name }}" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Last
                                                 Name</label>
@@ -890,8 +900,10 @@
                                                 (English)/ ชื่อเล่น (ภาษาอังกฤษ) <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            <input type="text" class="form-control" name="nickname" id="nickname"
-                                                value="" maxlength="50" minlength="1" required>
+                                            <input type="text" class="form-control" name="student_nick_name"
+                                                id="student_nick_name" value="{{ $data->student_nick_name }}"
+                                                maxlength="50" minlength="1"
+                                                placeholder="{{ $data->student_nick_name }}" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Nick
                                                 Name</label>
@@ -911,8 +923,9 @@
                                                 Date / วันเกิด <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            <input type="date" class="AddDate form-control" name="birthdate"
-                                                id="birthdate" value="" required>
+                                            <input type="text" class="form-control" name="date_of_birth"
+                                                id="date_of_birth" value="{{ $data->date_of_birth }}"
+                                                placeholder="{{ $data->date_of_birth }}" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Date</label>
                                             <div class="form-error-message" role="alert"><img
@@ -933,10 +946,10 @@
 
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="schoolname">School name (English) / ชื่อโรงเรียน (ภาษาอังกฤษ)<span
-                                                    class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="schoolname" id="schoolname"
-                                                value="" maxlength="100" required>
+                                                for="student_school_name">School name (English) / ชื่อโรงเรียน (ภาษาอังกฤษ)<span class="form-required">*</span></label>
+                                            <input type="text" class="form-control" name="student_school_name"
+                                                id="student_school_name" value="{{ $data->student_school_name }}"
+                                                maxlength="100" placeholder="{{ $data->student_school_name }}" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">School Name</label>
                                             <div class="form-error-message" role="alert"><img
@@ -951,12 +964,24 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="grade">Grade
+                                            <label class="form-label form-label-top form-label-auto"
+                                                for="student_grade">Grade
                                                 / ระดับชั้น <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            <select style="width: 100%" class="form-control" id="grade"
-                                                name="grade" data-component="dropdown" aria-label="Grade / ระดับชั้น"
+                                            <input type="text" class="form-control mb-3" name="student_grade"
+                                                id="student_grade" value="{{ $data->student_grade }}"
+                                                placeholder="{{ $data->student_grade }}" required>
+
+                                            <button type="button" id="addOptionGrade" class="btn btn-primary btn-sm">Add
+                                                Option</button>
+                                            <div id="options_grade" style="display: none;">
+
+                                            </div>
+
+
+                                            {{-- <select style="width: 100%" class="form-control" id="grade"
+                                                name="student_grade" data-component="dropdown" aria-label="Grade / ระดับชั้น"
                                                 required>
                                                 <option value="">Please Select</option>
                                                 <option value="Kindergarten">Kindergarten</option>
@@ -972,9 +997,9 @@
                                                 <option value="Grade 10">Grade 10</option>
                                                 <option value="Grade 11">Grade 11</option>
                                                 <option value="Grade 12">Grade 12</option>
-                                            </select>
+                                            </select> --}}
                                             <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">{{-- Grade as per Academic Year 2022 --}}</label>
+                                                aria-hidden="false">Grade</label>
                                             <div class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
                                                     height="10"> <span class="error-navigation-message">This field is
@@ -993,17 +1018,26 @@
                                     <div class="col-md-6">
 
                                         <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="package">แพคเกจในการสอบ / Packages <span
-                                                    class="form-required">*</span></label>
-                                            <select class="form-control" id="package" name="package"
+                                            <label class="form-label form-label-top form-label-auto" for="package">Packages / แพคเกจในการสอบ <span class="form-required">*</span></label>
+
+                                            <input type="text" class="form-control mb-3" name="package"
+                                                id="package" value="{{ $data->package }}"
+                                                placeholder="{{ $data->package }}" required>
+
+                                            {{-- add button add package --}}
+                                            <button type="button" id="addOptionPackage" class="btn btn-primary btn-sm">Add
+                                                Option</button>
+                                            <div id="options_package" style="display: none;">
+
+                                            </div>
+
+                                            {{-- <select class="form-control" id="package" name="package"
                                                 aria-label="แพคเกจในการสอบ / Packages" required>
                                                 <option value="">Please Select</option>
                                                 <option value="Test: 850 baht">Test: 850 baht</option>
-                                                {{-- <option value="Test + tutoring class: 1250 bath">Test +
-                                                    tutoring class: 1250 bath</option> --}}
-
-                                            </select>
+                                                <option value="Test + tutoring class: 1250 bath">Test +
+                                                    tutoring class: 1250 bath</option>
+                                            </select> --}}
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Packages</label>
                                             <div class="form-error-message" role="alert"><img
@@ -1022,9 +1056,9 @@
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="address">Address / ที่อยู่ภาษาไทยสำหรับจัดส่งของรางวัล <span
+                                                for="student_address">Address / ที่อยู่ภาษาไทยสำหรับจัดส่งของรางวัล <span
                                                     class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="address" id="address"
+                                            <input type="text" class="form-control" name="student_address" id="student_address" value="{{ $data->student_address }}" placeholder="{{ $data->student_address }}"
                                                 maxlength="150" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Street Address</label>
@@ -1032,10 +1066,10 @@
                                     </div>
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="postcode">
+                                            <label class="form-label form-label-top form-label-auto" for="student_zip">
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            <input type="text" class="form-control" name="postcode" id="postcode"
+                                            <input type="text" class="form-control" name="student_zip" id="student_zip" value="{{ $data->student_zip }}" placeholder="Zip Code / รหัสไปรษณีย์"
                                                 maxlength="50" minlength="2" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Postal / Zip Code / รหัสไปรษณีย์ </label>
@@ -1055,10 +1089,10 @@
                                     <div class="col-md-6">
                                         <div class="position-relative form-group" style="padding-top:24px;">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="parent">Parent's name / ชื่อและนามสกุลผู้ปกครอง<span
+                                                for="parent_name">Parent's name / ชื่อและนามสกุลผู้ปกครอง<span
                                                     class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="parent" id="parent"
-                                                value="" maxlength="100" required>
+                                            <input type="text" class="form-control" name="parent_name" id="parent_name"
+                                                value="{{ $data->parent_name }}" maxlength="100" placeholder="Parent's name / ชื่อและนามสกุลผู้ปกครอง" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Parent's name</label>
                                             <div class="form-error-message" role="alert"><img
@@ -1077,8 +1111,8 @@
                                                 Number / เบอร์โทรศัพท์ <span class="form-required">*</span>
                                                 <div style="width: 270px"></div>
                                             </label>
-                                            <input type="text" class="AddPhone form-control" name="phone"
-                                                id="phone" value="" maxlength="20" required>
+                                            <input type="text" class="form-control" name="parent_phone"
+                                                id="parent_phone" value="{{ $data->parent_phone }}" maxlength="20" placeholder="Parent's phone number / เบอร์โทรศัพท์ผู้ปกครอง" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Phone Number</label>
                                             <div class="form-error-message" role="alert"><img
@@ -1100,8 +1134,11 @@
                                                 (กรุณาตรวจสอบที่อยู่อีเมลให้ถูกต้อง หากกรอกผิด
                                                 จะไม่สามารถส่งข้อมูลในการเข้าสอบได้) <span
                                                     class="form-required">*</span></label>
-                                            <input type="email" class="form-control" name="email" id="email"
-                                                value="" maxlength="70" required>
+                                            <input type="text" class="form-control mb-2" name="contact_email" id="contact_email"
+                                                value="{{ $data->contact_email }}" maxlength="70" placeholder="Contact email / อีเมลติดต่อ" required>
+                                            {{-- <input type="text" class="form-control " name="contact_email_detail" id="contact_email_detail"
+                                                value="{{ $data->contact_email_detail }}" maxlength="70" placeholder="Contact email / อีเมลติดต่อ" required> --}}
+                                            <textarea name="contact_email_detail" id="contact_email_detail" class="form-control" cols="30" rows="5" required>{!! $data->contact_email_detail !!}</textarea>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">example@example.com</label>
                                             <div class="form-error-message" role="alert"><img
@@ -1124,13 +1161,9 @@
                                                 for="photo">อัพโหลดรูปภาพผู้สมัคร <span class="form-required">*</span>
                                                 <div style="width: 280px"></div>
                                             </label>
-                                            <input type="text" id="drop1" name="drop1"
-                                                class="form-control form_none" value="" required>
-                                            <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
-                                                <div class="fallback">
+                                            <input type="text" class="form-control mb-2" name="student_photo" id="student_photo"
+                                                value="{{ $data->student_photo }}" maxlength="70" placeholder="Student photo / รูปภาพผู้สมัคร" required>
 
-                                                </div>
-                                            </div>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Photo</label>
                                             <div id="dropzone-photo-error" class="form-error-message" role="alert"><img
@@ -1145,18 +1178,47 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="dropzonex dz-default dz-message" id="dropzone_preview"
-                                    style="font-size: 1.5em;">
-                                    <h3 class="dropzone-previews ui"></h3>
-
-
+                                <div class="form-row form-focus" id="dropzone-photo">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="form-label form-label-top form-label-auto" for="image_payment">
+                                                image_payment <span class="form-required">*</span>
+                                            </label>
+                                            <input type="file" class="form-control" name="image_payment" id="image_payment" maxlength="150" minlength="2" required>
+                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">Street Address</label>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <br>
-                                <div align="center"><img src="{{ asset('images/acc_meta.png') }}" alt="..."
-                                        height="500"></div>
+                                <div id="preview_image_payment" class="text-center" style="display: none;">
+
+                                    <button type="button" id="remove_image_payment" class="btn btn-primary">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
                                 <br>
+
+                                <script>
+                                    $(document).ready(function() {
+                                        $('#image_payment').on('change', function() {
+                                            var file = this.files[0];
+                                            if (file) {
+                                                var reader = new FileReader();
+                                                reader.onload = function(e) {
+                                                    $('#preview_image_payment')
+                                                        .html('<img src="' + e.target.result + '" alt="Preview" height="500">')
+                                                        .show();
+                                                };
+                                                reader.readAsDataURL(file);
+                                            }
+                                        });
+                                        $('#remove_image_payment').on('click', function() {
+                                            $('#preview_image_payment').hide();
+                                            $('#image_payment').val('');
+                                        });
+                                    });
+                                </script>
 
                                 <div class="form-row form-focus" id="dropzone-att">
                                     <div class="col-md-12 col-sm-12">
@@ -1167,14 +1229,8 @@
                                                     class="form-required">*</span>
                                                 <div style="width: 280px"></div>
                                             </label>
-                                            <input type="text" id="drop2" name="drop2"
-                                                class="form-control form_none" value="" required>
-                                            <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
-                                                <div class="fallback">
-                                                    {{--  <input name="file2" id="file2" type="file" multiple
-                                                        class="form-control" /> --}}
-                                                </div>
-                                            </div>
+                                            <input type="text" id="student_slip_photo" name="student_slip_photo"
+                                                class="form-control" value="{{ $data->student_slip_photo }}" maxlength="70" placeholder="Student slip photo / หลักฐานการชำระเงิน" required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Receipt Photo</label>
                                             <div id="dropzone-att-error" class="form-error-message" role="alert"><img
@@ -1189,15 +1245,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dropzonex dz-default dz-message" id="dropzone_preview2"
-                                    style="font-size: 1.5em;">
-                                    <h3 class="dropzone-previews ui"></h3>
-
-
-                                </div>
-
-
-
                                 <div class="form-row form-focus">
                                     <div class="col-md-6 ">
                                         <div class="position-relative form-group">
@@ -1220,13 +1267,8 @@
 
                                         </div>
                                     </div>
-
                                 </div>
-
-
-
                             </div>
-
                         </div>
                         <div class="card-footer text-center">
                             <br>
@@ -1779,14 +1821,91 @@
             }
         });
     </script>
-    <script type="text/javascript">
-        const warningTitleCSS = 'color:red; font-size:60px; font-weight: bold; -webkit-text-stroke: 1px black;';
-        const warningDescCSS = 'font-size: 18px;';
+    <script>
+        let indexoption = 0;
 
-        console.log('%cหยุด!', warningTitleCSS);
-        console.log(
-            "%cนี่เป็นคุณสมบัติการทำงานของเบราว์เซอร์ที่มีจุดมุ่งหมายให้ใช้สำหรับผู้พัฒนา หากผู้ใดบอกให้คุณคัดลอกแล้ววางข้อความบางอย่างที่นี่เพื่อเปิดใช้งานคุณสมบัติการทำงานของ ระบบ หรือเพื่อเข้าถึงบัญชีของบุคคลใดบุคคลหนึ่ง โดยมิชอบ คำบอกกล่าวเช่นนี้เป็นกลลวงและจะทำให้ผู้นั้นมีสิทธิ์เข้าถึงบัญชี ของคุณ",
-            warningDescCSS);
-        //console.log('%cSee https://www.facebook.com/selfxss for more information.', warningDescCSS);
+        document.getElementById('addOptionGrade').addEventListener('click', function() {
+            indexoption++;
+            document.getElementById('options_grade').style.display = 'block';
+            console.log(indexoption);
+            var option = document.createElement('div');
+            option.classList.add(`option${indexoption}`);
+            option.innerHTML = `
+                <label>Option Grade ${indexoption}</label>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="optionGrade[]">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" onclick="removeOptionGrade(${indexoption})" class="btn btn-danger btn-sm mt-1">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            `;
+
+            document.getElementById('options_grade').appendChild(option);
+        });
+
+        function removeOptionGrade(index) {
+            let optionDiv = document.querySelector(`.option${index}`);
+            if (optionDiv) {
+                optionDiv.remove();
+            }
+
+            // ถ้าไม่มี option เหลือ ให้ซ่อน container
+            if (document.getElementById('options_grade').children.length === 0) {
+                document.getElementById('options_grade').style.display = 'none';
+            }
+        }
     </script>
+
+    <script>
+        let indexoptionPackage = 0;
+
+        document.getElementById('addOptionPackage').addEventListener('click', function() {
+            indexoptionPackage++;
+            document.getElementById('options_package').style.display = 'block';
+            console.log(indexoptionPackage);
+            var option = document.createElement('div');
+            option.classList.add(`option${indexoptionPackage}`);
+            option.innerHTML = `
+                <label>Option Package ${indexoptionPackage}</label>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <input type="number" class="form-control" name="optionValue[]" placeholder="Option Value">
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" name="optionName[]" placeholder="Option Name">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" onclick="removeOptionPackage(${indexoptionPackage})" class="btn btn-danger btn-sm mt-1">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            `;
+
+            document.getElementById('options_package').appendChild(option);
+        });
+
+        function removeOptionPackage(index) {
+            let optionDiv = document.querySelector(`.option${index}`);
+            if (optionDiv) {
+                optionDiv.remove();
+            }
+
+            // ถ้าไม่มี option เหลือ ให้ซ่อน container
+            if (document.getElementById('options_package').children.length === 0) {
+                document.getElementById('options_package').style.display = 'none';
+            }
+        }
+    </script>
+
 @endsection
