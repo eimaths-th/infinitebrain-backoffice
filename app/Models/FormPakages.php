@@ -23,7 +23,7 @@ class FormPakages extends Model
      * @var array
      */
 
-    protected $table = 'form_pakages';
+    protected $table = 'forms_pakages';
 
     protected $fillable = [
         'form_id',

@@ -106,19 +106,28 @@
                                 <th>Explain</th>
                                 <th>User</th>
                                 <th>Created at</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($referent_url as $item)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td> <a class="text-dark" href="{{ $item->referent_url }}"
-                                            target="_blank">{{ $item->referent_url }}</a></td>
-                                    <td>{{ $item->code->referent_name }}</td>
-                                    <td>{{ $item->referent_code }}</td>
-                                    <td>{{ $item->comments }}</td>
-                                    <td>{{ $item->user->name }}</td>
-                                    <td>{{ $item->created_at }}</td>
+                                    <td>{{ $loop->iteration ?? 'N/A' }}</td>
+                                    <td> <a class="text-dark" href="{{ $item->referent_url ?? 'N/A' }}"
+                                            target="_blank">{{ $item->referent_url ?? 'N/A' }}</a></td>
+                                    <td>{{ $item->code->referent_name ?? 'N/A' }}</td>
+                                    <td>{{ $item->referent_code ?? 'N/A' }}</td>
+                                    <td>{{ $item->comments ?? 'N/A' }}</td>
+                                    <td>{{ $item->user->name ?? 'N/A' }}</td>
+                                    <td>{{ $item->created_at ?? 'N/A' }}</td>
+                                    <td>
+                                        {{-- modal edit --}}
+                                        <button type="button" class="btn btn-primary btn-sm"
+                                            onclick="editReferentUrl({{ $item->id }})">Edit</button>
+                                        {{-- modal delete --}}
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            onclick="deleteReferentUrl({{ $item->id }})">Delete</button>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -144,6 +153,95 @@
         </div>
         <br>
     </div>
+
+    {{-- modal edit url--}}
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Referent URL</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+
+                        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="Parent">Route :</label><br>
+                                <select style="width: 100%;" class="form-control" id="Editroute" name="route" required>
+                                    <option value="">Select Route</option>
+                                    <option value="gmec">gmec</option>
+                                    <option value="olpcs">olpcs</option>
+                                    <option value="asiarope">asiarope</option>
+                                    <option value="gelosea">gelosea</option>
+                                    <option value="imocsea">imocsea</option>
+                                    <option value="imocsea_special">imocsea_special</option>
+                                    <option value="isocsea">isocsea</option>
+                                    <option value="imocsea+isocsea">imocsea+isocsea</option>
+                                    <option value="cambridge">cambridge</option>
+                                    <option value="huaxiacup">huaxiacup</option>
+                                    <option value="huaxiacup-ii">huaxiacup-II</option>
+                                    <option value="mathleague">mathleague</option>
+                                    <option value="mathleague-ii">mathleague-II</option>
+                                    <option value="reward">reward</option>
+                                    <option value="test_field">test_field</option>
+                                    <option value="neos">neo-science-olympiad</option>
+                                    <option value="neos-2">neo-science-school</option>
+                                    <option value="neos-2">neo-science-school</option>
+                                    <option value="huaxiacup-final-round">China-Mathematical-Olympiad-Final</option>
+                                    <option value="ihcmi">international-hope-cup-mathematic-invitational</option>
+                                    <option value="isc">International STEM competitions</option>
+                                    <option value="seacso">seacso</option>
+                                    <option value="copernicus">COPERNICUS OLYMPIAD</option>
+                                    <option value="coding-olympics">CODING OLYMPICS</option>
+                                    <option value="stemco_science">stemco_science</option>
+                                    <option value="advance_english_grammar">advance_english_grammar</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="Name">Referent Code:</label>
+                                {{-- <input type="text" class="form-control" name="referent_code" id="referent_code" required> --}}
+                                <select name="referent_code" id="Editreferent_code" class="form-control" required>
+                                    <option value="">Select Referent Code</option>
+                                    @foreach ($referent_code as $item)
+                                        <option value="{{ $item->referent_code }}">{{ $item->referent_code }} — ({{ $item->referent_name }})</option>
+                                    @endforeach
+                                </select>
+                                <small class="form-text text-danger">* ตัวอย่าง : 1234567890</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="Parent">Explain :</label><br>
+                        <textarea name="comments" class="form-control" id="Editcomments" rows="5"></textarea>
+
+                    </div>
+                    <input type="hidden" name="id" id="Editid">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="editReferentUrlSave()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -161,5 +259,95 @@
             event.preventDefault();
             console.log(window.location);
         });
+    </script>
+    <script>
+        function editReferentUrl(id) {
+            $.ajax({
+                url: "{{ route('referent_url.edit') }}",
+                type: "GET",
+                data: {
+                    id: id,
+                    _token: "{{ csrf_token() }}",
+                },
+                success: function(response) {
+                    if (response.success) {
+                        console.log(response);
+                        $('#Editid').val(response.referent_url.id);
+                        $('#Editreferent_code').val(response.referent_url.referent_code).trigger('change');
+                        $('#Editroute').val(response.referent_url.route).trigger('change');
+                        $('#Editcomments').val(response.referent_url.comments);
+                        $('#editModal').modal('show');
+                    } else {
+                        toastr.error(response.message, {
+                            timeOut: 5000
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+        function editReferentUrlSave() {
+            $.ajax({
+                url: "{{ route('referent_url.edit.save') }}",
+                type: "POST",
+                data: {
+                    id: $('#Editid').val(),
+                    referent_code: $('#Editreferent_code').val(),
+                    route: $('#Editroute').val(),
+                    comments: $('#Editcomments').val(),
+                    _token: "{{ csrf_token() }}",
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.message, {
+                            timeOut: 3000
+                        });
+                        $('#editModal').modal('hide');
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 5000);
+                        // $('#Listview').DataTable().ajax.reload();
+                    } else {
+                        toastr.error(response.message, {
+                            timeOut: 5000
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function deleteReferentUrl(id) {
+            $.ajax({
+                url: "{{ route('referent_url.delete') }}",
+                type: "DELETE",
+                data: {
+                    id: id,
+                    _token: "{{ csrf_token() }}",
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.message, {
+                            timeOut: 3000
+                        });
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 5000);
+                        // $('#Listview').DataTable().ajax.reload();
+                    } else {
+                        toastr.error(response.message, {
+                            timeOut: 5000
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
     </script>
 @endsection

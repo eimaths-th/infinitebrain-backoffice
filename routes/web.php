@@ -314,16 +314,23 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/referent_url', [ReceiptFormController::class, 'referent_url'])->name('referent_url');
     Route::get('/generate_url', [ReceiptFormController::class, 'generateUrl'])->name('generate_url');
     Route::post('/generate_url', [ReceiptFormController::class, 'generateUrlSave'])->name('generate_url.save');
+    Route::get('/referent_url/edit', [ReceiptFormController::class, 'referent_urlEdit'])->name('referent_url.edit');
+    Route::post('/referent_url/edit', [ReceiptFormController::class, 'referent_urlEditSave'])->name('referent_url.edit.save');
+    Route::delete('/referent_url/delete', [ReceiptFormController::class, 'referent_urlDelete'])->name('referent_url.delete');
 
     Route::get('/referent_code', [ReceiptFormController::class, 'referent_code'])->name('referent_code');
     Route::get('/generate_code', [ReceiptFormController::class, 'generate_code'])->name('generate_code');
     Route::post('/referent_code', [ReceiptFormController::class, 'referent_codeSave'])->name('referent_code.save');
+    Route::get('/referent_code/edit', [ReceiptFormController::class, 'referent_codeEdit'])->name('referent_code.edit');
+    Route::post('/referent_code/edit', [ReceiptFormController::class, 'referent_codeEditSave'])->name('referent_code.edit.save');
+    Route::delete('/referent_code/delete', [ReceiptFormController::class, 'referent_codeDelete'])->name('referent_code.delete');
 
     //form manage
     Route::resource('form-manage', FormManageController::class);
     Route::get('/select_route', [FormManageController::class, 'selectRoute'])->name('select_route');
     Route::post('/create-form', [FormManageController::class, 'create'])->name('create-form');
-
+    Route::post('/edit-option-grade', [FormManageController::class, 'editOptionGrade'])->name('edit-option-grade');
+    Route::post('/delete-option-grade', [FormManageController::class, 'deleteOptionGrade'])->name('delete-option-grade');
 
 });
 
