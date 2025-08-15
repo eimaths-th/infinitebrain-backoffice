@@ -109,8 +109,18 @@ class FormManage extends Model
     {
         return $this->belongsTo(FormPakages::class);
     }
+    public function packages()
+    {
+        return $this->hasMany(FormPakages::class, 'form_id', 'id');
+    }
+
+
     public function grade()
     {
         return $this->belongsTo(FormGrades::class);
+    }
+    public function grades()
+    {
+        return $this->hasMany(FormGrades::class, 'form_id', 'id');
     }
 }

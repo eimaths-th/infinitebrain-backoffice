@@ -67,13 +67,87 @@ class ReceiptFormController extends Controller
     {
         $referent_code = ReferentCode::all();
         return view("receipt_form.generate_url")->with(['referent_code' => $referent_code]);
+
     }
+
+    public function generateUrlSave(Request $request)
+    {
+        $request->validate([
+            'route' => 'required',
+            'referent_code' => 'required',
+            'comments' => 'nullable',
+        ]);
+
+        $route = $request->input('route');
+        $comments = $request->input('comments');
+
+        $url = route($route, ['referent_code' => $request->input('referent_code')]);
+
+        ReferentURL::create([
+            'user_id' => Auth::user()->id,
+            'comments' => $comments,
+            'route' => $route,
+            'referent_url' => $url,
+            'referent_code' => $request->input('referent_code'),
+        ]);
+
+        return redirect(route('referent_url'));
+    }
+
+    public function referent_urlEdit(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+        ]);
+        $referent_code = ReferentCode::all();
+        $referent_url = ReferentURL::find($request->id);
+        return response()->json([
+            'success' => true,
+            'referent_code' => $referent_code,
+            'referent_url' => $referent_url,
+        ]);
+    }
+
+    public function referent_urlEditSave(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'referent_code' => 'required',
+            'route' => 'required',
+            'comments' => 'nullable',
+        ]);
+        $url = route($request->route, ['referent_code' => $request->referent_code]);
+        $referent_url = ReferentURL::find($request->id);
+        $referent_url->referent_code = $request->referent_code;
+        $referent_url->route = $request->route;
+        $referent_url->comments = $request->comments;
+        $referent_url->user_id = Auth::user()->id;
+        $referent_url->referent_url = $url;
+        $referent_url->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Referent url updated successfully',
+        ]);
+    }
+
+    public function referent_urlDelete(Request $request)
+    {
+        $referent_url = ReferentURL::find($request->id);
+        $referent_url->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Referent url deleted successfully',
+        ]);
+    }
+
     public function referent_url()
     {
         $referent_code = ReferentCode::all();
         $referent_url = ReferentURL::all();
         return view("receipt_form.referent_url")->with(['referent_code' => $referent_code, 'referent_url' => $referent_url]);
     }
+
     public function referent_code()
     {
         $referent_code = ReferentCode::all();
@@ -113,30 +187,64 @@ class ReceiptFormController extends Controller
         ]);
     }
 
+    public function referent_codeEdit(Request $request)
+    {
+        $referent_code = ReferentCode::find($request->id);
+        return response()->json([
+            'success' => true,
+            'referent_code' => $referent_code,
+        ]);
+    }
 
-    public function generateUrlSave(Request $request)
+
+    public function referent_codeEditSave(Request $request)
     {
         $request->validate([
-            'route' => 'required',
-            'referent_code' => 'required',
-            'comments' => 'nullable',
+            'referent_name' => 'required|string|max:255',
+            'comments' => 'nullable|string|max:500',
         ]);
 
-        $route = $request->input('route');
-        $comments = $request->input('comments');
+        $user_id = Auth::id();
 
-        $url = route($route, ['referent_code' => $request->input('referent_code')]);
+        $referent_code = ReferentCode::find($request->id);
+        $referent_code->referent_name = $request->referent_name;
+        $referent_code->comments = $request->comments;
+        $referent_code->user_id = $user_id;
+        $referent_code->save();
 
-        ReferentURL::create([
-            'user_id' => Auth::user()->id,
-            'comments' => $comments,
-            'route' => $route,
-            'referent_url' => $url,
-            'referent_code' => $request->input('referent_code'),
+        return response()->json([
+            'success' => true,
+            'message' => 'Referent code created successfully',
+            'code' => $referent_code,
         ]);
-
-        return redirect(route('referent_url'));
     }
+
+    public function referent_codeDelete(Request $request)
+    {
+        $referent_code = ReferentCode::find($request->id);
+        $referent_url = ReferentURL::where('referent_code', $referent_code->referent_code)->delete();
+
+        $receipt_form = ReceiptForm::where('referent_code', $referent_code->referent_code)->get();
+        foreach ($receipt_form as $form) {
+            $form->update([
+                'referent_code' => null,
+            ]);
+        }
+
+        $receipt = Receipt::where('referent_code', $referent_code->referent_code)->get();
+        foreach ($receipt as $receipt) {
+            $receipt->update([
+                'referent_code' => null,
+            ]);
+        }
+
+        $referent_code->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Referent code deleted successfully',
+        ]);
+    }
+
 
     public function getDatetime($route)
     {

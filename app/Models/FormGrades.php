@@ -22,6 +22,7 @@ class FormGrades extends Model
      * @var array
      */
     protected $table = 'forms_grades';
+    
     protected $fillable = [
         'form_id',
         'sfield',
