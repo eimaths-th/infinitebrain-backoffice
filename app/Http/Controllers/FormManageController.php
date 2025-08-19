@@ -21,6 +21,30 @@ class FormManageController extends Controller
     {
         //
         $data = FormManage::all();
+        // foreach ($data as $key => $form) {
+        //     $packages = FormPakages::where([
+        //         'form_name' => $form->form_name,
+        //         'form_route' => $form->form_route,
+        //         ])->get();
+        //     foreach ($packages as $key => $package) {
+        //         $package->update([
+        //             'form_id' => $form->id,
+        //             'sfield' => $form->sfield,
+        //         ]);
+        //     }
+
+        //     $grades = FormGrades::where([
+        //         'form_name' => $form->form_name,
+        //         'form_route' => $form->form_route,
+        //         ])->get();
+        //     foreach ($grades as $key => $grade) {
+        //         $grade->update([
+        //             'form_id' => $form->id,
+        //             'sfield' => $form->sfield,
+        //         ]);
+        //     }
+        // }
+
         return view('forms_manage.index', compact('data'));
     }
 
@@ -79,7 +103,7 @@ class FormManageController extends Controller
                 'form_route' => $form_route,
                 'head_title' => $request->form_name . ' 2025 Registration Form',
                 'news' => 'ท่านทราบข่าวสารการจัดสอบ ' . $request->form_name . ' จากช่องทางใด',
-                'created_by' => Auth::user()->id,
+                'create_by' => Auth::user()->id,
             ]);
             $data = FormManage::find($dataCreate->id);
             return view('forms_manage.create', compact('form_route', 'data'));
@@ -395,7 +419,7 @@ class FormManageController extends Controller
             'text_warning' => $request->text_warning,
             'text_footer' => $request->text_footer,
             'text_policy' => $request->text_policy,
-            'updated_by' => Auth::user()->id,
+            'update_by' => Auth::user()->id,
         ]);
 
         //file image
