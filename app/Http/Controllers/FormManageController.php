@@ -74,7 +74,6 @@ class FormManageController extends Controller
     }
     public function selectRoute()
     {
-
         return view('forms_manage.select_route');
     }
 
@@ -98,9 +97,11 @@ class FormManageController extends Controller
         if ($data) {
             return view('forms_manage.create', compact('form_route', 'data'));
         } else {
+            $last_id = FormManage::orderBy('id', 'desc')->first();
             $dataCreate = FormManage::create([
                 'form_name' => $request->form_name,
                 'form_route' => $form_route,
+                'sfield' => $last_id->sfield + 1,
                 'head_title' => $request->form_name . ' 2025 Registration Form',
                 'news' => 'ท่านทราบข่าวสารการจัดสอบ ' . $request->form_name . ' จากช่องทางใด',
                 'create_by' => Auth::user()->id,

@@ -88,6 +88,7 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
     Route::get('/advance_english_grammar', [ReceiptFormController::class, 'advance_english_grammar'])->name('advance_english_grammar');
 
     Route::get('/testing-form-manage', [FormManageController::class, 'testing_form_manage'])->name('testing-form-manage');
+    Route::get('/admin-test-field', [ReceiptFormController::class, 'admin_test_field'])->name('admin-test-field');
     //'25' => 'seacso',
 });
 

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\FormManage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -15,6 +16,9 @@ class ContactMail extends Mailable
     public $data;
     public $url1;
     public $url2;
+    public $head_title;
+    public $news_title;
+    public $check;
     /**
      * Create a new message instance.
      *
@@ -27,19 +31,25 @@ class ContactMail extends Mailable
         $this->url1 = '<img height="200px" src="' . asset('receipt_form_images/' . $data->photo_att) . '" alt="..." style="vertical-align: middle;">';
         $this->url2 = '<img src=" ' . asset('receipt_form_images/' . $data->file_att) . ' " alt="..." style="vertical-align: middle; height: 200px;">';
         // $this->url2 = asset('receipt_form_images/' . $data->file_att);
+
+        $sfield = $data->sfield;
+        $formManage = FormManage::where('sfield', $sfield)->first();
+
+        if ($formManage) {
+
+            $this->check = true;
+            $this->head_title = ($formManage->head_title) ?? 'Contact Mail';
+            $this->news_title = ($formManage->form_name) ?? 'Contact Mail' . ' ' . date('Y');
+
+        }else{
+            $this->check = false;
+        }
+        // dd($this->message);
         if ($data->sfield == '17') {
             $this->subject('Math League');
-        }else {
+        } else {
             $this->subject('Contact Mail');
-
         }
-        // dd($data,$this->url1,$this->url2);
-
-        // $this->url1 = asset('receipt_form_images/' . $data->photo_att);
-        // $this->url2 = asset('receipt_form_images/' . $data->file_att);
-        // $this->url2 = asset('receipt_form_images/' . $data->file_att);
-
-        // dd($data,$this->url1,$this->url2);
 
     }
 
