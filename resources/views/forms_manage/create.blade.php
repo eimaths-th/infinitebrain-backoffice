@@ -2,6 +2,9 @@
 
 @section('style')
     @include('forms_manage.css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 
 
@@ -18,20 +21,36 @@
                 <div class="card bg-light2 mb-3 ">
                     {{-- <div class="card-header">{{ __('Login') }}</div> --}}
                     <div align="center">
-                        <h1> {{ $form_route }}</h1>
-
                         @if (isset($data->brand))
-                            <div class="show-image-brand">
+                            <div class="show-image-brand-default" id="show-image-brand-default">
                                 <img class="card-img" src="{{ asset('form_manage/brand/' . $data->brand) }}" alt="..."
-                                    height="360">
+                                    width="100%" height="auto">
                             </div>
                         @else
-                            <div class="show-image-brand-default">
-                                <img class="card-img" src="{{ asset('images/GLOW_ASIAROPE_Logo-NoBG-1536x427.png') }}"
-                                    alt="..." height="360">
+                            <div class="show-image-brand-default" id="show-image-brand-default">
+
                             </div>
                         @endif
                     </div>
+                    <script>
+                        $(document).ready(function() {
+                            //show image brand
+                            $('#brand').on('change', function() {
+                                var file = this.files[0];
+                                if (file) {
+                                    var reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        $('.show-image-brand-default')
+                                            .html('<img src="' + e.target.result +
+                                                '" class=" my-3" alt="Preview" width="100%" height="auto">'
+                                                )
+                                            .show();
+                                    };
+                                    reader.readAsDataURL(file);
+                                }
+                            });
+                        });
+                    </script>
                     <form id="infinite" method="POST" action="{{ route('form-manage.store') }}"
                         enctype="multipart/form-data" {{-- onsubmit="return check_input();" --}}>
                         <input type="hidden" name="form_id" id="form_id" value="{{ $data->id ?? '' }}">
@@ -58,11 +77,11 @@
                                         {!! nl2br(e(session('warning'))) !!}
                                     </div>
                                 @endif
-                                @if (session('error'))
-                                    <div class="alert alert-danger">
-                                        {!! nl2br(e(session('error'))) !!}
-                                    </div>
-                                @endif
+
+                                <div class="alert alert-danger" id="error_alert" style="display: none;">
+
+                                </div>
+
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;">
                                         <span style="color: #6351a2;">
@@ -76,6 +95,18 @@
 
                                     <div class="row">
 
+                                        <div class="col-md-6">
+                                            <p style="text-align: left;">
+
+                                                <span style="color: #6351a2;">
+                                                    <label for="brand"><strong>Form Name : </strong></label>
+
+                                                    <input type="text" name="form_name" id="form_name"
+                                                        class="form-control" value="{{ $data->form_name }}"
+                                                        placeholder="Form Name">
+                                                </span>
+                                            </p>
+                                        </div>
                                         <div class="col-md-6">
                                             <p style="text-align: left;">
 
@@ -141,9 +172,9 @@
                                                             value="{{ $data->registration_date_label }}">
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <input type="text" name="registration_date"
+                                                        {{-- <input type="text" name="registration_date"
                                                             class="form-control" placeholder="dd/mm/yyyy"
-                                                            value="{{ $data->registration_date }}">
+                                                            value="{{ $data->registration_date }}"> --}}
                                                     </div>
                                                 </span>
                                             </p>
@@ -253,13 +284,9 @@
                                                         <div class="row">
                                                             <div class="col-lg-12">
                                                                 <input type="file" name="admission_criteria_image"
+                                                                    id="admission_criteria_image"
                                                                     class="form-control col-lg-2">
-                                                                @if (isset($data->admission_criteria_image))
-                                                                    <input type="text" name="oldAdmissionCriteriaImage"
-                                                                        id="oldAdmissionCriteriaImage"
-                                                                        value="{{ $data->admission_criteria_image }}"
-                                                                        hidden>
-                                                                @endif
+
                                                             </div>
 
                                                         </div>
@@ -267,23 +294,64 @@
                                                 </div>
                                             </div>
                                             {{-- show image --}}
+
                                             @if (isset($data->admission_criteria_image))
-                                                <div id="preview_admission_criteria_image" class="text-center"
-                                                    style="display: block;">
+                                                <input type="text" name="oldAdmissionCriteriaImage"
+                                                    id="oldAdmissionCriteriaImage"
+                                                    value="{{ $data->admission_criteria_image }}" hidden>
+
+                                                @php
+                                                    $display = 'block';
+                                                @endphp
+                                            @else
+                                                @php
+                                                    $display = 'none';
+                                                @endphp
+                                            @endif
+
+                                            <div id="preview_admission_criteria_image" class="text-center"
+                                                style="display: {{ $display }};">
+
+                                                @if (isset($data->admission_criteria_image))
                                                     <img name="admission_criteria_image" id="admission_criteria_image"
                                                         src="{{ asset('form_manage/admission_criteria_image/' . $data->admission_criteria_image) }}"
-                                                        class="custom-image2 my-3" alt="Image 2" hight="20px">
-                                                </div>
-                                            @endif
+                                                        class="custom-image2 my-3" alt="Image 2" width="100%"
+                                                        height="auto">
+                                                @endif
+                                                <button type="button" id="remove_admission_criteria_image"
+                                                    class="btn btn-primary">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+                                            </div>
+                                            <script>
+                                                $(document).ready(function() {
+                                                    $('#admission_criteria_image').on('change', function() {
+                                                        var file = this.files[0];
+                                                        if (file) {
+                                                            var reader = new FileReader();
+                                                            reader.onload = function(e) {
+                                                                $('#preview_admission_criteria_image')
+                                                                    .html('<img src="' + e.target.result +
+                                                                        '" class="custom-image2 my-3" alt="Preview" width="100%" height="auto">'
+                                                                        )
+                                                                    .show();
+                                                            };
+                                                            reader.readAsDataURL(file);
+                                                        }
+                                                    });
+                                                    $('#remove_admission_criteria_image').on('click', function() {
+                                                        $('#preview_admission_criteria_image').hide();
+                                                        $('#admission_criteria_image').val('');
+                                                    });
+                                                });
+                                            </script>
                                             <br>
                                         </span>
                                     </p>
-
                                 </div>
                             </div>
 
                             <div class="col-md-11 div_center">
-
 
                                 <div class="row mb-3 ">
                                     <label for="success" class="col-md-4 col-form-label text-md-end"></label>
@@ -296,11 +364,6 @@
                                             </div>
                                         @endif
 
-                                        @if ($errors->any())
-                                            <div class="alert alert-danger">
-                                                <p>{{ $errors->first() }}</p>
-                                            </div>
-                                        @endif
                                     </div>
                                 </div>
 
@@ -447,24 +510,7 @@
                                             </div>
 
 
-                                            {{-- <select style="width: 100%" class="form-control" id="grade"
-                                                name="student_grade" data-component="dropdown" aria-label="Grade / ระดับชั้น"
-                                                required>
-                                                <option value="">Please Select</option>
-                                                <option value="Kindergarten">Kindergarten</option>
-                                                <option value="Grade 1">Grade 1</option>
-                                                <option value="Grade 2">Grade 2</option>
-                                                <option value="Grade 3">Grade 3</option>
-                                                <option value="Grade 4">Grade 4</option>
-                                                <option value="Grade 5">Grade 5</option>
-                                                <option value="Grade 6">Grade 6</option>
-                                                <option value="Grade 7">Grade 7</option>
-                                                <option value="Grade 8">Grade 8</option>
-                                                <option value="Grade 9">Grade 9</option>
-                                                <option value="Grade 10">Grade 10</option>
-                                                <option value="Grade 11">Grade 11</option>
-                                                <option value="Grade 12">Grade 12</option>
-                                            </select> --}}
+
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Grade</label>
                                             <div class="form-error-message" role="alert"><img
@@ -478,7 +524,6 @@
                                         </div>
                                     </div>
                                 </div>
-
 
                                 <div class="form-row form-focus">
 
@@ -661,7 +706,7 @@
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto" for="image_payment">
-                                                image_payment <span class="form-required">*</span>
+                                                Image Payment <span class="form-required">*</span>
                                             </label>
                                             <input type="file" class="form-control" name="image_payment"
                                                 id="image_payment" maxlength="150" minlength="2">
@@ -691,16 +736,13 @@
                                     @if (isset($data->image_payment))
                                         <img name="image_payment" id="image_payment"
                                             src="{{ asset('form_manage/payment/' . $data->image_payment) }}"
-                                            class="custom-image2 my-3" alt="Image 2" hight="20px">
+                                            class="custom-image2 my-3" alt="Image 2" width="100%" height="auto">
                                     @endif
                                     <button type="button" id="remove_image_payment" class="btn btn-primary">
                                         <i class="fa fa-times"></i>
                                     </button>
                                 </div>
-
-
                                 <br>
-
                                 <script>
                                     $(document).ready(function() {
                                         $('#image_payment').on('change', function() {
@@ -709,7 +751,9 @@
                                                 var reader = new FileReader();
                                                 reader.onload = function(e) {
                                                     $('#preview_image_payment')
-                                                        .html('<img src="' + e.target.result + '" alt="Preview" height="500">')
+                                                        .html('<img src="' + e.target.result +
+                                                            '" class="custom-image2 my-3" alt="Preview" width="100%" height="auto">'
+                                                            )
                                                         .show();
                                                 };
                                                 reader.readAsDataURL(file);
@@ -753,8 +797,8 @@
                                     <div class="col-md-6 ">
                                         <div class="position-relative form-group">
                                             <label class="form-label form-label-top form-label-auto"
-                                                for="news">ท่านทราบข่าวสารการจัดสอบ ASIAROPE จากช่องทางใด <span
-                                                    class="form-required">*</span></label>
+                                                for="news">ท่านทราบข่าวสารการจัดสอบ {{ $data->form_name }}
+                                                จากช่องทางใด <span class="form-required">*</span></label>
                                             <input type="text" id="news" name="news" class="form-control"
                                                 value="{{ $data->news }}" maxlength="70" placeholder="News / ข่าวสาร"
                                                 required>

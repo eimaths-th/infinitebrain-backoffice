@@ -62,8 +62,19 @@
                                     <td>{{ $item->form_name }}</td>
                                     <td>{{ $item->form_route }}</td>
                                     <td>
-                                        <a href="{{ route('form-manage.edit', $item->id) }}" class="btn btn-primary">Edit</a>
-                                        <a href="{{ route('form-manage.destroy', $item->id) }}" class="btn btn-danger">Delete</a>
+                                        <a href="{{ route('form-manage.view', $item->id) }}" class="btn btn-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('create-form', ['id' => $item->id]) }}" class="btn btn-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+
+                                        {{-- delete btn --}}
+                                        <button type="button" class="btn btn-danger delete-btn" data-id="{{ $item->id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+
+                                        {{-- delete btn --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -79,367 +90,38 @@
 
     </div>
 
-    <!-- Create Modal -->
-    <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true" id="CreateModal">
-        <div class="modal-dialog modal-lg" role="document">
-            <form class="form" action="" method="POST">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Add Employee</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        </button>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
-                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
-
-                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true"></span>
-                            </button>
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Name:</label>
-                            <input type="text" class="form-control" name="name" id="AddName" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Email:</label>
-                            <input type="text" class="form-control" name="email" id="AddEmail" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Password:</label>
-                            <input type="password" class="form-control" name="password" required autocomplete="new-password"
-                                id="AddPassword">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Confirm Password:</label>
-                            <input type="password" class="form-control" name="password_confirmation" id="AddPasswordC"
-                                required autocomplete="new-password">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Level:</label>
-                            <select class="form-control" id="AddType" name="type_user">
-                                <option value="" selected>Select Time</option>
-                                <option value="0">10.00-18.00</option>
-                                <option value="1">09.00-17.00</option>
-
-                            </select>
-                        </div>
-                        <input type="hidden" name="code" value="code" id="AddCode">
-                        <div class="form-group">
-                            <label for="Name">Level:</label>
-                            <select class="form-control" id="AddLevel" name="level">
-                                <option value="" selected>Select Level</option>
-                                <option value="0">Owner</option>
-                                <option value="1">Admin</option>
-                                <option value="2">Teacher</option>
-                                <option value="3">Account</option>
-                                <option value="4">Officer</option>
-                                <option value="5">Normal</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="SubmitCreateForm">Save</button>
-                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-        </div>
-    </div>
-
-    <!-- Edit  Modal -->
-    <div class="fade modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
-        id="EditModal">
-        <div class="modal-dialog modal-lg" role="document">
-            <form class="form" action="" method="POST">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Employee</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        </button>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
-                            style="display: none;">
-                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert"
-                            style="display: none;">
-                            <strong>Success!</strong> Users was edit successfully.
-                            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true"></span>
-                            </button>
-                        </div>
-                        <div id="EditModalBody">
-
-                        </div>
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="SubmitEditForm">Update</button>
-                        <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-        </div>
-    </div>
 @endsection
 
 @section('script')
     @include('forms_manage.script')
-    {{-- <script>
+    <script>
         $(document).ready(function() {
+            // delete btn
+            $('.delete-btn').click(function() {
+                var id = $(this).data('id');
+                if (confirm("Are you sure?")) {
+                    $.ajax({
+                        url: "{{ route('form-manage.destroy') }}",
+                        method: 'POST',
+                        data: {
+                            id: id,
+                            _token: '{{ csrf_token() }}',
+                        },
+                        success: function(result) {
+                            if (result.status === 'success') {
+                                toastr.success(result.message, {
+                                    timeOut: 2000
+                                });
 
-            $(".delete_all_button").click(function() {
-                var len = $('input[name="table_records[]"]:checked').length;
-                if (len > 0) {
-                    if (confirm("Click OK to Delete?")) {
-                        $('form#delete_all').submit();
-                    }
-                } else {
-                    alert("Please Select Record For Delete");
+                                setTimeout(() => {
+                                    window.location.href =
+                                        "{{ route('form-manage.index') }}";
+                                }, 2000);
+                            }
+                        }
+                    });
                 }
-
             });
-
-            $('#check-all').click(function() {
-                $(':checkbox.flat').prop('checked', this.checked);
-            });
-
-            //$.noConflict();
-            var token = ''
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            var table = $('#Listview').DataTable({
-                /*"aoColumnDefs": [
-                {
-                'bSortable': true,
-                'aTargets': [0]
-                } //disables sorting for column one
-                ],
-                "searching": false,
-                "lengthChange": false,
-                "paging": false,
-                'iDisplayLength': 10,
-                "sPaginationType": "full_numbers",
-                "dom": 'T<"clear">lfrtip',
-                    */
-                ajax: '',
-                serverSide: true,
-                processing: true,
-                language: {
-                    loadingRecords: '&nbsp;',
-                    processing: '<div class="spinner"></div>'
-                },
-                aaSorting: [
-                    [0, "desc"]
-                ],
-                iDisplayLength: 10,
-                lengthMenu: [10, 25, 50, 75, 100],
-                stateSave: true,
-                sPaginationType: "full_numbers",
-                dom: 'T<"clear">lfrtip',
-                columns: [{
-                        data: 'checkbox',
-                        name: 'checkbox',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'id',
-                        name: 'id'
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'email',
-                        name: 'email'
-                    },
-                    {
-                        data: 'level',
-                        name: 'level'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action'
-                    },
-                ]
-            });
-
-
-
-            $(document).on('click', '#CreateButton', function(e) {
-                e.preventDefault();
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
-                $('#CreateModal').modal('show');
-            });
-
-            let id;
-            $(document).on('click', '#getEditData', function(e) {
-                e.preventDefault();
-
-
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
-
-                id = $(this).data('id');
-                $.ajax({
-                    url: "users/edit/" + id,
-                    method: 'GET',
-                    success: function(res) {
-                        $('#EditModalBody').html(res.html);
-                        $('#EditModal').modal('show');
-                    }
-                });
-
-            })
-
-
-            // Create product Ajax request.
-            $('#SubmitCreateForm').click(function(e) {
-                e.preventDefault();
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
-
-                $.ajax({
-                    url: "{{ route('users.store') }}",
-                    method: 'post',
-                    data: {
-                        password: $('#AddPassword').val(),
-                        password_confirmation: $('#AddPasswordC').val(),
-                        name: $('#AddName').val(),
-                        email: $('#AddEmail').val(),
-                        level: $('#AddLevel').val(),
-                        type_user: $('#AddType').val(),
-                        code: $('#AddCode').val(),
-                        _token: token,
-                    },
-                    success: function(result) {
-
-                        if (result.errors) {
-                            $('.alert-danger').html('');
-                            $.each(result.errors, function(key, value) {
-                                $('.alert-danger').show();
-                                $('.alert-danger').append('<strong><li>' + value +
-                                    '</li></strong>');
-                            });
-                        } else {
-                            $('.alert-danger').hide();
-                            $('.alert-success').show();
-                            $('.alert-success').append('<strong><li>' + result.success +
-                                '</li></strong>');
-                            $('#Listview').DataTable().ajax.reload();
-                            $('.form').trigger('reset');
-                            //$('#SubmitCreateForm').hide();
-                            //setTimeout(function() {
-                            //$('.alert-success').hide();
-                            //$('#CreateModal').modal('hide');
-                            //}, 10000);
-
-                        }
-                    }
-                });
-            });
-
-            $('#SubmitEditForm').click(function(e) {
-                if (!confirm("Are you sure?")) return;
-                e.preventDefault();
-
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
-
-
-                $.ajax({
-                    url: "users/save/" + id,
-                    method: 'PUT',
-                    data: {
-                        name: $('#editName').val(),
-                        password: $('#EditPassword').val(),
-                        password_confirmation: $('#EditPasswordC').val(),
-                        email: $('#editEmail').val(),
-                        level: $('#editLevel').val(),
-                    },
-
-                    success: function(result) {
-                        //console.log(result);
-                        if (result.errors) {
-                            $('.alert-danger').html('');
-                            $.each(result.errors, function(key, value) {
-                                $('.alert-danger').show();
-                                $('.alert-danger').append('<strong><li>' + value +
-                                    '</li></strong>');
-                            });
-                        } else {
-                            $('.alert-danger').hide();
-                            $('.alert-success').show();
-                            $('.alert-success').append('<strong><li>' + result.success +
-                                '</li></strong>');
-                            $('#Listview').DataTable().ajax.reload();
-                            //setTimeout(function() {
-                            //$('.alert-success').hide();
-                            //   $('#EditModal').modal('hide');
-                            //}, 10000);
-
-                        }
-                    }
-                });
-            });
-
-
-            $(document).on('click', '.btn-delete', function() {
-                if (!confirm("Are you sure?")) return;
-
-                var rowid = $(this).data('rowid')
-                var el = $(this)
-                if (!rowid) return;
-
-
-                $.ajax({
-                    type: "POST",
-                    dataType: 'JSON',
-                    url: "users/destroy/" + rowid,
-                    data: {
-                        _method: 'delete',
-                        _token: token
-                    },
-                    success: function(data) {
-
-                        toastr.success(data.message, {
-                            timeOut: 5000
-                        });
-
-                        $('#Listview').DataTable().ajax.reload();
-                        if (data.success) {
-                            table.row(el.parents('tr'))
-                                .remove()
-                                .draw();
-                        }
-                    }
-                }); //end ajax
-            })
-        })
-    </script> --}}
+        });
+    </script>
 @endsection

@@ -594,8 +594,7 @@
                                             </strong>
                                         </span>
                                     </p>
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong>
+                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration Date:</strong>
                                             @if ($date)
                                                 {{ $date }}
                                             @else

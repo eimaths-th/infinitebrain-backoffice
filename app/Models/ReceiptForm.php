@@ -51,4 +51,9 @@ class ReceiptForm extends Model
         return $this->hasOne(Receipt::class, 'id', 'rec_id');
     }
 
+    public function package()
+    {
+        return $this->hasOne(FormPakages::class, 'id', 'package');
+    }
+
 }

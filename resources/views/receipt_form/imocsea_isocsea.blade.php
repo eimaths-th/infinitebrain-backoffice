@@ -590,7 +590,7 @@
                                             @endif
                                         </span>
                                     </p>
-                                    <p><span style="color: #6351a2;"><strong>Contest Date:</strong>&nbsp; 15 October
+                                    <p><span style="color: #6351a2;"><strong>Contest Date :</strong>&nbsp; 15 October
                                             2023</span>
                                     </p>
                                     {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April

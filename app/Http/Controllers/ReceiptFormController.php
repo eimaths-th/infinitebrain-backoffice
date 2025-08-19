@@ -22,6 +22,8 @@ use App\Models\Receipt_RunningNumber;
 use App\Models\Receipt_Customer_RunningNumber;
 use Mail;
 use App\Mail\ContactMail;
+use App\Models\FormManage;
+use App\Models\FormPakages;
 use App\Models\OpeningClosingTime;
 use App\Models\ReferentCode;
 use App\Models\ReferentURL;
@@ -30,11 +32,13 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReceiptFormController extends Controller
 {
-    // not route
+    //
     const sfielda = array(
-
+    //sfild => route
         '0' => 'reward',
+        '1' => 'Null',
         '2' => 'GMEC',
+        '3' => 'Null',
         '4' => 'IMOCSEA',
         '5' => 'INFINITE Spelling Bee',
         '6' => 'GELOSEA',
@@ -43,6 +47,7 @@ class ReceiptFormController extends Controller
         '9' => 'OLPCS',
         '10' => 'ASIAROPE',
         '11' => 'Cambridge',
+        '12' => 'Null',
         '13' => 'ISOCSEA',
         '14' => 'IMOCSEA+ISOCSEA',
         '15' => 'Huaxiacup',
@@ -59,7 +64,7 @@ class ReceiptFormController extends Controller
         '26' => 'copernicus',
         '27' => 'coding-olympics',
         '28' => 'imocsea_special',
-        '29' => 'stemco_science',
+        '29' => 'stemco_science', //*
         '30' => 'advance_english_grammar',
     );
 
@@ -67,7 +72,6 @@ class ReceiptFormController extends Controller
     {
         $referent_code = ReferentCode::all();
         return view("receipt_form.generate_url")->with(['referent_code' => $referent_code]);
-
     }
 
     public function generateUrlSave(Request $request)
@@ -196,7 +200,6 @@ class ReceiptFormController extends Controller
         ]);
     }
 
-
     public function referent_codeEditSave(Request $request)
     {
         $request->validate([
@@ -260,6 +263,20 @@ class ReceiptFormController extends Controller
         }
         return $date;
     }
+
+    public function getForm()
+    {
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        $form = FormManage::where('form_route', $route)->first();
+        return view('forms_manage.view', compact('form', 'date'));
+    }
+
+    public function asiarope()
+    {
+        return $this->getForm();
+    }
+
     public function isc()
     {
 
@@ -305,17 +322,7 @@ class ReceiptFormController extends Controller
         //return view("receipt_form.olpcs");
     }
 
-    public function asiarope()
-    {
 
-        $route = request()->route()->getName();
-
-        $date = $this->getDatetime($route);
-
-        return view("receipt_form.asiarope")->with(['date' => $date]);
-
-        //return view("receipt_form.asiarope");
-    }
     public function test_field()
     {
         return view("receipt_form.test_field");
@@ -753,6 +760,7 @@ class ReceiptFormController extends Controller
         // $test = Receipt::find(1893);
         // dd($test->recform->id);
         $this->check_permission();
+        // dd($request->all());
         if ($request->get('sfield') === "17") {
             $validator =  Validator::make($request->all(), [
                 'submission_date' => 'required|string',
@@ -882,8 +890,8 @@ class ReceiptFormController extends Controller
             # code...
             $price = 500;
         } else {
-            $out_price = $this->delete_all_between('(', ')', $request->get('package'));
-            $price = preg_replace("/[^0-9.]/", "", $out_price);
+            $out_price = FormPakages::find($request->get('package_id'));
+            $price = $out_price->price;
             # code...
         }
 
@@ -1061,6 +1069,7 @@ class ReceiptFormController extends Controller
     public function store(Request $request)
     {
 
+        // dd($request->all());
 
         $allowedTLDs = ['.com', '.net', '.co.th', '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
         $route = $request->get('routeName');
@@ -1286,11 +1295,9 @@ class ReceiptFormController extends Controller
             'file_att' => $filebs,
             'referent_code' => $request->get('referent_code'),
         ]);
+
         $receiptForm->save();
 
-        // print_r (['sfielda' =>  self::sfielda]);
-        // print_r (['sfield' => $request->sfield]);
-        // exit();
         $adminEmail = $request->get('email');
 
         if ($request->get('sfield') == 0 || $request->get('sfield') == 17) {
@@ -1300,7 +1307,8 @@ class ReceiptFormController extends Controller
         }
         $receiptForm->save();
 
-        return redirect('/form/complete/' . strtolower(self::sfielda[$request->get('sfield')]));
+
+        return redirect('/form/complete/' . $route );
     }
 
     /**
@@ -1386,6 +1394,7 @@ class ReceiptFormController extends Controller
         } else {
             $data->rnumber = '';
         }
+        $data->package = FormPakages::find($data->package);
 
         // dd($data);
 
