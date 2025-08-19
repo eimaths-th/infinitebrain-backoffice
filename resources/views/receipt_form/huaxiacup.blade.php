@@ -594,8 +594,7 @@
                                             </strong>
                                         </span>
                                     </p>
-                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration
-                                                Date:</strong>
+                                    <p style="text-align: left;"><span style="color: #6351a2;"><strong>Registration Date:</strong>
                                             {{--   @if ($date)
                                                 {{ $date }}
                                             @else
@@ -707,7 +706,7 @@
 
                                 </div> --}}
                                 <input type="hidden" name="routeName" id="routeName" value="{{ request()->route()->getName() }}">
-                        <input type="hidden" name="referent_code" id="referent_code" value="{{ request()->referent_code }}">
+                                <input type="hidden" name="referent_code" id="referent_code" value="{{ request()->referent_code }}">
 
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"

@@ -615,8 +615,7 @@
                                     </p> --}}
 
 
-                                    <p><strong><span style="color: #6351a2;">Registration
-                                                Fee:&nbsp;</span></strong>
+                                    <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong>
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Cambridge Primary Insight (Year 1 - 6)
                                                 :</strong>2,190 baht</span>

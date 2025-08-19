@@ -584,7 +584,8 @@
                                     </p>
                                     <p><span style="color: #6351a2;"><strong>Venue:</strong>&nbsp;Online Competition</span>
                                     </p>
-                                    <p><strong><span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
+                                    <p><strong>
+                                        <span style="color: #6351a2;">Registration Fee:&nbsp;</span></strong></p>
                                     <p><span style="color: #6351a2;"><strong>Test:</strong> 790 baht (1
                                             category)</span><br><span style="color: #6351a2;">1290 baht (2
                                             categories)</span>
@@ -621,7 +622,7 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="routeName" id="routeName" value="{{ request()->route()->getName() }}">
-                        <input type="hidden" name="referent_code" id="referent_code" value="{{ request()->referent_code }}">
+                                <input type="hidden" name="referent_code" id="referent_code" value="{{ request()->referent_code }}">
 
                                 <div class="form-row form-focus">
                                     <label style="padding-left: 20px"

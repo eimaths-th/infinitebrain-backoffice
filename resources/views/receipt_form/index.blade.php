@@ -576,8 +576,8 @@
                                 <div class="col-md-6">
                                     <div class="position-relative  form-group">
                                         <label for="Package">Package:</label>
-                                        <input type="text" class="form-control" name="package" id="AddPackage"
-                                            value="">
+                                        <input type="text" class="form-control" name="package" id="AddPackage" value="">
+                                        <input type="hidden" name="package_id" id="AddPackageId" value="">
                                     </div>
                                 </div>
                             </div>
@@ -958,11 +958,11 @@
                     success: function(res) {
                         console.log(res);
                         document.getElementById("loadingOverlay").style.display = "none";
-                        console.log('test2');
                         //$('#EditModalBody').html(res.html);
                         $('#AddRecId').val(res.data.id);
                         $('#AddSubmissiondate').val(res.data.submission_date);
-                        $('#AddPackage').val(res.data.package);
+                        $('#AddPackage').val(res.data.package.package);
+                        $('#AddPackageId').val(res.data.package.id);
                         $('#AddContest').val(res.data.contest);
                         $('#AddDcode').val(res.data.discount_code);
                         $('#AddFirstname').val(res.data.first_name);
@@ -1040,6 +1040,7 @@
                         grade: $('#AddGrade').val(),
                         dcode: $('#AddDcode').val(),
                         description: $('#AddPackage').val(),
+                        package_id: $('#AddPackageId').val(),
                         referent_code: $('#AddReferentCode').val(),
                         street_address: $('#AddAddress').val(),
                         //street_address2: $('#AddAddress2').val(),

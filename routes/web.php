@@ -326,11 +326,23 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/referent_code/delete', [ReceiptFormController::class, 'referent_codeDelete'])->name('referent_code.delete');
 
     //form manage
-    Route::resource('form-manage', FormManageController::class);
+    // Route::resource('form-manage', FormManageController::class);
+    Route::get('/form-manage', [FormManageController::class, 'index'])->name('form-manage.index');
+    // form-manage.store
+    Route::post('/form-manage/store', [FormManageController::class, 'store'])->name('form-manage.store');
+    // form-manage.view
+    Route::get('/form-manage/{id}', [FormManageController::class, 'view'])->name('form-manage.view');
+    //destroy
+    Route::post('/form-manage/destroy', [FormManageController::class, 'destroy'])->name('form-manage.destroy');
     Route::get('/select_route', [FormManageController::class, 'selectRoute'])->name('select_route');
-    Route::post('/create-form', [FormManageController::class, 'create'])->name('create-form');
+    // Route::post('/create-form', [FormManageController::class, 'create'])->name('create-form');
+    Route::match(['GET','POST'], '/create-form', [FormManageController::class, 'create'])->name('create-form');
+    Route::get('/form-manage/{id}', [FormManageController::class, 'view'])->name('form-manage.view');
     Route::post('/edit-option-grade', [FormManageController::class, 'editOptionGrade'])->name('edit-option-grade');
     Route::post('/delete-option-grade', [FormManageController::class, 'deleteOptionGrade'])->name('delete-option-grade');
+
+    Route::post('/edit-option-package', [FormManageController::class, 'editOptionPackage'])->name('edit-option-package');
+    Route::post('/delete-option-package', [FormManageController::class, 'deleteOptionPackage'])->name('delete-option-package');
 
 });
 

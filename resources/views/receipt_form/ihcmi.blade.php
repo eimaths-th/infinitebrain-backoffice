@@ -566,9 +566,7 @@
                                 @endif
                                 <div class="form-html" data-component="text" tabindex="0">
                                     <p style="text-align: center;"><span style="color: #6351a2;"><strong><span
-                                                    style="text-decoration: underline;">International hope cup mathematic
-                                                    invitational Registration
-                                                    Form</span></strong></span></p>
+                                    style="text-decoration: underline;">International hope cup mathematic invitational Registration Form</span></strong></span></p>
 
                                     <p style="text-align: left;"><span style="color: #6351a2;">
                                             <strong>

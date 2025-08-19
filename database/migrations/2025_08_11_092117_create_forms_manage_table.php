@@ -21,12 +21,12 @@ return new class extends Migration
 
             //edit html
             $table->string('brand')->nullable();
-            $table->string('title')->nullable();
-            $table->string('sub_title')->nullable();
-            $table->string('head_title')->nullable();
-            $table->string('registration_date_label')->nullable()->default('รับสมัคร');
-            $table->string('contest_date_label')->nullable()->default('สอบวันที่');
-            $table->string('registration_fee_label')->nullable()->default('ค่าสมัคร');
+            $table->string('title')->nullable()->default('Olympiad Science Registration Form');
+            $table->string('sub_title')->nullable()->default('Fill out the form carefully for registration');
+            $table->string('head_title')->nullable()->default(date('Y') . ' ' . 'Registration Form');
+            $table->string('registration_date_label')->nullable()->default('Registration Date');
+            $table->string('contest_date_label')->nullable()->default('Exam Date');
+            $table->string('registration_fee_label')->nullable()->default('Registration Fee');
             $table->string('admission_criteria_text_label')->nullable()->default('เกณฑ์การรับสมัคร');
             $table->string('admission_criteria_image_label')->nullable()->default('เกณฑ์การเทียบระดับชั้น');
 
