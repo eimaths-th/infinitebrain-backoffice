@@ -961,8 +961,8 @@
                         //$('#EditModalBody').html(res.html);
                         $('#AddRecId').val(res.data.id);
                         $('#AddSubmissiondate').val(res.data.submission_date);
-                        $('#AddPackage').val(res.data.package.package);
-                        $('#AddPackageId').val(res.data.package.id);
+                        $('#AddPackage').val(res.data.package);
+                        $('#AddPackageId').val(res.data.packageId);
                         $('#AddContest').val(res.data.contest);
                         $('#AddDcode').val(res.data.discount_code);
                         $('#AddFirstname').val(res.data.first_name);

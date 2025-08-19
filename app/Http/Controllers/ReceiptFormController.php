@@ -276,6 +276,10 @@ class ReceiptFormController extends Controller
     {
         return $this->getForm();
     }
+    public function admin_test_field()
+    {
+        return $this->getForm();
+    }
 
     public function isc()
     {
@@ -283,7 +287,6 @@ class ReceiptFormController extends Controller
         $route = request()->route()->getName();
         $date = $this->getDatetime($route);
         return view("receipt_form.isc")->with(['date' => $date]);
-
     }
     public function gmec()
     {
@@ -709,6 +712,87 @@ class ReceiptFormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+    /**
+     * Check if user is already registered with similar name (80% or more similarity)
+     *
+     * @param string $route
+     * @param string $sfield
+     * @param string $firstname
+     * @param string $lastname
+     * @return array
+     */
+    public function checkRegisted($route, $sfield, $firstname, $lastname)
+    {
+        $getTime = OpeningClosingTime::where('route', $route)->orderBy('id', 'desc')->first();
+        $getTimeOpen = (new \DateTime($getTime->opening_time))->format('Y-m-d');
+        $getTimeClose = (new \DateTime($getTime->closing_time))->format('Y-m-d');
+
+        // First, check for exact match
+        $exactMatch = ReceiptForm::where([
+            ['first_name', '=', $firstname],
+            ['last_name', '=', $lastname],
+            ['sfield', '=', $sfield],
+        ])
+            ->whereBetween('submission_date', [$getTimeOpen, $getTimeClose])
+            ->first();
+
+        if ($exactMatch) {
+            return [
+                'receipt' => $exactMatch,
+                'checkRegisted' => true,
+                'matchType' => 'exact'
+            ];
+        }
+
+        // If no exact match, check for similar names
+        $similarRecords = ReceiptForm::where('sfield', $sfield)
+            ->whereBetween('submission_date', [$getTimeOpen, $getTimeClose])
+            ->get();
+
+        $similarityThreshold = 80; // 80% similarity threshold
+        $similarRecord = null;
+
+        foreach ($similarRecords as $record) {
+            $firstNameSimilarity = 0;
+            $lastNameSimilarity = 0;
+
+            similar_text(strtolower($firstname), strtolower($record->first_name), $firstNameSimilarity);
+            similar_text(strtolower($lastname), strtolower($record->last_name), $lastNameSimilarity);
+
+            // ตรวจสอบทั้งชื่อและนามสกุลต้องคล้ายกันทั้งคู่
+            if ($firstNameSimilarity >= $similarityThreshold && $lastNameSimilarity >= $similarityThreshold) {
+                $similarRecord = $record;
+                // คำนวณค่าเฉลี่ยความคล้ายคลึง
+                $avgSimilarity = ($firstNameSimilarity + $lastNameSimilarity) / 2;
+                break;
+            }
+        }
+
+        if ($similarRecord) {
+            return [
+                'receipt' => $similarRecord,
+                'checkRegisted' => true,
+                'matchType' => 'similar',
+                'similarity' => $avgSimilarity
+            ];
+        }
+
+        return [
+            'receipt' => null,
+            'checkRegisted' => false,
+            'matchType' => 'none'
+        ];
+    }
+
     public function create(Request $request)
     {
         //
@@ -851,7 +935,12 @@ class ReceiptFormController extends Controller
             $price = 500;
         } else {
             $out_price = FormPakages::find($request->get('package_id'));
-            $price = $out_price->price;
+            if ($out_price) {
+                $price = $out_price->price;
+            } else {
+                $out_price = $this->delete_all_between('(', ')', $request->get('package'));
+                $price = preg_replace("/[^0-9.]/", "", $out_price);
+            }
             # code...
         }
 
@@ -946,90 +1035,9 @@ class ReceiptFormController extends Controller
         return response()->json(['success' => 'Receive Add successfully']);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-
-    /**
-     * Check if user is already registered with similar name (80% or more similarity)
-     *
-     * @param string $route
-     * @param string $sfield
-     * @param string $firstname
-     * @param string $lastname
-     * @return array
-     */
-    public function checkRegisted($route, $sfield, $firstname, $lastname)
-    {
-        $getTime = OpeningClosingTime::where('route', $route)->orderBy('id', 'desc')->first();
-        $getTimeOpen = (new \DateTime($getTime->opening_time))->format('Y-m-d');
-        $getTimeClose = (new \DateTime($getTime->closing_time))->format('Y-m-d');
-
-        // First, check for exact match
-        $exactMatch = ReceiptForm::where([
-            ['first_name', '=', $firstname],
-            ['last_name', '=', $lastname],
-            ['sfield', '=', $sfield],
-        ])
-            ->whereBetween('submission_date', [$getTimeOpen, $getTimeClose])
-            ->first();
-
-        if ($exactMatch) {
-            return [
-                'receipt' => $exactMatch,
-                'checkRegisted' => true,
-                'matchType' => 'exact'
-            ];
-        }
-
-        // If no exact match, check for similar names
-        $similarRecords = ReceiptForm::where('sfield', $sfield)
-            ->whereBetween('submission_date', [$getTimeOpen, $getTimeClose])
-            ->get();
-
-        $similarityThreshold = 80; // 80% similarity threshold
-        $similarRecord = null;
-
-        foreach ($similarRecords as $record) {
-            $firstNameSimilarity = 0;
-            $lastNameSimilarity = 0;
-
-            similar_text(strtolower($firstname), strtolower($record->first_name), $firstNameSimilarity);
-            similar_text(strtolower($lastname), strtolower($record->last_name), $lastNameSimilarity);
-
-            // ตรวจสอบทั้งชื่อและนามสกุลต้องคล้ายกันทั้งคู่
-            if ($firstNameSimilarity >= $similarityThreshold && $lastNameSimilarity >= $similarityThreshold) {
-                $similarRecord = $record;
-                // คำนวณค่าเฉลี่ยความคล้ายคลึง
-                $avgSimilarity = ($firstNameSimilarity + $lastNameSimilarity) / 2;
-                break;
-            }
-        }
-
-        if ($similarRecord) {
-            return [
-                'receipt' => $similarRecord,
-                'checkRegisted' => true,
-                'matchType' => 'similar',
-                'similarity' => $avgSimilarity
-            ];
-        }
-
-        return [
-            'receipt' => null,
-            'checkRegisted' => false,
-            'matchType' => 'none'
-        ];
-    }
-
 
     public function store(Request $request)
     {
-
-        // dd($request->all());
 
         $allowedTLDs = ['.com', '.net', '.co.th', '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
         $route = $request->get('routeName');
@@ -1268,7 +1276,7 @@ class ReceiptFormController extends Controller
         $receiptForm->save();
 
 
-        return redirect('/form/complete/' . $route );
+        return redirect('/form/complete/' . $route);
     }
 
     /**
@@ -1302,7 +1310,6 @@ class ReceiptFormController extends Controller
         $data = ReceiptForm::find($id);
 
         $photo_att = '';
-
 
         if ($data->photo_att) {
 
@@ -1354,10 +1361,17 @@ class ReceiptFormController extends Controller
         } else {
             $data->rnumber = '';
         }
-        $data->package = FormPakages::find($data->package);
+
+        $packages  = FormPakages::find($data->package);
+
+        if ($packages) {
+            $data->package = $packages->package;
+            $data->packageId = $packages->id;
+        } else {
+            $data->packageId = '';
+        }
 
         // dd($data);
-
 
         return response()->json([
             'data' =>  $data

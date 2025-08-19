@@ -51,6 +51,7 @@
                         <option value="coding-olympics">CODING OLYMPICS</option>
                         <option value="stemco_science">stemco_science</option>
                         <option value="advance_english_grammar">advance_english_grammar</option>
+                        <option value="admin-test-field">admin-test-field</option>
                     </select>
                 </div>
             </div>

@@ -58,7 +58,7 @@
                         <input type="hidden" name="form_name" id="form_name" value="{{ $data->form_name }}">
                         <input type="hidden" name="referent_code" id="referent_code"
                             value="{{ request()->referent_code }}">
-                        <input type="hidden" name="sfield" id="sfield" value="10">
+                        <input type="hidden" name="sfield" id="sfield" value="{{ $data->sfield ?? '' }}">
                         @csrf
                         <div class="card-body">
                             <br>

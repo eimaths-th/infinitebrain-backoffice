@@ -216,49 +216,105 @@
                                                                 <h2
                                                                     style="margin: 0; color: #201f42; direction: ltr; font-family: 'Noto Serif', Georgia, serif; font-size: 24px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0;">
                                                                     <span class="tinyMce-placeholder">
-                                                                        <?php
-                                                                        if ($data->sfield == 10) {
-                                                                            $message = 'ASIAROPE Olympiad Registration Form';
-                                                                        } elseif ($data->sfield == 6) {
-                                                                            $message = 'GELOSEA ' . date('Y') . ' Registration Form';
-                                                                        } elseif ($data->sfield == 9) {
-                                                                            $message = 'OLPCS ' . date('Y') . ' Registration Form';
-                                                                        } elseif ($data->sfield == 11) {
-                                                                            $message = 'Cambridge ' . date('Y') . ' Registration Form';
-                                                                        } elseif ($data->sfield == 4 || $data->sfield == 28) {
-                                                                            $message = 'IMOCSEA ' . date('Y') . ' Registration Form';
-                                                                        } elseif ($data->sfield == 13) {
-                                                                            $message = 'ISOCSEA ' . date('Y') . ' Registration Form';
-                                                                        } elseif ($data->sfield == 14) {
-                                                                            $message = 'IMOCSEA+ISOCSEA ' . date('Y') . ' Registration Form';
-                                                                        } elseif ($data->sfield == 15 || $data->sfield == 19) {
-                                                                            $message = 'China Mathematical Olympiad';
-                                                                        } elseif ($data->sfield == 16 || $data->sfield == 18) {
-                                                                            $message = 'Math League';
-                                                                        } elseif ($data->sfield == 0) {
-                                                                            $message = 'Img Reward';
-                                                                        } elseif ($data->sfield == '17') {
-                                                                            $message = 'Thanks for your order!';
-                                                                        } elseif ($data->sfield == '20' || $data->sfield == '21') {
-                                                                            $message = 'NEO Science Olympiad';
-                                                                        } elseif ($data->sfield == '22') {
-                                                                            $message = 'China Mathematical Olympiad Final Round';
-                                                                        } elseif ($data->sfield == '23') {
-                                                                            $message = 'International Hope cup mathematic invitational';
-                                                                        } elseif ($data->sfield == '24') {
-                                                                            $message = 'International STEM Competitions ' . date('Y') . '';
-                                                                        } elseif ($data->sfield == '25') {
-                                                                            $message = 'Southeast Asia Computer Science Olympiad ' . date('Y') . '';
-                                                                        } elseif ($data->sfield == '26') {
-                                                                            $message = 'COPERNICUS OLYMPIAD ' . date('Y') . '';
-                                                                        }elseif ($data->sfield == '27') {
-                                                                            $message = 'CODING OLYMPICS ' . date('Y') . '';
-                                                                        }elseif ($data->sfield == '29') {
-                                                                            $message = 'STEMCO Science ' . date('Y') . ' Registration Form';
-                                                                        } elseif ($data->sfield == '30') {
-                                                                            $message = 'Advance English Grammar';
-                                                                        }                                                                         ?> 
-                                                                        {{ $message }}</span>
+
+                                                                        @php
+                                                                            if (!$check) {
+                                                                                if ($data->sfield == 10) {
+                                                                                    $head_title =
+                                                                                        'ASIAROPE Olympiad Registration Form';
+                                                                                } elseif ($data->sfield == 6) {
+                                                                                    $head_title =
+                                                                                        'GELOSEA ' .
+                                                                                        date('Y') .
+                                                                                        ' Registration Form';
+                                                                                } elseif ($data->sfield == 9) {
+                                                                                    $head_title =
+                                                                                        'OLPCS ' .
+                                                                                        date('Y') .
+                                                                                        ' Registration Form';
+                                                                                } elseif ($data->sfield == 11) {
+                                                                                    $head_title =
+                                                                                        'Cambridge ' .
+                                                                                        date('Y') .
+                                                                                        ' Registration Form';
+                                                                                } elseif (
+                                                                                    $data->sfield == 4 ||
+                                                                                    $data->sfield == 28
+                                                                                ) {
+                                                                                    $head_title =
+                                                                                        'IMOCSEA ' .
+                                                                                        date('Y') .
+                                                                                        ' Registration Form';
+                                                                                } elseif ($data->sfield == 13) {
+                                                                                    $head_title =
+                                                                                        'ISOCSEA ' .
+                                                                                        date('Y') .
+                                                                                        ' Registration Form';
+                                                                                } elseif ($data->sfield == 14) {
+                                                                                    $head_title =
+                                                                                        'IMOCSEA+ISOCSEA ' .
+                                                                                        date('Y') .
+                                                                                        ' Registration Form';
+                                                                                } elseif (
+                                                                                    $data->sfield == 15 ||
+                                                                                    $data->sfield == 19
+                                                                                ) {
+                                                                                    $head_title =
+                                                                                        'China Mathematical Olympiad';
+                                                                                } elseif (
+                                                                                    $data->sfield == 16 ||
+                                                                                    $data->sfield == 18
+                                                                                ) {
+                                                                                    $head_title = 'Math League';
+                                                                                } elseif ($data->sfield == 0) {
+                                                                                    $head_title = 'Img Reward';
+                                                                                } elseif ($data->sfield == '17') {
+                                                                                    $head_title = 'Thanks for your order!';
+                                                                                } elseif (
+                                                                                    $data->sfield == '20' ||
+                                                                                    $data->sfield == '21'
+                                                                                ) {
+                                                                                    $head_title = 'NEO Science Olympiad';
+                                                                                } elseif ($data->sfield == '22') {
+                                                                                    $head_title =
+                                                                                        'China Mathematical Olympiad Final Round';
+                                                                                } elseif ($data->sfield == '23') {
+                                                                                    $head_title =
+                                                                                        'International Hope cup mathematic invitational';
+                                                                                } elseif ($data->sfield == '24') {
+                                                                                    $head_title =
+                                                                                        'International STEM Competitions ' .
+                                                                                        date('Y') .
+                                                                                        '';
+                                                                                } elseif ($data->sfield == '25') {
+                                                                                    $head_title =
+                                                                                        'Southeast Asia Computer Science Olympiad ' .
+                                                                                        date('Y') .
+                                                                                        '';
+                                                                                } elseif ($data->sfield == '26') {
+                                                                                    $head_title =
+                                                                                        'COPERNICUS OLYMPIAD ' .
+                                                                                        date('Y') .
+                                                                                        '';
+                                                                                } elseif ($data->sfield == '27') {
+                                                                                    $head_title =
+                                                                                        'CODING OLYMPICS ' .
+                                                                                        date('Y') .
+                                                                                        '';
+                                                                                } elseif ($data->sfield == '29') {
+                                                                                    $head_title =
+                                                                                        'STEMCO Science ' .
+                                                                                        date('Y') .
+                                                                                        ' Registration Form';
+                                                                                } elseif ($data->sfield == '30') {
+                                                                                    $head_title =
+                                                                                        'Advance English Grammar';
+                                                                                }
+                                                                            }
+
+                                                                        @endphp
+
+                                                                        {{ $head_title }}</span>
                                                                 </h2>
                                                             </td>
                                                         </tr>
@@ -1584,95 +1640,6 @@
                                 </tr>
                             </tbody>
                         </table>
-
-                        {{-- <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
-                            role="presentation"
-                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; margin-bottom:100px" width="100%">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <table align="center" border="0" cellpadding="0" cellspacing="0"
-                                            class="row-content stack" role="presentation"
-                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; border-bottom: 0 solid #EFEEF4; border-left: 0 solid #EFEEF4; border-right: 0px solid #EFEEF4; border-top: 0 solid #EFEEF4; color: #000000; width: 700px;"
-                                            width="700">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="column column-1"
-                                                        style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left;  vertical-align: middle; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;"
-                                                        width="33.333333333333336%">
-                                                        <table border="0" cellpadding="0" cellspacing="0"
-                                                            class="heading_block block-1" role="presentation"
-                                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
-                                                            width="100%">
-                                                            <tr>
-                                                                <td class="pad"
-                                                                    style="text-align:left;width:100%;">
-                                                                    <h2
-                                                                        style="margin: 0;  font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 50px;">
-                                                                        <span
-                                                                            class="tinyMce-placeholder"><?php
-                                                                            if ($data->sfield == 9) {
-                                                                                $message1 = 'OLPCS';
-                                                                            } elseif ($data->sfield == 11) {
-                                                                                $message1 = 'Cambridge';
-                                                                            } elseif ($data->sfield == 10) {
-                                                                                $message1 = 'ASIAROPE';
-                                                                            } elseif ($data->sfield == 6) {
-                                                                                $message1 = 'GELOSEA';
-                                                                            } elseif ($data->sfield == 4 || $data->sfield == 28) {
-                                                                                $message1 = 'IMOCSEA';
-                                                                            } elseif ($data->sfield == 13) {
-                                                                                $message1 = 'ISOCSEA';
-                                                                            } elseif ($data->sfield == 14) {
-                                                                                $message1 = 'IMOCSEA+ISOCSEA';
-                                                                            } elseif ($data->sfield == 15 || $data->sfield == 19) {
-                                                                                $message1 = 'Huaxiacup';
-                                                                            } elseif ($data->sfield == 16 || $data->sfield == 18) {
-                                                                                $message1 = 'Mathleague';
-                                                                            } elseif ($data->sfield == 0) {
-                                                                                $message1 = 'Img Reward';
-                                                                            } elseif ($data->sfield == '17') {
-                                                                                $message1 = 'Test Field';
-                                                                            } elseif ($data->sfield == '20' || $data->sfield == '21') {
-                                                                                $message = 'NEO Science Olympiad';
-                                                                            } elseif ($data->sfield == '29') {
-                                                                                $message = 'STEMCO Science';
-                                                                            } elseif ($data->sfield == '30') {
-                                                                                $message = 'Advance English Grammar';
-                                                                            }
-                                                                            ?>
-                                                                            สอบ {{ $message1 }}
-                                                                            จากช่องทาง<br>ใด</span>
-                                                                    </h2>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </td>
-                                                    <td class="column column-2"
-                                                        style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: middle; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;"
-                                                        width="66.66666666666667%">
-                                                        <table border="0" cellpadding="10" cellspacing="0"
-                                                            class="paragraph_block block-1" role="presentation"
-                                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;"
-                                                            width="100%">
-                                                            <tr>
-                                                                <td class="pad">
-                                                                    <div
-                                                                        style="direction:ltr;font-family:Inter, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
-                                                                        <p style="margin: 0; margin-bottom: 50px;">
-                                                                            {{ $data->news_form }}</p>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table> --}}
                     @else
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
@@ -2399,51 +2366,101 @@
                                                                         style="text-align:left;width:100%;">
                                                                         <h2
                                                                             style="margin: 0;  font-size: 14px; font-weight: 400; text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 50px;">
-                                                                            <span
-                                                                                class="tinyMce-placeholder"><?php
-                                                                                if ($data->sfield == 9) {
-                                                                                    $message1 = 'OLPCS';
-                                                                                } elseif ($data->sfield == 11) {
-                                                                                    $message1 = 'Cambridge';
-                                                                                } elseif ($data->sfield == 10) {
-                                                                                    $message1 = 'ASIAROPE';
-                                                                                } elseif ($data->sfield == 6) {
-                                                                                    $message1 = 'GELOSEA';
-                                                                                } elseif ($data->sfield == 4 || $data->sfield == 28) {
-                                                                                    $message1 = 'IMOCSEA';
-                                                                                } elseif ($data->sfield == 13) {
-                                                                                    $message1 = 'ISOCSEA';
-                                                                                } elseif ($data->sfield == 14) {
-                                                                                    $message1 = 'IMOCSEA+ISOCSEA';
-                                                                                } elseif ($data->sfield == 15 || $data->sfield == 19) {
-                                                                                    $message1 = 'Huaxiacup';
-                                                                                } elseif ($data->sfield == 16 || $data->sfield == 18) {
-                                                                                    $message1 = 'Mathleague';
-                                                                                } elseif ($data->sfield == 0) {
-                                                                                    $message1 = 'Img Reward';
-                                                                                } elseif ($data->sfield == '17') {
-                                                                                    $message1 = 'Test Field';
-                                                                                } elseif ($data->sfield == '20' || $data->sfield == '21') {
-                                                                                    $message1 = 'NEO Science Olympiad';
-                                                                                } elseif ($data->sfield == '22') {
-                                                                                    $message1 = 'China Mathematical Olympiad Final Round';
-                                                                                } elseif ($data->sfield == '23') {
-                                                                                    $message1 = 'International Hope cup mathematic invitational';
-                                                                                } elseif ($data->sfield == '24') {
-                                                                                    $message1 = 'International STEM Competitions ' . date('Y') . '';
-                                                                                } elseif ($data->sfield == '25') {
-                                                                                    $message1 = 'Southeast Asia Computer Science Olympiad '. date('Y') . '';
-                                                                                } elseif ($data->sfield == '26') {
-                                                                                    $message1 = 'COPERNICUS OLYMPIAD '. date('Y') . '';
-                                                                                }elseif ($data->sfield == '27') {
-                                                                                    $message1 = 'CODING OLYMPICS '. date('Y') . '';
-                                                                                }elseif ($data->sfield == '29') {
-                                                                                    $message1 = 'STEMCO Science';
-                                                                                }else{
-                                                                                    $message1 = 'Advance English Grammar';
-                                                                                }
-                                                                                ?>
-                                                                                สอบ {{ $message1 }}
+                                                                            <span class="tinyMce-placeholder">
+                                                                                @php
+
+                                                                                    if (!$check) {
+                                                                                        if ($data->sfield == 9) {
+                                                                                            $news_title = 'OLPCS';
+                                                                                        } elseif ($data->sfield == 11) {
+                                                                                            $news_title = 'Cambridge';
+                                                                                        } elseif ($data->sfield == 10) {
+                                                                                            $news_title = 'ASIAROPE';
+                                                                                        } elseif ($data->sfield == 6) {
+                                                                                            $news_title = 'GELOSEA';
+                                                                                        } elseif (
+                                                                                            $data->sfield == 4 ||
+                                                                                            $data->sfield == 28
+                                                                                        ) {
+                                                                                            $news_title = 'IMOCSEA';
+                                                                                        } elseif ($data->sfield == 13) {
+                                                                                            $news_title = 'ISOCSEA';
+                                                                                        } elseif ($data->sfield == 14) {
+                                                                                            $news_title =
+                                                                                                'IMOCSEA+ISOCSEA';
+                                                                                        } elseif (
+                                                                                            $data->sfield == 15 ||
+                                                                                            $data->sfield == 19
+                                                                                        ) {
+                                                                                            $news_title = 'Huaxiacup';
+                                                                                        } elseif (
+                                                                                            $data->sfield == 16 ||
+                                                                                            $data->sfield == 18
+                                                                                        ) {
+                                                                                            $news_title = 'Mathleague';
+                                                                                        } elseif ($data->sfield == 0) {
+                                                                                            $news_title = 'Img Reward';
+                                                                                        } elseif (
+                                                                                            $data->sfield == '17'
+                                                                                        ) {
+                                                                                            $news_title = 'Test Field';
+                                                                                        } elseif (
+                                                                                            $data->sfield == '20' ||
+                                                                                            $data->sfield == '21'
+                                                                                        ) {
+                                                                                            $news_title =
+                                                                                                'NEO Science Olympiad';
+                                                                                        } elseif (
+                                                                                            $data->sfield == '22'
+                                                                                        ) {
+                                                                                            $news_title =
+                                                                                                'China Mathematical Olympiad Final Round';
+                                                                                        } elseif (
+                                                                                            $data->sfield == '23'
+                                                                                        ) {
+                                                                                            $news_title =
+                                                                                                'International Hope cup mathematic invitational';
+                                                                                        } elseif (
+                                                                                            $data->sfield == '24'
+                                                                                        ) {
+                                                                                            $news_title =
+                                                                                                'International STEM Competitions ' .
+                                                                                                date('Y') .
+                                                                                                '';
+                                                                                        } elseif (
+                                                                                            $data->sfield == '25'
+                                                                                        ) {
+                                                                                            $news_title =
+                                                                                                'Southeast Asia Computer Science Olympiad ' .
+                                                                                                date('Y') .
+                                                                                                '';
+                                                                                        } elseif (
+                                                                                            $data->sfield == '26'
+                                                                                        ) {
+                                                                                            $news_title =
+                                                                                                'COPERNICUS OLYMPIAD ' .
+                                                                                                date('Y') .
+                                                                                                '';
+                                                                                        } elseif (
+                                                                                            $data->sfield == '27'
+                                                                                        ) {
+                                                                                            $news_title =
+                                                                                                'CODING OLYMPICS ' .
+                                                                                                date('Y') .
+                                                                                                '';
+                                                                                        } elseif (
+                                                                                            $data->sfield == '29'
+                                                                                        ) {
+                                                                                            $news_title =
+                                                                                                'STEMCO Science';
+                                                                                        } else {
+                                                                                            $news_title =
+                                                                                                'Advance English Grammar';
+                                                                                        }
+                                                                                    }
+
+                                                                                @endphp
+                                                                                สอบ {{ $news_title }}
                                                                                 จากช่องทาง<br>ใด</span>
                                                                         </h2>
                                                                     </td>
