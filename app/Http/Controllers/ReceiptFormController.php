@@ -36,9 +36,9 @@ class ReceiptFormController extends Controller
     const sfielda = array(
         //sfild => route
         '0' => 'reward',
-        '1' => 'Null', //* null */
+        '1' => null, //* null */
         '2' => 'GMEC',
-        '3' => 'Null', //* null */
+        '3' => null, //* null */
         '4' => 'IMOCSEA',
         '5' => 'INFINITE Spelling Bee',
         '6' => 'GELOSEA',
@@ -47,7 +47,7 @@ class ReceiptFormController extends Controller
         '9' => 'OLPCS',
         '10' => 'ASIAROPE',
         '11' => 'Cambridge',
-        '12' => 'Null', //* null */
+        '12' => null, //* null */
         '13' => 'ISOCSEA',
         '14' => 'IMOCSEA+ISOCSEA',
         '15' => 'Huaxiacup',
@@ -296,16 +296,12 @@ class ReceiptFormController extends Controller
 
     public function olpcs()
     {
-
         return $this->getForm();
-
     }
-
 
     public function test_field()
     {
         return $this->getForm();
-
     }
     public function mathleague()
     {
@@ -320,35 +316,29 @@ class ReceiptFormController extends Controller
     public function huaxiacup()
     {
         return $this->getForm();
-
     }
     public function huaxiacupFinalRound()
     {
         return $this->getForm();
-
     }
     public function neos()
     {
         return $this->getForm();
-
     }
 
     public function neos2()
     {
         return $this->getForm();
-
     }
 
     public function huaxiacup_II()
     {
         return $this->getForm();
-
     }
 
     public function img_reward()
     {
         return $this->getForm();
-
     }
 
     public function gelosea()
@@ -361,36 +351,30 @@ class ReceiptFormController extends Controller
     public function imocsea()
     {
         return $this->getForm();
-
     }
 
     public function isocsea()
     {
         return $this->getForm();
-
     }
 
     public function imocsea_isocsea()
     {
         return $this->getForm();
-
     }
 
 
     public function cambridge()
     {
         return $this->getForm();
-
     }
     public function seacso()
     {
         return $this->getForm();
-
     }
     public function copernicus()
     {
         return $this->getForm();
-
     }
     public function codingOlympics()
     {
@@ -675,10 +659,135 @@ class ReceiptFormController extends Controller
         //get student
         //$student = Student::orderBy("name", "asc")->get();
         $referent_codes = ReferentCode::orderBy("id", "asc")->get();
-
         return view('receipt_form.index')
             ->with(['sfielda' =>  self::sfielda])
             ->with(['sfield' => $request->sfield])
+            ->with(['referent_codes' => $referent_codes]);
+    }
+    public function index_all(Request $request)
+    {
+        //
+        $this->check_permission();
+
+        if ($request->ajax()) {
+            //sleep(2);
+            $receipt = ReceiptForm::select(
+                "receipt_forms.id as receipt_id",
+                "receipt_forms.sfield as receipt_sfield",
+                "receipt_forms.submission_date as receipt_submission_date",
+                "receipt_forms.first_name as receipt_firstname",
+                "receipt_forms.last_name as receipt_lastname",
+                "receipt_forms.name_parent as receipt_parent_name",
+                "receipt_forms.mobile as receipt_mobile",
+                "receipt_forms.generate as receipt_generate",
+                "receipt_forms.photo_att as file",
+                "receipt_forms.referent_code as referent_code",
+
+            )
+                ->where('receipt_forms.sfield', $request->sfield)
+                ->orderBy("receipt_forms.id", "desc");
+            if ($request->start_date && $request->end_date) {
+                # code...
+                $receipt->whereBetween('receipt_forms.submission_date', [$request->start_date, $request->end_date]);
+            }
+            if ($request->referent_code) {
+                $receipt->where('receipt_forms.referent_code', $request->referent_code);
+            }
+            //print_r($levels);
+            //exit();
+            $receipt = $receipt->get();
+
+            return datatables()->of($receipt)
+                /* ->editColumn('student_name', function (Receipt $receipt) {
+                    return $receipt->student_name . ' ' . $receipt->student_lastname;
+                })*/
+                ->editColumn('checkbox', function ($row) {
+                    return '<input type="checkbox" id="' . $row->receipt_id . '" class="flat" name="table_records[]" value="' . $row->receipt_id . '" >';
+                })
+
+                ->addColumn('receipt_status', function ($row) {
+                    if ($row->receipt_generate == 0) {
+                        $html = '<i class="text-danger fa fa-edit"></i> ยังไม่ได้ออกใบเสร็จ ';
+                    } else {
+                        $html = '<i class="text-success fa fa-edit"></i> ออกใบเสร็จแล้ว ';
+                    }
+                    return $html;
+                })
+                ->addColumn('referent_code', function ($row) {
+                    return $row->referent_code;
+                })
+                ->addColumn('referent_name', function ($row) {
+                    $name = '';
+                    $referent_code = $row->referent_code;
+                    $referent_code = ReferentCode::where('referent_code', $referent_code)->first();
+                    if ($referent_code) {
+                        $name = $referent_code->referent_name;
+                    }
+                    return $name;
+                })
+                ->addColumn('action', function ($row) {
+                    $html = '';
+
+                    if ($row->receipt_sfield == '23' && $row->file) {
+                        $files = explode('|', $row->file);
+
+                        foreach ($files as $file) {
+                            if (!empty($file)) {
+                                $filePath = public_path('receipt_form_images/' . $file);
+
+                                if (file_exists($filePath)) {
+                                    $html .= '<a href="' . asset('receipt_form_images/' . $file) . '" class="btn btn-xs btn-info btn-edit"><i class="fa fa-download"></i> Download file</a> ';
+                                } else {
+                                    $html .= '<p class="text-danger">File ' . htmlspecialchars($file) . ' does not exist.</p>';
+                                }
+                            }
+                        }
+                    }
+
+                    if ($row->receipt_generate == 0) {
+
+                        if ($row->receipt_sfield == '23') {
+                            # code...
+                        } else {
+                            # code...
+                            $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Generate Receipt</a> ';
+                        }
+
+                        $html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
+                    } else {
+
+                        if ($row->receipt_sfield == '23') {
+                            # code...
+                        } else {
+                            # code...
+                            $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Edit</a> ';
+                        }
+                        $html .= '<a href="#" onclick="toastr.success(\'ออก Receive แล้วไม่สามารถลบได้\', {
+                            timeOut: 5000
+                        });" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</a>';
+                    }
+
+                    return $html;
+                })->rawColumns(['checkbox', 'receipt_status', 'action'])->toJson();
+        }
+
+        $referent_codes = ReferentCode::orderBy("id", "asc")->get();
+        $formManage = FormManage::orderBy("id", "asc")->get();
+
+        $mergeArray = self::sfielda;
+
+        foreach ($formManage as $form) {
+            if (!array_key_exists($form->sfield, $mergeArray)) {
+                $mergeArray[$form->sfield] = $form->form_name;
+            }
+        }
+
+        // dd($mergeArray);
+
+        return view('receipt_form.index_all')
+            ->with(['sfielda' =>  $mergeArray])
+            ->with(['sfield' => $request->sfield])
+            ->with(['formManage' => $mergeArray])
             ->with(['referent_codes' => $referent_codes]);
     }
 
@@ -815,6 +924,7 @@ class ReceiptFormController extends Controller
             ]);
         }
 
+        // dd($request->all());
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);

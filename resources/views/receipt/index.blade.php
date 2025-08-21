@@ -59,7 +59,11 @@
                     <div class="page-title-icon">
                         <i class="pe-7s-note2 icon-gradient bg-tempting-azure"></i>
                     </div>
-                    <div>{{ $sfielda[request()->get('sfield')] }} Receipts
+                    @php
+                        // dd($sfielda,request()->get('sfield'));
+                    @endphp
+                    <div>
+                        {{ $sfielda[(int) (request()->get('sfield'))] }} Receipts
                         <div class="page-title-subheading">Infinite Brain Receipt Data</div>
                     </div>
                 </div>

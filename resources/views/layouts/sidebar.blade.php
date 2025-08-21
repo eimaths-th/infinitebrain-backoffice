@@ -308,7 +308,7 @@
                         </ul>
                     </li>
 
-                    @if (Auth::user()->id == 16)
+                    @if (Auth::user()->level == 3 || Auth::user()->level == 1 || Auth::user()->level == 0)
                         <li>
                             <a href="#">
                                 {{-- find icon for forms management  --}}
@@ -346,6 +346,12 @@
                         </a>
 
                         <ul>
+                            <li>
+                                <a href="{{ route('receipts_form_all') }}">
+                                    <i class="metismenu-icon"></i>
+                                    All
+                                </a>
+                            </li>
                             <li>
                                 <a href="{{ route('receipts_form', ['sfield' => '9']) }}">
                                     <i class="metismenu-icon"></i>
@@ -528,6 +534,12 @@
                         </a>
 
                         <ul>
+                            <li>
+                                <a href="{{ route('receipts_all') }}">
+                                    <i class="metismenu-icon"></i>
+                                    All
+                                </a>
+                            </li>
                             <li>
                                 <a href="{{ route('receipts', ['sfield' => '9']) }}">
                                     <i class="metismenu-icon"></i>
