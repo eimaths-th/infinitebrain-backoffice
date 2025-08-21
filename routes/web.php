@@ -40,7 +40,7 @@ use App\Http\Controllers\CheckReportStdController;
 use App\Http\Controllers\FormManageController;
 use App\Http\Controllers\LineController;
 use App\Http\Controllers\TestController;
-
+use App\Http\Controllers\AzureTTSController;
 // use App\Http\Controllers\RouteToggleController;
 
 /*
@@ -373,6 +373,10 @@ Route::group(array('domain' => 'form.infinitebrain.co.th'), function () {
 });
 Route::get('/send-line-message', [LineController::class, 'sendMessage'])->name('send.line.message');
 Route::get('/test-view', [LineController::class, 'testView'])->name('line.testView');
+// Route::get('/generate-tts', [LineController::class, 'generateTTS'])->name('line.generate-tts');
+
+
+Route::post('/generate-tts', [AzureTTSController::class, 'generate'])->name('generate.tts');
 
 Route::post('/webhook', [LineController::class, 'webhook'])->name('line.webhook');
 

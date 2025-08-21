@@ -23,6 +23,12 @@ class LineController extends Controller
         return view('line_test_view');
     }
 
+    public function generateTTS(Request $request)
+    {
+        $ssmlText = $request->input('ssml');
+    }
+
+
     public function sendMessage(Request $request)
     {
         $ref = $request->input('ref'); // Capture the ref parameter from the URL
