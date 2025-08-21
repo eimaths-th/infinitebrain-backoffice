@@ -257,6 +257,7 @@ Route::group(['middleware' => ['auth']], function () {
     //reciept
 
     Route::get('/receipts', [ReceiptController::class, 'index'])->name('receipts');
+    Route::get('/receipts_all', [ReceiptController::class, 'index_all'])->name('receipts_all');
     Route::get('/receipts/create', [ReceiptController::class, 'create'])->name('receipts.create');
     Route::match(array('GET', 'POST'), '/receipts/print_day', [ReceiptController::class, 'print_day'])->name('receipts.print_day');
     Route::match(array('GET', 'POST'), '/receipts/print_month', [ReceiptController::class, 'print_month'])->name('receipts.print_month');
@@ -361,6 +362,7 @@ Route::get('/form/complete1', [ReceiptFormController::class, 'show1'])->name('fo
 Route::post('/form/store1', [ReceiptFormController::class, 'store1'])->name('form.store1');
 
 Route::get('/receipts_form', [ReceiptFormController::class, 'index'])->name('receipts_form');
+Route::get('/receipts_form_all', [ReceiptFormController::class, 'index_all'])->name('receipts_form_all');
 Route::get('/receipts_form/edit/{id}', [ReceiptFormController::class, 'edit'])->name('receipts_form.edit');
 Route::delete('/receipts_form/destroy/{id}', [ReceiptFormController::class, 'destroy'])->name('receipts_form.destroy');
 Route::delete('/receipts_form/destroy_all', [ReceiptFormController::class, 'destroy_all'])->name('receipts_form.destroy_all');

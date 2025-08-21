@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\Facades\Image;
 use App\Imports\ReceiptImport;
 use App\Exports\UsersExport;
+use App\Models\FormManage;
 use App\Models\Receipt_RunningNumber;
 use App\Models\Receipt_Customer_RunningNumber;
 use App\Models\ReferentCode;
@@ -33,7 +34,9 @@ class ReceiptController extends Controller
     const BAHT_TEXT_POINT = 'จุด';
     const sfielda = array(
         '0' => 'reward',
+        '1' => null,
         '2' => 'GMEC',
+        '3' => null,
         '4' => 'IMOCSEA',
         '5' => 'INFINITE Spelling Bee',
         '6' => 'GELOSEA',
@@ -42,6 +45,7 @@ class ReceiptController extends Controller
         '9' => 'OLPCS',
         '10' => 'ASIAROPE',
         '11' => 'Cambridge',
+        '12' => null,
         '13' => 'ISOCSEA',
         '14' => 'IMOCSEA+ISOCSEA',
         '15' => 'Huaxiacup',
@@ -52,6 +56,7 @@ class ReceiptController extends Controller
         '20' => 'Neo science',
         '21' => 'Neo science',
         '22' => 'chai-Final',
+        '23' => 'ihcmi',
         '24' => 'isc',
         '25' => 'seacso',
         '26' => 'copernicus',
@@ -62,7 +67,9 @@ class ReceiptController extends Controller
     );
     const sfieldas = array(
         '0' => 'IMG Reward',
+        '1' => null,
         '2' => 'G',
+        '3' => null,
         '4' => 'J',
         '5' => 'I',
         '6' => 'L',
@@ -71,6 +78,7 @@ class ReceiptController extends Controller
         '9' => 'O',
         '10' => 'P',
         '11' => 'Q',
+        '12' => null,
         '13' => 'S',
         '14' => 'T',
         '15' => 'U',
@@ -81,6 +89,7 @@ class ReceiptController extends Controller
         '20' => 'neos',
         '21' => 'neos-2',
         '22' => 'chai-Final',
+        '23' => 'ihcmi',
         '24' => 'isc',
         '25' => 'seacso',
         '26' => 'copernicus',
@@ -689,9 +698,132 @@ class ReceiptController extends Controller
         //get student
         //$student = Student::orderBy("name", "asc")->get();
         $referent_codes = ReferentCode::orderBy("id", "asc")->get();
-        return view('receipt.index')
-            ->with(['sfielda' =>  self::sfielda])
+
+        $sfieldForm = FormManage::where('sfield', $request->sfield)->first();
+
+        // dd(self::sfielda);
+        // check key is exist
+        if (array_key_exists($request->sfield, self::sfielda)) {
+            $sfielda = self::sfielda;
+        } else {
+            // merge array
+            $sfielda = array_merge(self::sfielda, [
+                $sfieldForm->sfield => $sfieldForm->form_name]);
+        }
+
+        // dd(self::sfielda,$sfielda);
+
+
+
+        return view('receipt.index ')
+            ->with(['sfielda' =>  $sfielda])
             ->with(['sfield' => $request->sfield])
+            ->with(['referent_codes' => $referent_codes]);
+    }
+    public function index_all(Request $request)
+    {
+        //
+        // dd($request->all());
+
+        $this->check_permission();
+
+        if ($request->ajax()) {
+            //sleep(2);
+
+            $receipt = Receipt::select(
+                "receipts.id as receipt_id",
+                "receipts.type as receipt_type",
+                "receipts.submission_date as receipt_submission_date",
+                "receipts.receipt_number as receipt_number",
+                "receipts.receipt_customer_number as receipt_customer_number",
+                "receipts.first_name as receipt_firstname",
+                "receipts.last_name as receipt_lastname",
+                "receipts.name_parent as receipt_parent_name",
+                "receipts.mobile as receipt_mobile",
+                "receipts.referent_code as receipt_referent_code",
+            )
+                //->join("students", "students.id", "=", "receipts.student_id")
+                //->join("subjects", "subjects.id", "=", "receipts.subject_id")
+                //->join("levels", "levels.id", "=", "receipts.level_id")
+
+                ->where('receipts.sfield', $request->sfield)
+                ->orderBy("receipts.id", "desc");
+            if ($request->start_date && $request->end_date) {
+                # code...
+                $receipt->whereBetween('receipts.submission_date', [$request->start_date, $request->end_date]);
+            }
+            if ($request->referent_code) {
+                $receipt->where('receipts.referent_code', $request->referent_code);
+            }
+
+            //print_r($levels);
+            //exit();
+            $receipt = $receipt->get();
+
+            return datatables()->of($receipt)
+                ->editColumn('receipt_type', function (Receipt $receipt) {
+                    if ($receipt->receipt_type == 2) {
+                        $mes = "ใบลดหนี้";
+                        $text = "Credit Note";
+                    } else {
+
+                        $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+                        $text = "Tax Invoice/Receipt";
+                    }
+                    return $mes;
+                })
+                ->editColumn('referent_code', function (Receipt $receipt) {
+                    // dd($receipt);
+                    return $receipt->receipt_referent_code;
+                })
+                ->editColumn('referent_name', function (Receipt $receipt) {
+                    $name = '';
+
+                    $referent_code = ReferentCode::where('referent_code', $receipt->receipt_referent_code)->first();
+
+                    if ($referent_code) {
+                        $name = $referent_code->referent_name;
+                    }
+                    // dd($name,$receipt->referent_code ,$receipt->referent_code);
+                    return $name;
+                })
+                ->editColumn('checkbox', function ($row) {
+                    return '<input type="checkbox" id="' . $row->receipt_id . '" class="flat" name="table_records[]" value="' . $row->receipt_id . '" >';
+                })
+                ->addColumn('action', function ($row) {
+                    $html = '<a href="receipts/show/view/' . $row->receipt_id . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->receipt_id . '"><i class="fa fa-eye"></i> View </a> ';
+                    $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->receipt_id . '"><i class="fa fa-edit"></i> Edit</a> ';
+                    $html .= '<a href="#" class="btn btn-xs btn-info btn-edit" id="getConvData" data-id="' . $row->receipt_id . '"><i class="fa fa-code-compare"></i></i> Credit Note</a> ';
+                    //$html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
+                    return $html;
+                })->toJson();
+        }
+
+        $referent_codes = ReferentCode::orderBy("id", "asc")->get();
+
+        $sfieldForm = FormManage::where('sfield', $request->sfield)->first();
+        $formManage = FormManage::orderBy("id", "asc")->get();
+
+        // dd(self::sfielda);
+        // check key is exist
+
+
+        $mergeArray = self::sfielda;
+
+        foreach ($formManage as $form) {
+            if (!array_key_exists($form->sfield, $mergeArray)) {
+                $mergeArray[$form->sfield] = $form->form_name;
+            }
+        }
+
+        // dd(self::sfielda,$sfielda);
+
+
+
+        return view('receipt.index_all')
+            ->with(['sfielda' =>  $mergeArray])
+            ->with(['sfield' => $request->sfield])
+            ->with(['formManage' => $mergeArray])
             ->with(['referent_codes' => $referent_codes]);
     }
 

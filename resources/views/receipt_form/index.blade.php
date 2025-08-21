@@ -435,6 +435,7 @@
             <div class="card-body">
                 <form action="{{ route('receipts_form') }}" method="GET">
                     <div class="row mb-4">
+                        
                         <div class="col-md-2">
                             <label for="date_range">วันที่</label>
                             <input type="hidden" name="sfield" id="sfield" value="{{ request()->get('sfield') }}">

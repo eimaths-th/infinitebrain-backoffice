@@ -45,6 +45,7 @@ class Receipt_Customer_RunningNumber extends Model
         '28',
         '29',
         '30',
+        '31',
     ];
 
     const TYPE_PREFIX = [
@@ -75,11 +76,28 @@ class Receipt_Customer_RunningNumber extends Model
         '28' => '28',
         '29' => '29',
         '30' => '30',
+        '31' => '31',
     ];
+
+
 
 
     public static function generate(string $type)
     {
+
+        $mergeArray = self::TYPE_PREFIX;
+        $mergeArray2 = self::TYPES;
+        $formManage = FormManage::orderBy("id", "asc")->get();
+        foreach ($formManage as $form) {
+            if (!array_key_exists($form->sfield, $mergeArray)) {
+                $mergeArray[$form->sfield] = $form->sfield;
+            }
+            if (!in_array($form->sfield, $mergeArray2)) {
+                $mergeArray2[] = $form->sfield;
+            }
+
+        }
+
         $type = strtoupper($type);
         if (!in_array($type, self::TYPES)) {
             throw new \Exception('Undefined running number type.');

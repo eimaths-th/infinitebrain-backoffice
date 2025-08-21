@@ -82,6 +82,18 @@ class Receipt_RunningNumber extends Model
 
     public static function pre_generate(string $type, string $sdate)
     {
+        $mergeArray = self::TYPE_PREFIX;
+        $mergeArray2 = self::TYPES;
+        $formManage = FormManage::orderBy("id", "asc")->get();
+        foreach ($formManage as $form) {
+            if (!array_key_exists($form->sfield, $mergeArray)) {
+                $mergeArray[$form->sfield] = $form->sfield;
+            }
+            if (!in_array($form->sfield, $mergeArray2)) {
+                $mergeArray2[] = $form->sfield;
+            }
+
+        }
         $type = strtoupper($type);
         if (!in_array($type, self::TYPES)) {
             throw new \Exception('Undefined running number type.');
@@ -93,13 +105,7 @@ class Receipt_RunningNumber extends Model
         $ldate = Carbon::create($sda[0], $sda[1], $sda[2]); // Create a Carbon instance for the date 2023-09-30
 
         $lastDayOfMonth = $ldate->endOfMonth()->format('d');
-        // dd(
-        //     $sdate,
-        //     $ldate,
-        //     $sda[0],
-        //     $sda[1],
-        //     $sda[2],
-        // );
+
         $day = $sda[2];
         $month = $sda[1];
         $year = $sda[0];
@@ -145,6 +151,18 @@ class Receipt_RunningNumber extends Model
 
     public static function generate(string $type, string $sdate)
     {
+        $mergeArray = self::TYPE_PREFIX;
+        $mergeArray2 = self::TYPES;
+        $formManage = FormManage::orderBy("id", "asc")->get();
+        foreach ($formManage as $form) {
+            if (!array_key_exists($form->sfield, $mergeArray)) {
+                $mergeArray[$form->sfield] = $form->sfield;
+            }
+            if (!in_array($form->sfield, $mergeArray2)) {
+                $mergeArray2[] = $form->sfield;
+            }
+
+        }
         $type = strtoupper($type);
         if (!in_array($type, self::TYPES)) {
             throw new \Exception('Undefined running number type.');
