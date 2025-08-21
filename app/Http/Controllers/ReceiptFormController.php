@@ -283,87 +283,72 @@ class ReceiptFormController extends Controller
 
     public function isc()
     {
-
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.isc")->with(['date' => $date]);
+        return $this->getForm();
     }
     public function gmec()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.gmec")->with(['date' => $date]);
+        return $this->getForm();
     }
     public function ihcmi()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.ihcmi")->with(['date' => $date]);
+        return $this->getForm();
     }
 
     public function olpcs()
     {
 
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.olpcs")->with(['date' => $date]);
+        return $this->getForm();
+
     }
 
 
     public function test_field()
     {
-        return view("receipt_form.test_field");
+        return $this->getForm();
+
     }
     public function mathleague()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.mathleague")->with(['date' => $date]);
+        return $this->getForm();
     }
 
     public function mathleague_II()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.mathleague_II")->with(['date' => $date]);
+        return $this->getForm();
     }
 
     public function huaxiacup()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.huaxiacup")->with(['date' => $date]);
+        return $this->getForm();
+
     }
     public function huaxiacupFinalRound()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.huaxiacup_III")->with(['date' => $date]);
+        return $this->getForm();
+
     }
     public function neos()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.neos")->with(['date' => $date]);
+        return $this->getForm();
+
     }
 
     public function neos2()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.neos-II")->with(['date' => $date]);
+        return $this->getForm();
+
     }
 
     public function huaxiacup_II()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.huaxiacup_II")->with(['date' => $date]);
+        return $this->getForm();
+
     }
 
     public function img_reward()
     {
-        return view("receipt_form.img_reward");
+        return $this->getForm();
+
     }
 
     public function gelosea()
@@ -375,55 +360,45 @@ class ReceiptFormController extends Controller
 
     public function imocsea()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.imocsea")->with(['date' => $date]);
+        return $this->getForm();
+
     }
 
     public function isocsea()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.isocsea")->with(['date' => $date]);
+        return $this->getForm();
+
     }
 
     public function imocsea_isocsea()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.imocsea_isocsea")->with(['date' => $date]);
+        return $this->getForm();
+
     }
 
 
     public function cambridge()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.cambridge")->with(['date' => $date]);
+        return $this->getForm();
+
     }
     public function seacso()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.seacso")->with(['date' => $date]);
+        return $this->getForm();
+
     }
     public function copernicus()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.copernicus")->with(['date' => $date]);
+        return $this->getForm();
+
     }
     public function codingOlympics()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.coding")->with(['date' => $date]);
+        return $this->getForm();
     }
     public function imocsea_special()
     {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.imocsea_special")->with(['date' => $date]);
+        return $this->getForm();
     }
     public function stemco_science()
     {
