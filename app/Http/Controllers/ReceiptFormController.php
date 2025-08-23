@@ -806,15 +806,18 @@ class ReceiptFormController extends Controller
      */
 
     /**
-     * Check if user is already registered with similar name (80% or more similarity)
+     * Check if user is already registered with similar name (threshold) and extra factors
      *
      * @param string $route
      * @param string $sfield
      * @param string $firstname
      * @param string $lastname
+     * @param string|null $birthdate  // raw input format as submitted
+     * @param string|null $phone      // raw input phone
+     * @param string|null $email      // raw input email
      * @return array
      */
-    public function checkRegisted($route, $sfield, $firstname, $lastname)
+    public function checkRegisted($route, $sfield, $firstname, $lastname, $birthdate = null, $phone = null, $email = null)
     {
         $getTime = OpeningClosingTime::where('route', $route)->orderBy('id', 'desc')->first();
         $getTimeOpen = (new \DateTime($getTime->opening_time))->format('Y-m-d');
@@ -842,21 +845,58 @@ class ReceiptFormController extends Controller
             ->whereBetween('submission_date', [$getTimeOpen, $getTimeClose])
             ->get();
 
-        $similarityThreshold = 80; // 80% similarity threshold
+        $similarityThreshold = 98; // 98% similarity threshold per policy (Option B)
         $similarRecord = null;
+        $sameBirthFlag = false;
+        $contactMatchFlag = false; // สำหรับ Option B จะหมายถึง เบอร์ และ อีเมล ตรงกัน
+        $isSamePersonFlag = false;
+
+        // Normalize ชื่อก่อนคำนวณ similarity: ลบอักขระที่ไม่ใช่ตัวอักษร/ช่องว่าง, lowercase, บีบช่องว่างซ้ำ
+        $normalize_name = function ($value) {
+            $text = (string)($value ?? '');
+            $text = mb_strtolower(trim($text), 'UTF-8');
+            // เก็บเฉพาะตัวอักษรทุกภาษาและช่องว่าง
+            $text = preg_replace('/[^\p{L}\s]+/u', '', $text);
+            // บีบช่องว่างหลายตัวให้เหลือ 1 ช่อง
+            $text = preg_replace('/\s+/u', ' ', $text);
+            return $text ?? '';
+        };
 
         foreach ($similarRecords as $record) {
             $firstNameSimilarity = 0;
             $lastNameSimilarity = 0;
 
-            similar_text(strtolower($firstname), strtolower($record->first_name), $firstNameSimilarity);
-            similar_text(strtolower($lastname), strtolower($record->last_name), $lastNameSimilarity);
+            $first_norm = $normalize_name($firstname);
+            $record_first_norm = $normalize_name($record->first_name);
+            $last_norm = $normalize_name($lastname);
+            $record_last_norm = $normalize_name($record->last_name);
+
+            similar_text($first_norm, $record_first_norm, $firstNameSimilarity);
+            similar_text($last_norm, $record_last_norm, $lastNameSimilarity);
 
             // ตรวจสอบทั้งชื่อและนามสกุลต้องคล้ายกันทั้งคู่
             if ($firstNameSimilarity >= $similarityThreshold && $lastNameSimilarity >= $similarityThreshold) {
                 $similarRecord = $record;
                 // คำนวณค่าเฉลี่ยความคล้ายคลึง
                 $avgSimilarity = ($firstNameSimilarity + $lastNameSimilarity) / 2;
+
+                // ตรวจสอบปัจจัยระบุตัวตนเพิ่มเติม: วันเกิด + (มือถือ หรือ อีเมล)
+                $input_birth = is_null($birthdate) ? '' : trim((string)$birthdate);
+                $record_birth = is_null($record->birth_date) ? '' : trim((string)$record->birth_date);
+                $sameBirthFlag = ($input_birth !== '' && $record_birth !== '' && $input_birth === $record_birth);
+
+                $input_mobile_norm = preg_replace('/\D+/', '', (string)($phone ?? ''));
+                $record_mobile_norm = preg_replace('/\D+/', '', (string)($record->mobile ?? ''));
+                $phoneMatch = ($input_mobile_norm !== '' && $record_mobile_norm !== '' && $input_mobile_norm === $record_mobile_norm);
+
+                $input_email_norm = strtolower(trim((string)($email ?? '')));
+                $record_email_norm = strtolower(trim((string)($record->email ?? '')));
+                $emailMatch = ($input_email_norm !== '' && $record_email_norm !== '' && $input_email_norm === $record_email_norm);
+
+                // Option B: ต้องตรงทั้งเบอร์ และ อีเมล
+                $contactMatchFlag = ($phoneMatch && $emailMatch);
+                $isSamePersonFlag = ($sameBirthFlag && $contactMatchFlag);
+
                 break;
             }
         }
@@ -866,7 +906,10 @@ class ReceiptFormController extends Controller
                 'receipt' => $similarRecord,
                 'checkRegisted' => true,
                 'matchType' => 'similar',
-                'similarity' => $avgSimilarity
+                'similarity' => $avgSimilarity,
+                'same_birth' => $sameBirthFlag,
+                'contact_match' => $contactMatchFlag,
+                'is_same_person' => $isSamePersonFlag,
             ];
         }
 
@@ -1132,36 +1175,39 @@ class ReceiptFormController extends Controller
             $request->get('sfield'),
             $request->get('firstname'),
             $request->get('lastname'),
+            $request->get('birthdate'),
+            $request->get('phone'),
+            $request->get('email'),
         );
 
         if ($result['checkRegisted']) {
-            $message = 'พบข้อมูลการลงทะเบียนที่ซ้ำกัน';
-
-            if ($result['matchType'] === 'similar') {
-                if ($result['similarity'] >= 80) {
-                    $similarity = number_format($result['similarity'], 2);
-                    $message = "พบข้อมูลชื่อหรือนามสกุลที่คล้ายกัน ({$similarity}%) กับผู้ลงทะเบียนรายอื่น\n";
-                    $message .= "ชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
-                    $message .= "กรุณาตรวจสอบข้อมูลให้แน่ใจว่าคุณยังไม่เคยลงทะเบียนไปก่อนหน้านี้";
-
-                    return back()
-                        ->withInput()
-                        ->with('warning', $message);
-                }
-            } else {
+            // 1) บล็อกกรณีข้อมูลซ้ำแบบตรงตัว
+            if ($result['matchType'] === 'exact') {
                 $message = "พบข้อมูลการลงทะเบียนซ้ำกับชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
                 $message .= "กรุณาตรวจสอบข้อมูลของคุณ";
-
                 return back()
                     ->withInput()
                     ->with('error', $message);
             }
-            # code...
-            // return back()->withErrors(['errors' => 'You have already registered.']);
-            return view('receipt_form.registed')->with([
-                'receipt' => $result['receipt'],
-                'route' => $route,
-            ]);
+
+            // 2) ชื่อคล้ายกัน: บล็อกเฉพาะเมื่อระบุได้ว่าเป็นคนเดียวกันจริง (วันเกิดตรง และ เบอร์และอีเมลตรง)
+            if ($result['matchType'] === 'similar') {
+                $similarity = number_format($result['similarity'] ?? 0, 2);
+                if (!empty($result['is_same_person'])) {
+                    $message = "พบข้อมูลการลงทะเบียนซ้ำ (ชื่อคล้าย {$similarity}% + วันเกิดตรง + เบอร์และอีเมลตรง) กับผู้ลงทะเบียนรายอื่น\n";
+                    $message .= "ชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
+                    $message .= "กรุณาตรวจสอบข้อมูลของคุณหรือใช้ข้อมูลติดต่ออื่น หากเป็นคนเดิม";
+                    return back()
+                        ->withInput()
+                        ->with('error', $message);
+                } else {
+                    // ไม่ใช่คนเดียวกัน: เตือนและดำเนินการต่อ
+                    $message = "พบข้อมูลชื่อหรือนามสกุลที่คล้ายกัน ({$similarity}%) กับผู้ลงทะเบียนรายอื่น\n";
+                    $message .= "ชื่อ-นามสกุลที่พบ: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
+                    $message .= "ระบบจะดำเนินการต่อ หากมั่นใจว่าไม่ใช่คนเดิม";
+                    session()->flash('warning', $message);
+                }
+            }
         }
 
         // dd($request->all());
