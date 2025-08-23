@@ -1170,45 +1170,45 @@ class ReceiptFormController extends Controller
         $allowedTLDs = ['.com', '.net', '.co.th', '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
         $route = $request->get('routeName');
 
-        $result = $this->checkRegisted(
-            $route,
-            $request->get('sfield'),
-            $request->get('firstname'),
-            $request->get('lastname'),
-            $request->get('birthdate'),
-            $request->get('phone'),
-            $request->get('email'),
-        );
+        // $result = $this->checkRegisted(
+        //     $route,
+        //     $request->get('sfield'),
+        //     $request->get('firstname'),
+        //     $request->get('lastname'),
+        //     $request->get('birthdate'),
+        //     $request->get('phone'),
+        //     $request->get('email'),
+        // );
 
-        if ($result['checkRegisted']) {
-            // 1) บล็อกกรณีข้อมูลซ้ำแบบตรงตัว
-            if ($result['matchType'] === 'exact') {
-                $message = "พบข้อมูลการลงทะเบียนซ้ำกับชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
-                $message .= "กรุณาตรวจสอบข้อมูลของคุณ";
-                return back()
-                    ->withInput()
-                    ->with('error', $message);
-            }
+        // if ($result['checkRegisted']) {
+        //     // 1) บล็อกกรณีข้อมูลซ้ำแบบตรงตัว
+        //     if ($result['matchType'] === 'exact') {
+        //         $message = "พบข้อมูลการลงทะเบียนซ้ำกับชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
+        //         $message .= "กรุณาตรวจสอบข้อมูลของคุณ";
+        //         return back()
+        //             ->withInput()
+        //             ->with('error', $message);
+        //     }
 
-            // 2) ชื่อคล้ายกัน: บล็อกเฉพาะเมื่อระบุได้ว่าเป็นคนเดียวกันจริง (วันเกิดตรง และ เบอร์และอีเมลตรง)
-            if ($result['matchType'] === 'similar') {
-                $similarity = number_format($result['similarity'] ?? 0, 2);
-                if (!empty($result['is_same_person'])) {
-                    $message = "พบข้อมูลการลงทะเบียนซ้ำ (ชื่อคล้าย {$similarity}% + วันเกิดตรง + เบอร์และอีเมลตรง) กับผู้ลงทะเบียนรายอื่น\n";
-                    $message .= "ชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
-                    $message .= "กรุณาตรวจสอบข้อมูลของคุณหรือใช้ข้อมูลติดต่ออื่น หากเป็นคนเดิม";
-                    return back()
-                        ->withInput()
-                        ->with('error', $message);
-                } else {
-                    // ไม่ใช่คนเดียวกัน: เตือนและดำเนินการต่อ
-                    $message = "พบข้อมูลชื่อหรือนามสกุลที่คล้ายกัน ({$similarity}%) กับผู้ลงทะเบียนรายอื่น\n";
-                    $message .= "ชื่อ-นามสกุลที่พบ: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
-                    $message .= "ระบบจะดำเนินการต่อ หากมั่นใจว่าไม่ใช่คนเดิม";
-                    session()->flash('warning', $message);
-                }
-            }
-        }
+        //     // 2) ชื่อคล้ายกัน: บล็อกเฉพาะเมื่อระบุได้ว่าเป็นคนเดียวกันจริง (วันเกิดตรง และ เบอร์และอีเมลตรง)
+        //     if ($result['matchType'] === 'similar') {
+        //         $similarity = number_format($result['similarity'] ?? 0, 2);
+        //         if (!empty($result['is_same_person'])) {
+        //             $message = "พบข้อมูลการลงทะเบียนซ้ำ (ชื่อคล้าย {$similarity}% + วันเกิดตรง + เบอร์และอีเมลตรง) กับผู้ลงทะเบียนรายอื่น\n";
+        //             $message .= "ชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
+        //             $message .= "กรุณาตรวจสอบข้อมูลของคุณหรือใช้ข้อมูลติดต่ออื่น หากเป็นคนเดิม";
+        //             return back()
+        //                 ->withInput()
+        //                 ->with('error', $message);
+        //         } else {
+        //             // ไม่ใช่คนเดียวกัน: เตือนและดำเนินการต่อ
+        //             $message = "พบข้อมูลชื่อหรือนามสกุลที่คล้ายกัน ({$similarity}%) กับผู้ลงทะเบียนรายอื่น\n";
+        //             $message .= "ชื่อ-นามสกุลที่พบ: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
+        //             $message .= "ระบบจะดำเนินการต่อ หากมั่นใจว่าไม่ใช่คนเดิม";
+        //             session()->flash('warning', $message);
+        //         }
+        //     }
+        // }
 
         // dd($request->all());
 
@@ -1244,9 +1244,9 @@ class ReceiptFormController extends Controller
             # code...
             $validator =  Validator::make($request->all(), [
                 // 'firstname' => 'required|string',
-                'firstname' => 'required|string',
-                'lastname' => 'required|string',
-                'nickname' => 'required|string',
+                'firstname' => ['required', 'regex:/^[A-Za-z]+$/'],
+                'lastname' => ['required', 'regex:/^[A-Za-z]+$/'],
+                'nickname' => ['required', 'regex:/^[A-Za-z]+$/'],
                 'birthdate' => 'required|string',
                 'schoolname' => 'required|string',
                 'grade' => 'required|string',
@@ -1270,32 +1270,41 @@ class ReceiptFormController extends Controller
             ]);
         } else {
             # code...
-            $validator =  Validator::make($request->all(), [
-                // 'firstname' => 'required|string',
-                'firstname' => 'required|string',
-                'lastname' => 'required|string',
-                'nickname' => 'required|string',
-                'birthdate' => 'required|string',
-                'schoolname' => 'required|string',
-                'grade' => 'required|string',
-                'package' => 'required|string',
-                'parent' => 'required|string',
-                'address' => 'required|string',
-                'postcode' => 'required|string',
-                'phone' => 'required|string',
-                'email' => [
-                    'required',
-                    'email',
-                    function ($attribute, $value, $fail) use ($allowedTLDs) {
-                        $domain = substr(strrchr($value, "@"), 1); // get domain part
-                        if (!collect($allowedTLDs)->contains(fn($suffix) => str_ends_with($domain, $suffix))) {
-                            $fail('รูปแบบอีเมลต้องลงท้ายด้วย .com, .net , .co.th , .ac.th, .or.th, .go.th, .edu หรือ .org
+            $validator =  Validator::make(
+                $request->all(),
+                [
+                    // 'firstname' => 'required|string',
+                    'firstname' => 'required|string |regex:/^[A-Za-z]+$/',
+                    'lastname' => 'required|string |regex:/^[A-Za-z]+$/',
+                    'nickname' => 'required|string |regex:/^[A-Za-z]+$/',
+                    'birthdate' => 'required|string',
+                    'schoolname' => 'required|string',
+                    'grade' => 'required|string',
+                    'package' => 'required|string',
+                    'parent' => 'required|string',
+                    'address' => 'required|string',
+                    'postcode' => 'required|string',
+                    'phone' => 'required|string',
+                    'email' => [
+                        'required',
+                        'email',
+                        function ($attribute, $value, $fail) use ($allowedTLDs) {
+                            $domain = substr(strrchr($value, "@"), 1); // get domain part
+                            if (!collect($allowedTLDs)->contains(fn($suffix) => str_ends_with($domain, $suffix))) {
+                                $fail('รูปแบบอีเมลต้องลงท้ายด้วย .com, .net , .co.th , .ac.th, .or.th, .go.th, .edu หรือ .org
                              เท่านั้น');
-                        }
-                    },
-                ],
-                'newsf' => 'required|string',
-            ]);
+                            }
+                        },
+                    ],
+                    'newsf' => 'required|string',
+                ]
+                ,
+                [
+                    'firstname.regex' => 'ชื่อต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
+                    'lastname.regex' => 'นามสกุลต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
+                    'nickname.regex' => 'ชื่อเล่นต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
+                ]
+            );
         }
 
 
