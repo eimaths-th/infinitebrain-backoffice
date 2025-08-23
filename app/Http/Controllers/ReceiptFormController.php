@@ -1216,8 +1216,8 @@ class ReceiptFormController extends Controller
             # code...
             $validator =  Validator::make($request->all(), [
                 // 'firstname' => 'required|string',
-                'firstname' => 'required|string',
-                'lastname' => 'required|string',
+                'firstname' => 'required|string|regex:/^[A-Za-z]+$/',
+                'lastname' => 'required|string|regex:/^[A-Za-z]+$/',
                 // 'nickname' => 'required|string',
                 // 'birthdate' => 'required|string',
                 // 'schoolname' => 'required|string',
@@ -1239,7 +1239,12 @@ class ReceiptFormController extends Controller
                     },
                 ],
                 // 'newsf' => 'required|string',
-            ]);
+            ],
+            [
+                'firstname.regex' => 'ชื่อต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
+                'lastname.regex' => 'นามสกุลต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
+            ]
+        );
         } elseif ($request->get('sfield') == '23') {
             # code...
             $validator =  Validator::make($request->all(), [
@@ -1267,6 +1272,11 @@ class ReceiptFormController extends Controller
                 'package' => 'required|string',
                 'newsf' => 'required|string',
 
+            ],
+            [
+                'firstname.regex' => 'ชื่อต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
+                'lastname.regex' => 'นามสกุลต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
+                'nickname.regex' => 'ชื่อเล่นต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
             ]);
         } else {
             # code...
@@ -1274,9 +1284,9 @@ class ReceiptFormController extends Controller
                 $request->all(),
                 [
                     // 'firstname' => 'required|string',
-                    'firstname' => 'required|string |regex:/^[A-Za-z]+$/',
-                    'lastname' => 'required|string |regex:/^[A-Za-z]+$/',
-                    'nickname' => 'required|string |regex:/^[A-Za-z]+$/',
+                    'firstname' => 'required|string|regex:/^[A-Za-z]+$/',
+                    'lastname' => 'required|string|regex:/^[A-Za-z]+$/',
+                    'nickname' => 'required|string|regex:/^[A-Za-z]+$/',
                     'birthdate' => 'required|string',
                     'schoolname' => 'required|string',
                     'grade' => 'required|string',
@@ -1297,8 +1307,7 @@ class ReceiptFormController extends Controller
                         },
                     ],
                     'newsf' => 'required|string',
-                ]
-                ,
+                ],
                 [
                     'firstname.regex' => 'ชื่อต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
                     'lastname.regex' => 'นามสกุลต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
