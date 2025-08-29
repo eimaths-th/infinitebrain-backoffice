@@ -1212,7 +1212,8 @@ class ReceiptFormController extends Controller
             }
         }
 
-        dd($result);
+        // dd($result);
+        
 
         if ($request->get('sfield') == '17') {
             # code...
