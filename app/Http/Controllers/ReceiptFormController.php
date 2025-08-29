@@ -1202,7 +1202,7 @@ class ReceiptFormController extends Controller
                         ->with('error', $message);
                 } else {
                     // ไม่ใช่คนเดียวกัน: เตือนและดำเนินการต่อ
-                    dd('ไม่ใช่คนเดียวกัน', $result);
+                    // dd('ไม่ใช่คนเดียวกัน', $result);
 
                     $message = "พบข้อมูลชื่อหรือนามสกุลที่คล้ายกัน ({$similarity}%) กับผู้ลงทะเบียนรายอื่น\n";
                     $message .= "ชื่อ-นามสกุลที่พบ: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
@@ -1213,7 +1213,7 @@ class ReceiptFormController extends Controller
         }
 
         // dd($result);
-        
+
 
         if ($request->get('sfield') == '17') {
             # code...
