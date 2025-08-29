@@ -156,6 +156,7 @@ class Receipt_School_RunningNumber extends Model
         $types = [
             'Sci' => ['0' => 'Sci', '1' => 'NTSci'],
             'CHN' => ['0' => 'CHN', '1' => 'NTCHN'],
+            'TH' => ['0' => 'TH', '1' => 'NTTH'],
             'default' => ['0' => 'def', '1' => 'NT'],
         ];
 
@@ -194,6 +195,9 @@ class Receipt_School_RunningNumber extends Model
             'NTCHN' => ['1' => '71', '0' => '01'],
             'def' => ['1' => '00', '0' => '00'],
             'NT'  => ['1' => '77', '0' => '77'],
+            'TH' => ['1' => '72', '0' => '02'],
+            'NTTH' => ['1' => '72', '0' => '02'],
+
         ];
 
         // Determine typenumber based on type and tex
