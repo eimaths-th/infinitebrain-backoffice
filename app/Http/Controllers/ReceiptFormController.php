@@ -1292,7 +1292,7 @@ class ReceiptFormController extends Controller
                 $request->all(),
                 [
                     // 'firstname' => 'required|string',
-                    'firstname' => 'required|string|regex:/^[A-Za-z]+$/',
+                    'firstname' => 'required|string',
                     'lastname' => 'required|string|regex:/^[A-Za-z]+$/',
                     'nickname' => 'required|string|regex:/^[A-Za-z]+$/',
                     'birthdate' => 'required|string',
@@ -1317,7 +1317,7 @@ class ReceiptFormController extends Controller
                     'newsf' => 'required|string',
                 ],
                 [
-                    'firstname.regex' => 'ชื่อต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
+                    // 'firstname.regex' => 'ชื่อต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
                     'lastname.regex' => 'นามสกุลต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
                     'nickname.regex' => 'ชื่อเล่นต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
                 ]
