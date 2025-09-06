@@ -1095,7 +1095,7 @@
                                                 </div>
                                             </div>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">
-                                                Photo
+                                                Photo ขนาดไม่เกิน 5mb
                                             </label>
                                             <div id="dropzone-photo-error" class="form-error-message" role="alert">
                                                 <img src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -1140,7 +1140,7 @@
                                                 </div>
                                             </div>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">
-                                                Receipt Photo
+                                                Receipt Photo ขนาดไม่เกิน 5mb
                                             </label>
                                             <div id="dropzone-att-error" class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"

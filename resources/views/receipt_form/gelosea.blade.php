@@ -1089,7 +1089,7 @@
                                                 </div>
                                             </div>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">
-                                                Photo
+                                                Photo ขนาดไม่เกิน 5mb
                                             </label>
                                             <div id="dropzone-photo-error" class="form-error-message" role="alert">
                                                 <img src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -1134,7 +1134,7 @@
                                                 </div>
                                             </div>
                                             <label class="form-sub-label" style="min-height:13px" aria-hidden="false">
-                                                Receipt Photo
+                                                Receipt Photo ขนาดไม่เกิน 5mb
                                             </label>
                                             <div id="dropzone-att-error" class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
@@ -1397,7 +1397,7 @@
             },
             dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
             dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
-            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
+            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 5 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
             acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
 
             // The setting up of the dropzone
@@ -1516,7 +1516,7 @@
             dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
             dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
             dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
-            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
+            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 5 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
             acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
             // The setting up of the dropzone
             init: function() {

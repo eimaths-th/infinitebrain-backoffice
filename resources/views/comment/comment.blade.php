@@ -224,7 +224,7 @@
         }
 
         .form_none {
-             display: none; 
+             display: none;
         }
 
         .dropzone {
@@ -667,8 +667,8 @@
                             <label for="Name">Comment:</label>
                             <input type="text" class="form-control" name="comment" id="user" value="">
                         </div>
-                       
-                       
+
+
                         <div class="form-row form-focus" id="dropzone-photo">
                                     <div class="col-md-12 col-sm-12">
                                         <a id="dphoto"></a>
@@ -681,11 +681,11 @@
                                                 class="form-control form_none" value="" hidden>
                                             <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
                                                 <div class="fallback">
-                                                   
+
                                                 </div>
                                             </div>
                                             <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Photo</label>
+                                                aria-hidden="false">Photo ขนาดไม่เกิน 5mb</label>
                                             <div id="dropzone-photo-error" class="form-error-message" role="alert"><img
                                                     src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
                                                     height="10">
@@ -781,7 +781,7 @@
                 //placeholder: "With Max Selection limit 4",
                 allowClear: true
             });
-            
+
             $('#check-all').click(function() {
                 $(':checkbox.flat').prop('checked', this.checked);
             });
@@ -794,7 +794,7 @@
                 }
             });
 
-           
+
             var table = $('#Listview').DataTable({
                 /*"aoColumnDefs": [
                 {
@@ -850,7 +850,7 @@
                         name: "photo",
                         data: "photo",
                         // render: function (data, type, full, meta) {
-                            
+
                         //     return "<img src=\"{{ asset('comments_images/') }}/" + data + "\" height=\"50\"/>";
                         // },
                     },
@@ -901,7 +901,7 @@
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
-                
+
 
                 $.ajax({
                     url: "{{ route('comment.store1') }}",
@@ -911,7 +911,7 @@
                         user: $('#AddUser').val(),
                         comment: $('#AddComment').val(),
                         photo: $('#AddPhoto').val(),
-                        
+
                         _token: token,
                     },
                     success: function(result) {
@@ -942,7 +942,7 @@
                     }
                 });
             });
-            
+
 
             $('#SubmitEditForm').click(function(e) {
                 //if (!confirm("Are you sure?")) return;
@@ -953,7 +953,7 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
 
-                
+
                 $.ajax({
                     url: "comment/save/" + id,
                     method: 'PUT',
@@ -961,12 +961,12 @@
                         user: $('#user').val(),
                         comment: $('#comment').val(),
                         student: $('#student').val(),
-                        
+
                         // photo: $('#EditPhoto').val(),
-                       
+
                         // grade: $('#EditGrade').val(),
                     },
-                    
+
                     success: function(result) {
                         // console.log($('#student').val());
                         //console.log(result);
@@ -1050,7 +1050,7 @@
             },
             dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
             dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
-            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด		
+            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 2 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
             acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
 
             // The setting up of the dropzone
@@ -1061,7 +1061,7 @@
                     $('#infinite').append("<input type='text' id='" + file.newName +
                        "' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
                     file.previewElement.id = file.newName;
-                    
+
 
                 }).on("removedfile", function(file) {
                     //alert(file.id);
@@ -1122,17 +1122,17 @@
                     // do stuff with file.id ...
                 });
                 /*this.on("addedfile", function(file) {
-                	
+
                 }).on("removedfile", function(file) {
-                	
+
                 }).on("thumbnail", function(file) {
-                	
+
                 }).on("error", function(file) {
-                	
+
                 }).on("processing", function(file) {
-                	
+
                 }).on("uploadprogress", function(file) {
-                	
+
                 });*/
 
             }
