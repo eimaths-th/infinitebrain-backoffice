@@ -1539,7 +1539,7 @@
                     // do stuff with file.id ...
                 }).on("error", function(file) {
                     this.removeFile(file);
-                    alert("please check file format or file size");
+                    alert("ไม่อนุญาตให้อัพโหลดไฟล์เกิน 5 MB");
                 });
                 /*this.on("addedfile", function(file) {
 
@@ -1655,7 +1655,7 @@
                     // do stuff with file.id ...
                 }).on("error", function(file) {
                     this.removeFile(file);
-                    alert("please check file format or file size");
+                    alert("ไม่อนุญาตให้อัพโหลดไฟล์เกิน 5 MB");
                 });
                 /*this.on("addedfile", function(file) {
 
