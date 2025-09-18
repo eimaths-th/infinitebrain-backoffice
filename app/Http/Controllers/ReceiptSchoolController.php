@@ -1081,7 +1081,9 @@ class ReceiptSchoolController extends Controller
 
                 if ($dresult['group'] === 'Sci') {
                     # code...
-                    $qty = $dresult['qty']; // fix new line
+                    // $qty = $dresult['qty']; // fix new line
+                    $qty = $dresult['week']; // fix new line
+
 
                 } else {
 
@@ -1295,7 +1297,7 @@ class ReceiptSchoolController extends Controller
         //     $vat_val = number_format(0, 2);
         //     $booksum = $booksum + $pricesub;
         // }
-
+        // dd($data,$receipt_detail_arr);
         return view($viewr)->with(['id' => $id])
             ->with(['discount' => $discount])
             ->with(['vat_price' => $vat_price])
@@ -1819,7 +1821,7 @@ class ReceiptSchoolController extends Controller
             Receipt_School::find($id_parent)->update(['file_att' => $stu, 'type' => $typeRec]);
             return response()->json(['success' => 'Receipt updated successfully']);
         }
-        // 
+        //
         $rrid  = $request->get('rrid');
         $std_id  = $request->get('student_id');
         $rrsub  = $request->get('rrsub');
