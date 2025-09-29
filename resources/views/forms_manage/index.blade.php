@@ -118,6 +118,15 @@
                                         "{{ route('form-manage.index') }}";
                                 }, 2000);
                             }
+                        },
+                        error: function(xhr) {
+                            let message = 'เกิดข้อผิดพลาดในการลบฟอร์ม';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                message = xhr.responseJSON.message;
+                            }
+                            toastr.error(message, {
+                                timeOut: 2000
+                            });
                         }
                     });
                 }
