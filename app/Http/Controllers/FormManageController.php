@@ -47,6 +47,11 @@ class FormManageController extends Controller
         //     }
         // }
 
+        $checkNull = FormManage::whereNull('form_route')->get();
+        foreach ($checkNull as $key => $value) {
+            $value->delete();
+        }
+
         return view('forms_manage.index', compact('data'));
     }
 
