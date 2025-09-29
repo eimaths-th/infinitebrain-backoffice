@@ -666,10 +666,13 @@ class ReceiptFormController extends Controller
 
         //get student
         //$student = Student::orderBy("name", "asc")->get();
+        $form = FormManage::find($request->sfield);
         $referent_codes = ReferentCode::orderBy("id", "asc")->get();
+
         return view('receipt_form.index')
             ->with(['sfielda' =>  self::sfielda])
             ->with(['sfield' => $request->sfield])
+            ->with(['form' => $form])
             ->with(['referent_codes' => $referent_codes]);
     }
     public function index_all(Request $request)

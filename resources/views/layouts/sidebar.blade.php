@@ -2,6 +2,8 @@
     use App\Models\Subject;
     use App\Models\SubjectPrice;
     use App\Models\Godeye;
+    use App\Models\FormManage;
+    $formManages = FormManage::all();
 @endphp
 <div class="app-sidebar sidebar-shadow">
     <div class="app-header__logo">
@@ -344,12 +346,52 @@
                             ข้อมูลจาก Online Form
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
-
+                        <!-- ข้อมูลจาก Online Form -->
+                        <!--
                         <ul>
                             <li>
                                 <a href="{{ route('receipts_form_all') }}">
                                     <i class="metismenu-icon"></i>
                                     All
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '2']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    GMEC
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '4']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    IMOCSEA
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '5']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    INFINITE Spelling Bee
+                                    {{-- no data --}}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '6']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    GELOSEA
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '7']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    LIMOC
+                                    {{-- no data --}}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '8']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    STEM
+                                    {{-- no data --}}
                                 </a>
                             </li>
                             <li>
@@ -372,24 +414,6 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('receipts_form', ['sfield' => '2']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    GMEC
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('receipts_form', ['sfield' => '4']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    IMOCSEA
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('receipts_form', ['sfield' => '28']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    IMOCSEA SPECIAL
-                                </a>
-                            </li>
-                            <li>
                                 <a href="{{ route('receipts_form', ['sfield' => '13']) }}">
                                     <i class="metismenu-icon"></i>
                                     ISOCSEA
@@ -401,67 +425,38 @@
                                     IMOCSEA+ISOCSEA
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ route('receipts_form', ['sfield' => '5']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    INFINITE Spelling Bee
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('receipts_form', ['sfield' => '6']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    GELOSEA
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('receipts_form', ['sfield' => '7']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    LIMOC
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('receipts_form', ['sfield' => '8']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    STEM
-                                </a>
-                            </li>
+
                             <li>
                                 <a href="{{ route('receipts_form', ['sfield' => '15']) }}">
                                     <i class="metismenu-icon"></i>
                                     Huaxiacup
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ route('receipts_form', ['sfield' => '19']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    Huaxiacup-II
-                                </a>
-                            </li>
+
                             <li>
                                 <a href="{{ route('receipts_form', ['sfield' => '16']) }}">
                                     <i class="metismenu-icon"></i>
                                     Mathleague
-                                    <!-- ml -->
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('receipts_form', ['sfield' => '18']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    Mathleague-II
-                                    <!-- ml -->
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="{{ route('receipts_form', ['sfield' => '0']) }}">
-                                    <i class="metismenu-icon"></i>
-                                    Img Reward
+                                    {{-- <!-- ml --> --}}
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('receipts_form', ['sfield' => '17']) }}">
                                     <i class="metismenu-icon"></i>
                                     Test Field
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '18']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Mathleague-II
+                                    {{-- <!-- ml --> --}}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '19']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Huaxiacup-II
                                 </a>
                             </li>
                             <li>
@@ -513,6 +508,13 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '28']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    IMOCSEA SPECIAL
+                                </a>
+                            </li>
+
+                            <li>
                                 <a href="{{ route('receipts_form', ['sfield' => '29']) }}">
                                     <i class="metismenu-icon"></i>
                                     STEMCO Science
@@ -524,7 +526,45 @@
                                     Advance English Grammar
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '32']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Award Ceremony ISOCSEA
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '33']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    IMOCSEA National Round
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '0']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    Img Reward
+                                </a>
+                            </li>
                         </ul>
+                        -->
+
+                        <ul>
+                            <li>
+                                <a href="{{ route('receipts_form_all') }}">
+                                    <i class="metismenu-icon"></i>
+                                    All
+                                </a>
+                            </li>
+                            @foreach ($formManages as $formManage)
+                                <li>
+                                    <a href="{{ route('receipts_form', ['sfield' => $formManage->id]) }}">
+                                        <i class="metismenu-icon"></i>
+                                        {{ $formManage->form_name }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+
                     </li>
                     <li>
                         <a href="#">
@@ -533,7 +573,7 @@
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
 
-                        <ul>
+                        {{-- <ul>
                             <li>
                                 <a href="{{ route('receipts_all') }}">
                                     <i class="metismenu-icon"></i>
@@ -704,6 +744,22 @@
                                     Advance English Grammar
                                 </a>
                             </li>
+                        </ul> --}}
+                        <ul>
+                            <li>
+                                <a href="{{ route('receipts_all') }}">
+                                    <i class="metismenu-icon"></i>
+                                    All
+                                </a>
+                            </li>
+                            @foreach ($formManages as $formManage)
+                                <li>
+                                    <a href="{{ route('receipts', ['sfield' => $formManage->id]) }}">
+                                        <i class="metismenu-icon"></i>
+                                        {{ $formManage->form_name }}
+                                    </a>
+                                </li>
+                            @endforeach
                         </ul>
                     </li>
 

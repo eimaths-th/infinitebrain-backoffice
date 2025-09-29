@@ -406,11 +406,11 @@
                     </div>
 
                     <div>
-                        @if ($sfielda[request()->get('sfield')] === 'neos')
+                        @if (isset($sfielda[request()->get('sfield')]) && $sfielda[request()->get('sfield')] === 'neos' )
                             Neo science Online Form
                             <div class="page-title-subheading">Infinite Brain Online Form Data</div>
                         @else
-                            {{ $sfielda[request()->get('sfield')] }} Online Form
+                            {{ isset($sfielda[request()->get('sfield')]) ? $sfielda[request()->get('sfield')] : $form->form_name }} Online Form
                             <div class="page-title-subheading">Infinite Brain Online Form Data</div>
                         @endif
 
@@ -435,7 +435,7 @@
             <div class="card-body">
                 <form action="{{ route('receipts_form') }}" method="GET">
                     <div class="row mb-4">
-                        
+
                         <div class="col-md-2">
                             <label for="date_range">วันที่</label>
                             <input type="hidden" name="sfield" id="sfield" value="{{ request()->get('sfield') }}">
