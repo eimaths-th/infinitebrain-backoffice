@@ -340,6 +340,14 @@ class ReceiptFormController extends Controller
     {
         return $this->getForm();
     }
+    public function award_ceremony_isocsea()
+    {
+        return $this->getForm();
+    }
+    public function imocsea_national_round()
+    {
+        return $this->getForm();
+    }
 
     public function gelosea()
     {

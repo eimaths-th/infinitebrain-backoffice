@@ -89,6 +89,8 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
 
     Route::get('/testing-form-manage', [FormManageController::class, 'testing_form_manage'])->name('testing-form-manage');
     Route::get('/admin-test-field', [ReceiptFormController::class, 'admin_test_field'])->name('admin-test-field');
+    Route::get('/award-ceremony-isocsea', [ReceiptFormController::class, 'Award_ceremony_ISOCSEA'])->name('award-ceremony-isocsea');
+    Route::get('/imocsea-national-round', [ReceiptFormController::class, 'imocsea_national_round'])->name('imocsea-national-round');
     //'25' => 'seacso',
 });
 
