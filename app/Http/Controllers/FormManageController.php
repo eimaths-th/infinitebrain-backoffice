@@ -6,6 +6,8 @@ use App\Models\FormGrades;
 use App\Models\FormManage;
 use App\Models\FormPakages;
 use App\Models\OpeningClosingTime;
+use App\Models\Receipt;
+use App\Models\ReceiptForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -543,6 +545,25 @@ class FormManageController extends Controller
     {
         //
         $form = FormManage::find($request->id);
+
+        $sfield = $form->sfield;
+
+        $rec_form = ReceiptForm::where('sfield', $sfield)->count();
+        if ($rec_form > 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'พบการสมัครสำหรับฟอร์มนี้ กรุณาตรวจสอบก่อนลบ'
+            ], 409);
+        }
+
+        $receipt = Receipt::where('sfield', $sfield)->count();
+        if ($receipt > 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'พบการออกใบเสร็จสำหรับฟอร์มนี้ กรุณาตรวจสอบก่อนลบ'
+            ], 409);
+        }
+
         $package = FormPakages::where('form_id', $request->id)->delete();
         $grade = FormGrades::where('form_id', $request->id)->delete();
         $form->delete();
@@ -550,7 +571,5 @@ class FormManageController extends Controller
             'status' => 'success',
             'message' => 'Form deleted successfully'
         ]);
-
-
     }
 }

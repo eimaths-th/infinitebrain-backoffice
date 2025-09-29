@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
+use App\Models\FormManage;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,5 +28,10 @@ class AppServiceProvider extends ServiceProvider
     {
         //boot strap
         Paginator::useBootstrap();
+
+        View::composer('layouts.sidebar', function ($view) {
+            $formManages = FormManage::orderBy('form_name')->get();
+            $view->with('formManages', $formManages);
+        });
     }
 }
