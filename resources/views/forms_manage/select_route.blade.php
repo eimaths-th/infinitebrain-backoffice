@@ -52,6 +52,8 @@
                         <option value="stemco_science">stemco_science</option>
                         <option value="advance_english_grammar">advance_english_grammar</option>
                         <option value="admin-test-field">admin-test-field</option>
+                        <option value="award-ceremony-isocsea">award-ceremony-isocsea</option>
+                        <option value="imocsea-national-round">imocsea-national-round</option>
                     </select>
                 </div>
             </div>

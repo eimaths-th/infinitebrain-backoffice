@@ -1298,6 +1298,7 @@ class ReceiptSchoolController extends Controller
         //     $booksum = $booksum + $pricesub;
         // }
         // dd($data,$receipt_detail_arr);
+        
         return view($viewr)->with(['id' => $id])
             ->with(['discount' => $discount])
             ->with(['vat_price' => $vat_price])
