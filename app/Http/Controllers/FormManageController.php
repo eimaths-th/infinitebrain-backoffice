@@ -91,7 +91,7 @@ class FormManageController extends Controller
 
         $data = FormManage::where([
             'form_route' => $form_route,
-            'form_name' => $form_name
+            // 'form_name' => $form_name
         ])->first();
         // dd($data);
         if ($data) {
