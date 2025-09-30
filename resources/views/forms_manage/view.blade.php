@@ -54,6 +54,47 @@
                                         {!! nl2br(e(session('warning'))) !!}
                                     </div>
                                 @endif
+                                @php
+                                    $fieldSettingsData = is_array($form->field_settings ?? null) ? $form->field_settings : [];
+                                    $fieldConfig = config('form_fields', []);
+                                    $normalizeBoolean = function ($value, $default) {
+                                        if ($value === true || $value === false) {
+                                            return $value;
+                                        }
+                                        if ($value === 1 || $value === '1') {
+                                            return true;
+                                        }
+                                        if ($value === 0 || $value === '0') {
+                                            return false;
+                                        }
+                                        if ($value === null) {
+                                            return (bool) $default;
+                                        }
+                                        if (is_string($value)) {
+                                            $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                                            if ($filtered !== null) {
+                                                return $filtered;
+                                            }
+                                        }
+                                        return (bool) ($value ?? $default);
+                                    };
+                                    $resolveSetting = function ($key, $attribute, $fallback) use ($fieldSettingsData, $fieldConfig, $normalizeBoolean) {
+                                        $settings = $fieldSettingsData[$key] ?? null;
+                                        if (is_array($settings) && array_key_exists($attribute, $settings)) {
+                                            return $normalizeBoolean($settings[$attribute], $fallback);
+                                        }
+                                        if (is_object($settings) && isset($settings->{$attribute})) {
+                                            return $normalizeBoolean($settings->{$attribute}, $fallback);
+                                        }
+                                        return $normalizeBoolean(data_get($fieldConfig, "$key.default_$attribute", $fallback), $fallback);
+                                    };
+                                    $isFieldEnabled = function ($key) use ($resolveSetting) {
+                                        return $resolveSetting($key, 'enabled', true);
+                                    };
+                                    $isFieldRequired = function ($key) use ($resolveSetting) {
+                                        return $resolveSetting($key, 'required', false) && $resolveSetting($key, 'enabled', true);
+                                    };
+                                @endphp
                                 @if (session('error'))
                                     <div class="alert alert-danger">
                                         {!! nl2br(e(session('error'))) !!}
@@ -208,97 +249,129 @@
                                 <input type="hidden" name="referent_code" id="referent_code"
                                     value="{{ request()->referent_code }}">
 
-                                <div class="form-row form-focus">
-                                    {{-- <label style="padding-left: 20px"
-                                        class="form-label form-label-top form-label-auto">Name-Surname (English) /
-                                        ชื่อ - นามสกุล ภาษาอังกฤษ <span class="form-required">*</span></label> --}}
-                                    <div class="col-md-6">
-                                        <label style="padding-left: 20px" class="form-label form-label-top form-label-auto">
-                                            {{ $form->student_first_name }}
-                                            <span class="form-required">*</span>
-                                        </label>
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="firstname">
-                                                <div style="width: 270px"></div>
-                                            </label>
-                                            <input type="text" class="form-control" name="firstname" id="firstname"
-                                                value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">First
-                                                Name</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
+                                @if ($isFieldEnabled('student_first_name') || $isFieldEnabled('student_last_name'))
+                                    <div class="form-row form-focus">
+                                        @if ($isFieldEnabled('student_first_name'))
+                                            <div class="col-md-6">
+                                                <label style="padding-left: 20px"
+                                                    class="form-label form-label-top form-label-auto">
+                                                    {{ $form->student_first_name }}
+                                                    @if ($isFieldRequired('student_first_name'))
+                                                        <span class="form-required">*</span>
+                                                    @endif
+                                                </label>
+                                                <div class="position-relative form-group">
+                                                    <label class="form-label form-label-top form-label-auto"
+                                                        for="firstname">
+                                                        <div style="width: 270px"></div>
+                                                    </label>
+                                                    <input type="text" class="form-control" name="firstname"
+                                                        id="firstname" value="" maxlength="50" minlength="2"
+                                                        @if ($isFieldRequired('student_first_name')) required @endif>
+                                                    <label class="form-sub-label" style="min-height:13px"
+                                                        aria-hidden="false">First
+                                                        Name</label>
+                                                    <div class="form-error-message" role="alert"><img
+                                                            src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                            height="10"> <span class="error-navigation-message">This
+                                                            field is
+                                                            required.</span>
+                                                        <div class="form-error-arrow">
+                                                            <div class="form-error-arrow-inner"></div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label style="padding-left: 20px"
-                                            class="form-label form-label-top form-label-auto">{{ $form->student_last_name }}
-                                            <span class="form-required">*</span></label>
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="lastname">
-                                                <div style="width: 270px"></div>
-                                            </label>
-                                            <input type="text" class="form-control" name="lastname" id="lastname"
-                                                value="" maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Last
-                                                Name</label>
+                                        @endif
+                                        @if ($isFieldEnabled('student_last_name'))
+                                            <div class="col-md-6">
+                                                <label style="padding-left: 20px"
+                                                    class="form-label form-label-top form-label-auto">
+                                                    {{ $form->student_last_name }}
+                                                    @if ($isFieldRequired('student_last_name'))
+                                                        <span class="form-required">*</span>
+                                                    @endif
+                                                </label>
+                                                <div class="position-relative form-group">
+                                                    <label class="form-label form-label-top form-label-auto"
+                                                        for="lastname">
+                                                        <div style="width: 270px"></div>
+                                                    </label>
+                                                    <input type="text" class="form-control" name="lastname"
+                                                        id="lastname" value="" maxlength="50" minlength="2"
+                                                        @if ($isFieldRequired('student_last_name')) required @endif>
+                                                    <label class="form-sub-label" style="min-height:13px"
+                                                        aria-hidden="false">Last
+                                                        Name</label>
 
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-row form-focus">
-
-                                    <div class="col-md-6 col-sm-12">
-
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="nickname">{{ $form->student_nick_name }} <span
-                                                    class="form-required">*</span>
-                                                <div style="width: 270px"></div>
-                                            </label>
-                                            <input type="text" class="form-control" name="nickname" id="nickname"
-                                                value="" maxlength="50" minlength="1" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Nick
-                                                Name</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     </div>
-                                    <div class="col-md-6 col-sm-12">
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="birthdate">
-                                                {{ $form->date_of_birth }} <span class="form-required">*</span>
-                                                <div style="width: 270px"></div>
-                                            </label>
-                                            <input type="date" class="AddDate form-control" name="birthdate"
-                                                id="birthdate" value="" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Date</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
+                                @endif
+
+                                @if ($isFieldEnabled('student_nick_name') || $isFieldEnabled('date_of_birth'))
+                                    <div class="form-row form-focus">
+
+                                        @if ($isFieldEnabled('student_nick_name'))
+                                            <div class="col-md-6 col-sm-12">
+
+                                                <div class="position-relative form-group">
+                                                    <label class="form-label form-label-top form-label-auto"
+                                                        for="nickname">{{ $form->student_nick_name }}
+                                                        @if ($isFieldRequired('student_nick_name'))
+                                                            <span class="form-required">*</span>
+                                                        @endif
+                                                        <div style="width: 270px"></div>
+                                                    </label>
+                                                    <input type="text" class="form-control" name="nickname"
+                                                        id="nickname" value="" maxlength="50" minlength="1"
+                                                        @if ($isFieldRequired('student_nick_name')) required @endif>
+                                                    <label class="form-sub-label" style="min-height:13px"
+                                                        aria-hidden="false">Nick
+                                                        Name</label>
+                                                    <div class="form-error-message" role="alert"><img
+                                                            src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                            height="10"> <span class="error-navigation-message">This
+                                                            field is
+                                                            required.</span>
+                                                        <div class="form-error-arrow">
+                                                            <div class="form-error-arrow-inner"></div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endif
+                                        @if ($isFieldEnabled('date_of_birth'))
+                                            <div class="col-md-6 col-sm-12">
+                                                <div class="position-relative form-group">
+                                                    <label class="form-label form-label-top form-label-auto"
+                                                        for="birthdate">
+                                                        {{ $form->date_of_birth }}
+                                                        @if ($isFieldRequired('date_of_birth'))
+                                                            <span class="form-required">*</span>
+                                                        @endif
+                                                        <div style="width: 270px"></div>
+                                                    </label>
+                                                    <input type="date" class="AddDate form-control" name="birthdate"
+                                                        id="birthdate" value=""
+                                                        @if ($isFieldRequired('date_of_birth')) required @endif>
+                                                    <label class="form-sub-label" style="min-height:13px"
+                                                        aria-hidden="false">Date</label>
+                                                    <div class="form-error-message" role="alert"><img
+                                                            src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                            height="10"> <span class="error-navigation-message">This
+                                                            field is
+                                                            required.</span>
+                                                        <div class="form-error-arrow">
+                                                            <div class="form-error-arrow-inner"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
-                                </div>
+                                @endif
 
                                 <div class="form-row form-focus">
 

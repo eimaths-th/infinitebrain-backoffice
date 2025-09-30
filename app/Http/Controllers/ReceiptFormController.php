@@ -66,6 +66,8 @@ class ReceiptFormController extends Controller
         '28' => 'imocsea_special',
         '29' => 'stemco_science',
         '30' => 'advance_english_grammar',
+        '31' => 'isocsea_imocsea_national_round_2025',
+        '32' => 'isocsea_imocsea_national_round',
     );
 
     public function generateUrl()
@@ -272,6 +274,13 @@ class ReceiptFormController extends Controller
         return view('forms_manage.view', compact('form', 'date'));
     }
 
+    public function generalForm()
+    {
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.generalForm")->with(['date' => $date]);
+    }
+
     public function asiarope()
     {
         return $this->getForm();
@@ -340,14 +349,7 @@ class ReceiptFormController extends Controller
     {
         return $this->getForm();
     }
-    public function award_ceremony_isocsea()
-    {
-        return $this->getForm();
-    }
-    public function imocsea_national_round()
-    {
-        return $this->getForm();
-    }
+
 
     public function gelosea()
     {
@@ -403,6 +405,35 @@ class ReceiptFormController extends Controller
         $route = request()->route()->getName();
         $date = $this->getDatetime($route);
         return view("receipt_form.advance_english_grammar")->with(['date' => $date]);
+    }
+
+    public function award_ceremony_isocsea()
+    {
+        return $this->getForm();
+        // $route = request()->route()->getName();
+        // $date = $this->getDatetime($route);
+        // return view("receipt_form.advance_english_grammar")->with(['date' => $date]);
+    }
+    public function imocsea_national_round()
+    {
+        return $this->getForm();
+        // $route = request()->route()->getName();
+        // $date = $this->getDatetime($route);
+        // return view("receipt_form.advance_english_grammar")->with(['date' => $date]);
+    }
+
+    public function isocsea_imocsea_national_round()
+    {
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.isocsea_imocsea_national_round")->with(['date' => $date]);
+    }
+
+    public function isocsea_imocsea_national_round_2025()
+    {
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.isocsea_imocsea_national_round_2025")->with(['date' => $date]);
     }
 
 
@@ -1177,6 +1208,7 @@ class ReceiptFormController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
 
         $allowedTLDs = ['.com', '.net', '.co.th', '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
         $route = $request->get('routeName');
@@ -1382,26 +1414,31 @@ class ReceiptFormController extends Controller
                 # code...
                 $filebs = '';
             } else {
-                $fileas = rtrim($fileas, "|");
-                $filesb = $request->get('imgFiles2');
-                $filebs = "";
-                foreach ($filesb as $fileb) {
-                    //echo $fileb;
-                    $oldfile = FileUpload::where('oldname', $fileb)->get();
-                    $filebs .= $oldfile[0]->filename . "|";
-                    File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
-                    FileUpload::where('filename', $oldfile[0]->filename)->delete();
+                $filebs = '';
+                if ($request->has('imgFiles2')) {
+                    $fileas = rtrim($fileas, "|");
+                    $filesb = $request->get('imgFiles2');
+                    $filebs = "";
+                    foreach ($filesb as $fileb) {
+                        //echo $fileb;
+                        $oldfile = FileUpload::where('oldname', $fileb)->get();
+                        $filebs .= $oldfile[0]->filename . "|";
+                        File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+                        FileUpload::where('filename', $oldfile[0]->filename)->delete();
+                    }
+                    $filebs = rtrim($filebs, "|");
                 }
-                $filebs = rtrim($filebs, "|");
             }
         }
 
-        if ($request->get('sfield') == 22) {
+        if ($request->get('sfield') == 22 || $request->get('sfield') == 31 || $request->get('sfield') == 32) {
             # code...
             $award = $request->get('award');
+            $street_address2 = $request->get('street_address2');
         } else {
             # code...
             $award = '';
+            $street_address2 = '';
         }
         // dd($request);
         // $receiptForm = ReceiptForm::create([
@@ -1417,6 +1454,7 @@ class ReceiptFormController extends Controller
             'birth_date' => $request->get('birthdate'),
             'school_name' => $request->get('schoolname'),
             'award' => $award,
+            'street_address2' => $street_address2,
             'grade' => $request->get('grade'),
             'package' => $request->get('package'),
             'contest' => $request->get('contest'),

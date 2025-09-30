@@ -78,6 +78,73 @@
                                     </div>
                                 @endif
 
+                                @php
+                                    $fieldSettings = $data->field_settings ?? [];
+                                @endphp
+                                @if (!empty($fieldConfig))
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-header py-2">
+                                            <strong>Field visibility & validation</strong>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm align-middle mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Field</th>
+                                                            <th>Description</th>
+                                                            <th class="text-center" style="width: 120px;">Enabled</th>
+                                                            <th class="text-center" style="width: 120px;">Required</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($fieldConfig as $fieldKey => $config)
+                                                            @php
+                                                                $settings = $fieldSettings[$fieldKey] ?? [
+                                                                    'enabled' => $config['default_enabled'] ?? true,
+                                                                    'required' => $config['default_required'] ?? false,
+                                                                ];
+                                                            @endphp
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>{{ $config['label'] }}</strong>
+                                                                </td>
+                                                                <td class="text-muted small">
+                                                                    {{ $config['description'] ?? '' }}
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <input type="hidden"
+                                                                        name="field_settings[{{ $fieldKey }}][enabled]"
+                                                                        value="0">
+                                                                    <input type="checkbox"
+                                                                        class="form-check-input field-toggle-enabled"
+                                                                        data-field="{{ $fieldKey }}"
+                                                                        data-field-enabled="{{ $fieldKey }}"
+                                                                        name="field_settings[{{ $fieldKey }}][enabled]"
+                                                                        value="1"
+                                                                        {{ ($settings['enabled'] ?? true) ? 'checked' : '' }}>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <input type="hidden"
+                                                                        name="field_settings[{{ $fieldKey }}][required]"
+                                                                        value="0">
+                                                                    <input type="checkbox"
+                                                                        class="form-check-input field-toggle-required"
+                                                                        data-field="{{ $fieldKey }}"
+                                                                        data-field-required="{{ $fieldKey }}"
+                                                                        name="field_settings[{{ $fieldKey }}][required]"
+                                                                        value="1"
+                                                                        {{ ($settings['required'] ?? false) ? 'checked' : '' }}>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <div class="alert alert-danger" id="error_alert" style="display: none;">
 
                                 </div>
@@ -850,6 +917,10 @@
     </div>
 
     @include('forms_manage.script')
+    <script>
+        window.fieldConfig = @json($fieldConfig ?? []);
+        window.initialFieldSettings = @json($fieldSettings ?? []);
+    </script>
     <script>
         let indexoptionPackage = 0;
 

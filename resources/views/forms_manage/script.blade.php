@@ -1,6 +1,8 @@
 <script>
     $(document).ready(function() {
         const $form = $('#infinite');
+        const fieldConfig = window.fieldConfig || {};
+        const fieldSettings = $.extend(true, {}, window.initialFieldSettings || {});
 
         function containerFor($el) {
             const $focus = $el.closest('.form-focus');
@@ -8,6 +10,147 @@
             const $group = $el.closest('.form-group');
             return $group.length ? $group : $el.parent();
         }
+
+        function ensureFieldSetting(fieldKey) {
+            if (!fieldSettings[fieldKey]) {
+                const defaults = fieldConfig[fieldKey] || {};
+                fieldSettings[fieldKey] = {
+                    enabled: defaults.default_enabled !== undefined ? !!defaults.default_enabled : true,
+                    required: defaults.default_required !== undefined ? !!defaults.default_required : false,
+                };
+            } else {
+                const state = fieldSettings[fieldKey];
+                state.enabled = state.enabled === true || state.enabled === '1' || state.enabled === 1;
+                state.required = state.required === true || state.required === '1' || state.required === 1;
+            }
+
+            if (!fieldSettings[fieldKey].enabled) {
+                fieldSettings[fieldKey].required = false;
+            }
+
+            return fieldSettings[fieldKey];
+        }
+
+        function findFieldWrapper($el) {
+            if (!$el || !$el.length) return $();
+            const columnSelectors = [
+                '.col-xl-12', '.col-lg-12', '.col-md-12', '.col-sm-12', '.col-12',
+                '.col-xl-11', '.col-lg-11', '.col-md-11', '.col-sm-11', '.col-11',
+                '.col-xl-10', '.col-lg-10', '.col-md-10', '.col-sm-10', '.col-10',
+                '.col-xl-9', '.col-lg-9', '.col-md-9', '.col-sm-9', '.col-9',
+                '.col-xl-8', '.col-lg-8', '.col-md-8', '.col-sm-8', '.col-8',
+                '.col-xl-7', '.col-lg-7', '.col-md-7', '.col-sm-7', '.col-7',
+                '.col-xl-6', '.col-lg-6', '.col-md-6', '.col-sm-6', '.col-6',
+                '.col-xl-5', '.col-lg-5', '.col-md-5', '.col-sm-5', '.col-5',
+                '.col-xl-4', '.col-lg-4', '.col-md-4', '.col-sm-4', '.col-4',
+                '.col-xl-3', '.col-lg-3', '.col-md-3', '.col-sm-3', '.col-3',
+                '.col-xl-2', '.col-lg-2', '.col-md-2', '.col-sm-2', '.col-2',
+                '.col-xl-1', '.col-lg-1', '.col-md-1', '.col-sm-1', '.col-1',
+            ];
+
+            for (const selector of columnSelectors) {
+                const $wrapper = $el.closest(selector);
+                if ($wrapper.length) {
+                    return $wrapper.first();
+                }
+            }
+
+            const $group = $el.closest('.form-group');
+            if ($group.length) {
+                return $group.first();
+            }
+
+            return $el.parent();
+        }
+
+        function storeOriginalRequired($inputs) {
+            $inputs.each(function() {
+                const $input = $(this);
+                if ($input.data('original-required') === undefined) {
+                    $input.data('original-required', $input.prop('required'));
+                }
+            });
+        }
+
+        function setRequiredState($inputs, shouldRequire) {
+            $inputs.each(function() {
+                $(this).prop('required', !!shouldRequire);
+            });
+        }
+
+        function clearValidationState($inputs) {
+            $inputs.each(function() {
+                const $input = $(this);
+                $input.data('invalid', false).css('border', '');
+                hideError($input);
+            });
+        }
+
+        function applyFieldState(fieldKey) {
+            const config = fieldConfig[fieldKey];
+            if (!config || !config.builder_input) {
+                $('[data-field-enabled="' + fieldKey + '"]').prop('disabled', true).prop('checked', false);
+                $('[data-field-required="' + fieldKey + '"]').prop('disabled', true).prop('checked', false);
+                return;
+            }
+
+            const $elements = $form.find(config.builder_input);
+            if (!$elements.length) {
+                $('[data-field-enabled="' + fieldKey + '"]').prop('disabled', true).prop('checked', false);
+                $('[data-field-required="' + fieldKey + '"]').prop('disabled', true).prop('checked', false);
+                return;
+            }
+
+            const settings = ensureFieldSetting(fieldKey);
+            const $wrapper = findFieldWrapper($elements.first());
+            const $inputs = $wrapper.find('input, select, textarea');
+
+            storeOriginalRequired($inputs);
+
+            if (!settings.enabled) {
+                $wrapper.attr('data-field-visible', '0').hide();
+                setRequiredState($inputs, false);
+                clearValidationState($inputs);
+
+                $('[data-field-required="' + fieldKey + '"]').prop('checked', false).prop('disabled', true);
+                $('[data-field-enabled="' + fieldKey + '"]').prop('checked', false);
+            } else {
+                $wrapper.attr('data-field-visible', '1').show();
+                setRequiredState($inputs, settings.required);
+                $('[data-field-enabled="' + fieldKey + '"]').prop('checked', true);
+                $('[data-field-required="' + fieldKey + '"]').prop('disabled', false).prop('checked', settings.required);
+            }
+        }
+
+        function applyAllFieldStates() {
+            Object.keys(fieldConfig).forEach(function(fieldKey) {
+                applyFieldState(fieldKey);
+            });
+        }
+
+        applyAllFieldStates();
+
+        $('.field-toggle-enabled').on('change', function() {
+            const fieldKey = $(this).data('field');
+            const enabled = $(this).is(':checked');
+            const settings = ensureFieldSetting(fieldKey);
+            settings.enabled = enabled;
+            if (!enabled) {
+                settings.required = false;
+            } else if (settings.required === undefined) {
+                const defaults = fieldConfig[fieldKey] || {};
+                settings.required = defaults.default_required !== undefined ? !!defaults.default_required : false;
+            }
+
+            applyFieldState(fieldKey);
+        });
+
+        $('.field-toggle-required').on('change', function() {
+            const fieldKey = $(this).data('field');
+            const settings = ensureFieldSetting(fieldKey);
+            settings.required = $(this).is(':checked');
+            applyFieldState(fieldKey);
+        });
 
         function showError($el) {
             const $c = containerFor($el);
