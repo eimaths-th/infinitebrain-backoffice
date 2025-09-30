@@ -601,6 +601,10 @@
             width: 100% !important;
         }
 
+        .select2-selection--error {
+            border: 1px solid #dc3545 !important;
+        }
+
         /* Disabled options styling */
         .select2-results__option[aria-disabled="true"] {
             color: #ccc !important;
@@ -637,11 +641,11 @@
 
                             <div class="text-center">
                                 <h2 class="card-title form_header">
-                                    ISOCSEA & IMOCSEA National Round {{ date('Y') }} Registration Form
+                                    สำหรับผู้ไม่เข้าร่วมพิธีรับรางวัลการแข่งขัน ISOCSEA  &  IMOCSEA  Award  ceremony  {{ date('Y') }}
                                 </h2>
                                 <p class="card-text form_sub_header">
                                     <b>
-                                        สำหรับผู้ไม่เข้าร่วมพิธีรับรางวัลการแข่งขัน ISOCSEA & IMOCSEA National Round 2025
+                                        ISOCSEA  &  IMOCSEA  Award  ceremony  {{ date('Y') }}  Registration  Form
                                     </b>
                                 </p>
                             </div>
@@ -671,42 +675,7 @@
                                                 </strong>
                                             </span>
                                         </p>
-                                        <p style="text-align: left;">
-                                            <span style="color: #6351a2;">
-                                                <strong>
-                                                    Registration Date:
-                                                </strong>
-                                                @if ($date)
-                                                    {{ $date }}
-                                                @else
-                                                    July 20, 2025 - October 15, 2025 <br>
-                                                @endif
-                                            </span>
-                                        </p>
-                                        <p>
-                                            <span style="color: #6351a2;">
-                                                <strong>
-                                                    Award Ceremony Date :
-                                                </strong>
-                                                &nbsp;9 November 2025
-                                            </span>
-                                        </p>
-                                        <p>
-                                            <span style="color: #6351a2;">
-                                                <strong>
-                                                    Location :
-                                                </strong>
-                                                &nbsp;ศูนย์ประชุม มหาวิทยาลัยเกษตรศาสตร์ วิทยาเขตบางเขน
-                                            </span>
-                                        </p>
-                                        <p>
-                                            <span style="color: #6351a2;">
-                                                <strong>
-                                                    Time :
-                                                </strong>
-                                                &nbsp;08:00 -16:00
-                                            </span>
-                                        </p>
+
                                         <p>
                                             <span style="color: #6351a2;">
                                                 <strong>
@@ -719,6 +688,26 @@
                                                 &nbsp;-&nbsp;จะจัดส่งรางวัลครั้งที่สองภายใน สิ้นเดือนตุลาคม 2568 <br>
                                                 &nbsp;-&nbsp;โดยการจัดส่งจะจัดส่งให้กับผู้ที่ลงชื่อก่อนเท่านั้น
                                             </span>
+                                        </p>
+                                        <p>
+                                            <span style="color: #6351a2;">
+                                                <strong>
+                                                ผลการสอบแข่งขัน  IMOCSEA 2025
+                                                </strong>
+                                                &nbsp;
+                                                <a href="https://docs.google.com/spreadsheets/d/1srsdHolEzQtRsJ0GIehehepARYBgd5nX/edit?usp=sharing&ouid=111130027835038984794&rtpof=true&sd=true">https://docs.google.com/spreadsheets/d/1srsdHolEzQtRsJ0GIehehepARYBgd5nX/edit?usp=sharing&ouid=111130027835038984794&rtpof=true&sd=true</a>
+                                                <br>
+                                                </span>
+                                        </p>
+                                        <p>
+                                            <span style="color: #6351a2;">
+                                                <strong>
+                                                ผลการสอบแข่งขัน  ISOCSEA 2025
+                                                </strong>
+                                                &nbsp;
+                                                <a href="https://docs.google.com/spreadsheets/d/1fWZ-paFDRFGRj9mqEfRS2WUkC2hvp4Ip/edit?usp=sharing&ouid=111130027835038984794&rtpof=true&sd=true">https://docs.google.com/spreadsheets/d/1fWZ-paFDRFGRj9mqEfRS2WUkC2hvp4Ip/edit?usp=sharing&ouid=111130027835038984794&rtpof=true&sd=true</a>
+                                                <br>
+                                                </span>
                                         </p>
                                         {{--  <p><span style="color: #6351a2;"><strong>Result Release:&nbsp;</strong>19 April
                                             2023</span>
@@ -904,6 +893,8 @@
                                                 <label class="form-label form-label-top form-label-auto"
                                                     for="grade">Grade
                                                     / ระดับชั้น <span class="form-required">*</span>
+                                                    <span style="color: red;">(ระดับชั้นที่ลงทะเบียนไว้ตอนสอบไม่ใช่ระดับชั้นที่ศึกษาอยู่ในปัจจุบัน)</span>
+
                                                     <div style="width: 270px"></div>
                                                 </label>
                                                 <select style="width: 100%" class="form-control" id="grade"
@@ -1251,9 +1242,7 @@
                             <div class="card-footer text-center">
                                 <br>
                                 <div class="text-danger">
-                                    **กรุณาตรวจสอบข้อมูลให้ถูกต้อง ก่อนทำการชำระเงินค่าสมัครสอบ หากตรวจสอบข้อมูล และ
-                                    พบว่าผู้สมัครไม่มีสิทธิ์เข้าสอบตามกฎ** <br>
-                                    **ของสนามสอบหรือด้วยสาเหตุอื่นๆของทางผู้สมัคร ทางบริษัทขอสงวนสิทธิ์ในการคืนเงินทุกกรณี**
+                                    **กรุณาตรวจสอบข้อมูลให้ถูกต้องก่อนส่งข้อมูล**
                                     <br>
                                 </div>
                                 <br>
@@ -1279,6 +1268,10 @@
             var $award = $('#award');
             var $package = $('#package');
             var originalAwardHTML = $award.html(); // Store original HTML
+            var $awardGroup = $award.closest('.position-relative.form-group');
+            var $awardError = $awardGroup.find('.form-error-message');
+            var $awardErrorMessage = $awardError.find('.error-navigation-message');
+            var defaultAwardErrorMessage = $.trim($awardErrorMessage.text()) || 'This field is required.';
 
             function awardGroup(value) {
                 if (!value) return '';
@@ -1301,6 +1294,91 @@
                         updateGroupAvailability();
                     }, 10);
                 }
+            }
+
+            function getAwardValidationConfig(packageValue) {
+                switch (packageValue) {
+                    case 'IMOCSEA+ISOCSEA':
+                        return {
+                            min: 2,
+                            max: 2,
+                            requireBothGroups: true,
+                            message: 'กรุณาเลือกผลรางวัลจาก IMOCSEA และ ISOCSEA อย่างละ 1 รายการ'
+                        };
+                    case 'IMOCSEA':
+                        return {
+                            min: 1,
+                            max: 1,
+                            message: 'กรุณาเลือกรางวัลจากกลุ่ม IMOCSEA 1 รายการ'
+                        };
+                    case 'ISOCSEA':
+                        return {
+                            min: 1,
+                            max: 1,
+                            message: 'กรุณาเลือกรางวัลจากกลุ่ม ISOCSEA 1 รายการ'
+                        };
+                    default:
+                        return {
+                            min: 1,
+                            max: 1,
+                            message: defaultAwardErrorMessage
+                        };
+                }
+            }
+
+            function getSelect2Selection() {
+                return $award.next('.select2').find('.select2-selection');
+            }
+
+            function showAwardError(message) {
+                var $selection = getSelect2Selection();
+                $awardGroup.addClass('form-focus-error');
+                $selection.addClass('select2-selection--error');
+                $awardErrorMessage.text(message || defaultAwardErrorMessage);
+                $awardError.show();
+            }
+
+            function clearAwardError() {
+                var $selection = getSelect2Selection();
+                $awardGroup.removeClass('form-focus-error');
+                $selection.removeClass('select2-selection--error');
+                $awardErrorMessage.text(defaultAwardErrorMessage);
+                $awardError.hide();
+            }
+
+            function validateAwardSelection(showFeedback) {
+                var packageValue = $package.val();
+                var selectedValues = $award.val() || [];
+                var config = getAwardValidationConfig(packageValue);
+                var isValid = true;
+
+                if (config.min && selectedValues.length < config.min) {
+                    isValid = false;
+                }
+
+                if (config.max && selectedValues.length > config.max) {
+                    isValid = false;
+                }
+
+                if (isValid && config.requireBothGroups) {
+                    var groups = selectedValues.reduce(function(result, value) {
+                        result[awardGroup(value)] = true;
+                        return result;
+                    }, {});
+                    if (Object.keys(groups).length < 2) {
+                        isValid = false;
+                    }
+                }
+
+                if (!isValid) {
+                    if (showFeedback) {
+                        showAwardError(config.message);
+                    }
+                } else {
+                    clearAwardError();
+                }
+
+                return isValid;
             }
 
             function updateGroupAvailability() {
@@ -1405,9 +1483,19 @@
             $package.on('change', function() {
                 $award.val(null).trigger('change');
                 setupSelectForPackage($(this).val(), false);
+                validateAwardSelection(false);
             });
 
-            $('#infinite').on('submit', function() {
+            $award.on('change.awardValidation', function() {
+                validateAwardSelection(false);
+            });
+
+            $('#infinite').on('submit', function(e) {
+                if (!validateAwardSelection(true)) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    return false;
+                }
                 $('#loader-container').show();
             });
             var inputlist = ["firstname", "lastname"];

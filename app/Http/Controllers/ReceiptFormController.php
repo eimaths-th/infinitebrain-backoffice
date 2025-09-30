@@ -1209,7 +1209,7 @@ class ReceiptFormController extends Controller
     protected function buildDynamicValidationRules($route, $allowedTLDs)
     {
         $formManage = FormManage::where('form_route', $route)->first();
-        
+
         if (!$formManage || !$formManage->field_settings) {
             return $this->getDefaultValidationRules($allowedTLDs);
         }
@@ -1237,7 +1237,7 @@ class ReceiptFormController extends Controller
 
         foreach ($fieldMapping as $configKey => $inputName) {
             $settings = $fieldSettings[$configKey] ?? null;
-            
+
             if (!is_array($settings)) {
                 continue;
             }
@@ -1250,7 +1250,7 @@ class ReceiptFormController extends Controller
             }
 
             $ruleArray = [];
-            
+
             if ($required) {
                 $ruleArray[] = 'required';
             } else {
@@ -1404,6 +1404,7 @@ class ReceiptFormController extends Controller
                 FileUpload::where('filename', $oldfile[0]->filename)->delete();
             }
             $filebs = rtrim($filebs, "|");
+            $fileas = rtrim($fileas, "|");
         } else {
             # code...
             $filesa = $request->get('imgFiles');
@@ -1411,19 +1412,20 @@ class ReceiptFormController extends Controller
             foreach ($filesa as $filea) {
                 //echo $filea;
                 $oldfile = FileUpload::where('oldname', $filea)->get();
+                
                 $fileas .= $oldfile[0]->filename . "|";
                 // }
                 File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
 
                 FileUpload::where('filename', $oldfile[0]->filename)->delete();
             }
+            $fileas = rtrim($fileas, "|");
             if ($request->get('sfield') == '23') {
                 # code...
                 $filebs = '';
             } else {
                 $filebs = '';
                 if ($request->has('imgFiles2')) {
-                    $fileas = rtrim($fileas, "|");
                     $filesb = $request->get('imgFiles2');
                     $filebs = "";
                     foreach ($filesb as $fileb) {
@@ -1664,7 +1666,7 @@ class ReceiptFormController extends Controller
 
         // Prepare update data
         $updateData = $request->all();
-        
+
         // Handle award field if present
         if ($request->has('award')) {
             $awardInput = $request->get('award');
