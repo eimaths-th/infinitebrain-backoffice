@@ -1206,6 +1206,121 @@ class ReceiptFormController extends Controller
     }
 
 
+    protected function buildDynamicValidationRules($route, $allowedTLDs)
+    {
+        $formManage = FormManage::where('form_route', $route)->first();
+        
+        if (!$formManage || !$formManage->field_settings) {
+            return $this->getDefaultValidationRules($allowedTLDs);
+        }
+
+        $fieldSettings = $formManage->field_settings;
+        $fieldConfig = config('form_fields', []);
+        $rules = [];
+        $messages = [];
+
+        $fieldMapping = [
+            'student_first_name' => 'firstname',
+            'student_last_name' => 'lastname',
+            'student_nick_name' => 'nickname',
+            'date_of_birth' => 'birthdate',
+            'student_school_name' => 'schoolname',
+            'student_grade' => 'grade',
+            'package' => 'package',
+            'student_address' => 'address',
+            'student_zip' => 'postcode',
+            'parent_name' => 'parent',
+            'parent_phone' => 'phone',
+            'contact_email' => 'email',
+            'news' => 'newsf',
+        ];
+
+        foreach ($fieldMapping as $configKey => $inputName) {
+            $settings = $fieldSettings[$configKey] ?? null;
+            
+            if (!is_array($settings)) {
+                continue;
+            }
+
+            $enabled = $settings['enabled'] ?? ($fieldConfig[$configKey]['default_enabled'] ?? true);
+            $required = $settings['required'] ?? ($fieldConfig[$configKey]['default_required'] ?? false);
+
+            if (!$enabled) {
+                continue;
+            }
+
+            $ruleArray = [];
+            
+            if ($required) {
+                $ruleArray[] = 'required';
+            } else {
+                $ruleArray[] = 'nullable';
+            }
+
+            $ruleArray[] = 'string';
+
+            if (in_array($inputName, ['firstname', 'lastname', 'nickname'])) {
+                $ruleArray[] = 'regex:/^[A-Za-z ]+$/';
+                $messages["{$inputName}.regex"] = ucfirst($inputName) . ' ต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น';
+            }
+
+            if ($inputName === 'email') {
+                $rules[$inputName] = array_merge(
+                    $required ? ['required'] : ['nullable'],
+                    [
+                        'email',
+                        function ($attribute, $value, $fail) use ($allowedTLDs) {
+                            if (!$value) return;
+                            $domain = substr(strrchr($value, "@"), 1);
+                            if (!collect($allowedTLDs)->contains(fn($suffix) => str_ends_with($domain, $suffix))) {
+                                $fail('รูปแบบอีเมลต้องลงท้ายด้วย .com, .net , .co.th , .ac.th, .or.th, .go.th, .edu หรือ .org เท่านั้น');
+                            }
+                        },
+                    ]
+                );
+            } else {
+                $rules[$inputName] = $ruleArray;
+            }
+        }
+
+        return ['rules' => $rules, 'messages' => $messages];
+    }
+
+    protected function getDefaultValidationRules($allowedTLDs)
+    {
+        return [
+            'rules' => [
+                'firstname' => 'required|string|regex:/^[A-Za-z ]+$/',
+                'lastname' => 'required|string|regex:/^[A-Za-z ]+$/',
+                'nickname' => 'required|string|regex:/^[A-Za-z ]+$/',
+                'birthdate' => 'required|string',
+                'schoolname' => 'required|string',
+                'grade' => 'required|string',
+                'package' => 'required|string',
+                'parent' => 'required|string',
+                'address' => 'required|string',
+                'postcode' => 'required|string',
+                'phone' => 'required|string',
+                'email' => [
+                    'required',
+                    'email',
+                    function ($attribute, $value, $fail) use ($allowedTLDs) {
+                        $domain = substr(strrchr($value, "@"), 1);
+                        if (!collect($allowedTLDs)->contains(fn($suffix) => str_ends_with($domain, $suffix))) {
+                            $fail('รูปแบบอีเมลต้องลงท้ายด้วย .com, .net , .co.th , .ac.th, .or.th, .go.th, .edu หรือ .org เท่านั้น');
+                        }
+                    },
+                ],
+                'newsf' => 'required|string',
+            ],
+            'messages' => [
+                'firstname.regex' => 'ชื่อต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
+                'lastname.regex' => 'นามสกุลต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
+                'nickname.regex' => 'ชื่อเล่นต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
+            ],
+        ];
+    }
+
     public function store(Request $request)
     {
         // dd($request->all());
@@ -1255,117 +1370,9 @@ class ReceiptFormController extends Controller
             }
         }
 
-        // dd($result);
-
-
-        if ($request->get('sfield') == '17') {
-            # code...
-            $validator =  Validator::make(
-                $request->all(),
-                [
-                    // 'firstname' => 'required|string',
-                    'firstname' => 'required|string|regex:/^[A-Za-z ]+$/',
-                    'lastname' => 'required|string|regex:/^[A-Za-z ]+$/',
-                    // 'nickname' => 'required|string',
-                    // 'birthdate' => 'required|string',
-                    // 'schoolname' => 'required|string',
-                    'grade' => 'required|string',
-                    'package' => 'required|string',
-                    // 'parent' => 'required|string',
-                    // 'address' => 'required|string',
-                    // 'postcode' => 'required|string',
-                    'phone' => 'required|string',
-                    'email' => [
-                        'required',
-                        'email',
-                        function ($attribute, $value, $fail) use ($allowedTLDs) {
-                            $domain = substr(strrchr($value, "@"), 1); // get domain part
-                            if (!collect($allowedTLDs)->contains(fn($suffix) => str_ends_with($domain, $suffix))) {
-                                $fail('รูปแบบอีเมลต้องลงท้ายด้วย .com, .net , .co.th , .ac.th, .or.th, .go.th, .edu หรือ .org
-                             เท่านั้น');
-                            }
-                        },
-                    ],
-                    // 'newsf' => 'required|string',
-                ],
-                [
-                    'firstname.regex' => 'ชื่อต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
-                    'lastname.regex' => 'นามสกุลต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
-                ]
-            );
-        } elseif ($request->get('sfield') == '23') {
-            # code...
-            $validator =  Validator::make(
-                $request->all(),
-                [
-                    // 'firstname' => 'required|string',
-                    'firstname' => ['required', 'regex:/^[A-Za-z ]+$/'],
-                    'lastname' => ['required', 'regex:/^[A-Za-z ]+$/'],
-                    'nickname' => ['required', 'regex:/^[A-Za-z ]+$/'],
-                    'birthdate' => 'required|string',
-                    'schoolname' => 'required|string',
-                    'grade' => 'required|string',
-                    'address' => 'required|string',
-                    'postcode' => 'required|string',
-                    'phone' => 'required|string',
-                    'email' => [
-                        'required',
-                        'email',
-                        function ($attribute, $value, $fail) use ($allowedTLDs) {
-                            $domain = substr(strrchr($value, "@"), 1); // get domain part
-                            if (!collect($allowedTLDs)->contains(fn($suffix) => str_ends_with($domain, $suffix))) {
-                                $fail('รูปแบบอีเมลต้องลงท้ายด้วย .com, .net , .co.th , .ac.th, .or.th, .go.th, .edu หรือ .org
-                             เท่านั้น');
-                            }
-                        },
-                    ],
-                    'package' => 'required|string',
-                    'newsf' => 'required|string',
-
-                ],
-                [
-                    'firstname.regex' => 'ชื่อต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
-                    'lastname.regex' => 'นามสกุลต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
-                    'nickname.regex' => 'ชื่อเล่นต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
-                ]
-            );
-        } else {
-            # code...
-            $validator =  Validator::make(
-                $request->all(),
-                [
-                    // 'firstname' => 'required|string',
-                    'firstname' => 'required|string|regex:/^[A-Za-z ]+$/',
-                    'lastname' => 'required|string|regex:/^[A-Za-z ]+$/',
-                    'nickname' => 'required|string|regex:/^[A-Za-z ]+$/',
-                    'birthdate' => 'required|string',
-                    'schoolname' => 'required|string',
-                    'grade' => 'required|string',
-                    'package' => 'required|string',
-                    'parent' => 'required|string',
-                    'address' => 'required|string',
-                    'postcode' => 'required|string',
-                    'phone' => 'required|string',
-                    'email' => [
-                        'required',
-                        'email',
-                        function ($attribute, $value, $fail) use ($allowedTLDs) {
-                            $domain = substr(strrchr($value, "@"), 1); // get domain part
-                            if (!collect($allowedTLDs)->contains(fn($suffix) => str_ends_with($domain, $suffix))) {
-                                $fail('รูปแบบอีเมลต้องลงท้ายด้วย .com, .net , .co.th , .ac.th, .or.th, .go.th, .edu หรือ .org
-                             เท่านั้น');
-                            }
-                        },
-                    ],
-                    'newsf' => 'required|string',
-                ],
-                [
-                    // 'firstname.regex' => 'ชื่อต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
-                    'lastname.regex' => 'นามสกุลต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
-                    'nickname.regex' => 'ชื่อเล่นต้องเป็นตัวอักษรภาษาอังกฤษเท่านั้น',
-                ]
-            );
-        }
+        // Build dynamic validation rules based on field_settings
+        $validationData = $this->buildDynamicValidationRules($route, $allowedTLDs);
+        $validator = Validator::make($request->all(), $validationData['rules'], $validationData['messages']);
 
 
         if ($validator->fails()) {
@@ -1433,7 +1440,13 @@ class ReceiptFormController extends Controller
 
         if ($request->get('sfield') == 22 || $request->get('sfield') == 31 || $request->get('sfield') == 32) {
             # code...
-            $award = $request->get('award');
+            // Handle award as array and convert to JSON
+            $awardInput = $request->get('award');
+            if (is_array($awardInput)) {
+                $award = json_encode($awardInput);
+            } else {
+                $award = $awardInput;
+            }
             $street_address2 = $request->get('street_address2');
         } else {
             # code...
@@ -1577,6 +1590,14 @@ class ReceiptFormController extends Controller
             $data->packageId = '';
         }
 
+        // Decode award JSON if it exists
+        if ($data->award && is_string($data->award)) {
+            $decodedAward = json_decode($data->award, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decodedAward)) {
+                $data->award = $decodedAward;
+            }
+        }
+
         // dd($data);
 
         return response()->json([
@@ -1641,9 +1662,18 @@ class ReceiptFormController extends Controller
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
+        // Prepare update data
+        $updateData = $request->all();
+        
+        // Handle award field if present
+        if ($request->has('award')) {
+            $awardInput = $request->get('award');
+            if (is_array($awardInput)) {
+                $updateData['award'] = json_encode($awardInput);
+            }
+        }
 
-
-        ReceiptForm::find($request->get('fid'))->update($request->all());
+        ReceiptForm::find($request->get('fid'))->update($updateData);
         return response()->json(['success' => 'Receipt Form updated successfully']);
     }
 

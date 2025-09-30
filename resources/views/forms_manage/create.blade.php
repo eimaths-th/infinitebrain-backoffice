@@ -769,16 +769,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-row form-focus" id="dropzone-photo">
+                                <div class="form-row form-focus col-md-6" id="image-payment-wrapper" data-field-input="image_payment">
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto" for="image_payment">
-                                                Image Payment <span class="form-required">*</span>
+                                                Image Payment
                                             </label>
                                             <input type="file" class="form-control" name="image_payment"
-                                                id="image_payment" maxlength="150" minlength="2">
+                                                id="image_payment" accept="image/*">
                                             <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Street Address</label>
+                                                aria-hidden="false">Upload payment QR code image (optional)</label>
                                         </div>
                                     </div>
                                 </div>
@@ -797,7 +797,7 @@
                                     @endphp
                                 @endif
 
-                                <div id="preview_image_payment" class="text-center"
+                                <div id="preview_image_payment" class="text-center" data-field-related="image_payment"
                                     style="display: {{ $display }};">
 
                                     @if (isset($data->image_payment))

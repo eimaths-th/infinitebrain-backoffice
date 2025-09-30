@@ -249,7 +249,7 @@ class FormManageController extends Controller
     public function store(Request $request)
     {
         //validate form
-
+        // dd($request->all());
         $fieldConfig = config('form_fields', []);
 
         $rules = [
