@@ -373,290 +373,360 @@
                                     </div>
                                 @endif
 
-                                <div class="form-row form-focus">
+                                @if ($isFieldEnabled('student_school_name') || $isFieldEnabled('student_grade'))
+                                    <div class="form-row form-focus">
+                                        @if ($isFieldEnabled('student_school_name'))
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label class="form-label form-label-top form-label-auto"
+                                                        for="schoolname">{{ $form->student_school_name }}
+                                                        @if ($isFieldRequired('student_school_name'))
+                                                            <span class="form-required">*</span>
+                                                        @endif
+                                                    </label>
+                                                    <input type="text" class="form-control" name="schoolname"
+                                                        id="schoolname" value="" maxlength="100"
+                                                        @if ($isFieldRequired('student_school_name')) required @endif>
+                                                    <label class="form-sub-label" style="min-height:13px"
+                                                        aria-hidden="false">School Name</label>
+                                                    <div class="form-error-message" role="alert"><img
+                                                            src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                            height="10"> <span class="error-navigation-message">This field
+                                                            is
+                                                            required.</span>
+                                                        <div class="form-error-arrow">
+                                                            <div class="form-error-arrow-inner"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if ($isFieldEnabled('student_grade'))
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label class="form-label form-label-top form-label-auto" for="grade">
+                                                        {{ $form->student_grade }}
+                                                        @if ($isFieldRequired('student_grade'))
+                                                            <span class="form-required">*</span>
+                                                        @endif
+                                                        <div style="width: 270px"></div>
+                                                    </label>
+                                                    <select style="width: 100%" class="form-control" id="grade"
+                                                        name="grade" data-component="dropdown"
+                                                        aria-label="Grade / ระดับชั้น"
+                                                        @if ($isFieldRequired('student_grade')) required @endif>
+                                                        <option value="">Please Select</option>
+                                                        @foreach ($form->grades as $grade)
+                                                            <option value="{{ $grade->grade }}">{{ $grade->grade }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <label class="form-sub-label" style="min-height:13px"
+                                                        aria-hidden="false">{{-- Grade as per Academic Year 2022 --}}</label>
+                                                    <div class="form-error-message" role="alert"><img
+                                                            src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                            height="10"> <span class="error-navigation-message">This field
+                                                            is
+                                                            required.</span>
+                                                        <div class="form-error-arrow">
+                                                            <div class="form-error-arrow-inner"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
 
-                                    <div class="col-md-6">
 
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="schoolname">{{ $form->student_school_name }}<span
-                                                    class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="schoolname" id="schoolname"
-                                                value="" maxlength="100" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">School Name</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
+                                @if ($isFieldEnabled('package'))
+                                    <div class="form-row form-focus">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label class="form-label form-label-top form-label-auto" for="package">
+                                                    {{ $form->package ?? ' ' }}
+                                                    @if ($isFieldRequired('package'))
+                                                        <span class="form-required">*</span>
+                                                    @endif
+                                                </label>
+                                                <select class="form-control" id="package" name="package"
+                                                    aria-label="แพคเกจในการสอบ / Packages"
+                                                    @if ($isFieldRequired('package')) required @endif>
+                                                    <option value="">Please Select</option>
+                                                    @foreach ($form->packages as $package)
+                                                        <option value="{{ $package->id }}">{{ $package->package }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label class="form-sub-label" style="min-height:13px"
+                                                    aria-hidden="false">Packages</label>
+                                                <div class="form-error-message" role="alert"><img
+                                                        src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                        height="10"> <span class="error-navigation-message">This field is
+                                                        required.</span>
+                                                    <div class="form-error-arrow">
+                                                        <div class="form-error-arrow-inner"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="grade">
-                                                {{ $form->student_grade }}
-                                                <span class="form-required">*</span>
-                                                <div style="width: 270px"></div>
-                                            </label>
-                                            <select style="width: 100%" class="form-control" id="grade"
-                                                name="grade" data-component="dropdown" aria-label="Grade / ระดับชั้น"
-                                                required>
-                                                <option value="">Please Select</option>
-                                                @foreach ($form->grades as $grade)
-                                                    <option value="{{ $grade->grade }}">{{ $grade->grade }}</option>
-                                                @endforeach
-                                            </select>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">{{-- Grade as per Academic Year 2022 --}}</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
+                                @endif
+
+                                @if ($isFieldEnabled('student_address') || $isFieldEnabled('student_zip'))
+                                    <div class="form-row form-focus">
+                                        @if ($isFieldEnabled('student_address'))
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="form-group">
+                                                    <label class="form-label form-label-top form-label-auto"
+                                                        for="address">{{ $form->student_address ?? ' ' }}
+                                                        @if ($isFieldRequired('student_address'))
+                                                            <span class="form-required">*</span>
+                                                        @endif
+                                                    </label>
+                                                    <input type="text" class="form-control" name="address" id="address"
+                                                        maxlength="150" minlength="2"
+                                                        @if ($isFieldRequired('student_address')) required @endif>
+                                                    <label class="form-sub-label" style="min-height:13px"
+                                                        aria-hidden="false">Street Address</label>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if ($isFieldEnabled('student_zip'))
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="form-group">
+                                                    <label class="form-label form-label-top form-label-auto" for="postcode">
+                                                        {{ $form->student_zip ?? ' ' }}
+                                                        @if ($isFieldRequired('student_zip'))
+                                                            <span class="form-required">*</span>
+                                                        @endif
+                                                    </label>
+                                                    <input type="text" class="form-control" name="postcode" id="postcode"
+                                                        maxlength="50" minlength="2"
+                                                        @if ($isFieldRequired('student_zip')) required @endif>
+                                                    <label class="form-sub-label" style="min-height:13px"
+                                                        aria-hidden="false">
+                                                        Postal / Zip Code / รหัสไปรษณีย์ </label>
+                                                    <div class="form-error-message" role="alert"><img
+                                                            src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                            height="10">
+                                                        <span class="error-navigation-message">This field is required.</span>
+                                                        <div class="form-error-arrow">
+                                                            <div class="form-error-arrow-inner"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
+
+                                @if ($isFieldEnabled('parent_name') || $isFieldEnabled('parent_phone'))
+                                    <div class="form-row form-focus">
+                                        @if ($isFieldEnabled('parent_name'))
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group" style="padding-top:24px;">
+                                                    <label class="form-label form-label-top form-label-auto" for="parent">
+                                                        {{ $form->parent_name ?? ' ' }}
+                                                        @if ($isFieldRequired('parent_name'))
+                                                            <span class="form-required">*</span>
+                                                        @endif
+                                                    </label>
+                                                    <input type="text" class="form-control" name="parent" id="parent"
+                                                        value="" maxlength="100"
+                                                        @if ($isFieldRequired('parent_name')) required @endif>
+                                                    <label class="form-sub-label" style="min-height:13px"
+                                                        aria-hidden="false">Parent's name</label>
+                                                    <div class="form-error-message" role="alert"><img
+                                                            src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                            height="10"> <span class="error-navigation-message">This field
+                                                            is
+                                                            required.</span>
+                                                        <div class="form-error-arrow">
+                                                            <div class="form-error-arrow-inner"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        @if ($isFieldEnabled('parent_phone'))
+                                            <div class="col-md-6 col-sm-12">
+                                                <div class="position-relative form-group" style="padding-top:24px;">
+                                                    <label class="form-label form-label-top form-label-auto" for="phone">
+                                                        {{ $form->parent_phone ?? ' ' }}
+                                                        @if ($isFieldRequired('parent_phone'))
+                                                            <span class="form-required">*</span>
+                                                        @endif
+                                                        <div style="width: 270px"></div>
+                                                    </label>
+                                                    <input type="text" class="AddPhone form-control" name="phone"
+                                                        id="phone" value="" maxlength="20"
+                                                        @if ($isFieldRequired('parent_phone')) required @endif>
+                                                    <label class="form-sub-label" style="min-height:13px"
+                                                        aria-hidden="false">Phone Number</label>
+                                                    <div class="form-error-message" role="alert"><img
+                                                            src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                            height="10"> <span class="error-navigation-message">This field
+                                                            is
+                                                            required.</span>
+                                                        <div class="form-error-arrow">
+                                                            <div class="form-error-arrow-inner"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
+                                @if ($isFieldEnabled('contact_email'))
+                                    <div class="form-row form-focus">
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="position-relative form-group" style="padding-top:0px;">
+                                                <label class="form-label form-label-top form-label-auto" for="grade">
+                                                    {{ $form->contact_email ?? ' ' }}
+                                                    {{ $form->contact_email_detail ?? ' ' }}
+                                                    @if ($isFieldRequired('contact_email'))
+                                                        <span class="form-required">*</span>
+                                                    @endif
+                                                </label>
+                                                <input type="email" class="form-control" name="email" id="email"
+                                                    value="" maxlength="70"
+                                                    @if ($isFieldRequired('contact_email')) required @endif>
+                                                <label class="form-sub-label" style="min-height:13px"
+                                                    aria-hidden="false">example@example.com</label>
+                                                <div class="form-error-message" role="alert"><img
+                                                        src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                        height="10"> <span class="error-navigation-message">Please input
+                                                        correct email.</span>
+                                                    <div class="form-error-arrow">
+                                                        <div class="form-error-arrow-inner"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
 
+                                @if ($isFieldEnabled('student_photo'))
+                                    <div class="form-row form-focus" id="dropzone-photo">
+                                        <div class="col-md-12 col-sm-12">
+                                            <a id="dphoto"></a>
+                                            <div class="position-relative form-group">
+                                                <label class="form-label form-label-top form-label-auto" for="photo">
+                                                    {{ $form->student_photo ?? ' ' }}
+                                                    @if ($isFieldRequired('student_photo'))
+                                                        <span class="form-required">*</span>
+                                                    @endif
+                                                    <div style="width: 280px"></div>
+                                                </label>
+                                                <input type="text" id="drop1" name="drop1"
+                                                    class="form-control form_none" value=""
+                                                    @if ($isFieldRequired('student_photo')) required @endif>
+                                                <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
+                                                    <div class="fallback">
 
-                                <div class="form-row form-focus">
-
-                                    <div class="col-md-6">
-
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="package">
-                                                {{ $form->package ?? ' ' }} <span class="form-required">*</span></label>
-                                            <select class="form-control" id="package" name="package"
-                                                aria-label="แพคเกจในการสอบ / Packages" required>
-                                                <option value="">Please Select</option>
-                                                @foreach ($form->packages as $package)
-                                                    <option value="{{ $package->id }}">{{ $package->package }}</option>
-                                                @endforeach
-                                                {{-- <option value="Test + tutoring class: 1250 bath">Test +
-                                                    tutoring class: 1250 bath</option> --}}
-
-                                            </select>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Packages</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-row form-focus">
-                                    <div class="col-md-12 col-sm-12">
-                                        <div class="form-group">
-                                            <label class="form-label form-label-top form-label-auto"
-                                                for="address">{{ $form->student_address ?? ' ' }} <span
-                                                    class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="address" id="address"
-                                                maxlength="150" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Street Address</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-sm-12">
-                                        <div class="form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="postcode">
-                                                {{ $form->student_zip ?? ' ' }} <span class="form-required">*</span>
-                                            </label>
-                                            <input type="text" class="form-control" name="postcode" id="postcode"
-                                                maxlength="50" minlength="2" required>
-                                            <label class="form-sub-label" style="min-height:13px" aria-hidden="false">
-                                                Postal / Zip Code / รหัสไปรษณีย์ </label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10">
-                                                <span class="error-navigation-message">This field is required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-row form-focus">
-                                    <div class="col-md-6">
-                                        <div class="position-relative form-group" style="padding-top:24px;">
-                                            <label class="form-label form-label-top form-label-auto" for="parent">
-                                                {{ $form->parent_name ?? ' ' }} <span
-                                                    class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="parent" id="parent"
-                                                value="" maxlength="100" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Parent's name</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-sm-12">
-                                        <div class="position-relative form-group" style="padding-top:24px;">
-                                            <label class="form-label form-label-top form-label-auto" for="phone">
-                                                {{ $form->parent_phone ?? ' ' }}
-                                                <span class="form-required">*</span>
-                                                <div style="width: 270px"></div>
-                                            </label>
-                                            <input type="text" class="AddPhone form-control" name="phone"
-                                                id="phone" value="" maxlength="20" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Phone Number</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
+                                                <label class="form-sub-label" style="min-height:13px"
+                                                    aria-hidden="false">Photo ขนาดไม่เกิน 5mb</label>
+                                                <div id="dropzone-photo-error" class="form-error-message" role="alert"><img
+                                                        src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                        height="10">
+                                                    <span class="error-navigation-message">This field is
+                                                        required.</span>
+                                                    <div class="form-error-arrow">
+                                                        <div class="form-error-arrow-inner"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                </div>
-                                <div class="form-row form-focus">
-                                    <div class="col-md-6 col-sm-12">
-                                        <div class="position-relative form-group" style="padding-top:0px;">
-                                            <label class="form-label form-label-top form-label-auto" for="grade">
-                                                {{ $form->contact_email ?? ' ' }}
-                                                {{ $form->contact_email_detail ?? ' ' }}
-                                                <span class="form-required">*</span></label>
-                                            <input type="email" class="form-control" name="email" id="email"
-                                                value="" maxlength="70" required>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">example@example.com</label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">Please input
-                                                    correct email.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="dropzonex dz-default dz-message" id="dropzone_preview"
+                                        style="font-size: 1.5em;">
+                                        <h3 class="dropzone-previews ui"></h3>
+
+
                                     </div>
-                                </div>
+                                @endif
 
-                                <div class="form-row form-focus" id="dropzone-photo">
-                                    <div class="col-md-12 col-sm-12">
-                                        <a id="dphoto"></a>
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="photo">
-                                                {{ $form->student_photo ?? ' ' }} <span class="form-required">*</span>
-                                                <div style="width: 280px"></div>
-                                            </label>
-                                            <input type="text" id="drop1" name="drop1"
-                                                class="form-control form_none" value="" required>
-                                            <div class="dropzone" id="my-awesome-dropzone" style="font-size: 1.5em;">
-                                                <div class="fallback">
-
-                                                </div>
-                                            </div>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Photo ขนาดไม่เกิน 5mb</label>
-                                            <div id="dropzone-photo-error" class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10">
-                                                <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                @if ($isFieldEnabled('image_payment'))
+                                    <br>
+                                    <div align="center" data-field-related="image_payment">
+                                        @if (isset($form->image_payment))
+                                            <img src="{{ asset('form_manage/payment/' . $form->image_payment) }}"
+                                                alt="..." height="500">
+                                        @endif
                                     </div>
-                                </div>
+                                    <br>
+                                @endif
 
-                                <div class="dropzonex dz-default dz-message" id="dropzone_preview"
-                                    style="font-size: 1.5em;">
-                                    <h3 class="dropzone-previews ui"></h3>
-
-
-                                </div>
-
-                                <br>
-                                <div align="center">
-                                    @if (isset($form->image_payment))
-                                        <img src="{{ asset('form_manage/payment/' . $form->image_payment) }}"
-                                            alt="..." height="500">
-                                    @endif
-                                </div>
-                                <br>
-
-                                <div class="form-row form-focus" id="dropzone-att">
-                                    <div class="col-md-12 col-sm-12">
-                                        <a id="datt"></a>
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="att">
-                                                {{ $form->student_slip_photo ?? ' ' }} <span
-                                                    class="form-required">*</span>
-                                                <div style="width: 280px"></div>
-                                            </label>
-                                            <input type="text" id="drop2" name="drop2"
-                                                class="form-control form_none" value="" required>
-                                            <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
-                                                <div class="fallback">
-                                                    {{--  <input name="file2" id="file2" type="file" multiple
+                                @if ($isFieldEnabled('student_slip_photo'))
+                                    <div class="form-row form-focus" id="dropzone-att">
+                                        <div class="col-md-12 col-sm-12">
+                                            <a id="datt"></a>
+                                            <div class="position-relative form-group">
+                                                <label class="form-label form-label-top form-label-auto" for="att">
+                                                    {{ $form->student_slip_photo ?? ' ' }}
+                                                    @if ($isFieldRequired('student_slip_photo'))
+                                                        <span class="form-required">*</span>
+                                                    @endif
+                                                    <div style="width: 280px"></div>
+                                                </label>
+                                                <input type="text" id="drop2" name="drop2"
+                                                    class="form-control form_none" value=""
+                                                    @if ($isFieldRequired('student_slip_photo')) required @endif>
+                                                <div class="dropzone" id="my-awesome-dropzone2" style="font-size: 1.5em;">
+                                                    <div class="fallback">
+                                                        {{--  <input name="file2" id="file2" type="file" multiple
                                                         class="form-control" /> --}}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false">Receipt Photo ขนาดไม่เกิน 5mb</label>
-                                            <div id="dropzone-att-error" class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10">
-                                                <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
+                                                <label class="form-sub-label" style="min-height:13px"
+                                                    aria-hidden="false">Receipt Photo ขนาดไม่เกิน 5mb</label>
+                                                <div id="dropzone-att-error" class="form-error-message" role="alert"><img
+                                                        src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                        height="10">
+                                                    <span class="error-navigation-message">This field is
+                                                        required.</span>
+                                                    <div class="form-error-arrow">
+                                                        <div class="form-error-arrow-inner"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="dropzonex dz-default dz-message" id="dropzone_preview2"
-                                    style="font-size: 1.5em;">
-                                    <h3 class="dropzone-previews ui"></h3>
-                                </div>
-                                <div class="form-row form-focus">
-                                    <div class="col-md-6 ">
-                                        <div class="position-relative form-group">
-                                            <label class="form-label form-label-top form-label-auto" for="newsf">
-                                                {{ $form->news ?? ' ' }} <span class="form-required">*</span></label>
-                                            <input type="text" class="form-control" name="newsf" id="newsf"
-                                                value="" maxlength="50" required>
+                                    <div class="dropzonex dz-default dz-message" id="dropzone_preview2"
+                                        style="font-size: 1.5em;">
+                                        <h3 class="dropzone-previews ui"></h3>
+                                    </div>
+                                @endif
+                                @if ($isFieldEnabled('news'))
+                                    <div class="form-row form-focus">
+                                        <div class="col-md-6 ">
+                                            <div class="position-relative form-group">
+                                                <label class="form-label form-label-top form-label-auto" for="newsf">
+                                                    {{ $form->news ?? ' ' }}
+                                                    @if ($isFieldRequired('news'))
+                                                        <span class="form-required">*</span>
+                                                    @endif
+                                                </label>
+                                                <input type="text" class="form-control" name="newsf" id="newsf"
+                                                    value="" maxlength="50"
+                                                    @if ($isFieldRequired('news')) required @endif>
 
-                                            <label class="form-sub-label" style="min-height:13px"
-                                                aria-hidden="false"></label>
-                                            <div class="form-error-message" role="alert"><img
-                                                    src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
-                                                    height="10"> <span class="error-navigation-message">This field is
-                                                    required.</span>
-                                                <div class="form-error-arrow">
-                                                    <div class="form-error-arrow-inner"></div>
+                                                <label class="form-sub-label" style="min-height:13px"
+                                                    aria-hidden="false"></label>
+                                                <div class="form-error-message" role="alert"><img
+                                                        src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                        height="10"> <span class="error-navigation-message">This field is
+                                                        required.</span>
+                                                    <div class="form-error-arrow">
+                                                        <div class="form-error-arrow-inner"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                         <div class="card-footer text-center">

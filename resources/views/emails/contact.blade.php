@@ -1812,7 +1812,13 @@
                                                                         <div
                                                                             style="direction:ltr;font-family:Inter, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
                                                                             <p style="margin: 0;">
-                                                                                {{ $data->award }}
+                                                                                {{-- its json format --}}
+                                                                                @foreach (json_decode($data->award, true) as $award)
+                                                                                    <span>{{ $award }}</span>
+                                                                                    @if (!$loop->last)
+                                                                                        ,
+                                                                                    @endif
+                                                                                @endforeach
                                                                             </p>
                                                                         </div>
                                                                     </td>

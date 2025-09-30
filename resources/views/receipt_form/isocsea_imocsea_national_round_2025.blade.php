@@ -53,22 +53,22 @@
 
         /*fucus empty color*/
         /*input:required:focus:invalid {
-                                                                                                                                                                                                                background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
-                                                                                                                                                                                                                background-size: 15px;
-                                                                                                                                                                                                            }*/
+                                                                                                                                                                                                                        background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 40% rgb(247, 213, 213);
+                                                                                                                                                                                                                        background-size: 15px;
+                                                                                                                                                                                                                    }*/
 
         input:required:focus:invalid~.form-error-message {
             display: block;
         }
 
         /* Only show invalid ring while not focused
-                                                                                                                                                                                                            input:not(:focus):not(:placeholder-shown):invalid {
-                                                                                                                                                                                                                border-color: var(--color-invalid);
-                                                                                                                                                                                                            }*/
+                                                                                                                                                                                                                    input:not(:focus):not(:placeholder-shown):invalid {
+                                                                                                                                                                                                                        border-color: var(--color-invalid);
+                                                                                                                                                                                                                    }*/
 
         /*input:not(:focus):not(:placeholder-shown):invalid~.error-message {
-                                                                                                                                                                                                                display: block;
-                                                                                                                                                                                                            }*/
+                                                                                                                                                                                                                        display: block;
+                                                                                                                                                                                                                    }*/
 
         /* Only show valid ring while not focused and if a value is entered */
         /* :empty won't work here as that targets elements that have no childeren. Therefore we abuse :placeholder-shown */
@@ -518,16 +518,16 @@
         }
 
         /* #loader {
-                                                                                        display: none;
-                                                                                        position: fixed;
-                                                                                        top: 0;
-                                                                                        left: 0;
-                                                                                        right: 0;
-                                                                                        bottom: 0;
-                                                                                        width: 100%;
-                                                                                        background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
-                                                                                        z-index: 10000;
-                                                                                    } */
+                                                                                                display: none;
+                                                                                                position: fixed;
+                                                                                                top: 0;
+                                                                                                left: 0;
+                                                                                                right: 0;
+                                                                                                bottom: 0;
+                                                                                                width: 100%;
+                                                                                                background: rgba(0, 0, 0, 0.75) url(images/loading2.gif) no-repeat center center;
+                                                                                                z-index: 10000;
+                                                                                            } */
         #loader-container {
             position: fixed;
             top: 0;
@@ -568,6 +568,49 @@
             font-size: 18px;
             color: #fff;
             /* White color for the message to contrast with the dark background */
+        }
+
+        /* Select2 custom styling */
+        .select2-container--default .select2-selection--multiple {
+            border: 2px solid var(--color-default);
+            min-height: 38px;
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--multiple {
+            border-color: var(--color-valid);
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #757575;
+            border-color: #757575;
+            color: white;
+            padding: 5px 10px;
+            margin-top: 5px;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: #ff6b6b;
+            margin-right: 5px;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+            color: #ff6b6b;
+        }
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        /* Disabled options styling */
+        .select2-results__option[aria-disabled="true"] {
+            color: #ccc !important;
+            background-color: #f5f5f5 !important;
+            cursor: not-allowed !important;
+            text-decoration: line-through;
+        }
+
+        .select2-results__option[aria-disabled="true"]:hover {
+            background-color: #f5f5f5 !important;
         }
     </style>
 @endsection
@@ -729,7 +772,8 @@
                                         value="{{ request()->route()->getName() }}">
                                     <input type="hidden" name="referent_code" id="referent_code"
                                         value="{{ request()->referent_code }}">
-                                    <input type="hidden" class="AddDate form-control" name="birthdate"id="birthdate" value="null" required>
+                                    <input type="hidden" class="AddDate form-control" name="birthdate"id="birthdate"
+                                        value="null" required>
                                     <input type="hidden" name="address" id="address" value="null">
                                     <input type="hidden" name="postcode" id="postcode" value="null">
                                     <input type="hidden" name="sfield" id="sfield" value="31">
@@ -764,8 +808,9 @@
                                                 <label class="form-label form-label-top form-label-auto" for="lastname">
                                                     <div style="width: 270px"></div>
                                                 </label>
-                                                <input type="text" class="form-control" name="lastname" id="lastname"
-                                                    value="" maxlength="50" minlength="2" required>
+                                                <input type="text" class="form-control" name="lastname"
+                                                    id="lastname" value="" maxlength="50" minlength="2"
+                                                    required>
                                                 <label class="form-sub-label" style="min-height:13px"
                                                     aria-hidden="false">Last
                                                     Name</label>
@@ -859,7 +904,10 @@
                                             <div class="position-relative form-group">
                                                 <label class="form-label form-label-top form-label-auto"
                                                     for="grade">Grade
-                                                    / ระดับชั้น <span class="form-required">*</span>
+                                                    / ระดับชั้น <br>
+                                                    (ระดับชั้นที่ลงทะเบียนไว้ตอนสอบไม่ใช่ระดับชั้นที่ศึกษาอยู่ในปัจจุบัน)
+
+                                                    <span class="form-required">*</span>
                                                     <div style="width: 270px"></div>
                                                 </label>
                                                 <select style="width: 100%" class="form-control" id="grade"
@@ -898,7 +946,7 @@
 
                                             <div class="position-relative form-group">
                                                 <label class="form-label form-label-top form-label-auto"
-                                                    for="package">รายการที่สอบแข่งขัน  <span
+                                                    for="package">รายการที่สอบแข่งขัน <span
                                                         class="form-required">*</span></label>
                                                 <select class="form-control" id="package" name="package"
                                                     aria-label="รายการที่สอบแข่งขัน " required>
@@ -932,14 +980,22 @@
                                                 <label class="form-label form-label-top form-label-auto"
                                                     for="award">รางวัล / award <span
                                                         class="form-required">*</span></label>
-                                                <select class="form-control" id="award" name="award"
-                                                    aria-label="รางวัล / award" required>
-                                                    <option value="">Please Select</option>
-                                                    <option value="Diamond">Diamond</option>
-                                                    <option value="Gold">Gold</option>
-                                                    <option value="Silver">Silver</option>
-                                                    <option value="Bronze">Bronze</option>
-                                                    <option value="ชมเชย">ชมเชย</option>
+                                                <select class="form-control" id="award" name="award[]"
+                                                    aria-label="รางวัล / award" required multiple>
+                                                    <optgroup label="IMOCSEA">
+                                                        <option value="IMOCSEA-Diamond">Diamond</option>
+                                                        <option value="IMOCSEA-Gold">Gold</option>
+                                                        <option value="IMOCSEA-Silver">Silver</option>
+                                                        <option value="IMOCSEA-Bronze">Bronze</option>
+                                                        <option value="IMOCSEA-ชมเชย">ชมเชย</option>
+                                                    </optgroup>
+                                                    <optgroup label="ISOCSEA">
+                                                        <option value="ISOCSEA-Diamond">Diamond</option>
+                                                        <option value="ISOCSEA-Gold">Gold</option>
+                                                        <option value="ISOCSEA-Silver">Silver</option>
+                                                        <option value="ISOCSEA-Bronze">Bronze</option>
+                                                        <option value="ISOCSEA-ชมเชย">ชมเชย</option>
+                                                    </optgroup>
                                                 </select>
                                                 <label class="form-sub-label" style="min-height:13px"
                                                     aria-hidden="false">award</label>
@@ -958,10 +1014,11 @@
 
                                             <div class="position-relative form-group">
                                                 <label class="form-label form-label-top form-label-auto"
-                                                    for="participant">จำนวนผู้ติดตาม  <span
+                                                    for="participant">จำนวนผู้ติดตาม <span
                                                         class="form-required">*</span></label>
-                                                <input type="number" class="form-control" id="street_address2" name="street_address2" min="0"
-                                                    aria-label="จำนวนผู้ติดตาม" required>
+                                                <input type="number" class="form-control" id="street_address2"
+                                                    name="street_address2" min="0" aria-label="จำนวนผู้ติดตาม"
+                                                    required>
                                                 <label class="form-sub-label" style="min-height:13px"
                                                     aria-hidden="false">จำนวนผู้ติดตาม</label>
                                                 <div class="form-error-message" role="alert"><img
@@ -1171,7 +1228,8 @@
                                         <div class="col-md-12 ">
                                             <div class="position-relative form-group">
                                                 <label class="form-label form-label-top form-label-auto"
-                                                    for="newsf">ท่านทราบข่าวสารการจัดสอบ  ISOCSEA & IMOCSEA National Round {{ date('Y') }} จากช่องทางใด <span
+                                                    for="newsf">ท่านทราบข่าวสารการจัดสอบ ISOCSEA & IMOCSEA National
+                                                    Round {{ date('Y') }} จากช่องทางใด <span
                                                         class="form-required">*</span>
                                                 </label>
                                                 <input type="text" class="form-control" name="newsf" id="newsf"
@@ -1224,6 +1282,137 @@
     </div>
     <script>
         $(document).ready(function() {
+            var $award = $('#award');
+            var $package = $('#package');
+            var originalAwardHTML = $award.html(); // Store original HTML
+
+            function awardGroup(value) {
+                if (!value) return '';
+                if (value.indexOf('IMOCSEA-') === 0) return 'IMOCSEA';
+                if (value.indexOf('ISOCSEA-') === 0) return 'ISOCSEA';
+                return '';
+            }
+
+            function resetAwardSelect(options, selectedValues, enableGroupLimit) {
+                $award.off('select2:select.groupLimit select2:unselect.groupLimit');
+                if ($award.hasClass('select2-hidden-accessible')) {
+                    $award.select2('destroy');
+                }
+                $award.select2(options);
+                if (Array.isArray(selectedValues) && selectedValues.length) {
+                    $award.val(selectedValues).trigger('change');
+                }
+                if (enableGroupLimit) {
+                    setTimeout(function() {
+                        updateGroupAvailability();
+                    }, 10);
+                }
+            }
+
+            function updateGroupAvailability() {
+                var selectedValues = $award.val() || [];
+                var selectedGroups = {};
+
+                // Count selections per group
+                selectedValues.forEach(function(value) {
+                    var group = awardGroup(value);
+                    if (group) {
+                        selectedGroups[group] = true;
+                    }
+                });
+
+                // Disable options in groups that already have a selection
+                $award.find('option').each(function() {
+                    var optionValue = $(this).val();
+                    var optionGroup = awardGroup(optionValue);
+
+                    if (optionGroup && selectedGroups[optionGroup]) {
+                        // Check if this option is already selected
+                        var isSelected = selectedValues.indexOf(optionValue) !== -1;
+                        if (!isSelected) {
+                            $(this).prop('disabled', true);
+                        }
+                    } else {
+                        $(this).prop('disabled', false);
+                    }
+                });
+            }
+
+            function enforceGroupLimit() {
+                $award.off('select2:select.groupLimit select2:unselect.groupLimit');
+
+                $award.on('select2:select.groupLimit', function(e) {
+                    var selectedValues = $(this).val() || [];
+                    var currentGroup = awardGroup(e.params.data.id);
+                    var duplicates = selectedValues.filter(function(value) {
+                        return awardGroup(value) === currentGroup;
+                    });
+
+                    if (duplicates.length > 1) {
+                        selectedValues = selectedValues.filter(function(value) {
+                            return value !== e.params.data.id;
+                        });
+                        $(this).val(selectedValues).trigger('change');
+                        if (typeof toastr !== 'undefined') {
+                            toastr.warning('สามารถเลือกได้กลุ่มละ 1 รางวัล');
+                        } else {
+                            alert('สามารถเลือกได้กลุ่มละ 1 รางวัล');
+                        }
+                    } else {
+                        updateGroupAvailability();
+                    }
+                });
+
+                $award.on('select2:unselect.groupLimit', function(e) {
+                    setTimeout(function() {
+                        updateGroupAvailability();
+                    }, 10);
+                });
+            }
+
+            function setupSelectForPackage(packageValue, preserveSelection) {
+                const selectedValues = preserveSelection ? ($award.val() || []) : [];
+                const baseOptions = {
+                    placeholder: 'Please Select Award',
+                    allowClear: true,
+                    maximumSelectionLength: 1,
+                };
+
+                // Destroy Select2 first
+                if ($award.hasClass('select2-hidden-accessible')) {
+                    $award.select2('destroy');
+                }
+
+                // Restore original HTML
+                $award.html(originalAwardHTML);
+
+                if (packageValue === 'IMOCSEA+ISOCSEA') {
+                    baseOptions.placeholder = 'Please Select Award (Max 2)';
+                    baseOptions.maximumSelectionLength = 2;
+                    resetAwardSelect(baseOptions, selectedValues, true);
+                    enforceGroupLimit();
+                } else if (packageValue === 'IMOCSEA') {
+                    const filtered = selectedValues.filter((value) => awardGroup(value) === 'IMOCSEA');
+                    // Remove ISOCSEA group completely
+                    $award.find('optgroup[label=\"ISOCSEA\"]').remove();
+                    resetAwardSelect(baseOptions, filtered, false);
+                } else if (packageValue === 'ISOCSEA') {
+                    const filtered = selectedValues.filter((value) => awardGroup(value) === 'ISOCSEA');
+                    // Remove IMOCSEA group completely
+                    $award.find('optgroup[label=\"IMOCSEA\"]').remove();
+                    resetAwardSelect(baseOptions, filtered, false);
+                } else {
+                    resetAwardSelect(baseOptions, selectedValues, false);
+                }
+            }
+
+            setupSelectForPackage($package.val(), true);
+
+            $package.on('change', function() {
+                $award.val(null).trigger('change');
+                setupSelectForPackage($(this).val(), false);
+            });
+
             $('#infinite').on('submit', function() {
                 $('#loader-container').show();
             });
@@ -1290,7 +1479,7 @@
                         $(this).closest(inputxx).find('.form-error-message').css("display", "none");
                     }
 
-                }  else {
+                } else {
                     if ($(this).attr('type') == 'email') {
                         var validRegex =
                             /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -1648,7 +1837,7 @@
             if (!document.getElementById('agreeCheckbox').checked) {
                 alert(
                     'กรุณาติ๊ก "ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว" ก่อนส่งฟอร์ม'
-                    );
+                );
                 return false;
             }
 

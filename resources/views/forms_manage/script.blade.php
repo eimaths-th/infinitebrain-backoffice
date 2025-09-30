@@ -33,19 +33,38 @@
 
         function findFieldWrapper($el) {
             if (!$el || !$el.length) return $();
+            
+            // First check if element itself or parent has data-field-input
+            const $dataWrapper = $el.closest('[data-field-input]');
+            if ($dataWrapper.length) {
+                return $dataWrapper.first();
+            }
+            
+            // Look for .form-group first (most specific)
+            const $group = $el.closest('.form-group');
+            if ($group.length) {
+                const $groupParent = $group.parent();
+                // Check if parent is a column, return that column
+                if ($groupParent.length && $groupParent.attr('class') && $groupParent.attr('class').match(/col-/)) {
+                    return $groupParent;
+                }
+                return $group.first();
+            }
+            
+            // Then look for column classes (from smallest to largest to get closest match)
             const columnSelectors = [
-                '.col-xl-12', '.col-lg-12', '.col-md-12', '.col-sm-12', '.col-12',
-                '.col-xl-11', '.col-lg-11', '.col-md-11', '.col-sm-11', '.col-11',
-                '.col-xl-10', '.col-lg-10', '.col-md-10', '.col-sm-10', '.col-10',
-                '.col-xl-9', '.col-lg-9', '.col-md-9', '.col-sm-9', '.col-9',
-                '.col-xl-8', '.col-lg-8', '.col-md-8', '.col-sm-8', '.col-8',
-                '.col-xl-7', '.col-lg-7', '.col-md-7', '.col-sm-7', '.col-7',
-                '.col-xl-6', '.col-lg-6', '.col-md-6', '.col-sm-6', '.col-6',
-                '.col-xl-5', '.col-lg-5', '.col-md-5', '.col-sm-5', '.col-5',
-                '.col-xl-4', '.col-lg-4', '.col-md-4', '.col-sm-4', '.col-4',
-                '.col-xl-3', '.col-lg-3', '.col-md-3', '.col-sm-3', '.col-3',
-                '.col-xl-2', '.col-lg-2', '.col-md-2', '.col-sm-2', '.col-2',
                 '.col-xl-1', '.col-lg-1', '.col-md-1', '.col-sm-1', '.col-1',
+                '.col-xl-2', '.col-lg-2', '.col-md-2', '.col-sm-2', '.col-2',
+                '.col-xl-3', '.col-lg-3', '.col-md-3', '.col-sm-3', '.col-3',
+                '.col-xl-4', '.col-lg-4', '.col-md-4', '.col-sm-4', '.col-4',
+                '.col-xl-5', '.col-lg-5', '.col-md-5', '.col-sm-5', '.col-5',
+                '.col-xl-6', '.col-lg-6', '.col-md-6', '.col-sm-6', '.col-6',
+                '.col-xl-7', '.col-lg-7', '.col-md-7', '.col-sm-7', '.col-7',
+                '.col-xl-8', '.col-lg-8', '.col-md-8', '.col-sm-8', '.col-8',
+                '.col-xl-9', '.col-lg-9', '.col-md-9', '.col-sm-9', '.col-9',
+                '.col-xl-10', '.col-lg-10', '.col-md-10', '.col-sm-10', '.col-10',
+                '.col-xl-11', '.col-lg-11', '.col-md-11', '.col-sm-11', '.col-11',
+                '.col-xl-12', '.col-lg-12', '.col-md-12', '.col-sm-12', '.col-12',
             ];
 
             for (const selector of columnSelectors) {
@@ -53,11 +72,6 @@
                 if ($wrapper.length) {
                     return $wrapper.first();
                 }
-            }
-
-            const $group = $el.closest('.form-group');
-            if ($group.length) {
-                return $group.first();
             }
 
             return $el.parent();
@@ -74,7 +88,16 @@
 
         function setRequiredState($inputs, shouldRequire) {
             $inputs.each(function() {
-                $(this).prop('required', !!shouldRequire);
+                const $input = $(this);
+                const inputName = $input.attr('name');
+
+                if (shouldRequire) {
+                    $input.prop('required', true).attr('required', 'required');
+                    console.log('Set required=true for:', inputName);
+                } else {
+                    $input.prop('required', false).removeAttr('required');
+                    console.log('Removed required for:', inputName);
+                }
             });
         }
 
@@ -95,20 +118,32 @@
             }
 
             const $elements = $form.find(config.builder_input);
-            if (!$elements.length) {
+            
+            // Try to find wrapper with data-field-input attribute first
+            let $wrapper = $('[data-field-input="' + config.public_name + '"]');
+            
+            if (!$wrapper.length && $elements.length) {
+                $wrapper = findFieldWrapper($elements.first());
+            }
+            
+            if (!$wrapper.length) {
+                console.log('Wrapper not found for field:', fieldKey, 'public_name:', config.public_name);
                 $('[data-field-enabled="' + fieldKey + '"]').prop('disabled', true).prop('checked', false);
                 $('[data-field-required="' + fieldKey + '"]').prop('disabled', true).prop('checked', false);
                 return;
             }
 
-            const settings = ensureFieldSetting(fieldKey);
-            const $wrapper = findFieldWrapper($elements.first());
             const $inputs = $wrapper.find('input, select, textarea');
+            const $related = $('[data-field-related="' + config.public_name + '"]');
+            const settings = ensureFieldSetting(fieldKey);
+
+            console.log('Applying field state:', fieldKey, 'enabled:', settings.enabled, 'required:', settings.required, 'inputs:', $inputs.length);
 
             storeOriginalRequired($inputs);
 
             if (!settings.enabled) {
                 $wrapper.attr('data-field-visible', '0').hide();
+                $related.hide();
                 setRequiredState($inputs, false);
                 clearValidationState($inputs);
 
@@ -116,6 +151,7 @@
                 $('[data-field-enabled="' + fieldKey + '"]').prop('checked', false);
             } else {
                 $wrapper.attr('data-field-visible', '1').show();
+                $related.show();
                 setRequiredState($inputs, settings.required);
                 $('[data-field-enabled="' + fieldKey + '"]').prop('checked', true);
                 $('[data-field-required="' + fieldKey + '"]').prop('disabled', false).prop('checked', settings.required);
