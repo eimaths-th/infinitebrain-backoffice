@@ -555,6 +555,18 @@
                                     All
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '31']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    (มา) ISOCSEA IMOCSEA National Round 2025
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts_form', ['sfield' => '32']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    (ไม่มา) ISOCSEA IMOCSEA National Round
+                                </a>
+                            </li>
                             @foreach ($formManages as $formManage)
                                 <li>
                                     <a href="{{ route('receipts_form', ['sfield' => $formManage->id]) }}">
@@ -750,6 +762,19 @@
                                 <a href="{{ route('receipts_all') }}">
                                     <i class="metismenu-icon"></i>
                                     All
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '31']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    (มา) ISOCSEA IMOCSEA National Round 2025
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('receipts', ['sfield' => '32']) }}">
+                                    <i class="metismenu-icon"></i>
+                                    (ไม่มา) ISOCSEA IMOCSEA National Round
                                 </a>
                             </li>
                             @foreach ($formManages as $formManage)

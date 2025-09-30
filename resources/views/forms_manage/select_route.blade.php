@@ -1,5 +1,5 @@
 
-<form action="{{ route('create-form') }}" method="post">
+<form id="select-route-form" action="{{ route('create-form') }}" method="post">
     @csrf
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">Generate URL</h5>
@@ -24,7 +24,7 @@
             <div class="col-lg-6">
                 <div class="form-group">
                     <label for="Parent">Route :</label><br>
-                    <select style="width: 100%;" class="form-control" id="route" name="route" required>
+                    <select style="width: 100%;" class="form-control" id="route" name="route">
                         <option value="">Select Route</option>
                         <option value="gmec">gmec</option>
                         <option value="olpcs">olpcs</option>
@@ -60,14 +60,64 @@
             <div class="col-lg-6">
                 <div class="form-group">
                     <label for="Parent">Form Name :</label><br>
-                    <input type="text" class="form-control" id="form_name" name="form_name" required>
+                    <input type="text" class="form-control" id="form_name" name="form_name">
                 </div>
             </div>
         </div>
     </div>
     <!-- Modal footer -->
     <div class="modal-footer">
-        <button type="submit" class="btn btn-success">Save</button>
+        <button type="submit" class="btn btn-success" id="select-route-submit">Save</button>
         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
     </div>
 </form>
+
+<script>
+    (function () {
+        const formSelector = '#select-route-form';
+
+        $(document).off('submit', formSelector).on('submit', formSelector, function (e) {
+            e.preventDefault();
+
+            const $form = $(this);
+            const $submit = $('#select-route-submit');
+
+            $submit.prop('disabled', true);
+
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'POST',
+                data: $form.serialize(),
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+                .done(function (resp) {
+                    if (resp?.status === 'success') {
+                        toastr.success(resp.message || 'สร้างฟอร์มสำเร็จ');
+                        setTimeout(function () {
+                            window.location.href = resp.redirect || '{{ route('form-manage.index') }}';
+                        }, 1200);
+                        return;
+                    }
+
+                    toastr.error('ไม่สามารถสร้างฟอร์มได้ กรุณาลองใหม่อีกครั้ง');
+                })
+                .fail(function (xhr) {
+                    if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                        $.each(xhr.responseJSON.errors, function (field, messages) {
+                            if (messages?.length) {
+                                toastr.error(messages[0]);
+                            }
+                        });
+                        return;
+                    }
+
+                    toastr.error('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+                })
+                .always(function () {
+                    $submit.prop('disabled', false);
+                });
+        });
+    })();
+</script>

@@ -88,6 +88,8 @@
                         <option value="admin-test-field">admin-test-field</option>
                         <option value="award-ceremony-isocsea">award-ceremony-isocsea</option>
                         <option value="imocsea-national-round">imocsea-national-round</option>
+                        <option value="isocsea-imocsea-national-round-2025"> (มา) isocsea-imocsea-national-round-2025</option>
+                        <option value="isocsea-imocsea-national-round">(ไม่มา) isocsea-imocsea-national-round</option>
                     </select>
 
                 </div>

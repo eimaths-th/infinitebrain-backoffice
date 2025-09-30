@@ -710,6 +710,22 @@
                                 </div>
 
                             </div>
+                            <div class="form-row">
+                                <div class="col-md-6" style="display: none;" id="showaward">
+                                    <div class="form-group">
+                                        <label for="Parent">รางวัล:</label>
+                                        <input type="text" class="form-control" name="award" id="Addaward" readonly "
+                                            value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="display: none;" id="showfollow">
+                                    <div class="form-group">
+                                        <label for="Dcode">จำนวนผู้ติดตาม:</label>
+                                        <input type="text" class="form-control" name="follow" id="Addfollow" readonly "
+                                            value="" readonly>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="form-row text-center">
                                 <div class="col-md-6">
@@ -993,8 +1009,15 @@
                         if (res.data.generate == 1) {
                             $('#SubmitEditForm').css('display', 'none');
                         }
+                        $('#Addaward').val(res.data.award);
+                        $('#Addfollow').val(res.data.street_address2);
 
-
+                        if (res.data.award) {
+                            $('#showaward').css('display', 'block');
+                        }
+                        if (res.data.street_address2) {
+                            $('#showfollow').css('display', 'block');
+                        }
                         //console.log(res.data.photo);
                         $('#EditModal').modal('show');
 

@@ -86,14 +86,48 @@ class FormManageController extends Controller
 
     public function create(Request $request)
     {
+        $validated = [];
+        $fieldConfig = config('form_fields', []);
+
+        if ($request->isMethod('post')) {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'route' => 'required|string|max:255',
+                    'form_name' => 'required|string|max:255',
+                ],
+                [
+                    'route.required' => 'กรุณาเลือก Route',
+                    'route.string' => 'รูปแบบ Route ไม่ถูกต้อง',
+                    'route.max' => 'Route ต้องไม่เกิน 255 ตัวอักษร',
+                    'form_name.required' => 'กรุณากรอกชื่อฟอร์ม',
+                    'form_name.string' => 'รูปแบบชื่อฟอร์มไม่ถูกต้อง',
+                    'form_name.max' => 'ชื่อฟอร์มต้องไม่เกิน 255 ตัวอักษร',
+                ]
+            );
+
+            if ($validator->fails()) {
+                if ($request->wantsJson() || $request->ajax()) {
+                    return response()->json([
+                        'status' => 'error',
+                        'errors' => $validator->errors(),
+                    ], 422);
+                }
+
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            $validated = $validator->validated();
+        }
+
         if ($request->id) {
             $id = $request->id;
             $data = FormManage::find($id);
             $form_route = $data->form_route;
             $form_name = $data->form_name;
         } else {
-            $form_route = $request->route;
-            $form_name = $request->form_name;
+            $form_route = $request->isMethod('post') ? ($validated['route'] ?? $request->input('route')) : $request->query('route');
+            $form_name = $request->isMethod('post') ? ($validated['form_name'] ?? $request->input('form_name')) : $request->query('form_name');
         }
 
         $data = FormManage::where([
@@ -102,20 +136,55 @@ class FormManageController extends Controller
         ])->first();
         // dd($data);
         if ($data) {
-            return view('forms_manage.create', compact('form_route', 'data'));
-        } else {
-            $last_id = FormManage::orderBy('id', 'desc')->first();
-            $dataCreate = FormManage::create([
-                'form_name' => $request->form_name,
-                'form_route' => $form_route,
-                'sfield' => $last_id->sfield + 1,
-                'head_title' => $request->form_name . ' 2025 Registration Form',
-                'news' => 'ท่านทราบข่าวสารการจัดสอบ ' . $request->form_name . ' จากช่องทางใด',
-                'create_by' => Auth::user()->id,
-            ]);
-            $data = FormManage::find($dataCreate->id);
-            return view('forms_manage.create', compact('form_route', 'data'));
+            if (!$data->field_settings) {
+                $data->field_settings = collect($fieldConfig)->map(function ($config) {
+                    return [
+                        'enabled' => $config['default_enabled'] ?? true,
+                        'required' => $config['default_required'] ?? false,
+                    ];
+                })->toArray();
+            }
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'โหลดข้อมูลฟอร์มสำเร็จ',
+                    'redirect' => route('create-form', ['id' => $data->id]),
+                ]);
+            }
+
+            return view('forms_manage.create', compact('form_route', 'data', 'fieldConfig'));
         }
+
+        $lastForm = FormManage::orderBy('id', 'desc')->first();
+        $nextSfield = $lastForm ? ($lastForm->sfield + 1) : 1;
+
+        $dataCreate = FormManage::create([
+            'form_name' => $form_name,
+            'form_route' => $form_route,
+            'sfield' => $nextSfield,
+            'head_title' => $form_name . ' 2025 Registration Form',
+            'news' => 'ท่านทราบข่าวสารการจัดสอบ ' . $form_name . ' จากช่องทางใด',
+            'create_by' => Auth::user()->id,
+        ]);
+
+        $data = FormManage::find($dataCreate->id);
+        $data->field_settings = collect($fieldConfig)->map(function ($config) {
+            return [
+                'enabled' => $config['default_enabled'] ?? true,
+                'required' => $config['default_required'] ?? false,
+            ];
+        })->toArray();
+        $data->save();
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'สร้างฟอร์มสำเร็จ',
+                'redirect' => route('create-form', ['id' => $data->id]),
+            ]);
+        }
+
+        return view('forms_manage.create', compact('form_route', 'data', 'fieldConfig'));
     }
 
     public function editOptionGrade(Request $request)
@@ -181,6 +250,8 @@ class FormManageController extends Controller
     {
         //validate form
 
+        $fieldConfig = config('form_fields', []);
+
         $rules = [
             'form_id' => 'required|exists:forms_manage,id',
             'form_route' => 'required|string|max:255',
@@ -222,6 +293,9 @@ class FormManageController extends Controller
             'optionValue.*' => 'nullable|numeric',
             'optionName' => 'nullable|array',
             'optionName.*' => 'nullable|string|max:100',
+            'field_settings' => 'nullable|array',
+            'field_settings.*.enabled' => 'nullable|boolean',
+            'field_settings.*.required' => 'nullable|boolean',
             // Image validation rules - only required if no old files exist
             'brand' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'image_payment' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
@@ -389,6 +463,52 @@ class FormManageController extends Controller
 
         $form_id = $request->form_id;
         $form_manage = FormManage::find($form_id);
+
+        $incomingFieldSettings = $request->input('field_settings', []);
+        $normalizedFieldSettings = [];
+
+        foreach ($fieldConfig as $fieldKey => $config) {
+            $incoming = $incomingFieldSettings[$fieldKey] ?? [];
+
+            $enabledValue = array_key_exists('enabled', $incoming)
+                ? filter_var($incoming['enabled'], FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE)
+                : null;
+            $requiredValue = array_key_exists('required', $incoming)
+                ? filter_var($incoming['required'], FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE)
+                : null;
+
+            $enabled = $enabledValue !== null ? $enabledValue : ($config['default_enabled'] ?? true);
+            $required = $requiredValue !== null ? $requiredValue : ($config['default_required'] ?? false);
+
+            if (!$enabled) {
+                $required = false;
+            }
+
+            $normalizedFieldSettings[$fieldKey] = [
+                'enabled' => $enabled,
+                'required' => $required,
+            ];
+        }
+
+        foreach ($incomingFieldSettings as $fieldKey => $incoming) {
+            if (!array_key_exists($fieldKey, $normalizedFieldSettings) && is_array($incoming)) {
+                $enabledValue = array_key_exists('enabled', $incoming)
+                    ? filter_var($incoming['enabled'], FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE)
+                    : false;
+                $requiredValue = array_key_exists('required', $incoming)
+                    ? filter_var($incoming['required'], FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE)
+                    : false;
+
+                $enabled = $enabledValue ?? false;
+                $required = $enabled ? ($requiredValue ?? false) : false;
+
+                $normalizedFieldSettings[$fieldKey] = [
+                    'enabled' => $enabled,
+                    'required' => $required,
+                ];
+            }
+        }
+
         $form_manage->update([
             'form_name' => $request->form_name,
             'form_route' => $request->form_route,
@@ -427,6 +547,7 @@ class FormManageController extends Controller
             'text_warning' => $request->text_warning,
             'text_footer' => $request->text_footer,
             'text_policy' => $request->text_policy,
+            'field_settings' => $normalizedFieldSettings,
             'update_by' => Auth::user()->id,
         ]);
 

@@ -100,10 +100,15 @@ class FormManage extends Model
         'student_photo',
         'student_slip_photo',
         'news',
+        'field_settings',
         'create_by',
         'update_by',
         'created_at',
         'updated_at'
+    ];
+
+    protected $casts = [
+        'field_settings' => 'array',
     ];
     public function package()
     {
