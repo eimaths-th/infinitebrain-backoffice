@@ -735,7 +735,7 @@
                                         <p>
                                             <span style="color: #6351a2;">
                                                 <b>Schedule</b> <br>
-                                                - Grade : Kindergarten - Grade 3 / Register Time : 08:30 - 09:30 / Award
+                                                {{-- - Grade : Kindergarten - Grade 3 / Register Time : 08:30 - 09:30 / Award
                                                 Time : 10:00 - 11:00 <br>
                                                 - Grade : Grade 4 - Grade 6 / Register Time : 10:00 - 11:00 / Award Time :
                                                 11:30 - 12:30 <br>
@@ -744,7 +744,7 @@
                                                 - Grade : Grade 10 - Grade 12 / Register Time : 13:30 - 14:30 / Award Time :
                                                 15:00 - 16:00 <br>
 
-                                                **กําหนดการอาจมีการเปลี่ยนแปลงตามความเหมาะสม**
+                                                **กําหนดการอาจมีการเปลี่ยนแปลงตามความเหมาะสม** --}}
                                             </span>
 
                                             <img src="{{ asset('images/schedule.png') }}" alt="Schedule" width="100%">
