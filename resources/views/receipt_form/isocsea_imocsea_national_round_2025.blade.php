@@ -746,6 +746,8 @@
 
                                                 **กําหนดการอาจมีการเปลี่ยนแปลงตามความเหมาะสม**
                                             </span>
+
+                                            <img src="{{ asset('images/schedule.png') }}" alt="Schedule" width="100%">
                                         </p>
                                         <p>
                                             <span style="color: #6351a2;">
