@@ -1205,7 +1205,6 @@ class ReceiptFormController extends Controller
         return response()->json(['success' => 'Receive Add successfully']);
     }
 
-
     protected function buildDynamicValidationRules($route, $allowedTLDs)
     {
         $formManage = FormManage::where('form_route', $route)->first();
@@ -1390,47 +1389,72 @@ class ReceiptFormController extends Controller
         }
 
         if ($request->get('sfield') == '17') {
-            $filesa = $request->get('imgFiles');
-            $filesb = $request->get('imgFiles2');
+            $filesa = (array) $request->get('imgFiles', []);
+            $filesb = (array) $request->get('imgFiles2', []);
 
             $fileas = "";
             $filebs = "";
-            foreach ($filesb as $fileb) {
-                //echo $fileb;
 
+            foreach ($filesb as $fileb) {
                 $oldfile = FileUpload::where('oldname', $fileb)->get();
+                if ($oldfile->isEmpty()) {
+                    continue;
+                }
+
                 $filebs .= $oldfile[0]->filename . "|";
                 File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
                 FileUpload::where('filename', $oldfile[0]->filename)->delete();
             }
+
+            foreach ($filesa as $filea) {
+                $oldfile = FileUpload::where('oldname', $filea)->get();
+                if ($oldfile->isEmpty()) {
+                    continue;
+                }
+
+                $fileas .= $oldfile[0]->filename . "|";
+                File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            }
+
             $filebs = rtrim($filebs, "|");
             $fileas = rtrim($fileas, "|");
         } else {
             # code...
-            $filesa = $request->get('imgFiles');
-            $fileas = "";
-            foreach ($filesa as $filea) {
-                //echo $filea;
-                $oldfile = FileUpload::where('oldname', $filea)->get();
-                
-                $fileas .= $oldfile[0]->filename . "|";
-                // }
-                File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
 
-                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            if ($request->has('imgFiles', [])) {
+                # code...
+
+
+                $filesa = (array) $request->get('imgFiles', []);
+                $fileas = "";
+                foreach ($filesa as $filea) {
+                    $oldfile = FileUpload::where('oldname', $filea)->get();
+                    if ($oldfile->isEmpty()) {
+                        continue;
+                    }
+
+                    $fileas .= $oldfile[0]->filename . "|";
+                    File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+
+                    FileUpload::where('filename', $oldfile[0]->filename)->delete();
+                }
+                $fileas = rtrim($fileas, "|");
             }
-            $fileas = rtrim($fileas, "|");
             if ($request->get('sfield') == '23') {
                 # code...
                 $filebs = '';
             } else {
                 $filebs = '';
                 if ($request->has('imgFiles2')) {
-                    $filesb = $request->get('imgFiles2');
+                    $filesb = (array) $request->get('imgFiles2', []);
                     $filebs = "";
                     foreach ($filesb as $fileb) {
-                        //echo $fileb;
                         $oldfile = FileUpload::where('oldname', $fileb)->get();
+                        if ($oldfile->isEmpty()) {
+                            continue;
+                        }
+
                         $filebs .= $oldfile[0]->filename . "|";
                         File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
                         FileUpload::where('filename', $oldfile[0]->filename)->delete();
@@ -1455,8 +1479,6 @@ class ReceiptFormController extends Controller
             $award = '';
             $street_address2 = '';
         }
-        // dd($request);
-        // $receiptForm = ReceiptForm::create([
 
         $receiptForm = new ReceiptForm([
             'sfield' => $request->get('sfield'),
@@ -1489,10 +1511,10 @@ class ReceiptFormController extends Controller
 
         $adminEmail = $request->get('email');
 
-        if ($request->get('sfield') == 0 || $request->get('sfield') == 17) {
-            // dd($request);
-        } else {
-            Mail::to($adminEmail)->send(new ContactMail($receiptForm));
+        if (!in_array($request->get('sfield'), [0, 17], true) && $adminEmail) {
+            if (filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
+                Mail::to($adminEmail)->send(new ContactMail($receiptForm));
+            }
         }
         $receiptForm->save();
 
