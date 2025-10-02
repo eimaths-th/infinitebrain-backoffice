@@ -1146,6 +1146,7 @@
                                                 </label>
                                                 <input type="email" class="form-control" name="email" id="email"
                                                     value="" maxlength="70" required>
+                                                    <small id="email-msg" style="color: red;"></small>
                                                 <label class="form-sub-label" style="min-height:13px"
                                                     aria-hidden="false">
                                                     example@example.com
