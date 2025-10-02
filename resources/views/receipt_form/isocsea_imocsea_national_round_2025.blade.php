@@ -1010,14 +1010,14 @@
                                                         <option value="IMOCSEA-Gold">Gold</option>
                                                         <option value="IMOCSEA-Silver">Silver</option>
                                                         <option value="IMOCSEA-Bronze">Bronze</option>
-                                                        <option value="IMOCSEA-ชมเชย">ชมเชย</option>
+                                                        {{-- <option value="IMOCSEA-ชมเชย">ชมเชย</option> --}}
                                                     </optgroup>
                                                     <optgroup label="ISOCSEA">
                                                         <option value="ISOCSEA-Diamond">Diamond</option>
                                                         <option value="ISOCSEA-Gold">Gold</option>
                                                         <option value="ISOCSEA-Silver">Silver</option>
                                                         <option value="ISOCSEA-Bronze">Bronze</option>
-                                                        <option value="ISOCSEA-ชมเชย">ชมเชย</option>
+                                                        {{-- <option value="ISOCSEA-ชมเชย">ชมเชย</option> --}}
                                                     </optgroup>
                                                 </select>
                                                 <label class="form-sub-label" style="min-height:13px"
@@ -1164,7 +1164,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-row form-focus" id="dropzone-photo">
+                                    {{-- <div class="form-row form-focus" id="dropzone-photo">
                                         <div class="col-md-12 col-sm-12">
                                             <a id="dphoto"></a>
                                             <div class="position-relative form-group">
@@ -1201,7 +1201,7 @@
                                     <div class="dropzonex dz-default dz-message" id="dropzone_preview"
                                         style="font-size: 1.5em;">
                                         <h3 class="dropzone-previews ui"></h3>
-                                    </div>
+                                    </div> --}}
 
                                     <br>
                                     {{-- <div align="center">
@@ -1251,8 +1251,7 @@
                                         <div class="col-md-12 ">
                                             <div class="position-relative form-group">
                                                 <label class="form-label form-label-top form-label-auto"
-                                                    for="newsf">ท่านทราบข่าวสารการจัดสอบ ISOCSEA & IMOCSEA National
-                                                    Round {{ date('Y') }} จากช่องทางใด <span
+                                                    for="newsf">ท่านทราบข่าวสารการจัดพิธีมอบรางวัล ISOCSEA & IMOCSEA National Round {{ date('Y') }} จากช่องทางใด <span
                                                         class="form-required">*</span>
                                                 </label>
                                                 <input type="text" class="form-control" name="newsf" id="newsf"
@@ -1287,8 +1286,9 @@
                                 <div class="form-group form-check">
                                     <input type="checkbox" class="form-check-input" id="agreeCheckbox" required
                                         style="float: none; margin-right: 3px;">
-                                    <label class="form-check-label" for="agreeCheckbox">ตกลงและยอมรับข้อกำหนดและเงื่อนไข
-                                        รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว</label>
+                                    <label class="form-check-label" for="agreeCheckbox">ผู้เข้าร่วมกิจกรรมยินยอมให้องค์กรสามารถนำภาพถ่ายหรือวิดีโอไปใช้เพื่อการประชาสัมพันธ์ ตามหลักพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล (PDPA)
+
+                                    </label>
                                 </div>
                                 <input type="submit" id="send_data" class="btn btn-lg btn-primary"
                                     value="Submit Application">
@@ -1648,128 +1648,128 @@
         });
     </script>
     <script type="text/javascript">
-        var myDropzone = {};
-        let imgFiles = document.getElementsByName('imgFiles[]');
-        let imgFiles2 = document.getElementsByName('imgFiles2[]');
+        // var myDropzone = {};
+        // let imgFiles = document.getElementsByName('imgFiles[]');
+        // let imgFiles2 = document.getElementsByName('imgFiles2[]');
 
-        Dropzone.options.myAwesomeDropzone = {
-            url: '{{ route('form.upload') }}',
-            headers: {
-                'X-CSRF-TOKEN': "{{ csrf_token() }}"
-            },
-            paramName: "file", // ชื่อไฟล์ปลายทางเมื่อ upload แบบ mutiple จะเป็น array
-            autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
-            uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
-            parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
-            maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
-            maxfilesexceeded: function(file) {
-                this.removeAllFiles();
-                this.addFile(file);
-            },
-            addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
-            maxFilesize: 5, // MB
-            previewsContainer: "#dropzone_preview", // ระบุ element เป้าหลาย
-            //previewTemplate: $('#template-preview').html(),
-            dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
-            renameFile: function(file) {
-                let newName = new Date().getTime() + '_' + file.name;
-                file.newName = newName;
-                return newName;
-            },
-            dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
-            dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
-            dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 5 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
-            acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
+        // Dropzone.options.myAwesomeDropzone = {
+        //     url: '{{ route('form.upload') }}',
+        //     headers: {
+        //         'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        //     },
+        //     paramName: "file", // ชื่อไฟล์ปลายทางเมื่อ upload แบบ mutiple จะเป็น array
+        //     autoProcessQueue: true, // ใส่เพื่อไม่ให้อัพโหลดทันที หลังจากเลือกไฟล์
+        //     uploadMultiple: true, // อัพโหลดไฟล์หลายไฟล์
+        //     parallelUploads: 2, // ให้ทำงานพร้อมกัน 10 ไฟล์
+        //     maxFiles: 2, // ไฟล์สูงสุด 5 ไฟล์
+        //     maxfilesexceeded: function(file) {
+        //         this.removeAllFiles();
+        //         this.addFile(file);
+        //     },
+        //     addRemoveLinks: true, // อนุญาตให้ลบไฟล์ก่อนการอัพโหลด
+        //     maxFilesize: 5, // MB
+        //     previewsContainer: "#dropzone_preview", // ระบุ element เป้าหลาย
+        //     //previewTemplate: $('#template-preview').html(),
+        //     dictRemoveFile: "Remove", // ชื่อ ปุ่ม remove
+        //     renameFile: function(file) {
+        //         let newName = new Date().getTime() + '_' + file.name;
+        //         file.newName = newName;
+        //         return newName;
+        //     },
+        //     dictCancelUpload: "Cancel", // ชื่อ ปุ่ม ยกเลิก
+        //     dictDefaultMessage: "<img height='60' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNsug8XTE5KVJEMECVvm8p43BZTdvZExoQ9Q&usqp=CAU'><br><font size='3'>Browse File</font>", // ข้อความบนพื้นที่แสดงรูปจะแสดงหลังจากโหลดเพจเสร็จ
+        //     dictFileTooBig: "ไม่อนุญาตให้อัพโหลดไฟล์เกิน 5 MB", //ข้อความแสดงเมื่อเลือกไฟล์ขนาดเกินที่กำหนด
+        //     acceptedFiles: "image/*", // อนุญาตให้เลือกไฟล์ประเภทรูปภาพได้
 
-            // The setting up of the dropzone
-            init: function() {
-                myDropzone = this;
-                this.on("addedfile", function(file) {
-                    //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
-                    $('#infinite').append("<input type='text' id='" + file.newName +
-                        "' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
-                    file.previewElement.id = file.newName;
-                }).on("removedfile", function(file) {
-                    //alert(file.id);
-                    //var name = file.name;
-                    var name = file.previewElement.id;
+        //     // The setting up of the dropzone
+        //     init: function() {
+        //         myDropzone = this;
+        //         this.on("addedfile", function(file) {
+        //             //$('#infinite').append("<input type='text' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
+        //             $('#infinite').append("<input type='text' id='" + file.newName +
+        //                 "' class='form_none' name='imgFiles[]' value='" + file.newName + "'/>");
+        //             file.previewElement.id = file.newName;
+        //         }).on("removedfile", function(file) {
+        //             //alert(file.id);
+        //             //var name = file.name;
+        //             var name = file.previewElement.id;
 
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                        },
-                        type: 'POST',
-                        url: '{{ route('form.delete') }}',
-                        data: {
-                            name: name,
-                        },
-                        success: function(data) {
-                            console.log('success: ' + data);
-                            var element = document.getElementById("infinite");
-                            var child = document.getElementById(name);
-                            element.removeChild(child);
-                            if (!document.getElementsByName('imgFiles[]').length) {
-                                $('#dropzone_preview').css("display", "none");
-                                $('#dropzone-photo').addClass('form-focus-error');
-                                $('#dropzone-photo')
-                                    .find('.form-error-message').css("display", "block");
-                                $('#dropzone-photo').css('border', 'solid 1px red');
-                            }
-                        }
-                    });
+        //             $.ajax({
+        //                 headers: {
+        //                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        //                 },
+        //                 type: 'POST',
+        //                 url: '{{ route('form.delete') }}',
+        //                 data: {
+        //                     name: name,
+        //                 },
+        //                 success: function(data) {
+        //                     console.log('success: ' + data);
+        //                     var element = document.getElementById("infinite");
+        //                     var child = document.getElementById(name);
+        //                     element.removeChild(child);
+        //                     if (!document.getElementsByName('imgFiles[]').length) {
+        //                         $('#dropzone_preview').css("display", "none");
+        //                         $('#dropzone-photo').addClass('form-focus-error');
+        //                         $('#dropzone-photo')
+        //                             .find('.form-error-message').css("display", "block");
+        //                         $('#dropzone-photo').css('border', 'solid 1px red');
+        //                     }
+        //                 }
+        //             });
 
-                    //var _ref;
-                    //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+        //             //var _ref;
+        //             //return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
 
-                }).on("maxfilesexceeded", function(file, response) {
-                    alert('allow maximum 2 file');
-                    this.removeFile(file);
-                }).on('complete', function(file) {
-                    let val = file.accepted;
-                    if (file.accepted == true) {
-                        obj = JSON.parse(file.xhr.response);
-                        //file.previewElement.id = obj.success;
-                        console.log(obj.success);
-                        //$('#infinite').append("<input type='text' id='" + obj.success +
-                        //    "' class='form_none' name='imgFiles[]' value='" + obj.success + "'/>");
-                    }
-                    let val1 = file.name;
-                    $('#dropzone_preview').css("display", "block");
-                    $('#dropzone-photo').removeClass('form-focus-error');
-                    $('#dropzone-photo')
-                        .find('.form-error-message').css("display", "none");
-                    $('#dropzone-photo').css('border', 'solid 1px green');
-                    if (document.getElementsByName('imgFiles[]').length) {
-                        //$('#error_div').css('display', 'none');
-                    }
-                }).on("success", function(file) {
-                    //var responseText = file.id // or however you would point to your assigned file ID here;
-                    //console.log(response); // console should show the ID you pointed to
-                    // do stuff with file.id ...
-                }).on("error", function(file) {
-                    alert("ไม่อนุญาตให้อัพโหลดไฟล์เกิน 5 MB");
-                    while (imgFiles.length > 0) {
-                        imgFiles[0].parentNode.removeChild(imgFiles[0]);
-                    }
-                    this.removeFile(file);
-                    // alert(dictFileTooBig);
-                });
-                /*this.on("addedfile", function(file) {
+        //         }).on("maxfilesexceeded", function(file, response) {
+        //             alert('allow maximum 2 file');
+        //             this.removeFile(file);
+        //         }).on('complete', function(file) {
+        //             let val = file.accepted;
+        //             if (file.accepted == true) {
+        //                 obj = JSON.parse(file.xhr.response);
+        //                 //file.previewElement.id = obj.success;
+        //                 console.log(obj.success);
+        //                 //$('#infinite').append("<input type='text' id='" + obj.success +
+        //                 //    "' class='form_none' name='imgFiles[]' value='" + obj.success + "'/>");
+        //             }
+        //             let val1 = file.name;
+        //             $('#dropzone_preview').css("display", "block");
+        //             $('#dropzone-photo').removeClass('form-focus-error');
+        //             $('#dropzone-photo')
+        //                 .find('.form-error-message').css("display", "none");
+        //             $('#dropzone-photo').css('border', 'solid 1px green');
+        //             if (document.getElementsByName('imgFiles[]').length) {
+        //                 //$('#error_div').css('display', 'none');
+        //             }
+        //         }).on("success", function(file) {
+        //             //var responseText = file.id // or however you would point to your assigned file ID here;
+        //             //console.log(response); // console should show the ID you pointed to
+        //             // do stuff with file.id ...
+        //         }).on("error", function(file) {
+        //             alert("ไม่อนุญาตให้อัพโหลดไฟล์เกิน 5 MB");
+        //             while (imgFiles.length > 0) {
+        //                 imgFiles[0].parentNode.removeChild(imgFiles[0]);
+        //             }
+        //             this.removeFile(file);
+        //             // alert(dictFileTooBig);
+        //         });
+        //         /*this.on("addedfile", function(file) {
 
-                }).on("removedfile", function(file) {
+        //         }).on("removedfile", function(file) {
 
-                }).on("thumbnail", function(file) {
+        //         }).on("thumbnail", function(file) {
 
-                }).on("error", function(file) {
+        //         }).on("error", function(file) {
 
-                }).on("processing", function(file) {
+        //         }).on("processing", function(file) {
 
-                }).on("uploadprogress", function(file) {
+        //         }).on("uploadprogress", function(file) {
 
-                });*/
+        //         });*/
 
-            }
-        }
+        //     }
+        // }
 
         // Dropzone.options.myAwesomeDropzone2 = {
         //     url: '{{ route('form.upload') }}',
@@ -1943,9 +1943,9 @@
 
             $("#infinite").validate(valid_option);
 
-            $('#btnUpload').on('click', function() {
-                myDropzone.processQueue();
-            });
+            // $('#btnUpload').on('click', function() {
+            //     myDropzone.processQueue();
+            // });
         });
 
         function check_input() {
@@ -1961,30 +1961,30 @@
                 return false;
             }
 
-            if (document.getElementsByName('imgFiles[]').length) {
-                //$('#error_div').css('display', 'none');
+            // if (document.getElementsByName('imgFiles[]').length) {
+            //     //$('#error_div').css('display', 'none');
 
 
-                return true;
-            } else {
-                if (!document.getElementsByName('imgFiles[]').length) {
-                    $('#dropzone-photo').addClass('form-focus-error');
-                    $('#dropzone-photo')
-                        .find('.form-error-message').css("display", "block");
-                    $('#dropzone-photo').css('border', 'solid 1px red');
-                    jumpTo('dphoto');
-                }
-                // if (!document.getElementsByName('imgFiles2[]').length) {
-                //     $('#dropzone-att').addClass('form-focus-error');
-                //     $('#dropzone-att')
-                //         .find('.form-error-message').css("display", "block");
-                //     $('#dropzone-att').css('border', 'solid 1px red');
-                //     jumpTo('datt');
-                // }
+            //     return true;
+            // } else {
+            //     if (!document.getElementsByName('imgFiles[]').length) {
+            //         $('#dropzone-photo').addClass('form-focus-error');
+            //         $('#dropzone-photo')
+            //             .find('.form-error-message').css("display", "block");
+            //         $('#dropzone-photo').css('border', 'solid 1px red');
+            //         jumpTo('dphoto');
+            //     }
+            //     // if (!document.getElementsByName('imgFiles2[]').length) {
+            //     //     $('#dropzone-att').addClass('form-focus-error');
+            //     //     $('#dropzone-att')
+            //     //         .find('.form-error-message').css("display", "block");
+            //     //     $('#dropzone-att').css('border', 'solid 1px red');
+            //     //     jumpTo('datt');
+            //     // }
 
-                //$('#error_div').css('display', 'block');
-                return false;
-            }
+            //     //$('#error_div').css('display', 'block');
+            //     return false;
+            // }
 
         }
 
