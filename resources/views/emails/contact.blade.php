@@ -1539,63 +1539,66 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @if ($url1)
+                            <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
+                                role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
+                                width="100%">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                                class="row-content stack" role="presentation"
+                                                style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; border-bottom: 0 solid #EFEEF4; border-left: 0 solid #EFEEF4; border-right: 0px solid #EFEEF4; border-top: 0 solid #EFEEF4; color: #000000; width: 700px;"
+                                                width="700">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="column column-1"
+                                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left;  vertical-align: middle; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;"
+                                                            width="33.333333333333336%">
+                                                            <table border="0" cellpadding="0" cellspacing="0"
+                                                                class="heading_block block-1" role="presentation"
+                                                                style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
+                                                                width="100%">
+                                                                <tr>
+                                                                    <td class="pad"
+                                                                        style="text-align:left;width:100%;">
+                                                                        <h2
+                                                                            style="margin: 0; font-size: 14px; font-weight: 400;  text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
+                                                                            <span
+                                                                                class="tinyMce-placeholder">อัพโหลดรูปภาพผู้สมัคร</span>
+                                                                        </h2>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                        <td class="column column-2"
+                                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left;  vertical-align: middle; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;"
+                                                            width="66.66666666666667%">
+                                                            <table border="0" cellpadding="10" cellspacing="0"
+                                                                class="paragraph_block block-1" role="presentation"
+                                                                style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;"
+                                                                width="100%">
+                                                                <tr>
+                                                                    <td class="pad">
+                                                                        <div
+                                                                            style="direction:ltr;font-family:Inter, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;">
 
-                        <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
-                            role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <table align="center" border="0" cellpadding="0" cellspacing="0"
-                                            class="row-content stack" role="presentation"
-                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; border-bottom: 0 solid #EFEEF4; border-left: 0 solid #EFEEF4; border-right: 0px solid #EFEEF4; border-top: 0 solid #EFEEF4; color: #000000; width: 700px;"
-                                            width="700">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="column column-1"
-                                                        style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left;  vertical-align: middle; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;"
-                                                        width="33.333333333333336%">
-                                                        <table border="0" cellpadding="0" cellspacing="0"
-                                                            class="heading_block block-1" role="presentation"
-                                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
-                                                            width="100%">
-                                                            <tr>
-                                                                <td class="pad"
-                                                                    style="text-align:left;width:100%;">
-                                                                    <h2
-                                                                        style="margin: 0; font-size: 14px; font-weight: 400;  text-align: start;margin-left:30px; margin-top: 10px; margin-bottom: 10px;">
-                                                                        <span
-                                                                            class="tinyMce-placeholder">อัพโหลดรูปภาพผู้สมัคร</span>
-                                                                    </h2>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </td>
-                                                    <td class="column column-2"
-                                                        style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left;  vertical-align: middle; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;"
-                                                        width="66.66666666666667%">
-                                                        <table border="0" cellpadding="10" cellspacing="0"
-                                                            class="paragraph_block block-1" role="presentation"
-                                                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;"
-                                                            width="100%">
-                                                            <tr>
-                                                                <td class="pad">
-                                                                    <div
-                                                                        style="direction:ltr;font-family:Inter, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;">
+                                                                            {!! $url1 !!}
 
-                                                                        {!! $url1 !!}
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        @endif
 
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
 
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
