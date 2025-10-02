@@ -1421,7 +1421,7 @@ class ReceiptFormController extends Controller
             $fileas = rtrim($fileas, "|");
         } else {
             # code...
-
+            $fileas = '';
             if ($request->has('imgFiles', [])) {
                 # code...
 
