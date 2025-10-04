@@ -98,8 +98,10 @@ class Receipt_Customer_RunningNumber extends Model
 
         }
 
+        // dd($mergeArray);
+
         $type = strtoupper($type);
-        if (!in_array($type, self::TYPES)) {
+        if (!in_array($type, $mergeArray)) {
             throw new \Exception('Undefined running number type.');
         }
         $number = 0;
@@ -123,10 +125,10 @@ class Receipt_Customer_RunningNumber extends Model
         $number = str_pad($number, 3, '0', STR_PAD_LEFT);
 
         // A-21-00001
-        if (strlen(Receipt_Customer_RunningNumber::TYPE_PREFIX[$type]) > 1) {
-            return Receipt_Customer_RunningNumber::TYPE_PREFIX[$type] . '' . $number;
+        if (strlen($mergeArray[$type]) > 1) {
+            return $mergeArray[$type] . '' . $number;
         } else {
-            return "0" . Receipt_Customer_RunningNumber::TYPE_PREFIX[$type] . '' . $number;
+            return "0" . $mergeArray[$type] . '' . $number;
         }
     }
 }

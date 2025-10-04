@@ -60,36 +60,40 @@
                     <label for="Parent">Route :</label><br>
                     <select style="width: 100%;" class="form-control" id="route" name="route" required>
                         <option value="">Select Route</option>
-                        <option value="gmec">gmec</option>
-                        <option value="olpcs">olpcs</option>
+                        {{-- <option value="advance_english_grammar">advance_english_grammar</option>
+                        <option value="admin-test-field">admin-test-field</option>
                         <option value="asiarope">asiarope</option>
-                        <option value="gelosea">gelosea</option>
-                        <option value="imocsea">imocsea</option>
-                        <option value="imocsea_special">imocsea_special</option>
-                        <option value="isocsea">isocsea</option>
-                        <option value="imocsea+isocsea">imocsea+isocsea</option>
+                        <option value="award-ceremony-isocsea">award-ceremony-isocsea</option>
                         <option value="cambridge">cambridge</option>
+                        <option value="coding-olympics">CODING OLYMPICS</option>
+                        <option value="copernicus">COPERNICUS OLYMPIAD</option>
+                        <option value="gelosea">gelosea</option>
+                        <option value="gmec">gmec</option>
                         <option value="huaxiacup">huaxiacup</option>
+                        <option value="huaxiacup-final-round">China-Mathematical-Olympiad-Final</option>
                         <option value="huaxiacup-ii">huaxiacup-II</option>
+                        <option value="ihcmi">international-hope-cup-mathematic-invitational</option>
+                        <option value="imocsea">imocsea</option>
+                        <option value="imocsea+isocsea">imocsea+isocsea</option>
+                        <option value="imocsea-national-round">imocsea-national-round</option>
+                        <option value="imocsea_special">imocsea_special</option>
+                        <option value="isc">International STEM competitions</option>
+                        <option value="isocsea">isocsea</option>
+                        <option value="isocsea-imocsea-national-round">(ไม่มา) isocsea-imocsea-national-round</option>
+                        <option value="isocsea-imocsea-national-round-2025">(มา) isocsea-imocsea-national-round-2025</option>
                         <option value="mathleague">mathleague</option>
                         <option value="mathleague-ii">mathleague-II</option>
-                        <option value="reward">reward</option>
-                        <option value="test_field">test_field</option>
                         <option value="neos">neo-science-olympiad</option>
                         <option value="neos-2">neo-science-school</option>
-                        <option value="huaxiacup-final-round">China-Mathematical-Olympiad-Final</option>
-                        <option value="ihcmi">international-hope-cup-mathematic-invitational</option>
-                        <option value="isc">International STEM competitions</option>
+                        <option value="olpcs">olpcs</option>
+                        <option value="reward">reward</option>
                         <option value="seacso">seacso</option>
-                        <option value="copernicus">COPERNICUS OLYMPIAD</option>
-                        <option value="coding-olympics">CODING OLYMPICS</option>
                         <option value="stemco_science">stemco_science</option>
-                        <option value="advance_english_grammar">advance_english_grammar</option>
-                        <option value="admin-test-field">admin-test-field</option>
-                        <option value="award-ceremony-isocsea">award-ceremony-isocsea</option>
-                        <option value="imocsea-national-round">imocsea-national-round</option>
-                        <option value="isocsea-imocsea-national-round-2025"> (มา) isocsea-imocsea-national-round-2025</option>
-                        <option value="isocsea-imocsea-national-round">(ไม่มา) isocsea-imocsea-national-round</option>
+                        <option value="test_field">test_field</option> --}}
+                        <option value="spelling-bee-islo">spelling-bee-islo</option>
+                        @foreach ($formRoutes as $formRoute)
+                            <option value="{{ $formRoute->slug }}">{{ $formRoute->form_name }}</option>
+                        @endforeach
                     </select>
 
                 </div>

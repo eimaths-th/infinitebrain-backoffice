@@ -274,13 +274,6 @@ class ReceiptFormController extends Controller
         return view('forms_manage.view', compact('form', 'date'));
     }
 
-    public function generalForm()
-    {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.generalForm")->with(['date' => $date]);
-    }
-
     public function asiarope()
     {
         return $this->getForm();
@@ -350,14 +343,6 @@ class ReceiptFormController extends Controller
         return $this->getForm();
     }
 
-
-    public function gelosea()
-    {
-        $route = request()->route()->getName();
-        $date = $this->getDatetime($route);
-        return view("receipt_form.gelosea")->with(['date' => $date]);
-    }
-
     public function imocsea()
     {
         return $this->getForm();
@@ -373,6 +358,20 @@ class ReceiptFormController extends Controller
         return $this->getForm();
     }
 
+    public function award_ceremony_isocsea()
+    {
+        return $this->getForm();
+        // $route = request()->route()->getName();
+        // $date = $this->getDatetime($route);
+        // return view("receipt_form.advance_english_grammar")->with(['date' => $date]);
+    }
+    public function imocsea_national_round()
+    {
+        return $this->getForm();
+        // $route = request()->route()->getName();
+        // $date = $this->getDatetime($route);
+        // return view("receipt_form.advance_english_grammar")->with(['date' => $date]);
+    }
 
     public function cambridge()
     {
@@ -394,6 +393,43 @@ class ReceiptFormController extends Controller
     {
         return $this->getForm();
     }
+
+    public function spelling_bee_islo()
+    {
+        return $this->getForm();
+    }
+
+    //แสดง form แบบใหม่
+    public function showFormBySlug($slug)
+    {
+        // dd($slug);
+        $form = FormManage::where('slug', $slug)->first();
+
+        if (!$form) {
+            abort(404, 'Form not found');
+        }
+
+        // Get datetime using slug as route
+        $date = $this->getDatetime($slug);
+
+        return view('forms_manage.view', compact('form', 'date'));
+    }
+
+    //สร้าง form แบบเดิม
+    public function generalForm()
+    {
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.generalForm")->with(['date' => $date]);
+    }
+
+    public function gelosea()
+    {
+        $route = request()->route()->getName();
+        $date = $this->getDatetime($route);
+        return view("receipt_form.gelosea")->with(['date' => $date]);
+    }
+
     public function stemco_science()
     {
         $route = request()->route()->getName();
@@ -405,21 +441,6 @@ class ReceiptFormController extends Controller
         $route = request()->route()->getName();
         $date = $this->getDatetime($route);
         return view("receipt_form.advance_english_grammar")->with(['date' => $date]);
-    }
-
-    public function award_ceremony_isocsea()
-    {
-        return $this->getForm();
-        // $route = request()->route()->getName();
-        // $date = $this->getDatetime($route);
-        // return view("receipt_form.advance_english_grammar")->with(['date' => $date]);
-    }
-    public function imocsea_national_round()
-    {
-        return $this->getForm();
-        // $route = request()->route()->getName();
-        // $date = $this->getDatetime($route);
-        // return view("receipt_form.advance_english_grammar")->with(['date' => $date]);
     }
 
     public function isocsea_imocsea_national_round()
@@ -1422,10 +1443,7 @@ class ReceiptFormController extends Controller
         } else {
             # code...
             $fileas = '';
-            if ($request->has('imgFiles', [])) {
-                # code...
-
-
+            if ($request->has('imgFiles')) {
                 $filesa = (array) $request->get('imgFiles', []);
                 $fileas = "";
                 foreach ($filesa as $filea) {
@@ -1522,6 +1540,205 @@ class ReceiptFormController extends Controller
         return redirect('/form/complete/' . $route);
     }
 
+    public function storeFormManage(Request $request)
+    {
+        // dd($request->all());
+
+        $allowedTLDs = ['.com', '.net', '.co.th', '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
+        $route = $request->get('routeName');
+
+        $result = $this->checkRegisted(
+            $route,
+            $request->get('sfield'),
+            $request->get('firstname'),
+            $request->get('lastname'),
+            $request->get('birthdate'),
+            $request->get('phone'),
+            $request->get('email'),
+        );
+
+        if ($result['checkRegisted']) {
+            // 1) บล็อกกรณีข้อมูลซ้ำแบบตรงตัว
+            if ($result['matchType'] === 'exact') {
+                $message = "พบข้อมูลการลงทะเบียนซ้ำกับชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
+                $message .= "กรุณาตรวจสอบข้อมูลของคุณ";
+                return back()
+                    ->withInput()
+                    ->with('error', $message);
+            }
+
+            // 2) ชื่อคล้ายกัน: บล็อกเฉพาะเมื่อระบุได้ว่าเป็นคนเดียวกันจริง (วันเกิดตรง และ เบอร์และอีเมลตรง)
+            if ($result['matchType'] === 'similar') {
+                $similarity = number_format($result['similarity'] ?? 0, 2);
+                if ($result['is_same_person']) {
+                    $message = "พบข้อมูลการลงทะเบียนซ้ำ (ชื่อคล้าย {$similarity}% + วันเกิดตรง + เบอร์และอีเมลตรง) กับผู้ลงทะเบียนรายอื่น\n";
+                    $message .= "ชื่อ-นามสกุล: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
+                    $message .= "กรุณาตรวจสอบข้อมูลของคุณหรือใช้ข้อมูลติดต่ออื่น หากเป็นคนเดิม";
+                    return back()
+                        ->withInput()
+                        ->with('error', $message);
+                } else {
+                    // ไม่ใช่คนเดียวกัน: เตือนและดำเนินการต่อ
+                    // dd('ไม่ใช่คนเดียวกัน', $result);
+
+                    $message = "พบข้อมูลชื่อหรือนามสกุลที่คล้ายกัน ({$similarity}%) กับผู้ลงทะเบียนรายอื่น\n";
+                    $message .= "ชื่อ-นามสกุลที่พบ: {$result['receipt']->first_name} {$result['receipt']->last_name}\n";
+                    $message .= "ระบบจะดำเนินการต่อ หากมั่นใจว่าไม่ใช่คนเดิม";
+                    session()->flash('warning', $message);
+                }
+            }
+        }
+
+        // Build dynamic validation rules based on field_settings
+        $validationData = $this->buildDynamicValidationRules($route, $allowedTLDs);
+        $validator = Validator::make($request->all(), $validationData['rules'], $validationData['messages']);
+
+
+        if ($validator->fails()) {
+            //return response()->json(['errors' => $validator->errors()->all()]);
+            return back()->withErrors(['errors' => $validator->errors()->all()]);
+        }
+        // dd($request);
+
+        if (!file_exists(public_path() . '/receipt_form_images/')) {
+            mkdir(public_path() . '/receipt_form_images/', 0777, true);
+        }
+
+        if (!file_exists(public_path() . '/receipt_form_watermark_images/')) {
+            mkdir(public_path() . '/receipt_form_watermark_images/', 0777, true);
+        }
+
+        if ($request->get('sfield') == '17') {
+            $filesa = (array) $request->get('imgFiles', []);
+            $filesb = (array) $request->get('imgFiles2', []);
+
+            $fileas = "";
+            $filebs = "";
+
+            foreach ($filesb as $fileb) {
+                $oldfile = FileUpload::where('oldname', $fileb)->get();
+                if ($oldfile->isEmpty()) {
+                    continue;
+                }
+
+                $filebs .= $oldfile[0]->filename . "|";
+                File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            }
+
+            foreach ($filesa as $filea) {
+                $oldfile = FileUpload::where('oldname', $filea)->get();
+                if ($oldfile->isEmpty()) {
+                    continue;
+                }
+
+                $fileas .= $oldfile[0]->filename . "|";
+                File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            }
+
+            $filebs = rtrim($filebs, "|");
+            $fileas = rtrim($fileas, "|");
+        } else {
+            # code...
+            $fileas = '';
+            if ($request->has('imgFiles')) {
+                $filesa = (array) $request->get('imgFiles', []);
+                $fileas = "";
+                foreach ($filesa as $filea) {
+                    $oldfile = FileUpload::where('oldname', $filea)->get();
+                    if ($oldfile->isEmpty()) {
+                        continue;
+                    }
+
+                    $fileas .= $oldfile[0]->filename . "|";
+                    File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+
+                    FileUpload::where('filename', $oldfile[0]->filename)->delete();
+                }
+                $fileas = rtrim($fileas, "|");
+            }
+            if ($request->get('sfield') == '23') {
+                # code...
+                $filebs = '';
+            } else {
+                $filebs = '';
+                if ($request->has('imgFiles2')) {
+                    $filesb = (array) $request->get('imgFiles2', []);
+                    $filebs = "";
+                    foreach ($filesb as $fileb) {
+                        $oldfile = FileUpload::where('oldname', $fileb)->get();
+                        if ($oldfile->isEmpty()) {
+                            continue;
+                        }
+
+                        $filebs .= $oldfile[0]->filename . "|";
+                        File::move(public_path() . '/form_images/' . $oldfile[0]->filename, public_path() . '/receipt_form_images/' . $oldfile[0]->filename);
+                        FileUpload::where('filename', $oldfile[0]->filename)->delete();
+                    }
+                    $filebs = rtrim($filebs, "|");
+                }
+            }
+        }
+
+        if ($request->get('sfield') == 22 || $request->get('sfield') == 31 || $request->get('sfield') == 32) {
+            # code...
+            // Handle award as array and convert to JSON
+            $awardInput = $request->get('award');
+            if (is_array($awardInput)) {
+                $award = json_encode($awardInput);
+            } else {
+                $award = $awardInput;
+            }
+            $street_address2 = $request->get('street_address2');
+        } else {
+            # code...
+            $award = '';
+            $street_address2 = '';
+        }
+
+        $receiptForm = new ReceiptForm([
+            'sfield' => $request->get('sfield'),
+            'submission_date' => date("Y-m-d"),
+            'subject' => $request->get('subject'),
+            'first_name' => $request->get('firstname'),
+            'last_name' => $request->get('lastname'),
+            'nick_name' => $request->get('nickname'),
+            'gender' => $request->get('gender'),
+            'birth_date' => $request->get('birthdate'),
+            'school_name' => $request->get('schoolname'),
+            'award' => $award,
+            'street_address2' => $street_address2,
+            'grade' => $request->get('grade'),
+            'package' => $request->get('package'),
+            'contest' => $request->get('contest'),
+            'discount_code' => $request->get('dcode'),
+            'name_parent' => $request->get('parent'),
+            'street_address' => $request->get('address'),
+            'postcode' => $request->get('postcode'),
+            'mobile' => $request->get('phone'),
+            'email' => $request->get('email'),
+            'news_form' => $request->get('newsf'),
+            'photo_att' => $fileas,
+            'file_att' => $filebs,
+            'referent_code' => $request->get('referent_code'),
+        ]);
+
+        $receiptForm->save();
+
+        $adminEmail = $request->get('email');
+
+        if (!in_array($request->get('sfield'), [0, 17], true) && $adminEmail) {
+            if (filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
+                Mail::to($adminEmail)->send(new ContactMail($receiptForm));
+            }
+        }
+        $receiptForm->save();
+
+
+        return redirect('/form/completed/' . $route);
+    }
+
     /**
      * Display the specified resource.
      *
@@ -1533,6 +1750,12 @@ class ReceiptFormController extends Controller
         //
 
         return view("receipt_form.complete")->with(['sfield' => $request->sfield]);
+    }
+    public function showFormManage(Request $request)
+    {
+        //
+
+        return view("receipt_form.complete_formManage")->with(['sfield' => $request->sfield]);
     }
     public function show1(ReceiptForm $receiptForm)
     {

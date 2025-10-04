@@ -59,42 +59,17 @@ Route::post('/attendance/import', [AttendanceController::class, 'import']);
 
 
 Route::group(['middleware' => 'check.opening.date.time'], function () {
-
-    Route::get('/international-hope-cup-mathematic-invitational', [ReceiptFormController::class, 'ihcmi'])->name('ihcmi');
-    Route::get('/gmec', [ReceiptFormController::class, 'gmec'])->name('gmec');
-    Route::get('/olpcs', [ReceiptFormController::class, 'olpcs'])->name('olpcs');
-    Route::get('/asiarope', [ReceiptFormController::class, 'asiarope'])->name('asiarope');
+    // Dynamic slug-based route for all forms
+    Route::get('/form/{slug}', [ReceiptFormController::class, 'showFormBySlug'])->name('form.show');
     Route::get('/gelosea', [ReceiptFormController::class, 'gelosea'])->name('gelosea');
-    Route::get('/imocsea', [ReceiptFormController::class, 'imocsea'])->name('imocsea');
-    Route::get('/isocsea', [ReceiptFormController::class, 'isocsea'])->name('isocsea');
-    Route::get('/imocsea+isocsea', [ReceiptFormController::class, 'imocsea_isocsea'])->name('imocsea+isocsea');
-    Route::get('/cambridge', [ReceiptFormController::class, 'cambridge'])->name('cambridge');
-
-    Route::get('/reward', [ReceiptFormController::class, 'img_reward'])->name('reward');
-    Route::get('/test_field', [ReceiptFormController::class, 'test_field'])->name('test_field');
-    Route::get('/mathleague', [ReceiptFormController::class, 'mathleague'])->name('mathleague');
-    Route::get('/huaxiacup', [ReceiptFormController::class, 'huaxiacup'])->name('huaxiacup');
-    Route::get('/huaxiacup-final-round', [ReceiptFormController::class, 'huaxiacupFinalRound'])->name('huaxiacup-final-round');
-    Route::get('/mathleague-ii', [ReceiptFormController::class, 'mathleague_II'])->name('mathleague-ii');
-    Route::get('/huaxiacup-ii', [ReceiptFormController::class, 'huaxiacup_II'])->name('huaxiacup-ii');
-    Route::get('/neo-science-olympiad', [ReceiptFormController::class, 'neos'])->name('neos');
-    Route::get('/neo-science-olympiad-II', [ReceiptFormController::class, 'neos2'])->name('neos-2');
-    Route::get('/International-STEM-competitions', [ReceiptFormController::class, 'isc'])->name('isc');
-    Route::get('/seacso', [ReceiptFormController::class, 'seacso'])->name('seacso');
-    Route::get('/copernicus', [ReceiptFormController::class, 'copernicus'])->name('copernicus');
-    Route::get('/coding-olympics', [ReceiptFormController::class, 'codingOlympics'])->name('coding-olympics');
-    Route::get('/imocsea_special', [ReceiptFormController::class, 'imocsea_special'])->name('imocsea_special');
+    Route::get('/spelling-bee-islo', [ReceiptFormController::class, 'spelling_bee_islo'])->name('spelling-bee-islo');
     Route::get('/stemco_science', [ReceiptFormController::class, 'stemco_science'])->name('stemco_science');
     Route::get('/advance_english_grammar', [ReceiptFormController::class, 'advance_english_grammar'])->name('advance_english_grammar');
-
-    Route::get('/testing-form-manage', [FormManageController::class, 'testing_form_manage'])->name('testing-form-manage');
-    Route::get('/admin-test-field', [ReceiptFormController::class, 'admin_test_field'])->name('admin-test-field');
-    Route::get('/award-ceremony-isocsea', [ReceiptFormController::class, 'Award_ceremony_ISOCSEA'])->name('award-ceremony-isocsea');
-    Route::get('/imocsea-national-round', [ReceiptFormController::class, 'imocsea_national_round'])->name('imocsea-national-round');
     Route::get('/isocsea-imocsea-national-round-2025', [ReceiptFormController::class, 'isocsea_imocsea_national_round_2025'])->name('isocsea-imocsea-national-round-2025');
     Route::get('/isocsea-imocsea-national-round', [ReceiptFormController::class, 'isocsea_imocsea_national_round'])->name('isocsea-imocsea-national-round');
 
-    //'25' => 'seacso',
+    // Testing route
+    Route::get('/testing-form-manage', [FormManageController::class, 'testing_form_manage'])->name('testing-form-manage');
 });
 
 Route::group(['middleware' => ['auth', 'checkUserId']], function () {
@@ -343,14 +318,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/form-manage/destroy', [FormManageController::class, 'destroy'])->name('form-manage.destroy');
     Route::get('/select_route', [FormManageController::class, 'selectRoute'])->name('select_route');
     // Route::post('/create-form', [FormManageController::class, 'create'])->name('create-form');
-    Route::match(['GET','POST'], '/create-form', [FormManageController::class, 'create'])->name('create-form');
+    Route::match(['GET', 'POST'], '/create-form', [FormManageController::class, 'create'])->name('create-form');
     Route::get('/form-manage/{id}', [FormManageController::class, 'view'])->name('form-manage.view');
     Route::post('/edit-option-grade', [FormManageController::class, 'editOptionGrade'])->name('edit-option-grade');
     Route::post('/delete-option-grade', [FormManageController::class, 'deleteOptionGrade'])->name('delete-option-grade');
 
     Route::post('/edit-option-package', [FormManageController::class, 'editOptionPackage'])->name('edit-option-package');
     Route::post('/delete-option-package', [FormManageController::class, 'deleteOptionPackage'])->name('delete-option-package');
-
 });
 
 //form
@@ -361,7 +335,9 @@ Route::post('/form/upload', [ReceiptFormController::class, 'fileStore'])->name('
 Route::post('/form/upload/api', [ReceiptFormController::class, 'fileStoreAPI'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->name('form.upload.api');
 Route::post('/form/upload/delete', [ReceiptFormController::class, 'fileDestroy'])->name('form.delete');
 Route::post('/form/store', [ReceiptFormController::class, 'store'])->name('form.store');
+Route::post('/form/storeFormManage', [ReceiptFormController::class, 'storeFormManage'])->name('form.storeFormManage');
 Route::get('/form/complete/{sfield}', [ReceiptFormController::class, 'show'])->name('form.complete');
+Route::get('/form/completed/{sfield}', [ReceiptFormController::class, 'showFormManage'])->name('form.completed');
 Route::get('/form/complete1', [ReceiptFormController::class, 'show1'])->name('form.complete1');
 
 Route::post('/form/store1', [ReceiptFormController::class, 'store1'])->name('form.store1');
