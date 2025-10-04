@@ -84,7 +84,7 @@ class Receipt_RunningNumber extends Model
     ];
 
 
-    public static function pre_generate(string $type, string $sdate)
+    public static function mergeArrayTypes()
     {
         $mergeArray = self::TYPE_PREFIX;
         $mergeArray2 = self::TYPES;
@@ -96,11 +96,53 @@ class Receipt_RunningNumber extends Model
             if (!in_array($form->sfield, $mergeArray2)) {
                 $mergeArray2[] = $form->sfield;
             }
-
         }
+
+        return [
+            'TYPE_PREFIX' => $mergeArray,
+            'TYPES' => $mergeArray2
+        ];
+    }
+
+    public static function getMergedTypePrefix()
+    {
+        $merged = self::mergeArrayTypes();
+        return $merged['TYPE_PREFIX'];
+    }
+
+    public static function getMergedTypes()
+    {
+        $merged = self::mergeArrayTypes();
+        return $merged['TYPES'];
+    }
+
+
+    public static function pre_generate(string $type, string $sdate)
+    {
+        // Get merged arrays from FormManage
+        $merged = self::mergeArrayTypes();
+        $mergeArrayTYPE_PREFIX = $merged['TYPE_PREFIX'];
+        $mergeArrayTYPES = $merged['TYPES'];
+
+        // Debug: ดูค่าหลัง merge
+        // dd([
+        //     'Original TYPE_PREFIX' => self::TYPE_PREFIX,
+        //     'Original TYPES' => self::TYPES,
+        //     'Merged TYPE_PREFIX' => $mergeArrayTYPE_PREFIX,
+        //     'Merged TYPES' => $mergeArrayTYPES,
+        //     'FormManage sfields' => \App\Models\FormManage::pluck('sfield')->toArray()
+        // ]);
+
         $type = strtoupper($type);
-        if (!in_array($type, self::TYPES)) {
-            throw new \Exception('Undefined running number type.');
+
+        $sfield = FormManage::where('sfield', $type)->first();
+
+        if (!in_array($type, $mergeArrayTYPES)) {
+            throw new \Exception('Undefined running number type: ' . $type);
+        }
+
+        if ($sfield) {
+            $type = $sfield->sfield;
         }
         $number = 0;
         $year = date('Y');
@@ -144,10 +186,10 @@ class Receipt_RunningNumber extends Model
         $number = str_pad($number, 3, '0', STR_PAD_LEFT);
 
         // A-21-00001
-        if (strlen(Receipt_RunningNumber::TYPE_PREFIX[$type]) > 1) {
-            return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
+        if (strlen($mergeArrayTYPE_PREFIX[$type]) > 1) {
+            return $mergeArrayTYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
         } else {
-            return "0" . Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
+            return "0" . $mergeArrayTYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
         }
 
         //return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '01' . $number;
@@ -155,27 +197,62 @@ class Receipt_RunningNumber extends Model
 
     public static function generate(string $type, string $sdate)
     {
-        $mergeArray = self::TYPE_PREFIX;
-        $mergeArray2 = self::TYPES;
-        $formManage = FormManage::orderBy("id", "asc")->get();
+        $mergeArrayTYPE_PREFIX = self::TYPE_PREFIX;
+        $mergeArrayTYPES = self::TYPES;
+
+        $formManage = FormManage::orderBy('id', 'asc')->get();
         foreach ($formManage as $form) {
-            if (!array_key_exists($form->sfield, $mergeArray)) {
-                $mergeArray[$form->sfield] = $form->sfield;
-            }
-            if (!in_array($form->sfield, $mergeArray2)) {
-                $mergeArray2[] = $form->sfield;
+            $sfield = (string) $form->sfield;
+
+            if ($sfield === '') {
+                continue;
             }
 
+            if (!array_key_exists($sfield, $mergeArrayTYPE_PREFIX)) {
+                $mergeArrayTYPE_PREFIX[$sfield] = $sfield;
+            }
+
+            $mergeArrayTYPES[] = $sfield;
         }
-        $type = strtoupper($type);
-        if (!in_array($type, self::TYPES)) {
-            throw new \Exception('Undefined running number type.');
+
+        $mergeArrayTYPES = array_values(array_unique(array_map('strval', $mergeArrayTYPES)));
+        usort($mergeArrayTYPES, function ($a, $b) {
+            return (int) $a <=> (int) $b;
+        });
+
+        $normalizedPrefixes = [];
+        foreach ($mergeArrayTYPE_PREFIX as $key => $value) {
+            $normalizedKey = (string) $key;
+            $normalizedPrefixes[$normalizedKey] = (string) $value;
         }
+
+        uksort($normalizedPrefixes, function ($a, $b) {
+            return (int) $a <=> (int) $b;
+        });
+
+        $mergeArrayTYPE_PREFIX = $normalizedPrefixes;
+
+        $type = trim((string) $type);
+
+        if (!array_key_exists($type, $mergeArrayTYPE_PREFIX)) {
+            $normalizedType = ltrim($type, '0');
+
+            if ($normalizedType === '') {
+                $normalizedType = '0';
+            }
+
+            if (array_key_exists($normalizedType, $mergeArrayTYPE_PREFIX)) {
+                $type = $normalizedType;
+            } else {
+                throw new \Exception('Undefined running number type.');
+            }
+        }
+        // dd($type,$mergeArrayTYPE_PREFIX ,array_key_exists($type, $mergeArrayTYPE_PREFIX));
 
         $number = 0;
         $year = date('Y');
         $month = date('m');
-        $sda = explode("-", $sdate);
+        $sda = explode('-', $sdate);
         $ldate = Carbon::create($sda[0], $sda[1], $sda[2]); // Create a Carbon instance for the date 2023-09-30
         $lastDayOfMonth = $ldate->endOfMonth()->format('d');
 
@@ -184,14 +261,12 @@ class Receipt_RunningNumber extends Model
         $year = $sda[0];
 
         if ($day == $lastDayOfMonth && $month != '01') {
-            // $month = str_pad(intval($month) - 1, 2, '0', STR_PAD_LEFT); // Decrease month by 1
-            $month = str_pad(intval($month), 2, '0', STR_PAD_LEFT); // Decrease month by 1
+            $month = str_pad(intval($month), 2, '0', STR_PAD_LEFT);
             if ($month == '00') {
-                $month = '12'; // If month becomes 00 (December of previous year)
+                $month = '12';
                 $year--;
             }
         }
-
 
         if (!Receipt_RunningNumber::where('type', $type)->where('year', $year)->where('month', $month)->exists()) {
             Receipt_RunningNumber::create([
@@ -203,20 +278,16 @@ class Receipt_RunningNumber extends Model
         }
 
         $running_number = Receipt_RunningNumber::where('type', $type)->where('year', $year)->where('month', $month)->first();
-        //print_r($running_number);
-        //exit();
         $running_number->number++;
         $running_number->save();
+
         $number = $running_number->number;
         $number = str_pad($number, 3, '0', STR_PAD_LEFT);
 
-        // A-21-00001
-        if (strlen(Receipt_RunningNumber::TYPE_PREFIX[$type]) > 1) {
-            return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
-        } else {
-            return "0" . Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
+        if (strlen($mergeArrayTYPE_PREFIX[$type]) > 1) {
+            return $mergeArrayTYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
         }
 
-        //return Receipt_RunningNumber::TYPE_PREFIX[$type] . '' . date('y') . '01' . $number;
+        return '0' . $mergeArrayTYPE_PREFIX[$type] . '' . date('y') . '' . $month . '' . $number;
     }
 }

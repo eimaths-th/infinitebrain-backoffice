@@ -11,6 +11,7 @@ use App\Models\ReceiptForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class FormManageController extends Controller
 {
@@ -86,20 +87,51 @@ class FormManageController extends Controller
 
     public function create(Request $request)
     {
+
+        // dd($request->all());
         $validated = [];
         $fieldConfig = config('form_fields', []);
 
         if ($request->isMethod('post')) {
+            $formNameInput = $request->input('form_name');
+            $slugInput = $request->input('slug');
+
+            if (!$slugInput && $formNameInput) {
+                $slugInput = Str::slug($formNameInput);
+                $request->merge(['slug' => $slugInput]);
+            }
+
+            if (!$request->filled('slug')) {
+                $errorMessage = 'ระบบไม่สามารถสร้าง Slug ได้ กรุณากรอกชื่อฟอร์มใหม่อีกครั้ง';
+
+                if ($request->wantsJson() || $request->ajax()) {
+                    return response()->json([
+                        'status' => 'error',
+                        'errors' => ['slug' => [$errorMessage]],
+                    ], 422);
+                }
+
+                return redirect()->back()->withErrors(['slug' => $errorMessage])->withInput();
+            }
+
+            $slugRule = 'required|string|max:255|regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/|unique:forms_manage,slug';
+
+            if ($request->filled('id')) {
+                $slugRule = 'required|string|max:255|regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/|unique:forms_manage,slug,' . $request->id;
+            }
+
             $validator = Validator::make(
                 $request->all(),
                 [
-                    'route' => 'required|string|max:255',
+                    'slug' => $slugRule,
                     'form_name' => 'required|string|max:255',
                 ],
                 [
-                    'route.required' => 'กรุณาเลือก Route',
-                    'route.string' => 'รูปแบบ Route ไม่ถูกต้อง',
-                    'route.max' => 'Route ต้องไม่เกิน 255 ตัวอักษร',
+                    'slug.required' => 'กรุณากรอก Slug',
+                    'slug.string' => 'รูปแบบ Slug ไม่ถูกต้อง',
+                    'slug.max' => 'Slug ต้องไม่เกิน 255 ตัวอักษร',
+                    'slug.regex' => 'Slug ต้องเป็นตัวอักษรภาษาอังกฤษพิมพ์เล็ก ตัวเลข และเครื่องหมาย - เท่านั้น (เช่น my-form-name)',
+                    'slug.unique' => 'Slug นี้ถูกใช้งานแล้ว กรุณาเลือก Slug อื่น',
                     'form_name.required' => 'กรุณากรอกชื่อฟอร์ม',
                     'form_name.string' => 'รูปแบบชื่อฟอร์มไม่ถูกต้อง',
                     'form_name.max' => 'ชื่อฟอร์มต้องไม่เกิน 255 ตัวอักษร',
@@ -120,24 +152,38 @@ class FormManageController extends Controller
             $validated = $validator->validated();
         }
 
+        $existingForm = null;
+        $slug = $slug ?? null;
+        $form_route = $form_route ?? ($request->query('route') ?? null);
+
         if ($request->id) {
-            $id = $request->id;
-            $data = FormManage::find($id);
-            $form_route = $data->form_route;
-            $form_name = $data->form_name;
+            $existingForm = FormManage::find($request->id);
+
+            if ($existingForm) {
+                $form_route = $existingForm->form_route;
+                $form_name = $existingForm->form_name;
+                $slug = $existingForm->slug ?: Str::slug($existingForm->form_route ?? $existingForm->form_name);
+            }
         } else {
-            $form_route = $request->isMethod('post') ? ($validated['route'] ?? $request->input('route')) : $request->query('route');
-            $form_name = $request->isMethod('post') ? ($validated['form_name'] ?? $request->input('form_name')) : $request->query('form_name');
+            if (!$slug && $form_route) {
+                $slug = Str::slug($form_route);
+            }
         }
 
-        $data = FormManage::where([
-            'form_route' => $form_route,
-            // 'form_name' => $form_name
-        ])->first();
-        // dd($data);
-        if ($data) {
-            if (!$data->field_settings) {
-                $data->field_settings = collect($fieldConfig)->map(function ($config) {
+        if (!$existingForm) {
+            if ($slug) {
+                $existingForm = FormManage::where(function ($query) use ($slug) {
+                    $query->where('slug', $slug)
+                        ->orWhere('form_route', $slug);
+                })->first();
+            } elseif (!empty($form_route)) {
+                $existingForm = FormManage::where('form_route', $form_route)->first();
+            }
+        }
+
+        if ($existingForm) {
+            if (!$existingForm->field_settings) {
+                $existingForm->field_settings = collect($fieldConfig)->map(function ($config) {
                     return [
                         'enabled' => $config['default_enabled'] ?? true,
                         'required' => $config['default_required'] ?? false,
@@ -148,12 +194,18 @@ class FormManageController extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'โหลดข้อมูลฟอร์มสำเร็จ',
-                    'redirect' => route('create-form', ['id' => $data->id]),
+                    'redirect' => route('create-form', ['id' => $existingForm->id]),
                 ]);
             }
 
+            $data = $existingForm;
+
             return view('forms_manage.create', compact('form_route', 'data', 'fieldConfig'));
         }
+
+        $form_name = $request->input('form_name');
+        $slug = $request->input('slug');
+        $form_route = $request->input('slug');
 
         $lastForm = FormManage::orderBy('id', 'desc')->first();
         $nextSfield = $lastForm ? ($lastForm->sfield + 1) : 1;
@@ -161,6 +213,7 @@ class FormManageController extends Controller
         $dataCreate = FormManage::create([
             'form_name' => $form_name,
             'form_route' => $form_route,
+            'slug' => $slug,
             'sfield' => $nextSfield,
             'head_title' => $form_name . ' 2025 Registration Form',
             'news' => 'ท่านทราบข่าวสารการจัดสอบ ' . $form_name . ' จากช่องทางใด',
@@ -252,9 +305,45 @@ class FormManageController extends Controller
         // dd($request->all());
         $fieldConfig = config('form_fields', []);
 
+        $fieldSettingsInput = $request->input('field_settings', []);
+        $normalizedFieldSettings = [];
+
+        foreach ($fieldConfig as $fieldKey => $config) {
+            $setting = $fieldSettingsInput[$fieldKey] ?? [];
+
+            $enabled = array_key_exists('enabled', $setting)
+                ? (bool) $setting['enabled']
+                : ($config['default_enabled'] ?? true);
+
+            $required = array_key_exists('required', $setting)
+                ? (bool) $setting['required']
+                : ($config['default_required'] ?? false);
+
+            if (!$enabled) {
+                $required = false;
+            }
+
+            $normalizedFieldSettings[$fieldKey] = [
+                'enabled' => $enabled,
+                'required' => $required,
+            ];
+        }
+
+        $fieldRule = function (string $configKey, string $ruleBody) use ($normalizedFieldSettings) {
+            $setting = $normalizedFieldSettings[$configKey] ?? ['enabled' => true, 'required' => true];
+            $prefix = ($setting['required'] ?? false) ? 'required' : 'nullable';
+
+            if (!($setting['enabled'] ?? true)) {
+                $prefix = 'nullable';
+            }
+
+            return $prefix . '|' . $ruleBody;
+        };
+
         $rules = [
             'form_id' => 'required|exists:forms_manage,id',
-            'form_route' => 'required|string|max:255',
+            'form_route' => 'nullable|string|max:255',
+            'slug' => 'nullable|string|max:255|regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
             'form_name' => 'required|string|max:255',
             'referent_code' => 'nullable|string|max:50',
             'sfield' => 'required|string',
@@ -273,20 +362,20 @@ class FormManageController extends Controller
             'text_footer' => 'required|string',
             'text_warning' => 'required|string',
             'text_policy' => 'required|string',
-            'student_first_name' => 'required|string|max:50',
-            'student_last_name' => 'required|string|max:50',
-            'student_nick_name' => 'required|string|max:50',
-            'date_of_birth' => 'required|string|max:50',
-            'student_school_name' => 'required|string|max:100',
-            'student_grade' => 'required|string|max:50',
-            'package' => 'required|string|max:100',
-            'student_address' => 'required|string',
-            'student_zip' => 'required|string',
-            'parent_name' => 'required|string|max:100',
-            'parent_phone' => 'required|string|max:100',
-            'contact_email' => 'required|string|max:100',
-            'contact_email_detail' => 'required|string',
-            'news' => 'required|string',
+            'student_first_name' => $fieldRule('student_first_name', 'string|max:50'),
+            'student_last_name' => $fieldRule('student_last_name', 'string|max:50'),
+            'student_nick_name' => $fieldRule('student_nick_name', 'string|max:50'),
+            'date_of_birth' => $fieldRule('date_of_birth', 'string|max:50'),
+            'student_school_name' => $fieldRule('student_school_name', 'string|max:100'),
+            'student_grade' => $fieldRule('student_grade', 'string|max:50'),
+            'package' => $fieldRule('package', 'string|max:100'),
+            'student_address' => $fieldRule('student_address', 'string'),
+            'student_zip' => $fieldRule('student_zip', 'string'),
+            'parent_name' => $fieldRule('parent_name', 'string|max:100'),
+            'parent_phone' => $fieldRule('parent_phone', 'string|max:100'),
+            'contact_email' => $fieldRule('contact_email', 'string|max:100'),
+            'contact_email_detail' => $fieldRule('contact_email_detail', 'string'),
+            'news' => $fieldRule('news', 'string'),
             'optionGrade' => 'nullable|array',
             'optionGrade.*' => 'nullable|string|max:100',
             'optionValue' => 'nullable|array',
@@ -300,8 +389,8 @@ class FormManageController extends Controller
             'brand' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'image_payment' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'admission_criteria_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'student_photo' => 'required|string',
-            'student_slip_photo' => 'required|string',
+            'student_photo' => $fieldRule('student_photo', 'string'),
+            'student_slip_photo' => $fieldRule('student_slip_photo', 'string'),
         ];
 
         // $messages = [];
@@ -512,6 +601,7 @@ class FormManageController extends Controller
         $form_manage->update([
             'form_name' => $request->form_name,
             'form_route' => $request->form_route,
+            'slug' => $request->slug ?? $form_manage->slug,
             'referent_code' => $request->referent_code,
             'sfield' => $request->sfield,
             'title' => $request->title,

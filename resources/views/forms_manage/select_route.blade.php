@@ -54,6 +54,8 @@
                         <option value="admin-test-field">admin-test-field</option>
                         <option value="award-ceremony-isocsea">award-ceremony-isocsea</option>
                         <option value="imocsea-national-round">imocsea-national-round</option>
+                        <option value="spelling-bee-islo">spelling-bee-islo</option>
+
                     </select>
                 </div>
             </div>

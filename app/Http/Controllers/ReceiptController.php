@@ -34,7 +34,7 @@ class ReceiptController extends Controller
     const BAHT_TEXT_POINT = 'จุด';
     const sfielda = array(
         '0' => 'reward',
-        '1' => null,
+        // '1' => null,
         '2' => 'GMEC',
         '3' => null,
         '4' => 'IMOCSEA',
@@ -64,10 +64,12 @@ class ReceiptController extends Controller
         '28' => 'imocsea_special',
         '29' => 'stemco_science',
         '30' => 'advance_english_grammar',
+        '31' => 'isocsea_imocsea_national_round_2025 ( มา )',
+        '32' => 'isocsea_imocsea_national_round_2025 ( ไม่มา )'
     );
     const sfieldas = array(
         '0' => 'IMG Reward',
-        '1' => null,
+        // '1' => null,
         '2' => 'G',
         '3' => null,
         '4' => 'J',
@@ -97,6 +99,8 @@ class ReceiptController extends Controller
         '28' => 'imocsea_special',
         '29' => 'stemco_science',
         '30' => 'advance_english_grammar',
+        '31' => 'isocsea_imocsea_national_round_2025',
+        '32' => 'isocsea_imocsea_national_round',
     );
     const thmonth = array(
         "",
@@ -703,14 +707,9 @@ class ReceiptController extends Controller
 
         // dd(self::sfielda);
         // check key is exist
-        if (array_key_exists($request->sfield, self::sfielda)) {
-            $sfielda = self::sfielda;
-        } else {
-            // merge array
-            $sfielda = array_merge(self::sfielda, [
-                $sfieldForm->sfield => $sfieldForm->form_name]);
-        }
-
+      
+        $sfielda = self::sfielda;
+        $sfielda[$sfieldForm->sfield] = $sfieldForm->form_name;
         // dd(self::sfielda,$sfielda);
 
 
