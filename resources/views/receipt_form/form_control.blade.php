@@ -77,8 +77,15 @@
                                 <tr>
                                     <td align="center"> {{ $key + 1 }}</td>
                                     <td>
-                                        <a target="_blank" class="f5 text-black"
-                                            href="{{ route($control->route) }}">{{ route($control->route) }}</a>
+                                        @if (Route::has($control->route))
+                                            <a target="_blank" class="f5 text-black"
+                                                href="{{ route($control->route) }}">{{ route($control->route) }}</a>
+                                        @else
+                                            <a target="_blank" class="f5 text-black"
+                                                href="{{ route('form.show', ['slug' => $control->route]) }}">
+                                                {{ route('form.show', ['slug' => $control->route]) }}
+                                            </a>
+                                        @endif
                                     </td>
                                     <td>{{ $control->opening_time }}</td>
                                     <td>{{ $control->closing_time }}</td>
