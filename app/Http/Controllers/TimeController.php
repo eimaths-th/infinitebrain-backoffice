@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FormManage;
 use App\Models\OpeningClosingTime;
 use Illuminate\Http\Request;
 
@@ -36,7 +37,13 @@ class TimeController extends Controller
     }
     public function formsTimes()
     {
-        return view('route_control');
+        $formRoutes = FormManage::whereNotNull('slug')
+            ->orderBy('form_name')
+            ->get(['id', 'form_name', 'slug']);
+
+        return view('route_control', [
+            'formRoutes' => $formRoutes
+        ]);
     }
     public function formsControl()
     {
@@ -48,10 +55,10 @@ class TimeController extends Controller
         foreach ($controls as $route => $times) {
             // หาสนามใหม่ล่าสุด
             $latestTime = $times->first();
-            
+
             // ตรวจสอบว่าสนามใหม่ล่าสุดปิดไปแล้วหรือยัง
             $closingDateTime = $now->copy()->setDateTimeFrom($latestTime->closing_time);
-            
+
             if ($now > $closingDateTime) {
                 // ถ้าสนามใหม่ล่าสุดปิดไปแล้ว ให้ทุกสนามของ route นี้เป็น Offline
                 foreach ($times as $time) {
@@ -62,7 +69,7 @@ class TimeController extends Controller
                 foreach ($times as $time) {
                     $openingDateTime = $now->copy()->setDateTimeFrom($time->opening_time);
                     $closingDateTime = $now->copy()->setDateTimeFrom($time->closing_time);
-                    
+
                     if ($now < $openingDateTime || $now > $closingDateTime) {
                         $status = 'Offline';
                         $time->update(['status' => $status]);
@@ -73,7 +80,7 @@ class TimeController extends Controller
                 }
             }
         }
-        
+
         $control = OpeningClosingTime::orderBy('id', 'desc')
             ->get();
         return view('receipt_form.form_control', [
