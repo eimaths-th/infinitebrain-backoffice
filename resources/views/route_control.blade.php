@@ -60,7 +60,8 @@
                     <label for="Parent">Route :</label><br>
                     <select style="width: 100%;" class="form-control" id="route" name="route" required>
                         <option value="">Select Route</option>
-                        {{-- <option value="advance_english_grammar">advance_english_grammar</option>
+                        <option value="spelling-bee-islo">spelling-bee-islo</option>
+                        <option value="advance_english_grammar">advance_english_grammar</option>
                         <option value="admin-test-field">admin-test-field</option>
                         <option value="asiarope">asiarope</option>
                         <option value="award-ceremony-isocsea">award-ceremony-isocsea</option>
@@ -89,11 +90,10 @@
                         <option value="reward">reward</option>
                         <option value="seacso">seacso</option>
                         <option value="stemco_science">stemco_science</option>
-                        <option value="test_field">test_field</option> --}}
-                        <option value="spelling-bee-islo">spelling-bee-islo</option>
-                        @foreach ($formRoutes as $formRoute)
+                        <option value="test_field">test_field</option>
+                        {{-- @foreach ($formRoutes as $formRoute)
                             <option value="{{ $formRoute->slug }}">{{ $formRoute->form_name }}</option>
-                        @endforeach
+                        @endforeach --}}
                     </select>
 
                 </div>
