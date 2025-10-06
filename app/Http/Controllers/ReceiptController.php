@@ -1720,6 +1720,8 @@ class ReceiptController extends Controller
 
     public function print_field(Request $request)
     {
+        [$mergedSfielda, $mergedSfieldas] = $this->getMergedSfieldMappings();
+
         $template = $request->get('printFieldTemplate');
 
         $this->check_permission();
@@ -1807,7 +1809,7 @@ class ReceiptController extends Controller
 
             $ret_receipt[$ymcode]['receipt_submission_date'] = $ymcode;
             $ret_receipt[$ymcode]['receipt_submission_month'] = self::enmonth[(int)$a_month[1]];
-            $ret_receipt[$ymcode]['field_code'] = self::sfieldas[$sfield] . " " . $ymcode;
+            $ret_receipt[$ymcode]['field_code'] = $mergedSfieldas[$sfield] . " " . $ymcode;
             $ret_receipt[$ymcode]['receipt_number'][$i] = $result->receipt_number;
             $maxdate = max(array_keys($ret_receipt[$ymcode]['receipt_number']));
             $ret_receipt[$ymcode]['receipt_numbers'] = $ret_receipt[$ymcode]['receipt_number'][0] . ' - ' . $ret_receipt[$ymcode]['receipt_number'][$maxdate];
@@ -1905,7 +1907,6 @@ class ReceiptController extends Controller
         //print_r($ret_receipt);
         //exit();
         // dd($total_price);
-        [$mergedSfielda, $mergedSfieldas] = $this->getMergedSfieldMappings();
         if ($total_price > 1) {
             # code...
             return view($viewr)
