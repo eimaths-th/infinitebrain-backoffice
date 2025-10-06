@@ -63,12 +63,14 @@
                         <option value="spelling-bee-islo">spelling-bee-islo</option>
                         <option value="advance_english_grammar">advance_english_grammar</option>
                         <option value="admin-test-field">admin-test-field</option>
-                        <option value="asiarope">asiarope</option>
+                        <option value="gelosea">gelosea</option>
+                        <option value="isocsea-imocsea-national-round">(ไม่มา) isocsea-imocsea-national-round</option>
+                        <option value="isocsea-imocsea-national-round-2025">(มา) isocsea-imocsea-national-round-2025</option>
+                        {{-- <option value="asiarope">asiarope</option>
                         <option value="award-ceremony-isocsea">award-ceremony-isocsea</option>
                         <option value="cambridge">cambridge</option>
                         <option value="coding-olympics">CODING OLYMPICS</option>
                         <option value="copernicus">COPERNICUS OLYMPIAD</option>
-                        <option value="gelosea">gelosea</option>
                         <option value="gmec">gmec</option>
                         <option value="huaxiacup">huaxiacup</option>
                         <option value="huaxiacup-final-round">China-Mathematical-Olympiad-Final</option>
@@ -90,10 +92,10 @@
                         <option value="reward">reward</option>
                         <option value="seacso">seacso</option>
                         <option value="stemco_science">stemco_science</option>
-                        <option value="test_field">test_field</option>
-                        {{-- @foreach ($formRoutes as $formRoute)
+                        <option value="test_field">test_field</option> --}}
+                        @foreach ($formRoutes as $formRoute)
                             <option value="{{ $formRoute->slug }}">{{ $formRoute->form_name }}</option>
-                        @endforeach --}}
+                        @endforeach
                     </select>
 
                 </div>
