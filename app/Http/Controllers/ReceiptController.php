@@ -133,6 +133,38 @@ class ReceiptController extends Controller
         "December"
     );
 
+    private function getMergedSfieldMappings(): array
+    {
+        $sfielda = self::sfielda;
+        $sfieldas = self::sfieldas;
+
+        $forms = FormManage::orderBy('sfield', 'asc')->get(['sfield', 'form_name', 'form_route']);
+
+        foreach ($forms as $form) {
+            if ($form->sfield === null) {
+                continue;
+            }
+
+            $key = (string)$form->sfield;
+            $formName = trim((string)($form->form_name ?? ''));
+            $formRoute = trim((string)($form->form_route ?? ''));
+
+            if ($formName === '' && $formRoute === '') {
+                continue;
+            }
+
+            if (!array_key_exists($key, $sfielda) || empty($sfielda[$key])) {
+                $sfielda[$key] = $formName !== '' ? $formName : $formRoute;
+            }
+
+            if (!array_key_exists($key, $sfieldas) || empty($sfieldas[$key])) {
+                $sfieldas[$key] = $formRoute !== '' ? $formRoute : $formName;
+            }
+        }
+
+        return [$sfielda, $sfieldas];
+    }
+
     private function convertDigit($digit)
     {
         switch ($digit) {
@@ -707,7 +739,7 @@ class ReceiptController extends Controller
 
         // dd(self::sfielda);
         // check key is exist
-      
+
         $sfielda = self::sfielda;
         $sfielda[$sfieldForm->sfield] = $sfieldForm->form_name;
         // dd(self::sfielda,$sfielda);
@@ -1458,13 +1490,15 @@ class ReceiptController extends Controller
         //print_r($ret_receipt);
         //exit();
 
+        [$mergedSfielda, $mergedSfieldas] = $this->getMergedSfieldMappings();
 
+        dd($mergedSfielda, $mergedSfieldas);
 
-
-        return view($viewr)->with(['sfield' => $sfield])->with(['sfielda' =>  self::sfielda])
+        return view($viewr)->with(['sfield' => $sfield])
             ->with(['template' =>  $template])
             ->with(['metaCheck' =>  $metaCheck])
-            ->with(['sfieldas' =>  self::sfieldas])
+            ->with(['sfieldas' =>  $mergedSfieldas])
+            ->with(['sfielda' =>  $mergedSfielda])
             ->with(['ymcode' =>  $ymcode])
             ->with(['thaiyear' =>  $thai_year])
             ->with(['thaimonth' =>  $thai_month])
@@ -1663,9 +1697,9 @@ class ReceiptController extends Controller
 
         //print_r($ret_receipt);
         //exit();
-
-        return view($viewr)->with(['sfield' => $sfield])->with(['sfielda' =>  self::sfielda])
-            ->with(['sfieldas' =>  self::sfieldas])
+        [$mergedSfielda, $mergedSfieldas] = $this->getMergedSfieldMappings();
+        return view($viewr)->with(['sfield' => $sfield])->with(['sfielda' =>  $mergedSfielda])
+            ->with(['sfieldas' =>  $mergedSfieldas])
             ->with(['ymcode' =>  $ymcode])
             ->with(['template' =>  $template])
             ->with(['metaCheck' =>  $metaCheck])
@@ -1871,12 +1905,13 @@ class ReceiptController extends Controller
         //print_r($ret_receipt);
         //exit();
         // dd($total_price);
+        [$mergedSfielda, $mergedSfieldas] = $this->getMergedSfieldMappings();
         if ($total_price > 1) {
             # code...
             return view($viewr)
                 ->with(['sfield' => $sfield])
-                ->with(['sfielda' =>  self::sfielda])
-                ->with(['sfieldas' =>  self::sfieldas])
+                ->with(['sfielda' =>  $mergedSfielda])
+                ->with(['sfieldas' =>  $mergedSfieldas])
                 ->with(['data' => $ret_receipt])
                 ->with(['template' =>  $template])
                 ->with(['metaCheck' =>  $metaCheck])
@@ -1899,8 +1934,8 @@ class ReceiptController extends Controller
 
             return view($viewr)
                 ->with(['sfield' => $sfield])
-                ->with(['sfielda' =>  self::sfielda])
-                ->with(['sfieldas' =>  self::sfieldas])
+                ->with(['sfielda' =>  $mergedSfielda])
+                ->with(['sfieldas' =>  $mergedSfieldas])
                 ->with(['data' => $ret_receipt])
 
                 ->with(['ymcode' =>  ' '])
