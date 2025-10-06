@@ -95,10 +95,10 @@
                     <img class="logo-brand" src="{{ asset('images/infinite-b-icon-2.png') }}" alt="logo">
                     <button class="hidden" id="login">Sign In</button>
                 </div>
-                {{-- <div class="toggle-panel toggle-right">
+                <div class="toggle-panel toggle-right">
                     <img class="logo-brand" src="{{ asset('images/infinite-b-icon-2.png') }}" alt="logo">
-                    <button class="hidden" id="register">Sign Up</button>
-                </div> --}}
+                    {{-- <button class="hidden" id="register">Sign Up</button> --}}
+                </div>
             </div>
         </div>
     </div>
