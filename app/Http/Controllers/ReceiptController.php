@@ -1492,7 +1492,7 @@ class ReceiptController extends Controller
 
         [$mergedSfielda, $mergedSfieldas] = $this->getMergedSfieldMappings();
 
-        dd($mergedSfielda, $mergedSfieldas);
+        // dd($mergedSfielda, $mergedSfieldas);
 
         return view($viewr)->with(['sfield' => $sfield])
             ->with(['template' =>  $template])
