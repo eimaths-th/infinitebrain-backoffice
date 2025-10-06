@@ -4,16 +4,11 @@
 
 @section('content')
     <div class="container" id="container">
-        <div class="form-container sign-up">
+        {{-- <div class="form-container sign-up">
             <form method="POST" action="{{ route('register.custom') }}">
                 @csrf
                 <h1>Create Account</h1>
-                {{-- <div class="social-icons">
-                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div> --}}
+
                 <span>or use your email for registeration</span>
                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name"
                     value="{{ old('name') }}" autocomplete="name" placeholder="Name" autofocus>
@@ -44,7 +39,7 @@
 
                 <button>Sign Up</button>
             </form>
-        </div>
+        </div> --}}
         <div class="form-container sign-in">
             <form method="POST" action="{{ route('login.custom') }}">
 
@@ -100,10 +95,10 @@
                     <img class="logo-brand" src="{{ asset('images/infinite-b-icon-2.png') }}" alt="logo">
                     <button class="hidden" id="login">Sign In</button>
                 </div>
-                <div class="toggle-panel toggle-right">
+                {{-- <div class="toggle-panel toggle-right">
                     <img class="logo-brand" src="{{ asset('images/infinite-b-icon-2.png') }}" alt="logo">
                     <button class="hidden" id="register">Sign Up</button>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
