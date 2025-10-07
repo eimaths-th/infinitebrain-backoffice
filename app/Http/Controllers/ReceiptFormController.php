@@ -20,7 +20,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Receipt_RunningNumber;
 use App\Models\Receipt_Customer_RunningNumber;
-use Mail;
+// use Mail;
 use App\Mail\ContactMail;
 use App\Models\FormManage;
 use App\Models\FormPakages;
@@ -28,6 +28,7 @@ use App\Models\OpeningClosingTime;
 use App\Models\ReferentCode;
 use App\Models\ReferentURL;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Mail;
 // use App\Exports\ExportUser;
 
 class ReceiptFormController extends Controller
@@ -1181,6 +1182,8 @@ class ReceiptFormController extends Controller
         $rdata->save();
 
         //secound description
+
+
         if ($request->get('sfield') == 11) {
             if (str_contains($request->get('description'), 'Primary')) {
                 $sdes = 'ค่าลงทะเบียนระดับประถม';
@@ -1210,6 +1213,14 @@ class ReceiptFormController extends Controller
                     $sdes = 'สมัครสอบไม่รวมติว';
                 }
             }
+        }
+
+        $formSfield = FormManage::where('sfield', $request->get('sfield'))->first();
+        if ($formSfield) {
+
+            $sdes = '';
+        } else {
+            $sdes = $sdes;
         }
 
         $rtdata = new ReceiptDetail([
@@ -1641,7 +1652,7 @@ class ReceiptFormController extends Controller
             $fileas = rtrim($fileas, "|");
         } else {
             # code...
-            $fileas = '';
+            $fileas = null;
             if ($request->has('imgFiles')) {
                 $filesa = (array) $request->get('imgFiles', []);
                 $fileas = "";
@@ -1660,9 +1671,9 @@ class ReceiptFormController extends Controller
             }
             if ($request->get('sfield') == '23') {
                 # code...
-                $filebs = '';
+                $filebs = null;
             } else {
-                $filebs = '';
+                $filebs = null;
                 if ($request->has('imgFiles2')) {
                     $filesb = (array) $request->get('imgFiles2', []);
                     $filebs = "";
