@@ -741,8 +741,13 @@ class ReceiptController extends Controller
         // check key is exist
 
         $sfielda = self::sfielda;
-        $sfielda[$sfieldForm->sfield] = $sfieldForm->form_name;
-        // dd(self::sfielda,$sfielda);
+
+        if ($sfieldForm) {
+            $sfielda = array_replace($sfielda, [
+                (string) $sfieldForm->sfield => $sfieldForm->form_name,
+            ]);
+        }
+        // dd($sfielda);
 
 
 
