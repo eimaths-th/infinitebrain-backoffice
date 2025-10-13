@@ -497,7 +497,7 @@
                                                                 <td class="pad">
                                                                     <div
                                                                         style="direction:ltr;font-family:Inter, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
-                                                                        <p style="margin: 0;">{{ $data->package }}</p>
+                                                                        <p style="margin: 0;">{{ $data->formPackage->package ??  $data->package }}</p>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -983,6 +983,7 @@
                             dd('error');
                         @endphp --}}
                     @elseif ($data->sfield == '18' || $data->sfield == '19')
+                        @if ($data->first_name || $data->last_name)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
@@ -1024,8 +1025,8 @@
                                                                 <td class="pad">
                                                                     <div
                                                                         style="direction:ltr;font-family:Inter, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
-                                                                        <p style="margin: 0;">{{ $data->first_name }}
-                                                                            {{ $data->last_name }}</p>
+                                                                        <p style="margin: 0;">{{ $data->first_name ?? ''}}
+                                                                            {{ $data->last_name ?? '' }}</p>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -1038,6 +1039,8 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
+                        @if ($data->nick_name)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-5"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
@@ -1093,6 +1096,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
+
+                        @if ($data->birth_date)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-6"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
@@ -1147,6 +1153,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
+
+                        @if ($data->school_name)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
@@ -1202,6 +1211,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
+
+                        @if ($data->grade)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
@@ -1256,7 +1268,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
 
+                        @if ($data->package)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
@@ -1299,7 +1313,7 @@
                                                                 <td class="pad">
                                                                     <div
                                                                         style="direction:ltr;font-family:Inter, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
-                                                                        <p style="margin: 0;">{{ $data->package }}</p>
+                                                                        <p style="margin: 0;">{{ $data->formPackage->package ??  $data->package }}</p>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -1312,7 +1326,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
 
+                        @if ($data->name_parent)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
@@ -1369,7 +1385,8 @@
                                 </tr>
                             </tbody>
                         </table>
-
+                        @endif
+                        @if ($data->street_address || $data->postcode)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
@@ -1412,8 +1429,8 @@
                                                                     <div
                                                                         style="direction:ltr;font-family:Inter, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
                                                                         <p style="margin: 0;">
-                                                                            {{ $data->street_address }}
-                                                                            / {{ $data->postcode }}</p>
+                                                                            {{ $data->street_address ?? '' }}
+                                                                            / {{ $data->postcode ?? '' }}</p>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -1426,7 +1443,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
 
+                        @if ($data->mobile)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
@@ -1482,7 +1501,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
 
+                        @if ($data->email)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
@@ -1539,7 +1560,9 @@
                                 </tr>
                             </tbody>
                         </table>
-                        @if ($url1)
+                        @endif
+
+                        @if ($data->photo_att)
                             <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                                 role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
                                 width="100%">
@@ -1599,7 +1622,7 @@
                             </table>
                         @endif
 
-
+                        @if ($data->file_att)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
@@ -1656,7 +1679,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
                     @else
+                        @if ($data->last_name)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-4"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                             <tbody>
@@ -1712,6 +1737,8 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
+                        @if ($data->nick_name)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-5"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
                             width="100%">
@@ -1768,10 +1795,12 @@
                                 </tr>
                             </tbody>
                         </table>
-
+                        @endif
                         <!-- รางวัล -->
                         @if ($data->sfield == '21')
                         @elseif ($data->sfield == '31' || $data->sfield == '32')
+
+                        @if ($data->award)
                             <table align="center" border="0" cellpadding="0" cellspacing="0"
                                 class="row row-6" role="presentation"
                                 style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
@@ -1835,7 +1864,9 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            @endif
                         @else
+                            @if ($data->birth_date)
                             <table align="center" border="0" cellpadding="0" cellspacing="0"
                                 class="row row-6" role="presentation"
                                 style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
@@ -1893,9 +1924,11 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            @endif
                         @endif
 
                         <!-- School -->
+                        @if ($data->school_name)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
                             width="100%">
@@ -1953,7 +1986,10 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
+
                         <!-- Grade -->
+                        @if ($data->grade)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
                             width="100%">
@@ -2009,10 +2045,13 @@
                                 </tr>
                             </tbody>
                         </table>
+                        @endif
 
                         <!-- Packages -->
                         @if ($data->sfield == '23')
                         @else
+
+                            @if ($data->package)
                             <table align="center" border="0" cellpadding="0" cellspacing="0"
                                 class="row row-7" role="presentation"
                                 style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
@@ -2057,7 +2096,7 @@
                                                                         <div
                                                                             style="direction:ltr;font-family:Inter, sans-serif;font-size:12px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
                                                                             <p style="margin: 0;">
-                                                                                {{ $data->package }}
+                                                                                {{ $data->formPackage->package ??  $data->package }}
                                                                             </p>
                                                                         </div>
                                                                     </td>
@@ -2071,9 +2110,12 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            @endif
                         @endif
 
                         <!-- PackaParent's nameges -->
+                        @if ($data->name_parent)
+
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
                             width="100%">
@@ -2133,11 +2175,12 @@
                                 </tr>
                             </tbody>
                         </table>
-
+                        @endif
                         <!-- Address -->
 
                         @if ($data->sfield == '31' || $data->sfield == '32')
                         @else
+                        @if ($data->street_address || $data->postcode)
                             <table align="center" border="0" cellpadding="0" cellspacing="0"
                                 class="row row-7" role="presentation"
                                 style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
@@ -2182,8 +2225,8 @@
                                                                         <div
                                                                             style="direction:ltr;font-family:Inter, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
                                                                             <p style="margin: 0;">
-                                                                                {{ $data->street_address }}
-                                                                                / {{ $data->postcode }}</p>
+                                                                                {{ $data->street_address ?? '' }}
+                                                                                / {{ $data->postcode ?? '' }}</p>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
@@ -2196,9 +2239,11 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            @endif
                         @endif
 
                         <!-- Phone -->
+                        @if ($data->mobile)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-8"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
                             width="100%">
@@ -2242,7 +2287,7 @@
                                                                 <td class="pad">
                                                                     <div
                                                                         style="direction:ltr;font-family:Inter, sans-serif;font-size:14px;font-weight:400;letter-spacing:0px;line-height:180%;text-align:left;mso-line-height-alt:25.2px;">
-                                                                        <p style="margin: 0;">{{ $data->mobile }}</p>
+                                                                        <p style="margin: 0;">{{ $data->mobile ?? '' }}</p>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -2255,8 +2300,10 @@
                                 </tr>
                             </tbody>
                         </table>
-
+                        @endif
                         <!-- Email -->
+
+                        @if ($data->email)
                         <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-7"
                             role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
                             width="100%">
@@ -2314,10 +2361,11 @@
                                 </tr>
                             </tbody>
                         </table>
-
+                        @endif
                         <!-- อัพโหลดรูปภาพผู้สมัคร -->
                         @if ($data->sfield == '23')
                         @else
+                            @if ($data->photo_att)
                             <table align="center" border="0" cellpadding="0" cellspacing="0"
                                 class="row row-8" role="presentation"
                                 style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
@@ -2375,10 +2423,11 @@
                                     </tr>
                                 </tbody>
                             </table>
-
+                            @endif
 
                             @if ($data->sfield == '31' || $data->sfield == '32')
                             @else
+                            @if ($data->file_att)
                                 <table align="center" border="0" cellpadding="0" cellspacing="0"
                                     class="row row-7" role="presentation"
                                     style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
@@ -2438,9 +2487,10 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                @endif
                             @endif
 
-
+                            @if ($data->news_form)
                             <table align="center" border="0" cellpadding="0" cellspacing="0"
                                 class="row row-8" role="presentation"
                                 style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; margin-bottom:100px"
@@ -2603,6 +2653,7 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            @endif
                         @endif
 
                     @endif
