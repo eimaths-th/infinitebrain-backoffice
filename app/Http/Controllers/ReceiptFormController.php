@@ -624,6 +624,7 @@ class ReceiptFormController extends Controller
                 "receipt_forms.generate as receipt_generate",
                 "receipt_forms.photo_att as file",
                 "receipt_forms.referent_code as referent_code",
+                "receipt_forms.email as email",
 
             )
                 ->where('receipt_forms.sfield', $request->sfield)
@@ -707,6 +708,11 @@ class ReceiptFormController extends Controller
                         $html .= '<a href="#" onclick="toastr.success(\'ออก Receive แล้วไม่สามารถลบได้\', {
                             timeOut: 5000
                         });" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</a>';
+                    }
+
+                    // Add Resend Mail button
+                    if (!in_array($row->receipt_sfield, [0, 17], true) && $row->email) {
+                        $html .= ' <a href="#" class="btn btn-xs btn-info btn-resend-mail" data-id="' . $row->receipt_id . '"><i class="fa fa-envelope"></i> Resend Mail</a>';
                     }
 
                     return $html;
@@ -746,6 +752,7 @@ class ReceiptFormController extends Controller
                 "receipt_forms.generate as receipt_generate",
                 "receipt_forms.photo_att as file",
                 "receipt_forms.referent_code as referent_code",
+                "receipt_forms.email as email",
 
             )
                 ->where('receipt_forms.sfield', $request->sfield)
@@ -829,6 +836,11 @@ class ReceiptFormController extends Controller
                         $html .= '<a href="#" onclick="toastr.success(\'ออก Receive แล้วไม่สามารถลบได้\', {
                             timeOut: 5000
                         });" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</a>';
+                    }
+
+                    // Add Resend Mail button
+                    if (!in_array($row->receipt_sfield, [0, 17], true) && $row->email) {
+                        $html .= ' <a href="#" class="btn btn-xs btn-info btn-resend-mail" data-id="' . $row->receipt_id . '"><i class="fa fa-envelope"></i> Resend Mail</a>';
                     }
 
                     return $html;
@@ -1748,6 +1760,23 @@ class ReceiptFormController extends Controller
 
 
         return redirect('/form/completed/' . $route);
+    }
+
+    public function reSendMail($id)
+    {
+        //
+        $receiptForm = ReceiptForm::find($id);
+        $adminEmail = $receiptForm->email;
+        if (!in_array($receiptForm->sfield, [0, 17], true) && $adminEmail) {
+            if (filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
+                Mail::to($adminEmail)->send(new ContactMail($receiptForm));
+            }
+        }
+        $receiptForm->save();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Mail sent successfully',
+        ]);
     }
 
     /**
