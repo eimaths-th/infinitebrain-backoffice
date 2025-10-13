@@ -1481,6 +1481,46 @@
                 }); //end ajax
             })
 
+            $(document).on('click', '.btn-resend-mail', function(e) {
+                e.preventDefault();
+                
+                if (!confirm("คุณต้องการส่งอีเมลอีกครั้งหรือไม่?")) return;
+
+                var id = $(this).data('id');
+                var btn = $(this);
+                
+                if (!id) return;
+
+                btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Sending...');
+
+                $.ajax({
+                    type: "POST",
+                    dataType: 'JSON',
+                    url: "receipts_form/resend-mail/" + id,
+                    data: {
+                        _token: token
+                    },
+                    success: function(data) {
+                        btn.prop('disabled', false).html('<i class="fa fa-envelope"></i> Resend Mail');
+                        if (data.status === 'success') {
+                            toastr.success(data.message, {
+                                timeOut: 5000
+                            });
+                        } else {
+                            toastr.error(data.message || 'Failed to send email', {
+                                timeOut: 5000
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        btn.prop('disabled', false).html('<i class="fa fa-envelope"></i> Resend Mail');
+                        toastr.error('เกิดข้อผิดพลาดในการส่งอีเมล', {
+                            timeOut: 5000
+                        });
+                    }
+                });
+            })
+
         })
 
 
