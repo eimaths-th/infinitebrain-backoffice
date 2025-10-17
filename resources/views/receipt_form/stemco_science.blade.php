@@ -1,4 +1,4 @@
-@extends('layouts.form')
+﻿@extends('layouts.form')
 
 @section('style')
 <style>
@@ -1490,7 +1490,8 @@
     }
 
     const valid_option = {
-        onkeyup: false,
+            ignore: ":hidden:not([required]), :disabled",
+            onkeyup: false,
         showErrors: function(errorMap, errorList) {
             var errors = this.numberOfInvalids();
             /* if (!document.getElementsByName('imgFiles[]').length) {

@@ -33,8 +33,8 @@
 
         @if ($message = Session::get('success'))
             <!--<div class="alert alert-success">
-                                                                                                        <p>{{ $message }}</p>
-                                                                                        </div>-->
+                                                                                                            <p>{{ $message }}</p>
+                                                                                            </div>-->
             <script>
                 toastr.success('{{ $message }}', {
                     timeOut: 5000
@@ -44,8 +44,8 @@
 
         @if ($message = Session::get('error'))
             <!--<div class="alert alert-success">
-                                                                                                                <p>{{ $message }}</p>
-                                                                                                                    </div>-->
+                                                                                                                    <p>{{ $message }}</p>
+                                                                                                                        </div>-->
             <script>
                 toastr.error('{{ $message }}', {
                     timeOut: 5000
@@ -63,8 +63,18 @@
                         // dd($sfielda,request()->get('sfield'));
                     @endphp
                     <div>
-                        {{ $sfielda[(int) (request()->get('sfield'))] }} Receipts
-                        <div class="page-title-subheading">Infinite Brain Receipt Data</div>
+                        @if (isset($sfielda[request()->get('sfield')]) && $sfielda[request()->get('sfield')] === 'neos')
+                            Receipts
+                            <div class="page-title-subheading">Infinite Brain Receipt Data</div>
+                        @else
+                            {{ isset($sfielda[request()->get('sfield')]) ? $sfielda[request()->get('sfield')] : $form->form_name }}
+                            Receipts
+                            <div class=
+                            "page-title-subheading">Infinite Brain Receipt Data
+                            </div>
+                        @endif
+                        {{-- {{ $sfielda[(int) request()->get('sfield')] }} Receipts
+                        <div class="page-title-subheading">Infinite Brain Receipt Data</div> --}}
                     </div>
                 </div>
                 <div class="page-title-actions">
@@ -159,7 +169,8 @@
                                 @foreach ($referent_codes as $referent_code)
                                     <option value="{{ $referent_code->referent_code }}"
                                         {{ request('referent_code') == $referent_code->referent_code ? 'selected' : '' }}>
-                                        {{ $referent_code->referent_code }} — ({{ $referent_code->referent_name }})</option>
+                                        {{ $referent_code->referent_code }} — ({{ $referent_code->referent_name }})
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -714,21 +725,21 @@
                         </div>
 
                         <!--<div class="form-row">
-                                                                                                    <div class="col-md-6">
-                                                                                                        <div class="position-relative form-group">
-                                                                                                            <label for="City">City:</label>
-                                                                                                            <input type="text" class="form-control" name="city" id="AddCity"
-                                                                                                                value="">
+                                                                                                        <div class="col-md-6">
+                                                                                                            <div class="position-relative form-group">
+                                                                                                                <label for="City">City:</label>
+                                                                                                                <input type="text" class="form-control" name="city" id="AddCity"
+                                                                                                                    value="">
+                                                                                                            </div>
                                                                                                         </div>
-                                                                                                    </div>
-                                                                                                    <div class="col-md-6">
-                                                                                                        <div class="position-relative form-group">
-                                                                                                            <label for="Province">Province:</label>
-                                                                                                            <input type="text" class="form-control" name="province" id="AddProvince"
-                                                                                                                value="">
+                                                                                                        <div class="col-md-6">
+                                                                                                            <div class="position-relative form-group">
+                                                                                                                <label for="Province">Province:</label>
+                                                                                                                <input type="text" class="form-control" name="province" id="AddProvince"
+                                                                                                                    value="">
+                                                                                                            </div>
                                                                                                         </div>
-                                                                                                    </div>
-                                                                                                </div>-->
+                                                                                                    </div>-->
                         <div class="col-md-6">
                             <div class="position-relative form-group">
                                 <label for="City">City:</label>
@@ -770,9 +781,9 @@
                         <textarea class="form-control" name="address" id="AddAddress"></textarea>
                     </div>
                     <!--<div class="form-group">
-                                                                                                        <label for="Name">Street Address 2:</label>
-                                                                                                        <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
-                                                                                                    </div>-->
+                                                                                                            <label for="Name">Street Address 2:</label>
+                                                                                                            <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
+                                                                                                        </div>-->
                     <label for="Name">Street Address 2:</label>
                     <textarea class="form-control" name="address2" id="AddAddress2"></textarea>
                 </div>-->
@@ -924,21 +935,21 @@
                                     </div>
 
                                     <!--<div class="form-row">
-                                                                                                            <div class="col-md-6">
-                                                                                                                <div class="position-relative form-group">
-                                                                                                                    <label for="City">City:</label>
-                                                                                                                    <input type="text" class="form-control" name="city" id="EditCity"
-                                                                                                                        value="">
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <div class="position-relative form-group">
+                                                                                                                        <label for="City">City:</label>
+                                                                                                                        <input type="text" class="form-control" name="city" id="EditCity"
+                                                                                                                            value="">
+                                                                                                                    </div>
                                                                                                                 </div>
-                                                                                                            </div>
-                                                                                                            <div class="col-md-6">
-                                                                                                                <div class="position-relative form-group">
-                                                                                                                    <label for="Province">Province:</label>
-                                                                                                                    <input type="text" class="form-control" name="province" id="EditProvince"
-                                                                                                                        value="">
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <div class="position-relative form-group">
+                                                                                                                        <label for="Province">Province:</label>
+                                                                                                                        <input type="text" class="form-control" name="province" id="EditProvince"
+                                                                                                                            value="">
+                                                                                                                    </div>
                                                                                                                 </div>
-                                                                                                            </div>
-                                                                                                            </div>-->
+                                                                                                                </div>-->
                                     {{--  <div class="col-md-6">
                                   <div class="position-relative form-group">
                                     <label for="Des">Description:</label>
@@ -951,9 +962,9 @@
                                         <textarea class="form-control" name="address" id="EditAddress"></textarea>
                                     </div>
                                     <!--<div class="form-group">
-                                                                                                                <label for="Name">Street Address 2:</label>
-                                                                                                                <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
-                                                                                                            </div>-->
+                                                                                                                    <label for="Name">Street Address 2:</label>
+                                                                                                                    <textarea class="form-control" name="address2" id="EditAddress2"></textarea>
+                                                                                                                </div>-->
 
 
                                     {{-- <div class="form-group">
@@ -1344,7 +1355,8 @@
             $('#referent_code').on('change', function() {
                 var referent_code = $(this).val();
                 var sfield = $('#sfield').val();
-                $('#Listview').DataTable().ajax.url("{{ route('receipts') }}?referent_code=" + referent_code +
+                $('#Listview').DataTable().ajax.url("{{ route('receipts') }}?referent_code=" +
+                    referent_code +
                     "&sfield=" + sfield).load();
             });
         });

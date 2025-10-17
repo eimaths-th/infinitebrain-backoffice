@@ -1,4 +1,4 @@
-@extends('layouts.form')
+﻿@extends('layouts.form')
 
 @section('style')
 <style>
@@ -1646,6 +1646,7 @@ emailInput.addEventListener('input', function () {
         }
 
         const valid_option = {
+            ignore: ":hidden:not([required]), :disabled",
             onkeyup: false,
             showErrors: function(errorMap, errorList) {
                 var errors = this.numberOfInvalids();

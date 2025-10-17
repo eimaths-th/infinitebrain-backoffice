@@ -20,52 +20,23 @@
             </button>
         </div>
 
-        <div class="row">
+        <div class="row g-3">
             <div class="col-lg-6">
                 <div class="form-group">
-                    <label for="Parent">Route :</label><br>
-                    <select style="width: 100%;" class="form-control" id="route" name="route">
-                        <option value="">Select Route</option>
-                        <option value="gmec">gmec</option>
-                        <option value="olpcs">olpcs</option>
-                        <option value="asiarope">asiarope</option>
-                        <option value="gelosea">gelosea</option>
-                        <option value="imocsea">imocsea</option>
-                        <option value="imocsea_special">imocsea_special</option>
-                        <option value="isocsea">isocsea</option>
-                        <option value="imocsea+isocsea">imocsea+isocsea</option>
-                        <option value="cambridge">cambridge</option>
-                        <option value="huaxiacup">huaxiacup</option>
-                        <option value="huaxiacup-ii">huaxiacup-II</option>
-                        <option value="mathleague">mathleague</option>
-                        <option value="mathleague-ii">mathleague-II</option>
-                        <option value="reward">reward</option>
-                        <option value="test_field">test_field</option>
-                        <option value="neos">neo-science-olympiad</option>
-                        <option value="neos-2">neo-science-school</option>
-                        <option value="huaxiacup-final-round">China-Mathematical-Olympiad-Final</option>
-                        <option value="ihcmi">international-hope-cup-mathematic-invitational</option>
-                        <option value="isc">International STEM competitions</option>
-                        <option value="seacso">seacso</option>
-                        <option value="copernicus">COPERNICUS OLYMPIAD</option>
-                        <option value="coding-olympics">CODING OLYMPICS</option>
-                        <option value="stemco_science">stemco_science</option>
-                        <option value="advance_english_grammar">advance_english_grammar</option>
-                        <option value="admin-test-field">admin-test-field</option>
-                        <option value="award-ceremony-isocsea">award-ceremony-isocsea</option>
-                        <option value="imocsea-national-round">imocsea-national-round</option>
-                        <option value="spelling-bee-islo">spelling-bee-islo</option>
-
-                    </select>
+                    <label for="form_name">Form Name :</label><br>
+                    <input type="text" class="form-control" id="form_name" name="form_name" placeholder="IMOCSEA 2025" autocomplete="off">
+                    <small class="form-text text-muted">กรอกชื่อฟอร์ม ระบบจะสร้าง Slug ให้อัตโนมัติ</small>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="form-group">
-                    <label for="Parent">Form Name :</label><br>
-                    <input type="text" class="form-control" id="form_name" name="form_name">
+                    <label for="slug_preview">Slug (URL) :</label><br>
+                    <input type="text" class="form-control" id="slug_preview" placeholder="slug จะถูกสร้างจากชื่อฟอร์ม" readonly>
+                    <small class="form-text text-muted">Slug ใช้ตัวอักษรพิมพ์เล็ก ตัวเลข และเครื่องหมาย - เท่านั้น</small>
                 </div>
             </div>
         </div>
+        <input type="hidden" id="slug" name="slug">
     </div>
     <!-- Modal footer -->
     <div class="modal-footer">
@@ -78,6 +49,31 @@
     (function () {
         const formSelector = '#select-route-form';
 
+        const formNameInput = $('#form_name');
+        const slugInput = $('#slug');
+        const slugPreview = $('#slug_preview');
+
+        const generateSlug = (value = '') => {
+            return value
+                .toString()
+                .trim()
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
+        };
+
+        const updateSlugPreview = () => {
+            const slug = generateSlug(formNameInput.val());
+            slugInput.val(slug || '');
+            slugPreview.val(slug || '');
+        };
+
+        updateSlugPreview();
+
+        formNameInput.on('input', updateSlugPreview);
+
         $(document).off('submit', formSelector).on('submit', formSelector, function (e) {
             e.preventDefault();
 
@@ -85,6 +81,14 @@
             const $submit = $('#select-route-submit');
 
             $submit.prop('disabled', true);
+
+            updateSlugPreview();
+
+            if (!slugInput.val()) {
+                toastr.error('กรุณากรอกชื่อฟอร์มเพื่อสร้าง Slug');
+                $submit.prop('disabled', false);
+                return;
+            }
 
             $.ajax({
                 url: $form.attr('action'),

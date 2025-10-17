@@ -569,7 +569,7 @@
                             </li>
                             @foreach ($formManages as $formManage)
                                 <li>
-                                    <a href="{{ route('receipts_form', ['sfield' => $formManage->id]) }}">
+                                    <a href="{{ route('receipts_form', ['sfield' => $formManage->sfield]) }}">
                                         <i class="metismenu-icon"></i>
                                         {{ $formManage->form_name }}
                                     </a>
@@ -779,7 +779,7 @@
                             </li>
                             @foreach ($formManages as $formManage)
                                 <li>
-                                    <a href="{{ route('receipts', ['sfield' => $formManage->id]) }}">
+                                    <a href="{{ route('receipts', ['sfield' => $formManage->sfield]) }}">
                                         <i class="metismenu-icon"></i>
                                         {{ $formManage->form_name }}
                                     </a>

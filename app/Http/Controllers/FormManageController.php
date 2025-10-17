@@ -24,6 +24,7 @@ class FormManageController extends Controller
     {
         //
         $data = FormManage::all();
+        // $data = FormManage::orderBy('id', 'desc')->get();
         // foreach ($data as $key => $form) {
         //     $packages = FormPakages::where([
         //         'form_name' => $form->form_name,
@@ -182,6 +183,7 @@ class FormManageController extends Controller
         }
 
         if ($existingForm) {
+            // dd($fieldConfig);
             if (!$existingForm->field_settings) {
                 $existingForm->field_settings = collect($fieldConfig)->map(function ($config) {
                     return [
@@ -236,7 +238,6 @@ class FormManageController extends Controller
                 'redirect' => route('create-form', ['id' => $data->id]),
             ]);
         }
-
         return view('forms_manage.create', compact('form_route', 'data', 'fieldConfig'));
     }
 
