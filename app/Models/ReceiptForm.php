@@ -9,7 +9,7 @@ class ReceiptForm extends Model
 {
     use HasFactory;
 
-    protected $table="receipt_forms";
+    protected $table = "receipt_forms";
 
     protected $fillable = [
         'rec_id',
@@ -51,9 +51,8 @@ class ReceiptForm extends Model
         return $this->hasOne(Receipt::class, 'id', 'rec_id');
     }
 
-    public function package()
+    public function formPackage()
     {
-        return $this->hasOne(FormPakages::class, 'id', 'package');
+        return $this->belongsTo(FormPakages::class, 'package');
     }
-
 }
