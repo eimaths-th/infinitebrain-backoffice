@@ -1,4 +1,4 @@
-@extends('layouts.form')
+﻿@extends('layouts.form')
 
 @section('style')
     <style>
@@ -1587,6 +1587,7 @@
         }
 
         const valid_option = {
+            ignore: ":hidden:not([required]), :disabled",
             onkeyup: false,
             showErrors: function(errorMap, errorList) {
                 var errors = this.numberOfInvalids();

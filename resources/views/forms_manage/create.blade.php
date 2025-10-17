@@ -93,8 +93,26 @@
                                                         <tr>
                                                             <th>Field</th>
                                                             <th>Description</th>
-                                                            <th class="text-center" style="width: 120px;">Enabled</th>
-                                                            <th class="text-center" style="width: 120px;">Required</th>
+                                                            <th class="text-center" style="width: 140px;">
+                                                                Enabled
+                                                                <div>
+                                                                    <label class="mb-0 small">
+                                                                        <input type="checkbox" id="toggle-all-enabled"
+                                                                            class="form-check-input me-1">
+                                                                        Check all
+                                                                    </label>
+                                                                </div>
+                                                            </th>
+                                                            <th class="text-center" style="width: 140px;">
+                                                                Required
+                                                                <div>
+                                                                    <label class="mb-0 small">
+                                                                        <input type="checkbox" id="toggle-all-required"
+                                                                            class="form-check-input me-1">
+                                                                        Check all
+                                                                    </label>
+                                                                </div>
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -122,7 +140,7 @@
                                                                         data-field-enabled="{{ $fieldKey }}"
                                                                         name="field_settings[{{ $fieldKey }}][enabled]"
                                                                         value="1"
-                                                                        {{ ($settings['enabled'] ?? true) ? 'checked' : '' }}>
+                                                                        {{ $settings['enabled'] ?? true ? 'checked' : '' }}>
                                                                 </td>
                                                                 <td class="text-center">
                                                                     <input type="hidden"
@@ -134,7 +152,7 @@
                                                                         data-field-required="{{ $fieldKey }}"
                                                                         name="field_settings[{{ $fieldKey }}][required]"
                                                                         value="1"
-                                                                        {{ ($settings['required'] ?? false) ? 'checked' : '' }}>
+                                                                        {{ $settings['required'] ?? false ? 'checked' : '' }}>
                                                                 </td>
                                                             </tr>
                                                         @endforeach
@@ -180,8 +198,9 @@
                                                 <span style="color: #6351a2;">
                                                     <label for="brand"><strong>Title Form : </strong></label>
 
-                                                    <input type="text" name="title" id="title" class="form-control"
-                                                        value="{{ $data->title }}" placeholder="Title Form">
+                                                    <input type="text" name="title" id="title"
+                                                        class="form-control" value="{{ $data->title }}"
+                                                        placeholder="Title Form">
                                                 </span>
                                             </p>
                                         </div>
@@ -655,7 +674,7 @@
                                             </label>
                                             <input type="text" class="form-control" name="student_zip"
                                                 id="student_zip" value="{{ $data->student_zip }}"
-                                                placeholder="Zip Code / รหัสไปรษณีย์" maxlength="50" minlength="2"
+                                                placeholder="Zip Code / รหัสไปรษณีย์" maxlength="150" minlength="2"
                                                 required>
                                             <label class="form-sub-label" style="min-height:13px"
                                                 aria-hidden="false">Postal / Zip Code / รหัสไปรษณีย์ </label>
@@ -769,7 +788,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-row form-focus col-md-6" id="image-payment-wrapper" data-field-input="image_payment">
+                                @php
+                                    $hasExistingPaymentImage = isset($data->image_payment) && !empty($data->image_payment);
+                                @endphp
+
+                                <div class="form-row form-focus col-md-6" id="image-payment-wrapper"
+                                    data-field-input="image_payment"
+                                    @if($hasExistingPaymentImage) style="display:none !important;" @endif>
+
                                     <div class="col-md-12 col-sm-12">
                                         <div class="form-group">
                                             <label class="form-label form-label-top form-label-auto" for="image_payment">
@@ -782,36 +808,94 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <br>
-                                @if (isset($data->image_payment))
+                                @if ($hasExistingPaymentImage)
                                     <input type="text" name="oldImagePayment" id="oldImagePayment"
                                         value="{{ $data->image_payment }}" hidden>
-
-                                    @php
-                                        $display = 'block';
-                                    @endphp
-                                @else
-                                    @php
-                                        $display = 'none';
-                                    @endphp
                                 @endif
 
                                 <div id="preview_image_payment" class="text-center" data-field-related="image_payment"
-                                    style="display: {{ $display }};">
+                                    style="display: {{ $hasExistingPaymentImage ? 'block' : 'none' }};">
 
-                                    @if (isset($data->image_payment))
-                                        <img name="image_payment" id="image_payment"
-                                            src="{{ asset('form_manage/payment/' . $data->image_payment) }}"
-                                            class="custom-image2 my-3" alt="Image 2" width="100%" height="auto">
+                                    @if ($hasExistingPaymentImage)
+                                        <img src="{{ asset('form_manage/payment/' . $data->image_payment) }}"
+                                            class="custom-image2 my-3" alt="Payment Image" width="100%"
+                                            height="auto">
+                                        <br>
+                                        <button type="button" id="remove_image_payment" class="btn btn-danger">
+                                            <i class="fa fa-times"></i> Remove Image
+                                        </button>
                                     @endif
-                                    <button type="button" id="remove_image_payment" class="btn btn-primary">
-                                        <i class="fa fa-times"></i>
-                                    </button>
                                 </div>
                                 <br>
                                 <script>
                                     $(document).ready(function() {
+
+                                        // Check if there's an existing payment image
+                                        let oldImagePaymentEl = document.getElementById('oldImagePayment');
+                                        let hasExistingImage = oldImagePaymentEl && oldImagePaymentEl.value;
+                                        const $imagePaymentToggle = $('[data-field-enabled="image_payment"]');
+                                        const oldImagePaymentValue = oldImagePaymentEl.value;
+                                        console.log('oldImagePaymentValue : ', oldImagePaymentValue);
+                                        // console.log($oldImagePaymentEl);
+                                        function isImagePaymentEnabled() {
+                                            if ($imagePaymentToggle.length) {
+                                                return $imagePaymentToggle.is(':checked');
+                                            }
+                                            const $wrapper = $('#image-payment-wrapper');
+                                            return $wrapper.is(':visible') && $wrapper.css('display') !== 'none';
+                                        }
+
+                                        function syncPreviewWithFieldState() {
+                                            if (!isImagePaymentEnabled()) {
+                                                $('#preview_image_payment').hide();
+                                                return;
+                                            }
+
+
+                                            if (hasExistingImage || $('#preview_image_payment').find('img').length) {
+                                                $('#preview_image_payment').show();
+                                            } else {
+                                                $('#preview_image_payment').hide();
+                                            }
+                                        }
+
+                                        function hideInputWrapper() {
+                                            $('#image-payment-wrapper').attr('style', 'display: none !important;');
+                                            $('#image-payment-wrapper').attr('data-field-visible', '0');
+                                            $('#image_payment').prop('required', false).removeAttr('required');
+                                            syncPreviewWithFieldState();
+                                        }
+
+                                        function showInputWrapper() {
+                                            if (!isImagePaymentEnabled()) {
+                                                syncPreviewWithFieldState();
+                                                return;
+                                            }
+                                            $('#image-payment-wrapper').attr('style', 'display: block !important;');
+                                            $('#image-payment-wrapper').attr('data-field-visible', '1');
+                                            $('#image_payment').prop('required', false).removeAttr('required');
+                                            $('#preview_image_payment').hide();
+                                        }
+
+                                        if (hasExistingImage) {
+                                            hideInputWrapper();
+                                        } else {
+                                            showInputWrapper();
+                                        }
+
+                                        // Re-apply after a short delay to override field toggle system
+                                        setTimeout(function() {
+                                            if (hasExistingImage) {
+                                                hideInputWrapper();
+                                            }
+                                            syncPreviewWithFieldState();
+                                        }, 100);
+
+                                        $imagePaymentToggle.on('change', function() {
+                                            syncPreviewWithFieldState();
+                                        });
+
                                         $('#image_payment').on('change', function() {
                                             var file = this.files[0];
                                             if (file) {
@@ -819,17 +903,31 @@
                                                 reader.onload = function(e) {
                                                     $('#preview_image_payment')
                                                         .html('<img src="' + e.target.result +
-                                                            '" class="custom-image2 my-3" alt="Preview" width="100%" height="auto">'
-                                                        )
-                                                        .show();
+                                                            '" class="custom-image2 my-3" alt="Preview" width="100%" height="auto"><br>' +
+                                                            '<button type="button" id="remove_image_payment" class="btn btn-danger"><i class="fa fa-times"></i> Remove Image</button>'
+                                                        );
+                                                    hasExistingImage = true;
+                                                    hideInputWrapper();
+
+                                                    // Re-bind remove button
+                                                    $('#remove_image_payment').on('click', handleRemovePaymentImage);
                                                 };
                                                 reader.readAsDataURL(file);
                                             }
                                         });
-                                        $('#remove_image_payment').on('click', function() {
-                                            $('#preview_image_payment').hide();
+
+                                        function handleRemovePaymentImage() {
+                                            $('#preview_image_payment').hide().html('');
                                             $('#image_payment').val('');
-                                        });
+                                            if ($('#oldImagePayment').length) {
+                                                $('#oldImagePayment').val('');
+                                            }
+                                            hasExistingImage = false;
+                                            showInputWrapper();
+                                        }
+
+                                        $('#remove_image_payment').on('click', handleRemovePaymentImage);
+                                        syncPreviewWithFieldState();
                                     });
                                 </script>
 
@@ -885,7 +983,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer text-center">
+                        <div class="card-footer text-center form-actions-footer">
                             <br>
                             <div class="text-danger">
                                 <h3>{!! $data->text_warning !!}
@@ -906,9 +1004,11 @@
 
                             </div>
                             <textarea name="text_policy" id="text_policy" class="form-control mb-5" cols="30" rows="3">{!! $data->text_policy !!}</textarea>
-                            <input type="submit" id="send_data" class="btn btn-lg btn-primary"
-                                value="Submit Application">
-                            <button type="reset" class="btn btn-lg btn-primary">Clear Form</button><br><br><br>
+                            <div class="form-submit-actions">
+                                <input type="submit" id="send_data" class="btn btn-lg btn-primary"
+                                    value="Submit Application">
+                                <button type="reset" class="btn btn-lg btn-primary">Clear Form</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -927,7 +1027,6 @@
         document.getElementById('addOptionPackage').addEventListener('click', function() {
             indexoptionPackage++;
             document.getElementById('options_package').style.display = 'block';
-            console.log(indexoptionPackage);
             var option = document.createElement('div');
             option.classList.add(`option${indexoptionPackage}`);
             option.innerHTML = `
@@ -1028,7 +1127,6 @@
                     price: price
                 },
                 success: function(response) {
-                    console.log(response);
                     //change icon
                     let icon = document.getElementById('changeIcon' + package_id);
                     icon.classList.remove('fa-edit');
@@ -1152,7 +1250,6 @@
                     value: value
                 },
                 success: function(response) {
-                    console.log(response);
                     //change icon
                     let icon = document.getElementById('changeIcon' + id);
                     icon.classList.remove('fa-edit');

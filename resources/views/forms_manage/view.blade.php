@@ -24,7 +24,7 @@
                         @else
                         @endif
                     </div>
-                    <form id="infinite" method="POST" action="{{ route('form.store') }}" onsubmit="return check_input();">
+                    <form id="infinite" method="POST" action="{{ route('form.storeFormManage') }}" onsubmit="return check_input();">
                         @csrf
                         <div class="card-body">
                             <br>
@@ -245,7 +245,7 @@
                                     maxlength="50" minlength="2" required>
                                 <input type="hidden" name="sfield" id="sfield" value="{{ $form->sfield }}">
                                 <input type="hidden" name="routeName" id="routeName"
-                                    value="{{ request()->route()->getName() }}">
+                                    value="{{ $form->form_route }}">
                                 <input type="hidden" name="referent_code" id="referent_code"
                                     value="{{ request()->referent_code }}">
 
@@ -590,6 +590,7 @@
                                                 <input type="email" class="form-control" name="email" id="email"
                                                     value="" maxlength="70"
                                                     @if ($isFieldRequired('contact_email')) required @endif>
+                                                <small id="email-msg" style="color: red;"></small>
                                                 <label class="form-sub-label" style="min-height:13px"
                                                     aria-hidden="false">example@example.com</label>
                                                 <div class="form-error-message" role="alert"><img
@@ -743,7 +744,7 @@
                             </div>
                             <br>
                             <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="agreeCheckbox" required
+                                <input type="checkbox" class="form-check-input" id="agreeCheckbox" required data-required-checkbox="true"
                                     style="float: none; margin-right: 3px;">
                                 <label class="form-check-label" for="agreeCheckbox">
                                     {!! nl2br($form->text_policy) ?? '' !!}
@@ -758,6 +759,60 @@
             </div>
         </div>
     </div>
+    <script>
+        const allowedSuffixes = ['.com', '.net', '.co.th', '.ac.th', '.or.th', '.go.th', '.edu', '.org'];
+        const emailInput = document.getElementById('email');
+        const msg = document.getElementById('email-msg');
+
+        let timeout;
+
+        emailInput.addEventListener('input', function() {
+            clearTimeout(timeout);
+
+            timeout = setTimeout(() => {
+                const email = emailInput.value.trim();
+
+                if (email.length < 5) {
+                    msg.textContent = '';
+                    return;
+                }
+
+                // ยังพิมพ์อยู่ → รอ user ใส่ @ ก่อนค่อยเช็ค
+                if (!email.includes('@')) {
+                    msg.textContent = '';
+                    return;
+                }
+
+                const parts = email.split('@');
+
+                // ต้องมีแค่ 2 ส่วน
+                if (parts.length !== 2 || !parts[1]) {
+                    msg.textContent = '';
+                    return;
+                }
+
+                const domain = parts[1].toLowerCase();
+
+                // ยังพิมพ์ไม่ครบโดเมน → ไม่ต้องแสดง error
+                if (domain.length < 3) {
+                    msg.textContent = '';
+                    return;
+                }
+
+                const isValid = allowedSuffixes.some(suffix => domain.endsWith(suffix));
+
+                if (isValid) {
+                    msg.textContent = '✅ อีเมลนี้รูปแบบถูกต้อง';
+                    msg.style.color = 'green';
+                } else {
+                    msg.textContent = '❌ รูปแบบอีเมลนี้ไม่ถูกต้อง (อนุญาตเฉพาะ: ' + allowedSuffixes.join(
+                        ', ') + ')';
+                    msg.style.color = 'red';
+                }
+
+            }, 500);
+        });
+    </script>
     <script>
         $(document).ready(function() {
             var inputlist = ["firstname", "lastname", "address", "postcode"];
@@ -1169,7 +1224,18 @@
             }
         }
 
+        if ($.validator) {
+            const originalCheck = $.validator.prototype.check;
+            $.validator.prototype.check = function(element) {
+                if (!element || !element.getAttribute || !element.name) {
+                    return true;
+                }
+                return originalCheck.call(this, element);
+            };
+        }
+
         const valid_option = {
+            ignore: ':hidden, [disabled], :not([name])',
             onkeyup: false,
             showErrors: function(errorMap, errorList) {
                 var errors = this.numberOfInvalids();
@@ -1197,18 +1263,87 @@
 
             submitHandler: function(form) {
                 $('#loader-container').show();
-
                 $('#send_data').attr('disabled', true);
 
-                if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]')
-                    .length) {
-                    $(form).submit();
-                    return true;
+                // Check agreeCheckbox first
+                const $agreeCheckbox = $('#agreeCheckbox');
+                const $agreeWrapper = $agreeCheckbox.closest('.form-group');
+
+                if (!$agreeCheckbox.is(':checked')) {
+                    $agreeWrapper.addClass('form-focus-error');
+                    if (!$agreeWrapper.find('.form-error-message').length) {
+                        $agreeWrapper.append(`
+                            <div class="form-error-message" role="alert">
+                                <img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10">
+                                <span class="error-navigation-message">
+                                    กรุณาติ๊ก "ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว" ก่อนส่งฟอร์ม
+                                </span>
+                                <div class="form-error-arrow">
+                                    <div class="form-error-arrow-inner"></div>
+                                </div>
+                            </div>
+                        `);
+                    } else {
+                        $agreeWrapper.find('.form-error-message').show();
+                    }
+
+                    jumpTo('agreeCheckbox');
+                    alert('กรุณาติ๊ก "ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว" ก่อนส่งฟอร์ม');
+                    $('#loader-container').hide();
+                    $('#send_data').attr('disabled', false);
+                    return false;
+                } else {
+                    $agreeWrapper.removeClass('form-focus-error');
+                    $agreeWrapper.find('.form-error-message').hide();
                 }
 
-                $('#loader-container').hide();
-                $('#send_data').attr('disabled', false);
-                return false;
+                const $photoWrapper = $('#dropzone-photo');
+                const $slipWrapper = $('#dropzone-att');
+                const photoActive = $photoWrapper.length && $photoWrapper.is(':visible') && !$photoWrapper.find('input, textarea, select').filter(':enabled').length;
+                const slipActive = $slipWrapper.length && $slipWrapper.is(':visible') && !$slipWrapper.find('input, textarea, select').filter(':enabled').length;
+
+                let missing = false;
+
+                if ($photoWrapper.length && $photoWrapper.is(':visible')) {
+                    const hasPhoto = document.getElementsByName('imgFiles[]').length > 0;
+                    if (!hasPhoto) {
+                        missing = true;
+                        $photoWrapper.addClass('form-focus-error');
+                        $photoWrapper.find('.form-error-message').css('display', 'block');
+                        $photoWrapper.css('border', 'solid 1px red');
+                        jumpTo('dphoto');
+                    } else {
+                        $photoWrapper.removeClass('form-focus-error');
+                        $photoWrapper.find('.form-error-message').css('display', 'none');
+                        $photoWrapper.css('border', '');
+                    }
+                }
+
+                if ($slipWrapper.length && $slipWrapper.is(':visible')) {
+                    const hasSlip = document.getElementsByName('imgFiles2[]').length > 0;
+                    if (!hasSlip) {
+                        missing = true;
+                        $slipWrapper.addClass('form-focus-error');
+                        $slipWrapper.find('.form-error-message').css('display', 'block');
+                        $slipWrapper.css('border', 'solid 1px red');
+                        if (!missing) {
+                            jumpTo('datt');
+                        }
+                    } else {
+                        $slipWrapper.removeClass('form-focus-error');
+                        $slipWrapper.find('.form-error-message').css('display', 'none');
+                        $slipWrapper.css('border', '');
+                    }
+                }
+
+                if (missing) {
+                    $('#loader-container').hide();
+                    $('#send_data').attr('disabled', false);
+                    return false;
+                }
+
+                form.submit();
+                return true;
             }
         }
 
@@ -1227,15 +1362,40 @@
 
         function check_input() {
             $('.form-control').focus();
-            //$('.form-control').focus({ preventScroll: false });
-            //$('input').focus();
-            //$('input').focus({ preventScroll: false });
 
-            if (!document.getElementById('agreeCheckbox').checked) {
+            const $agreeCheckbox = $('#agreeCheckbox');
+            const $agreeWrapper = $agreeCheckbox.closest('.form-group');
+
+            if (!$agreeCheckbox.is(':checked')) {
+                $agreeWrapper.addClass('form-focus-error');
+                if (!$agreeWrapper.find('.form-error-message').length) {
+                    $agreeWrapper.append(`
+                        <div class="form-error-message" role="alert">
+                            <img src="https://cdn.jotfor.ms/images/exclamation-octagon.png" height="10">
+                            <span class="error-navigation-message">
+                                กรุณาติ๊ก "ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว" ก่อนส่งฟอร์ม
+                            </span>
+                            <div class="form-error-arrow">
+                                <div class="form-error-arrow-inner"></div>
+                            </div>
+                        </div>
+                    `);
+                } else {
+                    $agreeWrapper.find('.error-navigation-message').text(
+                        'กรุณาติ๊ก "ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว" ก่อนส่งฟอร์ม'
+                    );
+                    $agreeWrapper.find('.form-error-message').show();
+                }
+
+                jumpTo('agreeCheckbox');
                 alert(
                     'กรุณาติ๊ก "ตกลงและยอมรับข้อกำหนดและเงื่อนไข รวมถึงตรวจสอบข้อมูลและเนื้อหาต่างๆเรียบร้อยแล้ว" ก่อนส่งฟอร์ม'
                 );
+
                 return false;
+            } else {
+                $agreeWrapper.removeClass('form-focus-error');
+                $agreeWrapper.find('.form-error-message').hide();
             }
 
             if (document.getElementsByName('imgFiles[]').length && document.getElementsByName('imgFiles2[]')

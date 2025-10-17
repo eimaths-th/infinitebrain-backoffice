@@ -69,12 +69,10 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
 
-                                        {{-- delete btn --}}
                                         <button type="button" class="btn btn-danger delete-btn" data-id="{{ $item->id }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
 
-                                        {{-- delete btn --}}
                                     </td>
                                 </tr>
                             @endforeach

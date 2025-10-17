@@ -3,6 +3,8 @@
         const $form = $('#infinite');
         const fieldConfig = window.fieldConfig || {};
         const fieldSettings = $.extend(true, {}, window.initialFieldSettings || {});
+        const $toggleAllEnabled = $('#toggle-all-enabled');
+        const $toggleAllRequired = $('#toggle-all-required');
 
         function containerFor($el) {
             const $focus = $el.closest('.form-focus');
@@ -33,24 +35,25 @@
 
         function findFieldWrapper($el) {
             if (!$el || !$el.length) return $();
-            
+
             // First check if element itself or parent has data-field-input
             const $dataWrapper = $el.closest('[data-field-input]');
             if ($dataWrapper.length) {
                 return $dataWrapper.first();
             }
-            
+
             // Look for .form-group first (most specific)
             const $group = $el.closest('.form-group');
             if ($group.length) {
                 const $groupParent = $group.parent();
                 // Check if parent is a column, return that column
-                if ($groupParent.length && $groupParent.attr('class') && $groupParent.attr('class').match(/col-/)) {
+                if ($groupParent.length && $groupParent.attr('class') && $groupParent.attr('class').match(
+                        /col-/)) {
                     return $groupParent;
                 }
                 return $group.first();
             }
-            
+
             // Then look for column classes (from smallest to largest to get closest match)
             const columnSelectors = [
                 '.col-xl-1', '.col-lg-1', '.col-md-1', '.col-sm-1', '.col-1',
@@ -118,14 +121,14 @@
             }
 
             const $elements = $form.find(config.builder_input);
-            
+
             // Try to find wrapper with data-field-input attribute first
             let $wrapper = $('[data-field-input="' + config.public_name + '"]');
-            
+
             if (!$wrapper.length && $elements.length) {
                 $wrapper = findFieldWrapper($elements.first());
             }
-            
+
             if (!$wrapper.length) {
                 console.log('Wrapper not found for field:', fieldKey, 'public_name:', config.public_name);
                 $('[data-field-enabled="' + fieldKey + '"]').prop('disabled', true).prop('checked', false);
@@ -135,9 +138,11 @@
 
             const $inputs = $wrapper.find('input, select, textarea');
             const $related = $('[data-field-related="' + config.public_name + '"]');
+            const hasExistingImagePayment = (fieldKey === 'image_payment') && $('#oldImagePayment').length && $('#oldImagePayment').val();
             const settings = ensureFieldSetting(fieldKey);
 
-            console.log('Applying field state:', fieldKey, 'enabled:', settings.enabled, 'required:', settings.required, 'inputs:', $inputs.length);
+            console.log('Applying field state:', fieldKey, 'enabled:', settings.enabled, 'required:', settings
+                .required, 'inputs:', $inputs.length);
 
             storeOriginalRequired($inputs);
 
@@ -152,9 +157,20 @@
             } else {
                 $wrapper.attr('data-field-visible', '1').show();
                 $related.show();
-                setRequiredState($inputs, settings.required);
+                if (hasExistingImagePayment) {
+                    setRequiredState($inputs, false);
+                    clearValidationState($inputs);
+                } else {
+                    setRequiredState($inputs, settings.required);
+                }
                 $('[data-field-enabled="' + fieldKey + '"]').prop('checked', true);
-                $('[data-field-required="' + fieldKey + '"]').prop('disabled', false).prop('checked', settings.required);
+                $('[data-field-required="' + fieldKey + '"]').prop('disabled', false).prop('checked', settings
+                    .required);
+                if (hasExistingImagePayment) {
+                    $wrapper.attr('data-existing-image', '1');
+                } else {
+                    $wrapper.removeAttr('data-existing-image');
+                }
             }
         }
 
@@ -164,7 +180,52 @@
             });
         }
 
+        function syncHeaderCheckbox($headerCheckbox, $targets) {
+            if (!$headerCheckbox.length) return;
+
+            const $enabledTargets = $targets.filter(function() {
+                return !this.disabled;
+            });
+
+            if (!$enabledTargets.length) {
+                $headerCheckbox.prop({
+                    checked: false,
+                    indeterminate: false,
+                    disabled: true
+                });
+                return;
+            }
+
+            const total = $enabledTargets.length;
+            const checkedCount = $enabledTargets.filter(':checked').length;
+
+            $headerCheckbox.prop('disabled', false);
+
+            if (checkedCount === 0) {
+                $headerCheckbox.prop({
+                    checked: false,
+                    indeterminate: false
+                });
+            } else if (checkedCount === total) {
+                $headerCheckbox.prop({
+                    checked: true,
+                    indeterminate: false
+                });
+            } else {
+                $headerCheckbox.prop({
+                    checked: false,
+                    indeterminate: true
+                });
+            }
+        }
+
+        function updateToggleHeaders() {
+            syncHeaderCheckbox($toggleAllEnabled, $('.field-toggle-enabled'));
+            syncHeaderCheckbox($toggleAllRequired, $('.field-toggle-required'));
+        }
+
         applyAllFieldStates();
+        updateToggleHeaders();
 
         $('.field-toggle-enabled').on('change', function() {
             const fieldKey = $(this).data('field');
@@ -175,10 +236,12 @@
                 settings.required = false;
             } else if (settings.required === undefined) {
                 const defaults = fieldConfig[fieldKey] || {};
-                settings.required = defaults.default_required !== undefined ? !!defaults.default_required : false;
+                settings.required = defaults.default_required !== undefined ? !!defaults
+                    .default_required : false;
             }
 
             applyFieldState(fieldKey);
+            updateToggleHeaders();
         });
 
         $('.field-toggle-required').on('change', function() {
@@ -186,6 +249,21 @@
             const settings = ensureFieldSetting(fieldKey);
             settings.required = $(this).is(':checked');
             applyFieldState(fieldKey);
+            updateToggleHeaders();
+        });
+
+        $toggleAllEnabled.on('change', function() {
+            if (!$toggleAllEnabled.length) return;
+            const shouldCheck = $(this).is(':checked');
+            $(this).prop('indeterminate', false);
+            $('.field-toggle-enabled').not(':disabled').prop('checked', shouldCheck).trigger('change');
+        });
+
+        $toggleAllRequired.on('change', function() {
+            if (!$toggleAllRequired.length) return;
+            const shouldCheck = $(this).is(':checked');
+            $(this).prop('indeterminate', false);
+            $('.field-toggle-required').not(':disabled').prop('checked', shouldCheck).trigger('change');
         });
 
         function showError($el) {
@@ -256,7 +334,12 @@
             let firstInvalid = null;
             // Validate all required fields
             $form.find('input, textarea, select').each(function() {
-                const ok = validateField($(this));
+                const $field = $(this);
+                if (!$field.is(':visible') || $field.is(':disabled')) {
+                    return;
+                }
+
+                const ok = validateField($field);
                 if (!ok && !firstInvalid) firstInvalid = this;
             });
 
@@ -380,8 +463,103 @@
                 }
             });
         });
+
+
+        (function() {
+            const formSelector = '#select-route-form';
+            const $formName = $('#form_name');
+            const $slugInput = $('#slug');
+            const $slugPreview = $('#slug-preview');
+            const previewPlaceholder = 'กรอกชื่อฟอร์มเพื่อสร้าง slug อัตโนมัติ';
+
+            const generateSlug = (value) => {
+                if (!value) {
+                    return '';
+                }
+
+                let slug = value.toString().trim().toLowerCase();
+
+                if (typeof slug.normalize === 'function') {
+                    slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                }
+
+                slug = slug
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+
+                return slug;
+            };
+
+            const updateSlugPreview = () => {
+                const nameValue = $formName.val().trim();
+                const slug = generateSlug(nameValue);
+                $slugInput.val(slug);
+
+                if (slug) {
+                    $slugPreview.text(slug).removeClass('text-muted');
+                } else {
+                    $slugPreview.text(previewPlaceholder).addClass('text-muted');
+                }
+            };
+
+            $formName.on('input blur', updateSlugPreview);
+
+            $(document).off('submit', formSelector).on('submit', formSelector, function(e) {
+                e.preventDefault();
+
+                const $form = $(this);
+                const $submit = $('#select-route-submit');
+
+                updateSlugPreview();
+                const slugValue = $slugInput.val();
+                if (!slugValue) {
+                    toastr.error('กรุณากรอกชื่อฟอร์มเพื่อสร้าง slug');
+                    return;
+                }
+
+                $submit.prop('disabled', true);
+
+                $.ajax({
+                        url: $form.attr('action'),
+                        type: 'POST',
+                        data: $form.serialize(),
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .done(function(resp) {
+                        if (resp?.status === 'success') {
+                            toastr.success(resp.message || 'สร้างฟอร์มสำเร็จ');
+                            setTimeout(function() {
+                                window.location.href = resp.redirect ||
+                                    '{{ route('form-manage.index') }}';
+                            }, 1200);
+                            return;
+                        }
+
+                        toastr.error('ไม่สามารถสร้างฟอร์มได้ กรุณาลองใหม่อีกครั้ง');
+                    })
+                    .fail(function(xhr) {
+                        if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                            $.each(xhr.responseJSON.errors, function(field, messages) {
+                                if (messages?.length) {
+                                    toastr.error(messages[0]);
+                                }
+                            });
+                            return;
+                        }
+
+                        toastr.error('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+                    })
+                    .always(function() {
+                        $submit.prop('disabled', false);
+                    });
+            });
+        })();
+
+
     });
 </script>
 {{--  --}}
-
-
