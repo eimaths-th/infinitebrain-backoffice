@@ -65,6 +65,7 @@ class FormManage extends Model
         'sfield',
         'form_name',
         'form_route',
+        'slug',
         'brand',
         'title',
         'sub_title',
