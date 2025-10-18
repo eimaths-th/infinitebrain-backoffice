@@ -57,6 +57,8 @@ class ExportForm implements FromCollection, WithHeadings
             "mobile",
             "package",
             "contest",
+            "award",
+            "street_address2",
             DB::raw("CONCAT('" . url('/') . "/receipt_form_images/',photo_att) AS photo"),
             DB::raw("CONCAT('" . url('/') . "/receipt_form_images/',file_att) AS slip"),
             "news_form"
@@ -66,6 +68,15 @@ class ExportForm implements FromCollection, WithHeadings
             ->get();
 
         $customResults = $receipts->map(function ($receipt) {
+            $awardValue = null;
+            if (!empty($receipt->award)) {
+                $awardData = is_array($receipt->award) ? $receipt->award : json_decode($receipt->award, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($awardData)) {
+                    $awardValue = implode(', ', $awardData);
+                } else {
+                    $awardValue = $receipt->award;
+                }
+            }
             return [
                 "submission_date" => $receipt->submission_date,
                 "first_name" => $receipt->first_name,
@@ -80,6 +91,8 @@ class ExportForm implements FromCollection, WithHeadings
                 "name_parent" => $receipt->name_parent,
                 "mobile" => $receipt->mobile,
                 "package" => $receipt->package,
+                "award" => $awardValue,
+                "street_address2" => $receipt->street_address2,
                 "price" => preg_replace("/[^0-9.]/", "", $this->delete_all_between('(', ')', $receipt->package)),
                 "contest" => $receipt->contest,
                 "photo" => $receipt->photo,
@@ -108,6 +121,8 @@ class ExportForm implements FromCollection, WithHeadings
             'Name Parent',
             'Mobile',
             'Package',
+            'Award',
+            'Follow Up',
             'Price',
             'Contest',
             'Photo',

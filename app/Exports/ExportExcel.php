@@ -91,6 +91,15 @@ class ExportExcel implements FromCollection, WithHeadings
             // ];
                 // dd($receipt->recform->id);
             if ($receipt->recform) {
+                $awardValue = null;
+                if (!empty($receipt->recform->award)) {
+                    $awardData = is_array($receipt->recform->award) ? $receipt->recform->award : json_decode($receipt->recform->award, true);
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($awardData)) {
+                        $awardValue = implode(', ', $awardData);
+                    } else {
+                        $awardValue = $receipt->recform->award;
+                    }
+                }
                 return [
                     "submission_date" => $receipt->submission_date,
                     "first_name" => $receipt->first_name,
@@ -105,6 +114,9 @@ class ExportExcel implements FromCollection, WithHeadings
                     "name_parent" => $receipt->name_parent,
                     "mobile" => $receipt->mobile,
                     "package" => $receipt->package,
+                    "award" => $awardValue,
+                    "street_address2" => $receipt->recform->street_address2,
+
                     "price" => preg_replace("/[^0-9.]/", "", $this->delete_all_between('(', ')', $receipt->package)),
                     "contest" => $receipt->contest,
                     "photo" => $receipt->recform->photo,
@@ -157,6 +169,8 @@ class ExportExcel implements FromCollection, WithHeadings
             'Name Parent',
             'Mobile',
             'Package',
+            'Award',
+            'Follow Up',
             'Price',
             'Contest',
             'Photo',
