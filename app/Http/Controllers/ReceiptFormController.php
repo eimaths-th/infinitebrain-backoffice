@@ -1059,7 +1059,6 @@ class ReceiptFormController extends Controller
         }
 
 
-
         if ($form->generate == 1) {
             return response()->json(['error' => 'Receive is already generate']);
         }
@@ -1529,10 +1528,11 @@ class ReceiptFormController extends Controller
             'last_name' => $request->get('lastname'),
             'nick_name' => $request->get('nickname'),
             'gender' => $request->get('gender'),
-            'birth_date' => $request->get('birthdate'),
+            'birth_date' => $request->get('birthdate') ?? null,
+            'ref_date' => $request->get('ref_date') ?? null,
             'school_name' => $request->get('schoolname'),
-            'award' => $award,
-            'street_address2' => $street_address2,
+            'award' => $award ?? null,
+            'street_address2' => $street_address2 ?? null,
             'grade' => $request->get('grade'),
             'package' => $request->get('package'),
             'contest' => $request->get('contest'),
@@ -1728,10 +1728,11 @@ class ReceiptFormController extends Controller
             'last_name' => $request->get('lastname'),
             'nick_name' => $request->get('nickname'),
             'gender' => $request->get('gender'),
-            'birth_date' => $request->get('birthdate'),
+            'birth_date' => $request->get('birthdate') ?? null,
+            'ref_date' => $request->get('ref_date') ?? null,
             'school_name' => $request->get('schoolname'),
-            'award' => $award,
-            'street_address2' => $street_address2,
+            'award' => $award ?? null,
+            'street_address2' => $street_address2 ?? null,
             'grade' => $request->get('grade'),
             'package' => $request->get('package'),
             'contest' => $request->get('contest'),
@@ -1788,13 +1789,11 @@ class ReceiptFormController extends Controller
     public function show(Request $request)
     {
         //
-
         return view("receipt_form.complete")->with(['sfield' => $request->sfield]);
     }
     public function showFormManage(Request $request)
     {
         //
-
         return view("receipt_form.complete_formManage")->with(['sfield' => $request->sfield]);
     }
     public function show1(ReceiptForm $receiptForm)
@@ -1885,8 +1884,8 @@ class ReceiptFormController extends Controller
             }
         }
 
+        $data->ref_date_label = optional($data->formManage)->ref_date_label ? optional($data->formManage)->ref_date_label . ' : ' : 'Reference Date :';
         // dd($data);
-
         return response()->json([
             'data' =>  $data
         ]);
@@ -2042,30 +2041,39 @@ class ReceiptFormController extends Controller
 
         if ($oldfile->generate == 0) {
             $arrl = explode('|', $oldfile->photo_att);
-            for ($i = 0; $i < count($arrl); $i++) {
-                $path = public_path() . '/receipt_form_images/' . $arrl[$i];
-                // echo "Attempting to delete: $path\n"; // Debug output
+            if ($oldfile->photo_att) {
+                # code...
 
-                if (file_exists($path)) {
-                    if (!is_dir($path)) {
-                        unlink($path);
-                        // echo "Deleted: $path\n"; // Debug output
+                for ($i = 0; $i < count($arrl); $i++) {
+                    $path = public_path() . '/receipt_form_images/' . $arrl[$i];
+                    // echo "Attempting to delete: $path\n"; // Debug output
+
+                    if (file_exists($path)) {
+                        if (!is_dir($path)) {
+                            unlink($path);
+                            // echo "Deleted: $path\n"; // Debug output
+                        } else {
+                            // echo "Skipping directory: $path\n"; // Debug output
+                        }
                     } else {
-                        // echo "Skipping directory: $path\n"; // Debug output
+                        // echo "File does not exist: $path\n"; // Debug output
                     }
-                } else {
-                    // echo "File does not exist: $path\n"; // Debug output
                 }
             }
+
             if ($oldfile->sfield === '23') {
                 # code...
             } else {
                 # code...
-                $arrb = explode('|', $oldfile->file_att);
-                for ($j = 0; $j <= count($arrb) - 1; $j++) {
-                    $path = public_path() . '/receipt_form_images/' . $arrb[$j];
-                    if (file_exists($path)) {
-                        unlink($path);
+
+                if ($oldfile->file_att) {
+                    # code...
+                    $arrb = explode('|', $oldfile->file_att);
+                    for ($j = 0; $j <= count($arrb) - 1; $j++) {
+                        $path = public_path() . '/receipt_form_images/' . $arrb[$j];
+                        if (file_exists($path)) {
+                            unlink($path);
+                        }
                     }
                 }
             }

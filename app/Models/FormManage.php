@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string $sub_title
  * @property string $head_title
+ * @property string $ref_date_label
  * @property string $registration_date_label
  * @property string $contest_date_label
  * @property string $registration_fee_label
@@ -70,6 +71,7 @@ class FormManage extends Model
         'title',
         'sub_title',
         'head_title',
+        'ref_date_label',
         'registration_date_label',
         'contest_date_label',
         'registration_fee_label',

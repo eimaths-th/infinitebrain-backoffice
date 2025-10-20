@@ -265,6 +265,19 @@
                                                 </span>
                                             </p>
                                         </div>
+                                        <div class="row">
+                                            <p style="text-align: left;">
+                                                <span style="color: #6351a2;">
+                                                    <label for="ref_date_label">Label วันที่อ้างอิง:</label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" name="ref_date_label" id="ref_date_label"
+                                                            placeholder="วันที่อ้างอิง" class="form-control"
+                                                            value="{{ $data->ref_date_label ?? '' }}">
+                                                        <small class="text-muted">Label นี้จะแสดงในฟอร์มสาธารณะ (Check "Enabled" ในตารางด้านบนเพื่อให้ user กรอกวันที่อ้างอิง)</small>
+                                                    </div>
+                                                </span>
+                                            </p>
+                                        </div>
                                     </div>
                                     <p>
                                         <span style="color: #6351a2;">

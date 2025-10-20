@@ -353,6 +353,7 @@ class FormManageController extends Controller
             'head_title' => 'required|string|max:255',
 
             'registration_date_label' => 'required|string',
+            'ref_date_label' => 'nullable|string',
             'contest_date_label' => 'required|string',
             'registration_fee_label' => 'required|string',
             'admission_criteria_text_label' => 'nullable|string',
@@ -423,6 +424,7 @@ class FormManageController extends Controller
             // labels and texts
             'registration_date_label.required' => 'The registration date label is required.',
             'registration_date_label.string' => 'The registration date label must be a string.',
+            'ref_date_label.string' => 'The reference date label must be a string.',
             'contest_date_label.required' => 'The contest date label is required.',
             'contest_date_label.string' => 'The contest date label must be a string.',
             'registration_fee_label.required' => 'The registration fee label is required.',
@@ -611,6 +613,7 @@ class FormManageController extends Controller
             // 'brand' => $request->brand,
             'registration_fee_label' => $request->registration_fee_label,
             'registration_date_label' => $request->registration_date_label,
+            'ref_date_label' => $request->ref_date_label,
             // 'registration_date' => $request->registration_date,
             'contest_date_label' => $request->contest_date_label,
             'contest_date' => $request->contest_date,

@@ -714,15 +714,22 @@
                                 <div class="col-md-6" style="display: none;" id="showaward">
                                     <div class="form-group">
                                         <label for="Parent">รางวัล:</label>
-                                        <input type="text" class="form-control" name="award" id="Addaward" readonly "
+                                        <input type="text" class="form-control" name="award" id="Addaward" readonly
                                             value="">
                                     </div>
                                 </div>
                                 <div class="col-md-6" style="display: none;" id="showfollow">
                                     <div class="form-group">
                                         <label for="Dcode">จำนวนผู้ติดตาม:</label>
-                                        <input type="text" class="form-control" name="follow" id="Addfollow" readonly "
+                                        <input type="text" class="form-control" name="follow" id="Addfollow" readonly
                                             value="" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group" style="display: none;" id="showrefdate">
+                                        <label for="Parent" id="AddRefDateLabel">Reference Date:</label>
+                                        <input type="text" class="form-control" name="ref_date" id="AddRefDate"
+                                            value="">
                                     </div>
                                 </div>
                             </div>
@@ -1011,12 +1018,17 @@
                         }
                         $('#Addaward').val(res.data.award);
                         $('#Addfollow').val(res.data.street_address2);
+                        $('#AddRefDate').val(res.data.ref_date);
 
                         if (res.data.award) {
                             $('#showaward').css('display', 'block');
                         }
                         if (res.data.street_address2) {
                             $('#showfollow').css('display', 'block');
+                        }
+                        if (res.data.ref_date) {
+                            $('#AddRefDateLabel').text(res.data.ref_date_label);
+                            $('#showrefdate').css('display', 'block');
                         }
                         //console.log(res.data.photo);
                         $('#EditModal').modal('show');
@@ -1070,6 +1082,7 @@
                         //street_address2: $('#AddAddress2').val(),
                         //city: $('#AddCity').val(),
                         //province: $('#AddProvince').val(),
+                        ref_date: $('#AddRefDate').val(),
                         postcode: $('#AddPostcode').val(),
                         name_parent: $('#AddParent').val(),
                         mobile: $('#AddMobile').val(),
@@ -1468,12 +1481,12 @@
 
             $(document).on('click', '.btn-resend-mail', function(e) {
                 e.preventDefault();
-                
+
                 if (!confirm("คุณต้องการส่งอีเมลอีกครั้งหรือไม่?")) return;
 
                 var id = $(this).data('id');
                 var btn = $(this);
-                
+
                 if (!id) return;
 
                 btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Sending...');

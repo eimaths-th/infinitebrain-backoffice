@@ -19,6 +19,7 @@ class Receipt extends Model
         'type',
         'recform_id',
         'submission_date',
+        'ref_date',
         'first_name',
         'last_name',
         'street_address',
