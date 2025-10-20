@@ -373,6 +373,34 @@
                                     </div>
                                 @endif
 
+                                @if ($isFieldEnabled('ref_date_label') && isset($form->ref_date_label) && !empty($form->ref_date_label))
+                                    <div class="form-row form-focus">
+                                        <div class="col-md-6 col-sm-12">
+                                            <div class="position-relative form-group">
+                                                <label class="form-label form-label-top form-label-auto"
+                                                    for="ref_date">
+                                                    {{ $form->ref_date_label }}
+                                                    <span class="form-required">*</span>
+                                                    <div style="width: 270px"></div>
+                                                </label>
+                                                <input type="date" class="form-control" name="ref_date"
+                                                    id="ref_date" value="" required>
+                                                <label class="form-sub-label" style="min-height:13px"
+                                                    aria-hidden="false">Reference Date</label>
+                                                <div class="form-error-message" role="alert"><img
+                                                        src="https://cdn.jotfor.ms/images/exclamation-octagon.png"
+                                                        height="10"> <span class="error-navigation-message">This
+                                                        field is
+                                                        required.</span>
+                                                    <div class="form-error-arrow">
+                                                        <div class="form-error-arrow-inner"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 @if ($isFieldEnabled('student_school_name') || $isFieldEnabled('student_grade'))
                                     <div class="form-row form-focus">
                                         @if ($isFieldEnabled('student_school_name'))

@@ -44,6 +44,7 @@ class ExportForm implements FromCollection, WithHeadings
     {
         $receipts = ReceiptForm::select(
             "submission_date",
+            "ref_date",
             "first_name",
             "last_name",
             "nick_name",
@@ -79,6 +80,7 @@ class ExportForm implements FromCollection, WithHeadings
             }
             return [
                 "submission_date" => $receipt->submission_date,
+                "ref_date" => $receipt->ref_date ?? null,
                 "first_name" => $receipt->first_name,
                 "last_name" => $receipt->last_name,
                 "nick_name" => $receipt->nick_name,
@@ -107,8 +109,10 @@ class ExportForm implements FromCollection, WithHeadings
 
     public function headings(): array
     {
+        
         return [
             'Submission Date',
+            'Ref Date',
             'First Name',
             'Last Name',
             'Nick Name',

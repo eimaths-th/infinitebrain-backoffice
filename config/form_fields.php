@@ -41,6 +41,14 @@ return [
         'default_enabled' => true,
         'default_required' => true,
     ],
+    'ref_date_label' => [
+        'label' => 'Reference Date',
+        'description' => 'วันที่อ้างอิง',
+        'builder_input' => '#ref_date_label',
+        'public_name' => 'ref_date_label',
+        'default_enabled' => false,
+        'default_required' => false,
+    ],
     'student_grade' => [
         'label' => 'Grade',
         'description' => 'ระดับชั้น',

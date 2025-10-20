@@ -48,6 +48,7 @@ class ExportExcel implements FromCollection, WithHeadings
             "submission_date",
             "first_name",
             "last_name",
+            "ref_date",
             // "nick_name",
             // "email",
             // "school_name",
@@ -102,6 +103,7 @@ class ExportExcel implements FromCollection, WithHeadings
                 }
                 return [
                     "submission_date" => $receipt->submission_date,
+                    "ref_date" => $receipt->ref_date ?? null,
                     "first_name" => $receipt->first_name,
                     "last_name" => $receipt->last_name,
                     "nick_name" => $receipt->recform->nick_name,
@@ -128,6 +130,7 @@ class ExportExcel implements FromCollection, WithHeadings
                 $null = ' ';
                 return [
                 "submission_date" => $receipt->submission_date,
+                "ref_date" => $receipt->ref_date ?? null,
                 "first_name" => $receipt->first_name,
                 "last_name" => $receipt->last_name,
                 "nick_name" => $null,
@@ -157,6 +160,7 @@ class ExportExcel implements FromCollection, WithHeadings
     {
         return [
             'Submission Date',
+            'Ref Date',
             'First Name',
             'Last Name',
             'Nick Name',

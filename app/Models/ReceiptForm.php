@@ -24,6 +24,7 @@ class ReceiptForm extends Model
         'school_name',
         'award',
         'birth_date',
+        'ref_date',
         'street_address',
         'street_address2',
         'city',
@@ -54,5 +55,10 @@ class ReceiptForm extends Model
     public function formPackage()
     {
         return $this->belongsTo(FormPakages::class, 'package');
+    }
+
+    public function formManage()
+    {
+        return $this->belongsTo(FormManage::class, 'sfield');
     }
 }
