@@ -5,51 +5,92 @@ use App\Models\SchoolPrice;
 use App\Models\Statuslog;
 use App\Models\Student;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class StatusService
 {
+    protected $schoolPricesCache = [];
+    protected $statusLogsToInsert = [];
+    protected $currentMonthYear;
+    protected $currentMonth;
+    protected $cMonth;
+    protected $cYear;
     public function updateStudentStatus()
     {
-        $students = Student::with('rec_school')->get();
+        // Initialize date variables
+        $this->currentMonthYear = date('Y-m');
+        $this->currentMonth = Carbon::parse($this->currentMonthYear)->firstOfMonth();
+        $this->cMonth = date('m');
+        $this->cYear = date('Y');
 
-        $updateStatus = $this->updateStatus($students);
-        // return redirect()->route('home');
+        // Eager load ALL relationships at once to avoid N+1 queries
+        $students = Student::with([
+            'rec_school',
+            'status_log' => function ($query) {
+                $query->latest();
+            }
+        ])->get();
+
+        $this->updateStatus($students);
     }
     public function updateStatus($students)
     {
-        // dd($students);
+        // Pre-load all SchoolPrices for all students at once
+        $studentIds = $students->pluck('id')->toArray();
+        $schoolPrices = SchoolPrice::whereIn('student_id', $studentIds)
+            ->where('course_type', 1)
+            ->where('qty', '>', 0)
+            ->orderBy('rid')
+            ->get()
+            ->groupBy('student_id');
+
+        // Pre-load all existing status logs for current month
+        $existingStatusLogs = Statuslog::whereIn('student_id', $studentIds)
+            ->whereMonth('status_date', $this->cMonth)
+            ->whereYear('status_date', $this->cYear)
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->student_id . '_' . $item->group;
+            });
+
+        // Pre-load latest status logs per student per group
+        $latestStatusLogs = Statuslog::whereIn('student_id', $studentIds)
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->student_id . '_' . $item->group;
+            })
+            ->map(function ($group) {
+                return $group->sortByDesc('id')->first();
+            });
+
+        // Cache SchoolPrice by ID
+        $allSchoolPriceIds = $schoolPrices->flatten()->pluck('id')->unique()->toArray();
+        $this->schoolPricesCache = SchoolPrice::whereIn('id', $allSchoolPriceIds)
+            ->get()
+            ->keyBy('id');
+
+        $this->statusLogsToInsert = [];
+        $studentsToUpdate = [];
         foreach ($students as $student) {
-            $statuses = $this->determineStatus($student);
-            $cl = 0;
+            // Use pre-loaded school prices
+            $studentSchoolPrices = $schoolPrices->get($student->id, collect());
+            $statuses = $this->determineStatus($student, $studentSchoolPrices);
+            
             foreach ($statuses as $statuse) {
                 foreach ($statuse as $subjectGroup => $statu) {
-
                     $schp_id = $statu['schoolprice_id'];
                     $status = $statu['status'];
 
-                    $existingStatus = Statuslog::where('student_id', $student->id)
-                        ->where('group', $subjectGroup)
-                        ->latest()
-                        ->get();
-                    $currentMonthYear = date('Y-m');
+                    // Use pre-loaded data instead of querying
+                    $key = $student->id . '_' . $subjectGroup;
+                    $existingStatus = $latestStatusLogs->get($key);
+                    $checkDuplicateCollection = $existingStatusLogs->get($key, collect());
 
-                    $status_date = $existingStatus->first()->status_date ?? '';
-                    $status_date_year_month = date('Y-m', strtotime($status_date));
+                    $status_date = $existingStatus->status_date ?? '';
+                    $status_date_year_month = $status_date ? Carbon::parse($status_date)->format('Y-m') : '';
 
-                    $select_status_date_year_month = date('Y-m', strtotime($currentMonthYear));
-
-                    $cMonth = date('m');
-                    $cYear = date('Y');
-                    $checkDuplicate = Statuslog::where([
-                        'student_id' => $student->id,
-                        'schoolprice_id' => $schp_id,
-                        'group' => $subjectGroup,
-                        // 'status' => $status,
-                    ])
-                        ->whereMonth('status_date', $cMonth)
-                        ->whereYear('status_date', $cYear)
-                        ->orderBy('id', 'desc')->get();
-                    $check_schp = SchoolPrice::find($schp_id);
+                    // Use cached SchoolPrice
+                    $check_schp = $this->schoolPricesCache->get($schp_id);
 
                     if ($check_schp) {
                         # code...
@@ -62,76 +103,83 @@ class StatusService
                             $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
                             $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
                         } else {
-
                             $startMonth = Carbon::parse($periodd[0])->format('Y-m');
                             $endMonth = Carbon::parse($periodd[1])->format('Y-m');
                         }
-                        $cMonthYear = Carbon::parse($currentMonthYear)->firstOfMonth();
+                        $cMonthYear = $this->currentMonth;
                         $endMonthYear = Carbon::parse($endMonth);
                         $checkDrop = $endMonthYear->diffInMonths($cMonthYear) > 2 && $endMonthYear->lessThan($cMonthYear) || $subjectGroup === 'N';
                     } else {
-                        # code...
                         $checkDrop = $subjectGroup === 'N';
-                        // dd($student->id, $schp_id, $check_schp, $subjectGroup, $status,$checkDrop);
                     }
 
+                    $shouldCreate = false;
 
-                    // dd(
-                    //     $student->id,
-                    //     $schp_id,
-                    //     $check_schp,
-                    //     $checkDuplicate,
-                    //     $status,
-                    //     $endMonth,
-                    //     $checkDrop,
-                    // );
+                    if (!$existingStatus) {
+                        $shouldCreate = true;
+                    } elseif ($existingStatus->status === $status && 
+                              $existingStatus->group === $subjectGroup && 
+                              $status_date_year_month == $this->currentMonthYear) {
+                        // Skip - same status in same month
+                    } elseif ($checkDuplicateCollection->count() > 0 && $checkDuplicateCollection->first()->status === $status) {
+                        // Skip - duplicate found
+                    } else {
+                        if (!$checkDrop) {
+                            $shouldCreate = true;
+                        }
+                    }
 
-                    if (count($existingStatus) < 1) {
-                        Statuslog::create([
+                    if ($shouldCreate) {
+                        $this->statusLogsToInsert[] = [
                             'student_id' => $student->id,
                             'schoolprice_id' => $schp_id,
                             'nick_name' => $student->nick_name,
                             'group' => $subjectGroup,
                             'status' => $status,
                             'status_date' => now(),
-                        ]);
-                    } elseif ($existingStatus->first()->status === $status && $existingStatus->first()->group === $subjectGroup && $status_date_year_month == $select_status_date_year_month) {
-                    } elseif ($checkDuplicate->count() > 0 && $checkDuplicate->first()->status === $status) {
-                        # code...
-                        // dd($checkDuplicate->first()->status, $status);
-                    } else {
-                        if ($checkDrop) {
-                            # code...
-                        } else {
-                            # code...
-                            Statuslog::create([
-                                'student_id' => $student->id,
-                                'schoolprice_id' => $schp_id,
-                                'nick_name' => $student->nick_name,
-                                'group' => $subjectGroup,
-                                'status' => $status,
-                                'status_date' => now(),
-                            ]);
-                        }
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
                     }
+
+                    // Prepare student status update
                     $lastStatusLog = $student->status_log->last();
-                    if ($lastStatusLog) {
-                        $student->update(['status' => $lastStatusLog->status]);
+                    if ($lastStatusLog && $student->status !== $lastStatusLog->status) {
+                        $studentsToUpdate[$student->id] = $lastStatusLog->status;
                     }
                 }
-                $cl++;
+            }
+        }
+
+        // Bulk insert all status logs at once
+        if (!empty($this->statusLogsToInsert)) {
+            // Insert in chunks to avoid memory issues
+            foreach (array_chunk($this->statusLogsToInsert, 500) as $chunk) {
+                Statuslog::insert($chunk);
+            }
+        }
+
+        // Bulk update student statuses
+        if (!empty($studentsToUpdate)) {
+            foreach ($studentsToUpdate as $studentId => $newStatus) {
+                Student::where('id', $studentId)->update(['status' => $newStatus]);
             }
         }
     }
-    public function determineStatus($student)
+    public function determineStatus($student, $studentSchoolPrices = null)
     {
         $stdId = $student->id;
 
-        $ssss = SchoolPrice::where('student_id', $stdId)
-            ->where('course_type', 1)
-            ->where('qty', '>', 0)
-            ->orderBy('rid')
-            ->get();
+        // Use pre-loaded school prices if available
+        if ($studentSchoolPrices === null) {
+            $ssss = SchoolPrice::where('student_id', $stdId)
+                ->where('course_type', 1)
+                ->where('qty', '>', 0)
+                ->orderBy('rid')
+                ->get();
+        } else {
+            $ssss = $studentSchoolPrices;
+        }
         $group_scp = $ssss->groupBy('group');
         $status = [];
         $statusss = [];
@@ -257,15 +305,13 @@ class StatusService
 
                         } else {
                             //กำลังเรียนอยู่
-                            $check_resume = Statuslog::where('student_id', $stdId)
+                            // Use pre-loaded status logs from student relationship
+                            $check_resume = $student->status_log
                                 ->where('group', $group)
-                                // ->whereMonth('status_date', $resume_month)
-                                // ->whereYear('status_date', $resume_year)
-                                ->latest()
-                                ->get();
+                                ->sortByDesc('id')
+                                ->values();
 
                             if (count($check_resume) > 0) {
-
                                 $firstLog = $check_resume->first();
                                 if ($currentMonth->diffInMonths($currentReceiptsubmission_date) == 0 && $currentReceiptsubmission_date->lessThan($currentReceiptStatDate)) {
                                     //จ่ายในเดือนปัจจุบัน                                                      //วันที่จ่ายน้อยกว่าวันที่เริ่มเรียน
