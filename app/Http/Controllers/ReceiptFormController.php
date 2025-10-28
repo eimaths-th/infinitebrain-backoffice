@@ -397,23 +397,27 @@ class ReceiptFormController extends Controller
 
     public function spelling_bee_islo()
     {
-        return $this->getForm();
+        // return $this->getForm();
+         return redirect()->away("https://form.metaknowledge.co.th/spelling-bee-islo");
     }
 
     //แสดง form แบบใหม่
     public function showFormBySlug($slug)
     {
         // dd($slug);
-        $form = FormManage::where('slug', $slug)->first();
+        // $form = FormManage::where('slug', $slug)->first();
 
-        if (!$form) {
-            abort(404, 'Form not found');
-        }
+        // if (!$form) {
+        //     abort(404, 'Form not found');
+        // }
 
-        // Get datetime using slug as route
-        $date = $this->getDatetime($slug);
+        // // Get datetime using slug as route
+        // $date = $this->getDatetime($slug);
 
-        return view('forms_manage.view', compact('form', 'date'));
+        // return view('forms_manage.view', compact('form', 'date'));
+
+
+        return redirect("https://form.metaknowledge.co.th/form/" . $slug);
     }
 
     //สร้าง form แบบเดิม
