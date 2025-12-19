@@ -279,7 +279,7 @@
 
                     </li>
                 @endif
-`
+                `
                 @if (Auth::user()->level != 3)
                     <li class="app-sidebar__heading"> พนักงาน </li>
 
@@ -289,6 +289,14 @@
                             Home
                         </a>
                     </li>
+                    <ul>
+                        <li>
+                            <a href="{{ route('leave-requests.index') }}">
+                                <i class="metismenu-icon"></i>
+                                เขียนใบลา
+                            </a>
+                        </li>
+                    </ul>
                 @endif
 
                 @if (Auth::user()->level == 1 || Auth::user()->level == 0 || Auth::user()->level == 4)
@@ -326,14 +334,7 @@
                                 </li>
                             </ul>
                         @endif
-                        <ul>
-                            <li>
-                                <a href="{{ route('leave-requests.index') }}">
-                                    <i class="metismenu-icon"></i>
-                                    เขียนใบลา
-                                </a>
-                            </li>
-                        </ul>
+
                         @if (Auth::user()->level == 0)
                             <ul>
                                 <li>
