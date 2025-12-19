@@ -8,6 +8,7 @@ use App\Models\Recordtime;
 use App\Models\User;
 use App\Models\UserCompensateDay;
 use App\Services\LeaveRequestExportService;
+use App\Services\LineMessagingService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class LeaveRequestController extends Controller
         $user = Auth::user();
         $query = LeaveRequest::with(['user', 'approver']);
 
-        if ($user->level == 0 || $user->level == 1) {
+        if ($user->level == 0) {
             if ($request->filled('user_id')) {
                 $query->where('user_id', $request->user_id);
             }
@@ -181,6 +182,9 @@ class LeaveRequestController extends Controller
                 ]);
             }
         }
+
+        $line_messaging = new LineMessagingService();
+        $line_messaging->SendLeaveRequestNotification($leave_request);
 
         return redirect()->route('leave-requests.index')
             ->with('success', 'ส่งใบลาเรียบร้อยแล้ว รอการอนุมัติ');

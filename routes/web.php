@@ -39,6 +39,7 @@ use App\Http\Controllers\BonusStudentController;
 use App\Http\Controllers\CheckReportStdController;
 use App\Http\Controllers\FormManageController;
 use App\Http\Controllers\LineController;
+use App\Http\Controllers\LineWebhookController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AzureTTSController;
 // use App\Http\Controllers\RouteToggleController;
@@ -56,6 +57,8 @@ use App\Http\Controllers\AzureTTSController;
 
 Route::get('/home3', [HomeController::class, 'home3']);
 Route::post('/attendance/import', [AttendanceController::class, 'import']);
+
+Route::post('/webhook/line', [LineWebhookController::class, 'Handle'])->name('webhook.line');
 
 
 Route::group(['middleware' => 'check.opening.date.time'], function () {

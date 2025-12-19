@@ -34,5 +34,10 @@ return [
         'client_id' => '315026935235-1fk08k7dale2t93u6aecsunp6ulrr877.apps.googleusercontent.com', //USE FROM Google DEVELOPER ACCOUNT
         'client_secret' => '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', //USE FROM Google DEVELOPER ACCOUNT
         'redirect' => 'https://school.infinitebrain.co.th/login/google/callback'
-],
+    ],
+
+    'line_messaging' => [
+        'channel_access_token' => env('LINE_CHANNEL_ACCESS_TOKEN'),
+        'group_id' => env('LINE_GROUP_ID'),
+    ],
 ];
