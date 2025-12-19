@@ -98,7 +98,9 @@ class LeaveRequestExportService
         $template->setValue('date_month', $this->thai_months[$submitted_date->month]);
         $template->setValue('date_year', $submitted_date->year + 543);
 
+        $template->setValue('prefix_employee_name', $leave_request->user->GetDisplayName() ?? '');
         $template->setValue('employee_name', $leave_request->user->GetFullName() ?? '');
+        $template->setValue('title_prefix', $leave_request->user->title_prefix ?? '');
         $template->setValue('position', $leave_request->user->position ?? 'พนักงาน');
 
         $template->setValue('start_day', $start_date->day);

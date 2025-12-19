@@ -46,6 +46,11 @@ class User extends Authenticatable
 
     public function GetFullName()
     {
+
+        return $this->name;
+    }
+    public function GetDisplayName()
+    {
         $prefix = $this->title_prefix ?? '';
         return trim($prefix . ' ' . $this->name);
     }
