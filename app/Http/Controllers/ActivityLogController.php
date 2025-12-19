@@ -16,7 +16,7 @@ class ActivityLogController extends Controller
     public function index()
     {
         //
-        $users = User::all();
+        $users = User::active()->get();
         $logs = ActivityLog::with('user')->latest()->paginate(20);
 
         $actions = ActivityLog::select('action')
@@ -71,7 +71,7 @@ class ActivityLogController extends Controller
     public function fullFilter(Request $request)
     {
         // dd($request->all());
-        $users = User::all();
+        $users = User::active()->get();
 
         $actions = ActivityLog::select('action')
             ->distinct()

@@ -99,6 +99,7 @@
                                     <button type="button" tabindex="0" class="dropdown-item" data-toggle="modal"
                                         data-target=".bd-example-modal-lg" id="EditUserButton"
                                         onclick="$('#EditUserModal').modal('show');">User Account</button>
+                                    <a class="dropdown-item" href="{{route('profile.signature')}}">Signature</a>
                                     <!--<button type="button" tabindex="0" class="dropdown-item">Settings</button>
                                     <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                     <button type="button" tabindex="0" class="dropdown-item">Actions</button>-->

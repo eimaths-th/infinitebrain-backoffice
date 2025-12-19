@@ -79,11 +79,26 @@ class EmployeeController extends Controller
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
+                ->addColumn('status', function ($row) {
+                    if ($row->is_disabled) {
+                        return '<span class="badge bg-secondary">ปิดใช้งาน</span>';
+                    }
+                    return '<span class="badge bg-success">ใช้งาน</span>';
+                })
                 ->addColumn('action', function ($row) {
                     $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
+
+                    if ($row->is_disabled) {
+                        $html .= '<a href="#" data-id="' . $row->id . '" class="btn btn-xs btn-success btn-toggle-disable"><i class="fa fa-check"></i> เปิด</a> ';
+                    } else {
+                        $html .= '<a href="#" data-id="' . $row->id . '" class="btn btn-xs btn-secondary btn-toggle-disable"><i class="fa fa-ban"></i> ปิด</a> ';
+                    }
+
                     $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
-                })->toJson();
+                })
+                ->rawColumns(['checkbox', 'status', 'action'])
+                ->toJson();
         }
 
         return view('users.index');
@@ -358,5 +373,39 @@ class EmployeeController extends Controller
         //$ids = $request->get('table_records');
         //User::whereIn('id',explode(",",$ids))->delete();
         return redirect('/users')->with('success', 'Deleted Successfully');
+    }
+
+    public function ToggleDisable($id)
+    {
+        $this->check_permission();
+
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'ไม่พบผู้ใช้'], 404);
+        }
+
+        $old = $user->toArray();
+
+        if ($user->is_disabled) {
+            $user->update([
+                'is_disabled' => false,
+                'disabled_at' => null,
+            ]);
+            $action = 'เปิดใช้งาน';
+        } else {
+            $user->update([
+                'is_disabled' => true,
+                'disabled_at' => now(),
+            ]);
+            $action = 'ปิดใช้งาน';
+        }
+
+        LogActivity::modelEvent($user, "user {$action}", $old, $user->toArray());
+
+        return response()->json([
+            'success' => true,
+            'message' => "{$action}ผู้ใช้ {$user->name} สำเร็จ",
+            'is_disabled' => $user->is_disabled,
+        ]);
     }
 }
