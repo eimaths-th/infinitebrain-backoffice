@@ -574,31 +574,43 @@ class LeaveRequestController extends Controller
     protected function ConvertDocxToPdf($docx_path)
     {
         $output_dir = dirname($docx_path);
-        $libreoffice_path = config('services.libreoffice.path', 'soffice');
+        $libreoffice_path = config('services.libreoffice.path', '/usr/bin/soffice');
+
+        putenv('HOME=' . storage_path('app/temp'));
 
         $command = sprintf(
-            '"%s" --headless --convert-to pdf --outdir "%s" "%s" 2>&1',
-            $libreoffice_path,
-            $output_dir,
-            $docx_path
+            '%s --headless --convert-to pdf --outdir %s %s 2>&1',
+            escapeshellarg($libreoffice_path),
+            escapeshellarg($output_dir),
+            escapeshellarg($docx_path)
         );
+
+        \Illuminate\Support\Facades\Log::info('LibreOffice command', [
+            'command' => $command,
+            'docx_path' => $docx_path,
+            'docx_exists' => file_exists($docx_path),
+        ]);
 
         exec($command, $output, $return_code);
 
-        if ($return_code !== 0) {
-            \Illuminate\Support\Facades\Log::error('LibreOffice conversion failed', [
-                'command' => $command,
-                'output' => $output,
-                'return_code' => $return_code,
-            ]);
-            return null;
-        }
+        \Illuminate\Support\Facades\Log::info('LibreOffice result', [
+            'output' => $output,
+            'return_code' => $return_code,
+        ]);
 
         $pdf_path = preg_replace('/\.docx$/i', '.pdf', $docx_path);
 
         if (file_exists($pdf_path)) {
             return $pdf_path;
         }
+
+        \Illuminate\Support\Facades\Log::error('LibreOffice conversion failed', [
+            'command' => $command,
+            'output' => $output,
+            'return_code' => $return_code,
+            'pdf_path' => $pdf_path,
+            'pdf_exists' => file_exists($pdf_path),
+        ]);
 
         return null;
     }
