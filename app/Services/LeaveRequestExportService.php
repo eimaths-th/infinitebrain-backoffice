@@ -90,13 +90,13 @@ class LeaveRequestExportService
 
     protected function FillCommonData(TemplateProcessor $template, LeaveRequest $leave_request)
     {
-        $created_date = $leave_request->created_at;
+        $submitted_date = $leave_request->submitted_date ?? $leave_request->created_at;
         $start_date = $leave_request->start_date;
         $end_date = $leave_request->end_date;
 
-        $template->setValue('date_day', $created_date->day);
-        $template->setValue('date_month', $this->thai_months[$created_date->month]);
-        $template->setValue('date_year', $created_date->year + 543);
+        $template->setValue('date_day', $submitted_date->day);
+        $template->setValue('date_month', $this->thai_months[$submitted_date->month]);
+        $template->setValue('date_year', $submitted_date->year + 543);
 
         $template->setValue('employee_name', $leave_request->user->GetFullName() ?? '');
         $template->setValue('position', $leave_request->user->position ?? 'พนักงาน');

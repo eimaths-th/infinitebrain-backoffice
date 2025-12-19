@@ -12,6 +12,7 @@ class LeaveRequest extends Model
     protected $fillable = [
         'user_id',
         'leave_type',
+        'submitted_date',
         'start_date',
         'end_date',
         'total_days',
@@ -35,6 +36,7 @@ class LeaveRequest extends Model
     ];
 
     protected $casts = [
+        'submitted_date' => 'date',
         'start_date' => 'date',
         'end_date' => 'date',
         'compensate_for_date' => 'date',

@@ -94,6 +94,12 @@
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-3">
+                    <label class="form-label">วันที่ยื่นใบลา <span class="text-danger">*</span></label>
+                    <input type="date" name="submitted_date" class="form-control" required
+                           value="{{ old('submitted_date', date('Y-m-d')) }}">
+                    <small class="text-muted">สามารถแก้ไขได้หากต้องการยื่นย้อนหลัง</small>
+                </div>
+                <div class="col-md-3">
                     <label class="form-label">คำนำหน้า <span class="text-danger">*</span></label>
                     <select name="title_prefix" id="titlePrefix" class="form-select" required>
                         <option value="">-- เลือก --</option>
