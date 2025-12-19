@@ -289,14 +289,12 @@
                             Home
                         </a>
                     </li>
-                    <ul>
-                        <li>
-                            <a href="{{ route('leave-requests.index') }}">
-                                <i class="metismenu-icon"></i>
-                                เขียนใบลา
-                            </a>
-                        </li>
-                    </ul>
+                    <li>
+                        <a href="{{ route('leave-requests.index') }}">
+                            <i class="metismenu-icon pe-7s-note2"></i>
+                            เขียนใบลา
+                        </a>
+                    </li>
                 @endif
 
                 @if (Auth::user()->level == 1 || Auth::user()->level == 0 || Auth::user()->level == 4)
