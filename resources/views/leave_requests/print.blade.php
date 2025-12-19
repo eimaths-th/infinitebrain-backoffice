@@ -193,8 +193,7 @@
 
     <script>
         window.onload = function() {
-            // Auto print if needed
-            // window.print();
+            window.print();
         }
     </script>
 </body>

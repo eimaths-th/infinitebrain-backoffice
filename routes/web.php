@@ -142,8 +142,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/leave-requests', [App\Http\Controllers\LeaveRequestController::class, 'Store'])->name('leave-requests.store');
     Route::get('/leave-requests/pending', [App\Http\Controllers\LeaveRequestController::class, 'PendingApprovals'])->name('leave-requests.pending');
     Route::get('/leave-requests/{id}', [App\Http\Controllers\LeaveRequestController::class, 'Show'])->name('leave-requests.show');
+    Route::get('/leave-requests/{id}/edit', [App\Http\Controllers\LeaveRequestController::class, 'Edit'])->name('leave-requests.edit');
+    Route::put('/leave-requests/{id}', [App\Http\Controllers\LeaveRequestController::class, 'Update'])->name('leave-requests.update');
     Route::get('/leave-requests/{id}/print', [App\Http\Controllers\LeaveRequestController::class, 'PrintLeave'])->name('leave-requests.print');
     Route::get('/leave-requests/{id}/export', [App\Http\Controllers\LeaveRequestController::class, 'ExportDocx'])->name('leave-requests.export');
+    Route::get('/leave-requests/{id}/pdf', [App\Http\Controllers\LeaveRequestController::class, 'ExportPdf'])->name('leave-requests.pdf');
     Route::post('/leave-requests/{id}/approve', [App\Http\Controllers\LeaveRequestController::class, 'Approve'])->name('leave-requests.approve');
     Route::post('/leave-requests/{id}/reject', [App\Http\Controllers\LeaveRequestController::class, 'Reject'])->name('leave-requests.reject');
     Route::delete('/leave-requests/{id}', [App\Http\Controllers\LeaveRequestController::class, 'Destroy'])->name('leave-requests.destroy');

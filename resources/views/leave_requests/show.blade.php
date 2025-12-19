@@ -12,11 +12,16 @@
             </div>
         </div>
         <div class="page-title-actions">
+            @if($leave_request->IsPending() && $leave_request->user_id == Auth::id())
+            <a href="{{ route('leave-requests.edit', $leave_request->id) }}" class="btn btn-warning">
+                <i class="fas fa-edit me-1"></i> แก้ไข
+            </a>
+            @endif
             <a href="{{ route('leave-requests.export', $leave_request->id) }}" class="btn btn-success">
                 <i class="fas fa-file-word me-1"></i> ดาวน์โหลด Word
             </a>
-            <a href="{{ route('leave-requests.print', $leave_request->id) }}" class="btn btn-info" target="_blank">
-                <i class="fas fa-print me-1"></i> พิมพ์ใบลา
+            <a href="{{ route('leave-requests.pdf', $leave_request->id) }}" class="btn btn-danger" target="_blank">
+                <i class="fas fa-file-pdf me-1"></i> เปิด PDF / พิมพ์
             </a>
             <a href="{{ route('leave-requests.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left me-1"></i> ย้อนกลับ
