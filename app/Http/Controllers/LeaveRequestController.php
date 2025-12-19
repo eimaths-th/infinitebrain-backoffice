@@ -576,10 +576,14 @@ class LeaveRequestController extends Controller
         $output_dir = dirname($docx_path);
         $libreoffice_path = config('services.libreoffice.path', '/usr/bin/soffice');
 
-        putenv('HOME=' . storage_path('app/temp'));
+        $home_dir = storage_path('app/temp/libreoffice_home');
+        if (!file_exists($home_dir)) {
+            mkdir($home_dir, 0755, true);
+        }
+        putenv('HOME=' . $home_dir);
 
         $command = sprintf(
-            '%s --headless --convert-to pdf --outdir %s %s 2>&1',
+            '%s --headless --nofirststartwizard --convert-to pdf --outdir %s %s 2>&1',
             escapeshellarg($libreoffice_path),
             escapeshellarg($output_dir),
             escapeshellarg($docx_path)
