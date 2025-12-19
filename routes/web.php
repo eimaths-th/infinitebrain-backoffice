@@ -122,6 +122,34 @@ Route::get('/test-fn', [TestController::class, 'store'])->name('testFs')->withou
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/search-rect', [RecordtimeController::class, 'search_rect'])->name('search_rect');
 
+    Route::get('/recordtime/import', [RecordtimeController::class, 'ShowImportForm'])->name('recordtime.import');
+    Route::post('/recordtime/import', [RecordtimeController::class, 'ProcessImport'])->name('recordtime.import.process');
+    Route::post('/recordtime/update-fingerprint', [RecordtimeController::class, 'UpdateFingerprint'])->name('recordtime.update.fingerprint');
+
+    Route::get('/company-holidays', [App\Http\Controllers\CompanyHolidayController::class, 'Index'])->name('company.holidays.index');
+    Route::post('/company-holidays', [App\Http\Controllers\CompanyHolidayController::class, 'Store'])->name('company.holidays.store');
+    Route::delete('/company-holidays/{id}', [App\Http\Controllers\CompanyHolidayController::class, 'Destroy'])->name('company.holidays.destroy');
+    Route::post('/company-holidays/recalculate', [App\Http\Controllers\CompanyHolidayController::class, 'RecalculateAll'])->name('company.holidays.recalculate');
+    Route::get('/company-holidays/compensate', [App\Http\Controllers\CompanyHolidayController::class, 'GetUserCompensateDays'])->name('company.holidays.compensate');
+    Route::post('/company-holidays/import', [App\Http\Controllers\CompanyHolidayController::class, 'Import'])->name('company.holidays.import');
+    Route::get('/company-holidays/template', [App\Http\Controllers\CompanyHolidayController::class, 'DownloadTemplate'])->name('company.holidays.template');
+
+    Route::get('/leave-requests', [App\Http\Controllers\LeaveRequestController::class, 'Index'])->name('leave-requests.index');
+    Route::get('/leave-requests/create', [App\Http\Controllers\LeaveRequestController::class, 'Create'])->name('leave-requests.create');
+    Route::post('/leave-requests', [App\Http\Controllers\LeaveRequestController::class, 'Store'])->name('leave-requests.store');
+    Route::get('/leave-requests/pending', [App\Http\Controllers\LeaveRequestController::class, 'PendingApprovals'])->name('leave-requests.pending');
+    Route::get('/leave-requests/{id}', [App\Http\Controllers\LeaveRequestController::class, 'Show'])->name('leave-requests.show');
+    Route::get('/leave-requests/{id}/print', [App\Http\Controllers\LeaveRequestController::class, 'PrintLeave'])->name('leave-requests.print');
+    Route::get('/leave-requests/{id}/export', [App\Http\Controllers\LeaveRequestController::class, 'ExportDocx'])->name('leave-requests.export');
+    Route::post('/leave-requests/{id}/approve', [App\Http\Controllers\LeaveRequestController::class, 'Approve'])->name('leave-requests.approve');
+    Route::post('/leave-requests/{id}/reject', [App\Http\Controllers\LeaveRequestController::class, 'Reject'])->name('leave-requests.reject');
+    Route::delete('/leave-requests/{id}', [App\Http\Controllers\LeaveRequestController::class, 'Destroy'])->name('leave-requests.destroy');
+    Route::post('/user/signature', [App\Http\Controllers\LeaveRequestController::class, 'SaveSignature'])->name('user.signature.save');
+
+    Route::get('/profile/signature', [App\Http\Controllers\ProfileController::class, 'Signature'])->name('profile.signature');
+    Route::post('/profile/signature', [App\Http\Controllers\ProfileController::class, 'UpdateSignature'])->name('profile.signature.update');
+    Route::delete('/profile/signature', [App\Http\Controllers\ProfileController::class, 'DeleteSignature'])->name('profile.signature.delete');
+    Route::post('/profile/contact', [App\Http\Controllers\ProfileController::class, 'UpdateContact'])->name('profile.contact.update');
 
     Route::resource('recordtime', RecordtimeController::class);
     Route::resource('app-down-load', AppDownloadController::class);
@@ -160,6 +188,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/users/store', [EmployeeController::class, 'store'])->name('users.store');
     Route::delete('/users/destroy/{id}', [EmployeeController::class, 'destroy'])->name('users.destroy');
     Route::delete('/users/destroy_all', [EmployeeController::class, 'destroy_all'])->name('users.destroy_all');
+    Route::post('/users/toggle-disable/{id}', [EmployeeController::class, 'ToggleDisable'])->name('users.toggle-disable');
 
     //subject
     Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects');

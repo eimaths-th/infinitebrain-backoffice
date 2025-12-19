@@ -61,6 +61,11 @@
                             data-bs-trigger="hover" data-bs-container="body" data-bs-title="Create New Student">
                             <i class="fas fa-user-plus"></i> Add Record
                         </a>
+                        <a href="{{ route('recordtime.import') }}" class="btn btn-info"
+                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
+                            data-bs-title="Import จากเครื่องสแกนนิ้ว">
+                            <i class="fas fa-file-import"></i> Import Excel
+                        </a>
 
                         {{-- <a class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" id="ImportButton"><i
                                 class="fa fa-file-excel"></i> Import Excel
@@ -207,8 +212,13 @@
                                             break;
 
                                         case 10:
+                                        case 14:
+                                        case 15:
                                             $class = 'dark';
 
+                                            break;
+                                        case 16:
+                                            $class = 'info';
                                             break;
 
                                         default:
@@ -221,7 +231,7 @@
                                     <span
                                         class="badge border border-{{ $class }} text-{{ $class }} px-2 pt-5px pb-5px rounded fs-12px d-inline-flex align-items-center"><i
                                             class="fa fa-circle fs-9px fa-fw me-5px"></i>
-                                        {{ $rec_time->status_name }}</span>
+                                        {{ $rec_time->status_name }} </span>
                                 </td>
 
                                 <td>

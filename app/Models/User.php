@@ -19,12 +19,36 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'code',
+        'fingerprint_id',
+        'days_off',
+        'wfh_days',
+        'is_disabled',
+        'disabled_at',
+        'signature',
+        'signature_is_image',
         'name',
+        'title_prefix',
+        'position',
+        'phone',
+        'address',
         'email',
         'type_user',
         'password',
         'level',
     ];
+
+    const TITLE_PREFIXES = [
+        'นาย' => 'นาย',
+        'นาง' => 'นาง',
+        'นางสาว' => 'นางสาว',
+        'other' => 'อื่นๆ',
+    ];
+
+    public function GetFullName()
+    {
+        $prefix = $this->title_prefix ?? '';
+        return trim($prefix . ' ' . $this->name);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -43,7 +67,19 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_disabled' => 'boolean',
+        'disabled_at' => 'date',
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_disabled', false);
+    }
+
+    public function scopeDisabled($query)
+    {
+        return $query->where('is_disabled', true);
+    }
 
 
     const ADMIN_TYPE = 1;
@@ -72,5 +108,10 @@ class User extends Authenticatable
                 session(['level' => self::DEFAULT_TYPE]);
                 return self::DEFAULT_TYPE;
         }
+    }
+
+    public function compensateDays()
+    {
+        return $this->hasMany(UserCompensateDay::class);
     }
 }

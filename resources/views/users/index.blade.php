@@ -51,7 +51,8 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Level</th>
-                                <th width="280px">Action</th>
+                                <th>สถานะ</th>
+                                <th width="320px">Action</th>
                             </tr>
                         </thead>
 
@@ -259,6 +260,12 @@
                         name: 'level'
                     },
                     {
+                        data: 'status',
+                        name: 'status',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
                         data: 'action',
                         name: 'action'
                     },
@@ -411,7 +418,7 @@
                         _token: token
                     },
                     success: function(data) {
-                    
+
                         toastr.success(data.message, {
                             timeOut: 5000
                         });
@@ -424,6 +431,38 @@
                         }
                     }
                 }); //end ajax
+            })
+
+            $(document).on('click', '.btn-toggle-disable', function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var btn = $(this);
+
+                $.ajax({
+                    type: "POST",
+                    dataType: 'JSON',
+                    url: "users/toggle-disable/" + id,
+                    data: {
+                        _token: token
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            toastr.success(data.message, {
+                                timeOut: 3000
+                            });
+                            $('#Listview').DataTable().ajax.reload();
+                        } else {
+                            toastr.error(data.message, {
+                                timeOut: 3000
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        toastr.error('เกิดข้อผิดพลาด', {
+                            timeOut: 3000
+                        });
+                    }
+                });
             })
         })
     </script>

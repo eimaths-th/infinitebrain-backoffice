@@ -31,7 +31,7 @@ class GodeyeContreoller extends Controller
     public function create()
     {
         //
-        $users = User::all();
+        $users = User::active()->get();
         return view('godeye.create', [
             'users' => $users,
         ]);

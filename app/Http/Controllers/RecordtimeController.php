@@ -10,6 +10,8 @@ use App\Models\WorktimeLog;
 use App\Models\WorktimeLogs;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Imports\RecordtimeImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RecordtimeController extends Controller
 {
@@ -26,7 +28,7 @@ class RecordtimeController extends Controller
     public function index()
     {
         //
-        $users = User::all();
+        $users = User::active()->get();
         $rec_times = Recordtime::orderBy('id', 'desc')->get();
         $checkCd = 0;
         return view('users.def_working', [
@@ -45,7 +47,7 @@ class RecordtimeController extends Controller
     public function create()
     {
         //
-        $users = User::all();
+        $users = User::active()->get();
         return view('users.working_create', [
             'users' => $users
         ]);
@@ -343,7 +345,7 @@ class RecordtimeController extends Controller
             $view = 'users.view_rect';
         }
 
-        $users = User::all();
+        $users = User::active()->get();
 
         // dd($name);
         $checkCd = 1;
@@ -485,7 +487,7 @@ class RecordtimeController extends Controller
 
     public function testrec()
     {
-        $users = User::all();
+        $users = User::active()->get();
         $ids = User::pluck('id')->toArray();
         $recordtime = Recordtime::whereNotIn('user_id', $ids)->delete();
         // $ids_rec = $recordtime->pluck('user_id')->toArray();
@@ -651,7 +653,7 @@ class RecordtimeController extends Controller
     public function find_UserRecTime($user_id, $status, $month, $year)
     {
         //
-        $users = User::all();
+        $users = User::active()->get();
 
         // dd($month);
         if ($month === 'null') {
@@ -678,7 +680,7 @@ class RecordtimeController extends Controller
     public function find_statusRecTime($status, $month, $year)
     {
         //
-        $users = User::all();
+        $users = User::active()->get();
 
         // dd($month);
 
@@ -863,6 +865,81 @@ class RecordtimeController extends Controller
             return redirect()->route('recordtime.index')->with('success', 'Record deleted successfully');
         } else {
             return redirect()->route('recordtime.index')->with('error', 'Record not found');
+        }
+    }
+
+    public function ShowImportForm()
+    {
+        $users = User::active()->orderBy('name')->get();
+        return view('users.recordtime_import', [
+            'users' => $users,
+        ]);
+    }
+
+    public function ProcessImport(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx|max:10240',
+        ]);
+
+        try {
+            $import = new RecordtimeImport();
+            Excel::import($import, $request->file('file'));
+
+            $results = $import->GetResults();
+            $users = User::active()->orderBy('name')->get();
+
+            return view('users.recordtime_import', [
+                'users' => $users,
+                'import_results' => $results,
+            ])->with('success', "นำเข้าข้อมูลสำเร็จ {$results['success_count']} รายการ");
+
+        } catch (\Exception $e) {
+            return redirect()->route('recordtime.import')
+                ->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+        }
+    }
+
+    public function UpdateFingerprint(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'fingerprint_id' => 'nullable|string|max:50',
+            'days_off' => 'nullable|string|max:20',
+            'wfh_days' => 'nullable|string|max:20',
+        ]);
+
+        try {
+            $user = User::find($request->user_id);
+
+            if ($request->fingerprint_id) {
+                $existing_user = User::where('fingerprint_id', $request->fingerprint_id)
+                    ->where('id', '!=', $user->id)
+                    ->first();
+
+                if ($existing_user) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Fingerprint ID นี้ถูกใช้โดย {$existing_user->name} แล้ว"
+                    ]);
+                }
+            }
+
+            $user->fingerprint_id = $request->fingerprint_id ?: null;
+            $user->days_off = $request->days_off ?: null;
+            $user->wfh_days = $request->wfh_days ?: null;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'บันทึกสำเร็จ'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'เกิดข้อผิดพลาด: ' . $e->getMessage()
+            ]);
         }
     }
 }
