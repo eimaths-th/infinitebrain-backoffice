@@ -74,6 +74,7 @@ class LeaveRequestController extends Controller
     {
         $request->validate([
             'leave_type' => 'required|in:' . implode(',', array_keys(LeaveRequest::LEAVE_TYPES)),
+            'submitted_date' => 'required|date',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'reason' => 'required|string|max:1000',
@@ -136,9 +137,12 @@ class LeaveRequestController extends Controller
             }
         }
 
+        $submitted_date = Carbon::parse($request->submitted_date);
+
         $leave_request = LeaveRequest::create([
             'user_id' => $user->id,
             'leave_type' => $request->leave_type,
+            'submitted_date' => $submitted_date,
             'start_date' => $start_date,
             'end_date' => $end_date,
             'total_days' => $total_days,
