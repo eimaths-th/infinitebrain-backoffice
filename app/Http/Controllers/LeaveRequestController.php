@@ -549,7 +549,10 @@ class LeaveRequestController extends Controller
 
             if (!$pdf_path || !file_exists($pdf_path)) {
                 @unlink($docx_path);
-                return back()->with('error', 'ไม่สามารถแปลงไฟล์เป็น PDF ได้ กรุณาตรวจสอบว่าติดตั้ง LibreOffice แล้ว');
+                return response()->view('errors.pdf_error', [
+                    'message' => 'ไม่สามารถแปลงไฟล์เป็น PDF ได้ กรุณาตรวจสอบว่าติดตั้ง LibreOffice แล้ว',
+                    'leave_request_id' => $id,
+                ], 500);
             }
 
             @unlink($docx_path);
@@ -561,7 +564,10 @@ class LeaveRequestController extends Controller
                 'Content-Disposition' => 'inline; filename="' . $file_name . '"',
             ])->deleteFileAfterSend(true);
         } catch (\Exception $e) {
-            return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+            return response()->view('errors.pdf_error', [
+                'message' => 'เกิดข้อผิดพลาด: ' . $e->getMessage(),
+                'leave_request_id' => $id,
+            ], 500);
         }
     }
 
