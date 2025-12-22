@@ -180,6 +180,38 @@
             </div>
         </div>
 
+        <div class="main-card mb-3 card">
+            <div class="card-header">
+                <i class="fas fa-chart-pie me-2"></i> สถิติการลาปี {{ $current_year + 543 }}
+            </div>
+            <div class="card-body">
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th>ประเภท</th>
+                            <th class="text-center">โควต้า</th>
+                            <th class="text-center">ใช้ไป</th>
+                            <th class="text-center">คงเหลือ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($leave_stats as $type => $stat)
+                        <tr class="{{ $leave_request->leave_type == $type ? 'table-info' : '' }}">
+                            <td>{{ $stat['name'] }}</td>
+                            <td class="text-center">{{ $stat['quota'] }}</td>
+                            <td class="text-center">{{ $stat['used'] }}</td>
+                            <td class="text-center">
+                                <span class="badge {{ $stat['remaining'] > 0 ? 'bg-success' : 'bg-danger' }}">
+                                    {{ $stat['remaining'] }}
+                                </span>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         @if($leave_request->IsPending() && Auth::user()->level <= 1)
         <div class="main-card mb-3 card">
             <div class="card-header bg-primary text-white">

@@ -202,9 +202,13 @@ class LeaveRequestController extends Controller
             abort(403, 'ไม่มีสิทธิ์ดูใบลานี้');
         }
 
+        $leave_stats = LeaveRequest::GetUserLeaveStats($leave_request->user_id);
+
         return view('leave_requests.show', [
             'leave_request' => $leave_request,
             'leave_types' => LeaveRequest::LEAVE_TYPES,
+            'leave_stats' => $leave_stats,
+            'current_year' => now()->year,
         ]);
     }
 
