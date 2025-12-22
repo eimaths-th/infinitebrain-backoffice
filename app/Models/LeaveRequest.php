@@ -74,6 +74,12 @@ class LeaveRequest extends Model
         'afternoon' => 'ครึ่งวันบ่าย',
     ];
 
+    const LEAVE_QUOTAS = [
+        'vacation' => 6,    // ลาพักร้อน 6 วัน/ปี
+        'personal' => 3,    // ลากิจ 3 วัน/ปี
+        'sick' => 30,       // ลาป่วย 30 วัน/ปี
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -140,5 +146,40 @@ class LeaveRequest extends Model
             return $this->start_date->format('d/m/Y');
         }
         return $this->start_date->format('d/m/Y') . ' - ' . $this->end_date->format('d/m/Y');
+    }
+
+    public static function GetUserLeaveStats($user_id, $year = null)
+    {
+        $year = $year ?? now()->year;
+
+        $stats = [];
+
+        foreach (self::LEAVE_QUOTAS as $leave_type => $quota) {
+            $used = self::where('user_id', $user_id)
+                ->where('leave_type', $leave_type)
+                ->where('status', self::STATUS_APPROVED)
+                ->whereYear('start_date', $year)
+                ->sum('total_days');
+
+            $stats[$leave_type] = [
+                'name' => self::LEAVE_TYPES[$leave_type],
+                'quota' => $quota,
+                'used' => (float) $used,
+                'remaining' => $quota - (float) $used,
+            ];
+        }
+
+        return $stats;
+    }
+
+    public static function GetUserLeaveUsedByType($user_id, $leave_type, $year = null)
+    {
+        $year = $year ?? now()->year;
+
+        return (float) self::where('user_id', $user_id)
+            ->where('leave_type', $leave_type)
+            ->where('status', self::STATUS_APPROVED)
+            ->whereYear('start_date', $year)
+            ->sum('total_days');
     }
 }

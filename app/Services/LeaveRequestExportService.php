@@ -115,6 +115,36 @@ class LeaveRequestExportService
         $template->setValue('reason', $leave_request->reason ?? '');
         $template->setValue('contact_phone', $leave_request->contact_phone ?? '');
         $template->setValue('contact_address', $leave_request->contact_address ?? '');
+
+        $this->FillLeaveStats($template, $leave_request);
+    }
+
+    protected function FillLeaveStats(TemplateProcessor $template, LeaveRequest $leave_request)
+    {
+        $year = $leave_request->start_date->year;
+        $user_id = $leave_request->user_id;
+
+        $vacation_used = LeaveRequest::GetUserLeaveUsedByType($user_id, 'vacation', $year);
+        $personal_used = LeaveRequest::GetUserLeaveUsedByType($user_id, 'personal', $year);
+        $sick_used = LeaveRequest::GetUserLeaveUsedByType($user_id, 'sick', $year);
+
+        $vacation_quota = LeaveRequest::LEAVE_QUOTAS['vacation'] ?? 6;
+        $personal_quota = LeaveRequest::LEAVE_QUOTAS['personal'] ?? 3;
+        $sick_quota = LeaveRequest::LEAVE_QUOTAS['sick'] ?? 30;
+
+        $template->setValue('vacation_quota', $vacation_quota);
+        $template->setValue('vacation_used', $vacation_used);
+        $template->setValue('vacation_remaining', $vacation_quota - $vacation_used);
+
+        $template->setValue('personal_quota', $personal_quota);
+        $template->setValue('personal_used', $personal_used);
+        $template->setValue('personal_remaining', $personal_quota - $personal_used);
+
+        $template->setValue('sick_quota', $sick_quota);
+        $template->setValue('sick_used', $sick_used);
+        $template->setValue('sick_remaining', $sick_quota - $sick_used);
+
+        $template->setValue('stats_year', $year + 543);
     }
 
     protected function FillGeneralLeave(TemplateProcessor $template, LeaveRequest $leave_request)
