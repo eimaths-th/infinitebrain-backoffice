@@ -146,13 +146,13 @@ class LeaveRequestExportService
 
         $template->setValue('stats_year', $year + 543);
 
-        $template->setValue('sum_total_days_sick', $leave_request->total_days + $sick_used);
-        $template->setValue('sum_total_days_personal', $leave_request->total_days + $personal_used);
-        $template->setValue('sum_total_days_vacation', $leave_request->total_days + $vacation_used);
-        
-        $template->setValue('total_days_sick', $leave_request->leave_type === 'sick' ?  $leave_request->total_days : '');
-        $template->setValue('total_days_personal', $leave_request->leave_type === 'personal' ?  $leave_request->total_days : '');
-        $template->setValue('total_days_vacation', $leave_request->leave_type === 'vacation' ?  $leave_request->total_days : '');
+        $template->setValue('sum_total_days_sick',   ($leave_request->total_days + $sick_used) ?: 0);
+        $template->setValue('sum_total_days_personal', ($leave_request->total_days + $personal_used) ?: 0);
+        $template->setValue('sum_total_days_vacation', ($leave_request->total_days + $vacation_used) ?: 0);
+
+        $template->setValue('total_days_sick', $leave_request->leave_type === 'sick' ?  $leave_request->total_days : 0);
+        $template->setValue('total_days_personal', $leave_request->leave_type === 'personal' ?  $leave_request->total_days : 0);
+        $template->setValue('total_days_vacation', $leave_request->leave_type === 'vacation' ?  $leave_request->total_days : 0);
     }
 
     protected function FillGeneralLeave(TemplateProcessor $template, LeaveRequest $leave_request)
