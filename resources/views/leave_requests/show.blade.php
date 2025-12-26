@@ -162,7 +162,13 @@
                 <p><strong>วันที่อนุมัติ:</strong> {{ $leave_request->approved_at ? $leave_request->approved_at->format('d/m/Y H:i') : '-' }}</p>
                 @if($leave_request->approver_signature)
                 <div class="text-center border p-2">
+                    @if(str_starts_with($leave_request->approver_signature, 'data:image'))
                     <img src="{{ $leave_request->approver_signature }}" alt="ลายเซ็นผู้อนุมัติ" style="max-height: 100px;">
+                    @elseif(str_starts_with($leave_request->approver_signature, '/storage'))
+                    <img src="{{ $leave_request->approver_signature }}" alt="ลายเซ็นผู้อนุมัติ" style="max-height: 100px;" onerror="this.style.display='none'">
+                    @else
+                    <img src="{{ Storage::url($leave_request->approver_signature) }}" alt="ลายเซ็นผู้อนุมัติ" style="max-height: 100px;" onerror="this.src='{{ $leave_request->approver_signature }}'">
+                    @endif
                 </div>
                 @endif
                 @elseif($leave_request->IsRejected())
