@@ -80,7 +80,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="card-body p-0">
+                    <div class="card-body p-0" style="padding: 1rem !important">
                         <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                             <table class="table table-sm table-hover mb-0">
                                 <thead class="table-light sticky-top">
@@ -134,7 +134,7 @@
                     <div class="card-header">
                         <i class="fas fa-gift me-2"></i> สิทธิ์วันลาชดเชยของพนักงาน (ปี {{ $year }})
                     </div>
-                    <div class="card-body p-0" id="compensateDaysContainer">
+                    <div class="card-body p-0" id="compensateDaysContainer" style="padding: 1rem !important">
                         <div class="text-center py-4 text-muted">
                             <i class="fas fa-spinner fa-spin"></i> กำลังโหลด...
                         </div>

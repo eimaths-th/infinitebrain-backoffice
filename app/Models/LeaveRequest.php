@@ -175,7 +175,7 @@ class LeaveRequest extends Model
     public static function GetUserLeaveUsedByType($user_id, $leave_type, $year = null)
     {
         $year = $year ?? now()->year;
-
+        //รอเปลี่ยนตัว where
         return (float) self::where('user_id', $user_id)
             ->where('leave_type', $leave_type)
             ->where('status', self::STATUS_APPROVED)
