@@ -287,7 +287,39 @@ class LeaveRequestExportService
         }
 
         if ($leave_request->approver_signature) {
-            $sig_path = $this->SaveBase64ToTemp($leave_request->approver_signature, 'approver_sig_' . $leave_request->id);
+            $sig_path = null;
+            $approver_sig = $leave_request->approver_signature;
+
+            // กรณี base64 data URL (เซ็นจาก signature pad)
+            if (strpos($approver_sig, 'data:image') === 0) {
+                $sig_path = $this->SaveBase64ToTemp($approver_sig, 'approver_sig_' . $leave_request->id);
+            }
+            // กรณี path ที่มาจาก Storage::url() (เช่น /storage/signatures/xxx.webp)
+            elseif (strpos($approver_sig, '/storage') === 0) {
+                $relative_path = str_replace('/storage/', '', $approver_sig);
+                $sig_path = storage_path('app/public/' . $relative_path);
+
+                if (!file_exists($sig_path)) {
+                    $sig_path = public_path('storage/' . $relative_path);
+                }
+
+                if ($sig_path && file_exists($sig_path)) {
+                    $sig_path = $this->ConvertToPng($sig_path, 'approver_sig_' . $leave_request->id);
+                }
+            }
+            // กรณี path จาก storage โดยตรง (เช่น signatures/xxx.webp)
+            else {
+                $sig_path = storage_path('app/public/' . $approver_sig);
+
+                if (!file_exists($sig_path)) {
+                    $sig_path = public_path('storage/' . $approver_sig);
+                }
+
+                if ($sig_path && file_exists($sig_path)) {
+                    $sig_path = $this->ConvertToPng($sig_path, 'approver_sig_' . $leave_request->id);
+                }
+            }
+
             if ($sig_path && file_exists($sig_path)) {
                 try {
                     $template->setImageValue('approver_signature', [
