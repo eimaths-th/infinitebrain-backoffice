@@ -546,20 +546,16 @@ class LeaveRequestController extends Controller
         }
 
         try {
-            $export_service = new LeaveRequestExportService();
-            $docx_path = $export_service->Export($leave_request);
-
-            $pdf_path = $this->ConvertDocxToPdf($docx_path);
+            // ใช้ PDF service ใหม่ที่สร้าง PDF โดยตรงจาก template
+            $pdf_service = new \App\Services\LeaveRequestPdfService();
+            $pdf_path = $pdf_service->Export($leave_request);
 
             if (!$pdf_path || !file_exists($pdf_path)) {
-                @unlink($docx_path);
                 return response()->view('errors.pdf_error', [
-                    'message' => 'ไม่สามารถแปลงไฟล์เป็น PDF ได้ กรุณาตรวจสอบว่าติดตั้ง LibreOffice แล้ว',
+                    'message' => 'ไม่สามารถสร้างไฟล์ PDF ได้',
                     'leave_request_id' => $id,
                 ], 500);
             }
-
-            @unlink($docx_path);
 
             $file_name = 'ใบลา_' . $leave_request->GetLeaveTypeName() . '_' . $leave_request->user->name . '_' . $leave_request->id . '.pdf';
 
