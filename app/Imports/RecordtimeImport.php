@@ -27,6 +27,9 @@ class RecordtimeImport implements ToCollection, WithStartRow
     protected $column_sets = [];
     protected $employees_from_file = [];
 
+    // เก็บข้อมูลก่อนบันทึก เพื่อเรียงตามวันที่
+    protected $pending_records = [];
+
     public function startRow(): int
     {
         return 1;
@@ -62,8 +65,59 @@ class RecordtimeImport implements ToCollection, WithStartRow
             }
 
             if ($this->current_fingerprint_id && count($this->column_sets) > 0) {
-                $this->ProcessDataRow($row);
+                $this->CollectDataRow($row);
             }
+        }
+
+        // เรียงตามวันที่ก่อนบันทึก
+        $this->SortAndSaveRecords();
+    }
+
+    protected function CollectDataRow($row)
+    {
+        foreach ($this->column_sets as $set) {
+            $date_raw = $row[$set['date']] ?? null;
+
+            if (empty($date_raw) || trim($date_raw) === '') {
+                continue;
+            }
+
+            $date = $this->ParseScheduleDate($date_raw);
+            if (!$date) {
+                continue;
+            }
+
+            $stime_raw = isset($set['stime']) ? ($row[$set['stime']] ?? null) : null;
+            $etime_raw = isset($set['etime']) ? ($row[$set['etime']] ?? null) : null;
+
+            $stime = $this->ParseTime($stime_raw);
+            $etime = $this->ParseTime($etime_raw);
+
+            // เก็บข้อมูลไว้ใน pending_records ก่อน
+            $this->pending_records[] = [
+                'fingerprint_id' => $this->current_fingerprint_id,
+                'date' => $date,
+                'stime' => $stime,
+                'etime' => $etime,
+            ];
+        }
+    }
+
+    protected function SortAndSaveRecords()
+    {
+        // เรียงตามวันที่จากน้อยไปมาก
+        usort($this->pending_records, function ($a, $b) {
+            return $a['date']->timestamp - $b['date']->timestamp;
+        });
+
+        // บันทึกข้อมูลตามลำดับวันที่
+        foreach ($this->pending_records as $record) {
+            $this->SaveRecord(
+                $record['fingerprint_id'],
+                $record['date'],
+                $record['stime'],
+                $record['etime']
+            );
         }
     }
 
@@ -174,30 +228,6 @@ class RecordtimeImport implements ToCollection, WithStartRow
             }
         }
         return true;
-    }
-
-    protected function ProcessDataRow($row)
-    {
-        foreach ($this->column_sets as $set) {
-            $date_raw = $row[$set['date']] ?? null;
-
-            if (empty($date_raw) || trim($date_raw) === '') {
-                continue;
-            }
-
-            $date = $this->ParseScheduleDate($date_raw);
-            if (!$date) {
-                continue;
-            }
-
-            $stime_raw = isset($set['stime']) ? ($row[$set['stime']] ?? null) : null;
-            $etime_raw = isset($set['etime']) ? ($row[$set['etime']] ?? null) : null;
-
-            $stime = $this->ParseTime($stime_raw);
-            $etime = $this->ParseTime($etime_raw);
-
-            $this->SaveRecord($this->current_fingerprint_id, $date, $stime, $etime);
-        }
     }
 
     protected function ParseScheduleDate($date_raw)
