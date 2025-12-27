@@ -273,4 +273,51 @@ class APIController extends Controller
             'data' => $pending_requests,
         ]);
     }
+
+    /**
+     * เช็ควันหยุดบริษัท และวันพุธ (owner หยุด)
+     * ใช้สำหรับ n8n เพื่อไม่ให้ส่งข้อความรบกวนวันหยุด
+     */
+    public function checkHoliday(Request $request)
+    {
+        $check_date = $request->get('date') 
+            ? Carbon::parse($request->get('date')) 
+            : Carbon::today();
+        
+        $is_holiday = false;
+        $holiday_reason = null;
+        $holiday_name = null;
+
+        // 1. เช็คว่าเป็นวันพุธหรือไม่ (Owner หยุดทุกวันพุธ)
+        if ($check_date->isWednesday()) {
+            $is_holiday = true;
+            $holiday_reason = 'owner_day_off';
+            $holiday_name = 'วันหยุดประจำสัปดาห์ (วันพุธ)';
+        }
+
+        // 2. เช็คว่าเป็นวันหยุดบริษัทหรือไม่
+        $company_holiday = \App\Models\CompanyHoliday::where('date', $check_date->format('Y-m-d'))->first();
+        if ($company_holiday) {
+            $is_holiday = true;
+            $holiday_reason = 'company_holiday';
+            $holiday_name = $company_holiday->name;
+        }
+
+        // 3. เช็คว่าเป็นวันเสาร์-อาทิตย์หรือไม่
+        if ($check_date->isWeekend()) {
+            $is_holiday = true;
+            $holiday_reason = 'weekend';
+            $holiday_name = $check_date->isSaturday() ? 'วันเสาร์' : 'วันอาทิตย์';
+        }
+
+        return response()->json([
+            'success' => true,
+            'date' => $check_date->format('Y-m-d'),
+            'day_name' => $check_date->locale('th')->dayName,
+            'is_holiday' => $is_holiday,
+            'holiday_reason' => $holiday_reason,
+            'holiday_name' => $holiday_name,
+            'should_send_notification' => !$is_holiday, // true = ส่งได้, false = ไม่ควรส่ง
+        ]);
+    }
 }
