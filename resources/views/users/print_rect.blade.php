@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -103,6 +105,50 @@
         .text-dark {
             color: rgb(22, 22, 22) !important;
         }
+
+        /* Signature Styles */
+        .signature-section {
+            margin-top: 30px;
+        }
+        .signature-box {
+            text-align: center;
+            min-height: 80px;
+            position: relative;
+        }
+        .signature-image {
+            max-height: 60px;
+            max-width: 150px;
+        }
+        .signature-line {
+            border-bottom: 1px dotted #333;
+            width: 150px;
+            display: inline-block;
+            min-height: 60px;
+        }
+        .signature-pad-container {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            display: inline-block;
+        }
+        #employeeSignaturePad {
+            width: 200px;
+            height: 80px;
+        }
+        .signature-controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .signature-pad-container {
+                border: none;
+            }
+        }
     </style>
     {{-- <style>
         @media print {
@@ -144,8 +190,12 @@
                             <td align="center" width="80%" colspan="5">
 
                                 <font class="grey"> Record Time Infinite Brain </font> {{ $name }}
-                                {{ date('F-Y', strtotime("$year-$month")) }}<b>
-                                </b>
+                                @if(isset($search_type) && $search_type === 'daterange')
+                                    {{ $date }}
+                                @else
+                                    {{ date('F-Y', strtotime("$year-$month")) }}
+                                @endif
+                                <b></b>
                             </td>
                             {{-- <td align="center" width="10%"><b></b></td>
                             <td align="center" width="10%">
@@ -257,6 +307,16 @@
                                         case 10:
                                             $class = 'dark';
 
+                                            break;
+                                        case 14:
+                                        case 15:
+                                            $class = 'dark';
+                                            break;
+                                        case 16:
+                                            $class = 'info';
+                                            break;
+                                        case 17: // ทำงานนอกสถานที่
+                                            $class = 'secondary';
                                             break;
 
                                         default:
@@ -402,7 +462,22 @@
                             <td align="center">ลงชื่อ.. {{ auth()->user()->name }} ....</td>
                             <td></td>
                             <td></td>
-                            <td align="center">ลงชื่อ...............................</td>
+                            <td align="center">
+                                <div class="signature-box">
+                                    {{-- แสดงลายเซ็นที่บันทึกไว้หรือเซ็นใหม่ --}}
+                                    <div id="savedSignatureContainer" style="display: none;">
+                                        <img id="savedSignatureImg" class="signature-image" src="" alt="ลายเซ็น">
+                                    </div>
+                                    <div id="drawSignatureContainer" style="display: none;">
+                                        <div class="signature-pad-container">
+                                            <canvas id="employeeSignaturePad"></canvas>
+                                        </div>
+                                    </div>
+                                    <div id="emptySignatureContainer">
+                                        <span class="signature-line"></span>
+                                    </div>
+                                </div>
+                            </td>
                             <td></td>
                             <td></td>
                             <td align="center">ลงชื่อ................................</td>
@@ -431,14 +506,151 @@
                         </tr>
                     </table>
 
+                    {{-- Signature Controls (จะซ่อนตอนพิมพ์) --}}
+                    @if(isset($selected_user) && $selected_user)
+                    <div class="signature-controls no-print" style="margin-top: 20px;">
+                        <table align="center" width="60%">
+                            <tr>
+                                <td align="center" colspan="3">
+                                    <strong>ตัวเลือกลายเซ็นพนักงาน:</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" style="padding: 10px;">
+                                    <button type="button" onclick="useNoSignature()" style="padding: 8px 15px; cursor: pointer;">
+                                        ไม่ใส่ลายเซ็น
+                                    </button>
+                                </td>
+                                <td align="center" style="padding: 10px;">
+                                    @if($selected_user->signature)
+                                    <button type="button" onclick="useSavedSignature()" style="padding: 8px 15px; cursor: pointer; background: #4CAF50; color: white; border: none;">
+                                        ใช้ลายเซ็นที่บันทึกไว้
+                                    </button>
+                                    @else
+                                    <button type="button" disabled style="padding: 8px 15px; cursor: not-allowed; opacity: 0.5;">
+                                        ไม่มีลายเซ็นที่บันทึกไว้
+                                    </button>
+                                    @endif
+                                </td>
+                                <td align="center" style="padding: 10px;">
+                                    <button type="button" onclick="useDrawSignature()" style="padding: 8px 15px; cursor: pointer; background: #2196F3; color: white; border: none;">
+                                        เซ็นด้วยมือ
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr id="clearSignatureRow" style="display: none;">
+                                <td align="center" colspan="3" style="padding: 10px;">
+                                    <button type="button" onclick="clearSignaturePad()" style="padding: 5px 10px; cursor: pointer;">
+                                        ล้างลายเซ็น
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="3" style="padding-top: 15px;">
+                                    <button type="button" onclick="printDocument()" style="padding: 10px 30px; cursor: pointer; background: #ff9800; color: white; border: none; font-size: 16px;">
+                                        🖨️ พิมพ์เอกสาร
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    @endif
+
                 </div>
             </div>
 
         </div>
 </body>
 
-
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <script>
+    var signaturePad = null;
+    var canvas = document.getElementById('employeeSignaturePad');
+    
+    // Initialize Signature Pad if canvas exists
+    if (canvas) {
+        signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(255, 255, 255)',
+            penColor: 'rgb(0, 0, 0)'
+        });
+        
+        function resizeCanvas() {
+            var ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext('2d').scale(ratio, ratio);
+            signaturePad.clear();
+        }
+    }
+    
+    // Saved signature URL
+    @if(isset($selected_user) && $selected_user && $selected_user->signature)
+        @if($selected_user->signature_is_image)
+            var savedSignatureUrl = "{{ Storage::url($selected_user->signature) }}";
+        @else
+            var savedSignatureUrl = "{{ $selected_user->signature }}";
+        @endif
+    @else
+        var savedSignatureUrl = null;
+    @endif
+    
+    function useNoSignature() {
+        document.getElementById('savedSignatureContainer').style.display = 'none';
+        document.getElementById('drawSignatureContainer').style.display = 'none';
+        document.getElementById('emptySignatureContainer').style.display = 'block';
+        document.getElementById('clearSignatureRow').style.display = 'none';
+    }
+    
+    function useSavedSignature() {
+        if (savedSignatureUrl) {
+            document.getElementById('savedSignatureImg').src = savedSignatureUrl;
+            document.getElementById('savedSignatureContainer').style.display = 'block';
+            document.getElementById('drawSignatureContainer').style.display = 'none';
+            document.getElementById('emptySignatureContainer').style.display = 'none';
+            document.getElementById('clearSignatureRow').style.display = 'none';
+        }
+    }
+    
+    function useDrawSignature() {
+        document.getElementById('savedSignatureContainer').style.display = 'none';
+        document.getElementById('drawSignatureContainer').style.display = 'block';
+        document.getElementById('emptySignatureContainer').style.display = 'none';
+        document.getElementById('clearSignatureRow').style.display = 'table-row';
+        
+        if (signaturePad) {
+            setTimeout(function() {
+                resizeCanvas();
+            }, 100);
+        }
+    }
+    
+    function clearSignaturePad() {
+        if (signaturePad) {
+            signaturePad.clear();
+        }
+    }
+    
+    function printDocument() {
+        // If using draw signature, convert canvas to image for printing
+        if (document.getElementById('drawSignatureContainer').style.display === 'block' && signaturePad && !signaturePad.isEmpty()) {
+            var signatureDataUrl = signaturePad.toDataURL();
+            var img = document.createElement('img');
+            img.src = signatureDataUrl;
+            img.className = 'signature-image';
+            img.style.maxHeight = '60px';
+            img.style.maxWidth = '150px';
+            
+            // Replace canvas with image for printing
+            var container = document.getElementById('drawSignatureContainer');
+            container.innerHTML = '';
+            container.appendChild(img);
+        }
+        
+        window.print();
+    }
+    
+    // Auto print only if no user selected (fallback behavior)
+    @if(!isset($selected_user) || !$selected_user)
     function printrep() {
         window.print();
     }
@@ -446,4 +658,7 @@
     setTimeout(function() {
         window.close();
     }, 4000);
+    @endif
 </script>
+
+</html>

@@ -220,6 +220,9 @@
                                         case 16:
                                             $class = 'info';
                                             break;
+                                        case 17: // ทำงานนอกสถานที่
+                                            $class = 'secondary';
+                                            break;
 
                                         default:
                                             break;
