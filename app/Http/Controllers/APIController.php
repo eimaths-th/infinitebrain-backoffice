@@ -303,11 +303,11 @@ class APIController extends Controller
         }
 
         // 3. เช็คว่าเป็นวันเสาร์-อาทิตย์หรือไม่
-        if ($check_date->isWeekend()) {
-            $is_holiday = true;
-            $holiday_reason = 'weekend';
-            $holiday_name = $check_date->isSaturday() ? 'วันเสาร์' : 'วันอาทิตย์';
-        }
+        // if ($check_date->isWeekend()) {
+        //     $is_holiday = true;
+        //     $holiday_reason = 'weekend';
+        //     $holiday_name = $check_date->isSaturday() ? 'วันเสาร์' : 'วันอาทิตย์';
+        // }
 
         return response()->json([
             'success' => true,
