@@ -322,7 +322,7 @@ class RecordtimeController extends Controller
             $rec_times = Recordtime::where('user_id', $user_id)
                 ->whereMonth('date', $month)
                 ->whereYear('date', $year)
-                ->orderBy('id', 'desc')
+                ->orderBy('id', 'asc')
                 ->get();
             $user_name = User::find($user_id);
             $name = $user_name->name;
@@ -333,7 +333,7 @@ class RecordtimeController extends Controller
 
             $rec_times = Recordtime::whereMonth('date', $month)
                 ->whereYear('date', $year)
-                ->orderBy('id', 'desc')
+                ->orderBy('id', 'asc')
                 ->get();
             $name = '';
             $rec_times_year2 = [];
