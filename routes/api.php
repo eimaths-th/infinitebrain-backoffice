@@ -31,5 +31,6 @@ Route::middleware('auth.apikey')->group(function () {
 });
 
 Route::get('/leave-requests/pending', [APIController::class, 'getPendingLeaveRequests']);
+Route::get('/check-holiday', [APIController::class, 'checkHoliday']);
 
 // Route::get('/test-fn', [TestController::class, 'store'])->name('testFs')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);// test
