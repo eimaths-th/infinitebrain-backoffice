@@ -52,14 +52,10 @@
                     <label for="Name">Status</label>
                     <select name="status" id="status" class="form-control" required>
                         <option value="">เลือก สถานะการมาทำงาน</option>
-                        <option value="1">ปกติ</option>
-                        <option value="2">ลาป่วย</option>
-                        <option value="3">ลาพักร้อน</option>
-                        <option value="4">ลากิจ</option>
-                        <option value="10">วันหยุด</option>
-                        <option value="11">OT</option>
-                        <option value="12">ชดเชย</option>
-                        <option value="13">ขาดงาน</option>
+
+                        @foreach ($statusworks as $statuswork)
+                            <option value="{{ $statuswork->id }}">{{ $statuswork->name }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>

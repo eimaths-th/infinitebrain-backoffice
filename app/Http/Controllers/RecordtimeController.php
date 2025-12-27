@@ -48,8 +48,10 @@ class RecordtimeController extends Controller
     {
         //
         $users = User::active()->get();
+        $statusworks = Statuswork::all();
         return view('users.working_create', [
-            'users' => $users
+            'users' => $users,
+            'statusworks' => $statusworks
         ]);
     }
 
@@ -312,31 +314,68 @@ class RecordtimeController extends Controller
 
     public function search_rect(Request $request)
     {
-
-        // dd($request);
         $user_id = $request->user_id;
         $month = $request->month;
         $year = $request->year;
-        if ($user_id) {
+        $date_from = $request->date_from;
+        $date_to = $request->date_to;
+        $search_type = $request->search_type ?? 'month'; // 'month' หรือ 'daterange'
+        $selected_user = null;
 
-            $rec_times = Recordtime::where('user_id', $user_id)
-                ->whereMonth('date', $month)
-                ->whereYear('date', $year)
-                ->orderBy('date', 'asc')
-                ->get();
-            $user_name = User::find($user_id);
-            $name = $user_name->name;
-            $rec_times_year2 = Recordtime::where('user_id', $user_id)
-                // ->whereYear('date', $currentYear)
-                ->get();
+        // Debug: ดูค่าที่รับมา
+        // dd($request->all(), $search_type, $date_from, $date_to);
+
+        // ถ้าเลือกค้นหาแบบช่วงวันที่
+        if ($search_type === 'daterange' && $date_from && $date_to) {
+            // input type="date" ส่งค่าในรูปแบบ Y-m-d อยู่แล้ว
+            $start_date = $date_from;
+            $end_date = $date_to;
+
+            if ($user_id) {
+                $rec_times = Recordtime::where('user_id', $user_id)
+                    ->whereDate('date', '>=', $start_date)
+                    ->whereDate('date', '<=', $end_date)
+                    ->orderBy('date', 'asc')
+                    ->get();
+                $user_name = User::find($user_id);
+                $selected_user = $user_name;
+                $name = $user_name->name;
+                $rec_times_year2 = Recordtime::where('user_id', $user_id)->get();
+            } else {
+                $rec_times = Recordtime::whereDate('date', '>=', $start_date)
+                    ->whereDate('date', '<=', $end_date)
+                    ->orderBy('date', 'asc')
+                    ->get();
+                $name = '';
+                $rec_times_year2 = [];
+            }
+            // สร้าง date สำหรับแสดงผล - แปลงเป็น d-m-Y สำหรับแสดงผล
+            $date_from_display = Carbon::parse($date_from)->format('d-m-Y');
+            $date_to_display = Carbon::parse($date_to)->format('d-m-Y');
+            $date = $date_from_display . ' - ' . $date_to_display;
         } else {
-
-            $rec_times = Recordtime::whereMonth('date', $month)
-                ->whereYear('date', $year)
-                ->orderBy('date', 'asc')
-                ->get();
-            $name = '';
-            $rec_times_year2 = [];
+            // ค้นหาแบบเดิม (เดือน/ปี)
+            if ($user_id) {
+                $rec_times = Recordtime::where('user_id', $user_id)
+                    ->whereMonth('date', $month)
+                    ->whereYear('date', $year)
+                    ->orderBy('date', 'asc')
+                    ->get();
+                $user_name = User::find($user_id);
+                $selected_user = $user_name;
+                $name = $user_name->name;
+                $rec_times_year2 = Recordtime::where('user_id', $user_id)
+                    // ->whereYear('date', $currentYear)
+                    ->get();
+            } else {
+                $rec_times = Recordtime::whereMonth('date', $month)
+                    ->whereYear('date', $year)
+                    ->orderBy('date', 'asc')
+                    ->get();
+                $name = '';
+                $rec_times_year2 = [];
+            }
+            $date = Carbon::create($year, $month)->format('Y-m');
         }
 
         if ($request->type === 'print') {
@@ -350,7 +389,6 @@ class RecordtimeController extends Controller
         // dd($name);
         $checkCd = 1;
 
-        $date = Carbon::create($year, $month)->format('Y-m');
         return view($view, [
             'rec_times' => $rec_times,
             'users' => $users,
@@ -361,6 +399,10 @@ class RecordtimeController extends Controller
             'fontsize' => 1,
             'checkCd' => $checkCd,
             'date' => $date,
+            'selected_user' => $selected_user,
+            'date_from' => $date_from,
+            'date_to' => $date_to,
+            'search_type' => $search_type,
 
             'rec_times_year2' => $rec_times_year2,
 
@@ -708,8 +750,11 @@ class RecordtimeController extends Controller
     {
         //
         $rect = Recordtime::find($id);
+        $statusworks = Statuswork::all();
+
         return view('users.working_edit', [
-            'rect' => $rect
+            'rect' => $rect, 
+            'statusworks' => $statusworks
         ]);
     }
 

@@ -433,7 +433,7 @@ class LeaveRequestController extends Controller
             'vacation' => 2,    // ลาพักผ่อน
             'compensate' => 14, // วันหยุดชดเชย
             'swap_day' => 14,   // สลับวันหยุด
-            'remote_work' => 15, // ทำงานนอกสถานที่ = WFH
+            'remote_work' => 17, // ทำงานนอกสถานที่
         ];
 
         $status_id = $status_map[$leave_request->leave_type] ?? 4;

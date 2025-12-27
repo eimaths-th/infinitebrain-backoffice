@@ -233,4 +233,44 @@ class APIController extends Controller
 
         return response()->json(['message' => 'No file found'], 400);
     }
+
+    /**
+     * ดึงข้อมูลใบลาที่รอการอนุมัติ
+     */
+    public function getPendingLeaveRequests(Request $request)
+    {
+        $pending_requests = \App\Models\LeaveRequest::where('status', 'pending')
+            ->with(['user:id,name,code,position'])
+            ->orderBy('submitted_date', 'desc')
+            ->get()
+            ->map(function ($leave) {
+                return [
+                    'id' => $leave->id,
+                    'user_id' => $leave->user_id,
+                    'user_name' => $leave->user->name ?? 'ไม่ระบุ',
+                    'user_code' => $leave->user->code ?? '',
+                    'user_position' => $leave->user->position ?? '',
+                    'leave_type' => $leave->leave_type,
+                    'leave_type_name' => \App\Models\LeaveRequest::LEAVE_TYPES[$leave->leave_type] ?? $leave->leave_type,
+                    'submitted_date' => $leave->submitted_date ? $leave->submitted_date->format('Y-m-d') : null,
+                    'start_date' => $leave->start_date ? $leave->start_date->format('Y-m-d') : null,
+                    'end_date' => $leave->end_date ? $leave->end_date->format('Y-m-d') : null,
+                    'total_days' => $leave->total_days,
+                    'half_day' => $leave->half_day,
+                    'half_day_name' => \App\Models\LeaveRequest::HALF_DAY_OPTIONS[$leave->half_day] ?? 'เต็มวัน',
+                    'reason' => $leave->reason,
+                    'location' => $leave->location,
+                    'contact_phone' => $leave->contact_phone,
+                    'status' => $leave->status,
+                    'status_name' => \App\Models\LeaveRequest::STATUSES[$leave->status] ?? $leave->status,
+                    'created_at' => $leave->created_at ? $leave->created_at->format('Y-m-d H:i:s') : null,
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'count' => $pending_requests->count(),
+            'data' => $pending_requests,
+        ]);
+    }
 }
