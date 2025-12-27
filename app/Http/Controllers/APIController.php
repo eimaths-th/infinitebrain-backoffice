@@ -280,9 +280,8 @@ class APIController extends Controller
      */
     public function checkHoliday(Request $request)
     {
-        $check_date = $request->get('date') 
-            ? Carbon::parse($request->get('date')) 
-            : Carbon::today();
+        // ใช้วันที่ปัจจุบันโดยอัตโนมัติ
+        $check_date = Carbon::today();
         
         $is_holiday = false;
         $holiday_reason = null;
