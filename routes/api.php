@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\Api\DailyIncomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,5 +33,14 @@ Route::middleware('auth.apikey')->group(function () {
 
 Route::get('/leave-requests/pending', [APIController::class, 'getPendingLeaveRequests']);
 Route::get('/check-holiday', [APIController::class, 'checkHoliday']);
+
+// Daily Income Summary API (สำหรับ n8n LINE Notification)
+Route::prefix('income')->group(function () {
+    Route::get('/daily', [DailyIncomeController::class, 'dailySummary']);        // ?date=2026-01-06
+    Route::get('/today', [DailyIncomeController::class, 'todaySummary']);         // รายได้วันนี้
+    Route::get('/yesterday', [DailyIncomeController::class, 'yesterdaySummary']); // รายได้เมื่อวาน
+    Route::get('/weekly', [DailyIncomeController::class, 'weeklySummary']);       // ?start_date=&end_date=
+    Route::get('/monthly', [DailyIncomeController::class, 'monthlySummary']);     // ?year=2026&month=1
+});
 
 // Route::get('/test-fn', [TestController::class, 'store'])->name('testFs')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);// test
