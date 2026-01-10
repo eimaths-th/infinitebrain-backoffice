@@ -593,7 +593,7 @@ class ReceiptSchoolController extends Controller
             $group = $upg->school_sub->group;
             $upg->update(['group' => $group]);
         }
-
+        // dd('update complete');
         return view('receipt_school.receipt')->with(['data2' => $student])->with(['data3' => $subject])->with(['data4' => $parent])
             ->with(['datap' => self::datap]);
     }
