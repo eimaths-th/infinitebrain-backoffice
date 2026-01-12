@@ -282,7 +282,7 @@
                     <div class="tab-pane fade active show" id="default-tab-2">
 
                         <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนปี {{ $year }}
-                            (ยังไม่เสร้จ)</h3>
+                            </h3>
                         <table style="width: 100%;" id="Listview3"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
 
