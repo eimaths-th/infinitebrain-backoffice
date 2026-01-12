@@ -46,9 +46,26 @@
             flex: 1;
             display: flex;
             position: relative;
-            height: 30px;
+            min-height: 30px;
             background: #f8f9fa;
             border-radius: 4px;
+            flex-direction: column;
+        }
+        .timeline-bars-inner {
+            position: relative;
+            height: 28px;
+            margin-bottom: 2px;
+        }
+        .timeline-bars-inner:last-child {
+            margin-bottom: 0;
+        }
+        .timeline-month-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
         }
         .timeline-month {
             flex: 1;
@@ -60,7 +77,7 @@
         }
         .timeline-bar {
             position: absolute;
-            height: 24px;
+            height: 22px;
             top: 3px;
             border-radius: 4px;
             opacity: 0.85;
@@ -68,15 +85,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
+            font-size: 10px;
             color: white;
             font-weight: 500;
             text-shadow: 0 1px 2px rgba(0,0,0,0.3);
             cursor: pointer;
+            z-index: 1;
         }
         .timeline-bar:hover {
             opacity: 1;
-            transform: scaleY(1.1);
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         .timeline-header {
             display: flex;
@@ -473,7 +492,7 @@
                                         $studentCode = $groupedData->first()->std->code ?? 'N/A';
                                         $studentName = $groupedData->first()->std->nick_name ?? 'Unknown';
                                         
-                                        // สร้างข้อมูล timeline bars
+                                        // สร้างข้อมูล timeline bars แยกตามกลุ่มวิชา
                                         $timelineBars = [];
                                         foreach ($groupedData as $data1) {
                                             $period = explode(' - ', $data1->period);
@@ -496,43 +515,75 @@
                                             $group = $data1->group;
                                             $groupMark = $group === 'CHN' ? 'C' : ($group === 'Sci' ? 'S' : $group);
                                             
-                                            // คำนวณ position และ width (เฉพาะปีที่เลือก)
-                                            if ($startYear == $year || $endYear == $year) {
-                                                $barStart = $startYear == $year ? $startMonth : 1;
-                                                $barEnd = $endYear == $year ? $endMonth : 12;
+                                            // คำนวณ position และ width (รองรับข้อมูลข้ามปี)
+                                            $yearInt = (int) $year;
+                                            if (($startYear <= $yearInt && $endYear >= $yearInt) || $startYear == $yearInt || $endYear == $yearInt) {
+                                                // คำนวณ start และ end สำหรับปีที่เลือก
+                                                if ($startYear < $yearInt) {
+                                                    $barStart = 1; // เริ่มตั้งแต่เดือน 1
+                                                } else {
+                                                    $barStart = $startMonth;
+                                                }
                                                 
-                                                $timelineBars[] = [
+                                                if ($endYear > $yearInt) {
+                                                    $barEnd = 12; // สิ้นสุดเดือน 12
+                                                } else {
+                                                    $barEnd = $endMonth;
+                                                }
+                                                
+                                                $timelineBars[$groupMark][] = [
                                                     'start' => $barStart,
                                                     'end' => $barEnd,
                                                     'group' => $groupMark,
                                                     'groupFull' => $group,
+                                                    'period' => $data1->period,
                                                 ];
                                             }
                                         }
+                                        
+                                        // นับจำนวนแถวที่ต้องแสดง
+                                        $totalRows = count($timelineBars);
                                     @endphp
                                     <div class="timeline-row" data-student="{{ strtolower($studentName) }}">
                                         <div class="timeline-label">
                                             <div>{{ $studentName }}</div>
                                             <div class="student-code">{{ $studentCode }}</div>
                                         </div>
-                                        <div class="timeline-bars">
-                                            @for ($month = 1; $month <= 12; $month++)
-                                                <div class="timeline-month" data-month="{{ $month }}"></div>
-                                            @endfor
-                                            @foreach ($timelineBars as $bar)
-                                                @php
-                                                    $left = (($bar['start'] - 1) / 12) * 100;
-                                                    $width = (($bar['end'] - $bar['start'] + 1) / 12) * 100;
-                                                    $groupClass = in_array($bar['group'], ['M', 'E', 'C', 'S', 'T', 'J', 'K']) 
-                                                        ? 'group-' . $bar['group'] 
-                                                        : 'group-default';
-                                                @endphp
-                                                <div class="timeline-bar {{ $groupClass }}" 
-                                                     style="left: {{ $left }}%; width: {{ $width }}%;"
-                                                     title="{{ $bar['groupFull'] }}: เดือน {{ $bar['start'] }} - {{ $bar['end'] }}">
-                                                    {{ $bar['group'] }}
+                                        <div class="timeline-bars" style="min-height: {{ max(30, $totalRows * 30) }}px;">
+                                            @foreach ($timelineBars as $groupMark => $bars)
+                                                <div class="timeline-bars-inner">
+                                                    <!-- Month Grid -->
+                                                    <div class="timeline-month-grid">
+                                                        @for ($month = 1; $month <= 12; $month++)
+                                                            <div class="timeline-month" data-month="{{ $month }}"></div>
+                                                        @endfor
+                                                    </div>
+                                                    <!-- Bars for this group -->
+                                                    @foreach ($bars as $bar)
+                                                        @php
+                                                            $left = (($bar['start'] - 1) / 12) * 100;
+                                                            $width = (($bar['end'] - $bar['start'] + 1) / 12) * 100;
+                                                            $groupClass = in_array($bar['group'], ['M', 'E', 'C', 'S', 'T', 'J', 'K']) 
+                                                                ? 'group-' . $bar['group'] 
+                                                                : 'group-default';
+                                                        @endphp
+                                                        <div class="timeline-bar {{ $groupClass }}" 
+                                                             style="left: {{ $left }}%; width: {{ $width }}%;"
+                                                             title="{{ $bar['groupFull'] }}: {{ $bar['period'] }}">
+                                                            {{ $bar['group'] }}
+                                                        </div>
+                                                    @endforeach
                                                 </div>
                                             @endforeach
+                                            @if (count($timelineBars) == 0)
+                                                <div class="timeline-bars-inner">
+                                                    <div class="timeline-month-grid">
+                                                        @for ($month = 1; $month <= 12; $month++)
+                                                            <div class="timeline-month" data-month="{{ $month }}"></div>
+                                                        @endfor
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
                                         <div class="timeline-actions">
                                             <a href="javascript:;" class="btn btn-xs btn-primary"
@@ -557,6 +608,7 @@
                             // สร้างข้อมูลสรุปจำนวนนักเรียนแต่ละวิชาในแต่ละเดือน
                             $subjectMonthly = [];
                             $allGroups = [];
+                            $yearInt = (int) $year;
                             
                             foreach ($reportYear_schoolPrice as $studentId => $groupedData) {
                                 foreach ($groupedData as $data1) {
@@ -582,23 +634,27 @@
                                         $allGroups[] = $group;
                                     }
                                     
-                                    // นับนักเรียนในแต่ละเดือนของปีที่เลือก
-                                    for ($m = 1; $m <= 12; $m++) {
-                                        $currentMY = Carbon::parse("$year-$m")->format('Y-m');
+                                    // นับนักเรียนในแต่ละเดือนของปีที่เลือก (รองรับข้ามปี)
+                                    if (($startYear <= $yearInt && $endYear >= $yearInt) || $startYear == $yearInt || $endYear == $yearInt) {
+                                        // คำนวณ start และ end สำหรับปีที่เลือก
+                                        if ($startYear < $yearInt) {
+                                            $barStart = 1;
+                                        } else {
+                                            $barStart = $startMonth;
+                                        }
                                         
-                                        // ตรวจสอบว่าเดือนนี้อยู่ในช่วง period หรือไม่
-                                        if ($startYear == $year || $endYear == $year) {
-                                            $barStart = $startYear == $year ? $startMonth : 1;
-                                            $barEnd = $endYear == $year ? $endMonth : 12;
-                                            
-                                            if ($m >= $barStart && $m <= $barEnd) {
-                                                $key = $group . '-' . $m . '-' . $studentId;
-                                                if (!isset($subjectMonthly[$group][$m])) {
-                                                    $subjectMonthly[$group][$m] = [];
-                                                }
-                                                if (!in_array($studentId, $subjectMonthly[$group][$m])) {
-                                                    $subjectMonthly[$group][$m][] = $studentId;
-                                                }
+                                        if ($endYear > $yearInt) {
+                                            $barEnd = 12;
+                                        } else {
+                                            $barEnd = $endMonth;
+                                        }
+                                        
+                                        for ($m = $barStart; $m <= $barEnd; $m++) {
+                                            if (!isset($subjectMonthly[$group][$m])) {
+                                                $subjectMonthly[$group][$m] = [];
+                                            }
+                                            if (!in_array($studentId, $subjectMonthly[$group][$m])) {
+                                                $subjectMonthly[$group][$m][] = $studentId;
                                             }
                                         }
                                     }
