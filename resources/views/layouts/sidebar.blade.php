@@ -440,14 +440,14 @@
                                         Bonus Student
                                     </a>
                                 </li>
-                                @if (Auth::user()->id == 16)
+                                {{-- @if (Auth::user()->id == 16) --}}
                                     <li>
                                         <a href="{{ route('reportRecieptStd') }}">
                                             <i class="metismenu-icon"></i>
                                             Report Student Recieept
                                         </a>
                                     </li>
-                                @endif
+                                {{-- @endif --}}
                             </ul>
                         </li>
                     @endif
