@@ -564,7 +564,8 @@ class StdlogController extends Controller
         $year = date('Y');
 
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
-        $reportYear_schoolPrice = $this->getMatchingSchoolPrices2(null, $year);
+        // ใช้ getMatchingSchoolPrices3 เพื่อรองรับข้อมูลข้ามปี
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($year, $year);
 
         $totalForAllMonths = $this->queryGrafgh1($stdlog);
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
@@ -636,19 +637,47 @@ class StdlogController extends Controller
         $matchingSchoolPrices = [];
         $schoolPrice_id = [];
         $test_scp = SchoolPrice::all();
-
+        
+        // แปลงเป็น integer
+        $periodYearInt = (int) $periodYear;
 
         foreach ($test_scp as $schoolPrice) {
             if ($schoolPrice->rec_school && $schoolPrice->rec_school->submission_date) {
-                if ($year) {
-
-                    $currentMonth = $year;
-                    // $currentMonth = Carbon::parse($year)->format('Y');
-                    $submissionDate = Carbon::parse($schoolPrice->rec_school->submission_date)->format('Y');
-                    // dd($year,$currentMonth,$submissionDate);
+                // ตรวจสอบว่า period มีปีที่เลือกหรือไม่ (รองรับข้ามปี)
+                $period = $schoolPrice->period;
+                $periodContainsYear = false;
+                
+                if ($period) {
+                    // แยก period เป็น start และ end
+                    $periodParts = explode(' - ', $period);
+                    
+                    if (count($periodParts) == 1) {
+                        // Format: 2025-08-2026-04 หรือ 2025-10-2026-02
+                        $parts = explode('-', $period);
+                        if (count($parts) >= 2) {
+                            $startYear = (int) $parts[0];
+                            $endYear = count($parts) >= 3 ? (int) $parts[2] : $startYear;
+                            // ตรวจสอบว่าปีที่เลือกอยู่ในช่วง period หรือไม่
+                            if ($periodYearInt >= $startYear && $periodYearInt <= $endYear) {
+                                $periodContainsYear = true;
+                            }
+                        }
+                    } else {
+                        // Format: 2025-08 - 2026-04 หรือ 2025-10 - 2026-02
+                        try {
+                            $startDate = Carbon::parse(trim($periodParts[0]));
+                            $endDate = Carbon::parse(trim($periodParts[1]));
+                            if ($periodYearInt >= $startDate->year && $periodYearInt <= $endDate->year) {
+                                $periodContainsYear = true;
+                            }
+                        } catch (\Exception $e) {
+                            // ถ้า parse ไม่ได้ ให้ข้าม
+                            continue;
+                        }
+                    }
                 }
-                // if ($submissionDate == $currentMonth) {
-                if ($submissionDate == $currentMonth && $schoolPrice->course_type == 1) {
+                
+                if ($periodContainsYear && $schoolPrice->course_type == 1) {
                     $matchingSchoolPrices[] = [
                         'id' => $schoolPrice->id,
                         'course_type' => $schoolPrice->course_type,
@@ -661,16 +690,12 @@ class StdlogController extends Controller
             }
         }
 
-        // dd($periodYear);
+        // dd($periodYearInt, $schoolPrice_id);
 
         $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
-            ->where(function ($query) use ($periodYear) {
-                $query->where('period', 'like', "%$periodYear%");
-            })
             ->orderBy('student_id')
             ->orderBy('rid', 'asc')
             ->get()
-            // ->get();
             ->groupBy('student_id');
 
 
