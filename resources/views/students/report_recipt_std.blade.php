@@ -17,6 +17,132 @@
             height: auto;
         }
 
+        /* Timeline Chart Styles */
+        .timeline-container {
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+        .timeline-chart {
+            min-width: 100%;
+        }
+        .timeline-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            min-height: 40px;
+        }
+        .timeline-label {
+            width: 180px;
+            min-width: 180px;
+            padding-right: 15px;
+            font-size: 13px;
+            text-align: right;
+        }
+        .timeline-label .student-code {
+            color: #666;
+            font-size: 11px;
+        }
+        .timeline-bars {
+            flex: 1;
+            display: flex;
+            position: relative;
+            height: 30px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .timeline-month {
+            flex: 1;
+            border-right: 1px solid #e9ecef;
+            position: relative;
+        }
+        .timeline-month:last-child {
+            border-right: none;
+        }
+        .timeline-bar {
+            position: absolute;
+            height: 24px;
+            top: 3px;
+            border-radius: 4px;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: white;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+        .timeline-bar:hover {
+            opacity: 1;
+            transform: scaleY(1.1);
+        }
+        .timeline-header {
+            display: flex;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+        .timeline-header-label {
+            width: 180px;
+            min-width: 180px;
+            font-weight: bold;
+        }
+        .timeline-header-months {
+            flex: 1;
+            display: flex;
+        }
+        .timeline-header-month {
+            flex: 1;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #495057;
+        }
+        .timeline-actions {
+            width: 60px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        /* Group Colors */
+        .group-M { background: linear-gradient(135deg, #4CAF50, #45a049); }
+        .group-E { background: linear-gradient(135deg, #2196F3, #1976D2); }
+        .group-C, .group-CHN { background: linear-gradient(135deg, #FF9800, #F57C00); }
+        .group-S, .group-Sci { background: linear-gradient(135deg, #9C27B0, #7B1FA2); }
+        .group-T { background: linear-gradient(135deg, #00BCD4, #0097A7); }
+        .group-J { background: linear-gradient(135deg, #E91E63, #C2185B); }
+        .group-K { background: linear-gradient(135deg, #795548, #5D4037); }
+        .group-default { background: linear-gradient(135deg, #607D8B, #455A64); }
+
+        /* Legend */
+        .timeline-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .legend-color {
+            width: 24px;
+            height: 16px;
+            border-radius: 3px;
+        }
+
+        /* Search box for timeline */
+        .timeline-search {
+            margin-bottom: 15px;
+        }
+
         /* .switchery {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 width: 30px;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 height: 16px;
@@ -120,7 +246,8 @@
                                         @php
                                             $currentYear = date('Y')+1;
                                             for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
-                                                echo "<option value='$i'>$i</option>";
+                                                $selected = (isset($year) && $year == $i) ? 'selected' : '';
+                                                echo "<option value='$i' $selected>$i</option>";
                                             }
                                         @endphp
                                     </select>
@@ -281,98 +408,273 @@
                     </div>
                     <div class="tab-pane fade active show" id="default-tab-2">
 
-                        <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนปี {{ $year }}
-                            </h3>
-                        <table style="width: 100%;" id="Listview3"
-                            class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
+                        <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนปี {{ $year }}</h3>
+                        
+                        <!-- Legend -->
+                        <div class="timeline-legend">
+                            <span class="fw-bold me-3">กลุ่มวิชา:</span>
+                            <div class="legend-item">
+                                <div class="legend-color group-M"></div>
+                                <span>M - คณิตศาสตร์</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color group-E"></div>
+                                <span>E - ภาษาอังกฤษ</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color group-C"></div>
+                                <span>C - ภาษาจีน</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color group-S"></div>
+                                <span>S - วิทยาศาสตร์</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color group-T"></div>
+                                <span>T - ภาษาไทย</span>
+                            </div>
+                            {{-- <div class="legend-item">
+                                <div class="legend-color group-J"></div>
+                                <span>J - ภาษาญี่ปุ่น</span>
+                            </div> --}}
+                            {{-- <div class="legend-item">
+                                <div class="legend-color group-K"></div>
+                                <span>K - ภาษาเกาหลี</span>
+                            </div> --}}
+                        </div>
 
-                            <thead>
-                                <tr>
-                                    <th width='1%' class="text-center" data-orderable="false">Code</th>
-                                    <th data-orderable="false">Name</th>
-                                    <th data-orderable="false">Firs Date</th>
-                                    <th data-orderable="false">Last Date</th>
-                                    <th data-orderable="false">Firs period</th>
-                                    <th data-orderable="false">Last period</th>
-                                    @php
-                                        $currentMonth = date('m');
-                                        // $currentYear = date('Y');
-                                    @endphp
-                                    @for ($i = 1; $i <= 12; $i++)
-                                        <th data-orderable="false">
-                                            {{ date('m', mktime(0, 0, 0, $i, 1, $currentYear)) }}-{{ $year }}
-                                        </th>
-                                    @endfor
-                                    <th data-orderable="false" width='1%'>view</th>
-                                </tr>
-                            </thead>
+                        <!-- Search -->
+                        <div class="timeline-search">
+                            <input type="text" id="timelineSearch" class="form-control" placeholder="🔍 ค้นหาชื่อนักเรียน...">
+                        </div>
 
-                            <tbody>
+                        <!-- Timeline Chart -->
+                        <div class="timeline-container">
+                            <div class="timeline-chart">
+                                <!-- Header -->
+                                <div class="timeline-header">
+                                    <div class="timeline-header-label">นักเรียน</div>
+                                    <div class="timeline-header-months">
+                                        @for ($i = 1; $i <= 12; $i++)
+                                            <div class="timeline-header-month">
+                                                {{ date('M', mktime(0, 0, 0, $i, 1)) }}
+                                            </div>
+                                        @endfor
+                                    </div>
+                                    <div class="timeline-actions">View</div>
+                                </div>
+
+                                <!-- Data Rows -->
                                 @php
                                     use Carbon\Carbon;
                                 @endphp
                                 @foreach ($reportYear_schoolPrice as $studentId => $groupedData)
-                                    <tr>
-                                        <td class="text-center">{{ $groupedData->first()->std->code ?? 'Null' }}</td>
-                                        <td>{{ $groupedData->first()->std->nick_name ?? 'Null' }}</td>
-                                        <td>{{ $groupedData->first()->rec_school->submission_date }}</td>
-                                        <td>{{ $groupedData->last()->rec_school->submission_date }}</td>
-                                        <td>{{ $groupedData->first()->period }}</td>
-                                        <td>{{ $groupedData->last()->period }}</td>
-                                        @for ($month = 1; $month <= 12; $month++)
-                                            <td>
+                                    @php
+                                        $studentCode = $groupedData->first()->std->code ?? 'N/A';
+                                        $studentName = $groupedData->first()->std->nick_name ?? 'Unknown';
+                                        
+                                        // สร้างข้อมูล timeline bars
+                                        $timelineBars = [];
+                                        foreach ($groupedData as $data1) {
+                                            $period = explode(' - ', $data1->period);
+                                            
+                                            if (count($period) == 1) {
+                                                $periods = explode('-', $data1->period);
+                                                $startMonth = (int) $periods[1];
+                                                $endMonth = count($periods) > 2 ? (int) $periods[3] : $startMonth;
+                                                $startYear = (int) $periods[0];
+                                                $endYear = count($periods) > 2 ? (int) $periods[2] : $startYear;
+                                            } else {
+                                                $startDate = Carbon::parse($period[0]);
+                                                $endDate = Carbon::parse($period[1]);
+                                                $startMonth = $startDate->month;
+                                                $endMonth = $endDate->month;
+                                                $startYear = $startDate->year;
+                                                $endYear = $endDate->year;
+                                            }
+                                            
+                                            $group = $data1->group;
+                                            $groupMark = $group === 'CHN' ? 'C' : ($group === 'Sci' ? 'S' : $group);
+                                            
+                                            // คำนวณ position และ width (เฉพาะปีที่เลือก)
+                                            if ($startYear == $year || $endYear == $year) {
+                                                $barStart = $startYear == $year ? $startMonth : 1;
+                                                $barEnd = $endYear == $year ? $endMonth : 12;
+                                                
+                                                $timelineBars[] = [
+                                                    'start' => $barStart,
+                                                    'end' => $barEnd,
+                                                    'group' => $groupMark,
+                                                    'groupFull' => $group,
+                                                ];
+                                            }
+                                        }
+                                    @endphp
+                                    <div class="timeline-row" data-student="{{ strtolower($studentName) }}">
+                                        <div class="timeline-label">
+                                            <div>{{ $studentName }}</div>
+                                            <div class="student-code">{{ $studentCode }}</div>
+                                        </div>
+                                        <div class="timeline-bars">
+                                            @for ($month = 1; $month <= 12; $month++)
+                                                <div class="timeline-month" data-month="{{ $month }}"></div>
+                                            @endfor
+                                            @foreach ($timelineBars as $bar)
                                                 @php
-                                                    $currentYear = $year;
-                                                    //เซตวันที่
-                                                    $currentMY = Carbon::parse("$currentYear-$month")->format('Y-m');
-
-                                                    $mark = [];
-                                                    $groupClass = 'text-red';
-
-                                                    foreach ($groupedData as $data1) {
-                                                        $period = explode(' - ', $data1->period);
-
-                                                        if (count($period) == 1) {
-                                                            $periods = explode('-', $data1->period);
-
-                                                            $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
-                                                            $endMonth = count($periods) > 2 ? Carbon::parse("$periods[2]-$periods[3]")->format('Y-m') : $startMonth;
-                                                        } else {
-                                                            $startMonth = Carbon::parse($period[0])->format('Y-m');
-                                                            $endMonth = Carbon::parse($period[1])->format('Y-m');
-                                                            // dd($currentMY, $period, $startMonth, $endMonth);
-                                                        }
-                                                        $isInMonthRange = $currentMY >= $startMonth && $currentMY <= $endMonth;
-
-                                                        if ($isInMonthRange) {
-                                                            $groupMark = $data1->group === 'CHN' ? 'C' : ($data1->group === 'Sci' ? 'S' : $data1->group);
-                                                            $groupClass = 'text-success';
-
-                                                            if (!in_array($groupMark, $mark)) {
-                                                                $mark[] = $groupMark;
-                                                            }
-                                                        }
-                                                    }
+                                                    $left = (($bar['start'] - 1) / 12) * 100;
+                                                    $width = (($bar['end'] - $bar['start'] + 1) / 12) * 100;
+                                                    $groupClass = in_array($bar['group'], ['M', 'E', 'C', 'S', 'T', 'J', 'K']) 
+                                                        ? 'group-' . $bar['group'] 
+                                                        : 'group-default';
                                                 @endphp
-                                                <span class="marked-cell {{ $groupClass }}">
-                                                    @foreach ($mark as $markItem)
-                                                        {{ $markItem }}
-                                                    @endforeach
-                                                </span>
-                                            </td>
-                                        @endfor
-                                        <td>
+                                                <div class="timeline-bar {{ $groupClass }}" 
+                                                     style="left: {{ $left }}%; width: {{ $width }}%;"
+                                                     title="{{ $bar['groupFull'] }}: เดือน {{ $bar['start'] }} - {{ $bar['end'] }}">
+                                                    {{ $bar['group'] }}
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <div class="timeline-actions">
                                             <a href="javascript:;" class="btn btn-xs btn-primary"
                                                 onclick="formModal('{{ route('reportRecieptStdShow', ['id' => $studentId]) }}')"
                                                 data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body"
                                                 data-bs-title="View Detail">
                                                 <i class="fa fa-eye"></i>
                                             </a>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </div>
                                 @endforeach
-                            </tbody>
-                        </table>
+                            </div>
+                        </div>
+
+                        <!-- สรุปจำนวน -->
+                        <div class="mt-3 text-muted">
+                            <small>แสดง <span id="visibleCount">{{ count($reportYear_schoolPrice) }}</span> จาก {{ count($reportYear_schoolPrice) }} รายการ</small>
+                        </div>
+
+                        <!-- ตารางสรุปจำนวนนักเรียนแต่ละวิชาต่อเดือน -->
+                        @php
+                            // สร้างข้อมูลสรุปจำนวนนักเรียนแต่ละวิชาในแต่ละเดือน
+                            $subjectMonthly = [];
+                            $allGroups = [];
+                            
+                            foreach ($reportYear_schoolPrice as $studentId => $groupedData) {
+                                foreach ($groupedData as $data1) {
+                                    $period = explode(' - ', $data1->period);
+                                    
+                                    if (count($period) == 1) {
+                                        $periods = explode('-', $data1->period);
+                                        $startMonth = (int) $periods[1];
+                                        $endMonth = count($periods) > 2 ? (int) $periods[3] : $startMonth;
+                                        $startYear = (int) $periods[0];
+                                        $endYear = count($periods) > 2 ? (int) $periods[2] : $startYear;
+                                    } else {
+                                        $startDate = Carbon::parse($period[0]);
+                                        $endDate = Carbon::parse($period[1]);
+                                        $startMonth = $startDate->month;
+                                        $endMonth = $endDate->month;
+                                        $startYear = $startDate->year;
+                                        $endYear = $endDate->year;
+                                    }
+                                    
+                                    $group = $data1->group;
+                                    if (!in_array($group, $allGroups)) {
+                                        $allGroups[] = $group;
+                                    }
+                                    
+                                    // นับนักเรียนในแต่ละเดือนของปีที่เลือก
+                                    for ($m = 1; $m <= 12; $m++) {
+                                        $currentMY = Carbon::parse("$year-$m")->format('Y-m');
+                                        
+                                        // ตรวจสอบว่าเดือนนี้อยู่ในช่วง period หรือไม่
+                                        if ($startYear == $year || $endYear == $year) {
+                                            $barStart = $startYear == $year ? $startMonth : 1;
+                                            $barEnd = $endYear == $year ? $endMonth : 12;
+                                            
+                                            if ($m >= $barStart && $m <= $barEnd) {
+                                                $key = $group . '-' . $m . '-' . $studentId;
+                                                if (!isset($subjectMonthly[$group][$m])) {
+                                                    $subjectMonthly[$group][$m] = [];
+                                                }
+                                                if (!in_array($studentId, $subjectMonthly[$group][$m])) {
+                                                    $subjectMonthly[$group][$m][] = $studentId;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // เรียงลำดับกลุ่มวิชา
+                            sort($allGroups);
+                        @endphp
+
+                        <h4 class="mt-5 mb-3"><i class="fa fa-table"></i> สรุปจำนวนนักเรียนแต่ละวิชาต่อเดือน ปี {{ $year }}</h4>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="text-center" style="width: 120px;">วิชา</th>
+                                        @for ($m = 1; $m <= 12; $m++)
+                                            <th class="text-center">{{ str_pad($m, 2, '0', STR_PAD_LEFT) }}/{{ $year }}</th>
+                                        @endfor
+                                        <th class="text-center bg-warning text-dark">รวม</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $monthTotals = array_fill(1, 12, 0);
+                                    @endphp
+                                    @foreach ($allGroups as $group)
+                                        @php
+                                            $groupName = match($group) {
+                                                'M' => 'M - คณิตศาสตร์',
+                                                'E' => 'E - ภาษาอังกฤษ',
+                                                'C', 'CHN' => 'C - ภาษาจีน',
+                                                'S', 'Sci' => 'S - วิทยาศาสตร์',
+                                                'T' => 'T - ภาษาไทย',
+                                                'J' => 'J - ภาษาญี่ปุ่น',
+                                                'K' => 'K - ภาษาเกาหลี',
+                                                default => $group
+                                            };
+                                            $groupMark = $group === 'CHN' ? 'C' : ($group === 'Sci' ? 'S' : $group);
+                                            $groupClass = in_array($groupMark, ['M', 'E', 'C', 'S', 'T', 'J', 'K']) 
+                                                ? 'group-' . $groupMark 
+                                                : 'group-default';
+                                            $rowTotal = 0;
+                                        @endphp
+                                        <tr>
+                                            <td>
+                                                <span class="badge {{ $groupClass }}" style="font-size: 12px;">{{ $groupName }}</span>
+                                            </td>
+                                            @for ($m = 1; $m <= 12; $m++)
+                                                @php
+                                                    $count = isset($subjectMonthly[$group][$m]) ? count($subjectMonthly[$group][$m]) : 0;
+                                                    $rowTotal += $count;
+                                                    $monthTotals[$m] += $count;
+                                                @endphp
+                                                <td class="text-center {{ $count > 0 ? 'text-success fw-bold' : 'text-muted' }}">
+                                                    {{ $count > 0 ? $count : '-' }}
+                                                </td>
+                                            @endfor
+                                            <td class="text-center bg-light fw-bold">{{ $rowTotal }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot class="table-secondary">
+                                    <tr>
+                                        <th class="text-center">รวมทั้งหมด</th>
+                                        @for ($m = 1; $m <= 12; $m++)
+                                            <th class="text-center">{{ $monthTotals[$m] > 0 ? $monthTotals[$m] : '-' }}</th>
+                                        @endfor
+                                        <th class="text-center bg-warning text-dark">{{ array_sum($monthTotals) }}</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="alert alert-info mt-3">
+                            <i class="fa fa-info-circle"></i> <strong>หมายเหตุ:</strong> ตัวเลขแสดงจำนวนนักเรียนที่มี period ครอบคลุมเดือนนั้นๆ ในปี {{ $year }}
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="default-tab-3">
                         <blockquote class="blockquote">
@@ -470,9 +772,27 @@
             var table2 = $('#Listview2').DataTable({
                 lengthMenu: [-1],
             });
-            var table3 = $('#Listview3').DataTable({
-                lengthMenu: [-1],
+
+            // Timeline Search
+            $('#timelineSearch').on('keyup', function() {
+                var searchText = $(this).val().toLowerCase();
+                var visibleCount = 0;
+                
+                $('.timeline-row').each(function() {
+                    var studentName = $(this).data('student');
+                    if (studentName.includes(searchText)) {
+                        $(this).show();
+                        visibleCount++;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+                
+                $('#visibleCount').text(visibleCount);
             });
+
+            // Timeline bar tooltip
+            $('.timeline-bar').tooltip();
 
             $('input[type="checkbox"]').change(function() {
                 var isChecked = $(this).is(":checked");
