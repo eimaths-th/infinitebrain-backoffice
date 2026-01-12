@@ -607,7 +607,7 @@ class StdlogController extends Controller
         $periodYear = $request->year;
 
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
-        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($periodYear, $year);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($periodYear, $periodYear);
 
         $totalForAllMonths = $this->queryGrafgh1($stdlog);
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
@@ -626,7 +626,7 @@ class StdlogController extends Controller
             'percentageChangeForAllMonths' => $percentageChangeForAllMonths,
             'totalGroups' => $totalGroups,
             'paper' => $paper,
-            'year' => $year,
+            'year' => $periodYear,
             'month' => $months,
         ]);
     }
