@@ -160,7 +160,7 @@
                     <div class="tab-pane fade " id="default-tab-1">
 
                         <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนเดือน {{ thaidate('F', $month) }}
-                            {{ $year }} (ยังไม่เสร้จ)</h3>
+                            {{ $year }}</h3>
                         <table style="width: 100%;" id="Listview"
                             class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">
 
