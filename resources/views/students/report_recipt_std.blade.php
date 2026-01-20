@@ -486,6 +486,8 @@
                                 <!-- Data Rows -->
                                 @php
                                     use Carbon\Carbon;
+                                    // ลำดับการเรียงวิชา
+                                    $subjectOrder = ['M' => 1, 'E' => 2, 'C' => 3, 'S' => 4, 'T' => 5, 'J' => 6, 'K' => 7];
                                 @endphp
                                 @foreach ($reportYear_schoolPrice as $studentId => $groupedData)
                                     @php
@@ -541,7 +543,12 @@
                                             }
                                         }
                                         
-                                        // นับจำนวนแถวที่ต้องแสดง
+                                        // นับจำนวนแถวที่ต้องแสดง และเรียงตามลำดับวิชา
+                                        uksort($timelineBars, function($a, $b) use ($subjectOrder) {
+                                            $orderA = $subjectOrder[$a] ?? 99;
+                                            $orderB = $subjectOrder[$b] ?? 99;
+                                            return $orderA - $orderB;
+                                        });
                                         $totalRows = count($timelineBars);
                                     @endphp
                                     <div class="timeline-row" data-student="{{ strtolower($studentName) }}">
