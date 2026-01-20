@@ -693,10 +693,14 @@ class StdlogController extends Controller
         // dd($periodYearInt, $schoolPrice_id);
 
         $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
+            ->with('std')
             ->orderBy('student_id')
             ->orderBy('rid', 'asc')
             ->get()
-            ->groupBy('student_id');
+            ->groupBy('student_id')
+            ->sortBy(function ($items) {
+                return $items->first()->std->code ?? 'ZZZZZ';
+            });
 
 
         // dd($reportMonth_schoolPrice);
