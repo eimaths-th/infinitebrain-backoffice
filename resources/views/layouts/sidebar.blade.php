@@ -39,7 +39,7 @@
     <div class="scrollbar-sidebar">
         <div class="app-sidebar__inner">
             <ul class="vertical-nav-menu">
-                @if (Auth::user()->level == 2 || Auth::user()->level == 1 || Auth::user()->level == 0)
+                @hasanyrole(['super-admin', 'admin', 'staff'])
                     <li class="app-sidebar__heading"> </li>
                     <li>
                         <a href="{{ route('home') }}">
@@ -79,6 +79,39 @@
                             <i class="metismenu-icon pe-7s-note2"></i>
                             Receipt (ค่าสมัครเรียน)
                         </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="metismenu-icon pe-7s-wallet"></i>
+                            ใบสำคัญจ่าย
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="{{ route('payment-voucher.index') }}">
+                                    <i class="metismenu-icon"></i>
+                                    รายการทั้งหมด
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('payment-voucher.create') }}">
+                                    <i class="metismenu-icon"></i>
+                                    สร้างใบสำคัญจ่าย
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('payment-voucher.pending') }}">
+                                    <i class="metismenu-icon"></i>
+                                    รออนุมัติ
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('payment-voucher.approved') }}">
+                                    <i class="metismenu-icon"></i>
+                                    รอตรวจสอบ
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="#">
@@ -278,9 +311,9 @@
 
 
                     </li>
-                @endif
-                `
-                @if (Auth::user()->level != 3)
+                @endhasanyrole
+                {{-- ส่วนพนักงาน - แสดงทุก role ยกเว้น parent --}}
+                @unlessrole('parent')
                     <li class="app-sidebar__heading"> พนักงาน </li>
 
                     <li>
@@ -295,9 +328,30 @@
                             เขียนใบลา
                         </a>
                     </li>
-                @endif
+                    <li>
+                        <a href="#">
+                            <i class="metismenu-icon pe-7s-user"></i>
+                            Finance
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
 
-                @if (Auth::user()->level == 1 || Auth::user()->level == 0 || Auth::user()->level == 4)
+                        @can('payment-voucher.view')
+                            <ul>
+                                <li>
+                                    <a href="{{ route('payment-voucher.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        ใบสำคัญจ่าย
+                                    </a>
+                                </li>
+                            </ul>
+                        @endcan
+
+                       
+                        
+                    </li>
+                @endunlessrole
+
+                @hasanyrole(['super-admin', 'admin', 'staff'])
                     <li class="app-sidebar__heading">ผู้ดูแลระบบ</li>
                     <li>
                         <a href="#">
@@ -306,7 +360,7 @@
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
 
-                        @if (Auth::user()->level == 1 || Auth::user()->level == 0)
+                        @hasanyrole(['super-admin', 'admin'])
                             <ul>
                                 <li>
                                     <a href="{{ route('users') }}">
@@ -331,9 +385,9 @@
                                     </a>
                                 </li>
                             </ul>
-                        @endif
+                        @endhasanyrole
 
-                        @if (Auth::user()->level == 0)
+                        @role('super-admin')
                             <ul>
                                 <li>
                                     <a href="{{ route('leave-requests.index') }}">
@@ -342,7 +396,40 @@
                                     </a>
                                 </li>
                             </ul>
-                        @endif
+                        @endrole
+
+                        {{-- Role & Permission Management (Super Admin Only) --}}
+                        @role('super-admin')
+                            <li class="app-sidebar__heading">จัดการสิทธิ์</li>
+                            <li>
+                                <a href="#">
+                                    <i class="metismenu-icon pe-7s-shield"></i>
+                                    Role & Permission
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('admin.roles.index') }}">
+                                            <i class="metismenu-icon"></i>
+                                            จัดการ Roles
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.permissions.index') }}">
+                                            <i class="metismenu-icon"></i>
+                                            จัดการ Permissions
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.user-roles.index') }}">
+                                            <i class="metismenu-icon"></i>
+                                            กำหนด Role ให้ผู้ใช้
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endrole
+
                         <ul>
                             <li>
                                 <a href="{{ route('recordtime.index') }}">
@@ -351,7 +438,7 @@
                                 </a>
                             </li>
                         </ul>
-                        @if (Auth::user()->level == 0 && Auth::user()->id == 4)
+                        @if (Auth::user()->hasRole('super-admin') && Auth::user()->id == 4)
                             <ul>
                                 <li>
                                     <a href="{{ route('Godeye.index') }}">
@@ -362,7 +449,7 @@
                             </ul>
                         @endif
                     </li>
-                    @if (Auth::user()->level == 1 || Auth::user()->level == 0)
+                    @hasanyrole(['super-admin', 'admin'])
                         <li>
                             <a href="#">
                                 <i class="metismenu-icon pe-7s-users"></i>
@@ -381,13 +468,13 @@
 
                             </ul>
                         </li>
-                    @endif
+                    @endhasanyrole
                     @php
                         $user_id = Auth::user()->id;
 
                         $godEye = Godeye::where('user_id', $user_id)->get();
                     @endphp
-                    @if ((Auth::user()->level == 0 && Auth::user()->id == 4) || $godEye->count() > 0)
+                    @if ((Auth::user()->hasRole('super-admin') ) || $godEye->count() > 0)
                         <li>
                             <a href="#">
                                 <i class="metismenu-icon pe-7s-users"></i>
@@ -451,7 +538,7 @@
                             </ul>
                         </li>
                     @endif
-                @endif
+                @endhasanyrole
 
             </ul>
         </div>

@@ -128,6 +128,8 @@
                                 <option value="3">Account</option>
                                 <option value="4">Officer</option>
                                 <option value="5">Normal</option>
+                                <option value="7">Finance</option>
+                                <option value="8">Header</option>
                             </select>
                         </div>
                     </div>

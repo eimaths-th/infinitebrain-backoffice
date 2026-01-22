@@ -42,6 +42,10 @@ use App\Http\Controllers\LineController;
 use App\Http\Controllers\LineWebhookController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AzureTTSController;
+use App\Http\Controllers\PaymentVoucherController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UserRoleController;
 // use App\Http\Controllers\RouteToggleController;
 
 /*
@@ -97,7 +101,58 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');
     Route::get('/report-reciept-student-search', [StdlogController::class, 'reportRecieptStdSearch'])->name('reportRecieptStdSearch');
     Route::get('/report-reciept-student/{id}', [StdlogController::class, 'reportRecieptStdShow'])->name('reportRecieptStdShow');
+
+    // Payment Voucher Routes (ใบสำคัญจ่าย)
+    
 });
+
+Route::prefix('payment-voucher')->name('payment-voucher.')->group(function () {
+        Route::get('/', [PaymentVoucherController::class, 'index'])->name('index');
+        Route::get('/create', [PaymentVoucherController::class, 'create'])->name('create');
+        Route::post('/store', [PaymentVoucherController::class, 'store'])->name('store');
+        Route::get('/show/{id}', [PaymentVoucherController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [PaymentVoucherController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [PaymentVoucherController::class, 'update'])->name('update');
+        Route::delete('/destroy/{id}', [PaymentVoucherController::class, 'destroy'])->name('destroy');
+        
+        // Approval Workflow
+        Route::post('/review/{id}', [PaymentVoucherController::class, 'review'])->name('review');
+        Route::post('/approve/{id}', [PaymentVoucherController::class, 'approve'])->name('approve');
+        Route::post('/reject/{id}', [PaymentVoucherController::class, 'reject'])->name('reject');
+        Route::post('/complete/{id}', [PaymentVoucherController::class, 'complete'])->name('complete');
+        
+        // Lists
+        Route::get('/pending', [PaymentVoucherController::class, 'pendingList'])->name('pending');
+        Route::get('/approved', [PaymentVoucherController::class, 'approvedList'])->name('approved');
+        
+        // Export
+        Route::get('/export/{id}', [PaymentVoucherController::class, 'exportExcel'])->name('export');
+        
+        // AJAX: Get Address
+        Route::get('/get-address', [PaymentVoucherController::class, 'getAddressByPayee'])->name('get-address');
+
+        // Attachments
+        Route::post('/{id}/upload-attachment', [PaymentVoucherController::class, 'uploadAttachment'])->name('upload-attachment');
+        Route::delete('/attachment/{id}', [PaymentVoucherController::class, 'deleteAttachment'])->name('delete-attachment');
+    });
+
+// Role & Permission Management (super-admin only)
+Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
+    Route::prefix('system-admin')->name('admin.')->group(function () {
+        // Roles Management
+        Route::resource('roles', RoleController::class);
+        
+        // Permissions Management
+        Route::resource('permissions', PermissionController::class)->except(['show']);
+        Route::post('/permissions/bulk-create', [PermissionController::class, 'bulkCreate'])->name('permissions.bulk-create');
+        
+        // User Roles Management
+        Route::get('/user-roles', [UserRoleController::class, 'index'])->name('user-roles.index');
+        Route::get('/user-roles/{id}/edit', [UserRoleController::class, 'edit'])->name('user-roles.edit');
+        Route::put('/user-roles/{id}', [UserRoleController::class, 'update'])->name('user-roles.update');
+    });
+});
+
 Route::get('/stdLog-search', [StdlogController::class, 'search_id'])->name('searchTestLog');
 
 

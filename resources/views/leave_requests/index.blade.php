@@ -23,11 +23,11 @@
             <a href="{{ route('leave-requests.create') }}" class="btn btn-success">
                 <i class="fas fa-plus me-1"></i> เขียนใบลาใหม่
             </a>
-            @if(Auth::user()->level <= 1)
+            @role('super-admin|admin')
             <a href="{{ route('leave-requests.pending') }}" class="btn btn-warning">
                 <i class="fas fa-clock me-1"></i> รออนุมัติ
             </a>
-            @endif
+            @endrole
         </div>
     </div>
 </div>
@@ -39,7 +39,7 @@
     <div class="card-body">
         <form method="GET" action="{{ route('leave-requests.index') }}">
             <div class="row g-3">
-                @if(Auth::user()->level <= 1)
+                @role('super-admin|admin')
                 <div class="col-md-3">
                     <label class="form-label">พนักงาน</label>
                     <select name="user_id" class="form-select">
@@ -51,7 +51,7 @@
                         @endforeach
                     </select>
                 </div>
-                @endif
+                @endrole
                 <div class="col-md-3">
                     <label class="form-label">ประเภทการลา</label>
                     <select name="leave_type" class="form-select">
@@ -125,7 +125,7 @@
                             <a href="{{ route('leave-requests.show', $request->id) }}" class="btn btn-sm btn-primary">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            @if($request->IsPending() && ($request->user_id == Auth::id() || Auth::user()->level <= 1))
+                            @if($request->IsPending() && ($request->user_id == Auth::id() || Auth::user()->hasAnyRole(['super-admin', 'admin'])))
                             <button type="button" class="btn btn-sm btn-danger btn-delete" data-id="{{ $request->id }}">
                                 <i class="fas fa-trash"></i>
                             </button>

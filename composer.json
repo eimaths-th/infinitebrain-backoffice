@@ -21,6 +21,7 @@
         "phattarachai/thaidate": "^12.1",
         "phpoffice/phpword": "^1.4",
         "setasign/fpdi": "^2.6",
+        "spatie/laravel-permission": "^6.24",
         "tecnickcom/tcpdf": "^6.10",
         "yajra/laravel-datatables-oracle": "~9.0"
     },

@@ -70,6 +70,10 @@ class EmployeeController extends Controller
                         $ltext = "Owner";
                     } elseif ($level->level == 4) {
                         $ltext = "Officer";
+                    } elseif ($level->level == 7) {
+                        $ltext = "Finance";
+                    } elseif ($level->level == 8) {
+                        $ltext = "Header";
                     } else {
                         $ltext = "Normal";
                     }
@@ -212,7 +216,15 @@ class EmployeeController extends Controller
         }
         if ($data->level == 5) {
             $fselected = 'selected';
-        } else {
+        } 
+        if ($data->level == 7) {
+            $fselected = 'selected';
+        } 
+        if ($data->level == 8) {
+            $fselected = 'selected';
+        } 
+        
+        else {
             $fselected = '';
         }
 
@@ -244,6 +256,8 @@ class EmployeeController extends Controller
                      <option value="3" ' . $dselected . '>Account</option>
                      <option value="4" ' . $cselected . '>Officer</option>
                      <option value="5" ' . $fselected . '>Normal</option>
+                     <option value="7" ' . $fselected . '>Finance</option>
+                     <option value="8" ' . $fselected . '>Header</option>
 
                     </select>
                 </div>';
