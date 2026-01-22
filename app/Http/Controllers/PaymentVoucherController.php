@@ -554,6 +554,16 @@ class PaymentVoucherController extends Controller
     }
 
     /**
+     * ดึงเลขที่เอกสารลำดับถัดไป (AJAX)
+     */
+    public function getNextVoucherNo(Request $request)
+    {
+        $branchCode = $request->input('branch_code', 'EL');
+        $nextNo = PaymentVoucher::generateVoucherNo($branchCode);
+        return response()->json(['voucher_no' => $nextNo]);
+    }
+
+    /**
      * อัพโหลดไฟล์แนบเพิ่มเติม (AJAX)
      */
     public function uploadAttachment(Request $request, $id)

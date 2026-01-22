@@ -434,11 +434,29 @@ document.getElementById('voucherForm').addEventListener('submit', function(e) {
 // Update voucher number preview when branch changes
 document.getElementById('branchCode').addEventListener('change', function() {
     const branchCode = this.value;
-    const year = new Date().getFullYear();
-    const month = String(new Date().getMonth() + 1).padStart(2, '0');
-    // Generate preview with format: BranchCode + Year + Month + 01
-    const newVoucherNo = branchCode + year + month + '01';
-    document.getElementById('voucherNoPreview').value = newVoucherNo;
+    const previewInput = document.getElementById('voucherNoPreview');
+    
+    // Show loading state
+    previewInput.value = 'กำลังโหลด...';
+    
+    // Call API to get next available number
+    $.ajax({
+        url: "{{ route('payment-voucher.get-next-no') }}",
+        type: "GET",
+        data: { branch_code: branchCode },
+        success: function(response) {
+            if(response.voucher_no) {
+                previewInput.value = response.voucher_no;
+            }
+        },
+        error: function() {
+            // Fallback to static generation if API fails
+            const year = new Date().getFullYear();
+            const month = String(new Date().getMonth() + 1).padStart(2, '0');
+            previewInput.value = branchCode + year + month + '01';
+            console.error('Failed to fetch next voucher number');
+        }
+    });
 });
 </script>
 @endsection
