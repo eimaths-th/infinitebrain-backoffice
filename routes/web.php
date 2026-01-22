@@ -130,6 +130,9 @@ Route::prefix('payment-voucher')->name('payment-voucher.')->group(function () {
         
         // AJAX: Get Address
         Route::get('/get-address', [PaymentVoucherController::class, 'getAddressByPayee'])->name('get-address');
+        
+        // AJAX: Get Next Voucher No
+        Route::get('/get-next-no', [PaymentVoucherController::class, 'getNextVoucherNo'])->name('get-next-no');
 
         // Attachments
         Route::post('/{id}/upload-attachment', [PaymentVoucherController::class, 'uploadAttachment'])->name('upload-attachment');
