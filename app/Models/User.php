@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -94,7 +95,11 @@ class User extends Authenticatable
         return $this->level === self::ADMIN_TYPE;
     }*/
 
-    public function hasRole()
+    /**
+     * @deprecated ใช้ hasRole() จาก spatie/laravel-permission แทน
+     * Legacy method สำหรับตรวจสอบ level เดิม - เปลี่ยนชื่อเพื่อไม่ให้ conflict กับ spatie
+     */
+    public function getLevelRole()
     {
         switch ($this->level) {
             case 0:

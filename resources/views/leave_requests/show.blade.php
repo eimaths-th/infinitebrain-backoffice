@@ -218,7 +218,7 @@
             </div>
         </div>
 
-        @if($leave_request->IsPending() && Auth::user()->level <= 1)
+        @if($leave_request->IsPending() && Auth::user()->hasAnyRole(['super-admin', 'admin']))
         <div class="main-card mb-3 card">
             <div class="card-header bg-primary text-white">
                 <i class="fas fa-gavel me-2"></i> พิจารณาใบลา
@@ -290,7 +290,7 @@ $(document).ready(function() {
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
     });
 
-    @if($leave_request->IsPending() && Auth::user()->level <= 1)
+    @if($leave_request->IsPending() && Auth::user()->hasAnyRole(['super-admin', 'admin']))
     var canvas = document.getElementById('approverSignaturePad');
     var signaturePad = null;
 

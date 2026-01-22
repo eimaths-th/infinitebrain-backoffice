@@ -1,28 +1,35 @@
 <div class="app-header header-shadow">
     <div class="app-header__logo">
 
-        @if (Auth::user()->level >= 0 && Auth::user()->level < 3)
+        @role('super-admin|admin|staff')
             <a href="{{ route('home') }}">
                 <div class="logo-src">
                     <img src="{{ asset('images/logo_infinitebrain.png') }}" alt="..." height="36"
                         style="padding-bottom: 5px">
                 </div>
             </a>
-        @elseif (Auth::user()->level == 3)
+        @elserole('finance')
             <a href="{{ route('formsControl') }}">
                 <div class="logo-src">
                     <img src="{{ asset('images/logo_infinitebrain.png') }}" alt="..." height="36"
                         style="padding-bottom: 5px">
                 </div>
             </a>
-        @elseif (Auth::user()->level > 3 && Auth::user()->level < 6)
+        @elserole('parent')
             <a href="{{ route('home2') }}">
                 <div class="logo-src">
                     <img src="{{ asset('images/logo_infinitebrain.png') }}" alt="..." height="36"
                         style="padding-bottom: 5px">
                 </div>
             </a>
-        @endif
+        @else
+            <a href="{{ route('home2') }}">
+                <div class="logo-src">
+                    <img src="{{ asset('images/logo_infinitebrain.png') }}" alt="..." height="36"
+                        style="padding-bottom: 5px">
+                </div>
+            </a>
+        @endrole
 
         <div class="header__pane ms-auto">
             <div>

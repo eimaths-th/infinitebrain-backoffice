@@ -1,0 +1,612 @@
+@extends('layouts.main_template')
+
+@section('style')
+    <style>
+        .status-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .status-draft { background-color: #6c757d; color: white; }
+        .status-pending { background-color: #ffc107; color: #212529; }
+        .status-reviewed { background-color: #17a2b8; color: white; }
+        .status-approved { background-color: #28a745; color: white; }
+        .status-rejected { background-color: #dc3545; color: white; }
+        .status-completed { background-color: #28a745; color: white; }
+        
+        .voucher-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .voucher-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .info-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            height: 100%;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            font-size: 1rem;
+            color: #212529;
+        }
+        .items-table th {
+            background: #343a40;
+            color: white;
+        }
+        .total-row {
+            background: #e7f3ff;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        .timeline-item {
+            position: relative;
+            padding-left: 40px;
+            padding-bottom: 20px;
+            border-left: 2px solid #dee2e6;
+        }
+        .timeline-item:last-child {
+            border-left: none;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #007bff;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #007bff;
+        }
+        .timeline-time {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        .timeline-action {
+            font-weight: 600;
+        }
+        .approval-card {
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            background: #f8fff9;
+        }
+        .print-section {
+            display: none;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            .print-section { display: block !important; }
+            .card { border: none !important; box-shadow: none !important; }
+        }
+        .attachment-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .attachment-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            width: 150px;
+            background: #f8f9fa;
+        }
+        .attachment-card img {
+            max-width: 130px;
+            max-height: 130px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .attachment-card .file-icon {
+            width: 130px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .attachment-card .file-name {
+            font-size: 0.75rem;
+            margin-top: 8px;
+            word-break: break-all;
+            color: #6c757d;
+        }
+        .item-attachments-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .item-attachments-inline img {
+            max-width: 50px;
+            max-height: 50px;
+            object-fit: cover;
+            border-radius: 3px;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+        }
+        .item-attachments-inline .pdf-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 3px;
+        }
+        /* Lightbox styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .lightbox .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+    </style>
+@endsection
+
+@section('content')
+<div class="row">
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success alert-dismissible fade show">
+            <p class="mb-0">{{ $message }}</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if ($message = Session::get('error'))
+        <div class="alert alert-danger alert-dismissible fade show">
+            <p class="mb-0">{{ $message }}</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    <div class="app-page-title no-print">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="page-title-icon">
+                    <i class="pe-7s-note2 icon-gradient bg-tempting-azure"></i>
+                </div>
+                <div>
+                    ใบสำคัญจ่าย
+                    <div class="page-title-subheading">รายละเอียดใบสำคัญจ่าย</div>
+                </div>
+            </div>
+            <div class="page-title-actions">
+                <a href="{{ route('payment-voucher.index') }}" class="btn btn-secondary">
+                    <i class="fa fa-arrow-left"></i> กลับ
+                </a>
+                <a href="{{ route('payment-voucher.export', $voucher->id) }}" class="btn btn-success">
+                    <i class="fa fa-file-excel-o"></i> Excel
+                </a>
+                <button onclick="window.print()" class="btn btn-info">
+                    <i class="fa fa-print"></i> พิมพ์
+                </button>
+                @if($voucher->canEdit())
+                <a href="{{ route('payment-voucher.edit', $voucher->id) }}" class="btn btn-warning">
+                    <i class="fa fa-edit"></i> แก้ไข
+                </a>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <!-- Voucher Header -->
+    <div class="voucher-header">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="voucher-number">{{ $voucher->voucher_no }}</div>
+                <div>วันที่: {{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}</div>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <span class="status-badge status-{{ $voucher->status }}">
+                    {{ $voucher->status_label }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <!-- Payee Info -->
+        <div class="col-md-6 mb-3">
+            <div class="info-card">
+                <h6 class="border-bottom pb-2 mb-3"><i class="fa fa-user"></i> ข้อมูลผู้รับเงิน</h6>
+                <div class="mb-2">
+                    <div class="info-label">จ่ายให้</div>
+                    <div class="info-value">{{ $voucher->pay_to }}</div>
+                </div>
+                @if($voucher->pay_to_address)
+                <div class="mb-2">
+                    <div class="info-label">ที่อยู่</div>
+                    <div class="info-value">{{ $voucher->pay_to_address }}</div>
+                </div>
+                @endif
+            </div>
+        </div>
+
+        <!-- Creator Info -->
+        <div class="col-md-6 mb-3">
+            <div class="info-card">
+                <h6 class="border-bottom pb-2 mb-3"><i class="fa fa-info-circle"></i> ข้อมูลเอกสาร</h6>
+                <div class="row">
+                    <div class="col-6 mb-2">
+                        <div class="info-label">ผู้สร้าง</div>
+                        <div class="info-value">{{ $voucher->created_by_name }}</div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="info-label">วันที่สร้าง</div>
+                        <div class="info-value">{{ $voucher->created_at->format('d/m/Y H:i') }}</div>
+                    </div>
+                    @if($voucher->approved_by_name)
+                    <div class="col-6 mb-2">
+                        <div class="info-label">ผู้อนุมัติ</div>
+                        <div class="info-value">{{ $voucher->approved_by_name }}</div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="info-label">วันที่อนุมัติ</div>
+                        <div class="info-value">{{ $voucher->approved_at ? \Carbon\Carbon::parse($voucher->approved_at)->format('d/m/Y H:i') : '-' }}</div>
+                    </div>
+                    @endif
+                    @if($voucher->reviewed_by_name)
+                    <div class="col-6 mb-2">
+                        <div class="info-label">ผู้ตรวจสอบ</div>
+                        <div class="info-value">{{ $voucher->reviewed_by_name }}</div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="info-label">วันที่ตรวจสอบ</div>
+                        <div class="info-value">{{ $voucher->reviewed_at ? \Carbon\Carbon::parse($voucher->reviewed_at)->format('d/m/Y H:i') : '-' }}</div>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Items Table -->
+    <div class="main-card mb-3 card">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fa fa-list"></i> รายการ</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered items-table">
+                    <thead>
+                        <tr>
+                            <th width="8%" class="text-center">ลำดับ</th>
+                            <th width="50%">รายละเอียด</th>
+                            <th width="25%">เอกสารแนบ</th>
+                            <th width="17%" class="text-end">จำนวนเงิน</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($voucher->items as $item)
+                        <tr>
+                            <td class="text-center">{{ $item->item_no }}</td>
+                            <td>{{ $item->description }}</td>
+                            <td>
+                                @if($item->attachments && $item->attachments->count() > 0)
+                                <div class="item-attachments-inline">
+                                    @foreach($item->attachments as $attachment)
+                                        @if($attachment->isImage())
+                                        <img src="{{ Storage::url($attachment->file_path) }}" 
+                                             alt="{{ $attachment->original_name }}"
+                                             onclick="openLightbox('{{ Storage::url($attachment->file_path) }}')"
+                                             title="{{ $attachment->original_name }}">
+                                        @else
+                                        <a href="{{ Storage::url($attachment->file_path) }}" target="_blank" title="{{ $attachment->original_name }}">
+                                            <div class="pdf-icon"><i class="fa fa-file-pdf-o text-danger"></i></div>
+                                        </a>
+                                        @endif
+                                    @endforeach
+                                </div>
+                                @else
+                                <span class="text-muted">-</span>
+                                @endif
+                            </td>
+                            <td class="text-end">{{ number_format($item->amount, 2) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td colspan="2" class="text-end">รวมทั้งสิ้น</td>
+                            <td class="text-end">{{ number_format($voucher->total_amount, 2) }} บาท</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            @if($voucher->remark)
+            <div class="mt-3">
+                <strong>หมายเหตุ:</strong> {{ $voucher->remark }}
+            </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Voucher Attachments -->
+    @if($voucher->attachments && $voucher->attachments->count() > 0)
+    <div class="main-card mb-3 card">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fa fa-paperclip"></i> เอกสารแนบใบสำคัญจ่าย</h6>
+        </div>
+        <div class="card-body">
+            <div class="attachment-gallery">
+                @foreach($voucher->attachments as $attachment)
+                <div class="attachment-card">
+                    @if($attachment->isImage())
+                    <img src="{{ Storage::url($attachment->file_path) }}" 
+                         alt="{{ $attachment->original_name }}"
+                         onclick="openLightbox('{{ Storage::url($attachment->file_path) }}')">
+                    @else
+                    <a href="{{ Storage::url($attachment->file_path) }}" target="_blank">
+                        <div class="file-icon">
+                            <i class="fa fa-file-pdf-o fa-3x text-danger"></i>
+                        </div>
+                    </a>
+                    @endif
+                    <div class="file-name">{{ $attachment->original_name }}</div>
+                    <small class="text-muted">{{ $attachment->file_size_formatted }}</small>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Approval Actions -->
+    @if($voucher->canReview() || $voucher->canApprove() || $voucher->canComplete())
+    <div class="main-card mb-3 card no-print">
+        <div class="card-header bg-success text-white">
+            <h6 class="mb-0"><i class="fa fa-check-circle"></i> ดำเนินการ</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                @php
+                    // ใช้ระบบ permission แทน level
+                    $canReview = Auth::user()->can('payment-voucher.review');
+                    $canApprove = Auth::user()->can('payment-voucher.approve');
+                    $disableAccount = $canReview ? '' : 'disabled';
+                    $enableFinance = $canApprove ? '' : 'disabled';
+                @endphp
+                @if($voucher->canReview() )
+                <div class="col-md-6 mb-3">
+                    <div class="approval-card" style="border-color: #17a2b8; background: #f0fafc;">
+                        <h6><i class="fa fa-search text-info"></i> ตรวจสอบใบสำคัญจ่าย</h6>
+                        <form action="{{ route('payment-voucher.review', $voucher->id) }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label class="form-label">หมายเหตุ (ถ้ามี)</label>
+                                <textarea name="remark" class="form-control" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-info" {{ $disableAccount }}>
+                                <i class="fa fa-check"></i> ตรวจสอบเรียบร้อย
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                @endif
+
+                @if($voucher->canApprove())
+                <div class="col-md-6 mb-3">
+                    <div class="approval-card">
+                        <h6><i class="fa fa-thumbs-up text-success"></i> อนุมัติใบสำคัญจ่าย</h6>
+                        <form action="{{ route('payment-voucher.approve', $voucher->id) }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label class="form-label">หมายเหตุ (ถ้ามี)</label>
+                                <textarea name="remark" class="form-control" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success" {{ $enableFinance }}>
+                                <i class="fa fa-check"></i> อนุมัติ
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="approval-card" style="border-color: #dc3545; background: #fff8f8;">
+                        <h6><i class="fa fa-thumbs-down text-danger"></i> ปฏิเสธใบสำคัญจ่าย</h6>
+                        <form action="{{ route('payment-voucher.reject', $voucher->id) }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label class="form-label">เหตุผลที่ปฏิเสธ <span class="text-danger">*</span></label>
+                                <textarea name="remark" class="form-control" rows="2" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-danger" {{ $enableFinance }}>
+                                <i class="fa fa-times"></i> ปฏิเสธ
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                @endif
+
+                @if($voucher->canReview())
+                <div class="col-md-6 mb-3">
+                    <div class="approval-card" style="border-color: #007bff; background: #f8f9ff;">
+                        <h6><i class="fa fa-check-square text-primary"></i> ตรวจสอบใบสำคัญจ่าย</h6>
+                        <form action="{{ route('payment-voucher.review', $voucher->id) }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label class="form-label">หมายเหตุ (ถ้ามี)</label>
+                                <textarea name="remark" class="form-control" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" {{ $disableAccount }}>
+                                <i class="fa fa-check-square-o"></i> ตรวจสอบเรียบร้อย
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                @endif
+
+                @if($voucher->canComplete())
+                <div class="col-md-6 mb-3">
+                    <div class="approval-card">
+                        <h6><i class="fa fa-flag-checkered text-success"></i> บันทึกเสร็จสิ้น</h6>
+                        <form action="{{ route('payment-voucher.complete', $voucher->id) }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label class="form-label">ชื่อผู้รับเงิน <span class="text-danger">*</span></label>
+                                <input type="text" name="receiver_name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">วันที่รับเงิน</label>
+                                <input type="date" name="received_date" class="form-control" value="{{ date('Y-m-d') }}">
+                            </div>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa fa-check"></i> บันทึกเสร็จสิ้น
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Activity Log -->
+    <div class="main-card mb-3 card no-print">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fa fa-history"></i> ประวัติการดำเนินการ</h6>
+        </div>
+        <div class="card-body">
+            <div class="timeline">
+                @foreach($voucher->logs->sortByDesc('created_at') as $log)
+                <div class="timeline-item">
+                    <div class="timeline-time">{{ $log->created_at->format('d/m/Y H:i') }}</div>
+                    <div class="timeline-action">
+                        @switch($log->action)
+                            @case('create')
+                                <span class="text-primary">สร้างเอกสาร</span>
+                                @break
+                            @case('submit')
+                                <span class="text-warning">ส่งตรวจสอบ</span>
+                                @break
+                            @case('review')
+                                <span class="text-info">ตรวจสอบแล้ว</span>
+                                @break
+                            @case('approve')
+                                <span class="text-success">อนุมัติ</span>
+                                @break
+                            @case('reject')
+                                <span class="text-danger">ปฏิเสธ</span>
+                                @break
+                            @case('complete')
+                                <span class="text-success">เสร็จสิ้น</span>
+                                @break
+                            @case('update')
+                                <span class="text-secondary">แก้ไข</span>
+                                @break
+                            @default
+                                <span>{{ $log->action }}</span>
+                        @endswitch
+                        โดย {{ $log->user_name }}
+                    </div>
+                    @if($log->remark)
+                    <div class="text-muted small">{{ $log->remark }}</div>
+                    @endif
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <!-- Receiver Info (if completed) -->
+    @if($voucher->status === 'completed' && $voucher->receiver_name)
+    <div class="main-card mb-3 card">
+        <div class="card-header bg-success text-white">
+            <h6 class="mb-0"><i class="fa fa-check-circle"></i> ข้อมูลการรับเงิน</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-label">ผู้รับเงิน</div>
+                    <div class="info-value">{{ $voucher->receiver_name }}</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-label">วันที่รับเงิน</div>
+                    <div class="info-value">{{ $voucher->received_date ? \Carbon\Carbon::parse($voucher->received_date)->format('d/m/Y') : '-' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+</div>
+@endsection
+
+@section('script')
+<script>
+$(document).ready(function() {
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+        $('.alert').fadeOut('slow');
+    }, 5000);
+});
+
+// Lightbox functionality
+function openLightbox(imageSrc) {
+    let lightbox = document.getElementById('lightbox');
+    if (!lightbox) {
+        lightbox = document.createElement('div');
+        lightbox.id = 'lightbox';
+        lightbox.className = 'lightbox';
+        lightbox.innerHTML = '<span class="close" onclick="closeLightbox()">&times;</span><img src="" id="lightbox-img">';
+        lightbox.onclick = function(e) {
+            if (e.target === lightbox) closeLightbox();
+        };
+        document.body.appendChild(lightbox);
+    }
+    document.getElementById('lightbox-img').src = imageSrc;
+    lightbox.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Close on ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+});
+</script>
+@endsection

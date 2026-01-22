@@ -75,5 +75,8 @@ class Kernel extends HttpKernel
         'switch' => switchhome::class,
         'outhome' => Outhome::class,
         
+        // Spatie Permission Middleware
+        'role' => \App\Http\Middleware\CheckRole::class,
+        'permission' => \App\Http\Middleware\CheckPermission::class,
     ];
 }
