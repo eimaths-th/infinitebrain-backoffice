@@ -297,15 +297,15 @@
                         </a>
                     </li>
                 @endcan
+                @can('payment-voucher.view')
 
-                <li>
-                    <a href="#">
-                        <i class="metismenu-icon  pe-7s-wallet"></i>
-                        Finance
-                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                    </a>
+                    <li>
+                        <a href="#">
+                            <i class="metismenu-icon  pe-7s-wallet"></i>
+                            Finance
+                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                        </a>
 
-                    @can('payment-voucher.view')
                         <ul>
                             {{-- <li>
                                     <a href="{{ route('payment-voucher.index') }}">
@@ -351,8 +351,8 @@
                                 </ul>
                             </li>
                         </ul>
-                    @endcan
-                </li>
+                    </li>
+                @endcan
 
                 {{-- ส่วนผู้ดูแลระบบ --}}
 
