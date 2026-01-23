@@ -195,6 +195,18 @@
                                                 </button>
                                             </form>
                                         @endif
+                                        {{-- ปุ่มลบถาวร (Force Delete) - สำหรับ admin หรือผู้มีสิทธิ์ --}}
+                                        @can('payment-voucher.delete')
+                                            <form action="{{ route('payment-voucher.force-destroy', $voucher->id) }}"
+                                                method="POST" class="d-inline"
+                                                onsubmit="return confirm('⚠️ คำเตือน!\n\nการลบนี้จะลบข้อมูลทั้งหมดที่เกี่ยวข้อง:\n- รายการย่อยทั้งหมด\n- ประวัติการดำเนินการ\n- ไฟล์แนบทั้งหมด\n\nการดำเนินการนี้ไม่สามารถกู้คืนได้!\n\nยืนยันการลบถาวร?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-dark btn-action" title="ลบถาวร">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
                                         @if ($voucher->canApprove())
                                             <button type="button" class="btn btn-success btn-action"
                                                 data-bs-toggle="modal" data-bs-target="#approveModal{{ $voucher->id }}"
