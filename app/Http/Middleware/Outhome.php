@@ -17,8 +17,8 @@ class Outhome
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user()->level == 3) {
-            return redirect(route('formsControl'));
+        if (Auth::user()->hasRole() === 'account') {
+            return redirect(route('payment-voucher.index'));
         } else {
 
             return $next($request);
