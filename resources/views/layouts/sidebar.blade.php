@@ -282,7 +282,7 @@
                 @endcan
                 {{-- ส่วนพนักงาน - แสดงทุก role ยกเว้น parent --}}
 
-                <li class="app-sidebar__heading"> พนักงาน </li>
+                <li class="app-sidebar__heading"> ทั่วไป </li>
                 @can(['general.view'])
                     <li>
                         <a href="{{ route('home2') }}">

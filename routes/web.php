@@ -103,51 +103,54 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/report-reciept-student/{id}', [StdlogController::class, 'reportRecieptStdShow'])->name('reportRecieptStdShow');
 
     // Payment Voucher Routes (ใบสำคัญจ่าย)
-    
+
 });
 
-Route::prefix('payment-voucher')->name('payment-voucher.')->group(function () {
-        Route::get('/', [PaymentVoucherController::class, 'index'])->name('index');
-        Route::get('/create', [PaymentVoucherController::class, 'create'])->name('create');
-        Route::post('/store', [PaymentVoucherController::class, 'store'])->name('store');
-        Route::get('/show/{id}', [PaymentVoucherController::class, 'show'])->name('show');
-        Route::get('/edit/{id}', [PaymentVoucherController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [PaymentVoucherController::class, 'update'])->name('update');
-        Route::delete('/destroy/{id}', [PaymentVoucherController::class, 'destroy'])->name('destroy');
-        
-        // Approval Workflow
-        Route::post('/review/{id}', [PaymentVoucherController::class, 'review'])->name('review');
-        Route::post('/approve/{id}', [PaymentVoucherController::class, 'approve'])->name('approve');
-        Route::post('/reject/{id}', [PaymentVoucherController::class, 'reject'])->name('reject');
-        Route::post('/complete/{id}', [PaymentVoucherController::class, 'complete'])->name('complete');
-        
-        // Lists
-        Route::get('/pending', [PaymentVoucherController::class, 'pendingList'])->name('pending');
-        Route::get('/approved', [PaymentVoucherController::class, 'approvedList'])->name('approved');
-        
-        // Export
-        Route::get('/export/{id}', [PaymentVoucherController::class, 'exportExcel'])->name('export');
-        
-        // Attachments
-        Route::post('/{id}/upload-attachment', [PaymentVoucherController::class, 'uploadAttachment'])->name('upload-attachment');
-        Route::delete('/attachment/{id}', [PaymentVoucherController::class, 'deleteAttachment'])->name('delete-attachment');
-        
-        // Payee & Voucher Number APIs
-        Route::get('/search-payee', [PaymentVoucherController::class, 'searchPayee'])->name('search-payee');
-        Route::get('/next-voucher-no', [PaymentVoucherController::class, 'getNextVoucherNo'])->name('next-voucher-no');
-        Route::post('/save-payee', [PaymentVoucherController::class, 'savePayee'])->name('save-payee');
-    });
+Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')->group(function () {
+    Route::get('/', [PaymentVoucherController::class, 'index'])->name('index');
+    Route::get('/create', [PaymentVoucherController::class, 'create'])->name('create');
+    Route::post('/store', [PaymentVoucherController::class, 'store'])->name('store');
+    Route::get('/show/{id}', [PaymentVoucherController::class, 'show'])->name('show');
+    Route::get('/edit/{id}', [PaymentVoucherController::class, 'edit'])->name('edit');
+    Route::put('/update/{id}', [PaymentVoucherController::class, 'update'])->name('update');
+    Route::delete('/destroy/{id}', [PaymentVoucherController::class, 'destroy'])->name('destroy');
+
+    // Force Delete (ลบถาวรพร้อมข้อมูลที่เกี่ยวข้องทั้งหมด)
+    Route::delete('/force-destroy/{id}', [PaymentVoucherController::class, 'forceDestroy'])->name('force-destroy');
+
+    // Approval Workflow
+    Route::post('/review/{id}', [PaymentVoucherController::class, 'review'])->name('review');
+    Route::post('/approve/{id}', [PaymentVoucherController::class, 'approve'])->name('approve');
+    Route::post('/reject/{id}', [PaymentVoucherController::class, 'reject'])->name('reject');
+    Route::post('/complete/{id}', [PaymentVoucherController::class, 'complete'])->name('complete');
+
+    // Lists
+    Route::get('/pending', [PaymentVoucherController::class, 'pendingList'])->name('pending');
+    Route::get('/approved', [PaymentVoucherController::class, 'approvedList'])->name('approved');
+
+    // Export
+    Route::get('/export/{id}', [PaymentVoucherController::class, 'exportExcel'])->name('export');
+
+    // Attachments
+    Route::post('/{id}/upload-attachment', [PaymentVoucherController::class, 'uploadAttachment'])->name('upload-attachment');
+    Route::delete('/attachment/{id}', [PaymentVoucherController::class, 'deleteAttachment'])->name('delete-attachment');
+
+    // Payee & Voucher Number APIs
+    Route::get('/search-payee', [PaymentVoucherController::class, 'searchPayee'])->name('search-payee');
+    Route::get('/next-voucher-no', [PaymentVoucherController::class, 'getNextVoucherNo'])->name('next-voucher-no');
+    Route::post('/save-payee', [PaymentVoucherController::class, 'savePayee'])->name('save-payee');
+});
 
 // Role & Permission Management (super-admin only)
 Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
     Route::prefix('system-admin')->name('admin.')->group(function () {
         // Roles Management
         Route::resource('roles', RoleController::class);
-        
+
         // Permissions Management
         Route::resource('permissions', PermissionController::class)->except(['show']);
         Route::post('/permissions/bulk-create', [PermissionController::class, 'bulkCreate'])->name('permissions.bulk-create');
-        
+
         // User Roles Management
         Route::get('/user-roles', [UserRoleController::class, 'index'])->name('user-roles.index');
         Route::get('/user-roles/{id}/edit', [UserRoleController::class, 'edit'])->name('user-roles.edit');

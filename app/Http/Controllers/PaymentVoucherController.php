@@ -45,10 +45,8 @@ class PaymentVoucherController extends Controller
             });
         }
 
-        if (Auth::user()->level == 3) {
-            $query->where('created_by', Auth::id());
-        }
-
+        // ใช้ role-based permission แทน level
+        // บัญชีทั่วไปดูได้เฉพาะที่ตัวเองสร้าง
         if (Auth::user()->hasRole('account')) {
             $query->where('created_by', Auth::id());
         }
@@ -90,7 +88,7 @@ class PaymentVoucherController extends Controller
         DB::beginTransaction();
         try {
             $branchCode = $request->branch_code ?? 'EL';
-            
+
             // บันทึกหรืออัปเดตข้อมูลผู้รับเงิน (Payee)
             $payee = null;
             if ($request->pay_to) {
@@ -101,7 +99,7 @@ class PaymentVoucherController extends Controller
                     'created_by' => Auth::id(),
                 ]);
             }
-            
+
             // สร้างใบสำคัญจ่าย
             $voucher = PaymentVoucher::create([
                 'voucher_no' => PaymentVoucher::generateVoucherNo($branchCode),
@@ -176,7 +174,6 @@ class PaymentVoucherController extends Controller
 
             return redirect()->route('payment-voucher.show', $voucher->id)
                 ->with('success', 'สร้างใบสำคัญจ่ายเรียบร้อยแล้ว');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage())->withInput();
@@ -316,7 +313,6 @@ class PaymentVoucherController extends Controller
 
             return redirect()->route('payment-voucher.show', $voucher->id)
                 ->with('success', 'อัพเดทใบสำคัญจ่ายเรียบร้อยแล้ว');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage())->withInput();
@@ -324,7 +320,7 @@ class PaymentVoucherController extends Controller
     }
 
     /**
-     * ลบใบสำคัญจ่าย
+     * ลบใบสำคัญจ่าย (Soft Delete)
      */
     public function destroy($id)
     {
@@ -338,6 +334,50 @@ class PaymentVoucherController extends Controller
 
         return redirect()->route('payment-voucher.index')
             ->with('success', 'ลบใบสำคัญจ่ายเรียบร้อยแล้ว');
+    }
+
+    /**
+     * ลบใบสำคัญจ่ายและข้อมูลที่เกี่ยวข้องทั้งหมด (Force Delete)
+     */
+    public function forceDestroy($id)
+    {
+        DB::beginTransaction();
+        try {
+            $voucher = PaymentVoucher::withTrashed()->findOrFail($id);
+
+            // 1. ลบไฟล์แนบทั้งหมดจาก storage
+            foreach ($voucher->allAttachments as $attachment) {
+                if (Storage::disk('public')->exists($attachment->file_path)) {
+                    Storage::disk('public')->delete($attachment->file_path);
+                }
+            }
+
+            // 2. ลบ folder ของ voucher (ถ้ามี)
+            $folderPath = 'payment_vouchers/' . $voucher->id;
+            if (Storage::disk('public')->exists($folderPath)) {
+                Storage::disk('public')->deleteDirectory($folderPath);
+            }
+
+            // 3. ลบ attachments records
+            $voucher->allAttachments()->delete();
+
+            // 4. ลบ items ทั้งหมด
+            $voucher->items()->delete();
+
+            // 5. ลบ logs ทั้งหมด
+            $voucher->logs()->delete();
+
+            // 6. ลบ voucher (force delete จริงๆ)
+            $voucher->forceDelete();
+
+            DB::commit();
+
+            return redirect()->route('payment-voucher.index')
+                ->with('success', 'ลบใบสำคัญจ่ายและข้อมูลที่เกี่ยวข้องทั้งหมดเรียบร้อยแล้ว');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -509,9 +549,9 @@ class PaymentVoucherController extends Controller
     public function exportExcel($id)
     {
         $voucher = PaymentVoucher::with('items')->findOrFail($id);
-        
+
         return Excel::download(
-            new PaymentVoucherExport($voucher), 
+            new PaymentVoucherExport($voucher),
             'payment_voucher_' . $voucher->voucher_no . '.xlsx'
         );
     }
@@ -600,7 +640,7 @@ class PaymentVoucherController extends Controller
     public function searchPayee(Request $request)
     {
         $keyword = $request->get('q', '');
-        
+
         $payees = \App\Models\Payee::active()
             ->when($keyword, function ($query) use ($keyword) {
                 $query->search($keyword);
@@ -619,7 +659,7 @@ class PaymentVoucherController extends Controller
     {
         $branchCode = $request->get('branch_code', 'EL');
         $voucherNo = PaymentVoucher::generateVoucherNo($branchCode);
-        
+
         return response()->json([
             'voucher_no' => $voucherNo,
             'branch_code' => $branchCode,
