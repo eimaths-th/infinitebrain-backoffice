@@ -139,6 +139,12 @@ Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')
     Route::get('/search-payee', [PaymentVoucherController::class, 'searchPayee'])->name('search-payee');
     Route::get('/next-voucher-no', [PaymentVoucherController::class, 'getNextVoucherNo'])->name('next-voucher-no');
     Route::post('/save-payee', [PaymentVoucherController::class, 'savePayee'])->name('save-payee');
+
+    // Import Excel
+    Route::get('/import', [PaymentVoucherController::class, 'showImportForm'])->name('import');
+    Route::post('/import', [PaymentVoucherController::class, 'importExcel'])->name('import.process');
+    Route::post('/import/store', [PaymentVoucherController::class, 'storeImport'])->name('import.store');
+    Route::get('/import/template', [PaymentVoucherController::class, 'downloadTemplate'])->name('import.template');
 });
 
 // Role & Permission Management (super-admin only)

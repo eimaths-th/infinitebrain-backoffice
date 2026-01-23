@@ -82,6 +82,9 @@
                     </div>
                 </div>
                 <div class="page-title-actions">
+                    <a href="{{ route('payment-voucher.import') }}" class="btn btn-info">
+                        <i class="fa fa-upload"></i> Import Excel
+                    </a>
                     <a href="{{ route('payment-voucher.create') }}" class="btn btn-success">
                         <i class="fa fa-plus"></i> สร้างใบสำคัญจ่าย
                     </a>
@@ -107,7 +110,8 @@
                                 </option>
                                 <option value="reviewed" {{ request('status') == 'reviewed' ? 'selected' : '' }}>ตรวจสอบแล้ว
                                 </option>
-                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>เสร็จสิ้น
+                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>
+                                    เสร็จสิ้น
                                 </option>
                             </select>
                         </div>
