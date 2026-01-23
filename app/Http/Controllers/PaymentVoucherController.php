@@ -49,6 +49,10 @@ class PaymentVoucherController extends Controller
             $query->where('created_by', Auth::id());
         }
 
+        if (Auth::user()->hasRole('account')) {
+            $query->where('created_by', Auth::id());
+        }
+
         $vouchers = $query->paginate(20);
 
         return view('payment_voucher.index', compact('vouchers'));
