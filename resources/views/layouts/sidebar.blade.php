@@ -356,7 +356,7 @@
 
                 {{-- ส่วนผู้ดูแลระบบ --}}
 
-                @hasanyrole(['super-admin', 'admin', 'staff'])
+                @can(['general.admin.view'])
                     <li class="app-sidebar__heading">ผู้ดูแลระบบ</li>
                     <li>
                         <a href="#">
@@ -400,7 +400,7 @@
                             </ul>
                         @endhasanyrole
 
-                        @role('super-admin')
+                        @can('system.view')
                             <ul>
                                 <li>
                                     <a href="{{ route('leave-requests.index') }}">
@@ -409,10 +409,10 @@
                                     </a>
                                 </li>
                             </ul>
-                        @endrole
+                        @endcan
 
                         {{-- Role & Permission Management (Super Admin Only) --}}
-                        @role('super-admin')
+                        @can('system.view')
                         <li class="app-sidebar__heading">จัดการสิทธิ์</li>
                         <li>
                             <a href="#">
@@ -441,7 +441,7 @@
                                 </li>
                             </ul>
                         </li>
-                    @endrole
+                    @endcan
 
                     {{-- <ul>
                         
@@ -457,7 +457,7 @@
                         </ul>
                     @endif
                     </li>
-                    @hasanyrole(['super-admin', 'admin'])
+                    @can(['system.view'])
                         <li>
                             <a href="#">
                                 <i class="metismenu-icon pe-7s-users"></i>
@@ -476,7 +476,7 @@
 
                             </ul>
                         </li>
-                    @endhasanyrole
+                    @endcan
                     @php
                         $user_id = Auth::user()->id;
 
@@ -546,7 +546,7 @@
                             </ul>
                         </li>
                     @endif
-                @endhasanyrole
+                @endcan
 
             </ul>
         </div>
