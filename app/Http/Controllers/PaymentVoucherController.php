@@ -7,6 +7,7 @@ use App\Models\PaymentVoucherItem;
 use App\Models\PaymentVoucherLog;
 use App\Models\PaymentVoucherAttachment;
 use App\Exports\PaymentVoucherExport;
+use App\Imports\PaymentVoucherImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -689,5 +690,110 @@ class PaymentVoucherController extends Controller
             'success' => true,
             'payee' => $payee,
         ]);
+    }
+
+    /**
+     * แสดงฟอร์ม Import Excel
+     */
+    public function showImportForm()
+    {
+        $branchCodes = PaymentVoucher::$branchCodes;
+        return view('payment_voucher.import', compact('branchCodes'));
+    }
+
+    /**
+     * Import ข้อมูลจาก Excel (แสดง Preview)
+     */
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls|max:10240',
+            'branch_code' => 'required|string|max:10',
+        ]);
+
+        try {
+            $file = $request->file('excel_file');
+            $filePath = $file->store('temp', 'local');
+            $fullPath = storage_path('app/' . $filePath);
+
+            $importer = new PaymentVoucherImport($fullPath, $request->branch_code);
+            $previewResult = $importer->preview();
+
+            // ลบไฟล์ชั่วคราว
+            Storage::disk('local')->delete($filePath);
+
+            if ($previewResult['success']) {
+                $data = $previewResult['data'];
+                $data['branch_code'] = $request->branch_code; // ส่ง branch_code ไปด้วย
+
+                return view('payment_voucher.import_preview', compact('data', 'previewResult'));
+            } else {
+                return back()
+                    ->with('error', 'Import ไม่สำเร็จ: ' . implode(', ', $previewResult['errors']))
+                    ->withInput();
+            }
+        } catch (\Exception $e) {
+            return back()
+                ->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    /**
+     * บันทึกข้อมูลจากการ Import
+     */
+    public function storeImport(Request $request)
+    {
+        $request->validate([
+            'voucher_no' => 'required|string|unique:payment_vouchers,voucher_no',
+            'branch_code' => 'required|string',
+            'voucher_date' => 'required|date',
+            'pay_to' => 'required|string',
+            'items' => 'required|array|min:1',
+            'items.*.description' => 'required|string',
+            'items.*.amount' => 'required|numeric|min:0',
+        ]);
+
+        try {
+            // เตรียมข้อมูลสำหรับ importFromPreview
+            $data = $request->all(); // รับข้อมูลทั้งหมดจาก Form including items
+
+            // เรียกใช้ Import Class (ใช้ dummy path เพราะไม่ได้อ่านไฟล์แล้ว)
+            $importer = new PaymentVoucherImport('', $request->branch_code);
+            $result = $importer->importFromPreview($data);
+
+            if ($result['success']) {
+                return redirect()->route('payment-voucher.show', $result['voucher_id'])
+                    ->with('success', "บันทึกข้อมูลเรียบร้อยแล้ว เลขที่: {$result['voucher_no']}");
+            } else {
+                return back()
+                    ->with('error', 'บันทึกไม่สำเร็จ: ' . implode(', ', $result['errors']))
+                    ->withInput();
+            }
+        } catch (\Exception $e) {
+            return back()
+                ->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    /**
+     * ดาวน์โหลด Template Excel
+     */
+    public function downloadTemplate()
+    {
+        $templatePath = public_path('templates/payment_voucher_template.xlsx');
+
+        if (file_exists($templatePath)) {
+            return response()->download($templatePath, 'payment_voucher_template.xlsx');
+        }
+
+        // ถ้าไม่มี template ให้ใช้ไฟล์ example
+        $examplePath = base_path('docs/example.xlsx');
+        if (file_exists($examplePath)) {
+            return response()->download($examplePath, 'payment_voucher_template.xlsx');
+        }
+
+        return back()->with('error', 'ไม่พบไฟล์ Template');
     }
 }
