@@ -39,7 +39,7 @@
     <div class="scrollbar-sidebar">
         <div class="app-sidebar__inner">
             <ul class="vertical-nav-menu">
-                @hasanyrole(['super-admin', 'admin', 'staff'])
+                @can(['general.admin.view'])
                     <li class="app-sidebar__heading"> </li>
                     <li>
                         <a href="{{ route('home') }}">
@@ -80,39 +80,7 @@
                             Receipt (ค่าสมัครเรียน)
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
-                            <i class="metismenu-icon pe-7s-wallet"></i>
-                            ใบสำคัญจ่าย
-                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                        </a>
-                        <ul>
-                            <li>
-                                <a href="{{ route('payment-voucher.index') }}">
-                                    <i class="metismenu-icon"></i>
-                                    รายการทั้งหมด
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('payment-voucher.create') }}">
-                                    <i class="metismenu-icon"></i>
-                                    สร้างใบสำคัญจ่าย
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('payment-voucher.pending') }}">
-                                    <i class="metismenu-icon"></i>
-                                    รออนุมัติ
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('payment-voucher.approved') }}">
-                                    <i class="metismenu-icon"></i>
-                                    รอตรวจสอบ
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+
                     <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-graph2"></i>
@@ -311,11 +279,11 @@
 
 
                     </li>
-                @endhasanyrole
+                @endcan
                 {{-- ส่วนพนักงาน - แสดงทุก role ยกเว้น parent --}}
-                @unlessrole('parent')
-                    <li class="app-sidebar__heading"> พนักงาน </li>
 
+                <li class="app-sidebar__heading"> พนักงาน </li>
+                @can(['general.view'])
                     <li>
                         <a href="{{ route('home2') }}">
                             <i class="metismenu-icon pe-7s-home"></i>
@@ -328,28 +296,65 @@
                             เขียนใบลา
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
-                            <i class="metismenu-icon pe-7s-user"></i>
-                            Finance
-                            <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                        </a>
+                @endcan
 
-                        @can('payment-voucher.view')
-                            <ul>
-                                <li>
+                <li>
+                    <a href="#">
+                        <i class="metismenu-icon  pe-7s-wallet"></i>
+                        Finance
+                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                    </a>
+
+                    @can('payment-voucher.view')
+                        <ul>
+                            {{-- <li>
                                     <a href="{{ route('payment-voucher.index') }}">
                                         <i class="metismenu-icon"></i>
                                         ใบสำคัญจ่าย
                                     </a>
-                                </li>
-                            </ul>
-                        @endcan
+                                </li> --}}
+                            <li>
+                                <a href="#">
+                                    <i class="metismenu-icon pe-7s-wallet"></i>
+                                    ใบสำคัญจ่าย
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('payment-voucher.index') }}">
+                                            <i class="metismenu-icon"></i>
+                                            รายการทั้งหมด
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('payment-voucher.create') }}">
+                                            <i class="metismenu-icon"></i>
+                                            สร้างใบสำคัญจ่าย
+                                        </a>
+                                    </li>
+                                    @can('payment-voucher.approve')
+                                        <li>
+                                            <a href="{{ route('payment-voucher.pending') }}">
+                                                <i class="metismenu-icon"></i>
+                                                รออนุมัติ
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('payment-voucher.review')
+                                        <li>
+                                            <a href="{{ route('payment-voucher.approved') }}">
+                                                <i class="metismenu-icon"></i>
+                                                รอตรวจสอบ
+                                            </a>
+                                        </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        </ul>
+                    @endcan
+                </li>
 
-                       
-                        
-                    </li>
-                @endunlessrole
+                {{-- ส่วนผู้ดูแลระบบ --}}
 
                 @hasanyrole(['super-admin', 'admin', 'staff'])
                     <li class="app-sidebar__heading">ผู้ดูแลระบบ</li>
@@ -385,6 +390,14 @@
                                     </a>
                                 </li>
                             </ul>
+                            <ul>
+                                <li>
+                                    <a href="{{ route('recordtime.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        บันทึกเข้างาน
+                                    </a>
+                                </li>
+                            </ul>
                         @endhasanyrole
 
                         @role('super-admin')
@@ -400,54 +413,49 @@
 
                         {{-- Role & Permission Management (Super Admin Only) --}}
                         @role('super-admin')
-                            <li class="app-sidebar__heading">จัดการสิทธิ์</li>
-                            <li>
-                                <a href="#">
-                                    <i class="metismenu-icon pe-7s-shield"></i>
-                                    Role & Permission
-                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="{{ route('admin.roles.index') }}">
-                                            <i class="metismenu-icon"></i>
-                                            จัดการ Roles
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('admin.permissions.index') }}">
-                                            <i class="metismenu-icon"></i>
-                                            จัดการ Permissions
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('admin.user-roles.index') }}">
-                                            <i class="metismenu-icon"></i>
-                                            กำหนด Role ให้ผู้ใช้
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endrole
-
-                        <ul>
-                            <li>
-                                <a href="{{ route('recordtime.index') }}">
-                                    <i class="metismenu-icon"></i>
-                                    บันทึกเข้างาน
-                                </a>
-                            </li>
-                        </ul>
-                        @if (Auth::user()->hasRole('super-admin') && Auth::user()->id == 4)
+                        <li class="app-sidebar__heading">จัดการสิทธิ์</li>
+                        <li>
+                            <a href="#">
+                                <i class="metismenu-icon pe-7s-shield"></i>
+                                Role & Permission
+                                <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                            </a>
                             <ul>
                                 <li>
-                                    <a href="{{ route('Godeye.index') }}">
+                                    <a href="{{ route('admin.roles.index') }}">
                                         <i class="metismenu-icon"></i>
-                                        God Eye
+                                        จัดการ Roles
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.permissions.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        จัดการ Permissions
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.user-roles.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        กำหนด Role ให้ผู้ใช้
                                     </a>
                                 </li>
                             </ul>
-                        @endif
+                        </li>
+                    @endrole
+
+                    {{-- <ul>
+                        
+                    </ul> --}}
+                    @if (Auth::user()->hasRole('super-admin') && Auth::user()->id == 4)
+                        <ul>
+                            <li>
+                                <a href="{{ route('Godeye.index') }}">
+                                    <i class="metismenu-icon"></i>
+                                    God Eye
+                                </a>
+                            </li>
+                        </ul>
+                    @endif
                     </li>
                     @hasanyrole(['super-admin', 'admin'])
                         <li>
@@ -474,7 +482,7 @@
 
                         $godEye = Godeye::where('user_id', $user_id)->get();
                     @endphp
-                    @if ((Auth::user()->hasRole('super-admin') ) || $godEye->count() > 0)
+                    @if (Auth::user()->hasRole('super-admin') || $godEye->count() > 0)
                         <li>
                             <a href="#">
                                 <i class="metismenu-icon pe-7s-users"></i>
@@ -528,12 +536,12 @@
                                     </a>
                                 </li>
                                 {{-- @if (Auth::user()->id == 16) --}}
-                                    <li>
-                                        <a href="{{ route('reportRecieptStd') }}">
-                                            <i class="metismenu-icon"></i>
-                                            Report Student Recieept
-                                        </a>
-                                    </li>
+                                <li>
+                                    <a href="{{ route('reportRecieptStd') }}">
+                                        <i class="metismenu-icon"></i>
+                                        Report Student Recieept
+                                    </a>
+                                </li>
                                 {{-- @endif --}}
                             </ul>
                         </li>

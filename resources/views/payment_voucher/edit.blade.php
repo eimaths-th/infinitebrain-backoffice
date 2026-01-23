@@ -159,6 +159,34 @@
                             <label class="form-label">ที่อยู่</label>
                             <textarea name="pay_to_address" class="form-control" rows="2" placeholder="ที่อยู่ผู้รับเงิน">{{ old('pay_to_address', $voucher->pay_to_address) }}</textarea>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">เลขที่บัญชีธนาคาร</label>
+                                <input type="text" name="pay_to_account_no" class="form-control" value="{{ old('pay_to_account_no', $voucher->pay_to_account_no) }}" placeholder="เช่น 123-4-56789-0">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">ชื่อธนาคาร</label>
+                                <select name="pay_to_bank_name" class="form-select">
+                                    <option value="">-- เลือกธนาคาร --</option>
+                                    <option value="ธนาคารกสิกรไทย" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารกสิกรไทย' ? 'selected' : '' }}>ธนาคารกสิกรไทย</option>
+                                    <option value="ธนาคารไทยพาณิชย์" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารไทยพาณิชย์' ? 'selected' : '' }}>ธนาคารไทยพาณิชย์</option>
+                                    <option value="ธนาคารกรุงเทพ" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารกรุงเทพ' ? 'selected' : '' }}>ธนาคารกรุงเทพ</option>
+                                    <option value="ธนาคารกรุงไทย" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารกรุงไทย' ? 'selected' : '' }}>ธนาคารกรุงไทย</option>
+                                    <option value="ธนาคารกรุงศรีอยุธยา" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารกรุงศรีอยุธยา' ? 'selected' : '' }}>ธนาคารกรุงศรีอยุธยา</option>
+                                    <option value="ธนาคารทหารไทยธนชาต" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารทหารไทยธนชาต' ? 'selected' : '' }}>ธนาคารทหารไทยธนชาต</option>
+                                    <option value="ธนาคารออมสิน" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารออมสิน' ? 'selected' : '' }}>ธนาคารออมสิน</option>
+                                    <option value="ธนาคาร ธ.ก.ส." {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคาร ธ.ก.ส.' ? 'selected' : '' }}>ธนาคาร ธ.ก.ส.</option>
+                                    <option value="ธนาคารอาคารสงเคราะห์" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารอาคารสงเคราะห์' ? 'selected' : '' }}>ธนาคารอาคารสงเคราะห์</option>
+                                    <option value="ธนาคารซีไอเอ็มบี ไทย" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารซีไอเอ็มบี ไทย' ? 'selected' : '' }}>ธนาคารซีไอเอ็มบี ไทย</option>
+                                    <option value="ธนาคารยูโอบี" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารยูโอบี' ? 'selected' : '' }}>ธนาคารยูโอบี</option>
+                                    <option value="ธนาคารแลนด์ แอนด์ เฮ้าส์" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารแลนด์ แอนด์ เฮ้าส์' ? 'selected' : '' }}>ธนาคารแลนด์ แอนด์ เฮ้าส์</option>
+                                    <option value="ธนาคารเกียรตินาคินภัทร" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารเกียรตินาคินภัทร' ? 'selected' : '' }}>ธนาคารเกียรตินาคินภัทร</option>
+                                    <option value="เงินสด" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'เงินสด' ? 'selected' : '' }}>เงินสด</option>
+                                    <option value="อื่นๆ" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'อื่นๆ' ? 'selected' : '' }}>อื่นๆ</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

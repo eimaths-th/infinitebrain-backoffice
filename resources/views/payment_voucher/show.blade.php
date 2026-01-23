@@ -259,6 +259,22 @@
                     <div class="info-value">{{ $voucher->pay_to_address }}</div>
                 </div>
                 @endif
+                @if($voucher->pay_to_account_no || $voucher->pay_to_bank_name)
+                <div class="row">
+                    @if($voucher->pay_to_account_no)
+                    <div class="col-6 mb-2">
+                        <div class="info-label">เลขที่บัญชี</div>
+                        <div class="info-value">{{ $voucher->pay_to_account_no }}</div>
+                    </div>
+                    @endif
+                    @if($voucher->pay_to_bank_name)
+                    <div class="col-6 mb-2">
+                        <div class="info-label">ธนาคาร</div>
+                        <div class="info-value">{{ $voucher->pay_to_bank_name }}</div>
+                    </div>
+                    @endif
+                </div>
+                @endif
             </div>
         </div>
 

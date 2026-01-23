@@ -138,22 +138,44 @@
 
                         <div class="mb-3">
                             <label class="form-label">จ่ายให้ (ชื่อ/บริษัท) <span class="required-mark">*</span></label>
-                            <select name="pay_to" id="payToSelect" class="form-control" required style="width: 100%;">
-                                <option value="">-- ระบุหรือค้นหาชื่อผู้รับเงิน --</option>
-                                @if(isset($payees))
-                                    @foreach($payees as $payee)
-                                        <option value="{{ $payee }}" {{ old('pay_to') == $payee ? 'selected' : '' }}>{{ $payee }}</option>
-                                    @endforeach
-                                @endif
-                                @if(old('pay_to') && (!isset($payees) || !$payees->contains(old('pay_to'))))
-                                    <option value="{{ old('pay_to') }}" selected>{{ old('pay_to') }}</option>
-                                @endif
+                            <select name="pay_to" id="payToSelect" class="form-select" required>
+                                <option value="">-- พิมพ์เพื่อค้นหาหรือเพิ่มใหม่ --</option>
                             </select>
+                            <small class="text-muted">พิมพ์ชื่อเพื่อค้นหาจากรายการเดิม หรือพิมพ์ชื่อใหม่เพื่อเพิ่ม</small>
+                            <input type="hidden" name="payee_id" id="payeeId" value="">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">ที่อยู่</label>
-                            <textarea name="pay_to_address" class="form-control" rows="2" placeholder="ที่อยู่ผู้รับเงิน">{{ old('pay_to_address') }}</textarea>
+                            <textarea name="pay_to_address" id="payToAddress" class="form-control" rows="2" placeholder="ที่อยู่ผู้รับเงิน">{{ old('pay_to_address') }}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">เลขที่บัญชีธนาคาร</label>
+                                <input type="text" name="pay_to_account_no" id="payToAccountNo" class="form-control" value="{{ old('pay_to_account_no') }}" placeholder="เช่น 123-4-56789-0">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">ชื่อธนาคาร</label>
+                                <select name="pay_to_bank_name" id="payToBankName" class="form-select">
+                                    <option value="">-- เลือกธนาคาร --</option>
+                                    <option value="ธนาคารกสิกรไทย" {{ old('pay_to_bank_name') == 'ธนาคารกสิกรไทย' ? 'selected' : '' }}>ธนาคารกสิกรไทย</option>
+                                    <option value="ธนาคารไทยพาณิชย์" {{ old('pay_to_bank_name') == 'ธนาคารไทยพาณิชย์' ? 'selected' : '' }}>ธนาคารไทยพาณิชย์</option>
+                                    <option value="ธนาคารกรุงเทพ" {{ old('pay_to_bank_name') == 'ธนาคารกรุงเทพ' ? 'selected' : '' }}>ธนาคารกรุงเทพ</option>
+                                    <option value="ธนาคารกรุงไทย" {{ old('pay_to_bank_name') == 'ธนาคารกรุงไทย' ? 'selected' : '' }}>ธนาคารกรุงไทย</option>
+                                    <option value="ธนาคารกรุงศรีอยุธยา" {{ old('pay_to_bank_name') == 'ธนาคารกรุงศรีอยุธยา' ? 'selected' : '' }}>ธนาคารกรุงศรีอยุธยา</option>
+                                    <option value="ธนาคารทหารไทยธนชาต" {{ old('pay_to_bank_name') == 'ธนาคารทหารไทยธนชาต' ? 'selected' : '' }}>ธนาคารทหารไทยธนชาต</option>
+                                    <option value="ธนาคารออมสิน" {{ old('pay_to_bank_name') == 'ธนาคารออมสิน' ? 'selected' : '' }}>ธนาคารออมสิน</option>
+                                    <option value="ธนาคาร ธ.ก.ส." {{ old('pay_to_bank_name') == 'ธนาคาร ธ.ก.ส.' ? 'selected' : '' }}>ธนาคาร ธ.ก.ส.</option>
+                                    <option value="ธนาคารอาคารสงเคราะห์" {{ old('pay_to_bank_name') == 'ธนาคารอาคารสงเคราะห์' ? 'selected' : '' }}>ธนาคารอาคารสงเคราะห์</option>
+                                    <option value="ธนาคารซีไอเอ็มบี ไทย" {{ old('pay_to_bank_name') == 'ธนาคารซีไอเอ็มบี ไทย' ? 'selected' : '' }}>ธนาคารซีไอเอ็มบี ไทย</option>
+                                    <option value="ธนาคารยูโอบี" {{ old('pay_to_bank_name') == 'ธนาคารยูโอบี' ? 'selected' : '' }}>ธนาคารยูโอบี</option>
+                                    <option value="ธนาคารแลนด์ แอนด์ เฮ้าส์" {{ old('pay_to_bank_name') == 'ธนาคารแลนด์ แอนด์ เฮ้าส์' ? 'selected' : '' }}>ธนาคารแลนด์ แอนด์ เฮ้าส์</option>
+                                    <option value="ธนาคารเกียรตินาคินภัทร" {{ old('pay_to_bank_name') == 'ธนาคารเกียรตินาคินภัทร' ? 'selected' : '' }}>ธนาคารเกียรตินาคินภัทร</option>
+                                    <option value="เงินสด" {{ old('pay_to_bank_name') == 'เงินสด' ? 'selected' : '' }}>เงินสด</option>
+                                    <option value="อื่นๆ" {{ old('pay_to_bank_name') == 'อื่นๆ' ? 'selected' : '' }}>อื่นๆ</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -249,64 +271,7 @@
 @endsection
 
 @section('script')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-$(document).ready(function() {
-    // Initialize Select2 for Pay To field with tags support
-    $('#payToSelect').select2({
-        tags: true,
-        placeholder: "-- ระบุหรือค้นหาชื่อผู้รับเงิน --",
-        allowClear: true,
-        theme: "bootstrap-5",
-        width: '100%',
-        language: {
-            noResults: function() {
-                return "ไม่พบข้อมูล - พิมพ์เพื่อเพิ่มรายชื่อใหม่";
-            }
-        }
-    });
-
-    // Auto-fill address when payee changes
-    $('#payToSelect').on('select2:select', function (e) {
-        var payee = e.params.data.id;
-        if(payee) {
-            // Disable address field while loading
-            var addressField = $('textarea[name="pay_to_address"]');
-            addressField.prop('disabled', true);
-            var originalPlaceholder = addressField.attr('placeholder');
-            addressField.attr('placeholder', 'กำลังค้นหาที่อยู่...');
-            
-            $.ajax({
-                url: "{{ route('payment-voucher.get-address') }}",
-                type: "GET",
-                data: { payee: payee },
-                success: function(response) {
-                    if(response.address) {
-                        addressField.val(response.address);
-                    }
-                },
-                error: function() {
-                    console.error('Failed to fetch address');
-                },
-                complete: function() {
-                    addressField.prop('disabled', false);
-                    addressField.attr('placeholder', originalPlaceholder);
-                }
-            });
-        }
-    });
-
-    // Handle old value if it was a custom tag not in the list
-    var oldPayTo = "{{ old('pay_to') }}";
-    if(oldPayTo) {
-        // Check if value already exists in options
-        if ($('#payToSelect').find("option[value='" + oldPayTo + "']").length == 0) {
-            var newOption = new Option(oldPayTo, oldPayTo, true, true);
-            $('#payToSelect').append(newOption).trigger('change');
-        }
-    }
-});
-
 let itemIndex = 0;
 
 function addItem() {
@@ -431,31 +396,111 @@ document.getElementById('voucherForm').addEventListener('submit', function(e) {
     }
 });
 
-// Update voucher number preview when branch changes
+// Update voucher number preview when branch changes - ดึงจาก server
 document.getElementById('branchCode').addEventListener('change', function() {
     const branchCode = this.value;
     const previewInput = document.getElementById('voucherNoPreview');
     
-    // Show loading state
+    // แสดงสถานะกำลังโหลด
     previewInput.value = 'กำลังโหลด...';
     
-    // Call API to get next available number
-    $.ajax({
-        url: "{{ route('payment-voucher.get-next-no') }}",
-        type: "GET",
-        data: { branch_code: branchCode },
-        success: function(response) {
-            if(response.voucher_no) {
-                previewInput.value = response.voucher_no;
-            }
-        },
-        error: function() {
-            // Fallback to static generation if API fails
+    // เรียก API เพื่อดึงเลขที่ใบสำคัญจ่ายถัดไปที่ถูกต้อง
+    fetch(`{{ route('payment-voucher.next-voucher-no') }}?branch_code=${branchCode}`)
+        .then(response => response.json())
+        .then(data => {
+            previewInput.value = data.voucher_no;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Fallback to simple format if API fails
             const year = new Date().getFullYear();
             const month = String(new Date().getMonth() + 1).padStart(2, '0');
             previewInput.value = branchCode + year + month + '01';
-            console.error('Failed to fetch next voucher number');
+        });
+});
+
+// Initialize Select2 for payee search
+$(document).ready(function() {
+    $('#payToSelect').select2({
+        placeholder: 'พิมพ์ชื่อผู้รับเงินหรือบริษัท...',
+        allowClear: true,
+        tags: true, // อนุญาตให้เพิ่มข้อมูลใหม่
+        createTag: function(params) {
+            var term = $.trim(params.term);
+            if (term === '') {
+                return null;
+            }
+            return {
+                id: term,
+                text: term,
+                newTag: true // เพิ่ม flag เพื่อระบุว่าเป็นรายการใหม่
+            };
+        },
+        ajax: {
+            url: '{{ route("payment-voucher.search-payee") }}',
+            dataType: 'json',
+            delay: 300,
+            data: function(params) {
+                return {
+                    q: params.term
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: data.map(function(item) {
+                        return {
+                            id: item.name, // ใช้ชื่อเป็น value
+                            text: item.name + (item.account_no ? ' (' + item.account_no + ')' : ''),
+                            payee: item // เก็บข้อมูลทั้งหมดไว้
+                        };
+                    })
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 1,
+        language: {
+            inputTooShort: function() {
+                return 'กรุณาพิมพ์อย่างน้อย 1 ตัวอักษร';
+            },
+            noResults: function() {
+                return 'ไม่พบข้อมูล - คุณสามารถพิมพ์ชื่อใหม่ได้';
+            },
+            searching: function() {
+                return 'กำลังค้นหา...';
+            }
         }
+    });
+
+    // เมื่อเลือก payee จะ auto-fill ที่อยู่และเลขบัญชี
+    $('#payToSelect').on('select2:select', function(e) {
+        var data = e.params.data;
+        
+        if (data.payee) {
+            // กรณีเลือกจากรายการที่มีอยู่
+            $('#payeeId').val(data.payee.id);
+            $('#payToAddress').val(data.payee.address || '');
+            $('#payToAccountNo').val(data.payee.account_no || '');
+            
+            // เลือกธนาคารถ้ามี
+            if (data.payee.bank_name) {
+                $('#payToBankName').val(data.payee.bank_name);
+            }
+        } else if (data.newTag) {
+            // กรณีเป็นรายการใหม่ ล้างข้อมูล
+            $('#payeeId').val('');
+            $('#payToAddress').val('');
+            $('#payToAccountNo').val('');
+            $('#payToBankName').val('');
+        }
+    });
+
+    // เมื่อ clear ข้อมูล
+    $('#payToSelect').on('select2:clear', function(e) {
+        $('#payeeId').val('');
+        $('#payToAddress').val('');
+        $('#payToAccountNo').val('');
+        $('#payToBankName').val('');
     });
 });
 </script>

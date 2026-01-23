@@ -16,6 +16,9 @@ class PaymentVoucher extends Model
         'branch_code',
         'pay_to',
         'pay_to_address',
+        'pay_to_account_no',
+        'pay_to_bank_name',
+        'payee_id',
         'total_amount',
         'remark',
         'status',
@@ -87,6 +90,11 @@ class PaymentVoucher extends Model
     public function allAttachments()
     {
         return $this->hasMany(PaymentVoucherAttachment::class);
+    }
+
+    public function payee()
+    {
+        return $this->belongsTo(Payee::class);
     }
 
     public function creator()

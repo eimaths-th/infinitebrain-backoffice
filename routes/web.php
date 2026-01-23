@@ -128,15 +128,14 @@ Route::prefix('payment-voucher')->name('payment-voucher.')->group(function () {
         // Export
         Route::get('/export/{id}', [PaymentVoucherController::class, 'exportExcel'])->name('export');
         
-        // AJAX: Get Address
-        Route::get('/get-address', [PaymentVoucherController::class, 'getAddressByPayee'])->name('get-address');
-        
-        // AJAX: Get Next Voucher No
-        Route::get('/get-next-no', [PaymentVoucherController::class, 'getNextVoucherNo'])->name('get-next-no');
-
         // Attachments
         Route::post('/{id}/upload-attachment', [PaymentVoucherController::class, 'uploadAttachment'])->name('upload-attachment');
         Route::delete('/attachment/{id}', [PaymentVoucherController::class, 'deleteAttachment'])->name('delete-attachment');
+        
+        // Payee & Voucher Number APIs
+        Route::get('/search-payee', [PaymentVoucherController::class, 'searchPayee'])->name('search-payee');
+        Route::get('/next-voucher-no', [PaymentVoucherController::class, 'getNextVoucherNo'])->name('next-voucher-no');
+        Route::post('/save-payee', [PaymentVoucherController::class, 'savePayee'])->name('save-payee');
     });
 
 // Role & Permission Management (super-admin only)
