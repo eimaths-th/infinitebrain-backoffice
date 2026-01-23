@@ -61,16 +61,7 @@ class PaymentVoucherController extends Controller
     {
         $branchCodes = PaymentVoucher::$branchCodes;
         $voucherNo = PaymentVoucher::generateVoucherNo();
-        
-        // Get distinct payee names for autocomplete
-        $payees = PaymentVoucher::select('pay_to')
-            ->distinct()
-            ->whereNotNull('pay_to')
-            ->where('pay_to', '!=', '')
-            ->orderBy('pay_to')
-            ->pluck('pay_to');
-            
-        return view('payment_voucher.create', compact('voucherNo', 'branchCodes', 'payees'));
+        return view('payment_voucher.create', compact('voucherNo', 'branchCodes'));
     }
 
     /**
@@ -82,6 +73,9 @@ class PaymentVoucherController extends Controller
             'branch_code' => 'required|string|max:10',
             'voucher_date' => 'required|date',
             'pay_to' => 'required|string|max:255',
+            'pay_to_address' => 'nullable|string',
+            'pay_to_account_no' => 'nullable|string|max:50',
+            'pay_to_bank_name' => 'nullable|string|max:100',
             'items' => 'required|array|min:1',
             'items.*.description' => 'required|string',
             'items.*.amount' => 'required|numeric|min:0',
@@ -93,6 +87,17 @@ class PaymentVoucherController extends Controller
         try {
             $branchCode = $request->branch_code ?? 'EL';
             
+            // บันทึกหรืออัปเดตข้อมูลผู้รับเงิน (Payee)
+            $payee = null;
+            if ($request->pay_to) {
+                $payee = \App\Models\Payee::findOrCreateByName($request->pay_to, [
+                    'address' => $request->pay_to_address,
+                    'account_no' => $request->pay_to_account_no,
+                    'bank_name' => $request->pay_to_bank_name,
+                    'created_by' => Auth::id(),
+                ]);
+            }
+            
             // สร้างใบสำคัญจ่าย
             $voucher = PaymentVoucher::create([
                 'voucher_no' => PaymentVoucher::generateVoucherNo($branchCode),
@@ -100,6 +105,9 @@ class PaymentVoucherController extends Controller
                 'voucher_date' => $request->voucher_date,
                 'pay_to' => $request->pay_to,
                 'pay_to_address' => $request->pay_to_address,
+                'pay_to_account_no' => $request->pay_to_account_no,
+                'pay_to_bank_name' => $request->pay_to_bank_name,
+                'payee_id' => $payee?->id,
                 'remark' => $request->remark,
                 'status' => $request->submit ? PaymentVoucher::STATUS_PENDING : PaymentVoucher::STATUS_DRAFT,
                 'created_by' => Auth::id(),
@@ -209,6 +217,9 @@ class PaymentVoucherController extends Controller
         $request->validate([
             'voucher_date' => 'required|date',
             'pay_to' => 'required|string|max:255',
+            'pay_to_address' => 'nullable|string',
+            'pay_to_account_no' => 'nullable|string|max:50',
+            'pay_to_bank_name' => 'nullable|string|max:100',
             'items' => 'required|array|min:1',
             'items.*.description' => 'required|string',
             'items.*.amount' => 'required|numeric|min:0',
@@ -220,11 +231,24 @@ class PaymentVoucherController extends Controller
         try {
             $oldStatus = $voucher->status;
 
+            // อัปเดตข้อมูลผู้รับเงิน (Payee) ถ้ามี
+            if ($request->pay_to) {
+                $payee = \App\Models\Payee::findOrCreateByName($request->pay_to, [
+                    'address' => $request->pay_to_address,
+                    'account_no' => $request->pay_to_account_no,
+                    'bank_name' => $request->pay_to_bank_name,
+                    'created_by' => Auth::id(),
+                ]);
+            }
+
             // อัพเดทข้อมูลหลัก
             $voucher->update([
                 'voucher_date' => $request->voucher_date,
                 'pay_to' => $request->pay_to,
                 'pay_to_address' => $request->pay_to_address,
+                'pay_to_account_no' => $request->pay_to_account_no,
+                'pay_to_bank_name' => $request->pay_to_bank_name,
+                'payee_id' => $payee->id ?? $voucher->payee_id,
                 'remark' => $request->remark,
                 'status' => $request->submit ? PaymentVoucher::STATUS_PENDING : PaymentVoucher::STATUS_DRAFT,
             ]);
@@ -533,37 +557,6 @@ class PaymentVoucherController extends Controller
     }
 
     /**
-     * ดึงที่อยู่ล่าสุดของผู้รับเงิน
-     */
-    public function getAddressByPayee(Request $request)
-    {
-        $payee = $request->input('payee');
-        if (!$payee) {
-            return response()->json(['address' => '']);
-        }
-
-        $voucher = PaymentVoucher::where('pay_to', $payee)
-            ->whereNotNull('pay_to_address')
-            ->where('pay_to_address', '!=', '')
-            ->orderBy('created_at', 'desc')
-            ->first();
-            
-        return response()->json([
-            'address' => $voucher ? $voucher->pay_to_address : ''
-        ]);
-    }
-
-    /**
-     * ดึงเลขที่เอกสารลำดับถัดไป (AJAX)
-     */
-    public function getNextVoucherNo(Request $request)
-    {
-        $branchCode = $request->input('branch_code', 'EL');
-        $nextNo = PaymentVoucher::generateVoucherNo($branchCode);
-        return response()->json(['voucher_no' => $nextNo]);
-    }
-
-    /**
      * อัพโหลดไฟล์แนบเพิ่มเติม (AJAX)
      */
     public function uploadAttachment(Request $request, $id)
@@ -594,6 +587,63 @@ class PaymentVoucherController extends Controller
                 'file_size_formatted' => $attachment->file_size_formatted,
                 'is_image' => $attachment->isImage(),
             ]
+        ]);
+    }
+
+    /**
+     * ค้นหาผู้รับเงิน (Payee) สำหรับ autocomplete
+     */
+    public function searchPayee(Request $request)
+    {
+        $keyword = $request->get('q', '');
+        
+        $payees = \App\Models\Payee::active()
+            ->when($keyword, function ($query) use ($keyword) {
+                $query->search($keyword);
+            })
+            ->orderBy('name')
+            ->limit(20)
+            ->get(['id', 'name', 'address', 'account_no', 'bank_name', 'tax_id', 'phone']);
+
+        return response()->json($payees);
+    }
+
+    /**
+     * ดึงเลขที่ใบสำคัญจ่ายถัดไปตามสาขา
+     */
+    public function getNextVoucherNo(Request $request)
+    {
+        $branchCode = $request->get('branch_code', 'EL');
+        $voucherNo = PaymentVoucher::generateVoucherNo($branchCode);
+        
+        return response()->json([
+            'voucher_no' => $voucherNo,
+            'branch_code' => $branchCode,
+        ]);
+    }
+
+    /**
+     * บันทึกหรืออัปเดตข้อมูลผู้รับเงิน
+     */
+    public function savePayee(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'nullable|string',
+            'account_no' => 'nullable|string|max:50',
+            'bank_name' => 'nullable|string|max:100',
+        ]);
+
+        $payee = \App\Models\Payee::findOrCreateByName($request->name, [
+            'address' => $request->address,
+            'account_no' => $request->account_no,
+            'bank_name' => $request->bank_name,
+            'created_by' => Auth::id(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'payee' => $payee,
         ]);
     }
 }

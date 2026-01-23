@@ -1,158 +1,323 @@
 @extends('layouts.main_template')
 
 @section('style')
-<!-- Helper classes for role badges -->
 <style>
-    .badge-role-super-admin { background-color: #d92550; color: #fff; }
-    .badge-role-admin { background-color: #f7b924; color: #fff; }
-    .badge-role-staff { background-color: #3f6ad8; color: #fff; }
-    .badge-role-finance { background-color: #3ac47d; color: #fff; }
-    .badge-role-parent { background-color: #16aaff; color: #fff; }
-    .badge-role-default { background-color: #6c757d; color: #fff; }
+    .stat-card {
+        border: none;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .stat-card .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+    .stat-card .stat-number {
+        font-size: 28px;
+        font-weight: 700;
+    }
+    .role-table th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+        border: none;
+        padding: 15px 12px;
+    }
+    .role-table td {
+        vertical-align: middle;
+        padding: 15px 12px;
+    }
+    .role-table tbody tr {
+        transition: all 0.2s ease;
+    }
+    .role-table tbody tr:hover {
+        background-color: #f8f9ff;
+    }
+    .role-name {
+        font-weight: 600;
+        color: #2d3748;
+    }
+    .role-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+    .role-super-admin { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    .role-admin { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+    .role-finance { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+    .role-staff { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
+    .role-default { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; }
     
-    .action-icon {
-        font-size: 0.9rem;
-        margin-right: 5px;
+    .permission-chip {
+        display: inline-block;
+        background: #e8f4fd;
+        color: #1976d2;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        margin: 2px;
+        font-weight: 500;
+    }
+    .permission-more {
+        background: #667eea;
+        color: white;
+    }
+    .user-count-badge {
+        background: #e3f2fd;
+        color: #1565c0;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+    .btn-action-group .btn {
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        margin: 0 2px;
+    }
+    .btn-view { background: #e3f2fd; color: #1976d2; border: none; }
+    .btn-view:hover { background: #1976d2; color: white; }
+    .btn-edit { background: #fff3e0; color: #f57c00; border: none; }
+    .btn-edit:hover { background: #f57c00; color: white; }
+    .btn-delete { background: #ffebee; color: #d32f2f; border: none; }
+    .btn-delete:hover { background: #d32f2f; color: white; }
+    
+    .search-box {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    .empty-state i {
+        font-size: 80px;
+        color: #e0e0e0;
+        margin-bottom: 20px;
     }
 </style>
 @endsection
 
 @section('content')
-<div class="app-main__inner">
+<div class="row">
+    @if ($message = Session::get('success'))
+        <div class="col-12">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fa fa-check-circle me-2"></i>{{ $message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    @endif
+    @if ($message = Session::get('error'))
+        <div class="col-12">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fa fa-exclamation-circle me-2"></i>{{ $message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    @endif
+
+    <!-- Page Header -->
     <div class="app-page-title">
         <div class="page-title-wrapper">
             <div class="page-title-heading">
                 <div class="page-title-icon">
-                    <i class="pe-7s-shield icon-gradient bg-happy-itmeo"></i>
+                    <i class="pe-7s-id icon-gradient bg-mixed-hopes"></i>
                 </div>
                 <div>
-                    จัดการบทบาทผู้ใช้งาน (Roles)
-                    <div class="page-title-subheading">
-                        กำหนดสิทธิ์การเข้าถึงและการใช้งานระบบตามตำแหน่งหรือหน้าที่
-                    </div>
+                    <span class="fw-bold">จัดการบทบาท (Roles)</span>
+                    <div class="page-title-subheading">กำหนดบทบาทและสิทธิ์การเข้าถึงของผู้ใช้ในระบบ</div>
                 </div>
             </div>
             <div class="page-title-actions">
-                @can('role.create')
-                <a href="{{ route('admin.roles.create') }}" class="btn-shadow btn btn-primary">
-                    <i class="fa fa-plus"></i> เพิ่มบทบาทใหม่
+                <a href="{{ route('admin.permissions.index') }}" class="btn btn-outline-primary me-2">
+                    <i class="fa fa-key"></i> จัดการ Permissions
                 </a>
-                @endcan
+                <a href="{{ route('admin.user-roles.index') }}" class="btn btn-outline-success me-2">
+                    <i class="fa fa-users"></i> กำหนด Role ผู้ใช้
+                </a>
+                <a href="{{ route('admin.roles.create') }}" class="btn btn-primary">
+                    <i class="fa fa-plus-circle"></i> เพิ่ม Role ใหม่
+                </a>
             </div>
         </div>
     </div>
 
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fa fa-check-circle"></i> {{ $message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <!-- Statistics Cards -->
+    <div class="col-12 mb-4">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="stat-icon bg-primary bg-opacity-10 text-primary me-3">
+                            <i class="fa fa-shield"></i>
+                        </div>
+                        <div>
+                            <div class="stat-number text-primary">{{ $roles->count() }}</div>
+                            <div class="text-muted">Total Roles</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="stat-icon bg-success bg-opacity-10 text-success me-3">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        <div>
+                            <div class="stat-number text-success">{{ $roles->sum(fn($r) => $r->users->count()) }}</div>
+                            <div class="text-muted">Users with Roles</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="stat-icon bg-info bg-opacity-10 text-info me-3">
+                            <i class="fa fa-key"></i>
+                        </div>
+                        <div>
+                            <div class="stat-number text-info">{{ \Spatie\Permission\Models\Permission::count() }}</div>
+                            <div class="text-muted">Total Permissions</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="stat-icon bg-warning bg-opacity-10 text-warning me-3">
+                            <i class="fa fa-user-shield"></i>
+                        </div>
+                        <div>
+                            <div class="stat-number text-warning">{{ $roles->where('name', 'super-admin')->first()?->users->count() ?? 0 }}</div>
+                            <div class="text-muted">Super Admins</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    @endif
-    @if ($message = Session::get('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fa fa-exclamation-circle"></i> {{ $message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
+    </div>
 
-    <div class="main-card mb-3 card">
-        <div class="card-body">
-            <h5 class="card-title">รายการบทบาททั้งหมด</h5>
-            <div class="table-responsive">
-                <table id="rolesTable" class="align-middle mb-0 table table-borderless table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th class="text-center" style="width: 5%">#</th>
-                            <th style="width: 20%">ชื่อบทบาท (Role)</th>
-                            <th class="text-center" style="width: 15%">ผู้ใช้งาน (คน)</th>
-                            <th style="width: 40%">สิทธิ์การใช้งาน (Permissions)</th>
-                            <th class="text-center" style="width: 20%">จัดการ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($roles as $key => $role)
-                        <tr>
-                            <td class="text-center text-muted">{{ $key + 1 }}</td>
-                            <td>
-                                @php
-                                    $badgeClass = 'badge-role-default';
-                                    if(str_contains($role->name, 'super-admin')) $badgeClass = 'badge-role-super-admin';
-                                    elseif(str_contains($role->name, 'admin')) $badgeClass = 'badge-role-admin';
-                                    elseif(str_contains($role->name, 'staff')) $badgeClass = 'badge-role-staff';
-                                    elseif(str_contains($role->name, 'finance')) $badgeClass = 'badge-role-finance';
-                                    elseif(str_contains($role->name, 'parent')) $badgeClass = 'badge-role-parent';
-                                @endphp
-                                <div class="widget-content p-0">
-                                    <div class="widget-content-wrapper">
-                                        <div class="widget-content-left mr-3">
-                                            <div class="widget-content-left">
-                                                <div class="badge {{ $badgeClass }} badge-pill p-2" style="min-width: 80px;">
-                                                    {{ $role->name }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-1 small text-muted">
-                                    <i class="fa fa-clock-o"></i> {{ $role->created_at->format('d/m/Y') }}
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge bg-light text-dark border">
-                                    <i class="fa fa-users text-primary"></i> {{ $role->users_count }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="d-flex flex-wrap gap-1">
-                                    @forelse($role->permissions->take(4) as $perm)
-                                        <span class="badge bg-secondary opacity-75">{{ $perm->name }}</span>
+    <!-- Main Table Card -->
+    <div class="col-12">
+        <div class="main-card mb-3 card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fa fa-list me-2"></i>รายการ Roles ทั้งหมด</h5>
+                <div class="input-group" style="width: 300px;">
+                    <span class="input-group-text bg-white"><i class="fa fa-search text-muted"></i></span>
+                    <input type="text" class="form-control" id="searchRole" placeholder="ค้นหา role...">
+                </div>
+            </div>
+            <div class="card-body p-0">
+                @if($roles->count() > 0)
+                <div class="table-responsive">
+                    <table class="table role-table mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%">#</th>
+                                <th style="width: 20%">Role Name</th>
+                                <th style="width: 12%">ผู้ใช้</th>
+                                <th style="width: 35%">Permissions</th>
+                                <th style="width: 12%">Guard</th>
+                                <th style="width: 16%" class="text-center">การดำเนินการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="roleTableBody">
+                            @foreach($roles as $index => $role)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>
+                                    @php
+                                        $badgeClass = match($role->name) {
+                                            'super-admin' => 'role-super-admin',
+                                            'admin' => 'role-admin',
+                                            'finance' => 'role-finance',
+                                            'staff' => 'role-staff',
+                                            default => 'role-default'
+                                        };
+                                        $icon = match($role->name) {
+                                            'super-admin' => 'fa-crown',
+                                            'admin' => 'fa-user-tie',
+                                            'finance' => 'fa-wallet',
+                                            'staff' => 'fa-user',
+                                            'parent' => 'fa-user-friends',
+                                            default => 'fa-tag'
+                                        };
+                                    @endphp
+                                    <span class="role-badge {{ $badgeClass }}">
+                                        <i class="fa {{ $icon }} me-1"></i>{{ $role->name }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="user-count-badge">
+                                        <i class="fa fa-users me-1"></i>{{ $role->users->count() }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @forelse($role->permissions->take(4) as $permission)
+                                        <span class="permission-chip">{{ $permission->name }}</span>
                                     @empty
-                                        <span class="text-muted small">- ไม่มีสิทธิ์ -</span>
+                                        <span class="text-muted fst-italic">ไม่มี permission</span>
                                     @endforelse
-                                    
                                     @if($role->permissions->count() > 4)
-                                        <span class="badge bg-light text-dark border">
-                                            +{{ $role->permissions->count() - 4 }} อื่นๆ
+                                        <span class="permission-chip permission-more">
+                                            +{{ $role->permissions->count() - 4 }} more
                                         </span>
                                     @endif
-                                </div>
-                                <div class="mt-1">
-                                    <small class="text-muted">รวม {{ $role->permissions->count() }} สิทธิ์</small>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <div class="d-flex justify-content-center gap-2">
-                                    @can('role.view')
-                                    <a href="{{ route('admin.roles.show', $role->id) }}" class="btn btn-sm btn-info text-white" data-bs-toggle="tooltip" title="ดูรายละเอียด">
-                                        <i class="fa fa-eye"></i>
-                                    </a>
-                                    @endcan
-                                    
-                                    @can('role.edit')
-                                    <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-sm btn-warning text-white" data-bs-toggle="tooltip" title="แก้ไข">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    @endcan
-
-                                    @if($role->name !== 'super-admin')
-                                        @can('role.delete')
-                                        <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-inline-block delete-form">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn btn-sm btn-danger delete-btn" data-bs-toggle="tooltip" title="ลบ">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </form>
-                                        @endcan
-                                    @else
-                                        <button class="btn btn-sm btn-secondary" disabled data-bs-toggle="tooltip" title="ไม่สามารถลบ Super Admin ได้"><i class="fa fa-lock"></i></button>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                </td>
+                                <td><code>{{ $role->guard_name }}</code></td>
+                                <td>
+                                    <div class="btn-action-group text-center">
+                                        <a href="{{ route('admin.roles.show', $role->id) }}" class="btn btn-view" title="ดูรายละเอียด">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-edit" title="แก้ไข">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        @if(!in_array($role->name, ['super-admin']))
+                                            <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-inline" onsubmit="return confirm('ยืนยันการลบ Role: {{ $role->name }}?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-delete" title="ลบ">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @else
+                <div class="empty-state">
+                    <i class="fa fa-folder-open"></i>
+                    <h5 class="text-muted">ยังไม่มี Role ในระบบ</h5>
+                    <p class="text-muted">เริ่มต้นด้วยการสร้าง Role แรกของคุณ</p>
+                    <a href="{{ route('admin.roles.create') }}" class="btn btn-primary btn-lg">
+                        <i class="fa fa-plus-circle me-2"></i>สร้าง Role แรก
+                    </a>
+                </div>
+                @endif
             </div>
         </div>
     </div>
@@ -161,52 +326,14 @@
 
 @section('script')
 <script>
-    $(document).ready(function() {
-        $('#rolesTable').DataTable({
-            "language": {
-                "lengthMenu": "แสดง _MENU_ รายการต่อหน้า",
-                "zeroRecords": "ไม่พบข้อมูล",
-                "info": "หน้า _PAGE_ จาก _PAGES_",
-                "infoEmpty": "ไม่มีข้อมูล",
-                "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
-                "search": "ค้นหา:",
-                "paginate": {
-                    "first": "หน้าแรก",
-                    "last": "หน้าสุดท้าย",
-                    "next": "ถัดไป",
-                    "previous": "ก่อนหน้า"
-                }
-            },
-            "columnDefs": [
-                { "orderable": false, "targets": 4 } // Disable sorting on Actions column
-            ]
+$(document).ready(function() {
+    // Search functionality
+    $('#searchRole').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#roleTableBody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
-
-        // Delete Confirmation
-        $('body').on('click', '.delete-btn', function(e) {
-            e.preventDefault();
-            var form = $(this).closest('form');
-            Swal.fire({
-                title: 'ยืนยันการลบ?',
-                text: "หากลบแล้วจะไม่สามารถกู้คืนได้ และผู้ใช้งานในบทบาทนี้จะสูญเสียสิทธิ์!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'ยืนยัน ลบข้อมูล',
-                cancelButtonText: 'ยกเลิก'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        });
-        
-        // Tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-          return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
     });
+});
 </script>
 @endsection
