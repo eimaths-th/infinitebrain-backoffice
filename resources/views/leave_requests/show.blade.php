@@ -303,9 +303,8 @@
                         <i class="fas fa-times me-1"></i> ไม่อนุมัติ
                     </button>
                 </div>
+            @endif
         </div>
-        @endif
-    </div>
     </div>
 @endsection
 
