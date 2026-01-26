@@ -30,7 +30,8 @@ class LeaveRequestController extends Controller
         $user = Auth::user();
         $query = LeaveRequest::with(['user', 'approver']);
 
-        if ($user->level == 0) {
+        // ตรวจสอบสิทธิ์ดูใบลาทั้งหมด
+        if ($user->hasPermissionTo('leave-requests.view-all') || $user->hasAnyRole(['super-admin', 'admin'])) {
             if ($request->filled('user_id')) {
                 $query->where('user_id', $request->user_id);
             }
@@ -198,7 +199,9 @@ class LeaveRequestController extends Controller
         $leave_request = LeaveRequest::with(['user', 'approver', 'attachments'])->findOrFail($id);
 
         $user = Auth::user();
-        if ($user->level > 1 && $leave_request->user_id !== $user->id) {
+        // ตรวจสอบสิทธิ์: ต้องเป็นเจ้าของใบลา หรือมี permission view-all หรือมี role super-admin/admin
+        $can_view_all = $user->hasPermissionTo('leave-requests.view-all') || $user->hasAnyRole(['super-admin', 'admin']);
+        if (!$can_view_all && $leave_request->user_id !== $user->id) {
             abort(403, 'ไม่มีสิทธิ์ดูใบลานี้');
         }
 
@@ -325,7 +328,8 @@ class LeaveRequestController extends Controller
     public function PendingApprovals()
     {
         $user = Auth::user();
-        if ($user->level > 1) {
+        // ตรวจสอบสิทธิ์: ต้องมี permission approve หรือมี role super-admin/admin
+        if (!$user->hasPermissionTo('leave-requests.approve') && !$user->hasAnyRole(['super-admin', 'admin'])) {
             abort(403, 'ไม่มีสิทธิ์เข้าถึงหน้านี้');
         }
 
@@ -343,8 +347,9 @@ class LeaveRequestController extends Controller
     public function Approve(Request $request, $id)
     {
         $user = Auth::user();
-        if ($user->level != 0) {
-            return response()->json(['success' => false, 'message' => 'เฉพาะ Owner เท่านั้นที่สามารถอนุมัติใบลาได้'], 403);
+        // ตรวจสอบสิทธิ์: ต้องมี permission approve หรือมี role super-admin/admin
+        if (!$user->hasPermissionTo('leave-requests.approve') && !$user->hasAnyRole(['super-admin', 'admin'])) {
+            return response()->json(['success' => false, 'message' => 'คุณไม่มีสิทธิ์อนุมัติใบลา'], 403);
         }
 
         $leave_request = LeaveRequest::findOrFail($id);
@@ -395,8 +400,9 @@ class LeaveRequestController extends Controller
     public function Reject(Request $request, $id)
     {
         $user = Auth::user();
-        if ($user->level != 0) {
-            return response()->json(['success' => false, 'message' => 'เฉพาะ Owner เท่านั้นที่สามารถปฏิเสธใบลาได้'], 403);
+        // ตรวจสอบสิทธิ์: ต้องมี permission reject หรือมี role super-admin/admin
+        if (!$user->hasPermissionTo('leave-requests.reject') && !$user->hasAnyRole(['super-admin', 'admin'])) {
+            return response()->json(['success' => false, 'message' => 'คุณไม่มีสิทธิ์ปฏิเสธใบลา'], 403);
         }
 
         $leave_request = LeaveRequest::findOrFail($id);
@@ -506,7 +512,9 @@ class LeaveRequestController extends Controller
         $leave_request = LeaveRequest::with(['user', 'approver'])->findOrFail($id);
 
         $user = Auth::user();
-        if ($user->level > 1 && $leave_request->user_id !== $user->id) {
+        // ตรวจสอบสิทธิ์: ต้องเป็นเจ้าของใบลา หรือมี permission view-all/export หรือมี role super-admin/admin
+        $can_access = $user->hasPermissionTo('leave-requests.view-all') || $user->hasPermissionTo('leave-requests.export') || $user->hasAnyRole(['super-admin', 'admin']);
+        if (!$can_access && $leave_request->user_id !== $user->id) {
             abort(403, 'ไม่มีสิทธิ์ดูใบลานี้');
         }
 
@@ -520,7 +528,9 @@ class LeaveRequestController extends Controller
         $leave_request = LeaveRequest::with(['user', 'approver'])->findOrFail($id);
 
         $user = Auth::user();
-        if ($user->level > 1 && $leave_request->user_id !== $user->id) {
+        // ตรวจสอบสิทธิ์: ต้องเป็นเจ้าของใบลา หรือมี permission export หรือมี role super-admin/admin
+        $can_export = $user->hasPermissionTo('leave-requests.export') || $user->hasAnyRole(['super-admin', 'admin']);
+        if (!$can_export && $leave_request->user_id !== $user->id) {
             abort(403, 'ไม่มีสิทธิ์ดูใบลานี้');
         }
 
@@ -541,7 +551,9 @@ class LeaveRequestController extends Controller
         $leave_request = LeaveRequest::with(['user', 'approver'])->findOrFail($id);
 
         $user = Auth::user();
-        if ($user->level > 1 && $leave_request->user_id !== $user->id) {
+        // ตรวจสอบสิทธิ์: ต้องเป็นเจ้าของใบลา หรือมี permission export หรือมี role super-admin/admin
+        $can_export = $user->hasPermissionTo('leave-requests.export') || $user->hasAnyRole(['super-admin', 'admin']);
+        if (!$can_export && $leave_request->user_id !== $user->id) {
             abort(403, 'ไม่มีสิทธิ์ดูใบลานี้');
         }
 
@@ -624,7 +636,9 @@ class LeaveRequestController extends Controller
         $leave_request = LeaveRequest::findOrFail($id);
         $user = Auth::user();
 
-        if ($leave_request->user_id !== $user->id && $user->level > 1) {
+        // ตรวจสอบสิทธิ์: ต้องเป็นเจ้าของใบลา หรือมี permission delete หรือมี role super-admin/admin
+        $can_delete = $user->hasPermissionTo('leave-requests.delete') || $user->hasAnyRole(['super-admin', 'admin']);
+        if ($leave_request->user_id !== $user->id && !$can_delete) {
             return response()->json(['success' => false, 'message' => 'ไม่มีสิทธิ์ลบใบลานี้'], 403);
         }
 

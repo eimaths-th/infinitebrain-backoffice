@@ -35,6 +35,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'attendance' => ['view', 'create', 'edit', 'delete', 'export'],
             'settings' => ['view', 'edit'],
             'employees' => ['view', 'create', 'edit', 'delete'],
+            'leave-requests' => ['view', 'view-all', 'create', 'edit', 'delete', 'approve', 'reject', 'export'],
+            'general' => ['view', 'admin.view'],
+            'system' => ['view'],
         ];
 
         // Create permissions
@@ -65,12 +68,22 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // 3. Finance - focus on financial operations
         $financePermissions = [
-            'receipts.view', 'receipts.create', 'receipts.edit', 'receipts.export',
-            'receipt-school.view', 'receipt-school.create', 'receipt-school.edit', 'receipt-school.export',
-            'payment-voucher.view', 'payment-voucher.create', 'payment-voucher.edit', 'payment-voucher.export',
+            'receipts.view',
+            'receipts.create',
+            'receipts.edit',
+            'receipts.export',
+            'receipt-school.view',
+            'receipt-school.create',
+            'receipt-school.edit',
+            'receipt-school.export',
+            'payment-voucher.view',
+            'payment-voucher.create',
+            'payment-voucher.edit',
+            'payment-voucher.export',
             'students.view',
             'parents.view',
-            'reports.view', 'reports.export',
+            'reports.view',
+            'reports.export',
         ];
         $finance = Role::firstOrCreate(['name' => 'finance', 'guard_name' => 'web']);
         $finance->syncPermissions($financePermissions);
@@ -78,7 +91,8 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // 4. Reviewer - can review payment vouchers
         $reviewerPermissions = [
-            'payment-voucher.view', 'payment-voucher.review',
+            'payment-voucher.view',
+            'payment-voucher.review',
             'receipts.view',
             'receipt-school.view',
         ];
@@ -88,7 +102,8 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // 5. Approver - can approve payment vouchers
         $approverPermissions = [
-            'payment-voucher.view', 'payment-voucher.approve',
+            'payment-voucher.view',
+            'payment-voucher.approve',
             'receipts.view',
             'receipt-school.view',
         ];
@@ -98,13 +113,24 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // 6. Staff - basic staff access
         $staffPermissions = [
-            'students.view', 'students.create', 'students.edit',
-            'parents.view', 'parents.create', 'parents.edit',
+            'students.view',
+            'students.create',
+            'students.edit',
+            'parents.view',
+            'parents.create',
+            'parents.edit',
             'receipts.view',
             'receipt-school.view',
-            'attendance.view', 'attendance.create', 'attendance.edit',
+            'attendance.view',
+            'attendance.create',
+            'attendance.edit',
             'courses.view',
             'subjects.view',
+            'leave-requests.view',
+            'leave-requests.create',
+            'leave-requests.edit',
+            'leave-requests.export',
+            'general.view',
         ];
         $staff = Role::firstOrCreate(['name' => 'staff', 'guard_name' => 'web']);
         $staff->syncPermissions($staffPermissions);

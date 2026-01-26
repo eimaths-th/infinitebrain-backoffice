@@ -20,6 +20,9 @@ class PaymentVoucher extends Model
         'pay_to_bank_name',
         'payee_id',
         'total_amount',
+        'withholding_tax_rate',
+        'withholding_tax_amount',
+        'net_amount',
         'remark',
         'status',
         'created_by',
@@ -171,11 +174,11 @@ class PaymentVoucher extends Model
         $year = date('Y');
         $month = date('m');
         $prefix = $branchCode . $year . $month;
-        
+
         $lastVoucher = self::where('voucher_no', 'like', $prefix . '%')
             ->orderBy('voucher_no', 'desc')
             ->first();
-        
+
         if ($lastVoucher) {
             // ดึงเลขลำดับจากท้าย voucher_no
             $lastNumber = (int) substr($lastVoucher->voucher_no, strlen($prefix));
@@ -183,7 +186,7 @@ class PaymentVoucher extends Model
         } else {
             $newNumber = 1;
         }
-        
+
         return $prefix . str_pad($newNumber, 2, '0', STR_PAD_LEFT);
     }
 
