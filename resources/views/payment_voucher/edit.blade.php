@@ -10,23 +10,28 @@
             margin-bottom: 10px;
             border: 1px solid #dee2e6;
         }
+
         .btn-remove-item {
             padding: 5px 10px;
         }
+
         .total-section {
             background: #e7f3ff;
             padding: 20px;
             border-radius: 8px;
             border: 2px solid #0d6efd;
         }
+
         .total-amount {
             font-size: 1.5rem;
             font-weight: bold;
             color: #0d6efd;
         }
+
         .required-mark {
             color: red;
         }
+
         .attachment-section {
             background: #fff3cd;
             padding: 15px;
@@ -34,12 +39,14 @@
             border: 1px dashed #ffc107;
             margin-top: 10px;
         }
+
         .attachment-preview {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             margin-top: 10px;
         }
+
         .attachment-item {
             position: relative;
             border: 1px solid #dee2e6;
@@ -47,11 +54,13 @@
             border-radius: 5px;
             background: white;
         }
+
         .attachment-item img {
             max-width: 80px;
             max-height: 80px;
             object-fit: cover;
         }
+
         .attachment-item .file-icon {
             width: 80px;
             height: 80px;
@@ -60,6 +69,7 @@
             justify-content: center;
             background: #f8f9fa;
         }
+
         .attachment-item .remove-btn {
             position: absolute;
             top: -8px;
@@ -74,6 +84,7 @@
             cursor: pointer;
             line-height: 1;
         }
+
         .item-attachments {
             margin-top: 10px;
             padding-top: 10px;
@@ -83,251 +94,370 @@
 @endsection
 
 @section('content')
-<div class="row">
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <div class="app-page-title">
-        <div class="page-title-wrapper">
-            <div class="page-title-heading">
-                <div class="page-title-icon">
-                    <i class="pe-7s-note2 icon-gradient bg-tempting-azure"></i>
-                </div>
-                <div>
-                    แก้ไขใบสำคัญจ่าย
-                    <div class="page-title-subheading">เลขที่: {{ $voucher->voucher_no }}</div>
-                </div>
+    <div class="row">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
-            <div class="page-title-actions">
-                <a href="{{ route('payment-voucher.show', $voucher->id) }}" class="btn btn-secondary">
-                    <i class="fa fa-arrow-left"></i> กลับ
-                </a>
-            </div>
-        </div>
-    </div>
+        @endif
 
-    <div class="main-card mb-3 card">
-        <div class="card-body">
-            <form action="{{ route('payment-voucher.update', $voucher->id) }}" method="POST" id="voucherForm" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <h5 class="border-bottom pb-2 mb-3">
-                            <i class="fa fa-file-text-o"></i> ข้อมูลใบสำคัญจ่าย
-                        </h5>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">สาขา <span class="required-mark">*</span></label>
-                            <select name="branch_code" class="form-select" required>
-                                @foreach($branchCodes as $code => $name)
-                                    <option value="{{ $code }}" {{ old('branch_code', $voucher->branch_code) == $code ? 'selected' : '' }}>{{ $name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">เลขที่ใบสำคัญจ่าย</label>
-                            <input type="text" class="form-control" value="{{ $voucher->voucher_no }}" readonly disabled>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">วันที่ <span class="required-mark">*</span></label>
-                            <input type="date" name="voucher_date" class="form-control" value="{{ old('voucher_date', $voucher->voucher_date) }}" required>
-                        </div>
+        <div class="app-page-title">
+            <div class="page-title-wrapper">
+                <div class="page-title-heading">
+                    <div class="page-title-icon">
+                        <i class="pe-7s-note2 icon-gradient bg-tempting-azure"></i>
                     </div>
+                    <div>
+                        แก้ไขใบสำคัญจ่าย
+                        <div class="page-title-subheading">เลขที่: {{ $voucher->voucher_no }}</div>
+                    </div>
+                </div>
+                <div class="page-title-actions">
+                    <a href="{{ route('payment-voucher.show', $voucher->id) }}" class="btn btn-secondary">
+                        <i class="fa fa-arrow-left"></i> กลับ
+                    </a>
+                </div>
+            </div>
+        </div>
 
-                    <div class="col-md-6">
-                        <h5 class="border-bottom pb-2 mb-3">
-                            <i class="fa fa-user"></i> ข้อมูลผู้รับเงิน
-                        </h5>
+        <div class="main-card mb-3 card">
+            <div class="card-body">
+                <form action="{{ route('payment-voucher.update', $voucher->id) }}" method="POST" id="voucherForm"
+                    enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
 
-                        <div class="mb-3">
-                            <label class="form-label">จ่ายให้ (ชื่อ/บริษัท) <span class="required-mark">*</span></label>
-                            <input type="text" name="pay_to" class="form-control" value="{{ old('pay_to', $voucher->pay_to) }}" placeholder="ระบุชื่อผู้รับเงิน" required>
-                        </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="fa fa-file-text-o"></i> ข้อมูลใบสำคัญจ่าย
+                            </h5>
 
-                        <div class="mb-3">
-                            <label class="form-label">ที่อยู่</label>
-                            <textarea name="pay_to_address" class="form-control" rows="2" placeholder="ที่อยู่ผู้รับเงิน">{{ old('pay_to_address', $voucher->pay_to_address) }}</textarea>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">เลขที่บัญชีธนาคาร</label>
-                                <input type="text" name="pay_to_account_no" class="form-control" value="{{ old('pay_to_account_no', $voucher->pay_to_account_no) }}" placeholder="เช่น 123-4-56789-0">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">ชื่อธนาคาร</label>
-                                <select name="pay_to_bank_name" class="form-select">
-                                    <option value="">-- เลือกธนาคาร --</option>
-                                    <option value="ธนาคารกสิกรไทย" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารกสิกรไทย' ? 'selected' : '' }}>ธนาคารกสิกรไทย</option>
-                                    <option value="ธนาคารไทยพาณิชย์" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารไทยพาณิชย์' ? 'selected' : '' }}>ธนาคารไทยพาณิชย์</option>
-                                    <option value="ธนาคารกรุงเทพ" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารกรุงเทพ' ? 'selected' : '' }}>ธนาคารกรุงเทพ</option>
-                                    <option value="ธนาคารกรุงไทย" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารกรุงไทย' ? 'selected' : '' }}>ธนาคารกรุงไทย</option>
-                                    <option value="ธนาคารกรุงศรีอยุธยา" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารกรุงศรีอยุธยา' ? 'selected' : '' }}>ธนาคารกรุงศรีอยุธยา</option>
-                                    <option value="ธนาคารทหารไทยธนชาต" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารทหารไทยธนชาต' ? 'selected' : '' }}>ธนาคารทหารไทยธนชาต</option>
-                                    <option value="ธนาคารออมสิน" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารออมสิน' ? 'selected' : '' }}>ธนาคารออมสิน</option>
-                                    <option value="ธนาคาร ธ.ก.ส." {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคาร ธ.ก.ส.' ? 'selected' : '' }}>ธนาคาร ธ.ก.ส.</option>
-                                    <option value="ธนาคารอาคารสงเคราะห์" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารอาคารสงเคราะห์' ? 'selected' : '' }}>ธนาคารอาคารสงเคราะห์</option>
-                                    <option value="ธนาคารซีไอเอ็มบี ไทย" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารซีไอเอ็มบี ไทย' ? 'selected' : '' }}>ธนาคารซีไอเอ็มบี ไทย</option>
-                                    <option value="ธนาคารยูโอบี" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารยูโอบี' ? 'selected' : '' }}>ธนาคารยูโอบี</option>
-                                    <option value="ธนาคารแลนด์ แอนด์ เฮ้าส์" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารแลนด์ แอนด์ เฮ้าส์' ? 'selected' : '' }}>ธนาคารแลนด์ แอนด์ เฮ้าส์</option>
-                                    <option value="ธนาคารเกียรตินาคินภัทร" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารเกียรตินาคินภัทร' ? 'selected' : '' }}>ธนาคารเกียรตินาคินภัทร</option>
-                                    <option value="เงินสด" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'เงินสด' ? 'selected' : '' }}>เงินสด</option>
-                                    <option value="อื่นๆ" {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'อื่นๆ' ? 'selected' : '' }}>อื่นๆ</option>
+                            <div class="mb-3">
+                                <label class="form-label">สาขา <span class="required-mark">*</span></label>
+                                <select name="branch_code" class="form-select" required>
+                                    @foreach ($branchCodes as $code => $name)
+                                        <option value="{{ $code }}"
+                                            {{ old('branch_code', $voucher->branch_code) == $code ? 'selected' : '' }}>
+                                            {{ $name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">เลขที่ใบสำคัญจ่าย</label>
+                                <input type="text" class="form-control" value="{{ $voucher->voucher_no }}" readonly
+                                    disabled>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">วันที่ <span class="required-mark">*</span></label>
+                                <input type="date" name="voucher_date" class="form-control"
+                                    value="{{ old('voucher_date', $voucher->voucher_date) }}" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="fa fa-user"></i> ข้อมูลผู้รับเงิน
+                            </h5>
+
+                            <div class="mb-3">
+                                <label class="form-label">จ่ายให้ (ชื่อ/บริษัท) <span class="required-mark">*</span></label>
+                                <input type="text" name="pay_to" class="form-control"
+                                    value="{{ old('pay_to', $voucher->pay_to) }}" placeholder="ระบุชื่อผู้รับเงิน" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">ที่อยู่</label>
+                                <textarea name="pay_to_address" class="form-control" rows="2" placeholder="ที่อยู่ผู้รับเงิน">{{ old('pay_to_address', $voucher->pay_to_address) }}</textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">เลขที่บัญชีธนาคาร</label>
+                                    <input type="text" name="pay_to_account_no" class="form-control"
+                                        value="{{ old('pay_to_account_no', $voucher->pay_to_account_no) }}"
+                                        placeholder="เช่น 123-4-56789-0">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">ชื่อธนาคาร</label>
+                                    <select name="pay_to_bank_name" class="form-select">
+                                        <option value="">-- เลือกธนาคาร --</option>
+                                        <option value="ธนาคารกสิกรไทย"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารกสิกรไทย' ? 'selected' : '' }}>
+                                            ธนาคารกสิกรไทย</option>
+                                        <option value="ธนาคารไทยพาณิชย์"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารไทยพาณิชย์' ? 'selected' : '' }}>
+                                            ธนาคารไทยพาณิชย์</option>
+                                        <option value="ธนาคารกรุงเทพ"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารกรุงเทพ' ? 'selected' : '' }}>
+                                            ธนาคารกรุงเทพ</option>
+                                        <option value="ธนาคารกรุงไทย"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารกรุงไทย' ? 'selected' : '' }}>
+                                            ธนาคารกรุงไทย</option>
+                                        <option value="ธนาคารกรุงศรีอยุธยา"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารกรุงศรีอยุธยา' ? 'selected' : '' }}>
+                                            ธนาคารกรุงศรีอยุธยา</option>
+                                        <option value="ธนาคารทหารไทยธนชาต"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารทหารไทยธนชาต' ? 'selected' : '' }}>
+                                            ธนาคารทหารไทยธนชาต</option>
+                                        <option value="ธนาคารออมสิน"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารออมสิน' ? 'selected' : '' }}>
+                                            ธนาคารออมสิน</option>
+                                        <option value="ธนาคาร ธ.ก.ส."
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคาร ธ.ก.ส.' ? 'selected' : '' }}>
+                                            ธนาคาร ธ.ก.ส.</option>
+                                        <option value="ธนาคารอาคารสงเคราะห์"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารอาคารสงเคราะห์' ? 'selected' : '' }}>
+                                            ธนาคารอาคารสงเคราะห์</option>
+                                        <option value="ธนาคารซีไอเอ็มบี ไทย"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารซีไอเอ็มบี ไทย' ? 'selected' : '' }}>
+                                            ธนาคารซีไอเอ็มบี ไทย</option>
+                                        <option value="ธนาคารยูโอบี"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารยูโอบี' ? 'selected' : '' }}>
+                                            ธนาคารยูโอบี</option>
+                                        <option value="ธนาคารแลนด์ แอนด์ เฮ้าส์"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารแลนด์ แอนด์ เฮ้าส์' ? 'selected' : '' }}>
+                                            ธนาคารแลนด์ แอนด์ เฮ้าส์</option>
+                                        <option value="ธนาคารเกียรตินาคินภัทร"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'ธนาคารเกียรตินาคินภัทร' ? 'selected' : '' }}>
+                                            ธนาคารเกียรตินาคินภัทร</option>
+                                        <option value="เงินสด"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'เงินสด' ? 'selected' : '' }}>
+                                            เงินสด</option>
+                                        <option value="อื่นๆ"
+                                            {{ old('pay_to_bank_name', $voucher->pay_to_bank_name) == 'อื่นๆ' ? 'selected' : '' }}>
+                                            อื่นๆ</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Voucher Attachments -->
-                <div class="mb-4">
-                    <h5 class="border-bottom pb-2 mb-3">
-                        <i class="fa fa-paperclip"></i> เอกสารแนบใบสำคัญจ่าย
-                    </h5>
-                    
-                    <!-- Existing Attachments -->
-                    @if($voucher->attachments->count() > 0)
-                    <div class="mb-3">
-                        <label class="form-label">เอกสารแนบที่มีอยู่</label>
-                        <div class="attachment-preview">
-                            @foreach($voucher->attachments as $attachment)
-                            <div class="attachment-item" id="attachment-{{ $attachment->id }}">
-                                @if($attachment->isImage())
-                                    <img src="{{ Storage::url($attachment->file_path) }}" alt="{{ $attachment->original_name }}">
-                                @else
-                                    <div class="file-icon">
-                                        <i class="fa fa-file-pdf-o fa-2x text-danger"></i>
-                                    </div>
-                                @endif
-                                <small class="d-block text-center text-truncate" style="max-width: 80px;">{{ $attachment->original_name }}</small>
-                                <button type="button" class="remove-btn" onclick="deleteAttachment({{ $attachment->id }})">&times;</button>
+                    <!-- Voucher Attachments -->
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fa fa-paperclip"></i> เอกสารแนบใบสำคัญจ่าย
+                        </h5>
+
+                        <!-- Existing Attachments -->
+                        @if ($voucher->attachments->count() > 0)
+                            <div class="mb-3">
+                                <label class="form-label">เอกสารแนบที่มีอยู่</label>
+                                <div class="attachment-preview">
+                                    @foreach ($voucher->attachments as $attachment)
+                                        <div class="attachment-item" id="attachment-{{ $attachment->id }}">
+                                            @if ($attachment->isImage())
+                                                <img src="{{ Storage::url($attachment->file_path) }}"
+                                                    alt="{{ $attachment->original_name }}">
+                                            @else
+                                                <div class="file-icon">
+                                                    <i class="fa fa-file-pdf-o fa-2x text-danger"></i>
+                                                </div>
+                                            @endif
+                                            <small class="d-block text-center text-truncate"
+                                                style="max-width: 80px;">{{ $attachment->original_name }}</small>
+                                            <button type="button" class="remove-btn"
+                                                onclick="deleteAttachment({{ $attachment->id }})">&times;</button>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
+                        @endif
+
+                        <div class="attachment-section">
+                            <label class="form-label">เพิ่มเอกสารแนบใหม่ (รองรับหลายไฟล์)</label>
+                            <input type="file" name="voucher_attachments[]" id="voucherAttachments"
+                                class="form-control" multiple accept="image/*,.pdf">
+                            <small class="text-muted">รองรับ: JPG, PNG, GIF, PDF (สูงสุด 10MB ต่อไฟล์)</small>
+                            <div id="voucherAttachmentPreview" class="attachment-preview"></div>
+                        </div>
+                    </div>
+
+                    <!-- Items Section -->
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fa fa-list"></i> รายการ
+                        </h5>
+
+                        <div id="itemsContainer">
+                            @foreach ($voucher->items as $index => $item)
+                                <div class="item-row" data-index="{{ $index }}">
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <label class="form-label">ลำดับ</label>
+                                            <input type="text" class="form-control text-center item-no"
+                                                value="{{ $index + 1 }}" readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">รายละเอียด <span
+                                                    class="required-mark">*</span></label>
+                                            <input type="text" name="items[{{ $index }}][description]"
+                                                class="form-control" value="{{ $item->description }}"
+                                                placeholder="รายละเอียดการจ่าย" required>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">จำนวนเงิน <span
+                                                    class="required-mark">*</span></label>
+                                            <input type="number" name="items[{{ $index }}][amount]"
+                                                class="form-control item-amount" step="0.01" min="0"
+                                                value="{{ $item->amount }}" placeholder="0.00" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Slip/เอกสาร</label>
+                                            @if ($item->attachments->count() > 0)
+                                                <div class="attachment-preview mb-2">
+                                                    @foreach ($item->attachments as $attachment)
+                                                        <div class="attachment-item"
+                                                            id="attachment-{{ $attachment->id }}">
+                                                            @if ($attachment->isImage())
+                                                                <img src="{{ Storage::url($attachment->file_path) }}"
+                                                                    alt="{{ $attachment->original_name }}"
+                                                                    style="max-width: 50px; max-height: 50px;">
+                                                            @else
+                                                                <div class="file-icon" style="width: 50px; height: 50px;">
+                                                                    <i class="fa fa-file-pdf-o text-danger"></i>
+                                                                </div>
+                                                            @endif
+                                                            <button type="button" class="remove-btn"
+                                                                onclick="deleteAttachment({{ $attachment->id }})">&times;</button>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                            <input type="file" name="items[{{ $index }}][attachments][]"
+                                                class="form-control form-control-sm" multiple accept="image/*,.pdf">
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                            <button type="button" class="btn btn-danger btn-remove-item"
+                                                onclick="removeItem(this)"
+                                                {{ $voucher->items->count() <= 1 ? 'disabled' : '' }}>
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             @endforeach
                         </div>
+
+                        <button type="button" class="btn btn-outline-primary mt-2" onclick="addItem()">
+                            <i class="fa fa-plus"></i> เพิ่มรายการ
+                        </button>
                     </div>
-                    @endif
 
-                    <div class="attachment-section">
-                        <label class="form-label">เพิ่มเอกสารแนบใหม่ (รองรับหลายไฟล์)</label>
-                        <input type="file" name="voucher_attachments[]" id="voucherAttachments" class="form-control" multiple accept="image/*,.pdf">
-                        <small class="text-muted">รองรับ: JPG, PNG, GIF, PDF (สูงสุด 10MB ต่อไฟล์)</small>
-                        <div id="voucherAttachmentPreview" class="attachment-preview"></div>
-                    </div>
-                </div>
+                    <!-- Total Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-7">
+                            <div class="mb-3">
+                                <label class="form-label">หมายเหตุ</label>
+                                <textarea name="remark" class="form-control" rows="3" placeholder="หมายเหตุเพิ่มเติม">{{ old('remark', $voucher->remark) }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="total-section">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-bold">ยอดรวม:</span>
+                                    <span id="subTotalDisplay">{{ number_format($voucher->total_amount, 2) }} บาท</span>
+                                </div>
 
-                <!-- Items Section -->
-                <div class="mb-4">
-                    <h5 class="border-bottom pb-2 mb-3">
-                        <i class="fa fa-list"></i> รายการ
-                    </h5>
-
-                    <div id="itemsContainer">
-                        @foreach($voucher->items as $index => $item)
-                        <div class="item-row" data-index="{{ $index }}">
-                            <div class="row">
-                                <div class="col-md-1">
-                                    <label class="form-label">ลำดับ</label>
-                                    <input type="text" class="form-control text-center item-no" value="{{ $index + 1 }}" readonly>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">รายละเอียด <span class="required-mark">*</span></label>
-                                    <input type="text" name="items[{{ $index }}][description]" class="form-control" value="{{ $item->description }}" placeholder="รายละเอียดการจ่าย" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">จำนวนเงิน <span class="required-mark">*</span></label>
-                                    <input type="number" name="items[{{ $index }}][amount]" class="form-control item-amount" step="0.01" min="0" value="{{ $item->amount }}" placeholder="0.00" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Slip/เอกสาร</label>
-                                    @if($item->attachments->count() > 0)
-                                    <div class="attachment-preview mb-2">
-                                        @foreach($item->attachments as $attachment)
-                                        <div class="attachment-item" id="attachment-{{ $attachment->id }}">
-                                            @if($attachment->isImage())
-                                                <img src="{{ Storage::url($attachment->file_path) }}" alt="{{ $attachment->original_name }}" style="max-width: 50px; max-height: 50px;">
-                                            @else
-                                                <div class="file-icon" style="width: 50px; height: 50px;"><i class="fa fa-file-pdf-o text-danger"></i></div>
-                                            @endif
-                                            <button type="button" class="remove-btn" onclick="deleteAttachment({{ $attachment->id }})">&times;</button>
+                                <div class="d-flex flex-column mb-2">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <div class="d-flex align-items-center">
+                                            <span class="fw-bold me-2">หัก ณ ที่จ่าย:</span>
+                                            <div class="form-check form-switch ms-2">
+                                                <input class="form-check-input" type="checkbox" id="manualTaxSwitch"
+                                                    {{ $voucher->withholding_tax_rate == 0 && $voucher->withholding_tax_amount > 0 ? 'checked' : '' }}>
+                                                <label class="form-check-label small"
+                                                    for="manualTaxSwitch">ระบุเอง</label>
+                                            </div>
                                         </div>
-                                        @endforeach
                                     </div>
-                                    @endif
-                                    <input type="file" name="items[{{ $index }}][attachments][]" class="form-control form-control-sm" multiple accept="image/*,.pdf">
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <!-- Mode: Auto (Percentage) -->
+                                        <div id="taxAutoMode"
+                                            class="d-flex align-items-center {{ $voucher->withholding_tax_rate == 0 && $voucher->withholding_tax_amount > 0 ? 'd-none' : '' }}">
+                                            <select name="withholding_tax_rate" id="withholdingTaxRate"
+                                                class="form-select form-select-sm" style="width: 80px;">
+                                                <option value="0"
+                                                    {{ $voucher->withholding_tax_rate == 0 ? 'selected' : '' }}>0%</option>
+                                                <option value="1"
+                                                    {{ $voucher->withholding_tax_rate == 1 ? 'selected' : '' }}>1%</option>
+                                                <option value="2"
+                                                    {{ $voucher->withholding_tax_rate == 2 ? 'selected' : '' }}>2%</option>
+                                                <option value="3"
+                                                    {{ $voucher->withholding_tax_rate == 3 ? 'selected' : '' }}>3%</option>
+                                                <option value="5"
+                                                    {{ $voucher->withholding_tax_rate == 5 ? 'selected' : '' }}>5%</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Mode: Manual (Input) -->
+                                        <div id="taxManualMode"
+                                            class="{{ $voucher->withholding_tax_rate == 0 && $voucher->withholding_tax_amount > 0 ? '' : 'd-none' }}">
+                                            <input type="number" id="manualTaxInput"
+                                                class="form-control form-control-sm text-end" style="width: 100px;"
+                                                placeholder="0.00" step="0.01" min="0"
+                                                value="{{ $voucher->withholding_tax_rate == 0 && $voucher->withholding_tax_amount > 0 ? $voucher->withholding_tax_amount : '' }}">
+                                        </div>
+
+                                        <span class="text-danger fw-bold" id="withholdingTaxAmountDisplay">
+                                            -{{ number_format($voucher->withholding_tax_amount, 2) }} บาท
+                                        </span>
+                                        <input type="hidden" name="withholding_tax_amount" id="withholdingTaxAmount"
+                                            value="{{ $voucher->withholding_tax_amount }}">
+                                        <input type="hidden" name="net_amount" id="netAmount"
+                                            value="{{ $voucher->net_amount }}">
+                                    </div>
                                 </div>
-                                <div class="col-md-1 d-flex align-items-end">
-                                    <button type="button" class="btn btn-danger btn-remove-item" onclick="removeItem(this)" {{ $voucher->items->count() <= 1 ? 'disabled' : '' }}>
-                                        <i class="fa fa-trash"></i>
-                                    </button>
+
+                                <hr>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="form-label mb-0 h5">ยอดสุทธิที่ต้องจ่าย</label>
+                                    <div class="total-amount" id="netTotalDisplay">
+                                        {{ number_format($voucher->net_amount, 2) }} บาท</div>
                                 </div>
                             </div>
                         </div>
-                        @endforeach
                     </div>
 
-                    <button type="button" class="btn btn-outline-primary mt-2" onclick="addItem()">
-                        <i class="fa fa-plus"></i> เพิ่มรายการ
-                    </button>
-                </div>
-
-                <!-- Total Section -->
-                <div class="row mb-4">
-                    <div class="col-md-8">
-                        <div class="mb-3">
-                            <label class="form-label">หมายเหตุ</label>
-                            <textarea name="remark" class="form-control" rows="3" placeholder="หมายเหตุเพิ่มเติม">{{ old('remark', $voucher->remark) }}</textarea>
+                    <!-- Action Buttons -->
+                    <div class="border-top pt-3">
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('payment-voucher.show', $voucher->id) }}" class="btn btn-secondary">
+                                <i class="fa fa-times"></i> ยกเลิก
+                            </a>
+                            <div>
+                                <button type="submit" class="btn btn-primary" name="submit" value="">
+                                    <i class="fa fa-save"></i> บันทึกร่าง
+                                </button>
+                                <button type="submit" class="btn btn-success" name="submit" value="1">
+                                    <i class="fa fa-send"></i> บันทึกและส่งอนุมัติ
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="total-section">
-                            <label class="form-label">ยอดรวมทั้งสิ้น</label>
-                            <div class="total-amount" id="totalDisplay">{{ number_format($voucher->total_amount, 2) }} บาท</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="border-top pt-3">
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ route('payment-voucher.show', $voucher->id) }}" class="btn btn-secondary">
-                            <i class="fa fa-times"></i> ยกเลิก
-                        </a>
-                        <div>
-                            <button type="submit" class="btn btn-primary" name="submit" value="">
-                                <i class="fa fa-save"></i> บันทึกร่าง
-                            </button>
-                            <button type="submit" class="btn btn-success" name="submit" value="1">
-                                <i class="fa fa-send"></i> บันทึกและส่งอนุมัติ
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 @endsection
 
 @section('script')
-<script>
-let itemIndex = {{ $voucher->items->count() - 1 }};
+    <script>
+        let itemIndex = {{ $voucher->items->count() - 1 }};
 
-function addItem() {
-    itemIndex++;
-    const container = document.getElementById('itemsContainer');
-    const rowCount = document.querySelectorAll('.item-row').length;
-    const itemHtml = `
+        function addItem() {
+            itemIndex++;
+            const container = document.getElementById('itemsContainer');
+            const rowCount = document.querySelectorAll('.item-row').length;
+            const itemHtml = `
         <div class="item-row" data-index="${itemIndex}">
             <div class="row">
                 <div class="col-md-1">
@@ -354,124 +484,195 @@ function addItem() {
             </div>
         </div>
     `;
-    container.insertAdjacentHTML('beforeend', itemHtml);
-    updateItemNumbers();
-    updateRemoveButtons();
-}
+            container.insertAdjacentHTML('beforeend', itemHtml);
+            updateItemNumbers();
+            updateRemoveButtons();
+        }
 
-function removeItem(btn) {
-    const row = btn.closest('.item-row');
-    row.remove();
-    updateItemNumbers();
-    updateRemoveButtons();
-    calculateTotal();
-}
+        function removeItem(btn) {
+            const row = btn.closest('.item-row');
+            row.remove();
+            updateItemNumbers();
+            updateRemoveButtons();
+            calculateTotal();
+        }
 
-function updateItemNumbers() {
-    const rows = document.querySelectorAll('.item-row');
-    rows.forEach((row, index) => {
-        row.querySelector('.item-no').value = index + 1;
-    });
-}
+        function updateItemNumbers() {
+            const rows = document.querySelectorAll('.item-row');
+            rows.forEach((row, index) => {
+                row.querySelector('.item-no').value = index + 1;
+            });
+        }
 
-function updateRemoveButtons() {
-    const rows = document.querySelectorAll('.item-row');
-    const buttons = document.querySelectorAll('.btn-remove-item');
-    buttons.forEach((btn, index) => {
-        btn.disabled = rows.length <= 1;
-    });
-}
+        function updateRemoveButtons() {
+            const rows = document.querySelectorAll('.item-row');
+            const buttons = document.querySelectorAll('.btn-remove-item');
+            buttons.forEach((btn, index) => {
+                btn.disabled = rows.length <= 1;
+            });
+        }
 
-function calculateTotal() {
-    const amounts = document.querySelectorAll('.item-amount');
-    let total = 0;
-    amounts.forEach(input => {
-        const value = parseFloat(input.value) || 0;
-        total += value;
-    });
-    document.getElementById('totalDisplay').textContent = 
-        total.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' บาท';
-}
+        function calculateTotal() {
+            const amounts = document.querySelectorAll('.item-amount');
+            let total = 0;
+            amounts.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                total += value;
+            });
 
-// Event listeners
-document.addEventListener('input', function(e) {
-    if (e.target.classList.contains('item-amount')) {
+            // แสดงยอดรวม
+            document.getElementById('subTotalDisplay').textContent =
+                total.toLocaleString('th-TH', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }) + ' บาท';
+
+            // คำนวณหัก ณ ที่จ่าย
+            let taxAmount = 0;
+            const isManualMode = document.getElementById('manualTaxSwitch').checked;
+
+            if (isManualMode) {
+                // โหมดระบุเอง
+                taxAmount = parseFloat(document.getElementById('manualTaxInput').value) || 0;
+                // อัปเดต dropdown เป็น 0 เพื่อให้รู้ว่าเป็น manual ในฝั่ง server
+                document.getElementById('withholdingTaxRate').value = 0;
+            } else {
+                // โหมดอัตโนมัติ
+                const taxRate = parseFloat(document.getElementById('withholdingTaxRate').value) || 0;
+                taxAmount = total * (taxRate / 100);
+            }
+
+            // ป้องกันภาษีเกินยอดรวม
+            if (taxAmount > total) {
+                taxAmount = total;
+                if (isManualMode) {
+                    document.getElementById('manualTaxInput').value = total.toFixed(2);
+                }
+            }
+
+            document.getElementById('withholdingTaxAmount').value = taxAmount.toFixed(2);
+            document.getElementById('withholdingTaxAmountDisplay').textContent =
+                '-' + taxAmount.toLocaleString('th-TH', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }) + ' บาท';
+
+            // คำนวณยอดสุทธิ
+            let netAmount = total - taxAmount;
+            if (netAmount < 0) netAmount = 0;
+
+            document.getElementById('netAmount').value = netAmount.toFixed(2);
+            document.getElementById('netTotalDisplay').textContent =
+                netAmount.toLocaleString('th-TH', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }) + ' บาท';
+        }
+
+        // Event listeners
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('item-amount')) {
+                calculateTotal();
+            }
+        });
+
+        // คำนวณเมื่อเปลี่ยนอัตราภาษี (Auto Mode)
+        document.getElementById('withholdingTaxRate').addEventListener('change', calculateTotal);
+
+        // คำนวณเมื่อกรอกภาษีเอง (Manual Mode)
+        document.getElementById('manualTaxInput').addEventListener('input', calculateTotal);
+
+        // Switch Mode Logic
+        document.getElementById('manualTaxSwitch').addEventListener('change', function(e) {
+            const isManual = e.target.checked;
+            const autoModeDiv = document.getElementById('taxAutoMode');
+            const manualModeDiv = document.getElementById('taxManualMode');
+
+            if (isManual) {
+                autoModeDiv.classList.add('d-none');
+                manualModeDiv.classList.remove('d-none');
+                document.getElementById('manualTaxInput').focus();
+            } else {
+                autoModeDiv.classList.remove('d-none');
+                manualModeDiv.classList.add('d-none');
+                // Reset manual input
+                document.getElementById('manualTaxInput').value = '';
+            }
+            calculateTotal();
+        });
+
+        // Initial calculation
         calculateTotal();
-    }
-});
 
-// Initial calculation
-calculateTotal();
+        // Preview voucher attachments
+        document.getElementById('voucherAttachments').addEventListener('change', function(e) {
+            const preview = document.getElementById('voucherAttachmentPreview');
+            preview.innerHTML = '';
 
-// Preview voucher attachments
-document.getElementById('voucherAttachments').addEventListener('change', function(e) {
-    const preview = document.getElementById('voucherAttachmentPreview');
-    preview.innerHTML = '';
-    
-    Array.from(e.target.files).forEach((file, index) => {
-        const item = document.createElement('div');
-        item.className = 'attachment-item';
-        
-        if (file.type.startsWith('image/')) {
-            const img = document.createElement('img');
-            img.src = URL.createObjectURL(file);
-            item.appendChild(img);
-        } else {
-            const icon = document.createElement('div');
-            icon.className = 'file-icon';
-            icon.innerHTML = '<i class="fa fa-file-pdf-o fa-2x text-danger"></i>';
-            item.appendChild(icon);
-        }
-        
-        const name = document.createElement('small');
-        name.className = 'd-block text-center text-truncate';
-        name.style.maxWidth = '80px';
-        name.textContent = file.name;
-        item.appendChild(name);
-        
-        preview.appendChild(item);
-    });
-});
+            Array.from(e.target.files).forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'attachment-item';
 
-// Delete existing attachment
-function deleteAttachment(id) {
-    if (!confirm('ต้องการลบเอกสารแนบนี้หรือไม่?')) return;
-    
-    fetch(`{{ url('payment-voucher/attachment') }}/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById(`attachment-${id}`).remove();
-        } else {
-            alert(data.message || 'เกิดข้อผิดพลาด');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('เกิดข้อผิดพลาดในการลบไฟล์');
-    });
-}
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    item.appendChild(img);
+                } else {
+                    const icon = document.createElement('div');
+                    icon.className = 'file-icon';
+                    icon.innerHTML = '<i class="fa fa-file-pdf-o fa-2x text-danger"></i>';
+                    item.appendChild(icon);
+                }
 
-// Form validation
-document.getElementById('voucherForm').addEventListener('submit', function(e) {
-    const amounts = document.querySelectorAll('.item-amount');
-    let hasValidItem = false;
-    amounts.forEach(input => {
-        if (parseFloat(input.value) > 0) {
-            hasValidItem = true;
+                const name = document.createElement('small');
+                name.className = 'd-block text-center text-truncate';
+                name.style.maxWidth = '80px';
+                name.textContent = file.name;
+                item.appendChild(name);
+
+                preview.appendChild(item);
+            });
+        });
+
+        // Delete existing attachment
+        function deleteAttachment(id) {
+            if (!confirm('ต้องการลบเอกสารแนบนี้หรือไม่?')) return;
+
+            fetch(`{{ url('payment-voucher/attachment') }}/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById(`attachment-${id}`).remove();
+                    } else {
+                        alert(data.message || 'เกิดข้อผิดพลาด');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('เกิดข้อผิดพลาดในการลบไฟล์');
+                });
         }
-    });
-    
-    if (!hasValidItem) {
-        e.preventDefault();
-        alert('กรุณาเพิ่มรายการอย่างน้อย 1 รายการที่มีจำนวนเงินมากกว่า 0');
-    }
-});
-</script>
+
+        // Form validation
+        document.getElementById('voucherForm').addEventListener('submit', function(e) {
+            const amounts = document.querySelectorAll('.item-amount');
+            let hasValidItem = false;
+            amounts.forEach(input => {
+                if (parseFloat(input.value) > 0) {
+                    hasValidItem = true;
+                }
+            });
+
+            if (!hasValidItem) {
+                e.preventDefault();
+                alert('กรุณาเพิ่มรายการอย่างน้อย 1 รายการที่มีจำนวนเงินมากกว่า 0');
+            }
+        });
+    </script>
 @endsection
