@@ -230,6 +230,17 @@
             </div>
 
             @if ($leave_request->IsPending() && Auth::user()->hasAnyRole(['super-admin']))
+
+                @php
+                    $disabled = 'disabled';
+                @endphp
+
+                @can('leave-requests.approve')
+                    @php
+                        $disabled = '';
+                    @endphp
+                @endcan
+
                 <div class="main-card mb-3 card">
                     <div class="card-header bg-primary text-white">
                         <i class="fas fa-gavel me-2"></i> พิจารณาใบลา
@@ -278,7 +289,7 @@
                             value="{{ Auth::user()->signature ? '1' : '0' }}">
                     </div>
 
-                    <button type="button" class="btn btn-success w-100 mb-2" id="approveBtn">
+                    <button type="button" class="btn btn-success w-100 mb-2" id="approveBtn" {{ $disabled }}>
                         <i class="fas fa-check me-1"></i> อนุมัติ
                     </button>
 
@@ -288,7 +299,7 @@
                         <label class="form-label">เหตุผลไม่อนุมัติ</label>
                         <textarea id="rejectionReason" class="form-control" rows="2" placeholder="ระบุเหตุผล"></textarea>
                     </div>
-                    <button type="button" class="btn btn-danger w-100" id="rejectBtn">
+                    <button type="button" class="btn btn-danger w-100" id="rejectBtn" {{ $disabled }}>
                         <i class="fas fa-times me-1"></i> ไม่อนุมัติ
                     </button>
                 </div>
