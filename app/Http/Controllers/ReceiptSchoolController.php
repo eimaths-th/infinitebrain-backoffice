@@ -463,6 +463,158 @@ class ReceiptSchoolController extends Controller
         // parent::__construct();
         $this->statusService = $statusService;
     }
+
+    /**
+     * แปลง period string เป็น start/end dates
+     * รองรับ format: "2026-01 - 2026-03" หรือ "2026-01-2026-03"
+     *
+     * @param string $period_string
+     * @return array|null ['start' => Carbon, 'end' => Carbon] หรือ null ถ้าไม่สามารถ parse ได้
+     */
+    private function ParsePeriodDates($period_string)
+    {
+        if (empty($period_string)) {
+            return null;
+        }
+
+        try {
+            $period = explode(' - ', $period_string);
+
+            if (count($period) == 2) {
+                // Format: "2026-01 - 2026-03"
+                $start_month = Carbon::parse(trim($period[0]))->startOfMonth();
+                $end_month = Carbon::parse(trim($period[1]))->endOfMonth();
+            } else {
+                // Format: "2026-01-2026-03" หรือ "2026-01"
+                $periods = explode('-', $period_string);
+
+                if (count($periods) == 2) {
+                    // Format: "2026-01" (เพียงเดือนเดียว)
+                    $start_month = Carbon::parse("{$periods[0]}-{$periods[1]}")->startOfMonth();
+                    $end_month = $start_month->copy()->endOfMonth();
+                } elseif (count($periods) == 4) {
+                    // Format: "2026-01-2026-03"
+                    $start_month = Carbon::parse("{$periods[0]}-{$periods[1]}")->startOfMonth();
+                    $end_month = Carbon::parse("{$periods[2]}-{$periods[3]}")->endOfMonth();
+                } elseif (count($periods) == 3) {
+                    // Format: "2026-01-03" (year-startMonth-endMonth same year)
+                    $start_month = Carbon::parse("{$periods[0]}-{$periods[1]}")->startOfMonth();
+                    $end_month = Carbon::parse("{$periods[0]}-{$periods[2]}")->endOfMonth();
+                } else {
+                    return null;
+                }
+            }
+
+            return [
+                'start' => $start_month,
+                'end' => $end_month
+            ];
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * ตรวจสอบว่า period ซ้อนทับกับ period ที่มีอยู่แล้วหรือไม่
+     *
+     * @param int $student_id
+     * @param int $subject_id
+     * @param string $period_string
+     * @param int|null $exclude_school_price_id - ไม่รวม record นี้ในการตรวจสอบ (สำหรับ update)
+     * @return array|null - ข้อมูล period ที่ซ้อนทับ หรือ null ถ้าไม่ซ้อนทับ
+     */
+    private function CheckPeriodOverlap($student_id, $subject_id, $period_string, $exclude_school_price_id = null)
+    {
+        $new_period = $this->ParsePeriodDates($period_string);
+        if (!$new_period) {
+            return null;
+        }
+
+        // ค้นหา SchoolPrice ที่มีอยู่แล้วสำหรับ student + subject
+        $existing_records = SchoolPrice::where('student_id', $student_id)
+            ->where('subject', $subject_id)
+            ->when($exclude_school_price_id, function ($query) use ($exclude_school_price_id) {
+                return $query->where('id', '!=', $exclude_school_price_id);
+            })
+            ->whereNotNull('period')
+            ->where('period', '!=', '')
+            ->get();
+
+        foreach ($existing_records as $record) {
+            $existing_period = $this->ParsePeriodDates($record->period);
+            if (!$existing_period) {
+                continue;
+            }
+
+            // ตรวจสอบ overlap: ถ้า start_new <= end_existing AND end_new >= start_existing
+            $is_overlap = $new_period['start']->lte($existing_period['end'])
+                && $new_period['end']->gte($existing_period['start']);
+
+            if ($is_overlap) {
+                // ดึงข้อมูล student และ subject สำหรับ error message
+                $student = Student::find($student_id);
+                $subject = Subject::find($subject_id);
+
+                return [
+                    'existing_period' => $record->period,
+                    'student_name' => $student ? "{$student->first_name} {$student->last_name}" : "ID: {$student_id}",
+                    'subject_name' => $subject ? $subject->title : "ID: {$subject_id}",
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * ตรวจสอบ period overlap สำหรับ update (exclude หลาย IDs)
+     *
+     * @param int $student_id
+     * @param int $subject_id
+     * @param string $period_string
+     * @param array $exclude_ids - IDs ที่ไม่รวมในการตรวจสอบ
+     * @return array|null
+     */
+    private function CheckPeriodOverlapForUpdate($student_id, $subject_id, $period_string, $exclude_ids = [])
+    {
+        $new_period = $this->ParsePeriodDates($period_string);
+        if (!$new_period) {
+            return null;
+        }
+
+        // ค้นหา SchoolPrice ที่มีอยู่แล้วสำหรับ student + subject
+        $existing_records = SchoolPrice::where('student_id', $student_id)
+            ->where('subject', $subject_id)
+            ->whereNotIn('id', $exclude_ids)
+            ->whereNotNull('period')
+            ->where('period', '!=', '')
+            ->get();
+
+        foreach ($existing_records as $record) {
+            $existing_period = $this->ParsePeriodDates($record->period);
+            if (!$existing_period) {
+                continue;
+            }
+
+            // ตรวจสอบ overlap: ถ้า start_new <= end_existing AND end_new >= start_existing
+            $is_overlap = $new_period['start']->lte($existing_period['end'])
+                && $new_period['end']->gte($existing_period['start']);
+
+            if ($is_overlap) {
+                $student = Student::find($student_id);
+                $subject = Subject::find($subject_id);
+
+                return [
+                    'existing_period' => $record->period,
+                    'student_name' => $student ? "{$student->first_name} {$student->last_name}" : "ID: {$student_id}",
+                    'subject_name' => $subject ? $subject->title : "ID: {$subject_id}",
+                ];
+            }
+        }
+
+        return null;
+    }
+
     public function index(Request $request)
     {
 
@@ -1298,7 +1450,7 @@ class ReceiptSchoolController extends Controller
         //     $booksum = $booksum + $pricesub;
         // }
         // dd($data,$receipt_detail_arr);
-        
+
         return view($viewr)->with(['id' => $id])
             ->with(['discount' => $discount])
             ->with(['vat_price' => $vat_price])
@@ -1485,11 +1637,6 @@ class ReceiptSchoolController extends Controller
 
     public function store(Request $request)
     {
-
-        // dd(
-        //     $request->payment_type,
-        //     $request
-        // );
         $payment_type = $request->payment_type;
 
         $validator =  Validator::make(
@@ -1555,16 +1702,39 @@ class ReceiptSchoolController extends Controller
 
         $typeRec = (bool)$hasPromotion ? 9 : 0;
 
-        // dd($typeRec);
+        // ตรวจสอบ period overlap ก่อนบันทึกข้อมูล (ก่อน file handling)
+        $period_errors = [];
+        foreach ($request->get('receipt') as $index => $value) {
+            if (!empty($value['period']) && !empty($value['std_id']) && !empty($value['subject'])) {
+                $overlap = $this->CheckPeriodOverlap(
+                    $value['std_id'],
+                    $value['subject'],
+                    $value['period']
+                );
+
+                if ($overlap) {
+                    $period_errors[] = "นักเรียน {$overlap['student_name']} วิชา {$overlap['subject_name']} " .
+                        "มี period ที่ซ้อนทับกับ {$overlap['existing_period']} อยู่แล้ว (คุณพยายามลงทะเบียน: {$value['period']})";
+                }
+            }
+        }
+
+        if (!empty($period_errors)) {
+            return response()->json(['errors' => $period_errors]);
+        }
+
+        // dd($typeRec)
         $filesb = $request->get('img');
 
         $filebs = "";
         foreach ($filesb as $fileb) {
             //echo $fileb;
-            $oldfile = FileUpload::where('oldname', $fileb)->get();
-            $filebs .= $oldfile[0]->filename . "|";
-            File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
-            FileUpload::where('filename', $oldfile[0]->filename)->delete();
+            $oldfile = FileUpload::where('oldname', $fileb)->first();
+            if ($oldfile) {
+                $filebs .= $oldfile->filename . "|";
+                File::move(public_path() . '/receipt_form_school/' . $oldfile->filename, public_path() . '/receipts_form_school/' . $oldfile->filename);
+                FileUpload::where('filename', $oldfile->filename)->delete();
+            }
         }
 
         $filebs = rtrim($filebs, "|");
@@ -1578,6 +1748,7 @@ class ReceiptSchoolController extends Controller
             $stu .= $sss . "|";
         }
         $stu = rtrim($stu, "|");
+
         // dd($payment_type);
         $rnumber = Receipt_School_RunningNumber::generate($group, $payment_type == 1 ? '1' : '0');
 
@@ -1682,7 +1853,6 @@ class ReceiptSchoolController extends Controller
 
             // $updateStatus = $this->updateStatus($students);
             $updateStatus = $this->statusService->updateStatus($students);
-
         }
 
         //merge $dataArray and $dataArray2 ;
@@ -1776,10 +1946,12 @@ class ReceiptSchoolController extends Controller
             foreach ($img as $fileb) {
                 //echo $filea;
                 // $stu .= $sss . "|";
-                $oldfile = FileUpload::where('oldname', $fileb)->get();
-                $stu .= $oldfile[0]->filename . "|";
-                File::move(public_path() . '/receipt_form_school/' . $oldfile[0]->filename, public_path() . '/receipts_form_school/' . $oldfile[0]->filename);
-                FileUpload::where('filename', $oldfile[0]->filename)->delete();
+                $oldfile = FileUpload::where('oldname', $fileb)->first();
+                if ($oldfile) {
+                    $stu .= $oldfile->filename . "|";
+                    File::move(public_path() . '/receipt_form_school/' . $oldfile->filename, public_path() . '/receipts_form_school/' . $oldfile->filename);
+                    FileUpload::where('filename', $oldfile->filename)->delete();
+                }
             }
         }
 
@@ -1855,6 +2027,33 @@ class ReceiptSchoolController extends Controller
 
         $SchoolPrice = SchoolPrice::where('rid', $id)->get();
         $SchoolPrice_old = $SchoolPrice->toArray();
+
+        // ตรวจสอบ period overlap ก่อนอัพเดทข้อมูล
+        // รวบรวม existing SchoolPrice IDs ที่จะถูก exclude จากการตรวจสอบ
+        $existing_school_price_ids = $SchoolPrice->pluck('id')->toArray();
+        $period_errors = [];
+
+        for ($xx = 0; $xx < count($rrsub); $xx++) {
+            if (!empty($rrperiod[$xx]) && !empty($std_id[$xx]) && !empty($rrsub[$xx])) {
+                // ตรวจสอบ overlap โดยไม่รวม records ที่มีอยู่แล้วของ receipt นี้
+                $overlap = $this->CheckPeriodOverlapForUpdate(
+                    $std_id[$xx],
+                    $rrsub[$xx],
+                    $rrperiod[$xx],
+                    $existing_school_price_ids
+                );
+
+                if ($overlap) {
+                    $period_errors[] = "นักเรียน {$overlap['student_name']} วิชา {$overlap['subject_name']} " .
+                        "มี period ที่ซ้อนทับกับ {$overlap['existing_period']} อยู่แล้ว (คุณพยายามลงทะเบียน: {$rrperiod[$xx]})";
+                }
+            }
+        }
+
+        if (!empty($period_errors)) {
+            return response()->json(['errors' => $period_errors]);
+        }
+
         foreach ($SchoolPrice as $price) {
             $price->delete();
         }

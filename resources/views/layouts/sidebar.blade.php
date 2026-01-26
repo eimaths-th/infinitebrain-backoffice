@@ -351,6 +351,52 @@
                                 </ul>
                             </li>
                         </ul>
+
+                        <ul>
+                            {{-- <li>
+                                    <a href="{{ route('payment-voucher.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        ใบสำคัญจ่าย
+                                    </a>
+                                </li> --}}
+                            <li>
+                                <a href="#">
+                                    <i class="metismenu-icon pe-7s-wallet"></i>
+                                    เงินเดือนพนักงาน
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('payment-voucher.index') }}">
+                                            <i class="metismenu-icon"></i>
+                                            รายการทั้งหมด
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('payment-voucher.create') }}">
+                                            <i class="metismenu-icon"></i>
+                                            สร้างใบสำคัญจ่าย
+                                        </a>
+                                    </li>
+                                    @can('payment-voucher.approve')
+                                        <li>
+                                            <a href="{{ route('payment-voucher.pending') }}">
+                                                <i class="metismenu-icon"></i>
+                                                รออนุมัติ
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('payment-voucher.review')
+                                        <li>
+                                            <a href="{{ route('payment-voucher.approved') }}">
+                                                <i class="metismenu-icon"></i>
+                                                รอตรวจสอบ
+                                            </a>
+                                        </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        </ul>
                     </li>
                 @endcan
 
