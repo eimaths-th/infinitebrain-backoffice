@@ -257,6 +257,8 @@ class PaymentVoucherController extends Controller
             'items' => 'required|array|min:1',
             'items.*.description' => 'required|string',
             'items.*.amount' => 'required|numeric|min:0',
+            'withholding_tax_rate' => 'nullable|numeric|min:0|max:100',
+            'withholding_tax_amount' => 'nullable|numeric|min:0',
             'voucher_attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
             'items.*.attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
         ]);
@@ -275,6 +277,37 @@ class PaymentVoucherController extends Controller
                 ]);
             }
 
+            // คำนวณยอดเงินรวมและภาษีหัก ณ ที่จ่าย (Server-side calculation)
+            $totalAmount = 0;
+            // ต้อง loop items จาก request ไม่ใช่ $voucher->items เพราะ items จะถูกลบสร้างใหม่
+            // แต่ใน logic เดิมมีการวนลูปข้างล่างเพื่อ create items ใหม่
+            // เราจะคำนวณ totalAmount จาก loop ของ request items ก่อนเพื่อคำนวณภาษี
+            if ($request->items) {
+                foreach ($request->items as $item) {
+                    if (!empty($item['description']) && ($item['amount'] ?? 0) > 0) {
+                        $totalAmount += $item['amount'];
+                    }
+                }
+            }
+
+            // คำนวณภาษีหัก ณ ที่จ่าย
+            $taxRate = $request->withholding_tax_rate ?? 0.00;
+
+            // กรณีระบุ manual (taxRate = 0) และมี tax amount ส่งมา ให้ใช้ค่าที่ส่งมา
+            // กรณี auto (taxRate > 0) ให้คำนวณใหม่เพื่อความปลอดภัย
+            if ($taxRate > 0) {
+                $taxAmount = $totalAmount * ($taxRate / 100);
+            } else {
+                $taxAmount = $request->input('withholding_tax_amount', 0);
+
+                // Validate manual tax amount to not exceed total amount
+                if ($taxAmount > $totalAmount) {
+                    $taxAmount = $totalAmount;
+                }
+            }
+
+            $netAmount = $totalAmount - $taxAmount;
+
             // อัพเดทข้อมูลหลัก
             $voucher->update([
                 'voucher_date' => $request->voucher_date,
@@ -285,6 +318,10 @@ class PaymentVoucherController extends Controller
                 'payee_id' => $payee->id ?? $voucher->payee_id,
                 'remark' => $request->remark,
                 'status' => $request->submit ? PaymentVoucher::STATUS_PENDING : PaymentVoucher::STATUS_DRAFT,
+                'withholding_tax_rate' => $taxRate,
+                'withholding_tax_amount' => $taxAmount,
+                'net_amount' => $netAmount,
+                'total_amount' => $totalAmount,
             ]);
 
             // อัพโหลดไฟล์แนบของ Voucher (เพิ่มใหม่)
