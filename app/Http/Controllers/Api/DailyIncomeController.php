@@ -13,7 +13,7 @@ class DailyIncomeController extends Controller
 {
     /**
      * สรุปรายได้รายวัน
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -21,7 +21,7 @@ class DailyIncomeController extends Controller
     {
         // รับวันที่จาก request หรือใช้วันนี้
         $date = $request->input('date', Carbon::today()->format('Y-m-d'));
-        
+
         try {
             $targetDate = Carbon::parse($date);
         } catch (\Exception $e) {
@@ -32,23 +32,31 @@ class DailyIncomeController extends Controller
         }
 
         // ดึงข้อมูลรายได้จาก SchoolPrice ตามวันที่
-        $incomeData = SchoolPrice::whereDate('created_at', $targetDate)
+        // ดึงข้อมูลรายได้จาก SchoolPrice ตามวันที่
+        $incomeData = SchoolPrice::join('receipt_school', 'school_price.rid', '=', 'receipt_school.id')
+            ->whereDate('school_price.created_at', $targetDate)
+            ->where('receipt_school.type', '!=', 2)
             ->select(
                 DB::raw('COUNT(*) as total_transactions'),
-                DB::raw('SUM(CAST(total AS DECIMAL(10,2))) as total_income'),
-                DB::raw('SUM(CAST(price AS DECIMAL(10,2))) as total_price'),
-                DB::raw('SUM(CAST(discount AS DECIMAL(10,2))) as total_discount'),
-                DB::raw('SUM(CAST(entrance_fee AS DECIMAL(10,2))) as total_entrance_fee'),
-                DB::raw('SUM(CAST(bookprice AS DECIMAL(10,2))) as total_book_price'),
-                DB::raw('SUM(CAST(media_price AS DECIMAL(10,2))) as total_media_price')
+                DB::raw('SUM(CAST(school_price.total AS DECIMAL(10,2))) as total_income'),
+                DB::raw('SUM(CAST(school_price.price AS DECIMAL(10,2))) as total_price'),
+                DB::raw('SUM(CAST(school_price.discount AS DECIMAL(10,2))) as total_discount'),
+                DB::raw('SUM(CAST(school_price.entrance_fee AS DECIMAL(10,2))) as total_entrance_fee'),
+                DB::raw('SUM(CAST(school_price.bookprice AS DECIMAL(10,2))) as total_book_price'),
+                DB::raw('SUM(CAST(school_price.media_price AS DECIMAL(10,2))) as total_media_price')
             )
             ->first();
 
         // ดึงข้อมูลจำนวน Receipt ที่สร้างในวันนั้น
-        $receiptCount = Receipt_School::whereDate('created_at', $targetDate)->count();
+        // ดึงข้อมูลจำนวน Receipt ที่สร้างในวันนั้น
+        $receiptCount = Receipt_School::whereDate('created_at', $targetDate)
+            ->where('type', '!=', 2)
+            ->count();
 
         // สรุปตามประเภทการชำระเงิน
+        // สรุปตามประเภทการชำระเงิน
         $byPaymentType = Receipt_School::whereDate('created_at', $targetDate)
+            ->where('type', '!=', 2)
             ->select('payment_type', DB::raw('COUNT(*) as count'))
             ->groupBy('payment_type')
             ->get();
@@ -60,8 +68,10 @@ class DailyIncomeController extends Controller
             ->get();
 
         // รายละเอียดรายได้แต่ละรายการ
-        $transactions = SchoolPrice::whereDate('school_price.created_at', $targetDate)
-            ->leftJoin('receipt_school', 'school_price.rid', '=', 'receipt_school.id')
+        // รายละเอียดรายได้แต่ละรายการ
+        $transactions = SchoolPrice::join('receipt_school', 'school_price.rid', '=', 'receipt_school.id')
+            ->whereDate('school_price.created_at', $targetDate)
+            ->where('receipt_school.type', '!=', 2)
             ->select(
                 'school_price.id',
                 'school_price.receipt_number',
@@ -210,14 +220,14 @@ class DailyIncomeController extends Controller
     {
         $totalIncome = number_format((float)($incomeData->total_income ?? 0), 2);
         $dateThai = $date->locale('th')->translatedFormat('j F Y');
-        
+
         $message = "📊 สรุปรายได้ประจำวัน\n";
         $message .= "📅 วันที่: {$dateThai}\n";
         $message .= "━━━━━━━━━━━━━━━\n";
         $message .= "💰 รายได้รวม: {$totalIncome} บาท\n";
         $message .= "🧾 จำนวนใบเสร็จ: {$receiptCount} ใบ\n";
         $message .= "📝 จำนวนรายการ: " . ($incomeData->total_transactions ?? 0) . " รายการ\n";
-        
+
         if ($byPaymentType->count() > 0) {
             $message .= "━━━━━━━━━━━━━━━\n";
             $message .= "💳 แยกตามการชำระ:\n";
@@ -244,5 +254,32 @@ class DailyIncomeController extends Controller
         ];
 
         return $labels[$type] ?? $type ?? 'ไม่ระบุ';
+    }
+
+    /**
+     * จำลองดึงข้อมูล 3 วัน (24-26 ม.ค. 2026)
+     */
+    public function simulationTest()
+    {
+        $dates = ['2026-01-24', '2026-01-25', '2026-01-26'];
+        $results = [];
+
+        foreach ($dates as $date) {
+            $request = new Request();
+            $request->merge(['date' => $date]);
+
+            $summaryResponse = $this->dailySummary($request);
+            $data = $summaryResponse->getData(true);
+
+            $results[] = [
+                'date' => $date,
+                'summary' => $data
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'test_results' => $results
+        ]);
     }
 }
