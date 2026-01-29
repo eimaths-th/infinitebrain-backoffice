@@ -90,47 +90,8 @@
                                 <span aria-hidden="true"></span>
                             </button>
                         </div>
-                        <div class="form-group">
-                            <label for="Name">Name:</label>
-                            <input type="text" class="form-control" name="name" id="AddName" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Email:</label>
-                            <input type="text" class="form-control" name="email" id="AddEmail" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Password:</label>
-                            <input type="password" class="form-control" name="password" required autocomplete="new-password"
-                                id="AddPassword">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Confirm Password:</label>
-                            <input type="password" class="form-control" name="password_confirmation" id="AddPasswordC"
-                                required autocomplete="new-password">
-                        </div>
-                        <div class="form-group">
-                            <label for="Name">Level:</label>
-                            <select class="form-control" id="AddType" name="type_user">
-                                <option value="" selected>Select Time</option>
-                                <option value="0">10.00-18.00</option>
-                                <option value="1">09.00-17.00</option>
-
-                            </select>
-                        </div>
-                        <input type="hidden" name="code" value="code" id="AddCode">
-                        <div class="form-group">
-                            <label for="Name">Level:</label>
-                            <select class="form-control" id="AddLevel" name="level">
-                                <option value="" selected>Select Level</option>
-                                <option value="0">Owner</option>
-                                <option value="1">Admin</option>
-                                <option value="2">Teacher</option>
-                                <option value="3">Account</option>
-                                <option value="4">Officer</option>
-                                <option value="5">Normal</option>
-                                <option value="7">Finance</option>
-                                <option value="8">Header</option>
-                            </select>
+                        <div id="CreateModalBody">
+                            <!-- Form loaded via AJAX -->
                         </div>
                     </div>
                     <!-- Modal footer -->
@@ -139,6 +100,7 @@
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
+            </form>
         </div>
     </div>
 
@@ -155,11 +117,10 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
-                            style="display: none;">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
-                            </button>
+                            </button></button>
                         </div>
                         <div class="alert alert-success alert-dismissible fade show" role="alert"
                             style="display: none;">
@@ -178,6 +139,7 @@
                         <button type="button" class="btn btn-danger modelClose" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
+            </form>
         </div>
     </div>
 @endsection
@@ -282,13 +244,20 @@
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
-                $('#CreateModal').modal('show');
+
+                $.ajax({
+                    url: "{{ route('users.create') }}",
+                    method: 'GET',
+                    success: function(res) {
+                        $('#CreateModalBody').html(res.html);
+                        $('#CreateModal').modal('show');
+                    }
+                });
             });
 
             let id;
             $(document).on('click', '#getEditData', function(e) {
                 e.preventDefault();
-
 
                 $('.alert-danger').html('');
                 $('.alert-danger').hide();
@@ -302,9 +271,9 @@
                     success: function(res) {
                         $('#EditModalBody').html(res.html);
                         $('#EditModal').modal('show');
+                        // Re-initialize tabs if needed (Bootstrap 5 usually works automatically)
                     }
                 });
-
             })
 
 
@@ -316,21 +285,15 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
 
+                var formData = $('#CreateModal form').serialize();
+                // Add token if not included (serialize includes _token if input exists, but csrf setup handles headers)
+                // However, our controller expects params.
+
                 $.ajax({
                     url: "{{ route('users.store') }}",
                     method: 'post',
-                    data: {
-                        password: $('#AddPassword').val(),
-                        password_confirmation: $('#AddPasswordC').val(),
-                        name: $('#AddName').val(),
-                        email: $('#AddEmail').val(),
-                        level: $('#AddLevel').val(),
-                        type_user: $('#AddType').val(),
-                        code: $('#AddCode').val(),
-                        _token: token,
-                    },
+                    data: formData,
                     success: function(result) {
-
                         if (result.errors) {
                             $('.alert-danger').html('');
                             $.each(result.errors, function(key, value) {
@@ -341,15 +304,14 @@
                         } else {
                             $('.alert-danger').hide();
                             $('.alert-success').show();
-                            $('.alert-success').append('<strong><li>' + result.success +
+                            $('.alert-success').html('<strong><li>' + result.success +
                                 '</li></strong>');
                             $('#Listview').DataTable().ajax.reload();
-                            $('.form').trigger('reset');
-                            //$('#SubmitCreateForm').hide();
-                            //setTimeout(function() {
-                            //$('.alert-success').hide();
-                            //$('#CreateModal').modal('hide');
-                            //}, 10000);
+                            $('#CreateModal form').trigger('reset');
+                            setTimeout(function() {
+                                $('.alert-success').hide();
+                                $('#CreateModal').modal('hide');
+                            }, 1500);
 
                         }
                     }
@@ -365,20 +327,14 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
 
+                var formData = $('#EditModal form').serialize();
 
                 $.ajax({
                     url: "users/save/" + id,
                     method: 'PUT',
-                    data: {
-                        name: $('#editName').val(),
-                        password: $('#EditPassword').val(),
-                        password_confirmation: $('#EditPasswordC').val(),
-                        email: $('#editEmail').val(),
-                        level: $('#editLevel').val(),
-                    },
+                    data: formData,
 
                     success: function(result) {
-                        //console.log(result);
                         if (result.errors) {
                             $('.alert-danger').html('');
                             $.each(result.errors, function(key, value) {
@@ -389,14 +345,13 @@
                         } else {
                             $('.alert-danger').hide();
                             $('.alert-success').show();
-                            $('.alert-success').append('<strong><li>' + result.success +
+                            $('.alert-success').html('<strong><li>' + result.success +
                                 '</li></strong>');
                             $('#Listview').DataTable().ajax.reload();
-                            //setTimeout(function() {
-                            //$('.alert-success').hide();
-                            //   $('#EditModal').modal('hide');
-                            //}, 10000);
-
+                            setTimeout(function() {
+                                $('.alert-success').hide();
+                                $('#EditModal').modal('hide');
+                            }, 1500);
                         }
                     }
                 });
@@ -466,6 +421,14 @@
                     }
                 });
             })
+
+            // Clear modal body on close to prevent ID conflicts
+            $('#CreateModal').on('hidden.bs.modal', function() {
+                $('#CreateModalBody').html('');
+            });
+            $('#EditModal').on('hidden.bs.modal', function() {
+                $('#EditModalBody').html('');
+            });
         })
     </script>
 @endsection

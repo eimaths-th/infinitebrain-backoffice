@@ -409,46 +409,7 @@ class PaymentVoucherController extends Controller
     /**
      * ลบใบสำคัญจ่ายและข้อมูลที่เกี่ยวข้องทั้งหมด (Force Delete)
      */
-    public function forceDestroy($id)
-    {
-        DB::beginTransaction();
-        try {
-            $voucher = PaymentVoucher::withTrashed()->findOrFail($id);
 
-            // 1. ลบไฟล์แนบทั้งหมดจาก storage
-            foreach ($voucher->allAttachments as $attachment) {
-                if (Storage::disk('public')->exists($attachment->file_path)) {
-                    Storage::disk('public')->delete($attachment->file_path);
-                }
-            }
-
-            // 2. ลบ folder ของ voucher (ถ้ามี)
-            $folderPath = 'payment_vouchers/' . $voucher->id;
-            if (Storage::disk('public')->exists($folderPath)) {
-                Storage::disk('public')->deleteDirectory($folderPath);
-            }
-
-            // 3. ลบ attachments records
-            $voucher->allAttachments()->delete();
-
-            // 4. ลบ items ทั้งหมด
-            $voucher->items()->delete();
-
-            // 5. ลบ logs ทั้งหมด
-            $voucher->logs()->delete();
-
-            // 6. ลบ voucher (force delete จริงๆ)
-            $voucher->forceDelete();
-
-            DB::commit();
-
-            return redirect()->route('payment-voucher.index')
-                ->with('success', 'ลบใบสำคัญจ่ายและข้อมูลที่เกี่ยวข้องทั้งหมดเรียบร้อยแล้ว');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
-        }
-    }
 
     /**
      * ตรวจสอบใบสำคัญจ่าย (Reviewer)
@@ -761,6 +722,50 @@ class PaymentVoucherController extends Controller
         ]);
     }
 
+    /**
+     * ลบใบสำคัญจ่ายและข้อมูลที่เกี่ยวข้องทั้งหมด (Force Delete)
+     */
+
+    public function forceDestroy($id)
+    {
+        DB::beginTransaction();
+        try {
+            $voucher = PaymentVoucher::withTrashed()->findOrFail($id);
+
+            // 1. ลบไฟล์แนบทั้งหมดจาก storage
+            foreach ($voucher->allAttachments as $attachment) {
+                if (Storage::disk('public')->exists($attachment->file_path)) {
+                    Storage::disk('public')->delete($attachment->file_path);
+                }
+            }
+
+            // 2. ลบ folder ของ voucher (ถ้ามี)
+            $folderPath = 'payment_vouchers/' . $voucher->id;
+            if (Storage::disk('public')->exists($folderPath)) {
+                Storage::disk('public')->deleteDirectory($folderPath);
+            }
+
+            // 3. ลบ attachments records
+            $voucher->allAttachments()->delete();
+
+            // 4. ลบ items ทั้งหมด
+            $voucher->items()->delete();
+
+            // 5. ลบ logs ทั้งหมด
+            $voucher->logs()->delete();
+
+            // 6. ลบ voucher (force delete จริงๆ)
+            $voucher->forceDelete();
+
+            DB::commit();
+
+            return redirect()->route('payment-voucher.index')
+                ->with('success', 'ลบใบสำคัญจ่ายและข้อมูลที่เกี่ยวข้องทั้งหมดเรียบร้อยแล้ว');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+        }
+    }
     /**
      * แสดงฟอร์ม Import Excel
      */

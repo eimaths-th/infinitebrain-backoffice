@@ -351,52 +351,70 @@
                                 </ul>
                             </li>
                         </ul>
-
-                        <ul>
-                            {{-- <li>
+                        @can('payroll.view')
+                            <ul>
+                                {{-- <li>
                                     <a href="{{ route('payment-voucher.index') }}">
                                         <i class="metismenu-icon"></i>
                                         ใบสำคัญจ่าย
                                     </a>
                                 </li> --}}
-                            <li>
-                                <a href="#">
-                                    <i class="metismenu-icon pe-7s-wallet"></i>
-                                    เงินเดือนพนักงาน
-                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="{{ route('payment-voucher.index') }}">
-                                            <i class="metismenu-icon"></i>
-                                            รายการทั้งหมด
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('payment-voucher.create') }}">
-                                            <i class="metismenu-icon"></i>
-                                            สร้างใบสำคัญจ่าย
-                                        </a>
-                                    </li>
-                                    @can('payment-voucher.approve')
+
+                                <li>
+
+                                    <a href="#">
+                                        <i class="metismenu-icon pe-7s-wallet"></i>
+                                        เงินเดือนพนักงาน
+                                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                    </a>
+                                    <ul>
+
                                         <li>
-                                            <a href="{{ route('payment-voucher.pending') }}">
+                                            <a href="{{ route('payroll.index') }}">
                                                 <i class="metismenu-icon"></i>
-                                                รออนุมัติ
+                                                รายการทั้งหมด
                                             </a>
                                         </li>
-                                    @endcan
-                                    @can('payment-voucher.review')
+
+                                    </ul>
+
+                                </li>
+
+                            </ul>
+                        @endcan
+
+
+                        @can('bank-statement.view')
+                            <ul>
+                                {{-- <li>
+                                    <a href="{{ route('payment-voucher.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        ใบสำคัญจ่าย
+                                    </a>
+                                </li> --}}
+
+                                <li>
+
+                                    <a href="#">
+                                        <i class="metismenu-icon pe-7s-wallet"></i>
+                                        Bank Statement
+                                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                    </a>
+                                    <ul>
+
                                         <li>
-                                            <a href="{{ route('payment-voucher.approved') }}">
+                                            <a href="{{ route('bank-statement.index') }}">
                                                 <i class="metismenu-icon"></i>
-                                                รอตรวจสอบ
+                                                รายการทั้งหมด
                                             </a>
                                         </li>
-                                    @endcan
-                                </ul>
-                            </li>
-                        </ul>
+
+                                    </ul>
+
+                                </li>
+
+                            </ul>
+                        @endcan
                     </li>
                 @endcan
 
@@ -490,7 +508,7 @@
                     @endcan
 
                     {{-- <ul>
-                        
+
                     </ul> --}}
                     @if (Auth::user()->hasRole('super-admin') && Auth::user()->id == 4)
                         <ul>

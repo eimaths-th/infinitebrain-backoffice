@@ -46,6 +46,7 @@ use App\Http\Controllers\PaymentVoucherController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserRoleController;
+use App\Http\Controllers\PayrollController;
 // use App\Http\Controllers\RouteToggleController;
 
 /*
@@ -145,6 +146,49 @@ Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')
     Route::post('/import', [PaymentVoucherController::class, 'importExcel'])->name('import.process');
     Route::post('/import/store', [PaymentVoucherController::class, 'storeImport'])->name('import.store');
     Route::get('/import/template', [PaymentVoucherController::class, 'downloadTemplate'])->name('import.template');
+});
+
+// Bank Statement Routes
+Route::middleware(['auth'])->prefix('bank-statement')->name('bank-statement.')->group(function () {
+    Route::get('/', [App\Http\Controllers\BankStatementController::class, 'index'])->name('index');
+    Route::get('/create', [App\Http\Controllers\BankStatementController::class, 'create'])->name('create');
+    Route::post('/store', [App\Http\Controllers\BankStatementController::class, 'store'])->name('store');
+    Route::get('/import', [App\Http\Controllers\BankStatementController::class, 'showImport'])->name('import');
+    Route::post('/import', [App\Http\Controllers\BankStatementController::class, 'import'])->name('import.process');
+    Route::delete('/{id}', [App\Http\Controllers\BankStatementController::class, 'destroy'])->name('destroy');
+});
+
+// Payroll Routes (ระบบเงินเดือน)
+Route::middleware(['auth'])->prefix('payroll')->name('payroll.')->group(function () {
+    Route::get('/', [PayrollController::class, 'index'])->name('index');
+    Route::get('/create', [PayrollController::class, 'create'])->name('create');
+    Route::post('/store', [PayrollController::class, 'store'])->name('store');
+    Route::get('/{id}', [PayrollController::class, 'show'])->name('show');
+    Route::delete('/{id}', [PayrollController::class, 'destroy'])->name('destroy');
+
+    // Generate payrolls for all employees
+    Route::post('/{id}/generate', [PayrollController::class, 'generatePayrolls'])->name('generate');
+
+    // Approval workflow
+    Route::post('/{id}/approve', [PayrollController::class, 'approve'])->name('approve');
+    Route::post('/{id}/paid', [PayrollController::class, 'markAsPaid'])->name('paid');
+
+    // Individual payroll
+    Route::get('/{period_id}/payroll/{payroll_id}', [PayrollController::class, 'editPayroll'])->name('edit-payroll');
+    Route::put('/{period_id}/payroll/{payroll_id}', [PayrollController::class, 'updatePayroll'])->name('update-payroll');
+    Route::delete('/{period_id}/payroll/{payroll_id}', [PayrollController::class, 'deletePayroll'])->name('delete-payroll');
+
+    // Payslip
+    Route::get('/{period_id}/payslip/{payroll_id}', [PayrollController::class, 'payslip'])->name('payslip');
+
+    // Import Excel
+    Route::get('/{id}/import', [PayrollController::class, 'showImport'])->name('import');
+    Route::match(['GET', 'POST'], '/{id}/import/preview', [PayrollController::class, 'previewImport'])->name('import.preview');
+    Route::post('/{id}/import/process', [PayrollController::class, 'processImport'])->name('import.process');
+
+    // Bulk Edit
+    Route::get('/{id}/bulk-edit', [PayrollController::class, 'bulkEdit'])->name('bulk-edit');
+    Route::post('/{id}/bulk-update', [PayrollController::class, 'bulkUpdate'])->name('bulk-update');
 });
 
 // Role & Permission Management (super-admin only)

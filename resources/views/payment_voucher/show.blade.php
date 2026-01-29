@@ -445,17 +445,17 @@
                             </tbody>
                             <tfoot>
                                 <tr class="total-row">
-                                    <td colspan="2" class="text-end">รวมเป็นเงิน</td>
+                                    <td colspan="3" class="text-end">รวมเป็นเงิน</td>
                                     <td class="text-end">{{ number_format($voucher->total_amount, 2) }} บาท</td>
                                 </tr>
                                 @if ($voucher->withholding_tax_amount > 0)
                                     <tr>
-                                        <td colspan="2" class="text-end text-danger">
+                                        <td colspan="3" class="text-end text-danger">
                                             หัก ณ ที่จ่าย
                                             @if ($voucher->withholding_tax_rate > 0)
                                                 ({{ __($voucher->withholding_tax_rate) }}%)
                                             @else
-                                                
+
                                             @endif
                                         </td>
                                         <td class="text-end text-danger">
@@ -463,7 +463,7 @@
                                         </td>
                                     </tr>
                                     <tr class="total-row" style="background-color: #d1e7dd;">
-                                        <td colspan="2" class="text-end">ยอดสุทธิ</td>
+                                        <td colspan="3" class="text-end">ยอดสุทธิ</td>
                                         <td class="text-end fw-bold text-success">
                                             {{ number_format($voucher->net_amount, 2) }} บาท
                                         </td>

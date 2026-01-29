@@ -80,6 +80,19 @@
 
 @section('content')
     <div class="row">
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success alert-dismissible fade show">
+                <p class="mb-0">{{ $message }}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+        @if ($message = Session::get('error'))
+            <div class="alert alert-danger alert-dismissible fade show">
+                <p class="mb-0">{{ $message }}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
@@ -215,7 +228,8 @@
                                         <option value="ธนาคารเกียรตินาคินภัทร"
                                             {{ old('pay_to_bank_name') == 'ธนาคารเกียรตินาคินภัทร' ? 'selected' : '' }}>
                                             ธนาคารเกียรตินาคินภัทร</option>
-                                        <option value="เงินสด" {{ old('pay_to_bank_name') == 'เงินสด' ? 'selected' : '' }}>
+                                        <option value="เงินสด"
+                                            {{ old('pay_to_bank_name') == 'เงินสด' ? 'selected' : '' }}>
                                             เงินสด</option>
                                         <option value="อื่นๆ" {{ old('pay_to_bank_name') == 'อื่นๆ' ? 'selected' : '' }}>
                                             อื่นๆ</option>
@@ -629,11 +643,8 @@
                     },
                     cache: true
                 },
-                minimumInputLength: 1,
+                minimumInputLength: 0,
                 language: {
-                    inputTooShort: function() {
-                        return 'กรุณาพิมพ์อย่างน้อย 1 ตัวอักษร';
-                    },
                     noResults: function() {
                         return 'ไม่พบข้อมูล - คุณสามารถพิมพ์ชื่อใหม่ได้';
                     },
