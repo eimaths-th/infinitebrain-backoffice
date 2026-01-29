@@ -32,9 +32,9 @@ class DailyIncomeController extends Controller
         }
 
         // ดึงข้อมูลรายได้จาก SchoolPrice ตามวันที่
-        // ดึงข้อมูลรายได้จาก SchoolPrice ตามวันที่
+        // ดึงข้อมูลรายได้จาก SchoolPrice โดยอิงวันที่จาก submission_date ของ Receipt_School
         $incomeData = SchoolPrice::join('receipt_school', 'school_price.rid', '=', 'receipt_school.id')
-            ->whereDate('school_price.created_at', $targetDate)
+            ->whereDate('receipt_school.submission_date', $targetDate)
             ->where('receipt_school.type', '!=', 2)
             ->select(
                 DB::raw('COUNT(*) as total_transactions'),
@@ -48,21 +48,21 @@ class DailyIncomeController extends Controller
             ->first();
 
         // ดึงข้อมูลจำนวน Receipt ที่สร้างในวันนั้น
-        // ดึงข้อมูลจำนวน Receipt ที่สร้างในวันนั้น
-        $receiptCount = Receipt_School::whereDate('created_at', $targetDate)
+        // ดึงข้อมูลจำนวน Receipt ที่ submission_date ตรงกับวันที่เลือก
+        $receiptCount = Receipt_School::whereDate('submission_date', $targetDate)
             ->where('type', '!=', 2)
             ->count();
 
         // สรุปตามประเภทการชำระเงิน
         // สรุปตามประเภทการชำระเงิน
-        $byPaymentType = Receipt_School::whereDate('created_at', $targetDate)
+        $byPaymentType = Receipt_School::whereDate('submission_date', $targetDate)
             ->where('type', '!=', 2)
             ->select('payment_type', DB::raw('COUNT(*) as count'))
             ->groupBy('payment_type')
             ->get();
 
         // สรุปตามประเภทคอร์ส
-        $byCourseType = Receipt_School::whereDate('created_at', $targetDate)
+        $byCourseType = Receipt_School::whereDate('submission_date', $targetDate)
             ->select('course_type', DB::raw('COUNT(*) as count'))
             ->groupBy('course_type')
             ->get();
@@ -70,7 +70,7 @@ class DailyIncomeController extends Controller
         // รายละเอียดรายได้แต่ละรายการ
         // รายละเอียดรายได้แต่ละรายการ
         $transactions = SchoolPrice::join('receipt_school', 'school_price.rid', '=', 'receipt_school.id')
-            ->whereDate('school_price.created_at', $targetDate)
+            ->whereDate('receipt_school.submission_date', $targetDate)
             ->where('receipt_school.type', '!=', 2)
             ->select(
                 'school_price.id',
@@ -83,9 +83,10 @@ class DailyIncomeController extends Controller
                 'receipt_school.first_name',
                 'receipt_school.last_name',
                 'receipt_school.payment_type',
-                'receipt_school.course_type'
+                'receipt_school.course_type',
+                'receipt_school.submission_date'
             )
-            ->orderBy('school_price.created_at', 'desc')
+            ->orderBy('receipt_school.submission_date', 'desc')
             ->get();
 
         // สร้างข้อความสำหรับส่ง LINE
