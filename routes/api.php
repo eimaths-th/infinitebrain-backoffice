@@ -26,9 +26,9 @@ Route::middleware('auth.apikey')->group(function () {
     Route::get('/searchstudent', [APIController::class, 'searchStudent']);
     Route::get('/searchsubject', [APIController::class, 'searchSubject']);
     Route::post('/savehistories', [APIController::class, 'saveHistories'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-    
+
     // Leave Request API
-    
+
 });
 
 Route::get('/leave-requests/pending', [APIController::class, 'getPendingLeaveRequests']);
@@ -41,6 +41,8 @@ Route::prefix('income')->group(function () {
     Route::get('/yesterday', [DailyIncomeController::class, 'yesterdaySummary']); // รายได้เมื่อวาน
     Route::get('/weekly', [DailyIncomeController::class, 'weeklySummary']);       // ?start_date=&end_date=
     Route::get('/monthly', [DailyIncomeController::class, 'monthlySummary']);     // ?year=2026&month=1
+    Route::get('/simulation-test', [DailyIncomeController::class, 'simulationTest']); // Test 3 days
+
 });
 
 // Route::get('/test-fn', [TestController::class, 'store'])->name('testFs')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);// test
