@@ -36,6 +36,20 @@ class User extends Authenticatable
         'type_user',
         'password',
         'level',
+        // Payroll fields
+        'nickname',
+        'gender',
+        'nationality',
+        'birth_date',
+        'start_date',
+        'end_date',
+        'employee_type',
+        'department',
+        'base_salary',
+        'bank_account',
+        'bank_name',
+        'tax_id',
+        'social_security_no',
     ];
 
     const TITLE_PREFIXES = [
@@ -123,5 +137,31 @@ class User extends Authenticatable
     public function compensateDays()
     {
         return $this->hasMany(UserCompensateDay::class);
+    }
+
+    /**
+     * Payroll relationships
+     */
+    public function payrolls()
+    {
+        return $this->hasMany(Payroll::class);
+    }
+
+    /**
+     * Get employee type label
+     */
+    public function GetEmployeeTypeLabel()
+    {
+        return Payroll::$employeeTypes[$this->employee_type] ?? $this->employee_type;
+    }
+
+    /**
+     * Scope for payroll-eligible users (active employees)
+     */
+    public function scopePayrollEligible($query)
+    {
+        return $query->where('is_disabled', false)
+            ->whereNotNull('base_salary')
+            ->where('base_salary', '>', 0);
     }
 }

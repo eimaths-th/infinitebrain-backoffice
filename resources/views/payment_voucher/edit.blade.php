@@ -95,6 +95,19 @@
 
 @section('content')
     <div class="row">
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success alert-dismissible fade show">
+                <p class="mb-0">{{ $message }}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+        @if ($message = Session::get('error'))
+            <div class="alert alert-danger alert-dismissible fade show">
+                <p class="mb-0">{{ $message }}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
@@ -169,7 +182,8 @@
                             <div class="mb-3">
                                 <label class="form-label">จ่ายให้ (ชื่อ/บริษัท) <span class="required-mark">*</span></label>
                                 <input type="text" name="pay_to" class="form-control"
-                                    value="{{ old('pay_to', $voucher->pay_to) }}" placeholder="ระบุชื่อผู้รับเงิน" required>
+                                    value="{{ old('pay_to', $voucher->pay_to) }}" placeholder="ระบุชื่อผู้รับเงิน"
+                                    required>
                             </div>
 
                             <div class="mb-3">

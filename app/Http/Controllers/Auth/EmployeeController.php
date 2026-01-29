@@ -113,10 +113,17 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
-        //
-        //return view('users.create'); // -> resources/views/users/create.blade.php
+        $this->check_permission();
+        $user = null;
+        $html = view('users.form_body', compact('user'))->render();
+        return response()->json(['html' => $html]);
     }
 
     /**
@@ -127,40 +134,30 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        // Validation for required fields (and using some regex to validate our numeric value)
-
-        //return response()->json(['success'=>$request->all()]);
-        //exit();
-
         $this->check_permission();
+        \Illuminate\Support\Facades\Log::info("User Create Request Data: ", $request->all());
 
-        $validator =  Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
+            'code' => 'required|string|max:255|unique:users',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'level' => 'required',
-            'type_user' => 'required',
+            // Optional fields don't strictly need regex validation unless specific format
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-        // Getting values from the blade template form
-        $level = new User([
-            'name' => $request->get('name'),
-            'email' => $request->get('email'),
-            'password' => Hash::make($request->get('password')),
-            'level' => $request->get('level'),
-            'code' => $request->get('code'),
-            'type_user' => $request->get('type_user'),
-        ]);
-        $level->save();
 
-        LogActivity::modelEvent($level, 'user created', null, $level->toArray());
-        // LogActivity::add('create_user', 'User created their profile');
+        $data = $request->all();
+        $data['password'] = Hash::make($request->get('password'));
+
+        $user = User::create($data);
+
+        LogActivity::modelEvent($user, 'user created', null, $user->toArray());
 
         return response()->json(['success' => 'User Add successfully']);
-        //return redirect('/users')->with('success', 'User saved.');   // -> resources/views/users/index.blade.php
     }
 
     /**
@@ -182,86 +179,9 @@ class EmployeeController extends Controller
      */
     public function edit($id)
     {
-        //
         $this->check_permission();
-
-        $data = User::find($id);
-        if ($data->level == 1) {
-            $aselected = 'selected';
-        } else {
-            $aselected = '';
-        }
-
-        if ($data->level == 2) {
-            $bselected = 'selected';
-        } else {
-            $bselected = '';
-        }
-
-        if ($data->level == 3) {
-            $dselected = 'selected';
-        } else {
-            $dselected = '';
-        }
-
-        if ($data->level == 0) {
-            $oselected = 'selected';
-        } else {
-            $oselected = '';
-        }
-        if ($data->level == 4) {
-            $cselected = 'selected';
-        } else {
-            $cselected = '';
-        }
-        if ($data->level == 5) {
-            $fselected = 'selected';
-        } 
-        if ($data->level == 7) {
-            $fselected = 'selected';
-        } 
-        if ($data->level == 8) {
-            $fselected = 'selected';
-        } 
-        
-        else {
-            $fselected = '';
-        }
-
-        $html = '<div class="form-group">
-                    <label for="Name">Name:</label>
-                    <input type="text" class="form-control" name="name" id="editName" value="' . $data->name . '">
-                </div>
-                <div class="form-group">
-                    <label for="Name">Email:</label>
-                    <input type="text" class="form-control" name="email" id="editEmail" value="' . $data->email . '">
-                </div>
-                    <div class="form-group">
-                    <label for="Name">Password:</label>
-                    <input type="password" class="form-control" name="password" required autocomplete="new-password"
-                        id="EditPassword" >
-                </div>
-                <div class="form-group">
-                    <label for="Name">Confirm Password:</label>
-                    <input type="password" class="form-control" name="password_confirmation" id="EditPasswordC"
-                        required autocomplete="new-password" >
-                </div>
-                <div class="form-group">
-                    <label for="Name">Level:</label>
-                    <select class="form-control" id="editLevel" name="level">
-                     <option value="">Select Level</option>
-                     <option value="0" ' . $oselected . '>Owner</option>
-                     <option value="1" ' . $aselected . '>Admin</option>
-                     <option value="2" ' . $bselected . '>Teacher</option>
-                     <option value="3" ' . $dselected . '>Account</option>
-                     <option value="4" ' . $cselected . '>Officer</option>
-                     <option value="5" ' . $fselected . '>Normal</option>
-                     <option value="7" ' . $fselected . '>Finance</option>
-                     <option value="8" ' . $fselected . '>Header</option>
-
-                    </select>
-                </div>';
-
+        $user = User::find($id);
+        $html = view('users.form_body', compact('user'))->render();
         return response()->json(['html' => $html]);
     }
 
@@ -274,45 +194,36 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-        //print_r($request);
-        //return response()->json(['success'=>$request->all()]);
-        //exit();
         $this->check_permission();
-
 
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'code' => 'required|string|max:255|unique:users,code,' . $id,
         ];
 
         if ($request->get('password')) {
             $rules['password'] = 'required|string|min:8|confirmed';
         }
 
-        $validator =  Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
-        $level = [
-            'name' => $request->get('name'),
-            'email' => $request->get('email'),
-            'level' => $request->get('level'),
-            //'password' => Hash::make($request->get('password')),
-        ];
+        $user = User::find($id);
+        $old = $user->toArray();
 
+        $data = $request->except(['password', 'password_confirmation', '_token', '_method']);
 
         if ($request->get('password')) {
-            $level['password'] = Hash::make($request->get('password'));
+            $data['password'] = Hash::make($request->get('password'));
         }
 
-        $user =  User::find($id);
-        $old = $user->toArray();
-        $user->update($level);
+        $user->update($data);
+
         LogActivity::modelEvent($user, 'user updated', $old, $user->toArray());
-        // LogActivity::add('update_profile', 'User updated their profile');
 
         return response()->json(['success' => 'User updated successfully']);
     }
