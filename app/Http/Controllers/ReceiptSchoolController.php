@@ -1637,6 +1637,8 @@ class ReceiptSchoolController extends Controller
 
     public function store(Request $request)
     {
+
+        dd( $request->all());
         $payment_type = $request->payment_type;
 
         $validator =  Validator::make(
@@ -1705,7 +1707,7 @@ class ReceiptSchoolController extends Controller
         // ตรวจสอบ period overlap ก่อนบันทึกข้อมูล (ก่อน file handling)
         $period_errors = [];
         foreach ($request->get('receipt') as $index => $value) {
-            if (!empty($value['period']) && !empty($value['std_id']) && !empty($value['subject'])) {
+            if (!empty($value['period']) && !empty($value['std_id']) && !empty($value['subject']) && $value['course_type'] == 1) {
                 $overlap = $this->CheckPeriodOverlap(
                     $value['std_id'],
                     $value['subject'],
