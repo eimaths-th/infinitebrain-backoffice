@@ -16,6 +16,7 @@ class PayrollIncomeItem extends Model
         'quantity',
         'rate',
         'amount',
+        'is_wht_3_percent',
         'sort_order',
     ];
 
@@ -23,6 +24,7 @@ class PayrollIncomeItem extends Model
         'quantity' => 'decimal:2',
         'rate' => 'decimal:2',
         'amount' => 'decimal:2',
+        'is_wht_3_percent' => 'boolean',
     ];
 
     /**

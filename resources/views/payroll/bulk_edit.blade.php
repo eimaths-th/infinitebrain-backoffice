@@ -1,393 +1,513 @@
 @extends('layouts.main_template')
 
-@section('style')
-    <style>
-        .bulk-edit-table th {
-            background-color: #f8f9fa;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            white-space: nowrap;
-        }
-
-        .input-number {
-            text-align: right;
-            min-width: 80px;
-        }
-
-        .dynamic-col-header {
-            background-color: #e8f5e9 !important;
-            /* Light green for income */
-            position: relative;
-        }
-
-        .dynamic-col-header.deduction {
-            background-color: #ffebee !important;
-            /* Light red for deduction */
-        }
-
-        .remove-col-btn {
-            position: absolute;
-            top: -10px;
-            right: -5px;
-            color: red;
-            cursor: pointer;
-            z-index: 20;
-            background: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            text-align: center;
-            line-height: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-            font-size: 12px;
-        }
-    </style>
-@endsection
-
 @section('content')
-    <div class="container-fluid">
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h4 class="mb-1">
-                    <i class="fas fa-edit me-2"></i>แก้ไขเงินเดือนหลายคน (Bulk Edit)
-                </h4>
-                <p class="text-muted mb-0">
-                    งวด: {{ $period->period_name }}
-                </p>
+    <div class="app-page-title">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="page-title-icon">
+                    <i class="pe-7s-users icon-gradient bg-malibu-beach"></i>
+                </div>
+                <div>
+                    แก้ไขเงินเดือนแบบกลุ่ม (Bulk Edit)
+                    <div class="page-title-subheading">งวด: {{ $period->code }}</div>
+                </div>
             </div>
-            <div>
-                <button type="button" class="btn btn-success me-1" onclick="showAddColumnModal('income')">
-                    <i class="fas fa-plus-circle me-1"></i> เพิ่มคอลัมน์รายได้
-                </button>
-                <button type="button" class="btn btn-danger me-2" onclick="showAddColumnModal('deduction')">
-                    <i class="fas fa-minus-circle me-1"></i> เพิ่มคอลัมน์รายจ่าย
-                </button>
-                <a href="{{ route('payroll.show', $period->id) }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-times me-1"></i> ยกเลิก/กลับ
+            <div class="page-title-actions">
+                <a href="{{ route('payroll.show', $period->id) }}" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-arrow-left me-1"></i> กลับ
                 </a>
-                <button type="submit" form="bulk-edit-form" class="btn btn-primary ms-2">
+                <button type="submit" form="main-bulk-form" class="btn btn-primary">
                     <i class="fas fa-save me-1"></i> บันทึกทั้งหมด
                 </button>
             </div>
         </div>
+    </div>
 
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
+    {{-- Alert Messages --}}
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
-        <div class="card">
-            <div class="card-body p-0">
-                <form action="{{ route('payroll.bulk-update', $period->id) }}" method="POST" id="bulk-edit-form">
-                    @csrf
-                    <!-- Container for Dynamic Column Definitions -->
-                    <div id="dynamic-cols-definitions"></div>
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
-                    <div class="table-responsive" style="max-height: 70vh;">
-                        <table class="table table-bordered table-hover mb-0 bulk-edit-table" id="bulk-table">
-                            <thead class="table-light">
-                                <tr id="header-row">
-                                    <th style="width: 50px;" class="text-center">#</th>
-                                    <th style="width: 100px;">รหัส</th>
-                                    <th style="width: 200px;">ชื่อ-นามสกุล</th>
-                                    <th style="width: 150px;" class="text-end">เงินเดือน (Base)</th>
-                                    <th style="width: 150px;" class="text-end">ค่าล่วงเวลา (OT)</th>
+    <form action="{{ route('payroll.bulk-update', $period->id) }}" method="POST" id="main-bulk-form">
+        @csrf
 
-                                    <!-- Dynamic Columns will be inserted here -->
-                                    <th id="marker-dynamic-start" style="display:none;"></th>
+        <div class="accordion" id="payrollAccordion">
+            @foreach ($period->payrolls as $payroll)
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ $payroll->id }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ $payroll->id }}" aria-expanded="false"
+                            aria-controls="collapse{{ $payroll->id }}">
+                            <div class="d-flex w-100 justify-content-between align-items-center me-3">
+                                <div>
+                                    <strong>{{ $payroll->employee_code }} {{ $payroll->employee_name }}</strong>
+                                    <span class="text-muted ms-2">({{ $payroll->position }})</span>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-label-primary me-2">ฐานเงินเดือน:
+                                        {{ number_format($payroll->base_salary, 2) }}</span>
+                                    <span class="badge bg-success">Net: {{ number_format($payroll->net_pay, 2) }}</span>
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="collapse{{ $payroll->id }}" class="accordion-collapse collapse"
+                        aria-labelledby="heading{{ $payroll->id }}" data-bs-parent="#payrollAccordion">
+                        <div class="accordion-body bg-light">
+                            <div class="d-flex justify-content-end mb-2">
+                                <button type="button" class="btn btn-sm btn-info text-white"
+                                    onclick="saveIndividual({{ $payroll->id }})">
+                                    <i class="fas fa-save me-1"></i> บันทึกรายการนี้
+                                </button>
+                            </div>
+                            <div class="row">
+                                {{-- Settings & Base Salary --}}
+                                <div class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold">ข้อมูลพื้นฐาน & การหัก</h6>
 
-                                    <th style="width: 80px;" class="text-center">ปกส.</th>
-                                    <th style="width: 80px;" class="text-center">ภาษี</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($period->payrolls as $index => $payroll)
-                                    <tr data-payroll-id="{{ $payroll->id }}">
-                                        <td class="text-center align-middle">{{ $index + 1 }}</td>
-                                        <td class="align-middle">{{ $payroll->employee_code }}</td>
-                                        <td class="align-middle">
-                                            <strong>{{ $payroll->employee_name }}</strong><br>
-                                            <small class="text-muted">{{ $payroll->position }}</small>
-                                        </td>
-                                        <td>
-                                            <input type="number" step="0.01" class="form-control input-number"
-                                                name="payrolls[{{ $payroll->id }}][base_salary]"
-                                                value="{{ $payroll->base_salary }}">
-                                        </td>
-                                        <td>
-                                            @php
-                                                $ot_item = $payroll->incomeItems
-                                                    ->where('income_type', \App\Models\Payroll::INCOME_OT)
-                                                    ->first();
-                                                $ot_amount = $ot_item ? $ot_item->amount : 0;
-                                            @endphp
-                                            <input type="number" step="0.01" class="form-control input-number"
-                                                name="payrolls[{{ $payroll->id }}][ot]" value="{{ $ot_amount }}">
-                                        </td>
+                                            {{-- Hidden ID for explicit key matching --}}
+                                            <input type="hidden" name="payrolls[{{ $payroll->id }}][id]"
+                                                value="{{ $payroll->id }}">
 
-                                        <!-- Dynamic Inputs will be inserted here by JS -->
+                                            <div class="mb-3">
+                                                <label class="form-label">เงินเดือน (Base)</label>
+                                                <input type="number" step="0.01" class="form-control"
+                                                    name="payrolls[{{ $payroll->id }}][base_salary]"
+                                                    value="{{ $payroll->base_salary }}">
+                                            </div>
 
-                                        <td class="text-center align-middle cell-sso">
-                                            <div class="form-check d-flex justify-content-center">
+                                            <div class="form-check form-switch mb-2">
                                                 <input class="form-check-input" type="checkbox"
                                                     name="payrolls[{{ $payroll->id }}][calc_social_security]"
                                                     value="1" {{ $payroll->calc_social_security ? 'checked' : '' }}>
+                                                <label class="form-check-label">หักประกันสังคม (Auto)</label>
                                             </div>
-                                        </td>
-                                        <td class="text-center align-middle cell-tax">
-                                            <div class="form-check d-flex justify-content-center">
+                                            <div class="input-group input-group-sm mb-3">
+                                                <span class="input-group-text">อัตรา</span>
+                                                <input type="number" class="form-control"
+                                                    name="payrolls[{{ $payroll->id }}][social_security_rate]"
+                                                    value="{{ $payroll->social_security_rate }}" step="0.01"
+                                                    min="0" max="100">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+
+                                            <div class="form-check form-switch mb-2">
                                                 <input class="form-check-input" type="checkbox"
                                                     name="payrolls[{{ $payroll->id }}][calc_tax]" value="1"
                                                     {{ $payroll->calc_tax ? 'checked' : '' }}>
+                                                <label class="form-check-label">หักภาษี (Auto)</label>
                                             </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+
+                                            <hr>
+
+                                            {{-- Late Deduction Input --}}
+                                            @php
+                                                $late_item = $payroll->deductionItems
+                                                    ->where('deduction_type', 'late')
+                                                    ->first();
+                                                $late_minutes = 0;
+                                                if ($late_item) {
+                                                    $late_minutes = $late_item->rate > 0 ? (int) $late_item->rate : 0;
+                                                }
+                                            @endphp
+                                            <label class="form-label text-danger">มาสาย (นาที)</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control"
+                                                    name="payrolls[{{ $payroll->id }}][late_minutes]"
+                                                    value="{{ $late_minutes }}" step="1" min="0">
+                                                <span class="input-group-text">นาที</span>
+                                            </div>
+
+                                            {{-- Absence Deduction Input --}}
+                                            @php
+                                                $absence_item = $payroll->deductionItems
+                                                    ->where('deduction_type', 'absence')
+                                                    ->first();
+                                                $absence_days = 0;
+                                                if ($absence_item) {
+                                                    $absence_days =
+                                                        $absence_item->rate > 0 ? (float) $absence_item->rate : 0;
+                                                }
+                                            @endphp
+                                            <label class="form-label text-danger mt-2">ขาดงาน (วัน)</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control"
+                                                    name="payrolls[{{ $payroll->id }}][absence_days]"
+                                                    value="{{ $absence_days }}" step="0.5" min="0">
+                                                <span class="input-group-text">วัน</span>
+                                            </div>
+
+                                            <small class="text-muted">ระบบจะคำนวณยอดเงินหักให้อัตโนมัติ</small>
+
+                                            <hr class="my-3">
+
+                                            <div class="mb-2">
+                                                <label class="form-label">หมายเหตุ</label>
+                                                <textarea name="payrolls[{{ $payroll->id }}][remark]" class="form-control" rows="2">{{ $payroll->remark }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Income & Deductions --}}
+                                <div class="col-md-8">
+                                    {{-- Income --}}
+                                    <div class="card mb-3">
+                                        <div class="card-header d-flex justify-content-between align-items-center py-2">
+                                            <h6 class="mb-0 text-success"><i class="fas fa-plus-circle me-1"></i>
+                                                รายการรายได้</h6>
+                                            <button type="button" class="btn btn-sm btn-outline-success"
+                                                onclick="addIncomeItem({{ $payroll->id }})">
+                                                <i class="fas fa-plus"></i> เพิ่ม
+                                            </button>
+                                        </div>
+                                        <div class="card-body p-2" id="income-list-{{ $payroll->id }}">
+                                            @foreach ($payroll->incomeItems as $item)
+                                                @php $rowId = 'income-' . $payroll->id . '-' . $loop->index . '-' . uniqid(); @endphp
+                                                <div class="row g-1 mb-2 align-items-center item-row"
+                                                    id="{{ $rowId }}">
+                                                    <div class="col-3">
+                                                        <select
+                                                            name="payrolls[{{ $payroll->id }}][income_items][{{ $loop->index }}][type]"
+                                                            class="form-select form-select-sm">
+                                                            @foreach (\App\Models\Payroll::$incomeTypes as $key => $label)
+                                                                <option value="{{ $key }}"
+                                                                    {{ $item->income_type == $key ? 'selected' : '' }}>
+                                                                    {{ $label }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="payrolls[{{ $payroll->id }}][income_items][{{ $loop->index }}][description]"
+                                                            value="{{ $item->description }}" placeholder="คำอธิบาย">
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <input type="number" step="0.01"
+                                                            class="form-control form-control-sm"
+                                                            name="payrolls[{{ $payroll->id }}][income_items][{{ $loop->index }}][amount]"
+                                                            value="{{ $item->amount }}" placeholder="จำนวนเงิน">
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="payrolls[{{ $payroll->id }}][income_items][{{ $loop->index }}][is_wht_3_percent]"
+                                                                value="1"
+                                                                {{ $item->is_wht_3_percent ? 'checked' : '' }}>
+                                                            <label class="form-check-label" style="font-size: 0.8rem;">หัก
+                                                                3%</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button type="button"
+                                                            class="btn btn-xs btn-outline-danger border-0"
+                                                            onclick="removeItem('{{ $rowId }}')">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </div>
+                                                    <input type="hidden"
+                                                        name="payrolls[{{ $payroll->id }}][income_items][{{ $loop->index }}][quantity]"
+                                                        value="{{ $item->quantity }}">
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                    {{-- Deductions --}}
+                                    <div class="card mb-3">
+                                        <div class="card-header d-flex justify-content-between align-items-center py-2">
+                                            <h6 class="mb-0 text-danger"><i class="fas fa-minus-circle me-1"></i>
+                                                รายการหัก</h6>
+                                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                                onclick="addDeductionItem({{ $payroll->id }})">
+                                                <i class="fas fa-plus"></i> เพิ่มรายการหักบริษัท
+                                            </button>
+                                        </div>
+                                        <div class="card-body p-2" id="deduction-list-{{ $payroll->id }}">
+
+                                            {{-- Group 1: Government --}}
+                                            <h6 class="fw-bold text-muted border-bottom pb-1 mb-2"
+                                                style="font-size: 0.85rem;">ส่วนของรัฐบาล & กองทุน (Government)</h6>
+                                            @php
+                                                $govDeductions = $payroll->deductionItems->filter(
+                                                    fn($i) => in_array($i->deduction_type, [
+                                                        'social_security',
+                                                        'tax',
+                                                        'wht_3_percent',
+                                                    ]),
+                                                );
+                                            @endphp
+                                            @foreach ($govDeductions as $item)
+                                                <div
+                                                    class="row g-1 mb-2 align-items-center bg-light p-1 rounded border-start border-3 border-info">
+                                                    <div class="col-8">
+                                                        <span
+                                                            class="fw-semibold text-dark">{{ $item->description }}</span>
+                                                    </div>
+                                                    <div class="col-4 text-end">
+                                                        <span
+                                                            class="text-danger fw-bold deduction-amount">-{{ number_format($item->amount, 2) }}</span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+
+                                            {{-- Group 2: Company --}}
+                                            <h6 class="fw-bold text-muted border-bottom pb-1 mb-2 mt-3"
+                                                style="font-size: 0.85rem;">ส่วนของบริษัท (Company) & มาสาย</h6>
+                                            @php
+                                                $compDeductions = $payroll->deductionItems->reject(
+                                                    fn($i) => in_array($i->deduction_type, [
+                                                        'social_security',
+                                                        'tax',
+                                                        'wht_3_percent',
+                                                        'late',
+                                                        'absence',
+                                                    ]),
+                                                );
+                                                $lateItem = $payroll->deductionItems
+                                                    ->where('deduction_type', 'late')
+                                                    ->first();
+                                            @endphp
+
+                                            {{-- Late Item Handling (Displayed but read-only here, edited via inputs) --}}
+                                            @if ($lateItem && $lateItem->amount > 0)
+                                                <div
+                                                    class="row g-1 mb-2 align-items-center bg-light p-1 rounded border-start border-3 border-warning">
+                                                    <div class="col-8">
+                                                        <span
+                                                            class="fw-semibold text-dark">{{ $lateItem->description }}</span>
+                                                    </div>
+                                                    <div class="col-4 text-end">
+                                                        <span
+                                                            class="text-danger fw-bold">-{{ number_format($lateItem->amount, 2) }}</span>
+                                                    </div>
+                                                </div>
+                                            @endif
+
+                                            @foreach ($compDeductions as $item)
+                                                @php $rowId = 'deduction-' . $payroll->id . '-' . $loop->index . '-' . uniqid(); @endphp
+                                                <div class="row g-1 mb-2 align-items-center item-row"
+                                                    id="{{ $rowId }}">
+                                                    <div class="col-3">
+                                                        <select
+                                                            name="payrolls[{{ $payroll->id }}][deduction_items][{{ $loop->index }}][type]"
+                                                            class="form-select form-select-sm">
+                                                            @foreach (\App\Models\Payroll::$deductionTypes as $key => $label)
+                                                                @if (!in_array($key, ['social_security', 'tax', 'late', 'wht_3_percent', 'absence']))
+                                                                    <option value="{{ $key }}"
+                                                                        {{ $item->deduction_type == $key ? 'selected' : '' }}>
+                                                                        {{ $label }}</option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            name="payrolls[{{ $payroll->id }}][deduction_items][{{ $loop->index }}][description]"
+                                                            value="{{ $item->description }}" placeholder="คำอธิบาย">
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <input type="number" step="0.01"
+                                                            class="form-control form-control-sm"
+                                                            name="payrolls[{{ $payroll->id }}][deduction_items][{{ $loop->index }}][amount]"
+                                                            value="{{ $item->amount }}" placeholder="จำนวนเงิน">
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button type="button"
+                                                            class="btn btn-xs btn-outline-danger border-0"
+                                                            onclick="removeItem('{{ $rowId }}')">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            @endforeach
         </div>
 
-        <div class="mt-3 text-muted small">
-            <i class="fas fa-info-circle me-1"></i>
-            หมายเหตุ: คอลัมน์ที่เพิ่มขึ้นมาใหม่ จะบันทึกทับรายการเดิมที่มี "ประเภท" และ "คำอธิบาย" ตรงกัน
-        </div>
-    </div>
-
-    <!-- Modal for Adding Column -->
-    <div class="modal fade" id="addColumnModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">เพิ่มคอลัมน์</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="col-group-type"> <!-- income or deduction -->
-                    <div class="mb-3">
-                        <label class="form-label">ประเภทรายการ</label>
-                        <select class="form-select" id="col-item-type">
-                            <!-- JS will populate -->
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">คำอธิบายเพิ่มเติม (ถ้ามี)</label>
-                        <input type="text" class="form-control" id="col-description" placeholder="เช่น โบนัสปีใหม่">
-                        <small class="text-muted">ใช้เพื่อแยกประเภทรายการเดียวกันออกจากกัน</small>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                    <button type="button" class="btn btn-primary" onclick="confirmAddColumn()">เพิ่มคอลัมน์</button>
-                </div>
+        {{-- Submit Block --}}
+        <div class="card mt-4">
+            <div class="card-body text-end">
+                <a href="{{ route('payroll.show', $period->id) }}" class="btn btn-secondary me-2">ยกเลิก</a>
+                <button type="submit" class="btn btn-primary btn-lg">บันทึกการแก้ไขทั้งหมด</button>
             </div>
         </div>
-    </div>
+    </form>
 @endsection
-
-@php
-    $existingIncomes = $period->payrolls
-        ->pluck('incomeItems')
-        ->flatten()
-        ->whereNotIn('income_type', [\App\Models\Payroll::INCOME_SALARY, \App\Models\Payroll::INCOME_OT])
-        ->unique(fn($item) => $item->income_type . '-' . $item->description)
-        ->map(
-            fn($item) => [
-                'type' => $item->income_type,
-                'description' => $item->description,
-            ],
-        )
-        ->values();
-
-    $existingDeductions = $period->payrolls
-        ->pluck('deductionItems')
-        ->flatten()
-        ->whereNotIn('deduction_type', [
-            \App\Models\Payroll::DEDUCTION_SOCIAL_SECURITY,
-            \App\Models\Payroll::DEDUCTION_TAX,
-        ])
-        ->unique(fn($item) => $item->deduction_type . '-' . $item->description)
-        ->map(
-            fn($item) => [
-                'type' => $item->deduction_type,
-                'description' => $item->description,
-            ],
-        )
-        ->values();
-
-    $payrollsData = $period->payrolls->map(function ($p) {
-        return [
-            'id' => $p->id,
-            'incomes' => $p->incomeItems,
-            'deductions' => $p->deductionItems,
-        ];
-    });
-@endphp
 
 @section('script')
     <script>
         const incomeTypes = @json(\App\Models\Payroll::$incomeTypes);
         const deductionTypes = @json(\App\Models\Payroll::$deductionTypes);
-        let colCounter = 0;
+        const updateUrl = "{{ route('payroll.bulk-update', $period->id) }}";
 
-        // Collect existing items to auto-create columns
-        const existingIncomes = @json($existingIncomes);
-        const existingDeductions = @json($existingDeductions);
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize existing columns
-            existingIncomes.forEach(item => {
-                addColumn('income', item.type, item.description);
-            });
-            existingDeductions.forEach(item => {
-                addColumn('deduction', item.type, item.description);
-            });
-
-            // Fill values for these columns
-            fillExistingValues();
-        });
-
-        function showAddColumnModal(groupType) {
-            document.getElementById('col-group-type').value = groupType;
-            const select = document.getElementById('col-item-type');
-            select.innerHTML = '';
-
-            const types = groupType === 'income' ? incomeTypes : deductionTypes;
-
+        // Helper to generate options
+        function getOptions(types, exclude = []) {
+            let html = '';
             for (const [key, label] of Object.entries(types)) {
-                if (groupType === 'deduction' && (key === 'social_security' || key === 'tax')) continue;
-                if (groupType === 'income' && key === 'salary') continue;
-
-                const option = document.createElement('option');
-                option.value = key;
-                option.text = label;
-                select.appendChild(option);
+                if (!exclude.includes(key)) {
+                    html += `<option value="${key}">${label}</option>`;
+                }
             }
-
-            updateDescriptionPlaceholder();
-            select.onchange = updateDescriptionPlaceholder;
-
-            new bootstrap.Modal(document.getElementById('addColumnModal')).show();
+            return html;
         }
 
-        function updateDescriptionPlaceholder() {
-            const select = document.getElementById('col-item-type');
-            const text = select.options[select.selectedIndex].text;
-            document.getElementById('col-description').value = text;
-        }
+        function addIncomeItem(payrollId) {
+            const container = document.getElementById(`income-list-${payrollId}`);
+            const index = Date.now() + Math.floor(Math.random() * 1000);
+            const rowId = `income-${payrollId}-${index}`;
 
-        function confirmAddColumn() {
-            const groupType = document.getElementById('col-group-type').value;
-            const typeKey = document.getElementById('col-item-type').value;
-            const description = document.getElementById('col-description').value || document.getElementById('col-item-type')
-                .options[document.getElementById('col-item-type').selectedIndex].text;
-
-            addColumn(groupType, typeKey, description);
-            bootstrap.Modal.getInstance(document.getElementById('addColumnModal')).hide();
-        }
-
-        function addColumn(groupType, typeKey, description) {
-            const uuid = Date.now() + '_' + colCounter++;
-
-            // 1. Add Definition Hidden Inputs
-            const defContainer = document.getElementById('dynamic-cols-definitions');
-            defContainer.innerHTML += `
-            <input type="hidden" name="cols[${groupType}][${uuid}][type]" value="${typeKey}" data-uuid="${uuid}" data-type="${typeKey}" data-desc="${description}" class="col-def-${groupType}">
-            <input type="hidden" name="cols[${groupType}][${uuid}][description]" value="${description}">
+            const html = `
+            <div class="row g-1 mb-2 align-items-center item-row" id="${rowId}">
+                <div class="col-3">
+                    <select name="payrolls[${payrollId}][income_items][${index}][type]" class="form-select form-select-sm">
+                        ${getOptions(incomeTypes)}
+                    </select>
+                </div>
+                <div class="col-4">
+                    <input type="text" class="form-control form-control-sm"
+                        name="payrolls[${payrollId}][income_items][${index}][description]"
+                        placeholder="คำอธิบาย">
+                </div>
+                <div class="col-2">
+                    <input type="number" step="0.01" class="form-control form-control-sm"
+                        name="payrolls[${payrollId}][income_items][${index}][amount]"
+                        placeholder="จำนวนเงิน">
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                            name="payrolls[${payrollId}][income_items][${index}][is_wht_3_percent]"
+                            value="1">
+                        <label class="form-check-label" style="font-size: 0.8rem;">หัก 3%</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-xs btn-outline-danger border-0" onclick="removeItem('${rowId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="payrolls[${payrollId}][income_items][${index}][quantity]" value="1">
+            </div>
         `;
-
-            // 2. Add Header Column
-            const headerRow = document.getElementById('header-row');
-            const marker = document.getElementById('marker-dynamic-start');
-
-            const newTh = document.createElement('th');
-            newTh.className = `text-end dynamic-col-header ${groupType}`;
-            newTh.style.minWidth = "120px";
-            newTh.innerHTML = `
-            ${description}
-            <span class="remove-col-btn" onclick="removeColumn(this, '${uuid}')">&times;</span>
-        `;
-
-            marker.parentElement.insertBefore(newTh, marker.nextSibling);
-
-            // 3. Add Input Cells to Body Rows
-            const rows = document.querySelectorAll('#bulk-table tbody tr');
-            rows.forEach(row => {
-                const newTd = document.createElement('td');
-                newTd.className = `dynamic-col-${uuid}`;
-                // We set a data attribute to help with value filling
-                newTd.innerHTML = `
-                <input type="number" step="0.01" class="form-control input-number dynamic-input"
-                       name="payrolls[${row.dataset.payrollId}][extra_${groupType}][${uuid}]"
-                       data-payroll-id="${row.dataset.payrollId}"
-                       data-group="${groupType}"
-                       data-type="${typeKey}"
-                       data-desc="${description}"
-                       placeholder="0.00">
-            `;
-
-                const ssoCell = row.querySelector('.cell-sso');
-                row.insertBefore(newTd, ssoCell);
-            });
+            container.insertAdjacentHTML('beforeend', html);
         }
 
-        function fillExistingValues() {
-            // This function iterates over all payrolls (we need the data in JS)
-            // OR we can just use the DOM since we built the inputs.
-            // Problem: We need the VALUES of these items for each payroll.
-            // We can pass the full data structure to JS.
+        function addDeductionItem(payrollId) {
+            const container = document.getElementById(`deduction-list-${payrollId}`);
+            const index = Date.now() + Math.floor(Math.random() * 1000);
+            const rowId = `deduction-${payrollId}-${index}`;
 
-            const payrollsData = @json($payrollsData);
+            const html = `
+            <div class="row g-1 mb-2 align-items-center item-row" id="${rowId}">
+                <div class="col-3">
+                    <select name="payrolls[${payrollId}][deduction_items][${index}][type]" class="form-select form-select-sm">
+                        ${getOptions(deductionTypes, ['social_security', 'tax', 'late', 'wht_3_percent', 'absence'])}
+                    </select>
+                </div>
+                <div class="col-5">
+                    <input type="text" class="form-control form-control-sm"
+                        name="payrolls[${payrollId}][deduction_items][${index}][description]"
+                        placeholder="คำอธิบาย">
+                </div>
+                <div class="col-2">
+                    <input type="number" step="0.01" class="form-control form-control-sm"
+                        name="payrolls[${payrollId}][deduction_items][${index}][amount]"
+                        placeholder="จำนวนเงิน">
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-xs btn-outline-danger border-0" onclick="removeItem('${rowId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+            container.insertAdjacentHTML('beforeend', html);
+        }
 
-            payrollsData.forEach(payroll => {
-                // Fill Incomes
-                payroll.incomes.forEach(item => {
-                    // Find input matching payrollID, Group=income, Type, Desc
-                    // Since we don't know the UUID, we must find the input by data attributes
-                    const input = document.querySelector(
-                        `input[data-payroll-id="${payroll.id}"][data-group="income"][data-type="${item.income_type}"][data-desc="${item.description}"]`
-                    );
-                    if (input) {
-                        input.value = item.amount;
-                    }
-                });
+        function removeItem(rowId) {
+            document.getElementById(rowId).remove();
+        }
 
-                // Fill Deductions
-                payroll.deductions.forEach(item => {
-                    const input = document.querySelector(
-                        `input[data-payroll-id="${payroll.id}"][data-group="deduction"][data-type="${item.deduction_type}"][data-desc="${item.description}"]`
-                        );
-                    if (input) {
-                        // If Late Deduction, use rate (minutes), else use amount
-                        if (item.deduction_type === 'late' && item.rate > 0) {
-                            input.value = item.rate;
-                        } else {
-                            input.value = item.amount;
+        // Individual Save Function
+        function saveIndividual(payrollId) {
+            // Collect Inputs strictly for this ID
+            // The simple way: select input[name^="payrolls[123]"]
+            const container = document.getElementById(`collapse${payrollId}`);
+            const inputs = container.querySelectorAll('input, select, textarea');
+
+            const formData = new FormData();
+            formData.append('_token', '{{ csrf_token() }}');
+
+            let hasData = false;
+            inputs.forEach(input => {
+                if (input.name && input.name.startsWith(`payrolls[${payrollId}]`)) {
+                    if (input.type === 'checkbox') {
+                        if (input.checked) {
+                            formData.append(input.name, input.value);
                         }
+                    } else if (input.type === 'radio') {
+                        if (input.checked) {
+                            formData.append(input.name, input.value);
+                        }
+                    } else {
+                        formData.append(input.name, input.value);
                     }
-                });
+                    hasData = true;
+                }
             });
-        }
 
-        function removeColumn(btn, uuid) {
-            if (!confirm('ต้องการลบคอลัมน์นี้หรือไม่? ข้อมูลที่กรอกไว้ในคอลัมน์นี้จะหายไป')) return;
+            if (!hasData) return;
 
-            // Remove Definition
-            const defs = document.querySelectorAll(`input[name*="[${uuid}]"]`);
-            defs.forEach(el => el.remove());
+            // Show Loading (Optional, maybe spinner on button)
+            const btn = event.target.closest('button');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
 
-            // Remove TDs
-            const tds = document.querySelectorAll(`.dynamic-col-${uuid}`);
-            tds.forEach(td => td.remove());
-
-            // Remove TH
-            const th = btn.closest('th');
-            th.remove();
+            fetch(updateUrl, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        toastr.success('บันทึกข้อมูลเรียบร้อยแล้ว');
+                        // Optional: Update Badge UI if response contained new totals
+                    } else {
+                        toastr.error(data.message || 'เกิดข้อผิดพลาด');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    toastr.error('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                });
         }
     </script>
 @endsection

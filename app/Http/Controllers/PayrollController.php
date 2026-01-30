@@ -213,17 +213,25 @@ class PayrollController extends Controller
             $payroll->incomeItems()->delete();
             $payroll->deductionItems()->delete();
 
-            // เพิ่ม income items ใหม่
+            // เพิ่ม income items ใหม่ และอัปเดต base_salary
             if ($request->has('income_items')) {
                 foreach ($request->income_items as $item) {
                     if (!empty($item['amount']) && $item['amount'] > 0) {
+                        $is_wht = isset($item['is_wht_3_percent']);
                         $payroll->AddIncomeItem(
                             $item['type'],
                             $item['description'],
                             $item['amount'],
                             $item['quantity'] ?? 1,
-                            $item['rate'] ?? 0
+                            $item['rate'] ?? 0,
+                            $is_wht // WHT Flag
                         );
+
+                        // Sync base_salary if this is the salary item
+                        if ($item['type'] === Payroll::INCOME_SALARY) {
+                            $payroll->base_salary = $item['amount'];
+                            $payroll->save();
+                        }
                     }
                 }
             }
@@ -233,10 +241,12 @@ class PayrollController extends Controller
             $payroll->CalculateTotals();
 
             // รายการหักที่คำนวณอัตโนมัติ - ข้ามไม่ต้องบันทึกจากฟอร์ม
+            // Note: 'wht_3_percent' is also auto now.
             $auto_deduction_types = [
                 Payroll::DEDUCTION_SOCIAL_SECURITY,
                 Payroll::DEDUCTION_TAX,
                 Payroll::DEDUCTION_LATE,
+                'wht_3_percent'
             ];
 
             // เพิ่ม deduction items ใหม่ (เฉพาะที่ไม่ใช่ auto)
@@ -271,19 +281,12 @@ class PayrollController extends Controller
                 }
             }
 
-            // คำนวณ totals และภาษี
+            // คำนวณ totals และภาษี (รวม WHT และ PIT)
             $payroll->CalculateTotals();
 
             if ($payroll->calc_tax) {
-                $tax = $payroll->CalculateTax();
-                if ($tax > 0) {
-                    $payroll->AddDeductionItem(
-                        Payroll::DEDUCTION_TAX,
-                        'ภาษี ' . $payroll->tax_rate . '%',
-                        $tax,
-                        $payroll->tax_rate
-                    );
-                }
+                // CalculateTax creates items internally
+                $payroll->CalculateTax();
                 $payroll->CalculateTotals();
             }
 
@@ -295,7 +298,23 @@ class PayrollController extends Controller
                     $payroll->AddDeductionItem(
                         Payroll::DEDUCTION_LATE,
                         'มาสาย ' . $late_minutes . ' นาที',
-                        $late_amount
+                        $late_amount,
+                        $late_minutes // Save minutes as rate
+                    );
+                }
+                $payroll->CalculateTotals();
+            }
+
+            // คำนวณหักขาดงาน
+            $absence_days = $request->input('absence_days', 0);
+            if ($absence_days > 0) {
+                $absence_amount = $payroll->CalculateAbsenceDeduction($absence_days);
+                if ($absence_amount > 0) {
+                    $payroll->AddDeductionItem(
+                        Payroll::DEDUCTION_ABSENCE,
+                        'ขาดงาน ' . $absence_days . ' วัน',
+                        $absence_amount,
+                        $absence_days // Save days as rate
                     );
                 }
                 $payroll->CalculateTotals();
@@ -849,7 +868,7 @@ class PayrollController extends Controller
     }
 
     /**
-     * Process Bulk Update
+     * Process Bulk Update (New Design: Nested Items)
      */
     public function bulkUpdate(Request $request, $id)
     {
@@ -859,91 +878,249 @@ class PayrollController extends Controller
         }
 
         $items = $request->input('payrolls', []);
-        $dynamic_cols = $request->input('cols', []); // Dynamic Columns Definitions
         $count = 0;
 
         DB::beginTransaction();
         try {
             foreach ($items as $payroll_id => $data) {
+                // Find existing payroll record
                 $payroll = Payroll::where('payroll_period_id', $id)->find($payroll_id);
-                if ($payroll) {
-                    $new_base_salary = $this->ParseNumber($data['base_salary'] ?? 0);
-                    $payroll->base_salary = $new_base_salary;
+                if (!$payroll) continue;
 
-                    // Sync Salary Income Item
-                    // We remove the old one (if essentially different?) or just consistency: delete & re-add logic is safer for single item types.
-                    // But maybe we should only update if exists? Re-adding is simpler.
-                    $payroll->incomeItems()->where('income_type', Payroll::INCOME_SALARY)->delete();
-                    if ($new_base_salary > 0) {
-                        $payroll->AddIncomeItem(Payroll::INCOME_SALARY, 'เงินเดือน', $new_base_salary);
-                    }
+                // 1. Update Basic Settings
+                $payroll->base_salary = $this->ParseNumber($data['base_salary'] ?? 0);
+                $payroll->calc_social_security = isset($data['calc_social_security']);
+                $payroll->calc_tax = isset($data['calc_tax']);
+                $payroll->save();
 
-                    // Update OT (Income Item)
-                    $ot_amount = $this->ParseNumber($data['ot'] ?? 0);
-                    $payroll->incomeItems()->where('income_type', Payroll::INCOME_OT)->delete();
-                    if ($ot_amount > 0) {
-                        $payroll->AddIncomeItem(Payroll::INCOME_OT, 'ค่าล่วงเวลา', $ot_amount);
-                    }
+                // 2. Wipe Old Items
+                $payroll->incomeItems()->delete();
+                $payroll->deductionItems()->delete();
 
-                    // Update Settings
-                    $payroll->calc_social_security = isset($data['calc_social_security']);
-                    $payroll->calc_tax = isset($data['calc_tax']);
-
-                    $payroll->save(); // Save basic info first
-
-                    // Process Dynamic Income Columns
-                    if (isset($dynamic_cols['income'])) {
-                        foreach ($dynamic_cols['income'] as $uuid => $colDef) {
-                            $amount = $this->ParseNumber($data['extra_income'][$uuid] ?? 0);
-
-                            // Always remove existing item with same Type AND Description to prevent duplicates
-                            // and ensure the latest value is set.
-                            $payroll->incomeItems()
-                                ->where('income_type', $colDef['type'])
-                                ->where('description', $colDef['description'])
-                                ->delete();
-
-                            if ($amount > 0) {
-                                $payroll->AddIncomeItem($colDef['type'], $colDef['description'], $amount);
-                            }
+                // 3. Process Income Items
+                if (isset($data['income_items']) && is_array($data['income_items'])) {
+                    foreach ($data['income_items'] as $item) {
+                        $amount = $this->ParseNumber($item['amount'] ?? 0);
+                        if ($amount > 0) {
+                            $is_wht = isset($item['is_wht_3_percent']);
+                            $payroll->AddIncomeItem(
+                                $item['type'],
+                                $item['description'] ?? '',
+                                $amount,
+                                1, // Quantity default
+                                0, // Rate default
+                                $is_wht // WHT 3% Flag
+                            );
                         }
                     }
+                }
 
-                    // Process Dynamic Deduction Columns
-                    if (isset($dynamic_cols['deduction'])) {
-                        foreach ($dynamic_cols['deduction'] as $uuid => $colDef) {
-                            $input_val = $this->ParseNumber($data['extra_deduction'][$uuid] ?? 0);
+                // 4. Ensure Base Salary Sync
+                if ($payroll->base_salary > 0) {
+                    $hasSalaryItem = $payroll->incomeItems()->where('income_type', Payroll::INCOME_SALARY)->exists();
+                    if (!$hasSalaryItem) {
+                        // Salary is usually NOT WHT 3%
+                        $payroll->AddIncomeItem(Payroll::INCOME_SALARY, 'เงินเดือน', $payroll->base_salary);
+                    }
+                }
 
-                            // Remove existing
-                            $payroll->deductionItems()
-                                ->where('deduction_type', $colDef['type'])
-                                ->where('description', $colDef['description'])
-                                ->delete();
+                // 5. Update Total Income for Calculations
+                // Call CalculateTotals to ensure incomeItems sum is up to date before Tax/SSO
+                $payroll->CalculateTotals();
 
-                            if ($input_val > 0) {
-                                if ($colDef['type'] === \App\Models\Payroll::DEDUCTION_LATE) {
-                                    $amount = $payroll->CalculateLateDeduction($input_val);
-                                    $payroll->AddDeductionItem($colDef['type'], $colDef['description'], $amount, $input_val);
-                                } else {
-                                    $payroll->AddDeductionItem($colDef['type'], $colDef['description'], $input_val);
-                                }
-                            }
+                // 6. Process Manual Deduction Items
+                if (isset($data['deduction_items']) && is_array($data['deduction_items'])) {
+                    foreach ($data['deduction_items'] as $item) {
+                        // Skip auto types
+                        if (in_array($item['type'], [Payroll::DEDUCTION_SOCIAL_SECURITY, Payroll::DEDUCTION_TAX, Payroll::DEDUCTION_LATE, 'wht_3_percent'])) continue;
+
+                        $amount = $this->ParseNumber($item['amount'] ?? 0);
+                        if ($amount > 0) {
+                            $payroll->AddDeductionItem(
+                                $item['type'],
+                                $item['description'] ?? '',
+                                $amount
+                            );
                         }
                     }
+                }
 
+                // 7. Calculate Auto Deductions
+                // SSO (Model only returns amount, we must add item)
+                if ($payroll->calc_social_security) {
+                    // Ensure totals are fresh? CalculateTotals called above.
+                    $ss = $payroll->CalculateSocialSecurity();
+                    if ($ss > 0) {
+                        $payroll->AddDeductionItem(Payroll::DEDUCTION_SOCIAL_SECURITY, 'ประกันสังคม ' . $payroll->social_security_rate . '%', $ss, $payroll->social_security_rate);
+                    }
+                }
+
+                // Tax (Model creates items internally for both PIT and WHT)
+                // We just call it.
+                if ($payroll->calc_tax) {
+                    // Note: CalculateTax inside Model now relies on incomeItems having is_wht_3_percent set
+                    // And it creates deduction items.
+                    $payroll->CalculateTax();
+                }
+
+                // Late (Model only returns amount)
+                $late_minutes = isset($data['late_minutes']) ? (int)$data['late_minutes'] : 0;
+                if ($late_minutes > 0) {
+                    $late_amt = $payroll->CalculateLateDeduction($late_minutes);
+                    if ($late_amt > 0) {
+                        $payroll->AddDeductionItem(Payroll::DEDUCTION_LATE, "มาสาย $late_minutes นาที", $late_amt, $late_minutes);
+                    }
+                }
+
+                // Absence (Job Abandonment)
+                $absence_days = isset($data['absence_days']) ? (float)$data['absence_days'] : 0;
+                if ($absence_days > 0) {
+                    $absence_amt = $payroll->CalculateAbsenceDeduction($absence_days);
+                    if ($absence_amt > 0) {
+                        $payroll->AddDeductionItem(Payroll::DEDUCTION_ABSENCE, "ขาดงาน $absence_days วัน", $absence_amt, $absence_days);
+                    }
+                }
+
+                // Final Totals
+                $payroll->CalculateTotals();
+                $count++;
+            }
+
+            $period->CalculateTotals();
+            DB::commit();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => "บันทึกข้อมูลเรียบร้อย ($count รายการ)",
+                    'count' => $count
+                ]);
+            }
+
+            return redirect()->back()->with('success', "บันทึกข้อมูลเรียบร้อย ($count รายการ)");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'เกิดข้อผิดพลาด: ' . $e->getMessage()
+                ], 500);
+            }
+            return redirect()->back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+        }
+    }
+    /**
+     * Sync Attendance Data (Late & Absence) from Recordtime
+     */
+    public function syncAttendance($id)
+    {
+        $period = PayrollPeriod::findOrFail($id);
+
+        if (!$period->CanEdit()) {
+            return back()->with('error', 'ไม่สามารถแก้ไขงวดนี้ได้');
+        }
+
+        // Calculate Attendance Cycle: 26th of Prev Month - 25th of Current Month
+        $ad_year = $period->year - 543;
+        $month = $period->month;
+
+        // Current Month 25th
+        $attendance_end_date = sprintf('%04d-%02d-25', $ad_year, $month);
+
+        // Previous Month 26th
+        if ($month == 1) {
+            $prev_month = 12;
+            $prev_year = $ad_year - 1;
+        } else {
+            $prev_month = $month - 1;
+            $prev_year = $ad_year;
+        }
+        $attendance_start_date = sprintf('%04d-%02d-26', $prev_year, $prev_month);
+
+        DB::beginTransaction();
+        try {
+            $payrolls = $period->payrolls;
+            $updated_count = 0;
+
+            foreach ($payrolls as $payroll) {
+                // Find User
+                $user = $payroll->user;
+                if (!$user) continue;
+
+                // Query Recordtime using Custom Date Range
+                // Late Minutes: Sum late_time
+                $late_minutes = \App\Models\Recordtime::where('user_id', $user->id)
+                    ->whereBetween('date', [$attendance_start_date, $attendance_end_date])
+                    ->sum('late_time');
+
+                // Absence Days: Count status 13
+                $absence_days = \App\Models\Recordtime::where('user_id', $user->id)
+                    ->whereBetween('date', [$attendance_start_date, $attendance_end_date])
+                    ->where('status', 13) // Missing Work
+                    ->count();
+
+                $updated = false;
+
+                // Update Late
+                // Update if Late minutes exist OR if deduction exists (to potentially remove it)
+                if ($late_minutes > 0 || $payroll->deductionItems()->where('deduction_type', Payroll::DEDUCTION_LATE)->exists()) {
+                    // Update Item
+                    if ($late_minutes > 0) {
+                        // ... logic remains same ...
+                        $late_amount = $payroll->CalculateLateDeduction($late_minutes);
+                        if ($late_amount > 0) {
+                            $payroll->AddDeductionItem(
+                                Payroll::DEDUCTION_LATE,
+                                'มาสาย ' . $late_minutes . ' นาที',
+                                $late_amount,
+                                $late_minutes
+                            );
+                        }
+                    } else {
+                        // Remove if 0
+                        $payroll->deductionItems()->where('deduction_type', Payroll::DEDUCTION_LATE)->delete();
+                    }
+                    $updated = true;
+                }
+
+                // Update Absence
+                if ($absence_days > 0 || $payroll->deductionItems()->where('deduction_type', Payroll::DEDUCTION_ABSENCE)->exists()) {
+                    // Update Item
+                    if ($absence_days > 0) {
+                        $absence_amount = $payroll->CalculateAbsenceDeduction($absence_days);
+                        if ($absence_amount > 0) {
+                            $payroll->AddDeductionItem(
+                                Payroll::DEDUCTION_ABSENCE,
+                                'ขาดงาน ' . $absence_days . ' วัน',
+                                $absence_amount,
+                                $absence_days
+                            );
+                        }
+                    } else {
+                        // Remove if 0
+                        $payroll->deductionItems()->where('deduction_type', Payroll::DEDUCTION_ABSENCE)->delete();
+                    }
+                    $updated = true;
+                }
+
+                // Recalculate if changed
+                if ($updated) {
                     $payroll->CalculateTotals();
-                    $count++;
+                    $updated_count++;
                 }
             }
 
             $period->CalculateTotals();
             DB::commit();
 
-            return redirect()->route('payroll.show', $period->id)
-                ->with('success', "บันทึกข้อมูลเรียบร้อยแล้ว ({$count} รายการ)");
+            // Format dates for message (convert to Thai Date format if needed, or just d/m/Y)
+            $start_str = date('d/m/Y', strtotime($attendance_start_date));
+            $end_str = date('d/m/Y', strtotime($attendance_end_date));
+
+            return back()->with('success', "ซิงค์ข้อมูลเวลาเรียบร้อยแล้ว (รอบ {$start_str} - {$end_str}) อัปเดต {$updated_count} รายการ");
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+            return back()->with('error', 'เกิดข้อผิดพลาดในการซิงค์: ' . $e->getMessage());
         }
     }
 }

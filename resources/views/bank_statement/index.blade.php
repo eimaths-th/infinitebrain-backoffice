@@ -13,6 +13,9 @@
                         <a href="{{ route('bank-statement.import') }}" class="btn btn-success">
                             <i class="feather icon-upload"></i> นำเข้า Excel
                         </a>
+                        <a href="{{ route('bank-statement.sync') }}" class="btn btn-info text-white">
+                            <i class="feather icon-refresh-cw"></i> ดึงจากเงินเดือน
+                        </a>
                     </div>
                 </div>
                 <div class="card-body">
