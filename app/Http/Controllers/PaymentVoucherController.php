@@ -553,22 +553,27 @@ class PaymentVoucherController extends Controller
     /**
      * รายการรอตรวจสอบ (สำหรับ Approver)
      */
+    /**
+     * รายการรอตรวจสอบ (สำหรับ Approver) -> จริงๆ คือรายการรออนุมัติ (ที่ Review แล้ว)
+     */
     public function pendingList()
     {
-        $vouchers = PaymentVoucher::where('status', PaymentVoucher::STATUS_PENDING)
-            ->orderBy('created_at', 'asc')
+        // แก้ไข: หน้า Pending (รออนุมัติ) ต้องดึงข้อมูลที่สถานะเป็น 'reviewed' (ตรวจสอบแล้ว)
+        $vouchers = PaymentVoucher::where('status', PaymentVoucher::STATUS_REVIEWED)
+            ->orderBy('reviewed_at', 'asc') // เรียงตามวันที่ตรวจสอบล่าสุด
             ->paginate(20);
 
         return view('payment_voucher.pending', compact('vouchers'));
     }
 
     /**
-     * รายการรอ Review (สำหรับ Reviewer)
+     * รายการรอ Review (สำหรับ Reviewer) -> จริงๆ คือรายการรอตรวจสอบ
      */
     public function approvedList()
     {
-        $vouchers = PaymentVoucher::where('status', PaymentVoucher::STATUS_APPROVED)
-            ->orderBy('approved_at', 'asc')
+        // แก้ไข: หน้า Approved (รอตรวจสอบ/Review) ต้องดึงข้อมูลที่สถานะเป็น 'pending' (รอตรวจสอบ)
+        $vouchers = PaymentVoucher::where('status', PaymentVoucher::STATUS_PENDING)
+            ->orderBy('created_at', 'asc')
             ->paginate(20);
 
         return view('payment_voucher.approved', compact('vouchers'));

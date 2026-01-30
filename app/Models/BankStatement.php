@@ -29,6 +29,7 @@ class BankStatement extends Model
         'total_out',
         'remark',
         'created_by',
+        'payroll_id',
     ];
 
     protected $casts = [
@@ -44,6 +45,11 @@ class BankStatement extends Model
         'total_in' => 'decimal:2',
         'total_out' => 'decimal:2',
     ];
+
+    public function payroll()
+    {
+        return $this->belongsTo(Payroll::class);
+    }
 
     public function creator()
     {

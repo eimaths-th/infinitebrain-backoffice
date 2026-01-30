@@ -104,7 +104,21 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     Route::get('/report-reciept-student/{id}', [StdlogController::class, 'reportRecieptStdShow'])->name('reportRecieptStdShow');
 
     // Payment Voucher Routes (ใบสำคัญจ่าย)
+    Route::get('/debug-attendance', function () {
+        $start_date = '2025-12-26';
+        $end_date = '2026-01-25';
+        $user_id = 16;
+        $records = \App\Models\Recordtime::where('user_id', $user_id)
+            ->whereBetween('date', [$start_date, $end_date])
+            ->where('late_time', '>', 0)
+            ->orderBy('date')
+            ->get(['date', 'late_time', 'explain']);
 
+        return [
+            'records' => $records,
+            'sum' => $records->sum('late_time')
+        ];
+    });
 });
 
 Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')->group(function () {
@@ -155,6 +169,8 @@ Route::middleware(['auth'])->prefix('bank-statement')->name('bank-statement.')->
     Route::post('/store', [App\Http\Controllers\BankStatementController::class, 'store'])->name('store');
     Route::get('/import', [App\Http\Controllers\BankStatementController::class, 'showImport'])->name('import');
     Route::post('/import', [App\Http\Controllers\BankStatementController::class, 'import'])->name('import.process');
+    Route::get('/sync', [App\Http\Controllers\BankStatementController::class, 'showSync'])->name('sync');
+    Route::post('/sync', [App\Http\Controllers\BankStatementController::class, 'syncPayroll'])->name('sync.process');
     Route::delete('/{id}', [App\Http\Controllers\BankStatementController::class, 'destroy'])->name('destroy');
 });
 
@@ -189,6 +205,8 @@ Route::middleware(['auth'])->prefix('payroll')->name('payroll.')->group(function
     // Bulk Edit
     Route::get('/{id}/bulk-edit', [PayrollController::class, 'bulkEdit'])->name('bulk-edit');
     Route::post('/{id}/bulk-update', [PayrollController::class, 'bulkUpdate'])->name('bulk-update');
+    // Sync Attendance
+    Route::post('/{id}/sync-attendance', [PayrollController::class, 'syncAttendance'])->name('sync-attendance');
 });
 
 // Role & Permission Management (super-admin only)
@@ -595,7 +613,22 @@ Route::post('/comment/upload/delete', [CommentController::class, 'fileDestroy'])
 Route::delete('/comment/destroy/{id}', [CommentController::class, 'destroy'])->name('comment.destroy');
 Route::delete('/comment/destroy_all', [CommentController::class, 'destroy_all'])->name('comment.destroy_all');
 
-Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
-Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
 Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
 Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+
+// Temporary Debug Route
+Route::get('/debug-attendance', function () {
+    $start_date = '2025-12-26';
+    $end_date = '2026-01-25';
+    $user_id = 16;
+    $records = \App\Models\Recordtime::where('user_id', $user_id)
+        ->whereBetween('date', [$start_date, $end_date])
+        ->where('late_time', '>', 0)
+        ->orderBy('date')
+        ->get(['date', 'late_time', 'explain']);
+
+    return [
+        'records' => $records,
+        'sum' => $records->sum('late_time')
+    ];
+});

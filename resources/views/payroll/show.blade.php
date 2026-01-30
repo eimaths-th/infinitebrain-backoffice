@@ -115,6 +115,14 @@
                         <i class="fas fa-file-excel me-1"></i> Import Excel
                     </a>
 
+                    <form action="{{ route('payroll.sync-attendance', $period->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-info"
+                            onclick="return confirm('ยืนยันการดึงข้อมูลเวลาเข้า-ออกงาน?')">
+                            <i class="fas fa-clock me-1"></i> Sync Attendance
+                        </button>
+                    </form>
+
                     <a href="{{ route('payroll.bulk-edit', $period->id) }}" class="btn btn-warning text-dark">
                         <i class="fas fa-edit me-1"></i> แก้ไขหลายคน (Bulk Edit)
                     </a>
