@@ -1638,7 +1638,7 @@ class ReceiptSchoolController extends Controller
     public function store(Request $request)
     {
 
-        dd( $request->all());
+        // dd( $request->all());
         $payment_type = $request->payment_type;
 
         $validator =  Validator::make(
