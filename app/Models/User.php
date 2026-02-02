@@ -89,6 +89,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'is_disabled' => 'boolean',
         'disabled_at' => 'date',
+        // Payroll date fields
+        'birth_date' => 'date',
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'base_salary' => 'decimal:2',
     ];
 
     public function scopeActive($query)
