@@ -135,10 +135,12 @@
                     <div class="fade modal bd-example-modal-lg" tabindex="-1" role="dialog"
                         aria-labelledby="myLargeModalLabel" aria-hidden="true" id="EditUserModal">
                         <div class="modal-dialog modal-lg" role="document">
-                            <form class="form" action="" method="POST">
+                            <form class="form" id="EditUserForm" action="" method="POST">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Users Data</h5>
+                                        <h5 class="modal-title" id="exampleModalLongTitle">
+                                            <i class="fa fa-user-circle me-2"></i>แก้ไขข้อมูลส่วนตัว
+                                        </h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close">
                                         </button>
@@ -154,40 +156,159 @@
                                         </div>
                                         <div class="alert alert-success alert-dismissible fade show" role="alert"
                                             style="display: none;">
-
                                             <button type="button" class="btn-close" data-dismiss="alert"
                                                 aria-label="Close">
                                                 <span aria-hidden="true"></span>
                                             </button>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="Name">Name:</label>
-                                            <input type="text" class="form-control" name="name" id="EdituName"
-                                                value="{{ Auth::user()->name }}">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Name">Email:</label>
-                                            <input type="text" class="form-control" name="email" id="EdituEmail"
-                                                value="{{ Auth::user()->email }}">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Name">Password:</label>
-                                            <input type="password" class="form-control" name="password" required
-                                                autocomplete="new-password" id="EdituPassword">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Name">Confirm Password:</label>
-                                            <input type="password" class="form-control" name="password_confirmation"
-                                                id="EdituPasswordC" required autocomplete="new-password">
+
+                                        <!-- Tabs -->
+                                        <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link active" id="account-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#account-pane" type="button" role="tab"
+                                                    aria-controls="account-pane" aria-selected="true">
+                                                    <i class="fa fa-key me-1"></i>ข้อมูลบัญชี
+                                                </button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="personal-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#personal-pane" type="button" role="tab"
+                                                    aria-controls="personal-pane" aria-selected="false">
+                                                    <i class="fa fa-id-card me-1"></i>ข้อมูลส่วนตัว
+                                                </button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="bank-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#bank-pane" type="button" role="tab"
+                                                    aria-controls="bank-pane" aria-selected="false">
+                                                    <i class="fa fa-university me-1"></i>ข้อมูลธนาคาร
+                                                </button>
+                                            </li>
+                                        </ul>
+
+                                        <div class="tab-content pt-3" id="profileTabsContent">
+                                            <!-- Account Tab -->
+                                            <div class="tab-pane fade show active" id="account-pane" role="tabpanel"
+                                                aria-labelledby="account-tab">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="EdituName" class="form-label">ชื่อ-นามสกุล <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control" name="name"
+                                                            id="EdituName" value="{{ Auth::user()->name }}" required>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="EdituEmail" class="form-label">Email <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="email" class="form-control" name="email"
+                                                            id="EdituEmail" value="{{ Auth::user()->email }}"
+                                                            required>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="EdituPassword" class="form-label">รหัสผ่านใหม่
+                                                            <small
+                                                                class="text-muted">(เว้นว่างหากไม่เปลี่ยน)</small></label>
+                                                        <input type="password" class="form-control" name="password"
+                                                            id="EdituPassword" autocomplete="new-password">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="EdituPasswordC"
+                                                            class="form-label">ยืนยันรหัสผ่าน</label>
+                                                        <input type="password" class="form-control"
+                                                            name="password_confirmation" id="EdituPasswordC"
+                                                            autocomplete="new-password">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Personal Tab -->
+                                            <div class="tab-pane fade" id="personal-pane" role="tabpanel"
+                                                aria-labelledby="personal-tab">
+                                                <div class="row">
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="EdituTitlePrefix"
+                                                            class="form-label">คำนำหน้า</label>
+                                                        <select class="form-control" name="title_prefix"
+                                                            id="EdituTitlePrefix">
+                                                            <option value="">-- เลือก --</option>
+                                                            @foreach (\App\Models\User::TITLE_PREFIXES as $key => $label)
+                                                                <option value="{{ $key }}">
+                                                                    {{ $label }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="EdituNickname" class="form-label">ชื่อเล่น</label>
+                                                        <input type="text" class="form-control" name="nickname"
+                                                            id="EdituNickname">
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="EdituGender" class="form-label">เพศ</label>
+                                                        <select class="form-control" name="gender" id="EdituGender">
+                                                            <option value="">-- เลือก --</option>
+                                                            <option value="male">ชาย</option>
+                                                            <option value="female">หญิง</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="EdituBirthDate" class="form-label">วันเกิด</label>
+                                                        <input type="date" class="form-control" name="birth_date"
+                                                            id="EdituBirthDate">
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="EdituNationality"
+                                                            class="form-label">สัญชาติ</label>
+                                                        <input type="text" class="form-control" name="nationality"
+                                                            id="EdituNationality" value="ไทย">
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <label for="EdituPhone"
+                                                            class="form-label">เบอร์โทรศัพท์</label>
+                                                        <input type="text" class="form-control" name="phone"
+                                                            id="EdituPhone">
+                                                    </div>
+                                                    <div class="col-md-12 mb-3">
+                                                        <label for="EdituAddress" class="form-label">ที่อยู่</label>
+                                                        <textarea class="form-control" name="address" id="EdituAddress" rows="2"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Bank Tab -->
+                                            <div class="tab-pane fade" id="bank-pane" role="tabpanel"
+                                                aria-labelledby="bank-tab">
+                                                <div class="row">
+                                                    <div class="col-12 mb-3">
+                                                        <div class="alert alert-info">
+                                                            <i class="fa fa-info-circle me-2"></i>
+                                                            ข้อมูลธนาคารจะใช้สำหรับการโอนเงินเดือน กรุณากรอกให้ถูกต้อง
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="EdituBankName" class="form-label">ธนาคาร</label>
+                                                        <input type="text" class="form-control" name="bank_name"
+                                                            id="EdituBankName"
+                                                            placeholder="เช่น กสิกรไทย, กรุงเทพ, ไทยพาณิชย์">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="EdituBankAccount"
+                                                            class="form-label">เลขที่บัญชี</label>
+                                                        <input type="text" class="form-control"
+                                                            name="bank_account" id="EdituBankAccount"
+                                                            placeholder="เลขที่บัญชีธนาคาร">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </div>
                                     <!-- Modal footer -->
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-success"
-                                            id="SubmitUserEditForm">Save</button>
-                                        <button type="button" class="btn btn-danger modelClose"
-                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-success" id="SubmitUserEditForm"><i
+                                                class="fa fa-save me-1"></i>บันทึก</button>
+                                        <button type="button" class="btn btn-secondary modelClose"
+                                            data-bs-dismiss="modal"><i class="fa fa-times me-1"></i>ปิด</button>
                                     </div>
                                 </div>
                             </form>
@@ -229,47 +350,97 @@
 
     <script>
         $(document).ready(function() {
+            // Load user data when modal opens
+            $('#EditUserModal').on('show.bs.modal', function() {
+                $.ajax({
+                    url: "{{ route('profile.data') }}",
+                    method: 'GET',
+                    success: function(result) {
+                        if (result.success) {
+                            var user = result.user;
+                            $('#EdituName').val(user.name);
+                            $('#EdituEmail').val(user.email);
+                            $('#EdituNickname').val(user.nickname);
+                            $('#EdituTitlePrefix').val(user.title_prefix);
+                            $('#EdituGender').val(user.gender);
+                            $('#EdituBirthDate').val(user.birth_date);
+                            $('#EdituNationality').val(user.nationality || 'ไทย');
+                            $('#EdituPhone').val(user.phone);
+                            $('#EdituAddress').val(user.address);
+                            $('#EdituBankName').val(user.bank_name);
+                            $('#EdituBankAccount').val(user.bank_account);
+                            // Clear password fields
+                            $('#EdituPassword').val('');
+                            $('#EdituPasswordC').val('');
+                        }
+                    },
+                    error: function() {
+                        toastr.error('ไม่สามารถโหลดข้อมูลได้');
+                    }
+                });
+            });
 
+            // Reset modal on close
+            $('#EditUserModal').on('hidden.bs.modal', function() {
+                $('#EditUserModal .alert-danger').html('').hide();
+                $('#EditUserModal .alert-success').html('').hide();
+                // Reset to first tab
+                $('#account-tab').tab('show');
+            });
 
+            // Submit profile update
             $('#SubmitUserEditForm').click(function(e) {
-                if (!confirm("Are you sure?")) return;
                 e.preventDefault();
 
-                $('.alert-danger').html('');
-                $('.alert-danger').hide();
-                $('.alert-success').html('');
-                $('.alert-success').hide();
+                if (!confirm("ยืนยันการบันทึกข้อมูล?")) return;
 
-                let id = {{ Auth::user()->id }};
+                var $modal = $('#EditUserModal');
+                $modal.find('.alert-danger').html('').hide();
+                $modal.find('.alert-success').html('').hide();
+
+                var formData = {
+                    name: $('#EdituName').val(),
+                    email: $('#EdituEmail').val(),
+                    password: $('#EdituPassword').val(),
+                    password_confirmation: $('#EdituPasswordC').val(),
+                    nickname: $('#EdituNickname').val(),
+                    title_prefix: $('#EdituTitlePrefix').val(),
+                    gender: $('#EdituGender').val(),
+                    birth_date: $('#EdituBirthDate').val(),
+                    nationality: $('#EdituNationality').val(),
+                    phone: $('#EdituPhone').val(),
+                    address: $('#EdituAddress').val(),
+                    bank_name: $('#EdituBankName').val(),
+                    bank_account: $('#EdituBankAccount').val(),
+                };
+
                 $.ajax({
-                    url: "users/msave/" + id,
+                    url: "{{ route('profile.update') }}",
                     method: 'PUT',
-                    data: {
-                        name: $('#EdituName').val(),
-                        password: $('#EdituPassword').val(),
-                        password_confirmation: $('#EdituPasswordC').val(),
-                        email: $('#EdituEmail').val(),
-
-                    },
-
+                    data: formData,
                     success: function(result) {
-                        console.log(result);
-                        if (result.errors) {
-                            $('.alert-danger').html('');
-                            $.each(result.errors, function(key, value) {
-                                $('.alert-danger').show();
-                                $('.alert-danger').append('<strong><li>' + value +
-                                    '</li></strong>');
+                        if (result.success) {
+                            $modal.find('.alert-success').html('<strong>' + result.message +
+                                '</strong>').show();
+                            toastr.success(result.message);
+                            setTimeout(function() {
+                                $modal.modal('hide');
+                                // Reload page to reflect changes in header
+                                location.reload();
+                            }, 1500);
+                        }
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            var errorHtml = '';
+                            $.each(errors, function(key, value) {
+                                errorHtml += '<li>' + value[0] + '</li>';
                             });
+                            $modal.find('.alert-danger').html('<ul>' + errorHtml + '</ul>')
+                                .show();
                         } else {
-                            $('.alert-danger').hide();
-                            $('.alert-success').show();
-                            $('.alert-success').append('<strong><li>' + result.success +
-                                '</li></strong>');
-
-                            $('#EditModal').modal('hide');
-
-
+                            toastr.error('เกิดข้อผิดพลาด กรุณาลองใหม่');
                         }
                     }
                 });

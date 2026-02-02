@@ -284,6 +284,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/profile/signature', [App\Http\Controllers\ProfileController::class, 'UpdateSignature'])->name('profile.signature.update');
     Route::delete('/profile/signature', [App\Http\Controllers\ProfileController::class, 'DeleteSignature'])->name('profile.signature.delete');
     Route::post('/profile/contact', [App\Http\Controllers\ProfileController::class, 'UpdateContact'])->name('profile.contact.update');
+    Route::get('/profile/data', [App\Http\Controllers\ProfileController::class, 'GetProfileData'])->name('profile.data');
+    Route::put('/profile/update', [App\Http\Controllers\ProfileController::class, 'UpdateProfile'])->name('profile.update');
 
     Route::resource('recordtime', RecordtimeController::class);
     Route::resource('app-down-load', AppDownloadController::class);

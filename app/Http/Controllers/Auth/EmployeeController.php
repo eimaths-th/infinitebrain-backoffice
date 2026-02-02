@@ -143,7 +143,26 @@ class EmployeeController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'level' => 'required',
-            // Optional fields don't strictly need regex validation unless specific format
+            // Personal info
+            'title_prefix' => 'nullable|string|max:50',
+            'nickname' => 'nullable|string|max:100',
+            'gender' => 'nullable|in:male,female',
+            'nationality' => 'nullable|string|max:100',
+            'birth_date' => 'nullable|date',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
+            // Employment info
+            'position' => 'nullable|string|max:100',
+            'department' => 'nullable|string|max:100',
+            'employee_type' => 'nullable|in:fulltime,parttime,contract',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            // Payroll info
+            'base_salary' => 'nullable|numeric|min:0',
+            'bank_name' => 'nullable|string|max:100',
+            'bank_account' => 'nullable|string|max:50',
+            'tax_id' => 'nullable|string|max:20',
+            'social_security_no' => 'nullable|string|max:20',
         ]);
 
         if ($validator->fails()) {
@@ -200,6 +219,26 @@ class EmployeeController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'code' => 'required|string|max:255|unique:users,code,' . $id,
+            // Personal info
+            'title_prefix' => 'nullable|string|max:50',
+            'nickname' => 'nullable|string|max:100',
+            'gender' => 'nullable|in:male,female',
+            'nationality' => 'nullable|string|max:100',
+            'birth_date' => 'nullable|date',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
+            // Employment info
+            'position' => 'nullable|string|max:100',
+            'department' => 'nullable|string|max:100',
+            'employee_type' => 'nullable|in:fulltime,parttime,contract',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            // Payroll info
+            'base_salary' => 'nullable|numeric|min:0',
+            'bank_name' => 'nullable|string|max:100',
+            'bank_account' => 'nullable|string|max:50',
+            'tax_id' => 'nullable|string|max:20',
+            'social_security_no' => 'nullable|string|max:20',
         ];
 
         if ($request->get('password')) {
