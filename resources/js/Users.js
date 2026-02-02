@@ -1,36 +1,36 @@
 $(document).ready(function () {
 
-    $(".delete_all_button").click(function(){
+    $(".delete_all_button").click(function () {
 
         //var parent = $(this).closest("#delete_all");
- 
+
         var len = $('input[name="table_records[]"]:checked').length;
- 
+
         //alert(len);
- 
-        if (len>0) {
- 
-          if (confirm("Click OK to Delete?")){
- 
-           
- 
-           $('form#delete_all').submit();
- 
-          }
- 
+
+        if (len > 0) {
+
+            if (confirm("Click OK to Delete?")) {
+
+
+
+                $('form#delete_all').submit();
+
+            }
+
         } else {
- 
+
             alert("Please Select Record For Delete");
- 
-            
- 
+
+
+
         }
- 
+
     });
 
-    $('#check-all').click(function () {    
-        $(':checkbox.flat').prop('checked', this.checked);    
-     });
+    $('#check-all').click(function () {
+        $(':checkbox.flat').prop('checked', this.checked);
+    });
 
     //$.noConflict();
     var token = ''
@@ -46,23 +46,17 @@ $(document).ready(function () {
         btnUpdate = $('.btn-update');
 
     var table = $('#Listview').DataTable({
-        /*"aoColumnDefs": [
-            {
-                'bSortable': true,
-                'aTargets': [0]
-            } //disables sorting for column one
-        ],
-        "searching": false,
-        "lengthChange": false,
-        "paging": false,
-        'iDisplayLength': 10,
-        "sPaginationType": "full_numbers",
-        "dom": 'T<"clear">lfrtip',
-*/
-        ajax: '',
+        ajax: {
+            url: '',
+            data: function (d) {
+                d.department = $('#filter-department').val();
+                d.employee_type = $('#filter-employee-type').val();
+                d.status = $('#filter-status').val();
+            }
+        },
         serverSide: true,
         processing: true,
-        aaSorting: [[0, "desc"]],
+        aaSorting: [[1, "desc"]],
         iDisplayLength: 15,
         lengthMenu: [15, 25, 50, 75, 100],
         stateSave: true,
@@ -71,11 +65,28 @@ $(document).ready(function () {
         columns: [
             { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
             { data: 'id', name: 'id' },
+            { data: 'code', name: 'code' },
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
+            { data: 'department', name: 'department' },
+            { data: 'position', name: 'position' },
             { data: 'level', name: 'level' },
-            { data: 'action', name: 'action' },
+            { data: 'status', name: 'status', orderable: false },
+            { data: 'action', name: 'action', orderable: false, searchable: false },
         ]
+    });
+
+    // Filter change events
+    $('#filter-department, #filter-employee-type, #filter-status').on('change', function () {
+        table.ajax.reload();
+    });
+
+    // Clear filters button
+    $('#clear-filters').on('click', function () {
+        $('#filter-department').val('');
+        $('#filter-employee-type').val('');
+        $('#filter-status').val('');
+        table.ajax.reload();
     });
 
     btnAdd.click(function () {

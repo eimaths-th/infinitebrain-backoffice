@@ -48,64 +48,109 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        //
-        /*$levels = User::latest()->paginate(10);
-        return view('users.index', compact('users'))
-            ->with('i', (request()->input('page', 1) - 1) * 10);*/
-        //sleep(3);
         $this->check_permission();
 
         if ($request->ajax()) {
-            //sleep(2);
-            $levels = User::orderBy("id", "desc")->get();
-            return datatables()->of($levels)
-                ->editColumn('level', function (User $level) {
-                    if ($level->level == 1) {
-                        $ltext = "Admin";
-                    } elseif ($level->level == 2) {
-                        $ltext = "Teacher";
-                    } elseif ($level->level == 3) {
-                        $ltext = "Account";
-                    } elseif ($level->level == 0) {
-                        $ltext = "Owner";
-                    } elseif ($level->level == 4) {
-                        $ltext = "Officer";
-                    } elseif ($level->level == 7) {
-                        $ltext = "Finance";
-                    } elseif ($level->level == 8) {
-                        $ltext = "Header";
-                    } else {
-                        $ltext = "Normal";
-                    }
+            $query = User::query()->orderBy("id", "desc");
 
-                    return $ltext;
-                })
+            // Apply filters
+            if ($request->filled('department')) {
+                $query->where('department', $request->department);
+            }
+            if ($request->filled('employee_type')) {
+                $query->where('employee_type', $request->employee_type);
+            }
+            if ($request->filled('status')) {
+                if ($request->status === 'active') {
+                    $query->where('is_disabled', false);
+                } elseif ($request->status === 'disabled') {
+                    $query->where('is_disabled', true);
+                }
+            }
+
+            $users = $query->get();
+
+            return datatables()->of($users)
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
+                ->editColumn('id', function ($row) {
+                    return $row->id;
+                })
+                ->editColumn('code', function (User $user) {
+                    return $user->code ? '<span class="badge bg-dark">' . e($user->code) . '</span>' : '<span class="text-muted">-</span>';
+                })
+                ->editColumn('name', function (User $user) {
+                    $prefix = $user->title_prefix ? \App\Models\User::TITLE_PREFIXES[$user->title_prefix] ?? '' : '';
+                    $fullName = trim($prefix . ' ' . $user->name);
+                    return '<div class="fw-bold">' . e($fullName) . '</div>';
+                })
+                ->editColumn('email', function ($row) {
+                    return $row->email;
+                })
+                ->addColumn('department', function (User $user) {
+                    return $user->department ? e($user->department) : '<span class="text-muted">-</span>';
+                })
+                ->addColumn('position', function (User $user) {
+                    return $user->position ? e($user->position) : '<span class="text-muted">-</span>';
+                })
+                ->editColumn('level', function (User $user) {
+                    // Get user roles from Spatie
+                    $roles = $user->getRoleNames();
+
+                    if ($roles->isEmpty()) {
+                        return '<span class="badge bg-light text-dark">No Role</span>';
+                    }
+
+                    // Role color mapping
+                    $roleColors = [
+                        'super-admin' => 'danger',
+                        'admin' => 'primary',
+                        'finance' => 'success',
+                        'reviewer' => 'info',
+                        'approver' => 'warning',
+                        'staff' => 'secondary',
+                        'parent' => 'dark',
+                    ];
+
+                    // Display all roles as badges
+                    $badges = [];
+                    foreach ($roles as $role) {
+                        $color = $roleColors[$role] ?? 'light text-dark';
+                        $badges[] = '<span class="badge bg-' . $color . '">' . ucwords(str_replace('-', ' ', $role)) . '</span>';
+                    }
+
+                    return implode(' ', $badges);
+                })
                 ->addColumn('status', function ($row) {
                     if ($row->is_disabled) {
-                        return '<span class="badge bg-secondary">ปิดใช้งาน</span>';
+                        return '<span class="badge bg-secondary"><i class="fa fa-ban me-1"></i>ปิดใช้งาน</span>';
                     }
-                    return '<span class="badge bg-success">ใช้งาน</span>';
+                    return '<span class="badge bg-success"><i class="fa fa-check me-1"></i>ใช้งาน</span>';
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
+                    $html = '<div class="btn-group" role="group">';
+                    $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '" title="แก้ไข"><i class="fa fa-edit"></i></a>';
 
                     if ($row->is_disabled) {
-                        $html .= '<a href="#" data-id="' . $row->id . '" class="btn btn-xs btn-success btn-toggle-disable"><i class="fa fa-check"></i> เปิด</a> ';
+                        $html .= '<a href="#" data-id="' . $row->id . '" class="btn btn-xs btn-success btn-toggle-disable" title="เปิดใช้งาน"><i class="fa fa-check"></i></a>';
                     } else {
-                        $html .= '<a href="#" data-id="' . $row->id . '" class="btn btn-xs btn-secondary btn-toggle-disable"><i class="fa fa-ban"></i> ปิด</a> ';
+                        $html .= '<a href="#" data-id="' . $row->id . '" class="btn btn-xs btn-secondary btn-toggle-disable" title="ปิดใช้งาน"><i class="fa fa-ban"></i></a>';
                     }
 
-                    $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
+                    $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete" title="ลบ"><i class="fa fa-trash"></i></a>';
+                    $html .= '</div>';
                     return $html;
                 })
-                ->rawColumns(['checkbox', 'status', 'action'])
+                ->rawColumns(['checkbox', 'code', 'name', 'department', 'position', 'level', 'status', 'action'])
                 ->toJson();
         }
 
-        return view('users.index');
+        // Get unique departments and employee types for filters
+        $departments = User::whereNotNull('department')->distinct()->pluck('department');
+        $employee_types = User::whereNotNull('employee_type')->distinct()->pluck('employee_type');
+
+        return view('users.index', compact('departments', 'employee_types'));
     }
 
     /**

@@ -51,10 +51,10 @@
                     value="{{ $user->email ?? '' }}" required>
             </div>
             <div class="col-md-6 mb-3">
-                <label for="{{ $prefix }}level" class="form-label">ระดับสิทธิ์ (Level) <span
+                <label for="{{ $prefix }}level" class="form-label">บทบาท (Role) <span
                         class="text-danger">*</span></label>
                 <select class="form-control" id="{{ $prefix }}level" name="level" required>
-                    <option value="">Select Level</option>
+                    <option value="">-- เลือกบทบาท --</option>
                     <option value="0" {{ ($user->level ?? '') == '0' ? 'selected' : '' }}>Owner</option>
                     <option value="1" {{ ($user->level ?? '') == '1' ? 'selected' : '' }}>Admin</option>
                     <option value="2" {{ ($user->level ?? '') == '2' ? 'selected' : '' }}>Teacher</option>

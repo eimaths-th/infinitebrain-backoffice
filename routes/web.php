@@ -137,6 +137,7 @@ Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')
     Route::post('/review/{id}', [PaymentVoucherController::class, 'review'])->name('review');
     Route::post('/approve/{id}', [PaymentVoucherController::class, 'approve'])->name('approve');
     Route::post('/reject/{id}', [PaymentVoucherController::class, 'reject'])->name('reject');
+    Route::post('/reject-to-draft/{id}', [PaymentVoucherController::class, 'rejectToDraft'])->name('reject-to-draft');
     Route::post('/complete/{id}', [PaymentVoucherController::class, 'complete'])->name('complete');
 
     // Lists

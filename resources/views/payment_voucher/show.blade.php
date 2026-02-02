@@ -111,13 +111,25 @@
             box-shadow: 0 0 0 2px #007bff;
         }
 
-        .timeline-time {
-            font-size: 0.8rem;
-            color: #6c757d;
-        }
-
         .timeline-action {
             font-weight: 600;
+            display: block;
+            margin-bottom: 2px;
+            font-size: 0.95rem;
+        }
+
+        .timeline-user {
+            font-size: 0.85rem;
+            color: #495057;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .timeline-time {
+            font-size: 0.75rem;
+            color: #6c757d;
+            display: block;
+            margin-bottom: 8px;
         }
 
         .approval-card {
@@ -455,7 +467,6 @@
                                             @if ($voucher->withholding_tax_rate > 0)
                                                 ({{ __($voucher->withholding_tax_rate) }}%)
                                             @else
-
                                             @endif
                                         </td>
                                         <td class="text-end text-danger">
@@ -587,17 +598,18 @@
 
                             @if ($voucher->canReview())
                                 <div class="col-md-6 mb-3">
-                                    <div class="approval-card" style="border-color: #007bff; background: #f8f9ff;">
-                                        <h6><i class="fa fa-check-square text-primary"></i> ตรวจสอบใบสำคัญจ่าย</h6>
-                                        <form action="{{ route('payment-voucher.review', $voucher->id) }}"
+                                    <div class="approval-card" style="border-color: #fd7e14; background: #fff8f3;">
+                                        <h6><i class="fa fa-reply text-warning"></i> ส่งกลับแก้ไข</h6>
+                                        <form action="{{ route('payment-voucher.reject-to-draft', $voucher->id) }}"
                                             method="POST">
                                             @csrf
                                             <div class="mb-3">
-                                                <label class="form-label">หมายเหตุ (ถ้ามี)</label>
-                                                <textarea name="remark" class="form-control" rows="2"></textarea>
+                                                <label class="form-label">เหตุผล <span
+                                                        class="text-danger">*</span></label>
+                                                <textarea name="remark" class="form-control" rows="2" required placeholder="ระบุสิ่งที่ต้องแก้ไข..."></textarea>
                                             </div>
-                                            <button type="submit" class="btn btn-primary" {{ $disableAccount }}>
-                                                <i class="fa fa-check-square-o"></i> ตรวจสอบเรียบร้อย
+                                            <button type="submit" class="btn btn-warning" {{ $disableAccount }}>
+                                                <i class="fa fa-reply"></i> ส่งกลับแก้ไข
                                             </button>
                                         </form>
                                     </div>
@@ -644,7 +656,6 @@
                     <div class="timeline">
                         @foreach ($voucher->logs->sortByDesc('created_at') as $log)
                             <div class="timeline-item">
-                                <div class="timeline-time">{{ $log->created_at->format('d/m/Y H:i') }}</div>
                                 <div class="timeline-action">
                                     @switch($log->action)
                                         @case('create')
@@ -667,6 +678,10 @@
                                             <span class="text-danger">ปฏิเสธ</span>
                                         @break
 
+                                        @case('reject_to_draft')
+                                            <span class="text-warning">ส่งกลับแก้ไข</span>
+                                        @break
+
                                         @case('complete')
                                             <span class="text-success">เสร็จสิ้น</span>
                                         @break
@@ -678,8 +693,9 @@
                                         @default
                                             <span>{{ $log->action }}</span>
                                     @endswitch
-                                    โดย {{ $log->user_name }}
                                 </div>
+                                <div class="timeline-user">โดย {{ $log->user_name }}</div>
+                                <div class="timeline-time">{{ $log->created_at->format('d/m/Y H:i') }}</div>
                                 @if ($log->remark)
                                     <div class="text-muted small">{{ $log->remark }}</div>
                                 @endif
