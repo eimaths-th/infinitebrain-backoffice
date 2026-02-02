@@ -39,6 +39,48 @@
         </div>
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
+                <!-- Filters Section -->
+                <div class="card mb-3 bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="fa fa-filter me-2"></i>ตัวกรองข้อมูล
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="filter-department" class="form-label fw-bold">แผนก</label>
+                                <select class="form-select" id="filter-department">
+                                    <option value="">-- ทั้งหมด --</option>
+                                    @foreach ($departments as $dept)
+                                        <option value="{{ $dept }}">{{ $dept }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="filter-employee-type" class="form-label fw-bold">ประเภทพนักงาน</label>
+                                <select class="form-select" id="filter-employee-type">
+                                    <option value="">-- ทั้งหมด --</option>
+                                    <option value="fulltime">Full-time</option>
+                                    <option value="parttime">Part-time</option>
+                                    <option value="contract">Contract</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="filter-status" class="form-label fw-bold">สถานะ</label>
+                                <select class="form-select" id="filter-status">
+                                    <option value="">-- ทั้งหมด --</option>
+                                    <option value="active">ใช้งาน</option>
+                                    <option value="disabled">ปิดใช้งาน</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="button" class="btn btn-secondary w-100" id="clear-filters">
+                                    <i class="fa fa-times me-1"></i>ล้างตัวกรอง
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <form method="post" action="{{ route('users.destroy_all') }}" name="delete_all" id="delete_all">
                     @csrf
                     @method('DELETE')
@@ -48,11 +90,14 @@
                             <tr>
                                 <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>No</th>
-                                <th>Name</th>
+                                <th>รหัส</th>
+                                <th>ชื่อ-นามสกุล</th>
                                 <th>Email</th>
-                                <th>Level</th>
+                                <th>แผนก</th>
+                                <th>ตำแหน่ง</th>
+                                <th>Role</th>
                                 <th>สถานะ</th>
-                                <th width="320px">Action</th>
+                                <th width="120px">Action</th>
                             </tr>
                         </thead>
 
@@ -117,7 +162,8 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="display: none;">
                             <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button></button>
@@ -186,7 +232,14 @@
                 "sPaginationType": "full_numbers",
                 "dom": 'T<"clear">lfrtip',
                     */
-                ajax: '',
+                ajax: {
+                    url: '',
+                    data: function(d) {
+                        d.department = $('#filter-department').val();
+                        d.employee_type = $('#filter-employee-type').val();
+                        d.status = $('#filter-status').val();
+                    }
+                },
                 serverSide: true,
                 processing: true,
                 language: {
@@ -194,11 +247,11 @@
                     processing: '<div class="spinner"></div>'
                 },
                 aaSorting: [
-                    [0, "desc"]
+                    [1, "desc"]
                 ],
-                iDisplayLength: 10,
-                lengthMenu: [10, 25, 50, 75, 100],
-                stateSave: true,
+                iDisplayLength: 15,
+                lengthMenu: [15, 25, 50, 75, 100],
+                stateSave: false,
                 sPaginationType: "full_numbers",
                 dom: 'T<"clear">lfrtip',
                 columns: [{
@@ -212,6 +265,10 @@
                         name: 'id'
                     },
                     {
+                        data: 'code',
+                        name: 'code'
+                    },
+                    {
                         data: 'name',
                         name: 'name'
                     },
@@ -220,20 +277,42 @@
                         name: 'email'
                     },
                     {
+                        data: 'department',
+                        name: 'department'
+                    },
+                    {
+                        data: 'position',
+                        name: 'position'
+                    },
+                    {
                         data: 'level',
                         name: 'level'
                     },
                     {
                         data: 'status',
                         name: 'status',
-                        orderable: false,
-                        searchable: false
+                        orderable: false
                     },
                     {
                         data: 'action',
-                        name: 'action'
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
                     },
                 ]
+            });
+
+            // Filter change events
+            $('#filter-department, #filter-employee-type, #filter-status').on('change', function() {
+                table.ajax.reload();
+            });
+
+            // Clear filters button
+            $('#clear-filters').on('click', function() {
+                $('#filter-department').val('');
+                $('#filter-employee-type').val('');
+                $('#filter-status').val('');
+                table.ajax.reload();
             });
 
 

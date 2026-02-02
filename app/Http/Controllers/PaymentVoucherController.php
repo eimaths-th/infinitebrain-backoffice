@@ -518,6 +518,43 @@ class PaymentVoucherController extends Controller
     }
 
     /**
+     * ส่งกลับเป็น Draft เพื่อแก้ไข (Reviewer)
+     */
+    public function rejectToDraft(Request $request, $id)
+    {
+        $request->validate([
+            'remark' => 'required|string|max:500',
+        ]);
+
+        $voucher = PaymentVoucher::findOrFail($id);
+
+        // เฉพาะผู้ที่มีสิทธิ review เท่านั้น
+        if (!$voucher->canReview()) {
+            return back()->with('error', 'ไม่สามารถส่งกลับแก้ไขได้');
+        }
+
+        $oldStatus = $voucher->status;
+
+        $voucher->update([
+            'status' => PaymentVoucher::STATUS_DRAFT,
+            'review_remark' => $request->remark,
+        ]);
+
+        PaymentVoucherLog::create([
+            'payment_voucher_id' => $voucher->id,
+            'action' => 'reject_to_draft',
+            'from_status' => $oldStatus,
+            'to_status' => PaymentVoucher::STATUS_DRAFT,
+            'user_id' => Auth::id(),
+            'user_name' => Auth::user()->name ?? 'System',
+            'remark' => $request->remark,
+        ]);
+
+        return redirect()->route('payment-voucher.show', $voucher->id)
+            ->with('success', 'ส่งกลับแก้ไขเรียบร้อยแล้ว กรุณาแก้ไขและส่งใหม่อีกครั้ง');
+    }
+
+    /**
      * เสร็จสิ้นใบสำคัญจ่าย
      */
     public function complete(Request $request, $id)
