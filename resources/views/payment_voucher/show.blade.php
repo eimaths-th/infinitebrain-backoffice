@@ -416,6 +416,12 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered items-table">
+                            <tr>
+                                <th style="width: 150px;">วันที่:</th>
+                                <td>{{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}</td>
+                                <th style="width: 150px;">ผู้ทำรายการ:</th>
+                                <td>{{ $voucher->created_by_name }}</td>
+                            </tr>
                             <thead>
                                 <tr>
                                     <th width="8%" class="text-center">ลำดับ</th>

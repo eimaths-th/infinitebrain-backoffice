@@ -29,6 +29,9 @@
     -->
     <link rel="icon" type="image/png" href="../images/inf-icon2.png">
 
+    <!-- Flatpickr Datepicker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 
     <script defer src="{{ asset('architectui/assets/scripts/main.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script>
@@ -444,6 +447,21 @@
                         }
                     }
                 });
+            });
+        });
+    </script>
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/th.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr(".datepicker", {
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "d/m/Y",
+                locale: "th",
+                allowInput: true
             });
         });
     </script>
