@@ -117,11 +117,13 @@
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">จากวันที่</label>
-                            <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+                            <input type="text" name="from_date" class="form-control datepicker"
+                                value="{{ request('from_date') }}" placeholder="วว/ดด/ปปปป">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">ถึงวันที่</label>
-                            <input type="date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+                            <input type="text" name="to_date" class="form-control datepicker"
+                                value="{{ request('to_date') }}" placeholder="วว/ดด/ปปปป">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">ค้นหา</label>

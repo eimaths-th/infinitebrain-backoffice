@@ -154,7 +154,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label">วันที่ <span class="required-mark">*</span></label>
-                                <input type="date" name="voucher_date" class="form-control"
+                                <input type="text" name="voucher_date" class="form-control datepicker"
                                     value="{{ old('voucher_date', date('Y-m-d')) }}" required>
                             </div>
                         </div>

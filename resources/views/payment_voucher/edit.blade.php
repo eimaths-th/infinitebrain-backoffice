@@ -109,12 +109,15 @@
         @endif
 
         @if ($errors->any())
-            <div class="alert alert-danger">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h5 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> พบข้อผิดพลาด {{ $errors->count() }}
+                    รายการ</h5>
                 <ul class="mb-0">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
@@ -140,7 +143,7 @@
         <div class="main-card mb-3 card">
             <div class="card-body">
                 <form action="{{ route('payment-voucher.update', $voucher->id) }}" method="POST" id="voucherForm"
-                    enctype="multipart/form-data">
+                    enctype="multipart/form-data" novalidate>
                     @csrf
                     @method('PUT')
 
@@ -169,8 +172,12 @@
 
                             <div class="mb-3">
                                 <label class="form-label">วันที่ <span class="required-mark">*</span></label>
-                                <input type="date" name="voucher_date" class="form-control"
+                                <input type="text" name="voucher_date"
+                                    class="form-control datepicker @error('voucher_date') is-invalid @enderror"
                                     value="{{ old('voucher_date', $voucher->voucher_date) }}" required>
+                                @error('voucher_date')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
@@ -181,9 +188,13 @@
 
                             <div class="mb-3">
                                 <label class="form-label">จ่ายให้ (ชื่อ/บริษัท) <span class="required-mark">*</span></label>
-                                <input type="text" name="pay_to" class="form-control"
+                                <input type="text" name="pay_to"
+                                    class="form-control @error('pay_to') is-invalid @enderror"
                                     value="{{ old('pay_to', $voucher->pay_to) }}" placeholder="ระบุชื่อผู้รับเงิน"
                                     required>
+                                @error('pay_to')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="mb-3">
@@ -312,15 +323,23 @@
                                             <label class="form-label">รายละเอียด <span
                                                     class="required-mark">*</span></label>
                                             <input type="text" name="items[{{ $index }}][description]"
-                                                class="form-control" value="{{ $item->description }}"
-                                                placeholder="รายละเอียดการจ่าย" required>
+                                                class="form-control @error('items.' . $index . '.description') is-invalid @enderror"
+                                                value="{{ $item->description }}" placeholder="รายละเอียดการจ่าย"
+                                                required>
+                                            @error('items.' . $index . '.description')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                         <div class="col-md-2">
                                             <label class="form-label">จำนวนเงิน <span
                                                     class="required-mark">*</span></label>
                                             <input type="number" name="items[{{ $index }}][amount]"
-                                                class="form-control item-amount" step="0.01" min="0"
-                                                value="{{ $item->amount }}" placeholder="0.00" required>
+                                                class="form-control item-amount @error('items.' . $index . '.amount') is-invalid @enderror"
+                                                step="0.01" min="0" value="{{ $item->amount }}"
+                                                placeholder="0.00" required>
+                                            @error('items.' . $index . '.amount')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Slip/เอกสาร</label>
@@ -675,17 +694,116 @@
 
         // Form validation
         document.getElementById('voucherForm').addEventListener('submit', function(e) {
-            const amounts = document.querySelectorAll('.item-amount');
+            let errors = [];
+            let firstErrorField = null;
+
+            // Clear previous error states
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            const existingAlert = document.querySelector('#validationAlert');
+            if (existingAlert) existingAlert.remove();
+
+            // 1. Check Voucher Date
+            const voucherDate = document.querySelector('input[name="voucher_date"]');
+            if (voucherDate && !voucherDate.value) {
+                errors.push('กรุณาระบุวันที่');
+                voucherDate.classList.add('is-invalid');
+                if (!firstErrorField) firstErrorField = voucherDate;
+            }
+
+            // 2. Check Pay To
+            const payTo = document.querySelector('input[name="pay_to"]');
+            if (payTo && !payTo.value.trim()) {
+                errors.push('กรุณาระบุผู้รับเงิน');
+                payTo.classList.add('is-invalid');
+                if (!firstErrorField) firstErrorField = payTo;
+            }
+
+            // 3. Check Items
+            const items = document.querySelectorAll('.item-row');
             let hasValidItem = false;
-            amounts.forEach(input => {
-                if (parseFloat(input.value) > 0) {
-                    hasValidItem = true;
+
+            items.forEach((item, index) => {
+                // Use simplified selectors using class or partial name match
+                const description = item.querySelector('input[name*="[description]"]');
+                const amount = item.querySelector('.item-amount');
+
+                // Validate Description
+                if (description && !description.value.trim()) {
+                    errors.push(`รายการที่ ${index + 1}: กรุณาระบุรายละเอียด`);
+                    description.classList.add('is-invalid');
+                    if (!firstErrorField) firstErrorField = description;
+                }
+
+                // Validate Amount
+                if (amount) {
+                    const val = parseFloat(amount.value);
+                    if (!amount.value || isNaN(val) || val <= 0) {
+                        errors.push(`รายการที่ ${index + 1}: กรุณาระบุจำนวนเงินให้ถูกต้อง`);
+                        amount.classList.add('is-invalid');
+                        if (!firstErrorField) firstErrorField = amount;
+                    } else {
+                        hasValidItem = true;
+                    }
                 }
             });
 
-            if (!hasValidItem) {
+            if (!hasValidItem && items.length > 0) {
+                errors.push('กรุณาเพิ่มรายการอย่างน้อย 1 รายการที่มีจำนวนเงินมากกว่า 0');
+            }
+
+            // Show errors
+            if (errors.length > 0) {
                 e.preventDefault();
-                alert('กรุณาเพิ่มรายการอย่างน้อย 1 รายการที่มีจำนวนเงินมากกว่า 0');
+                e.stopPropagation(); // Stop event bubbling
+
+                // Create alert HTML
+                let errorHtml =
+                    '<div class="alert alert-danger alert-dismissible fade show" id="validationAlert" role="alert">';
+                errorHtml += '<h5 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> พบข้อผิดพลาด ' +
+                    errors.length + ' รายการ:</h5>';
+                errorHtml += '<ul class="mb-0">';
+                errors.forEach(err => {
+                    errorHtml += `<li>${err}</li>`;
+                });
+                errorHtml += '</ul>';
+                errorHtml +=
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                errorHtml += '</div>';
+
+                // Insert alert at the top of the main card
+                const mainCard = document.querySelector('.main-card');
+                if (mainCard) {
+                    mainCard.insertAdjacentHTML('afterbegin', errorHtml);
+                } else {
+                    // Fallback using form parent
+                    const form = document.getElementById('voucherForm');
+                    form.parentNode.insertBefore(errorHtml, form);
+                }
+
+                // Scroll to top or first error
+                if (firstErrorField) {
+                    firstErrorField.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                    setTimeout(() => firstErrorField.focus(), 500);
+                } else {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+
+        // Remove invalid class on input
+        document.body.addEventListener('input', function(e) {
+            if (e.target.classList.contains('form-control')) {
+                e.target.classList.remove('is-invalid');
+                const feedback = e.target.nextElementSibling;
+                if (feedback && feedback.classList.contains('invalid-feedback')) {
+                    feedback.style.display = 'none';
+                }
             }
         });
     </script>
