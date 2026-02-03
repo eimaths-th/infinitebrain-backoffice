@@ -187,7 +187,11 @@ class Payroll extends Model
 
         // 3. หักค่าลดหย่อน
         $personal_allowance = 60000; // ลดหย่อนส่วนตัว
-        $sso_allowance = $monthly_social_security * 12; // ลดหย่อนประกันสังคม (Annualized)
+
+        // ลดหย่อนประกันสังคม: ใช้ยอดจ่ายจริงต่อปี (ไม่เกิน 875 บาท/เดือน)
+        // ถ้า SSO เดือนนี้มากกว่า 875 ให้ใช้ 875 เป็น cap
+        $monthly_sso_capped = min($monthly_social_security, 875);
+        $sso_allowance = $monthly_sso_capped * 12; // ลดหย่อนประกันสังคมต่อปี (สูงสุด 10,500)
 
         $total_deductions = $expense_allowance + $personal_allowance + $sso_allowance;
         $net_taxable_income = max(0, $annual_income - $total_deductions);
@@ -281,29 +285,27 @@ class Payroll extends Model
         }
 
         // ---- B. ภาษีเงินได้บุคคลธรรมดา (PIT) ----
-        // รายได้ที่นำมาคิด PIT คือ รายได้ทั้งหมด ลบด้วย รายได้ที่ถูกคิด WHT ไปแล้ว (หรือรวม? ปกติแยกกัน)
-        // ถ้าถูกหัก WHT 3% ถือเป็น 40(2) หรือรับเหมารับจ้าง ซึ่งต้องนำมารวมคำนวณภาษีปลายปีอยู่ดี?
-        // แต่ในบริบท Payroll รายเดือน:
-        // ถ้าเป็นพนักงานบริษัท -> คิด PIT
-        // ถ้าเป็นฟรีแลนซ์/รับจ้าง -> คิด WHT 3% แล้วจบ (ส่ง ภงด.3/53)
-        // Assumption: ถ้าติ๊ก WHT 3% -> ถูกหัก 3% แล้ว ไม่นำมาคิด PIT ใน Payroll นี้อีก (แยกคำนวณ)
-        // ดังนั้น PIT Base Income = Total Income - WHT Income Base
+        // คำนวณภาษีจาก "เงินเดือน" เท่านั้น ไม่รวมรายได้อื่นๆ เช่น OT, ค่าเดินทาง, โบนัส
 
-        $total_income = $this->incomeItems->sum(fn($item) => $item->amount * $item->quantity);
-        $pit_base_income = $total_income - $wht_total_income;
+        // หารายได้จากเงินเดือนเท่านั้น (income_type = 'salary')
+        $salary_income = $this->incomeItems
+            ->where('income_type', self::INCOME_SALARY)
+            ->where('is_wht_3_percent', false) // ไม่เอารายได้ที่ถูก WHT 3% ไปแล้ว
+            ->sum(fn($item) => $item->amount * $item->quantity);
 
-        if ($pit_base_income > 0) {
+        if ($salary_income > 0) {
             // ต้องหา SSO ที่หักจริงในเดือนนี้
             $sso_item = $this->deductionItems()->where('deduction_type', self::DEDUCTION_SOCIAL_SECURITY)->first();
             $sso_amount = $sso_item ? $sso_item->amount : 0;
 
-            $pit_tax = $this->CalculateProgressiveTax($pit_base_income, $sso_amount);
+            $pit_tax = $this->CalculateProgressiveTax($salary_income, $sso_amount);
 
             if ($pit_tax > 0) {
                 $this->AddDeductionItem(
                     self::DEDUCTION_TAX,
-                    'ภาษีหัก ณ ที่จ่าย (ภ.ง.ด.1)',
-                    $pit_tax
+                    'ภาษีเงินได้ (ภ.ง.ด.1)',
+                    $pit_tax,
+                    null // ไม่ส่ง rate เพราะภาษีเป็นแบบขั้นบันได ไม่ใช่เปอร์เซ็นต์ตายตัว
                 );
             } else {
                 // Remove if 0
@@ -476,16 +478,9 @@ class Payroll extends Model
         $payroll->CalculateTotals();
 
         // คำนวณภาษี (หลังจากได้ total_income)
+        // CalculateTax จะสร้าง deduction item ให้เองแล้ว
         if ($payroll->calc_tax) {
-            $tax = $payroll->CalculateTax();
-            if ($tax > 0) {
-                $payroll->AddDeductionItem(
-                    self::DEDUCTION_TAX,
-                    'ภาษี ' . $payroll->tax_rate . '%',
-                    $tax,
-                    $payroll->tax_rate
-                );
-            }
+            $payroll->CalculateTax();
             $payroll->CalculateTotals();
         }
 

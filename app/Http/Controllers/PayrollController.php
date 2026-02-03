@@ -297,7 +297,7 @@ class PayrollController extends Controller
                 if ($late_amount > 0) {
                     $payroll->AddDeductionItem(
                         Payroll::DEDUCTION_LATE,
-                        'มาสาย ' . $late_minutes . ' นาที',
+                        'หักเข้ากองทุน',
                         $late_amount,
                         $late_minutes // Save minutes as rate
                     );
@@ -968,7 +968,7 @@ class PayrollController extends Controller
                 if ($late_minutes > 0) {
                     $late_amt = $payroll->CalculateLateDeduction($late_minutes);
                     if ($late_amt > 0) {
-                        $payroll->AddDeductionItem(Payroll::DEDUCTION_LATE, "มาสาย $late_minutes นาที", $late_amt, $late_minutes);
+                        $payroll->AddDeductionItem(Payroll::DEDUCTION_LATE, "หักเข้ากองทุน", $late_amt, $late_minutes);
                     }
                 }
 
@@ -1071,7 +1071,7 @@ class PayrollController extends Controller
                         if ($late_amount > 0) {
                             $payroll->AddDeductionItem(
                                 Payroll::DEDUCTION_LATE,
-                                'มาสาย ' . $late_minutes . ' นาที',
+                                'หักเข้ากองทุน',
                                 $late_amount,
                                 $late_minutes
                             );

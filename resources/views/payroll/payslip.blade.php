@@ -6,61 +6,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ใบจ่ายเงินเดือน - {{ $payroll->employee_name }}</title>
     <style>
+        @page {
+            size: A5 landscape;
+            margin: 10mm;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
         }
 
         body {
             font-family: 'Sarabun', 'TH Sarabun New', sans-serif;
-            font-size: 14px;
-            line-height: 1.5;
-            padding: 20px;
+            font-size: 11px;
+            line-height: 1.3;
+            padding: 15px;
         }
 
         .payslip-container {
-            max-width: 800px;
+            max-width: 100%;
             margin: 0 auto;
             border: 2px solid #333;
-            padding: 20px;
+            padding: 12px;
         }
 
         .header {
             text-align: center;
             border-bottom: 2px solid #333;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
         }
 
         .company-name {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
         }
 
         .company-address {
-            font-size: 12px;
+            font-size: 10px;
             color: #555;
         }
 
         .title {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 6px;
         }
 
         .employee-info {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 15px;
-            padding: 10px;
+            margin-bottom: 8px;
+            padding: 6px;
             background: #f5f5f5;
-            border-radius: 5px;
+            border-radius: 3px;
         }
 
         .info-group {
             display: flex;
-            gap: 10px;
+            gap: 6px;
         }
 
         .info-label {
@@ -70,7 +78,7 @@
 
         .content-row {
             display: flex;
-            gap: 20px;
+            gap: 12px;
         }
 
         .content-col {
@@ -79,9 +87,9 @@
 
         .section-title {
             font-weight: bold;
-            padding: 8px;
+            padding: 5px;
             background: #e9ecef;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             border-radius: 3px;
         }
 
@@ -98,11 +106,11 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
 
         table td {
-            padding: 5px 8px;
+            padding: 3px 6px;
             border-bottom: 1px solid #ddd;
         }
 
@@ -116,52 +124,57 @@
         }
 
         .net-pay-section {
-            margin-top: 20px;
-            padding: 15px;
+            margin-top: 10px;
+            padding: 10px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 8px;
+            border-radius: 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .net-pay-label {
-            font-size: 16px;
+            font-size: 13px;
         }
 
         .net-pay-amount {
-            font-size: 24px;
+            font-size: 18px;
             font-weight: bold;
         }
 
         .footer {
-            margin-top: 30px;
+            margin-top: 15px;
             display: flex;
             justify-content: space-between;
         }
 
         .signature-box {
             text-align: center;
-            width: 200px;
+            width: 150px;
         }
 
         .signature-line {
             border-top: 1px solid #333;
-            margin-top: 50px;
+            margin-top: 30px;
             padding-top: 5px;
         }
 
         .payment-info {
-            margin-top: 15px;
-            padding: 10px;
+            margin-top: 8px;
+            padding: 6px;
             background: #fff3cd;
-            border-radius: 5px;
+            border-radius: 3px;
             display: flex;
             justify-content: space-between;
         }
 
         @media print {
+            @page {
+                size: A5 landscape;
+                margin: 10mm;
+            }
+
             body {
                 padding: 0;
             }
@@ -172,6 +185,36 @@
 
             .payslip-container {
                 border: 1px solid #333;
+                max-width: 100%;
+            }
+
+            * {
+                print-color-adjust: exact !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
+            .employee-info {
+                background: #f5f5f5 !important;
+            }
+
+            .income-section .section-title {
+                background: #d4edda !important;
+                color: #155724 !important;
+            }
+
+            .deduction-section .section-title {
+                background: #f8d7da !important;
+                color: #721c24 !important;
+            }
+
+            .net-pay-section {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                color: white !important;
+            }
+
+            .payment-info {
+                background: #fff3cd !important;
             }
         }
     </style>
