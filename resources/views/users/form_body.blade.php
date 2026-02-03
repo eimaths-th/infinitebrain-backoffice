@@ -182,11 +182,13 @@
     <div class="tab-pane fade" id="{{ $prefix }}payroll" role="tabpanel"
         aria-labelledby="{{ $prefix }}payroll-tab">
         <div class="row">
+            @can('users.edit.salary')
             <div class="col-md-6 mb-3">
                 <label for="{{ $prefix }}base_salary" class="form-label">เงินเดือนฐาน</label>
                 <input type="number" step="0.01" class="form-control" name="base_salary"
                     id="{{ $prefix }}base_salary" value="{{ $user->base_salary ?? 0 }}">
             </div>
+            @endcan
             <div class="col-md-6 mb-3">
                 <label for="{{ $prefix }}bank_name" class="form-label">ธนาคาร</label>
                 <input type="text" class="form-control" name="bank_name" id="{{ $prefix }}bank_name"
