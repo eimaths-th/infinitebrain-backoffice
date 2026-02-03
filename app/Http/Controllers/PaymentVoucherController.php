@@ -201,6 +201,10 @@ class PaymentVoucherController extends Controller
                     'user_id' => Auth::id(),
                     'user_name' => Auth::user()->name ?? 'System',
                 ]);
+
+                // Notify via LINE
+                $lineService = new \App\Services\LineMessagingService();
+                $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_PENDING, $request->boolean('is_test'));
             }
 
             DB::commit();
@@ -368,21 +372,25 @@ class PaymentVoucherController extends Controller
                 'user_name' => Auth::user()->name ?? 'System',
             ]);
 
-            if ($request->submit && $oldStatus !== PaymentVoucher::STATUS_PENDING) {
+            if ($request->submit) {
                 PaymentVoucherLog::create([
                     'payment_voucher_id' => $voucher->id,
                     'action' => PaymentVoucherLog::ACTION_SUBMIT,
-                    'from_status' => $oldStatus,
+                    'from_status' => PaymentVoucher::STATUS_DRAFT,
                     'to_status' => PaymentVoucher::STATUS_PENDING,
                     'user_id' => Auth::id(),
                     'user_name' => Auth::user()->name ?? 'System',
                 ]);
+
+                // Notify via LINE
+                $lineService = new \App\Services\LineMessagingService();
+                $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_PENDING, $request->boolean('is_test'));
             }
 
             DB::commit();
 
             return redirect()->route('payment-voucher.show', $voucher->id)
-                ->with('success', 'อัพเดทใบสำคัญจ่ายเรียบร้อยแล้ว');
+                ->with('success', 'แก้ไขใบสำคัญจ่ายเรียบร้อยแล้ว');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage())->withInput();
@@ -442,6 +450,10 @@ class PaymentVoucherController extends Controller
             'remark' => $request->remark,
         ]);
 
+        // Notify via LINE
+        $lineService = new \App\Services\LineMessagingService();
+        $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_REVIEWED, $request->boolean('is_test'));
+
         return redirect()->route('payment-voucher.show', $voucher->id)
             ->with('success', 'ตรวจสอบใบสำคัญจ่ายเรียบร้อยแล้ว');
     }
@@ -476,6 +488,10 @@ class PaymentVoucherController extends Controller
             'user_name' => Auth::user()->name ?? 'System',
             'remark' => $request->remark,
         ]);
+
+        // Notify via LINE
+        $lineService = new \App\Services\LineMessagingService();
+        $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_APPROVED, $request->boolean('is_test'));
 
         return redirect()->route('payment-voucher.show', $voucher->id)
             ->with('success', 'อนุมัติใบสำคัญจ่ายเรียบร้อยแล้ว');
@@ -513,6 +529,10 @@ class PaymentVoucherController extends Controller
             'remark' => $request->remark,
         ]);
 
+        // Notify via LINE
+        $lineService = new \App\Services\LineMessagingService();
+        $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_REJECTED, $request->boolean('is_test'));
+
         return redirect()->route('payment-voucher.show', $voucher->id)
             ->with('success', 'ปฏิเสธใบสำคัญจ่ายเรียบร้อยแล้ว');
     }
@@ -549,6 +569,10 @@ class PaymentVoucherController extends Controller
             'user_name' => Auth::user()->name ?? 'System',
             'remark' => $request->remark,
         ]);
+
+        // Notify via LINE (Reject to Draft considers as Reject)
+        $lineService = new \App\Services\LineMessagingService();
+        $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_REJECTED, $request->boolean('is_test'));
 
         return redirect()->route('payment-voucher.show', $voucher->id)
             ->with('success', 'ส่งกลับแก้ไขเรียบร้อยแล้ว กรุณาแก้ไขและส่งใหม่อีกครั้ง');
