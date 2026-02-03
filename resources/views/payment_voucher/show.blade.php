@@ -558,6 +558,15 @@
                                                 <label class="form-label">หมายเหตุ (ถ้ามี)</label>
                                                 <textarea name="remark" class="form-control" rows="2"></textarea>
                                             </div>
+                                            @can('payment-voucher.test')
+                                                <div class="mb-3 form-check">
+                                                    <input class="form-check-input" type="checkbox" name="is_test"
+                                                        id="is_test_review" value="1">
+                                                    <label class="form-check-label text-danger fw-bold" for="is_test_review">
+                                                        ทดสอบระบบ (Test Mode)
+                                                    </label>
+                                                </div>
+                                            @endcan
                                             <button type="submit" class="btn btn-info" {{ $disableAccount }}>
                                                 <i class="fa fa-check"></i> ตรวจสอบเรียบร้อย
                                             </button>
@@ -577,6 +586,15 @@
                                                 <label class="form-label">หมายเหตุ (ถ้ามี)</label>
                                                 <textarea name="remark" class="form-control" rows="2"></textarea>
                                             </div>
+                                            @can('payment-voucher.test')
+                                                <div class="mb-3 form-check">
+                                                    <input class="form-check-input" type="checkbox" name="is_test"
+                                                        id="is_test_approve" value="1">
+                                                    <label class="form-check-label text-danger fw-bold" for="is_test_approve">
+                                                        ทดสอบระบบ (Test Mode)
+                                                    </label>
+                                                </div>
+                                            @endcan
                                             <button type="submit" class="btn btn-success" {{ $enableFinance }}>
                                                 <i class="fa fa-check"></i> อนุมัติ
                                             </button>
@@ -594,6 +612,15 @@
                                                         class="text-danger">*</span></label>
                                                 <textarea name="remark" class="form-control" rows="2" required></textarea>
                                             </div>
+                                            @can('payment-voucher.test')
+                                                <div class="mb-3 form-check">
+                                                    <input class="form-check-input" type="checkbox" name="is_test"
+                                                        id="is_test_reject" value="1">
+                                                    <label class="form-check-label text-danger fw-bold" for="is_test_reject">
+                                                        ทดสอบระบบ (Test Mode)
+                                                    </label>
+                                                </div>
+                                            @endcan
                                             <button type="submit" class="btn btn-danger" {{ $enableFinance }}>
                                                 <i class="fa fa-times"></i> ปฏิเสธ
                                             </button>
@@ -614,6 +641,16 @@
                                                         class="text-danger">*</span></label>
                                                 <textarea name="remark" class="form-control" rows="2" required placeholder="ระบุสิ่งที่ต้องแก้ไข..."></textarea>
                                             </div>
+                                            @can('payment-voucher.test')
+                                                <div class="mb-3 form-check">
+                                                    <input class="form-check-input" type="checkbox" name="is_test"
+                                                        id="is_test_reject_draft" value="1">
+                                                    <label class="form-check-label text-danger fw-bold"
+                                                        for="is_test_reject_draft">
+                                                        ทดสอบระบบ (Test Mode)
+                                                    </label>
+                                                </div>
+                                            @endcan
                                             <button type="submit" class="btn btn-warning" {{ $disableAccount }}>
                                                 <i class="fa fa-reply"></i> ส่งกลับแก้ไข
                                             </button>

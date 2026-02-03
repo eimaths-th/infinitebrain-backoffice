@@ -17,10 +17,12 @@ class LineMessagingService
         $this->group_id = config('services.line_messaging.group_id');
     }
 
-    public function Send(string $message): bool
+    public function Send(string $message, ?string $targetGroupId = null): bool
     {
-        if (empty($this->channel_access_token) || empty($this->group_id)) {
-            Log::warning('LINE Messaging API credentials are not configured');
+        $groupId = $targetGroupId ?? $this->group_id;
+
+        if (empty($this->channel_access_token) || empty($groupId)) {
+            Log::warning('LINE Messaging API credentials or Group ID are not configured');
             return false;
         }
 
@@ -29,7 +31,7 @@ class LineMessagingService
                 'Authorization' => 'Bearer ' . $this->channel_access_token,
                 'Content-Type' => 'application/json',
             ])->post($this->api_url, [
-                'to' => $this->group_id,
+                'to' => $groupId,
                 'messages' => [
                     [
                         'type' => 'text',
@@ -39,7 +41,7 @@ class LineMessagingService
             ]);
 
             if ($response->successful()) {
-                Log::info('LINE Message sent successfully', ['message' => $message]);
+                Log::info('LINE Message sent successfully', ['message' => $message, 'to' => $groupId]);
                 return true;
             }
 
@@ -73,5 +75,58 @@ class LineMessagingService
         $message .= "\n\n🔗 ดูรายละเอียด: " . route('leave-requests.show', $leave_request->id);
 
         return $this->Send($message);
+    }
+
+    public function SendPaymentVoucherNotification($voucher, $status, $isTest = false): bool
+    {
+        $message = "";
+        $targetGroup = null;
+        $icon = "💰";
+
+        switch ($status) {
+            case \App\Models\PaymentVoucher::STATUS_PENDING:
+                $message = "🆕 มีใบสำคัญจ่ายรอตรวจสอบ";
+                $targetGroup = config('services.line_messaging.reviewer_group_id');
+                $icon = "🟡";
+                break;
+            case \App\Models\PaymentVoucher::STATUS_REVIEWED:
+                $message = "✅ ใบสำคัญจ่ายผ่านการตรวจสอบ (รออนุมัติ)";
+                $targetGroup = config('services.line_messaging.approver_group_id');
+                $icon = "🔵";
+                break;
+            case \App\Models\PaymentVoucher::STATUS_APPROVED:
+                $message = "🎉 ใบสำคัญจ่ายอนุมัติแล้ว";
+                $targetGroup = config('services.line_messaging.manager_group_id');
+                $icon = "🟢";
+                break;
+            case \App\Models\PaymentVoucher::STATUS_REJECTED:
+                $message = "❌ ใบสำคัญจ่ายถูกปฏิเสธ";
+                $targetGroup = config('services.line_messaging.reviewer_group_id');
+                break;
+            default:
+                return false;
+        }
+
+        // Test Mode Override
+        if ($isTest) {
+            $targetGroup = config('services.line_messaging.system_test_group_id');
+            $message = "[TEST] " . $message;
+        }
+
+        $formattedAmount = number_format($voucher->total_amount, 2);
+
+        $content = "{$icon} {$message}\n";
+        $content .= "เลขที่: {$voucher->voucher_no}\n";
+        $content .= "จ่ายให้: {$voucher->pay_to}\n";
+        $content .= "จำนวนเงิน: {$formattedAmount} บาท\n";
+        $content .= "โดย: {$voucher->created_by_name}\n";
+
+        if ($status === \App\Models\PaymentVoucher::STATUS_REJECTED && $voucher->remark) {
+            $content .= "เหตุผล: {$voucher->remark}\n";
+        }
+
+        $content .= "\n🔗 ดูรายละเอียด: " . route('payment-voucher.show', $voucher->id);
+
+        return $this->Send($content, $targetGroup);
     }
 }

@@ -462,17 +462,28 @@
 
                     <!-- Action Buttons -->
                     <div class="border-top pt-3">
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between align-items-center">
                             <a href="{{ route('payment-voucher.show', $voucher->id) }}" class="btn btn-secondary">
                                 <i class="fa fa-times"></i> ยกเลิก
                             </a>
-                            <div>
-                                <button type="submit" class="btn btn-primary" name="submit" value="">
-                                    <i class="fa fa-save"></i> บันทึกร่าง
-                                </button>
-                                <button type="submit" class="btn btn-success" name="submit" value="1">
-                                    <i class="fa fa-send"></i> บันทึกและส่งอนุมัติ
-                                </button>
+                            <div class="d-flex align-items-center gap-3">
+                                @can('payment-voucher.test')
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="is_test" id="is_test"
+                                            value="1">
+                                        <label class="form-check-label text-danger fw-bold" for="is_test">
+                                            ทดสอบระบบ (Test Mode)
+                                        </label>
+                                    </div>
+                                @endcan
+                                <div>
+                                    <button type="submit" class="btn btn-primary" name="submit" value="">
+                                        <i class="fa fa-save"></i> บันทึกร่าง
+                                    </button>
+                                    <button type="submit" class="btn btn-success" name="submit" value="1">
+                                        <i class="fa fa-paper-plane"></i> บันทึกและส่งตรวจสอบ
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
