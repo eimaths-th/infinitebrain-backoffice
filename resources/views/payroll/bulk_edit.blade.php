@@ -163,6 +163,63 @@
 
                                 {{-- Income & Deductions --}}
                                 <div class="col-md-8">
+                                    {{-- Salary Items สำหรับ Part-time (ดึงจาก User Profile) --}}
+                                    @if ($payroll->employee_type === 'parttime' && $payroll->user?->salaryItems?->count() > 0)
+                                        <div class="card mb-3 border-info">
+                                            <div class="card-header bg-info text-white py-2">
+                                                <h6 class="mb-0"><i class="fas fa-list me-1"></i> รายการรายได้ PART-TIME
+                                                    (จาก PROFILE)
+                                                </h6>
+                                            </div>
+                                            <div class="card-body p-2">
+                                                <table class="table table-sm table-borderless mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>รายการ</th>
+                                                            <th class="text-center" style="width: 100px;">เรท</th>
+                                                            <th class="text-center" style="width: 80px;">จำนวน</th>
+                                                            <th class="text-end" style="width: 100px;">รวม</th>
+                                                            <th style="width: 80px;"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($payroll->user->salaryItems as $salary_item)
+                                                            <tr
+                                                                id="salary-item-row-{{ $payroll->id }}-{{ $salary_item->id }}">
+                                                                <td><strong>{{ $salary_item->description }}</strong></td>
+                                                                <td class="text-center">
+                                                                    <span
+                                                                        class="badge bg-secondary">{{ number_format($salary_item->rate, 2) }}/{{ $salary_item->unit }}</span>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm text-center"
+                                                                        id="salary-qty-{{ $payroll->id }}-{{ $salary_item->id }}"
+                                                                        data-payroll-id="{{ $payroll->id }}"
+                                                                        data-rate="{{ $salary_item->rate }}"
+                                                                        data-description="{{ $salary_item->description }}"
+                                                                        data-unit="{{ $salary_item->unit }}"
+                                                                        value="0" min="0" step="0.5"
+                                                                        onchange="updateSalaryItemTotal({{ $payroll->id }}, {{ $salary_item->id }})"
+                                                                        oninput="updateSalaryItemTotal({{ $payroll->id }}, {{ $salary_item->id }})">
+                                                                </td>
+                                                                <td class="text-end fw-bold text-success"
+                                                                    id="salary-total-{{ $payroll->id }}-{{ $salary_item->id }}">
+                                                                    0.00</td>
+                                                                <td class="text-end">
+                                                                    <button type="button" class="btn btn-success btn-xs"
+                                                                        onclick="addSalaryItemToIncomeList({{ $payroll->id }}, {{ $salary_item->id }})">
+                                                                        <i class="fas fa-plus"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    @endif
+
                                     {{-- Income --}}
                                     <div class="card mb-3">
                                         <div class="card-header d-flex justify-content-between align-items-center py-2">
@@ -508,6 +565,95 @@
                     btn.disabled = false;
                     btn.innerHTML = originalText;
                 });
+        }
+
+        // ===== Salary Items Functions (Part-time for Bulk Edit) =====
+        function updateSalaryItemTotal(payrollId, itemId) {
+            const qtyInput = document.getElementById(`salary-qty-${payrollId}-${itemId}`);
+            const totalDisplay = document.getElementById(`salary-total-${payrollId}-${itemId}`);
+
+            if (!qtyInput || !totalDisplay) return;
+
+            const rate = parseFloat(qtyInput.dataset.rate) || 0;
+            const qty = parseFloat(qtyInput.value) || 0;
+            const total = rate * qty;
+
+            totalDisplay.textContent = total.toLocaleString('th-TH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function addSalaryItemToIncomeList(payrollId, itemId) {
+            const qtyInput = document.getElementById(`salary-qty-${payrollId}-${itemId}`);
+            if (!qtyInput) return;
+
+            const rate = parseFloat(qtyInput.dataset.rate) || 0;
+            const qty = parseFloat(qtyInput.value) || 0;
+            const description = qtyInput.dataset.description || '';
+            const unit = qtyInput.dataset.unit || '';
+
+            if (qty <= 0) {
+                alert('กรุณาระบุจำนวน');
+                qtyInput.focus();
+                return;
+            }
+
+            const amount = rate * qty;
+            const container = document.getElementById(`income-list-${payrollId}`);
+            if (!container) return;
+
+            const index = Date.now() + Math.floor(Math.random() * 1000);
+            const rowId = `income-${payrollId}-${index}`;
+            const descText = `${description} (${qty} ${unit})`;
+
+            const html = `
+            <div class="row g-1 mb-2 align-items-center item-row" id="${rowId}">
+                <div class="col-3">
+                    <select name="payrolls[${payrollId}][income_items][${index}][type]" class="form-select form-select-sm">
+                        ${getOptions(incomeTypes)}
+                    </select>
+                </div>
+                <div class="col-4">
+                    <input type="text" class="form-control form-control-sm"
+                        name="payrolls[${payrollId}][income_items][${index}][description]"
+                        value="${descText}" placeholder="คำอธิบาย">
+                </div>
+                <div class="col-2">
+                    <input type="number" step="0.01" class="form-control form-control-sm"
+                        name="payrolls[${payrollId}][income_items][${index}][amount]"
+                        value="${amount.toFixed(2)}" placeholder="จำนวนเงิน">
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                            name="payrolls[${payrollId}][income_items][${index}][is_wht_3_percent]"
+                            value="1">
+                        <label class="form-check-label" style="font-size: 0.8rem;">หัก 3%</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-xs btn-outline-danger border-0" onclick="removeItem('${rowId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="payrolls[${payrollId}][income_items][${index}][quantity]" value="1">
+            </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+
+            // Reset qty input และแสดง feedback
+            qtyInput.value = 0;
+            updateSalaryItemTotal(payrollId, itemId);
+
+            // Flash success
+            const row = document.getElementById(`salary-item-row-${payrollId}-${itemId}`);
+            if (row) {
+                row.classList.add('table-success');
+                setTimeout(() => row.classList.remove('table-success'), 1500);
+            }
+
+            toastr.success(`เพิ่ม ${description} (${qty} ${unit}) = ${amount.toFixed(2)} บาท`);
         }
     </script>
 @endsection

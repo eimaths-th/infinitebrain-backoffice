@@ -5,6 +5,7 @@
                 <th style="width: 50px">#</th>
                 <th>รหัส</th>
                 <th>ชื่อ-นามสกุล</th>
+                <th>แผนก</th>
                 <th>ตำแหน่ง</th>
                 <th class="text-end">เงินเดือน</th>
                 <th class="text-end">รายได้รวม</th>
@@ -24,6 +25,7 @@
                             <span class="badge bg-secondary ms-1" title="ไม่หัก ปกส.">ไม่หัก ปกส.</span>
                         @endif
                     </td>
+                    <td>{{ $payroll->user?->department ?: '-' }}</td>
                     <td>{{ $payroll->position }}</td>
                     <td class="text-end">{{ number_format($payroll->base_salary, 2) }}</td>
                     <td class="text-end text-success">{{ number_format($payroll->total_income, 2) }}</td>
@@ -58,7 +60,7 @@
         </tbody>
         <tfoot>
             <tr class="table-light">
-                <th colspan="4" class="text-end">รวม</th>
+                <th colspan="5" class="text-end">รวม</th>
                 <th class="text-end">{{ number_format($payrolls->sum('base_salary'), 2) }}</th>
                 <th class="text-end text-success">{{ number_format($payrolls->sum('total_income'), 2) }}</th>
                 <th class="text-end text-danger">{{ number_format($payrolls->sum('total_deduction'), 2) }}</th>

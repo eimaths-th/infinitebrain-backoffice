@@ -169,4 +169,28 @@ class User extends Authenticatable
             ->whereNotNull('base_salary')
             ->where('base_salary', '>', 0);
     }
+
+    /**
+     * Tags ของ User (เช่น วิชาที่สอน)
+     */
+    public function tags()
+    {
+        return $this->belongsToMany(UserTag::class, 'user_tag_pivot');
+    }
+
+    /**
+     * รายการรายได้สำหรับ Part-time
+     */
+    public function salaryItems()
+    {
+        return $this->hasMany(UserSalaryItem::class)->where('is_active', true)->orderBy('sort_order');
+    }
+
+    /**
+     * ตรวจสอบว่าเป็น Part-time หรือไม่
+     */
+    public function IsParttime()
+    {
+        return $this->employee_type === 'parttime';
+    }
 }

@@ -152,21 +152,31 @@
             </div>
         @endif
 
-        <!-- Fulltime Employees -->
-        @if ($fulltime_payrolls->count() > 0)
+        <!-- Fulltime Employees (แบ่งตามแผนก) -->
+        @foreach ($fulltime_by_department as $department => $payrolls)
             <div class="card mb-4">
-                <div class="card-header employee-type-header">
-                    <h6 class="mb-0"><i class="fas fa-user-tie me-2"></i>พนักงานประจำ ({{ $fulltime_payrolls->count() }}
-                        คน)</h6>
+                <div class="card-header employee-type-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        <i class="fas fa-building me-2"></i>{{ $department }}
+                        <span class="badge bg-secondary ms-2">{{ $payrolls->count() }} คน</span>
+                    </h6>
+                    @php
+                        $dept_total_income = $payrolls->sum('total_income');
+                        $dept_total_deduction = $payrolls->sum('total_deduction');
+                        $dept_net_pay = $payrolls->sum('net_pay');
+                    @endphp
+                    <small class="text-muted">
+                        รวม: <strong>{{ number_format($dept_net_pay, 2) }}</strong> บาท
+                    </small>
                 </div>
                 <div class="card-body p-0">
                     @include('payroll._payroll_table', [
-                        'payrolls' => $fulltime_payrolls,
+                        'payrolls' => $payrolls,
                         'period' => $period,
                     ])
                 </div>
             </div>
-        @endif
+        @endforeach
 
         <!-- Part-time Employees -->
         @if ($parttime_payrolls->count() > 0)

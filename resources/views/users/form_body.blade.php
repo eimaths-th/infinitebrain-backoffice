@@ -165,15 +165,37 @@
                         Contract</option>
                 </select>
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="{{ $prefix }}start_date" class="form-label">วันที่เริ่มงาน</label>
-                <input type="date" class="form-control" name="start_date" id="{{ $prefix }}start_date"
-                    value="{{ $user->start_date ?? '' }}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="{{ $prefix }}end_date" class="form-label">วันที่สิ้นสุดงาน</label>
-                <input type="date" class="form-control" name="end_date" id="{{ $prefix }}end_date"
-                    value="{{ $user->end_date ?? '' }}">
+            @can('users.edit.detail')
+                <div class="col-md-6 mb-3">
+                    <label for="{{ $prefix }}start_date" class="form-label">วันที่เริ่มงาน</label>
+                    <input type="date" class="form-control" name="start_date" id="{{ $prefix }}start_date"
+                        value="{{ $user->start_date ?? '' }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="{{ $prefix }}end_date" class="form-label">วันที่สิ้นสุดงาน</label>
+                    <input type="date" class="form-control" name="end_date" id="{{ $prefix }}end_date"
+                        value="{{ $user->end_date ?? '' }}">
+                </div>
+            @endcan
+
+            {{-- Tags Section --}}
+            <div class="col-md-12 mb-3">
+                <label for="{{ $prefix }}tags" class="form-label">
+                    <i class="fas fa-tags me-1"></i>Tags (เช่น วิชาที่สอน)
+                </label>
+                @php
+                    $all_tags = \App\Models\UserTag::active()->orderBy('name')->get();
+                    $user_tag_ids = $user?->tags?->pluck('id')->toArray() ?? [];
+                @endphp
+                <select class="form-control" name="tags[]" id="{{ $prefix }}tags" multiple>
+                    @foreach ($all_tags as $tag)
+                        <option value="{{ $tag->id }}"
+                            {{ in_array($tag->id, $user_tag_ids) ? 'selected' : '' }}>
+                            {{ $tag->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <small class="text-muted">กด Ctrl (หรือ Cmd) ค้างไว้เพื่อเลือกหลายรายการ</small>
             </div>
         </div>
     </div>
@@ -183,11 +205,11 @@
         aria-labelledby="{{ $prefix }}payroll-tab">
         <div class="row">
             @can('users.edit.salary')
-            <div class="col-md-6 mb-3">
-                <label for="{{ $prefix }}base_salary" class="form-label">เงินเดือนฐาน</label>
-                <input type="number" step="0.01" class="form-control" name="base_salary"
-                    id="{{ $prefix }}base_salary" value="{{ $user->base_salary ?? 0 }}">
-            </div>
+                <div class="col-md-6 mb-3">
+                    <label for="{{ $prefix }}base_salary" class="form-label">เงินเดือนฐาน</label>
+                    <input type="number" step="0.01" class="form-control" name="base_salary"
+                        id="{{ $prefix }}base_salary" value="{{ $user->base_salary ?? 0 }}">
+                </div>
             @endcan
             <div class="col-md-6 mb-3">
                 <label for="{{ $prefix }}bank_name" class="form-label">ธนาคาร</label>
@@ -209,6 +231,114 @@
                 <input type="text" class="form-control" name="social_security_no"
                     id="{{ $prefix }}social_security_no" value="{{ $user->social_security_no ?? '' }}">
             </div>
+
+            {{-- Salary Items สำหรับ Part-time --}}
+            <div class="col-12 mt-3" id="{{ $prefix }}salary_items_section">
+                <div class="card border-info">
+                    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0"><i class="fas fa-list me-1"></i>รายการรายได้ (Part-time)</h6>
+                        <button type="button" class="btn btn-sm btn-light"
+                            onclick="addSalaryItem('{{ $prefix }}')">
+                            <i class="fas fa-plus me-1"></i>เพิ่มรายการ
+                        </button>
+                    </div>
+                    <div class="card-body p-2" id="{{ $prefix }}salary_items_container">
+                        @php
+                            $salary_items = $user?->salaryItems ?? collect();
+                        @endphp
+                        @forelse($salary_items as $index => $item)
+                            <div class="row g-2 mb-2 salary-item-row"
+                                id="{{ $prefix }}salary_item_{{ $item->id }}">
+                                <div class="col-5">
+                                    <input type="text" class="form-control form-control-sm"
+                                        name="salary_items[{{ $item->id }}][description]"
+                                        value="{{ $item->description }}" placeholder="ชื่อรายการ">
+                                    <input type="hidden" name="salary_items[{{ $item->id }}][id]"
+                                        value="{{ $item->id }}">
+                                </div>
+                                <div class="col-3">
+                                    <div class="input-group input-group-sm">
+                                        <input type="number" step="0.01" class="form-control"
+                                            name="salary_items[{{ $item->id }}][rate]"
+                                            value="{{ $item->rate }}" placeholder="เรท">
+                                        <span class="input-group-text">฿</span>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <select class="form-select form-select-sm"
+                                        name="salary_items[{{ $item->id }}][unit]">
+                                        @foreach (\App\Models\UserSalaryItem::UNITS as $key => $label)
+                                            <option value="{{ $key }}"
+                                                {{ $item->unit == $key ? 'selected' : '' }}>
+                                                {{ $label }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-2 text-end">
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                        onclick="removeSalaryItem('{{ $prefix }}salary_item_{{ $item->id }}')">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-muted text-center mb-0 empty-message"
+                                id="{{ $prefix }}empty_salary_msg">
+                                ยังไม่มีรายการ กดปุ่ม "เพิ่มรายการ" เพื่อเพิ่ม
+                            </p>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    let salaryItemCounter = {{ $salary_items->count() }};
+
+    function addSalaryItem(prefix) {
+        const container = document.getElementById(prefix + 'salary_items_container');
+        const emptyMsg = document.getElementById(prefix + 'empty_salary_msg');
+        if (emptyMsg) emptyMsg.remove();
+
+        const newIndex = 'new_' + (++salaryItemCounter);
+        const html = `
+            <div class="row g-2 mb-2 salary-item-row" id="${prefix}salary_item_${newIndex}">
+                <div class="col-5">
+                    <input type="text" class="form-control form-control-sm"
+                        name="salary_items[${newIndex}][description]"
+                        placeholder="ชื่อรายการ เช่น สอนคณิต ป.6" required>
+                </div>
+                <div class="col-3">
+                    <div class="input-group input-group-sm">
+                        <input type="number" step="0.01" class="form-control"
+                            name="salary_items[${newIndex}][rate]"
+                            placeholder="เรท" required>
+                        <span class="input-group-text">฿</span>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <select class="form-select form-select-sm" name="salary_items[${newIndex}][unit]">
+                        <option value="ชม.">ชั่วโมง</option>
+                        <option value="วัน">วัน</option>
+                        <option value="ครั้ง">ครั้ง</option>
+                    </select>
+                </div>
+                <div class="col-2 text-end">
+                    <button type="button" class="btn btn-sm btn-outline-danger"
+                        onclick="removeSalaryItem('${prefix}salary_item_${newIndex}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+
+    function removeSalaryItem(rowId) {
+        const row = document.getElementById(rowId);
+        if (row) row.remove();
+    }
+</script>
