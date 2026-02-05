@@ -51,7 +51,7 @@ class EmployeeController extends Controller
         $this->check_permission();
 
         if ($request->ajax()) {
-            $query = User::query()->orderBy("id", "desc");
+            $query = User::query();
 
             // Apply filters
             if ($request->filled('department')) {
@@ -68,7 +68,7 @@ class EmployeeController extends Controller
                 }
             }
 
-            $users = $query->get();
+            $users = $query->orderBy("is_disabled", "asc")->orderBy("code", "asc");
 
             return datatables()->of($users)
                 ->editColumn('checkbox', function ($row) {
@@ -306,6 +306,45 @@ class EmployeeController extends Controller
         }
 
         $user->update($data);
+
+        // บันทึก Tags
+        if ($request->has('tags')) {
+            $user->tags()->sync($request->input('tags', []));
+        }
+
+        // บันทึก Salary Items (สำหรับ Part-time)
+        if ($request->has('salary_items')) {
+            $existing_ids = [];
+            foreach ($request->input('salary_items', []) as $key => $item) {
+                if (empty($item['description']) || empty($item['rate'])) {
+                    continue;
+                }
+
+                $item_data = [
+                    'description' => $item['description'],
+                    'rate' => $item['rate'],
+                    'unit' => $item['unit'] ?? 'ชม.',
+                ];
+
+                // ถ้ามี id แสดงว่าเป็น item ที่มีอยู่แล้ว
+                if (!empty($item['id']) && is_numeric($item['id'])) {
+                    $salary_item = \App\Models\UserSalaryItem::find($item['id']);
+                    if ($salary_item && $salary_item->user_id == $user->id) {
+                        $salary_item->update($item_data);
+                        $existing_ids[] = $salary_item->id;
+                    }
+                } else {
+                    // สร้างใหม่
+                    $new_item = $user->salaryItems()->create($item_data);
+                    $existing_ids[] = $new_item->id;
+                }
+            }
+
+            // ลบ items ที่ไม่ได้ส่งมา (is_active = false)
+            \App\Models\UserSalaryItem::where('user_id', $user->id)
+                ->whereNotIn('id', $existing_ids)
+                ->update(['is_active' => false]);
+        }
 
         LogActivity::modelEvent($user, 'user updated', $old, $user->toArray());
 

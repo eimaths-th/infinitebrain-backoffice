@@ -113,12 +113,22 @@ class PayrollController extends Controller
         $period = PayrollPeriod::with(['payrolls.user', 'payrolls.incomeItems', 'payrolls.deductionItems'])
             ->findOrFail($id);
 
-        // จัดกลุ่มตามประเภทพนักงาน
-        $fulltime_payrolls = $period->payrolls->where('employee_type', 'fulltime');
+        // จัดกลุ่มตามแผนก สำหรับ fulltime (ใช้ user->department ที่เป็นข้อมูลล่าสุด)
+        $fulltime_by_department = $period->payrolls
+            ->where('employee_type', 'fulltime')
+            ->sortBy(fn($p) => $p->user?->department ?: 'ไม่ระบุแผนก')  // Sort ตามชื่อแผนก
+            ->groupBy(fn($p) => $p->user?->department ?: 'ไม่ระบุแผนก');
+
+        // เรียงลำดับ key (แผนก) ตามตัวอักษร โดย "ไม่ระบุแผนก" อยู่ท้ายสุด
+        $fulltime_by_department = $fulltime_by_department->sortKeys()->sortBy(function ($value, $key) {
+            return $key === 'ไม่ระบุแผนก' ? 'zzz' : $key;
+        });
+
+        // Part-time และ Contract ยังคงเหมือนเดิม
         $parttime_payrolls = $period->payrolls->where('employee_type', 'parttime');
         $contract_payrolls = $period->payrolls->where('employee_type', 'contract');
 
-        return view('payroll.show', compact('period', 'fulltime_payrolls', 'parttime_payrolls', 'contract_payrolls'));
+        return view('payroll.show', compact('period', 'fulltime_by_department', 'parttime_payrolls', 'contract_payrolls'));
     }
 
     /**

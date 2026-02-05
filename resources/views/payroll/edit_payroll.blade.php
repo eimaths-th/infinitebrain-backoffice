@@ -177,6 +177,65 @@
 
                 <!-- Right Column: Income & Deductions -->
                 <div class="col-md-8">
+                    {{-- Salary Items สำหรับ Part-time (ดึงจาก User Profile) --}}
+                    @if ($payroll->employee_type === 'parttime' && $payroll->user?->salaryItems?->count() > 0)
+                        <div class="card mb-4 border-info">
+                            <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0"><i class="fas fa-list me-2"></i>รายการรายได้ Part-time (จาก Profile)</h6>
+                                <span class="badge bg-light text-dark">กรอกจำนวนแล้วกด "เพิ่มเข้ารายการ"</span>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>รายการ</th>
+                                            <th class="text-center" style="width: 120px;">เรท</th>
+                                            <th class="text-center" style="width: 100px;">จำนวน</th>
+                                            <th class="text-end" style="width: 140px;">รวม</th>
+                                            <th style="width: 100px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($payroll->user->salaryItems as $salary_item)
+                                            <tr id="salary-item-row-{{ $salary_item->id }}">
+                                                <td>
+                                                    <strong>{{ $salary_item->description }}</strong>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span
+                                                        class="badge bg-secondary">{{ number_format($salary_item->rate, 2) }}
+                                                        ฿/{{ $salary_item->unit }}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <input type="number"
+                                                        class="form-control form-control-sm text-center salary-qty-input"
+                                                        id="salary-qty-{{ $salary_item->id }}"
+                                                        data-rate="{{ $salary_item->rate }}"
+                                                        data-description="{{ $salary_item->description }}"
+                                                        data-unit="{{ $salary_item->unit }}" value="0"
+                                                        min="0" step="0.5"
+                                                        onchange="updateSalaryItemTotal({{ $salary_item->id }})"
+                                                        oninput="updateSalaryItemTotal({{ $salary_item->id }})"
+                                                        placeholder="{{ $salary_item->unit }}">
+                                                </td>
+                                                <td class="text-end fw-bold text-success"
+                                                    id="salary-total-{{ $salary_item->id }}">
+                                                    0.00 ฿
+                                                </td>
+                                                <td class="text-end">
+                                                    <button type="button" class="btn btn-success btn-sm"
+                                                        onclick="addSalaryItemToIncome({{ $salary_item->id }})">
+                                                        <i class="fas fa-plus"></i> เพิ่ม
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    @endif
+
                     <!-- Income Items -->
                     <div class="card mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
@@ -447,6 +506,113 @@
 
         function removeItem(id) {
             document.getElementById(id)?.remove();
+        }
+
+        // ===== Salary Items Functions (Part-time) =====
+        // อัพเดทยอดรวมเมื่อกรอกจำนวน
+        function updateSalaryItemTotal(itemId) {
+            const qtyInput = document.getElementById('salary-qty-' + itemId);
+            const totalDisplay = document.getElementById('salary-total-' + itemId);
+
+            if (!qtyInput || !totalDisplay) return;
+
+            const rate = parseFloat(qtyInput.dataset.rate) || 0;
+            const qty = parseFloat(qtyInput.value) || 0;
+            const total = rate * qty;
+
+            totalDisplay.textContent = total.toLocaleString('th-TH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + ' ฿';
+
+            // เปลี่ยนสีถ้ามีค่า
+            if (total > 0) {
+                totalDisplay.classList.remove('text-muted');
+                totalDisplay.classList.add('text-success');
+            } else {
+                totalDisplay.classList.remove('text-success');
+                totalDisplay.classList.add('text-muted');
+            }
+        }
+
+        // เพิ่ม Salary Item เข้าไปใน Income Items
+        function addSalaryItemToIncome(itemId) {
+            const qtyInput = document.getElementById('salary-qty-' + itemId);
+            if (!qtyInput) return;
+
+            const rate = parseFloat(qtyInput.dataset.rate) || 0;
+            const qty = parseFloat(qtyInput.value) || 0;
+            const description = qtyInput.dataset.description || '';
+            const unit = qtyInput.dataset.unit || '';
+
+            if (qty <= 0) {
+                alert('กรุณาระบุจำนวน');
+                qtyInput.focus();
+                return;
+            }
+
+            const amount = rate * qty;
+            const container = document.getElementById('income-items-container');
+
+            // Clear empty message if exists
+            const emptyMsg = container.querySelector('p.text-muted');
+            if (emptyMsg) emptyMsg.remove();
+
+            // Generate HTML for income item
+            let optionsHtml = '';
+            for (const [key, label] of Object.entries(incomeTypes)) {
+                const selected = key === 'other' ? 'selected' : '';
+                optionsHtml += `<option value="${key}" ${selected}>${label}</option>`;
+            }
+
+            const descText = `${description} (${qty} ${unit})`;
+
+            const html = `
+            <div class="item-row" id="income-row-${incomeIndex}">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-3">
+                        <select name="income_items[${incomeIndex}][type]" class="form-select form-select-sm">
+                            ${optionsHtml}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" name="income_items[${incomeIndex}][description]"
+                               class="form-control form-control-sm" placeholder="คำอธิบาย" value="${descText}">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" name="income_items[${incomeIndex}][amount]"
+                               class="form-control form-control-sm" placeholder="จำนวนเงิน" step="0.01" value="${amount.toFixed(2)}">
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                name="income_items[${incomeIndex}][is_wht_3_percent]" value="1">
+                            <label class="form-check-label" style="font-size: 0.8rem;">หัก 3%</label>
+                        </div>
+                    </div>
+                    <div class="col-md-1 text-end">
+                        <span class="remove-item-btn" onclick="removeItem('income-row-${incomeIndex}')">
+                            <i class="fas fa-times-circle"></i>
+                        </span>
+                    </div>
+                    <input type="hidden" name="income_items[${incomeIndex}][quantity]" value="1">
+                </div>
+            </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', html);
+            incomeIndex++;
+
+            // Reset qty input และแสดง feedback
+            qtyInput.value = 0;
+            updateSalaryItemTotal(itemId);
+
+            // แสดง feedback
+            const row = document.getElementById('salary-item-row-' + itemId);
+            if (row) {
+                row.classList.add('table-success');
+                setTimeout(() => row.classList.remove('table-success'), 1500);
+            }
         }
     </script>
 @endsection
