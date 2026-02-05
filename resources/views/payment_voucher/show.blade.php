@@ -421,10 +421,15 @@
                     <div class="table-responsive">
                         <table class="table table-bordered items-table">
                             <tr>
-                                <th style="width: 150px;">วันที่:</th>
+                                <th class="fw-bold">วันที่เอกสาร:</th>
                                 <td>{{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}</td>
                                 <th style="width: 150px;">ผู้ทำรายการ:</th>
                                 <td>{{ $voucher->created_by_name }}</td>
+                            </tr>
+                            <tr>
+                                <th class="fw-bold">เบิกจ่ายประจำสัปดาห์:</th>
+                                <td>{{ $voucher->payment_cycle ?? '-' }}</td>
+                                <td colspan="2"></td> {{-- Span the remaining columns for alignment --}}
                             </tr>
                             <thead>
                                 <tr>

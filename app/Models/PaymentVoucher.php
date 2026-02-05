@@ -39,6 +39,7 @@ class PaymentVoucher extends Model
         'received_date',
         'payer_name',
         'paid_date',
+        'payment_cycle',
     ];
 
     protected $casts = [

@@ -346,15 +346,19 @@
             <div class="info-label">วันที่ / Date</div>
             <div class="info-value">
                 {{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}
-                {{-- <div class="underline" style="margin-top: 5px; border-color: #81c784;"></div> --}}
             </div>
-        </div>
-
-        <div style="display: flex; margin-bottom: 20px;">
             <div style="width: 100px; color: #666;">ที่อยู่</div>
             <div style="flex: 1;">
                 {{ $voucher->pay_to_address ?? '-' }}
             </div>
+            <div class="info-label">เบิกจ่ายประจำสัปดาห์</div>
+            <div class="info-value">
+                {{ $voucher->payment_cycle ?? '-' }}
+            </div>
+        </div>
+
+        <div style="display: flex; margin-bottom: 20px;">
+
         </div>
 
         <!-- Table -->

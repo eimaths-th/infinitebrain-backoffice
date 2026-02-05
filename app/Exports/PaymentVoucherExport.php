@@ -79,6 +79,12 @@ class PaymentVoucherExport
         $voucher_date = Carbon::parse($this->voucher->voucher_date)->format('d/m/Y');
         $sheet->setCellValue('J11', $voucher_date);
 
+        // Payment Cycle (J12) - Assuming user added this field in template
+        // Note: Please adjust the cell coordinate if it's different in the actual template
+        if ($this->voucher->payment_cycle) {
+            $sheet->setCellValue('J12', $this->voucher->payment_cycle);
+        }
+
         // Pay to (C10)
         $sheet->setCellValue('C10', $this->voucher->pay_to);
 

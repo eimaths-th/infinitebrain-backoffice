@@ -75,6 +75,7 @@ class PaymentVoucherController extends Controller
         $request->validate([
             'branch_code' => 'required|string|max:10',
             'voucher_date' => 'required|date',
+            'payment_cycle' => 'nullable|string|max:100', // Added payment_cycle
             'pay_to' => 'required|string|max:255',
             'pay_to_address' => 'nullable|string',
             'pay_to_account_no' => 'nullable|string|max:50',
@@ -134,6 +135,7 @@ class PaymentVoucherController extends Controller
                 'voucher_no' => PaymentVoucher::generateVoucherNo($branchCode),
                 'branch_code' => $branchCode,
                 'voucher_date' => $request->voucher_date,
+                'payment_cycle' => $request->payment_cycle, // Added payment_cycle
                 'pay_to' => $request->pay_to,
                 'pay_to_address' => $request->pay_to_address,
                 'pay_to_account_no' => $request->pay_to_account_no,
@@ -254,6 +256,7 @@ class PaymentVoucherController extends Controller
 
         $request->validate([
             'voucher_date' => 'required|date',
+            'payment_cycle' => 'nullable|string|max:100', // Added payment_cycle
             'pay_to' => 'required|string|max:255',
             'pay_to_address' => 'nullable|string',
             'pay_to_account_no' => 'nullable|string|max:50',
@@ -315,6 +318,7 @@ class PaymentVoucherController extends Controller
             // อัพเดทข้อมูลหลัก
             $voucher->update([
                 'voucher_date' => $request->voucher_date,
+                'payment_cycle' => $request->payment_cycle, // Added payment_cycle
                 'pay_to' => $request->pay_to,
                 'pay_to_address' => $request->pay_to_address,
                 'pay_to_account_no' => $request->pay_to_account_no,

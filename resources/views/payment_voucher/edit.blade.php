@@ -171,6 +171,12 @@
                             </div>
 
                             <div class="mb-3">
+                                <label class="form-label">เบิกจ่ายประจำสัปดาห์ ครั้งที่</label>
+                                <input type="text" name="payment_cycle" class="form-control"
+                                    value="{{ old('payment_cycle', $voucher->payment_cycle) }}" placeholder="เช่น 1/2567">
+                            </div>
+
+                            <div class="mb-3">
                                 <label class="form-label">วันที่ <span class="required-mark">*</span></label>
                                 <input type="text" name="voucher_date"
                                     class="form-control datepicker @error('voucher_date') is-invalid @enderror"
