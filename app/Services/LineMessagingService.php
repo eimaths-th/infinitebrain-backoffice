@@ -111,6 +111,9 @@ class LineMessagingService
         if ($isTest) {
             $targetGroup = config('services.line_messaging.system_test_group_id');
             $message = "[TEST] " . $message;
+            Log::info("PaymentVoucherNotification: Test Mode Logic Applied. TargetGroup changed to $targetGroup");
+        } else {
+            Log::info("PaymentVoucherNotification: Normal Mode. TargetGroup: $targetGroup (Manager Group Config: " . config('services.line_messaging.manager_group_id') . ")");
         }
 
         $formattedAmount = number_format($voucher->total_amount, 2);
