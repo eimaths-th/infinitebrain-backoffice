@@ -593,8 +593,8 @@ class PaymentVoucherController extends Controller
 
         $voucher->update([
             'status' => PaymentVoucher::STATUS_COMPLETED,
-            'receiver_name' => $request->receiver_name,
-            'received_date' => $request->received_date ?? now(),
+            'payer_name' => $request->payer_name,
+            'paid_date' => $request->paid_date ?? now(),
         ]);
 
         PaymentVoucherLog::create([
@@ -604,7 +604,7 @@ class PaymentVoucherController extends Controller
             'to_status' => PaymentVoucher::STATUS_COMPLETED,
             'user_id' => Auth::id(),
             'user_name' => Auth::user()->name ?? 'System',
-            'remark' => 'ผู้รับเงิน: ' . $request->receiver_name,
+            'remark' => 'ผู้จ่ายเงิน: ' . $request->payer_name,
         ]);
 
         return redirect()->route('payment-voucher.show', $voucher->id)
@@ -648,6 +648,16 @@ class PaymentVoucherController extends Controller
         $voucher = PaymentVoucher::with('items')->findOrFail($id);
 
         return (new PaymentVoucherExport($voucher))->Download();
+    }
+
+    /**
+     * Print View (HTML)
+     */
+    public function printPdf($id)
+    {
+        $voucher = PaymentVoucher::with(['items', 'attachments'])->findOrFail($id);
+
+        return view('payment_voucher.print', compact('voucher'));
     }
 
     /**

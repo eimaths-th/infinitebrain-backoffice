@@ -37,6 +37,8 @@ class PaymentVoucher extends Model
         'review_remark',
         'receiver_name',
         'received_date',
+        'payer_name',
+        'paid_date',
     ];
 
     protected $casts = [
@@ -44,6 +46,7 @@ class PaymentVoucher extends Model
         'approved_at' => 'datetime',
         'reviewed_at' => 'datetime',
         'received_date' => 'date',
+        'paid_date' => 'date',
         'total_amount' => 'decimal:2',
     ];
 
@@ -59,7 +62,7 @@ class PaymentVoucher extends Model
         'draft' => 'แบบร่าง',
         'pending' => 'รอตรวจสอบ',
         'reviewed' => 'รออนุมัติ',
-        'approved' => 'อนุมัติแล้ว',
+        'approved' => 'รอจ่ายเงิน',
         'rejected' => 'ถูกปฏิเสธ',
         'completed' => 'เสร็จสิ้น',
     ];
