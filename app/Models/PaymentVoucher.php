@@ -58,7 +58,7 @@ class PaymentVoucher extends Model
     public static $statusLabels = [
         'draft' => 'แบบร่าง',
         'pending' => 'รอตรวจสอบ',
-        'reviewed' => 'ตรวจสอบแล้ว รออนุมัติ',
+        'reviewed' => 'รออนุมัติ',
         'approved' => 'อนุมัติแล้ว',
         'rejected' => 'ถูกปฏิเสธ',
         'completed' => 'เสร็จสิ้น',
