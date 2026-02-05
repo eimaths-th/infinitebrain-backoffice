@@ -647,10 +647,7 @@ class PaymentVoucherController extends Controller
     {
         $voucher = PaymentVoucher::with('items')->findOrFail($id);
 
-        return Excel::download(
-            new PaymentVoucherExport($voucher),
-            'payment_voucher_' . $voucher->voucher_no . '.xlsx'
-        );
+        return (new PaymentVoucherExport($voucher))->Download();
     }
 
     /**
