@@ -365,6 +365,24 @@
             </div>
         </div>
     </div>
+
+    <!-- Attachments -->
+    @if ($voucher->allAttachments && $voucher->allAttachments->count() > 0)
+        @foreach ($voucher->allAttachments as $attachment)
+            @if ($attachment->isImage())
+                <div class="page"
+                    style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div style="font-weight: bold; margin-bottom: 20px; text-align: left; width: 100%;">
+                        เอกสารแนบ: {{ $attachment->file_name }} <br>
+                        <span
+                            style="font-weight: normal; font-size: 12px; color: #666;">{{ $attachment->description }}</span>
+                    </div>
+                    <img src="{{ $attachment->file_url }}"
+                        style="max-width: 100%; max-height: 250mm; object-fit: contain;">
+                </div>
+            @endif
+        @endforeach
+    @endif
 </body>
 
 </html>
