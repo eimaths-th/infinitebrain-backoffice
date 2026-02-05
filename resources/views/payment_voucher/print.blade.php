@@ -190,9 +190,13 @@
 
         .signature-line {
             display: grid;
-            grid-template-columns: 60px 1fr;
+            grid-template-columns: 75px 1fr;
             margin-bottom: 15px;
             align-items: end;
+        }
+
+        .signature-line>div:first-child {
+            white-space: nowrap;
         }
 
         .sig-dots {
@@ -213,15 +217,101 @@
 <body onload="window.print()">
     <div class="page">
         <!-- Header -->
-        <div class="header-section">
-            <img src="{{ asset('images/infinite_logo.png') }}" alt="Logo" class="logo">
-            <div class="company-info">
-                <div class="company-name">บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่)</div>
-                <div>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</div>
-                <div>เลขประจำตัวผู้เสียภาษี : 0125563031038</div>
-                <div>โทร. 098-5098554</div>
-            </div>
-        </div>
+
+        @switch($voucher->branch_code)
+            @case('EL')
+            @case('IF')
+                <div class="header-section">
+                    <img src="{{ asset('images/infinite_logo.png') }}" alt="Logo" class="logo">
+                    <div class="company-info">
+                        <div class="company-name">บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่)</div>
+                        <div>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</div>
+                        <div>เลขประจำตัวผู้เสียภาษี : 0125563031038</div>
+                        <div>โทร. 098-5098554</div>
+                    </div>
+                </div>
+                <style>
+                    .items-table th {
+                        border-top: 1px solid #81c784;
+                        /* Greenish border like in sample */
+                        border-bottom: 1px solid #81c784;
+                        padding: 8px;
+                        text-align: center;
+                        color: #666;
+                        font-weight: normal;
+                    }
+
+                    .total-row {
+                        border-top: 1px solid #81c784;
+                        border-bottom: 1px solid #81c784;
+                        font-weight: bold;
+                    }
+                </style>
+            @break
+
+            @case('EiBK')
+            @case('EiRP')
+                <div class="header-section">
+                    <img src="{{ asset('images/logo_meta.png') }}" alt="Logo" class="logo">
+                    <div class="company-info">
+                        <div class="company-name">META KNOWLEDGE CO., LTD.</div>
+                        <div>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</div>
+                        <div>เลขประจำตัวผู้เสียภาษี: 0125565026368</div>
+                        <div>โทร 093-358-6333</div>
+                    </div>
+                </div>
+                <style>
+                    .items-table th {
+                        border-top: 1px solid rgb(255, 115, 0);
+                        /* Greenish border like in sample */
+                        border-bottom: 1px solid rgb(255, 115, 0);
+                        padding: 8px;
+                        text-align: center;
+                        color: #666;
+                        font-weight: normal;
+                    }
+
+                    .total-row {
+                        border-top: 1px solid rgb(255, 115, 0);
+                        border-bottom: 1px solid rgb(255, 115, 0);
+                        font-weight: bold;
+                    }
+                </style>
+            @break
+
+            @case('MT')
+                <div class="header-section">
+                    <img src="{{ asset('images/logo_meta_2.png') }}" alt="Logo" class="logo">
+                    <div class="company-info">
+                        <div class="company-name">บริษัท เมต้า2 โนวเลจ จำกัด (สำนักงานใหญ่)</div>
+                        <div>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</div>
+                        <div>เลขประจำตัวผู้เสียภาษี: 0125567041160</div>
+                        <div>โทร 093-358-6333</div>
+                    </div>
+                </div>
+                <style>
+                    .items-table th {
+                        border-top: 1px solid rgb(255, 115, 0);
+                        /* Greenish border like in sample */
+                        border-bottom: 1px solid rgb(255, 115, 0);
+                        padding: 8px;
+                        text-align: center;
+                        color: #666;
+                        font-weight: normal;
+                    }
+
+                    .total-row {
+                        border-top: 1px solid rgb(255, 115, 0);
+                        border-bottom: 1px solid rgb(255, 115, 0);
+                        font-weight: bold;
+                    }
+                </style>
+            @break
+
+            @default
+        @endswitch
+
+
 
         <div class="doc-title">
             <h1>ใบสำคัญจ่าย</h1>
@@ -315,12 +405,14 @@
             <div class="signature-block">
                 <div class="signature-line">
                     <div>ผู้อนุมัติ</div>
-                    <div class="info-value">{{ $voucher->approved_by_name ?? '' }}</div>
+                    <div class="info-value">
+                        @if ($voucher->approved_by_name)
+                            {{ $voucher->approved_by_name }}
+                        @else
+                            <div class="sig-dots"></div>
+                        @endif
+                    </div>
                 </div>
-                <!-- Line for signature if needed or just name -->
-                @if (!$voucher->approved_by_name)
-                    <div style="text-align:center; color:#ddd;">................................................</div>
-                @endif
 
                 <div class="signature-line">
                     <div>วันที่</div>
@@ -333,11 +425,14 @@
             <div class="signature-block">
                 <div class="signature-line">
                     <div>ผู้จัดทำ</div>
-                    <div class="info-value">{{ $voucher->created_by_name ?? '' }}</div>
+                    <div class="info-value">
+                        @if ($voucher->created_by_name)
+                            {{ $voucher->created_by_name }}
+                        @else
+                            <div class="sig-dots"></div>
+                        @endif
+                    </div>
                 </div>
-                @if (!$voucher->created_by_name)
-                    <div style="text-align:center; color:#ddd;">................................................</div>
-                @endif
 
                 <div class="signature-line">
                     <div>เช็คจำนวน</div>
@@ -350,11 +445,14 @@
             <div class="signature-block">
                 <div class="signature-line">
                     <div>ผู้จ่ายเงิน</div>
-                    <div class="info-value">{{ $voucher->payer_name ?? $voucher->receiver_name }}</div>
+                    <div class="info-value">
+                        @if ($voucher->payer_name || $voucher->receiver_name)
+                            {{ $voucher->payer_name ?? $voucher->receiver_name }}
+                        @else
+                            <div class="sig-dots"></div>
+                        @endif
+                    </div>
                 </div>
-                @if (!$voucher->payer_name && !$voucher->receiver_name)
-                    <div style="text-align:center; color:#ddd;">................................................</div>
-                @endif
 
                 <div class="signature-line">
                     <div>วันที่</div>
