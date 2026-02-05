@@ -6,6 +6,7 @@
 
 /* แก้ไข z-index ของ sidebar ให้สูงกว่า overlay เมื่อเปิดโหมด mobile */
 @media (max-width: 1250px) {
+
     /* ให้ sidebar มี z-index สูงกว่า overlay */
     .sidebar-mobile-open .app-sidebar {
         z-index: 13 !important;
@@ -13,6 +14,9 @@
         left: 0 !important;
         top: 0 !important;
         height: 100vh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
     }
 
     /* ให้แน่ใจว่า overlay อยู่ใต้ sidebar */
@@ -24,6 +28,10 @@
     /* ให้แน่ใจว่า sidebar scrollbar แสดงผลได้ถูกต้อง */
     .sidebar-mobile-open .app-sidebar .scrollbar-sidebar {
         z-index: 14 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        max-height: 100vh !important;
+        -webkit-overflow-scrolling: touch !important;
     }
 
     /* ให้แน่ใจว่า menu items สามารถคลิกได้ */
