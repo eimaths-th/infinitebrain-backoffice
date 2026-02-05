@@ -655,7 +655,7 @@ class PaymentVoucherController extends Controller
      */
     public function printPdf($id)
     {
-        $voucher = PaymentVoucher::with(['items', 'attachments'])->findOrFail($id);
+        $voucher = PaymentVoucher::with(['items', 'allAttachments'])->findOrFail($id);
 
         return view('payment_voucher.print', compact('voucher'));
     }
