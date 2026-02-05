@@ -21,7 +21,34 @@ class PaymentVoucherExport
      *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
+    /**
+     * Export Payment Voucher to Excel using template
+     *
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
     public function Download()
+    {
+        $spreadsheet = $this->prepareSpreadsheet();
+
+        // Create temp file
+        $temp_file = tempnam(sys_get_temp_dir(), 'pv_excel_');
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save($temp_file);
+
+        // Generate filename
+        $filename = 'payment_voucher_' . $this->voucher->voucher_no . '.xlsx';
+
+        return response()->download($temp_file, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ])->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Prepare Spreadsheet object with data
+     *
+     * @return Spreadsheet
+     */
+    public function prepareSpreadsheet()
     {
         // Load template file
         $template_path = base_path('docs/example.xlsx');
@@ -37,17 +64,7 @@ class PaymentVoucherExport
         // Fill signatures
         $this->FillSignatures($sheet);
 
-        // Create temp file
-        $temp_file = tempnam(sys_get_temp_dir(), 'pv_excel_');
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save($temp_file);
-
-        // Generate filename
-        $filename = 'payment_voucher_' . $this->voucher->voucher_no . '.xlsx';
-
-        return response()->download($temp_file, $filename, [
-            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        ])->deleteFileAfterSend(true);
+        return $spreadsheet;
     }
 
     /**

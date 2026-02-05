@@ -275,8 +275,12 @@
                     <a href="{{ route('payment-voucher.export', $voucher->id) }}" class="btn btn-success">
                         <i class="fa fa-file-excel-o"></i> Excel
                     </a>
+                    <a href="{{ route('payment-voucher.print-pdf', $voucher->id) }}" target="_blank"
+                        class="btn btn-primary">
+                        <i class="fa fa-print"></i> พิมพ์ (ฟอร์ม)
+                    </a>
                     <button onclick="window.print()" class="btn btn-info">
-                        <i class="fa fa-print"></i> พิมพ์
+                        <i class="fa fa-print"></i> พิมพ์ (หน้าเว็บ)
                     </button>
                     @if ($voucher->canEdit())
                         <a href="{{ route('payment-voucher.edit', $voucher->id) }}" class="btn btn-warning">
@@ -667,13 +671,14 @@
                                             method="POST">
                                             @csrf
                                             <div class="mb-3">
-                                                <label class="form-label">ชื่อผู้รับเงิน <span
+                                                <label class="form-label">ชื่อผู้จ่ายเงิน <span
                                                         class="text-danger">*</span></label>
-                                                <input type="text" name="receiver_name" class="form-control" required>
+                                                <input type="text" name="payer_name" class="form-control" required
+                                                    value="{{ Auth::user()->name }}">
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">วันที่รับเงิน</label>
-                                                <input type="date" name="received_date" class="form-control"
+                                                <label class="form-label">วันที่จ่ายเงิน</label>
+                                                <input type="date" name="paid_date" class="form-control"
                                                     value="{{ date('Y-m-d') }}">
                                             </div>
                                             <button type="submit" class="btn btn-success">
@@ -749,23 +754,23 @@
             </div>
         </div>
 
-        @if ($voucher->status === 'completed' && $voucher->receiver_name)
+        @if ($voucher->status === 'completed')
             <div class="col-12">
-                <!-- Receiver Info (if completed) -->
+                <!-- Payment Info (if completed) -->
                 <div class="main-card mb-3 card">
                     <div class="card-header bg-success text-white">
-                        <h6 class="mb-0"><i class="fa fa-check-circle"></i> ข้อมูลการรับเงิน</h6>
+                        <h6 class="mb-0"><i class="fa fa-check-circle"></i> ข้อมูลการจ่ายเงิน</h6>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="info-label">ผู้รับเงิน</div>
-                                <div class="info-value">{{ $voucher->receiver_name }}</div>
+                                <div class="info-label">ผู้จ่ายเงิน</div>
+                                <div class="info-value">{{ $voucher->payer_name ?? $voucher->receiver_name }}</div>
                             </div>
                             <div class="col-md-6">
-                                <div class="info-label">วันที่รับเงิน</div>
+                                <div class="info-label">วันที่จ่ายเงิน</div>
                                 <div class="info-value">
-                                    {{ $voucher->received_date ? \Carbon\Carbon::parse($voucher->received_date)->format('d/m/Y') : '-' }}
+                                    {{ $voucher->paid_date ? \Carbon\Carbon::parse($voucher->paid_date)->format('d/m/Y') : ($voucher->received_date ? \Carbon\Carbon::parse($voucher->received_date)->format('d/m/Y') : '-') }}
                                 </div>
                             </div>
                         </div>

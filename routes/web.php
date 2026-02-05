@@ -146,6 +146,7 @@ Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')
 
     // Export
     Route::get('/export/{id}', [PaymentVoucherController::class, 'exportExcel'])->name('export');
+    Route::get('/print-pdf/{id}', [PaymentVoucherController::class, 'printPdf'])->name('print-pdf');
 
     // Attachments
     Route::post('/{id}/upload-attachment', [PaymentVoucherController::class, 'uploadAttachment'])->name('upload-attachment');
