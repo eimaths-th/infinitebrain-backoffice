@@ -73,6 +73,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('css/infinite.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/sidebar-mobile-fix.css') }}">
 
     <style>
         .form-row {

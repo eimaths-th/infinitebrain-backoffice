@@ -1,0 +1,47 @@
+/*
+ * Sidebar Mobile Fix - แก้ไขปัญหาการคลิก sidebar บนมือถือ
+ * ปัญหา: Overlay มี z-index สูงกว่า sidebar ทำให้คลิก menu ไม่ได้
+ * วิธีแก้: เพิ่ม z-index ให้ sidebar เมื่อเปิดโหมด mobile
+ */
+
+/* แก้ไข z-index ของ sidebar ให้สูงกว่า overlay เมื่อเปิดโหมด mobile */
+@media (max-width: 1250px) {
+    /* ให้ sidebar มี z-index สูงกว่า overlay */
+    .sidebar-mobile-open .app-sidebar {
+        z-index: 13 !important;
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        height: 100vh !important;
+    }
+
+    /* ให้แน่ใจว่า overlay อยู่ใต้ sidebar */
+    .sidebar-mobile-open .sidebar-mobile-overlay {
+        z-index: 12 !important;
+        pointer-events: auto !important;
+    }
+
+    /* ให้แน่ใจว่า sidebar scrollbar แสดงผลได้ถูกต้อง */
+    .sidebar-mobile-open .app-sidebar .scrollbar-sidebar {
+        z-index: 14 !important;
+    }
+
+    /* ให้แน่ใจว่า menu items สามารถคลิกได้ */
+    .sidebar-mobile-open .app-sidebar .app-sidebar__inner {
+        position: relative !important;
+        z-index: 14 !important;
+        pointer-events: auto !important;
+    }
+
+    /* ให้ link ใน menu คลิกได้ */
+    .sidebar-mobile-open .app-sidebar .vertical-nav-menu li a {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+    }
+
+    /* ให้ sidebar แสดงผลเต็มหน้าจอแนวตั้ง */
+    .sidebar-mobile-open .app-sidebar {
+        width: 280px !important;
+        max-width: 280px !important;
+    }
+}
