@@ -612,7 +612,46 @@ class PaymentVoucherController extends Controller
         ]);
 
         return redirect()->route('payment-voucher.show', $voucher->id)
-            ->with('success', 'บันทึกเสร็จสิ้นเรียบร้อยแล้ว');
+            ->with('success', 'บันทึกสถานะเสร็จสิ้นเรียบร้อยแล้ว');
+    }
+
+    /**
+     * ยกเลิกสถานะเสร็จสิ้น (กรณีกดผิด) - Revert to Approved
+     */
+    public function undoComplete(Request $request, $id)
+    {
+        $request->validate([
+            'remark' => 'required|string|max:500',
+        ]);
+
+        $voucher = PaymentVoucher::findOrFail($id);
+
+        if (!$voucher->canUndoComplete()) {
+            return back()->with('error', 'ไม่สามารถยกเลิกสถานะเสร็จสิ้นได้');
+        }
+
+        $oldStatus = $voucher->status;
+
+        // Reset fields related to completion
+        $voucher->update([
+            'status' => PaymentVoucher::STATUS_APPROVED,
+            // 'payer_name' => null, // Optional: Clear payer info? Let's keep it for record or clear it?
+            // 'paid_date' => null,  // Clearing might be safer to indicate it's not paid.
+        ]);
+
+        // Create Log
+        PaymentVoucherLog::create([
+            'payment_voucher_id' => $voucher->id,
+            'action' => 'undo_complete',
+            'from_status' => $oldStatus,
+            'to_status' => PaymentVoucher::STATUS_APPROVED,
+            'user_id' => Auth::id(),
+            'user_name' => Auth::user()->name ?? 'System',
+            'remark' => $request->remark ?? 'ยกเลิกสถานะเสร็จสิ้น (กดผิด)',
+        ]);
+
+        return redirect()->route('payment-voucher.show', $voucher->id)
+            ->with('success', 'ยกเลิกสถานะเสร็จสิ้นเรียบร้อยแล้ว สถานะกลับเป็น "รอจ่ายเงิน"');
     }
 
     /**

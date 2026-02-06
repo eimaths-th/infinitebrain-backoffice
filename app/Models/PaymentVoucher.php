@@ -155,6 +155,11 @@ class PaymentVoucher extends Model
         return $this->status === self::STATUS_APPROVED;
     }
 
+    public function canUndoComplete()
+    {
+        return $this->status === self::STATUS_COMPLETED;
+    }
+
     // Branch Codes
     const BRANCH_EL = 'EL'; // สาขาหลัก
     const BRANCH_EB = 'EB'; // สาขาย่อย (ถ้ามี)

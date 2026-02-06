@@ -139,6 +139,7 @@ Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')
     Route::post('/reject/{id}', [PaymentVoucherController::class, 'reject'])->name('reject');
     Route::post('/reject-to-draft/{id}', [PaymentVoucherController::class, 'rejectToDraft'])->name('reject-to-draft');
     Route::post('/complete/{id}', [PaymentVoucherController::class, 'complete'])->name('complete');
+    Route::post('/undo-complete/{id}', [PaymentVoucherController::class, 'undoComplete'])->name('undo-complete');
 
     // Lists
     Route::get('/pending', [PaymentVoucherController::class, 'pendingList'])->name('pending');
