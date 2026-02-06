@@ -24,12 +24,15 @@
         .bg-chn {
             background-color: #ff9999 !important;
         }
+
         .bg-math {
             background-color: #80dfff !important;
         }
+
         .bg-eng {
             background-color: #66ffcc !important;
         }
+
         .bg-sci {
             background-color: #b3b3ff !important;
         }
@@ -103,6 +106,7 @@
                                 <th>Student Code</th>
                                 <th>Student Name</th>
                                 <th>Subject</th>
+                                <th>Teacher Name</th>
                                 {{-- <th>Level</th> --}}
                                 <th>Date</th>
                                 <th>Start Time</th>
@@ -276,6 +280,18 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="Teacher">Teacher:</label><br>
+                            <select style="width: 100%;" class="select2 select2_single form-control" id="AddTeacher"
+                                name="user_id">
+                                <option value="" selected>Select Teacher</option>
+                                @foreach ($teachers as $teacher)
+                                    <option value="{{ $teacher->id }}">{{ $teacher->name }} ({{ $teacher->nickname }})
+                                    </option>
+                                @endforeach
+
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="Subject">Subject:</label>
                             <select class="AddSubject form-control" id="AddSubject" name="subject">
                                 <option value="" selected>Select Subject</option>
@@ -369,6 +385,19 @@
                                 <select style="width: 100%;" class="select2 select2_single form-control" id="EditStudent"
                                     name="student" multiple="multiple">
 
+
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Teacher">Teacher:</label><br>
+                                <select style="width: 100%;" class="select2 select2_single form-control" id="EditTeacher"
+                                    name="user_id">
+                                    <option value="" selected>Select Teacher</option>
+                                    @foreach ($teachers as $teacher)
+                                        <option value="{{ $teacher->id }}">{{ $teacher->name }}
+                                            ({{ $teacher->nickname }})
+                                        </option>
+                                    @endforeach
 
                                 </select>
                             </div>
@@ -663,6 +692,10 @@
                         name: 'student_subject'
                     },
                     {
+                        data: 'teacher_name',
+                        name: 'teacher_name'
+                    },
+                    {
                         data: 'datetime',
                         name: 'datetime'
                     },
@@ -765,6 +798,7 @@
                         $('#EditTime').val(res.stime);
                         $('#EditETime').val(res.etime);
                         $('#EditDes').val(res.des);
+                        $('#EditTeacher').val(res.user_id).trigger('change');
                         $('#Signature').html(res.signature);
                         $('#EditModal').modal('show');
                     }
