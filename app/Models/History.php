@@ -25,11 +25,16 @@ class History extends Model
     /**
      * @var array
      */
-    protected $fillable = ['student_id', 'subject_id', 'school_price_id', 'status', 'check_school_price_id', 'level_id', 'datetime', 'description', 'created_at', 'updated_at', 'stime', 'etime', 'signature'];
+    protected $fillable = ['student_id', 'subject_id', 'school_price_id', 'status', 'check_school_price_id', 'level_id', 'datetime', 'description', 'created_at', 'updated_at', 'stime', 'etime', 'signature', 'user_id'];
 
     // protected $casts = [
     //     'datetime' => 'datetime:Y-m-d',
     // ];
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 
     public function student()
     {

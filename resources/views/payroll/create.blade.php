@@ -9,12 +9,23 @@
                         <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>สร้างงวดเงินเดือนใหม่</h5>
                     </div>
                     <div class="card-body">
-                        @if ($existing)
+                        @if ($existing_periods->count() > 0)
                             <div class="alert alert-info">
                                 <i class="fas fa-info-circle me-2"></i>
-                                งวด {{ \App\Models\PayrollPeriod::$thaiMonths[$current_month] }} {{ $current_year }}
-                                มีอยู่แล้ว
-                                <a href="{{ route('payroll.show', $existing->id) }}">คลิกเพื่อดู</a>
+                                <strong>งวดประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$current_month] }}
+                                    {{ $current_year }} ที่มีอยู่แล้ว:</strong>
+                                <ul class="mt-2 mb-0">
+                                    @foreach ($existing_periods as $ex)
+                                        <li>
+                                            <span class="badge bg-secondary">{{ $ex->period_code }}</span>
+                                            {{ $ex->period_name }}
+                                            ({!! $ex->GetStatusBadge() !!})
+                                            <a href="{{ route('payroll.show', $ex->id) }}" class="ms-2">ดูข้อมูล</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <hr>
+                                <small>ท่านสามารถสร้างงวดเพิ่มได้ (เช่น งวดรายสัปดาห์ใหม่) โดยระบุข้อมูลด้านล่าง</small>
                             </div>
                         @endif
 

@@ -100,9 +100,11 @@ class HistoryController extends Controller
                 "histories.datetime as datetime",
                 "histories.stime as stime",
                 "histories.etime as etime",
+                "users.name as teacher_name"
             )
                 ->join("students", "students.id", "=", "histories.student_id")
                 ->join("subjects", "subjects.id", "=", "histories.subject_id")
+                ->leftJoin("users", "users.id", "=", "histories.user_id")
                 //->join("levels", "levels.id", "=", "histories.level_id")
 
                 //->where('levels.subject', $request->id)
@@ -125,9 +127,9 @@ class HistoryController extends Controller
         }
 
         //get subject
+        $teachers = \App\Models\User::orderBy('name', 'asc')->get();
 
-
-        return view('histories.index')->with(['data' => $subject])->with(['data2' => $student]);
+        return view('histories.index', compact('teachers'))->with(['data' => $subject])->with(['data2' => $student]);
     }
 
     /**
@@ -244,6 +246,7 @@ class HistoryController extends Controller
                 'etime' => $request->get('etime'),
                 'description' => $request->get('des'),
                 'status' => 'non-reciept',
+                'user_id' => $request->get('user_id') ?? Auth::id(),
             ]);
             $course->save();
             return response()->json(['success' => 'ไม่ได้อยู่ในระยะเวลาที่ลงทะเบียน']);
@@ -279,6 +282,8 @@ class HistoryController extends Controller
                 'etime' => $request->get('etime'),
                 'description' => $request->get('des'),
                 'status' => 'reciept',
+                'user_id' => $request->get('user_id') ?? Auth::id(),
+
 
             ]);
             $course->save();
@@ -295,6 +300,7 @@ class HistoryController extends Controller
                 'etime' => $request->get('etime'),
                 'description' => $request->get('des'),
                 'status' => 'non-reciept',
+                'user_id' => $request->get('user_id') ?? Auth::id(),
             ]);
             $course->save();
             return response()->json(['success' => 'ไม่ได้อยู่ในระยะเวลาที่ลงทะเบียน']);
@@ -635,7 +641,16 @@ class HistoryController extends Controller
         $photo_att .= "<div><a href=\"" . urldecode($urla) . "\" target=\"blank\"><img src=\"" . $urla . "\" height=\"100\">click to view</a></div>&nbsp;&nbsp;";
 
         return response()->json([
-            'html' => $select_list, 'html2' => $select_list2, 'date' => $date_start, 'student' => $select_list_student, 'subject' => $select_list_subject, 'des' => $data->description, 'stime' => $data->stime, 'etime' => $data->etime, 'signature' => $photo_att
+            'html' => $select_list,
+            'html2' => $select_list2,
+            'date' => $date_start,
+            'student' => $select_list_student,
+            'subject' => $select_list_subject,
+            'des' => $data->description,
+            'stime' => $data->stime,
+            'etime' => $data->etime,
+            'signature' => $photo_att,
+            'user_id' => $data->user_id
         ]);
     }
 
@@ -665,7 +680,9 @@ class HistoryController extends Controller
         $course = [
             'student_id' => $request->get('student'),
             'subject_id' => $request->get('subject'),
+            'subject_id' => $request->get('subject'),
             //'level_id' => $request->get('level'),
+            'user_id' => $request->get('user_id'), // Update teacher
             'datetime' => $request->get('date'),
             'stime' => $request->get('stime'),
             'etime' => $request->get('etime'),

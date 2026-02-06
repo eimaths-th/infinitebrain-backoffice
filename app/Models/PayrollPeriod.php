@@ -64,17 +64,37 @@ class PayrollPeriod extends Model
     /**
      * สร้าง period_code อัตโนมัติ
      */
-    public static function GeneratePeriodCode($year, $month)
+    /**
+     * สร้าง period_code อัตโนมัติ (YYYY-MM หรือ YYYY-MM-W-DD)
+     */
+    public static function GeneratePeriodCode($year, $month, $frequency = 'monthly', $start_date = null)
     {
-        return sprintf('%04d-%02d', $year, $month);
+        $base = sprintf('%04d-%02d', $year, $month);
+
+        if ($frequency === 'weekly' && $start_date) {
+            // Append day to ensure uniqueness (e.g., 2569-02-W-01)
+            $day = date('d', strtotime($start_date));
+            return $base . "-W-" . $day;
+        }
+
+        return $base . "-M"; // Add -M to distinguish from old system if needed, or keep compliant
     }
 
     /**
      * สร้าง period_name อัตโนมัติ
      */
-    public static function GeneratePeriodName($year, $month)
+    public static function GeneratePeriodName($year, $month, $frequency = 'monthly', $start_date = null, $end_date = null)
     {
-        return self::$thaiMonths[$month] . ' ' . $year;
+        $month_name = self::$thaiMonths[$month] ?? '';
+        $base = "$month_name $year";
+
+        if ($frequency === 'weekly' && $start_date && $end_date) {
+            $s = date('j', strtotime($start_date));
+            $e = date('j', strtotime($end_date));
+            return "งวดรายสัปดาห์ $s-$e $base"; // e.g. งวดรายสัปดาห์ 1-7 กุมภาพันธ์ 2569
+        }
+
+        return "งวดประจำเดือน $base";
     }
 
     /**

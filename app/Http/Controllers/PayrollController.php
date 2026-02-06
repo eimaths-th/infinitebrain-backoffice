@@ -31,9 +31,19 @@ class PayrollController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Sort by Year (Desc), Month (Desc), Start Date (Desc)
         $periods = $query->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
-            ->paginate(12);
+            ->orderBy('start_date', 'desc')
+            ->get(); // Fetch all first, then group in view or controller. Pagination with grouping is tricky.
+        // Let's stick to pagination if too many, but grouping needs full list or careful chunking.
+        // Given typical data volume, fetching all for current year or paginating by 50 is fine.
+        // Let's use simple pagination but increase limit, or just get() if not too large.
+        // For UI Grouping key: 'YYYY-MM'.
+
+        // Let's paginate normally but sort correctly so grouping works per page (mostly)
+        // Adjust pagination size to cover likely a full year
+        $periods = $query->paginate(20);
 
         // Get years for filter
         $years = PayrollPeriod::selectRaw('DISTINCT year')
@@ -53,11 +63,12 @@ class PayrollController extends Controller
         $current_month = (int) date('m');
 
         // ตรวจสอบว่างวดนี้มีอยู่แล้วหรือไม่
-        $existing = PayrollPeriod::where('year', $current_year)
+        // ตรวจสอบว่างวดนี้มีอยู่แล้วหรือไม่
+        $existing_periods = PayrollPeriod::where('year', $current_year)
             ->where('month', $current_month)
-            ->first();
+            ->get(); // Get ALL periods (monthly, weekly 1, weekly 2 etc.)
 
-        return view('payroll.create', compact('current_year', 'current_month', 'existing'));
+        return view('payroll.create', compact('current_year', 'current_month', 'existing_periods'));
     }
 
     /**
@@ -195,7 +206,7 @@ class PayrollController extends Controller
                 // Create Logic Base
                 $payroll = Payroll::CreateForUser($period->id, $user, $options);
 
-                // *** WEEKLY LOGIC: ปรับปรุงยอดเงินเดือน ***
+                // *** WEEKLY LOGIC: ปรับปรุงยอดเงินเดือนและรายการหัก ***
                 if ($frequency === 'weekly' && $user->employee_type !== 'parttime') {
                     // คำนวณวันในงวด
                     $days = 7;
@@ -205,39 +216,69 @@ class PayrollController extends Controller
                         $days = $start->diffInDays($end) + 1;
                     }
 
-                    // สูตร: (เงินเดือน / 30) * จำนวนวัน
-                    // ใช้ 30 วันเป็นฐานมาตรฐาน หรือจะใช้ daysInMonth ก็ได้ แต่ 30 เป็น convention ที่ตกลงไว้
-                    $daily_rate = $payroll->base_salary / 30;
+                    // 1. คำนวณเงินเดือนรายสัปดาห์ (Pro-rated Salary)
+                    $full_base_salary = $payroll->base_salary; // เงินเดือนเต็มเดือน
+                    $daily_rate = $full_base_salary / 30;
                     $prorated_salary = round($daily_rate * $days, 2);
 
                     // Update Base Salary in Record & Income Item
-                    // incomeItems[0] is usually Salary created by CreateForUser
-                    $salaryItem = $payroll->incomeItems()->where('type', Payroll::INCOME_SALARY)->first();
+                    $salaryItem = $payroll->incomeItems()->where('income_type', Payroll::INCOME_SALARY)->first();
                     if ($salaryItem) {
                         $salaryItem->amount = $prorated_salary;
                         $salaryItem->save();
                     }
-
                     $payroll->base_salary = $prorated_salary;
 
-                    // Recalculate Social Security (Pro-rated salary might drop below cap/floor logic if strictly applied, but keeping simple for now)
-                    // Usually SS is calculated on Actual Income.
+                    // 2. คำนวณประกันสังคม (Pro-rated Social Security)
+                    // ต้องคำนวณจากยอดเต็มเดือน (max cap) ก่อน แล้วค่อยหารเฉลี่ยตามวัน
                     if ($payroll->calc_social_security) {
-                        // Re-run SS Calc because base_salary changed
-                        // Remove old SS deduction first
-                        $payroll->deductionItems()->where('type', Payroll::DEDUCTION_SOCIAL_SECURITY)->delete();
+                        // คำนวณ SS เต็มเดือน (ใช้ฐานเงินเดือนเต็ม)
+                        $base_for_ss = min($full_base_salary, $payroll->social_security_cap);
+                        $full_month_ss = round($base_for_ss * ($payroll->social_security_rate / 100), 2);
 
-                        $ss = $payroll->CalculateSocialSecurity();
-                        if ($ss > 0) {
+                        // Pro-rate SS
+                        $daily_ss = $full_month_ss / 30;
+                        $prorated_ss = round($daily_ss * $days, 2);
+
+                        // ลบรายการเดิม (ที่คำนวณจากยอดเต็มใน CreateForUser หรือยอด partial ถ้ามีการ recalc)
+                        $payroll->deductionItems()->where('deduction_type', Payroll::DEDUCTION_SOCIAL_SECURITY)->delete();
+
+                        if ($prorated_ss > 0) {
                             $payroll->AddDeductionItem(
                                 Payroll::DEDUCTION_SOCIAL_SECURITY,
-                                'ประกันสังคม ' . $payroll->social_security_rate . '%',
-                                $ss,
+                                'ประกันสังคม (เฉลี่ย ' . $days . ' วัน)',
+                                $prorated_ss,
                                 $payroll->social_security_rate
                             );
                         }
                     }
 
+                    // 3. คำนวณภาษี (Pro-rated Tax)
+                    // ต้องคำนวณจากรายได้ทั้งปี (ฐานเงินเดือนเต็ม) ก่อน
+                    if ($payroll->calc_tax) {
+                        $payroll->deductionItems()->where('deduction_type', Payroll::DEDUCTION_TAX)->delete();
+
+                        // จำลองคำนวณภาษีต่อเดือนจากฐานเงินเดือนเต็ม
+                        // ต้องหา SS เต็มเดือนเพื่อไปลดหย่อนในการคำนวณภาษี
+                        $base_for_ss = min($full_base_salary, $payroll->social_security_cap);
+                        $full_month_ss = round($base_for_ss * ($payroll->social_security_rate / 100), 2);
+
+                        $full_month_tax = $payroll->CalculateProgressiveTax($full_base_salary, $full_month_ss);
+
+                        // Pro-rate Tax
+                        $daily_tax = $full_month_tax / 30;
+                        $prorated_tax = round($daily_tax * $days, 2);
+
+                        if ($prorated_tax > 0) {
+                            $payroll->AddDeductionItem(
+                                Payroll::DEDUCTION_TAX,
+                                'ภาษี (เฉลี่ย ' . $days . ' วัน)',
+                                $prorated_tax
+                            );
+                        }
+                    }
+
+                    $payroll->CalculateTotals();
                     $payroll->save();
                 }
 
@@ -323,63 +364,104 @@ class PayrollController extends Controller
             }
 
 
-            // คำนวณ totals ก่อนคำนวณรายการหัก
-            $payroll->CalculateTotals();
+            // ตรวจสอบ Frequency ของงวด
+            $frequency = $period->frequency;
+            $full_base_salary = $payroll->user->base_salary ?? $payroll->base_salary;
+            // หมายเหตุ: กรณี Weekly ค่า payroll->base_salary ใน DB จะเป็นค่า pro-rate แล้ว
+            // ดังนั้นควรดึงจาก User ใหม่เพื่อให้ได้ฐานเงินเดือนเต็มมาคำนวณสิทธิ์ต่างๆ
 
-            // รายการหักที่คำนวณอัตโนมัติ - ข้ามไม่ต้องบันทึกจากฟอร์ม
-            // Note: 'wht_3_percent' is also auto now.
-            $auto_deduction_types = [
-                Payroll::DEDUCTION_SOCIAL_SECURITY,
-                Payroll::DEDUCTION_TAX,
-                Payroll::DEDUCTION_LATE,
-                'wht_3_percent'
-            ];
-
-            // เพิ่ม deduction items ใหม่ (เฉพาะที่ไม่ใช่ auto)
-            if ($request->has('deduction_items')) {
-                foreach ($request->deduction_items as $item) {
-                    // ข้ามรายการหักอัตโนมัติ
-                    if (in_array($item['type'], $auto_deduction_types)) {
-                        continue;
-                    }
-
-                    if (!empty($item['amount']) && $item['amount'] > 0) {
-                        $payroll->AddDeductionItem(
-                            $item['type'],
-                            $item['description'],
-                            $item['amount'],
-                            $item['rate'] ?? null
-                        );
-                    }
-                }
+            // ถ้าเป็น Weekly และ payroll->base_salary น้อยกว่า user->base_salary (แสดงว่าถูก pro-rate มา)
+            // ให้ใช้ user->base_salary เป็นฐานคำนวณหักต่างๆ
+            if ($frequency === 'weekly' && $payroll->base_salary < $full_base_salary) {
+                // Use Full Salary for calculations
+            } else {
+                $full_base_salary = $payroll->base_salary;
             }
 
             // คำนวณ ปกส. อัตโนมัติ
             if ($payroll->calc_social_security) {
-                $ss = $payroll->CalculateSocialSecurity();
-                if ($ss > 0) {
+                // คำนวณจากฐานเต็ม
+                $base_for_ss = min($full_base_salary, $payroll->social_security_cap);
+                $full_month_ss = round($base_for_ss * ($payroll->social_security_rate / 100), 2);
+
+                $ss_to_deduct = $full_month_ss;
+
+                // ถ้าเป็น Weekly ต้อง Pro-rate SS
+                if ($frequency === 'weekly') {
+                    $days = 7; // Default or Calculate from period
+                    if ($period->start_date && $period->end_date) {
+                        $start = \Carbon\Carbon::parse($period->start_date);
+                        $end = \Carbon\Carbon::parse($period->end_date);
+                        $days = $start->diffInDays($end) + 1;
+                    }
+                    $ss_to_deduct = round(($full_month_ss / 30) * $days, 2);
+                }
+
+                if ($ss_to_deduct > 0) {
+                    $description = 'ประกันสังคม ' . $payroll->social_security_rate . '%';
+                    if ($frequency === 'weekly') {
+                        $description = 'ประกันสังคม (เฉลี่ย ' . $days . ' วัน)';
+                    }
+
                     $payroll->AddDeductionItem(
                         Payroll::DEDUCTION_SOCIAL_SECURITY,
-                        'ประกันสังคม ' . $payroll->social_security_rate . '%',
-                        $ss,
+                        $description,
+                        $ss_to_deduct,
                         $payroll->social_security_rate
                     );
+                } else {
+                    $payroll->deductionItems()->where('deduction_type', Payroll::DEDUCTION_SOCIAL_SECURITY)->delete();
                 }
+            } else {
+                $payroll->deductionItems()->where('deduction_type', Payroll::DEDUCTION_SOCIAL_SECURITY)->delete();
             }
 
             // คำนวณ totals และภาษี (รวม WHT และ PIT)
             $payroll->CalculateTotals();
 
             if ($payroll->calc_tax) {
-                // CalculateTax creates items internally
-                $payroll->CalculateTax();
+                // Custom Tax Calculation for Weekly to support Pro-rate
+                if ($frequency === 'weekly') {
+                    $payroll->deductionItems()->where('deduction_type', Payroll::DEDUCTION_TAX)->delete();
+
+                    // Calc Full Month Tax
+                    // Need SS for Tax Allowance (Full Month SS)
+                    $base_for_ss = min($full_base_salary, $payroll->social_security_cap);
+                    $full_month_ss_for_tax = round($base_for_ss * ($payroll->social_security_rate / 100), 2);
+
+                    $full_month_tax = $payroll->CalculateProgressiveTax($full_base_salary, $full_month_ss_for_tax);
+
+                    // Pro-rate Tax
+                    $days = 7;
+                    if ($period->start_date && $period->end_date) {
+                        $start = \Carbon\Carbon::parse($period->start_date);
+                        $end = \Carbon\Carbon::parse($period->end_date);
+                        $days = $start->diffInDays($end) + 1;
+                    }
+                    $prorated_tax = round(($full_month_tax / 30) * $days, 2);
+
+                    if ($prorated_tax > 0) {
+                        $payroll->AddDeductionItem(
+                            Payroll::DEDUCTION_TAX,
+                            'ภาษี (เฉลี่ย ' . $days . ' วัน)',
+                            $prorated_tax
+                        );
+                    }
+                } else {
+                    // Standard Monthly Logic
+                    $payroll->CalculateTax();
+                }
                 $payroll->CalculateTotals();
             }
 
             // คำนวณหักมาสาย
             $late_minutes = $request->input('late_minutes', 0);
             if ($late_minutes > 0) {
-                $late_amount = $payroll->CalculateLateDeduction($late_minutes);
+                // Calculate Rate from Full Salary
+                // Rate/Min = FullSalary / 30 / 8 / 60
+                $rate_per_minute = $full_base_salary / 30 / 8 / 60;
+                $late_amount = round($rate_per_minute * $late_minutes, 2);
+
                 if ($late_amount > 0) {
                     $payroll->AddDeductionItem(
                         Payroll::DEDUCTION_LATE,
@@ -394,7 +476,11 @@ class PayrollController extends Controller
             // คำนวณหักขาดงาน
             $absence_days = $request->input('absence_days', 0);
             if ($absence_days > 0) {
-                $absence_amount = $payroll->CalculateAbsenceDeduction($absence_days);
+                // Calculate Rate from Full Salary
+                // Rate/Day = FullSalary / 30
+                $rate_per_day = $full_base_salary / 30;
+                $absence_amount = round($rate_per_day * $absence_days, 2);
+
                 if ($absence_amount > 0) {
                     $payroll->AddDeductionItem(
                         Payroll::DEDUCTION_ABSENCE,

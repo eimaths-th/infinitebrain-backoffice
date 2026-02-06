@@ -209,6 +209,7 @@ class APIController extends Controller
                     'stime' => $request->get('stime'),
                     'etime' => $updatedTime,
                     'signature' => $newname,
+                    'user_id' => $request->get('user_id'),
                 ]);
             } else {
                 $course = new History([
@@ -219,6 +220,7 @@ class APIController extends Controller
                     'stime' => $request->get('stime'),
                     'etime' => $updatedTime,
                     'signature' => $newname,
+                    'user_id' => $request->get('user_id'),
                 ]);
             }
 
@@ -282,7 +284,7 @@ class APIController extends Controller
     {
         // ใช้วันที่ปัจจุบันโดยอัตโนมัติ
         $check_date = Carbon::today();
-        
+
         $is_holiday = false;
         $holiday_reason = null;
         $holiday_name = null;
@@ -318,5 +320,14 @@ class APIController extends Controller
             'holiday_name' => $holiday_name,
             'should_send_notification' => !$is_holiday, // true = ส่งได้, false = ไม่ควรส่ง
         ]);
+    }
+
+    public function getTeachers()
+    {
+        $teachers = \App\Models\User::select('id', 'name', 'code', 'nickname')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return response()->json($teachers);
     }
 }

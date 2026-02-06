@@ -119,61 +119,91 @@
             </div>
 
             <!-- Periods List -->
+            @php
+                // Group periods by Year-Month
+                $groupedPeriods = $periods->groupBy(function ($item) {
+                    return $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT);
+                });
+            @endphp
+
             <div class="row">
-                @forelse($periods as $period)
-                    <div class="col-md-4 mb-4">
-                        <div class="card period-card">
-                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">{{ $period->period_name }}</h5>
-                                {!! $period->GetStatusBadge() !!}
-                            </div>
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <small class="text-muted">พนักงาน</small>
-                                        <div class="fw-bold">{{ number_format($period->employee_count) }} คน</div>
+                @forelse($groupedPeriods as $key => $monthPeriods)
+                    @php
+                        [$year, $month] = explode('-', $key);
+                        $monthName = \App\Models\PayrollPeriod::$thaiMonths[(int) $month] ?? '-';
+                    @endphp
+
+                    <div class="col-12 mb-3">
+                        <h5 class="text-primary border-bottom pb-2">
+                            <i class="far fa-calendar-alt me-2"></i>{{ $monthName }} {{ $year }}
+                        </h5>
+                    </div>
+
+                    @foreach ($monthPeriods as $period)
+                        <div class="col-md-4 mb-4">
+                            <div class="card period-card">
+                                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        @if ($period->frequency === 'weekly')
+                                            <span class="badge bg-info me-2">Weekly</span>
+                                        @else
+                                            <span class="badge bg-primary me-2">Monthly</span>
+                                        @endif
+                                        <h6 class="mb-0 text-dark">{{ $period->period_code }}</h6>
                                     </div>
-                                    <div class="col-6">
-                                        <small class="text-muted">วันจ่าย</small>
-                                        <div class="fw-bold">{{ $period->payment_date?->format('d/m/Y') ?? '-' }}</div>
+                                    {!! $period->GetStatusBadge() !!}
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <h6 class="fw-bold mb-1">{{ $period->period_name }}</h6>
+                                        <small class="text-muted">
+                                            <i class="far fa-clock me-1"></i>
+                                            {{ $period->start_date ? $period->start_date->format('d/m/Y') : '-' }}
+                                            -
+                                            {{ $period->end_date ? $period->end_date->format('d/m/Y') : '-' }}
+                                        </small>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <small class="text-muted">วันจ่ายเงิน</small>
+                                            <div class="fw-bold">{{ $period->payment_date?->format('d/m/Y') ?? '-' }}</div>
+                                        </div>
+                                        <div class="col-6 text-end">
+                                            <small class="text-muted">พนักงาน</small>
+                                            <div class="fw-bold">{{ number_format($period->employee_count) }} คน</div>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-2">
+
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <span class="text-muted">ยอดสุทธิ</span>
+                                        <span
+                                            class="h5 mb-0 text-primary fw-bold">{{ number_format($period->total_net_pay, 2) }}</span>
                                     </div>
                                 </div>
-                                <hr>
-                                <div class="row text-center">
-                                    <div class="col-4">
-                                        <small class="text-muted">รายได้รวม</small>
-                                        <div class="text-success fw-bold">{{ number_format($period->total_income, 2) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <small class="text-muted">หักรวม</small>
-                                        <div class="text-danger fw-bold">{{ number_format($period->total_deduction, 2) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <small class="text-muted">สุทธิ</small>
-                                        <div class="text-primary fw-bold">{{ number_format($period->total_net_pay, 2) }}
-                                        </div>
-                                    </div>
+                                <div class="card-footer bg-white d-flex justify-content-between">
+                                    <a href="{{ route('payroll.show', $period->id) }}"
+                                        class="btn btn-primary btn-sm w-100 me-1">
+                                        <i class="fas fa-eye me-1"></i> รายละเอียด
+                                    </a>
+
+                                    @if ($period->CanEdit())
+                                        <form action="{{ route('payroll.destroy', $period->id) }}" method="POST"
+                                            class="d-inline"
+                                            onsubmit="return confirm('ยืนยันลบงวดบัญชีนี้?\nข้อมูล payroll ทั้งหมดจะถูกลบไปด้วย')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" title="ลบงวด">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
-                            </div>
-                            <div class="card-footer bg-white">
-                                <a href="{{ route('payroll.show', $period->id) }}" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-eye me-1"></i> ดูรายละเอียด
-                                </a>
-                                @if ($period->CanEdit())
-                                    <form action="{{ route('payroll.destroy', $period->id) }}" method="POST"
-                                        class="d-inline" onsubmit="return confirm('ยืนยันการลบงวดนี้?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                @endif
                             </div>
                         </div>
-                    </div>
+                    @endforeach
                 @empty
                     <div class="col-12">
                         <div class="card">
