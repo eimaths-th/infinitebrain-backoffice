@@ -281,8 +281,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Teacher">Teacher:</label><br>
-                            <select style="width: 100%;" class="select2 select2_single form-control" id="AddTeacher"
-                                name="user_id">
+                            <select style="width: 100%;" class="form-control" id="AddTeacher" name="user_id">
                                 <option value="" selected>Select Teacher</option>
                                 @foreach ($teachers as $teacher)
                                     <option value="{{ $teacher->id }}">{{ $teacher->name }} ({{ $teacher->nickname }})
@@ -390,8 +389,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="Teacher">Teacher:</label><br>
-                                <select style="width: 100%;" class="select2 select2_single form-control" id="EditTeacher"
-                                    name="user_id">
+                                <select style="width: 100%;" class="form-control" id="EditTeacher" name="user_id">
                                     <option value="" selected>Select Teacher</option>
                                     @foreach ($teachers as $teacher)
                                         <option value="{{ $teacher->id }}">{{ $teacher->name }}
@@ -858,6 +856,7 @@
                         des: $('#AddDes').val(),
                         stime: $('#AddTime').val(),
                         etime: $('#AddETime').val(),
+                        user_id: $('#AddTeacher').val(),
                         _token: token,
                     },
                     success: function(result) {
@@ -918,6 +917,7 @@
                         stime: $('#EditTime').val(),
                         etime: $('#EditETime').val(),
                         des: $('#EditDes').val(),
+                        user_id: $('#EditTeacher').val(),
                         _token: token,
                     },
 

@@ -325,6 +325,11 @@ class APIController extends Controller
     public function getTeachers()
     {
         $teachers = \App\Models\User::select('id', 'name', 'code', 'nickname')
+            ->whereHas('roles', function ($q) {
+                $q->where('name', 'teacher');
+            })->orWhereHas('permissions', function ($q) {
+                $q->where('name', 'teacher.teach');
+            })
             ->orderBy('name', 'asc')
             ->get();
 
