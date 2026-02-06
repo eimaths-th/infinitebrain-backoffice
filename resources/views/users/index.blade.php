@@ -95,9 +95,9 @@
                                 <th>Email</th>
                                 <th>แผนก</th>
                                 <th>ตำแหน่ง</th>
+                                <th>Tags</th>
                                 <th>Role</th>
                                 <th>สถานะ</th>
-                                <th>Tags</th>
                                 <th width="120px">Action</th>
                             </tr>
                         </thead>
@@ -286,6 +286,12 @@
                         name: 'position'
                     },
                     {
+                        data: 'tags',
+                        name: 'tags',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
                         data: 'level',
                         name: 'level'
                     },
@@ -293,12 +299,6 @@
                         data: 'status',
                         name: 'status',
                         orderable: false
-                    },
-                    {
-                        data: 'tags',
-                        name: 'tags',
-                        orderable: false,
-                        searchable: false
                     },
                     {
                         data: 'action',
