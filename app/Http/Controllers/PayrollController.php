@@ -68,32 +68,44 @@ class PayrollController extends Controller
         $request->validate([
             'year' => 'required|integer|min:2560|max:2600',
             'month' => 'required|integer|min:1|max:12',
+            'frequency' => 'required|in:monthly,weekly',
+            'start_date' => 'required_if:frequency,weekly|nullable|date',
+            'end_date' => 'required_if:frequency,weekly|nullable|date|after_or_equal:start_date',
         ]);
 
         $year = $request->year;
         $month = $request->month;
+        $frequency = $request->frequency;
 
-        // ตรวจสอบว่ามีงวดนี้แล้วหรือไม่
-        $existing = PayrollPeriod::where('year', $year)
-            ->where('month', $month)
-            ->first();
+        // คำนวณวันเริ่ม-สิ้นสุดงวด
+        $ad_year = $year - 543;
 
-        if ($existing) {
-            return redirect()->route('payroll.show', $existing->id)
-                ->with('info', 'งวดนี้มีอยู่แล้ว');
+        if ($frequency === 'weekly') {
+            $start_date = $request->start_date;
+            $end_date = $request->end_date;
+
+            // ตรวจสอบว่ามีงวด Weekly ที่ช่วงเวลาซ้อนทับกันหรือไม่ (Optional Check)
+        } else {
+            $start_date = sprintf('%04d-%02d-01', $ad_year, $month);
+            $end_date = date('Y-m-t', strtotime($start_date));
         }
 
-        // คำนวณวันเริ่ม-สิ้นสุดงวด (ใช้ปี ค.ศ.)
-        $ad_year = $year - 543;
-        $start_date = sprintf('%04d-%02d-01', $ad_year, $month);
-        $end_date = date('Y-m-t', strtotime($start_date));
-        $payment_date = $end_date; // default วันสุดท้ายของเดือน
+        $payment_date = $end_date; // default วันสุดท้ายของงวด
+
+        // Generate Code
+        $period_code = PayrollPeriod::GeneratePeriodCode($year, $month, $frequency, $start_date);
+
+        // ตรวจสอบ Duplicate Code
+        if (PayrollPeriod::where('period_code', $period_code)->exists()) {
+            return back()->with('error', "งวดรหัส $period_code มีอยู่แล้ว กรุณาตรวจสอบวันที่หรือสร้างใหม่");
+        }
 
         $period = PayrollPeriod::create([
-            'period_code' => PayrollPeriod::GeneratePeriodCode($year, $month),
-            'period_name' => PayrollPeriod::GeneratePeriodName($year, $month),
+            'period_code' => $period_code,
+            'period_name' => PayrollPeriod::GeneratePeriodName($year, $month, $frequency, $start_date, $end_date),
             'year' => $year,
             'month' => $month,
+            'frequency' => $frequency,
             'start_date' => $start_date,
             'end_date' => $end_date,
             'payment_date' => $payment_date,
@@ -144,8 +156,24 @@ class PayrollController extends Controller
 
         DB::beginTransaction();
         try {
-            // ดึง users ที่ active และมีเงินเดือน
-            $users = User::where('is_disabled', false)->get();
+            // ดึง users ที่ active
+            $query = User::where('is_disabled', false);
+
+            // กรองตาม Frequency ของงวด
+            $frequency = $period->frequency ?? 'monthly'; // default to monthly for old key
+
+            // ถ้าเป็น Weekly ดึงเฉพาะคนที่เลือก Weekly
+            if ($frequency === 'weekly') {
+                $query->where('payroll_frequency', 'weekly');
+            } else {
+                // ถ้าเป็น Monthly ดึงคนที่เลือก Monthly หรือ NULL (default)
+                $query->where(function ($q) {
+                    $q->where('payroll_frequency', 'monthly')
+                        ->orWhereNull('payroll_frequency');
+                });
+            }
+
+            $users = $query->get();
 
             $count = 0;
             foreach ($users as $user) {
@@ -164,7 +192,55 @@ class PayrollController extends Controller
                     'calc_tax' => true,
                 ];
 
-                Payroll::CreateForUser($period->id, $user, $options);
+                // Create Logic Base
+                $payroll = Payroll::CreateForUser($period->id, $user, $options);
+
+                // *** WEEKLY LOGIC: ปรับปรุงยอดเงินเดือน ***
+                if ($frequency === 'weekly' && $user->employee_type !== 'parttime') {
+                    // คำนวณวันในงวด
+                    $days = 7;
+                    if ($period->start_date && $period->end_date) {
+                        $start = \Carbon\Carbon::parse($period->start_date);
+                        $end = \Carbon\Carbon::parse($period->end_date);
+                        $days = $start->diffInDays($end) + 1;
+                    }
+
+                    // สูตร: (เงินเดือน / 30) * จำนวนวัน
+                    // ใช้ 30 วันเป็นฐานมาตรฐาน หรือจะใช้ daysInMonth ก็ได้ แต่ 30 เป็น convention ที่ตกลงไว้
+                    $daily_rate = $payroll->base_salary / 30;
+                    $prorated_salary = round($daily_rate * $days, 2);
+
+                    // Update Base Salary in Record & Income Item
+                    // incomeItems[0] is usually Salary created by CreateForUser
+                    $salaryItem = $payroll->incomeItems()->where('type', Payroll::INCOME_SALARY)->first();
+                    if ($salaryItem) {
+                        $salaryItem->amount = $prorated_salary;
+                        $salaryItem->save();
+                    }
+
+                    $payroll->base_salary = $prorated_salary;
+
+                    // Recalculate Social Security (Pro-rated salary might drop below cap/floor logic if strictly applied, but keeping simple for now)
+                    // Usually SS is calculated on Actual Income.
+                    if ($payroll->calc_social_security) {
+                        // Re-run SS Calc because base_salary changed
+                        // Remove old SS deduction first
+                        $payroll->deductionItems()->where('type', Payroll::DEDUCTION_SOCIAL_SECURITY)->delete();
+
+                        $ss = $payroll->CalculateSocialSecurity();
+                        if ($ss > 0) {
+                            $payroll->AddDeductionItem(
+                                Payroll::DEDUCTION_SOCIAL_SECURITY,
+                                'ประกันสังคม ' . $payroll->social_security_rate . '%',
+                                $ss,
+                                $payroll->social_security_rate
+                            );
+                        }
+                    }
+
+                    $payroll->save();
+                }
+
                 $count++;
             }
 

@@ -176,26 +176,75 @@
                     <input type="date" class="form-control" name="end_date" id="{{ $prefix }}end_date"
                         value="{{ $user->end_date ?? '' }}">
                 </div>
+
+                {{-- Probation Section --}}
+                <div class="col-md-6 mb-3 d-flex align-items-center">
+                    <div class="form-check form-switch ps-0">
+                        <input class="form-check-input ms-0 me-2" type="checkbox" id="{{ $prefix }}is_probation"
+                            name="is_probation" value="1" {{ $user->is_probation ?? false ? 'checked' : '' }}
+                            onchange="toggleProbationFields('{{ $prefix }}')" style="float: none;">
+                        <label class="form-check-label" for="{{ $prefix }}is_probation">อยู่ในช่วงทดลองงาน</label>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3 probation-field" id="{{ $prefix }}probation_end_date_wrapper"
+                    style="display: {{ $user->is_probation ?? false ? 'block' : 'none' }};">
+                    <label for="{{ $prefix }}probation_end_date" class="form-label">วันสิ้นสุดการทดลองงาน</label>
+                    <input type="date" class="form-control" name="probation_end_date"
+                        id="{{ $prefix }}probation_end_date" value="{{ $user->probation_end_date ?? '' }}">
+                </div>
             @endcan
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">ความถี่การจ่ายเงินเดือน</label>
+                <div class="mt-2">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="payroll_frequency"
+                            id="{{ $prefix }}freq_monthly" value="monthly"
+                            {{ ($user->payroll_frequency ?? 'monthly') == 'monthly' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="{{ $prefix }}freq_monthly">รายเดือน</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="payroll_frequency"
+                            id="{{ $prefix }}freq_weekly" value="weekly"
+                            {{ ($user->payroll_frequency ?? 'monthly') == 'weekly' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="{{ $prefix }}freq_weekly">รายสัปดาห์</label>
+                    </div>
+                </div>
+            </div>
 
             {{-- Tags Section --}}
             <div class="col-md-12 mb-3">
-                <label for="{{ $prefix }}tags" class="form-label">
-                    <i class="fas fa-tags me-1"></i>Tags (เช่น วิชาที่สอน)
-                </label>
-                @php
-                    $all_tags = \App\Models\UserTag::active()->orderBy('name')->get();
-                    $user_tag_ids = $user?->tags?->pluck('id')->toArray() ?? [];
-                @endphp
-                <select class="form-control" name="tags[]" id="{{ $prefix }}tags" multiple>
+                <label class="form-label d-block mb-2"><i class="fas fa-tags me-1"></i>Tags (เช่น วิชาที่สอน)</label>
+                <div class="d-flex flex-wrap gap-2 p-2 border rounded bg-light">
+                    @php
+                        $all_tags = \App\Models\UserTag::active()->orderBy('name')->get();
+                        $user_tag_ids = $user?->tags?->pluck('id')->toArray() ?? [];
+                    @endphp
                     @foreach ($all_tags as $tag)
-                        <option value="{{ $tag->id }}"
-                            {{ in_array($tag->id, $user_tag_ids) ? 'selected' : '' }}>
-                            {{ $tag->name }}
-                        </option>
+                        <div class="position-relative">
+                            <input type="checkbox" class="btn-check" name="tags[]"
+                                id="{{ $prefix }}tag_{{ $tag->id }}" value="{{ $tag->id }}"
+                                {{ in_array($tag->id, $user_tag_ids) ? 'checked' : '' }} autocomplete="off">
+                            <label class="btn btn-outline-{{ $tag->color }} btn-sm rounded-pill"
+                                for="{{ $prefix }}tag_{{ $tag->id }}">
+                                {{ $tag->name }}
+                                <i class="fas fa-check check-icon d-none"></i>
+                            </label>
+                        </div>
                     @endforeach
-                </select>
-                <small class="text-muted">กด Ctrl (หรือ Cmd) ค้างไว้เพื่อเลือกหลายรายการ</small>
+
+                    <a href="{{ route('user-tags.index') }}" target="_blank"
+                        class="btn btn-sm btn-secondary rounded-pill" title="จัดการ Tags">
+                        <i class="fas fa-cog"></i> จัดการ Tags
+                    </a>
+                </div>
+                <style>
+                    .btn-check:checked+.btn .check-icon {
+                        display: inline-block !important;
+                        margin-left: 5px;
+                    }
+                </style>
             </div>
         </div>
     </div>
@@ -335,6 +384,21 @@
             </div>
         `;
         container.insertAdjacentHTML('beforeend', html);
+    }
+
+    function toggleProbationFields(prefix) {
+        const isProbation = document.getElementById(prefix + 'is_probation').checked;
+        const endDateWrapper = document.getElementById(prefix + 'probation_end_date_wrapper');
+        const endDateInput = document.getElementById(prefix + 'probation_end_date');
+
+        if (isProbation) {
+            endDateWrapper.style.display = 'block';
+            endDateInput.required = true;
+        } else {
+            endDateWrapper.style.display = 'none';
+            endDateInput.required = false;
+            endDateInput.value = '';
+        }
     }
 
     function removeSalaryItem(rowId) {

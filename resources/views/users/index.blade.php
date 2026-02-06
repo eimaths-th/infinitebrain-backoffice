@@ -97,6 +97,7 @@
                                 <th>ตำแหน่ง</th>
                                 <th>Role</th>
                                 <th>สถานะ</th>
+                                <th>Tags</th>
                                 <th width="120px">Action</th>
                             </tr>
                         </thead>
@@ -292,6 +293,12 @@
                         data: 'status',
                         name: 'status',
                         orderable: false
+                    },
+                    {
+                        data: 'tags',
+                        name: 'tags',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'action',
