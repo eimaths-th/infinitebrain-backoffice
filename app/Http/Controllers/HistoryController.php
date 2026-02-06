@@ -127,7 +127,11 @@ class HistoryController extends Controller
         }
 
         //get subject
-        $teachers = \App\Models\User::orderBy('name', 'asc')->get();
+        $teachers = \App\Models\User::whereHas('roles', function ($q) {
+            $q->where('name', 'teacher');
+        })->orWhereHas('permissions', function ($q) {
+            $q->where('name', 'teacher.teach');
+        })->orderBy('name', 'asc')->get();
 
         return view('histories.index', compact('teachers'))->with(['data' => $subject])->with(['data2' => $student]);
     }
