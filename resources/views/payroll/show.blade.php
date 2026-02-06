@@ -45,10 +45,17 @@
             <div>
                 <h4 class="mb-1">
                     <i class="fas fa-calendar-alt me-2"></i>{{ $period->period_name }}
+                    @if ($period->frequency == 'weekly')
+                        <span class="badge bg-info ms-2">รายสัปดาห์</span>
+                    @else
+                        <span class="badge bg-primary ms-2">รายเดือน</span>
+                    @endif
                 </h4>
                 <p class="text-muted mb-0">
-                    งวดวันที่ {{ $period->start_date->format('d/m/Y') }} - {{ $period->end_date->format('d/m/Y') }}
-                    | วันจ่าย: {{ $period->payment_date?->format('d/m/Y') ?? '-' }}
+                    <i class="fas fa-clock me-1"></i> ช่วงเวลา: {{ $period->start_date->format('d/m/Y') }} -
+                    {{ $period->end_date->format('d/m/Y') }}
+                    <span class="mx-2">|</span>
+                    <i class="fas fa-money-check-alt me-1"></i> วันจ่าย: {{ $period->payment_date?->format('d/m/Y') ?? '-' }}
                 </p>
             </div>
             <div class="d-flex gap-2">

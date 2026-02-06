@@ -122,11 +122,22 @@ class EmployeeController extends Controller
 
                     return implode(' ', $badges);
                 })
-                ->addColumn('status', function ($row) {
+                ->editColumn('status', function ($row) {
                     if ($row->is_disabled) {
                         return '<span class="badge bg-secondary"><i class="fa fa-ban me-1"></i>ปิดใช้งาน</span>';
                     }
                     return '<span class="badge bg-success"><i class="fa fa-check me-1"></i>ใช้งาน</span>';
+                })
+                ->addColumn('tags', function (User $user) {
+                    $tags = $user->tags;
+                    if ($tags->isEmpty()) {
+                        return '<span class="text-muted">-</span>';
+                    }
+                    $badges = [];
+                    foreach ($tags as $tag) {
+                        $badges[] = '<span class="badge" style="background-color: var(--bs-' . $tag->color . '); color: white;">' . e($tag->name) . '</span>';
+                    }
+                    return implode(' ', $badges);
                 })
                 ->addColumn('action', function ($row) {
                     $html = '<div class="btn-group" role="group">';
@@ -142,7 +153,7 @@ class EmployeeController extends Controller
                     $html .= '</div>';
                     return $html;
                 })
-                ->rawColumns(['checkbox', 'code', 'name', 'department', 'position', 'level', 'status', 'action'])
+                ->rawColumns(['checkbox', 'code', 'name', 'department', 'position', 'level', 'status', 'tags', 'action'])
                 ->toJson();
         }
 
@@ -202,6 +213,9 @@ class EmployeeController extends Controller
             'employee_type' => 'nullable|in:fulltime,parttime,contract',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
+            'is_probation' => 'nullable|boolean',
+            'probation_end_date' => 'nullable|required_if:is_probation,true|date',
+            'payroll_frequency' => 'nullable|in:monthly,weekly',
             // Payroll info
             'base_salary' => 'nullable|numeric|min:0',
             'bank_name' => 'nullable|string|max:100',
@@ -278,6 +292,9 @@ class EmployeeController extends Controller
             'employee_type' => 'nullable|in:fulltime,parttime,contract',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
+            'is_probation' => 'nullable|boolean',
+            'probation_end_date' => 'nullable|required_if:is_probation,true|date',
+            'payroll_frequency' => 'nullable|in:monthly,weekly',
             // Payroll info
             'base_salary' => 'nullable|numeric|min:0',
             'bank_name' => 'nullable|string|max:100',

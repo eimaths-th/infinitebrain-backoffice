@@ -44,6 +44,9 @@ class User extends Authenticatable
         'start_date',
         'end_date',
         'employee_type',
+        'is_probation',
+        'probation_end_date',
+        'payroll_frequency',
         'department',
         'base_salary',
         'bank_account',
@@ -93,6 +96,8 @@ class User extends Authenticatable
         'birth_date' => 'date',
         'start_date' => 'date',
         'end_date' => 'date',
+        'probation_end_date' => 'date',
+        'is_probation' => 'boolean',
         'base_salary' => 'decimal:2',
     ];
 

@@ -437,6 +437,12 @@
                                         รายชื่อพนักงาน
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('user-tags.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        จัดการ Tags
+                                    </a>
+                                </li>
                             </ul>
                             <ul>
                                 <li>

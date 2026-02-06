@@ -47,6 +47,54 @@
                                 @enderror
                             </div>
 
+                            <div class="mb-3">
+                                <label class="form-label">ประเภทงวด</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="frequency" id="freq_monthly"
+                                            value="monthly" checked onchange="toggleFrequency()">
+                                        <label class="form-check-label" for="freq_monthly">รายเดือน</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="frequency" id="freq_weekly"
+                                            value="weekly" onchange="toggleFrequency()">
+                                        <label class="form-check-label" for="freq_weekly">รายสัปดาห์</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="weekly_dates" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">วันที่เริ่ม <span class="text-danger">*</span></label>
+                                        <input type="date" name="start_date" id="start_date" class="form-control">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">วันที่สิ้นสุด <span class="text-danger">*</span></label>
+                                        <input type="date" name="end_date" id="end_date" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                                function toggleFrequency() {
+                                    const isWeekly = document.getElementById('freq_weekly').checked;
+                                    const weeklyDiv = document.getElementById('weekly_dates');
+                                    const startDate = document.getElementById('start_date');
+                                    const endDate = document.getElementById('end_date');
+
+                                    if (isWeekly) {
+                                        weeklyDiv.style.display = 'block';
+                                        startDate.required = true;
+                                        endDate.required = true;
+                                    } else {
+                                        weeklyDiv.style.display = 'none';
+                                        startDate.required = false;
+                                        endDate.required = false;
+                                    }
+                                }
+                            </script>
+
                             <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save me-1"></i> สร้างงวด
