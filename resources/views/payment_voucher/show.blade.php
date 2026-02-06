@@ -542,7 +542,7 @@
 
         <div class="col-12">
             <!-- Approval Actions -->
-            @if ($voucher->canReview() || $voucher->canApprove() || $voucher->canComplete())
+            @if ($voucher->canReview() || $voucher->canApprove() || $voucher->canComplete() || $voucher->canUndoComplete())
                 <div class="main-card mb-3 card no-print">
                     <div class="card-header bg-success text-white">
                         <h6 class="mb-0"><i class="fa fa-check-circle"></i> ดำเนินการ</h6>
@@ -688,6 +688,32 @@
                                             </div>
                                             <button type="submit" class="btn btn-success">
                                                 <i class="fa fa-check"></i> บันทึกเสร็จสิ้น
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if ($voucher->canUndoComplete())
+                                <div class="col-md-6 mb-3">
+                                    <div class="approval-card" style="border-color: #6c757d; background: #f8f9fa;">
+                                        <h6><i class="fa fa-undo text-secondary"></i> แก้ไขสถานะ (เสร็จสิ้น)</h6>
+                                        <form action="{{ route('payment-voucher.undo-complete', $voucher->id) }}"
+                                            method="POST"
+                                            onsubmit="return confirm('ยืนยันการยกเลิกสถานะเสร็จสิ้น? สถานะจะกลับเป็นรอจ่ายเงิน');">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <div class="alert alert-warning py-2 mb-2">
+                                                    <small><i class="fa fa-exclamation-triangle"></i>
+                                                        กดปุ่มนี้เมื่อต้องการย้อนกลับสถานะไปเป็น "รอจ่ายเงิน"</small>
+                                                </div>
+                                                <label class="form-label">เหตุผลที่ยกเลิก <span
+                                                        class="text-danger">*</span></label>
+                                                <textarea name="remark" class="form-control" rows="2" required
+                                                    placeholder="ระบุสาเหตุ... (เช่น กดผิด, ข้อมูลผิดพลาด)"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-secondary w-100">
+                                                <i class="fa fa-undo"></i> ยกเลิกสถานะเสร็จสิ้น
                                             </button>
                                         </form>
                                     </div>
