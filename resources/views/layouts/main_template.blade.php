@@ -421,6 +421,9 @@
                 $.ajax({
                     url: "{{ route('profile.update') }}",
                     method: 'PUT',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     data: formData,
                     success: function(result) {
                         if (result.success) {
