@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserRoleController extends Controller
 {
@@ -46,8 +47,14 @@ class UserRoleController extends Controller
         $user = User::with('roles', 'permissions')->findOrFail($id);
         $roles = Role::with('permissions')->orderBy('name')->get();
         $userRoles = $user->roles->pluck('name')->toArray();
+        $userMaxLevel = Auth::user()->maxRoleLevel();
 
-        return view('user_roles.edit', compact('user', 'roles', 'userRoles'));
+        // Filter roles that are higher than user's max level from the selection list
+        // Or keep them but mark as disabled in view?
+        // Let's filter them out for now so they can't even see/select them or maybe just validation is enough
+        // but for UX, passing max level is good.
+
+        return view('user_roles.edit', compact('user', 'roles', 'userRoles', 'userMaxLevel'));
     }
 
     /**
@@ -64,7 +71,31 @@ class UserRoleController extends Controller
         DB::beginTransaction();
         try {
             // Sync roles
-            $user->syncRoles($request->roles ?? []);
+            // Sync roles
+            $requestedRoles = $request->roles ?? [];
+            $highLevelRoles = Role::whereIn('name', $requestedRoles)
+                ->where('level', '>', Auth::user()->maxRoleLevel())
+                ->exists();
+
+            if ($highLevelRoles) {
+                return back()->with('error', 'คุณไม่สามารถกำหนด Role ที่มีระดับสูงกว่าของคุณได้');
+            }
+
+            // Also check if user is trying to remove a role that is higher than their level?
+            // "You cannot manage roles higher than yours".
+            // So if target user has a higher role, you shouldn't be able to edit them at all?
+            // Or just not touch those roles?
+
+            // For now, strict check on assigned roles.
+
+            // Allow update but preserve existing higher roles?
+            // Or simply Block if target user has higher role?
+            if ($user->maxRoleLevel() > Auth::user()->maxRoleLevel()) {
+                // If we are strict:
+                return back()->with('error', 'คุณไม่สามารถแก้ไขสิทธิ์ของผู้ใช้ที่มีระดับสูงกว่าคุณได้');
+            }
+
+            $user->syncRoles($requestedRoles);
 
             DB::commit();
             return redirect()->route('admin.user-roles.index')
@@ -88,7 +119,20 @@ class UserRoleController extends Controller
         DB::beginTransaction();
         try {
             $users = User::whereIn('id', $request->user_ids)->get();
+            $targetRole = Role::where('name', $request->role)->first();
+            if (!$targetRole) {
+                throw new \Exception('Role does not exist');
+            }
+
+            if ($targetRole->level > Auth::user()->maxRoleLevel()) {
+                return back()->with('error', 'คุณไม่สามารถกำหนด Role ที่มีระดับสูงกว่าของคุณได้');
+            }
+
             foreach ($users as $user) {
+                // Optional: Prevent assigning if target user already has higher role?
+                if ($user->maxRoleLevel() > Auth::user()->maxRoleLevel()) {
+                    continue; // Skip or Error? Let's skip safely
+                }
                 $user->assignRole($request->role);
             }
 

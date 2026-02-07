@@ -467,6 +467,15 @@
                                         บันทึกเข้างาน
                                     </a>
                                 </li>
+
+                            </ul>
+                            <ul>
+                                <li>
+                                    <a href="{{ route('admin.user-roles.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        กำหนด Role ให้ผู้ใช้
+                                    </a>
+                                </li>
                             </ul>
                         @endhasanyrole
 
@@ -480,6 +489,8 @@
                                 </li>
                             </ul>
                         @endcan
+
+
 
                         {{-- Role & Permission Management (Super Admin Only) --}}
                         @can('system.view')
@@ -503,15 +514,11 @@
                                         จัดการ Permissions
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="{{ route('admin.user-roles.index') }}">
-                                        <i class="metismenu-icon"></i>
-                                        กำหนด Role ให้ผู้ใช้
-                                    </a>
-                                </li>
+
                             </ul>
-                        </li>
-                    @endcan
+                        @endcan
+
+                    </li>
 
                     {{-- <ul>
 

@@ -118,6 +118,16 @@
                         </button>
                     </form>
 
+                    @if ($period->frequency == 'monthly')
+                        <form action="{{ route('payroll.import-weekly', $period->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-primary"
+                                onclick="return confirm('ยืนยันการนำเข้าข้อมูลจากงวดรายสัปดาห์? (ข้อมูลเดิมในงวดนี้ของพนักงานรายสัปดาห์จะถูกทับ)')">
+                                <i class="fas fa-layer-group me-1"></i> รวมยอดรายสัปดาห์
+                            </button>
+                        </form>
+                    @endif
+
                     <a href="{{ route('payroll.import', $period->id) }}" class="btn btn-info">
                         <i class="fas fa-file-excel me-1"></i> Import Excel
                     </a>

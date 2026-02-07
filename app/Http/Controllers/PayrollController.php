@@ -1295,4 +1295,135 @@ class PayrollController extends Controller
             return back()->with('error', 'เกิดข้อผิดพลาดในการซิงค์: ' . $e->getMessage());
         }
     }
+    /**
+     * Import Data from Weekly Periods
+     */
+    public function importWeekly($id)
+    {
+        $targetPeriod = PayrollPeriod::findOrFail($id);
+
+        if ($targetPeriod->frequency !== 'monthly') {
+            return back()->with('error', 'ฟีเจอร์นี้สำหรับงวดรายเดือนเท่านั้น');
+        }
+
+        // 1. Find Source Weekly Periods (Same Year & Month)
+        // Note: We might want to include ANY weekly period that falls within this month?
+        // But strictly, let's stick to Year/Month matching first.
+        $weeklyPeriods = PayrollPeriod::where('year', $targetPeriod->year)
+            ->where('month', $targetPeriod->month)
+            ->where('frequency', 'weekly')
+            ->where('id', '!=', $targetPeriod->id) // Just in case
+            ->get();
+
+        if ($weeklyPeriods->isEmpty()) {
+            return back()->with('error', 'ไม่พบงวดรายสัปดาห์ในเดือนนี้');
+        }
+
+        DB::beginTransaction();
+        try {
+            $userData = [];
+            $importedCount = 0;
+
+            foreach ($weeklyPeriods as $wp) {
+                foreach ($wp->payrolls as $payroll) {
+                    $uid = $payroll->user_id;
+
+                    if (!isset($userData[$uid])) {
+                        $userData[$uid] = [
+                            'user' => $payroll->user,
+                            'employee_code' => $payroll->employee_code, // Capture snapshot
+                            'position' => $payroll->position,           // Capture snapshot
+                            'base_salary' => 0,
+                            'income_items' => [],
+                            'deduction_items' => [],
+                            'ss_rate' => $payroll->social_security_rate,
+                        ];
+                    }
+
+                    // Sum Base Salary (Actual paid amount in that week)
+                    $userData[$uid]['base_salary'] += $payroll->base_salary;
+                    \Log::info("ImportWeekly User {$uid}: Adding base salary {$payroll->base_salary}. New Total: {$userData[$uid]['base_salary']}");
+
+                    // Aggregate Incomes
+                    foreach ($payroll->incomeItems as $item) {
+                        $key = $item->income_type . '|' . $item->description;
+                        if (!isset($userData[$uid]['income_items'][$key])) {
+                            $userData[$uid]['income_items'][$key] = [
+                                'type' => $item->income_type,
+                                'desc' => $item->description,
+                                'amount' => 0,
+                                'qty' => 0
+                            ];
+                        }
+                        $userData[$uid]['income_items'][$key]['amount'] += $item->amount;
+                        $userData[$uid]['income_items'][$key]['qty'] += $item->quantity;
+                        \Log::info("ImportWeekly User {$uid}: Adding income item {$key} amount {$item->amount}");
+                    }
+
+                    // Aggregate Deductions
+                    foreach ($payroll->deductionItems as $item) {
+                        $key = $item->deduction_type . '|' . $item->description;
+                        if (!isset($userData[$uid]['deduction_items'][$key])) {
+                            $userData[$uid]['deduction_items'][$key] = [
+                                'type' => $item->deduction_type,
+                                'desc' => $item->description,
+                                'amount' => 0,
+                                'rate' => 0 // Sum rate? e.g. late minutes
+                            ];
+                        }
+                        $userData[$uid]['deduction_items'][$key]['amount'] += $item->amount;
+                        $userData[$uid]['deduction_items'][$key]['rate'] += $item->rate;
+                    }
+                }
+            }
+
+            // 3. Create/Update Records in Monthly Period
+            foreach ($userData as $uid => $data) {
+                $user = $data['user'];
+
+                // Create or Update Payroll Record
+                $payroll = Payroll::updateOrCreate(
+                    ['payroll_period_id' => $targetPeriod->id, 'user_id' => $uid],
+                    [
+                        'employee_code' => $data['employee_code'] ?? $user->employee_code ?? '-',
+                        'employee_name' => $user->name,
+                        'position' => $data['position'] ?? $user->position,
+                        'employee_type' => $user->employee_type,
+                        'bank_account' => $user->bank_account,
+                        'bank_name' => $user->bank_name,
+                        'base_salary' => $data['base_salary'],
+                        'remark' => 'รวมยอดจากรายสัปดาห์ (' . $weeklyPeriods->count() . ' งวด)',
+                        // Disable auto calc to prevent overwriting with monthly logic partials
+                        'calc_social_security' => false,
+                        'calc_tax' => false
+                    ]
+                );
+
+                // Clear old items to replace with consolidated ones
+                $payroll->incomeItems()->delete();
+                $payroll->deductionItems()->delete();
+
+                // Add Incomes
+                foreach ($data['income_items'] as $item) {
+                    $payroll->AddIncomeItem($item['type'], $item['desc'] . ' (รวม)', $item['amount'], $item['qty']);
+                }
+
+                // Add Deductions
+                foreach ($data['deduction_items'] as $item) {
+                    $payroll->AddDeductionItem($item['type'], $item['desc'] . ' (รวม)', $item['amount'], $item['rate']);
+                }
+
+                $payroll->CalculateTotals();
+                $importedCount++;
+            }
+
+            $targetPeriod->CalculateTotals();
+            DB::commit();
+
+            return back()->with('success', "นำเข้าข้อมูลจาก {$weeklyPeriods->count()} งวดรายสัปดาห์เรียบร้อยแล้ว (รวม {$importedCount} คน)");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'เกิดข้อผิดพลาดในการนำเข้า: ' . $e->getMessage());
+        }
+    }
 }
