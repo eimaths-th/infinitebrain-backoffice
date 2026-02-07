@@ -93,6 +93,7 @@
                                 <th>รหัส</th>
                                 <th>ชื่อ-นามสกุล</th>
                                 <th>Email</th>
+                                <th>วันเกิด</th>
                                 <th>แผนก</th>
                                 <th>ตำแหน่ง</th>
                                 <th>Tags</th>
@@ -276,6 +277,10 @@
                     {
                         data: 'email',
                         name: 'email'
+                    },
+                    {
+                        data: 'birth_date',
+                        name: 'birth_date'
                     },
                     {
                         data: 'department',

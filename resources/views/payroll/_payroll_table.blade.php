@@ -21,7 +21,7 @@
                     <td>{{ $payroll->employee_code }}</td>
                     <td>
                         <strong>{{ $payroll->employee_name }}</strong>
-                        @if (!$payroll->calc_social_security)
+                        @if (!$payroll->calc_social_security && $payroll->deductionItems->where('deduction_type', 'social_security')->isEmpty())
                             <span class="badge bg-secondary ms-1" title="ไม่หัก ปกส.">ไม่หัก ปกส.</span>
                         @endif
                     </td>

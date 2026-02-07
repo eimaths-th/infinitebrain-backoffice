@@ -88,6 +88,9 @@ class EmployeeController extends Controller
                 ->editColumn('email', function ($row) {
                     return $row->email;
                 })
+                ->editColumn('birth_date', function ($row) {
+                    return $row->birth_date ? \Carbon\Carbon::parse($row->birth_date)->format('d m Y') : '-';
+                })
                 ->addColumn('department', function (User $user) {
                     return $user->department ? e($user->department) : '<span class="text-muted">-</span>';
                 })

@@ -183,6 +183,7 @@ Route::middleware(['auth'])->prefix('payroll')->name('payroll.')->group(function
     Route::get('/create', [PayrollController::class, 'create'])->name('create');
     Route::post('/store', [PayrollController::class, 'store'])->name('store');
     Route::get('/{id}', [PayrollController::class, 'show'])->name('show');
+    Route::post('/{id}/import-weekly', [PayrollController::class, 'importWeekly'])->name('import-weekly');
     Route::delete('/{id}', [PayrollController::class, 'destroy'])->name('destroy');
 
     // Generate payrolls for all employees

@@ -121,7 +121,7 @@
             <div class="col-md-6 mb-3">
                 <label for="{{ $prefix }}birth_date" class="form-label">วันเกิด</label>
                 <input type="date" class="form-control" name="birth_date" id="{{ $prefix }}birth_date"
-                    value="{{ $user->birth_date ?? '' }}">
+                    value="{{ isset($user->birth_date) ? \Carbon\Carbon::parse($user->birth_date)->format('Y-m-d') : '' }}">
             </div>
             <div class="col-md-6 mb-3">
                 <label for="{{ $prefix }}nationality" class="form-label">สัญชาติ</label>

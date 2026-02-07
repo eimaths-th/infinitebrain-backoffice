@@ -198,4 +198,12 @@ class User extends Authenticatable
     {
         return $this->employee_type === 'parttime';
     }
+    /**
+     * Get the highest level among the user's assigned roles.
+     * Default to 0 if no roles.
+     */
+    public function maxRoleLevel()
+    {
+        return $this->roles->max('level') ?? 0;
+    }
 }
