@@ -179,7 +179,7 @@
                                     <div class="row">
                                         <label class="col-sm-4">จากวันที่ :</label>
                                         <div class="col-sm-8">
-                                            <input type="date" name="date_from" id="dateFrom" class="form-control" 
+                                            <input type="date" name="date_from" id="dateFrom" class="form-control"
                                                 value="{{ $date_from ?? '' }}" autocomplete="off">
                                         </div>
                                     </div>
@@ -188,7 +188,7 @@
                                     <div class="row">
                                         <label class="col-sm-4">ถึงวันที่ :</label>
                                         <div class="col-sm-8">
-                                            <input type="date" name="date_to" id="dateTo" class="form-control" 
+                                            <input type="date" name="date_to" id="dateTo" class="form-control"
                                                 value="{{ $date_to ?? '' }}" autocomplete="off">
                                         </div>
                                     </div>
@@ -465,6 +465,7 @@
                                     break;
 
                                 default:
+                                    $color = 'rgba(52, 58, 64, 0.8)';
                                     break;
                             }
                             $text_late = '';
@@ -517,7 +518,7 @@
             var searchType = document.querySelector('input[name="search_type"]:checked').value;
             var monthYearSearch = document.getElementById('monthYearSearch');
             var dateRangeSearch = document.getElementById('dateRangeSearch');
-            
+
             if (searchType === 'month') {
                 monthYearSearch.style.display = 'block';
                 dateRangeSearch.style.display = 'none';

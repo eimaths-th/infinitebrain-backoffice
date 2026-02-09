@@ -271,7 +271,7 @@
             @php
                 $incomeCount = $payroll->incomeItems->count();
                 $deductionCount = $payroll->deductionItems->count();
-                $maxRows = max($incomeCount, $deductionCount);
+                $maxRows = 1 + max($incomeCount, $deductionCount);
             @endphp
             <!-- Income -->
             <div class="content-col income-section">
