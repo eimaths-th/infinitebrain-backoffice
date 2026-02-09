@@ -472,12 +472,6 @@
                             if ($rec_years->late_time) {
                                 $text_late = ' : ' . $rec_years->late_time . ' นาที';
                             }
-
-                            echo '{';
-                            echo "title: '{$rec_years->status_name} {$text_late}',";
-                            echo "start: '{$rec_years->date}',";
-                            echo "color: '{$color}'";
-                            echo '},';
                         }
                     @endphp
 
