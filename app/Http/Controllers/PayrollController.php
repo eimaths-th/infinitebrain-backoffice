@@ -538,6 +538,24 @@ class PayrollController extends Controller
     }
 
     /**
+     * พิมพ์ใบปะหน้า (Cover Page)
+     */
+    public function coverPage($id)
+    {
+        $period = PayrollPeriod::with(['payrolls.user', 'payrolls.incomeItems', 'payrolls.deductionItems'])
+            ->findOrFail($id);
+
+        // Group by Department
+        $payrollsByDept = $period->payrolls->sortBy(function ($payroll) {
+            return $payroll->user->department ?? 'ไม่ระบุแผนก';
+        })->groupBy(function ($payroll) {
+            return $payroll->user->department ?? 'ไม่ระบุแผนก';
+        });
+
+        return view('payroll.cover_page', compact('period', 'payrollsByDept'));
+    }
+
+    /**
      * อนุมัติงวด
      */
     public function approve($id)

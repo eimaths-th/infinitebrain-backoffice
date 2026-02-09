@@ -199,6 +199,7 @@ Route::middleware(['auth'])->prefix('payroll')->name('payroll.')->group(function
     Route::delete('/{period_id}/payroll/{payroll_id}', [PayrollController::class, 'deletePayroll'])->name('delete-payroll');
 
     // Payslip
+    Route::get('/{id}/cover-page', [PayrollController::class, 'coverPage'])->name('cover-page');
     Route::get('/{period_id}/payslip/{payroll_id}', [PayrollController::class, 'payslip'])->name('payslip');
 
     // Import Excel

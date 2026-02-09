@@ -59,8 +59,11 @@
                 </p>
             </div>
             <div class="d-flex gap-2">
+                <a href="{{ route('payroll.cover-page', $period->id) }}" target="_blank" class="btn btn-outline-primary">
+                    <i class="fas fa-print me-1"></i> ใบปะหน้า
+                </a>
                 <a href="{{ route('payroll.index') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-1"></i> กลับ
+                    <i class="fas fa-arrow-left me-1"></i> กลับ111
                 </a>
             </div>
         </div>
