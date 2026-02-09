@@ -268,6 +268,11 @@
 
         <!-- Content -->
         <div class="content-row" style="margin-top: 20px;">
+            @php
+                $incomeCount = $payroll->incomeItems->count();
+                $deductionCount = $payroll->deductionItems->count();
+                $maxRows = max($incomeCount, $deductionCount);
+            @endphp
             <!-- Income -->
             <div class="content-col income-section">
                 <div class="section-title">รายได้</div>
@@ -281,6 +286,12 @@
                             <td>{{ number_format($item->quantity * $item->amount, 2) }}</td>
                         </tr>
                     @endforeach
+                    @for ($i = $incomeCount; $i < $maxRows; $i++)
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    @endfor
                     <tr class="total-row">
                         <td>รวมเงินได้</td>
                         <td>{{ number_format($payroll->total_income, 2) }}</td>
@@ -298,6 +309,12 @@
                             <td>{{ number_format($item->amount, 2) }}</td>
                         </tr>
                     @endforeach
+                    @for ($i = $deductionCount; $i < $maxRows; $i++)
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    @endfor
                     <tr class="total-row">
                         <td>รวมรายการหัก</td>
                         <td>{{ number_format($payroll->total_deduction, 2) }}</td>
