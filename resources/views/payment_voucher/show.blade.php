@@ -683,7 +683,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">วันที่จ่ายเงิน</label>
-                                                <input type="date" name="paid_date" class="form-control"
+                                                <input type="text" name="paid_date" class="form-control datepicker"
                                                     value="{{ date('Y-m-d') }}">
                                             </div>
                                             <button type="submit" class="btn btn-success">
