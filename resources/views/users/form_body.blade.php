@@ -120,7 +120,8 @@
             </div>
             <div class="col-md-6 mb-3">
                 <label for="{{ $prefix }}birth_date" class="form-label">วันเกิด</label>
-                <input type="date" class="form-control" name="birth_date" id="{{ $prefix }}birth_date"
+                <input type="text" class="form-control datepicker" name="birth_date"
+                    id="{{ $prefix }}birth_date"
                     value="{{ isset($user->birth_date) ? \Carbon\Carbon::parse($user->birth_date)->format('Y-m-d') : '' }}">
             </div>
             <div class="col-md-6 mb-3">
@@ -168,12 +169,14 @@
             @can('users.edit.detail')
                 <div class="col-md-6 mb-3">
                     <label for="{{ $prefix }}start_date" class="form-label">วันที่เริ่มงาน</label>
-                    <input type="date" class="form-control" name="start_date" id="{{ $prefix }}start_date"
+                    <input type="text" class="form-control datepicker" name="start_date"
+                        id="{{ $prefix }}start_date"
                         value="{{ isset($user->start_date) ? \Carbon\Carbon::parse($user->start_date)->format('Y-m-d') : '' }}">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="{{ $prefix }}end_date" class="form-label">วันที่สิ้นสุดงาน</label>
-                    <input type="date" class="form-control" name="end_date" id="{{ $prefix }}end_date"
+                    <input type="text" class="form-control datepicker" name="end_date"
+                        id="{{ $prefix }}end_date"
                         value="{{ isset($user->end_date) ? \Carbon\Carbon::parse($user->end_date)->format('Y-m-d') : '' }}">
                 </div>
 
@@ -190,7 +193,7 @@
                 <div class="col-md-6 mb-3 probation-field" id="{{ $prefix }}probation_end_date_wrapper"
                     style="display: {{ $user->is_probation ?? false ? 'block' : 'none' }};">
                     <label for="{{ $prefix }}probation_end_date" class="form-label">วันสิ้นสุดการทดลองงาน</label>
-                    <input type="date" class="form-control" name="probation_end_date"
+                    <input type="text" class="form-control datepicker" name="probation_end_date"
                         id="{{ $prefix }}probation_end_date"
                         value="{{ isset($user->probation_end_date) ? \Carbon\Carbon::parse($user->probation_end_date)->format('Y-m-d') : '' }}">
                 </div>

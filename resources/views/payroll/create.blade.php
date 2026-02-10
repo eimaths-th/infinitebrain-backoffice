@@ -78,11 +78,13 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">วันที่เริ่ม <span class="text-danger">*</span></label>
-                                        <input type="date" name="start_date" id="start_date" class="form-control">
+                                        <input type="text" name="start_date" id="start_date"
+                                            class="form-control datepicker">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">วันที่สิ้นสุด <span class="text-danger">*</span></label>
-                                        <input type="date" name="end_date" id="end_date" class="form-control">
+                                        <input type="text" name="end_date" id="end_date"
+                                            class="form-control datepicker">
                                     </div>
                                 </div>
                             </div>

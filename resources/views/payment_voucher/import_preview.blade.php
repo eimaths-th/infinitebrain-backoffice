@@ -72,7 +72,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label font-weight-bold">วันที่ <span class="text-danger">*</span></label>
-                                <input type="date" name="voucher_date" class="form-control form-control-lg"
+                                <input type="text" name="voucher_date" class="form-control form-control-lg datepicker"
                                     value="{{ $data['voucher_date'] }}" required>
                             </div>
                         </div>

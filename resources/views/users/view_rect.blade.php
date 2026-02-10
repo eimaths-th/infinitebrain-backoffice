@@ -123,11 +123,17 @@
                                 <label class="col-lg-12 mb-2">ประเภทการค้นหา :</label>
                                 <div class="col-lg-12">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="search_type" id="searchMonth" value="month" {{ (!isset($search_type) || $search_type === 'month') ? 'checked' : '' }} onchange="toggleSearchType()">
+                                        <input class="form-check-input" type="radio" name="search_type" id="searchMonth"
+                                            value="month"
+                                            {{ !isset($search_type) || $search_type === 'month' ? 'checked' : '' }}
+                                            onchange="toggleSearchType()">
                                         <label class="form-check-label" for="searchMonth">เดือน/ปี</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="search_type" id="searchDaterange" value="daterange" {{ (isset($search_type) && $search_type === 'daterange') ? 'checked' : '' }} onchange="toggleSearchType()">
+                                        <input class="form-check-input" type="radio" name="search_type"
+                                            id="searchDaterange" value="daterange"
+                                            {{ isset($search_type) && $search_type === 'daterange' ? 'checked' : '' }}
+                                            onchange="toggleSearchType()">
                                         <label class="form-check-label" for="searchDaterange">ช่วงวันที่</label>
                                     </div>
                                 </div>
@@ -136,16 +142,19 @@
                     </div>
                     <div class="row mb-3">
                         {{-- ค้นหาแบบเดือน/ปี --}}
-                        <div id="monthYearSearch" class="col-lg-5" style="{{ (isset($search_type) && $search_type === 'daterange') ? 'display: none;' : '' }}">
+                        <div id="monthYearSearch" class="col-lg-5"
+                            style="{{ isset($search_type) && $search_type === 'daterange' ? 'display: none;' : '' }}">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="row">
-                                        <label for="month" class="col-sm-4">เดือน<span class="text-danger">*</span> : </label>
+                                        <label for="month" class="col-sm-4">เดือน<span class="text-danger">*</span> :
+                                        </label>
                                         <div class="col-sm-8">
                                             <select name="month" id="selectMonth" class="form-select form-control">
                                                 <option value="">เลือกเดือน</option>
                                                 @for ($i = 1; $i <= 12; $i++)
-                                                    <option value="{{ $i }}" {{ (isset($month) && $month == $i) ? 'selected' : '' }}>
+                                                    <option value="{{ $i }}"
+                                                        {{ isset($month) && $month == $i ? 'selected' : '' }}>
                                                         {{ date('F', mktime(0, 0, 0, $i, 1)) }}
                                                     </option>
                                                 @endfor
@@ -161,7 +170,7 @@
                                                 @php
                                                     $currentYear = date('Y');
                                                     for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
-                                                        $selected = (isset($year) && $year == $i) ? 'selected' : '';
+                                                        $selected = isset($year) && $year == $i ? 'selected' : '';
                                                         echo "<option value='$i' $selected>$i</option>";
                                                     }
                                                 @endphp
@@ -173,14 +182,16 @@
                         </div>
 
                         {{-- ค้นหาแบบช่วงวันที่ --}}
-                        <div id="dateRangeSearch" class="col-lg-5" style="{{ (isset($search_type) && $search_type === 'daterange') ? '' : 'display: none;' }}">
+                        <div id="dateRangeSearch" class="col-lg-5"
+                            style="{{ isset($search_type) && $search_type === 'daterange' ? '' : 'display: none;' }}">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="row">
                                         <label class="col-sm-4">จากวันที่ :</label>
                                         <div class="col-sm-8">
-                                            <input type="date" name="date_from" id="dateFrom" class="form-control"
-                                                value="{{ $date_from ?? '' }}" autocomplete="off">
+                                            <input type="text" name="date_from" id="dateFrom"
+                                                class="form-control datepicker" value="{{ $date_from ?? '' }}"
+                                                autocomplete="off">
                                         </div>
                                     </div>
                                 </div>
@@ -188,8 +199,9 @@
                                     <div class="row">
                                         <label class="col-sm-4">ถึงวันที่ :</label>
                                         <div class="col-sm-8">
-                                            <input type="date" name="date_to" id="dateTo" class="form-control"
-                                                value="{{ $date_to ?? '' }}" autocomplete="off">
+                                            <input type="text" name="date_to" id="dateTo"
+                                                class="form-control datepicker" value="{{ $date_to ?? '' }}"
+                                                autocomplete="off">
                                         </div>
                                     </div>
                                 </div>
@@ -203,23 +215,23 @@
                 </form>
             </div>
             {{-- @if (auth()->user()->id == 16) --}}
-                <div id="calendar2">
+            <div id="calendar2">
 
-                    <div class="card-header-tab card-header-tab-animation card-header mb-3">
-                        <div class="card-header-title">
-                            <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
-                            Work record of {{ $name }}
-                        </div>
-                    </div>
-
-                    <div class="col-lg">
-                        <div class="pt-0 pb-0 card-body mb-5">
-
-                            <div id="calendar" class="calendar " style="max-height: 600px;"></div>
-
-                        </div>
+                <div class="card-header-tab card-header-tab-animation card-header mb-3">
+                    <div class="card-header-title">
+                        <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                        Work record of {{ $name }}
                     </div>
                 </div>
+
+                <div class="col-lg">
+                    <div class="pt-0 pb-0 card-body mb-5">
+
+                        <div id="calendar" class="calendar " style="max-height: 600px;"></div>
+
+                    </div>
+                </div>
+            </div>
             {{-- @endif --}}
 
             <div class="card-body">
@@ -402,10 +414,12 @@
         //     console.log(window.location);
         // });
         function export_report() {
-            @if(isset($search_type) && $search_type === 'daterange')
-                url = '{{ route('search_rect', ['type' => 'print', 'user_id' => $user_id, 'search_type' => 'daterange', 'date_from' => $date_from ?? '', 'date_to' => $date_to ?? '']) }}';
+            @if (isset($search_type) && $search_type === 'daterange')
+                url =
+                    '{{ route('search_rect', ['type' => 'print', 'user_id' => $user_id, 'search_type' => 'daterange', 'date_from' => $date_from ?? '', 'date_to' => $date_to ?? '']) }}';
             @else
-                url = '{{ route('search_rect', ['type' => 'print', 'user_id' => $user_id, 'month' => $month, 'year' => $year]) }}';
+                url =
+                    '{{ route('search_rect', ['type' => 'print', 'user_id' => $user_id, 'month' => $month, 'year' => $year]) }}';
             @endif
 
             window.open(
@@ -545,7 +559,7 @@
             });
 
             // ตรวจสอบค่า search_type ที่ส่งมา
-            @if(isset($search_type) && $search_type === 'daterange')
+            @if (isset($search_type) && $search_type === 'daterange')
                 document.getElementById('searchDaterange').checked = true;
                 toggleSearchType();
             @endif

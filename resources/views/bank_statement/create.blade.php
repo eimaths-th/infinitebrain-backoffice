@@ -25,8 +25,8 @@
                         <div class="row">
                             <div class="col-md-4 form-group">
                                 <label>วันที่ (Date) <span class="text-danger">*</span></label>
-                                <input type="date" name="date" class="form-control" value="{{ date('Y-m-d') }}"
-                                    required>
+                                <input type="text" name="date" class="form-control datepicker"
+                                    value="{{ date('Y-m-d') }}" required>
                             </div>
                             <div class="col-md-4 form-group">
                                 <label>เลขที่ (Reference No.)</label>

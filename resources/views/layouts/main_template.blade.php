@@ -257,8 +257,8 @@
                                                     </div>
                                                     <div class="col-md-4 mb-3">
                                                         <label for="EdituBirthDate" class="form-label">วันเกิด</label>
-                                                        <input type="date" class="form-control" name="birth_date"
-                                                            id="EdituBirthDate">
+                                                        <input type="text" class="form-control datepicker"
+                                                            name="birth_date" id="EdituBirthDate">
                                                     </div>
                                                     <div class="col-md-4 mb-3">
                                                         <label for="EdituNationality"

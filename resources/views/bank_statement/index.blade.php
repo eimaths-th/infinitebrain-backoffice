@@ -26,12 +26,12 @@
                     <form action="{{ route('bank-statement.index') }}" method="GET" class="mb-3">
                         <div class="row">
                             <div class="col-md-3">
-                                <input type="date" name="start_date" class="form-control"
+                                <input type="text" name="start_date" class="form-control datepicker"
                                     value="{{ request('start_date') }}" placeholder="วันที่เริ่มต้น">
                             </div>
                             <div class="col-md-3">
-                                <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}"
-                                    placeholder="วันที่สิ้นสุด">
+                                <input type="text" name="end_date" class="form-control datepicker"
+                                    value="{{ request('end_date') }}" placeholder="วันที่สิ้นสุด">
                             </div>
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-secondary btn-block">ค้นหา</button>
