@@ -83,8 +83,11 @@ class PaymentVoucherController extends Controller
             'items' => 'required|array|min:1',
             'items.*.description' => 'required|string',
             'items.*.amount' => 'required|numeric|min:0',
+            'deductions' => 'nullable|array',
+            'deductions.*.description' => 'required_with:deductions|string',
+            'deductions.*.amount' => 'required_with:deductions|numeric|min:0',
             'withholding_tax_rate' => 'nullable|numeric|min:0|max:100',
-            'withholding_tax_amount' => 'nullable|numeric|min:0', // เพิ่ม validate สำหรับ manual amount
+            'withholding_tax_amount' => 'nullable|numeric|min:0',
             'voucher_attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
             'items.*.attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
         ]);
@@ -112,23 +115,30 @@ class PaymentVoucherController extends Controller
                 }
             }
 
+            // คำนวณยอดรวมรายการหัก
+            $totalDeductionAmount = 0;
+            if ($request->deductions) {
+                foreach ($request->deductions as $deduction) {
+                    if (!empty($deduction['description']) && ($deduction['amount'] ?? 0) > 0) {
+                        $totalDeductionAmount += $deduction['amount'];
+                    }
+                }
+            }
+
             // คำนวณภาษีหัก ณ ที่จ่าย
             $taxRate = $request->withholding_tax_rate ?? 0.00;
 
-            // กรณีระบุ manual (taxRate = 0) และมี tax amount ส่งมา ให้ใช้ค่าที่ส่งมา
-            // กรณี auto (taxRate > 0) ให้คำนวณใหม่เพื่อความปลอดภัย หรือจะใช้ค่าที่ส่งมาก็ได้ (แต่คำนวณใหม่ปลอดภัยกว่า)
             if ($taxRate > 0) {
                 $taxAmount = $totalAmount * ($taxRate / 100);
             } else {
                 $taxAmount = $request->input('withholding_tax_amount', 0);
-
-                // Validate manual tax amount to not exceed total amount
                 if ($taxAmount > $totalAmount) {
                     $taxAmount = $totalAmount;
                 }
             }
 
-            $netAmount = $totalAmount - $taxAmount;
+            // สูตร: ยอดเบิก - รายการหัก - หัก ณ ที่จ่าย = ยอดสุทธิ
+            $netAmount = $totalAmount - $totalDeductionAmount - $taxAmount;
 
             // สร้างใบสำคัญจ่าย
             $voucher = PaymentVoucher::create([
@@ -147,8 +157,9 @@ class PaymentVoucherController extends Controller
                 'created_by_name' => Auth::user()->name ?? 'System',
                 'withholding_tax_rate' => $taxRate,
                 'withholding_tax_amount' => $taxAmount,
+                'total_deduction_amount' => $totalDeductionAmount,
                 'net_amount' => $netAmount,
-                'total_amount' => $totalAmount, // Will be updated correctly implicitly or we can set it here
+                'total_amount' => $totalAmount,
             ]);
 
             // อัพโหลดไฟล์แนบของ Voucher
@@ -181,8 +192,30 @@ class PaymentVoucherController extends Controller
                 }
             }
 
-            // อัพเดทยอดรวม
-            $voucher->update(['total_amount' => $totalAmount]);
+            // สร้างรายการหัก
+            $totalDeductionAmount = 0;
+            if ($request->deductions) {
+                foreach ($request->deductions as $index => $deduction) {
+                    if (!empty($deduction['description']) && ($deduction['amount'] ?? 0) > 0) {
+                        PaymentVoucherItem::create([
+                            'payment_voucher_id' => $voucher->id,
+                            'type' => PaymentVoucherItem::TYPE_DEDUCTION,
+                            'item_no' => $index + 1,
+                            'description' => $deduction['description'],
+                            'amount' => $deduction['amount'],
+                        ]);
+                        $totalDeductionAmount += $deduction['amount'];
+                    }
+                }
+            }
+
+            // อัพเดทยอดรวม (recalculate)
+            $netAmount = $totalAmount - $totalDeductionAmount - ($voucher->withholding_tax_amount ?? 0);
+            $voucher->update([
+                'total_amount' => $totalAmount,
+                'total_deduction_amount' => $totalDeductionAmount,
+                'net_amount' => $netAmount,
+            ]);
 
             // บันทึก Log
             PaymentVoucherLog::create([
@@ -264,6 +297,9 @@ class PaymentVoucherController extends Controller
             'items' => 'required|array|min:1',
             'items.*.description' => 'required|string',
             'items.*.amount' => 'required|numeric|min:0',
+            'deductions' => 'nullable|array',
+            'deductions.*.description' => 'required_with:deductions|string',
+            'deductions.*.amount' => 'required_with:deductions|numeric|min:0',
             'withholding_tax_rate' => 'nullable|numeric|min:0|max:100',
             'withholding_tax_amount' => 'nullable|numeric|min:0',
             'voucher_attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
@@ -297,23 +333,29 @@ class PaymentVoucherController extends Controller
                 }
             }
 
+            // คำนวณยอดรวมรายการหัก
+            $totalDeductionAmount = 0;
+            if ($request->deductions) {
+                foreach ($request->deductions as $deduction) {
+                    if (!empty($deduction['description']) && ($deduction['amount'] ?? 0) > 0) {
+                        $totalDeductionAmount += $deduction['amount'];
+                    }
+                }
+            }
+
             // คำนวณภาษีหัก ณ ที่จ่าย
             $taxRate = $request->withholding_tax_rate ?? 0.00;
 
-            // กรณีระบุ manual (taxRate = 0) และมี tax amount ส่งมา ให้ใช้ค่าที่ส่งมา
-            // กรณี auto (taxRate > 0) ให้คำนวณใหม่เพื่อความปลอดภัย
             if ($taxRate > 0) {
                 $taxAmount = $totalAmount * ($taxRate / 100);
             } else {
                 $taxAmount = $request->input('withholding_tax_amount', 0);
-
-                // Validate manual tax amount to not exceed total amount
                 if ($taxAmount > $totalAmount) {
                     $taxAmount = $totalAmount;
                 }
             }
 
-            $netAmount = $totalAmount - $taxAmount;
+            $netAmount = $totalAmount - $totalDeductionAmount - $taxAmount;
 
             // อัพเดทข้อมูลหลัก
             $voucher->update([
@@ -328,6 +370,7 @@ class PaymentVoucherController extends Controller
                 'status' => $request->submit ? PaymentVoucher::STATUS_PENDING : PaymentVoucher::STATUS_DRAFT,
                 'withholding_tax_rate' => $taxRate,
                 'withholding_tax_amount' => $taxAmount,
+                'total_deduction_amount' => $totalDeductionAmount,
                 'net_amount' => $netAmount,
                 'total_amount' => $totalAmount,
             ]);
@@ -364,7 +407,30 @@ class PaymentVoucherController extends Controller
                 }
             }
 
-            $voucher->update(['total_amount' => $totalAmount]);
+            // สร้างรายการหัก
+            $totalDeductionAmount = 0;
+            if ($request->deductions) {
+                foreach ($request->deductions as $index => $deduction) {
+                    if (!empty($deduction['description']) && ($deduction['amount'] ?? 0) > 0) {
+                        PaymentVoucherItem::create([
+                            'payment_voucher_id' => $voucher->id,
+                            'type' => PaymentVoucherItem::TYPE_DEDUCTION,
+                            'item_no' => $index + 1,
+                            'description' => $deduction['description'],
+                            'amount' => $deduction['amount'],
+                        ]);
+                        $totalDeductionAmount += $deduction['amount'];
+                    }
+                }
+            }
+
+            // อัพเดทยอดรวม (recalculate)
+            $netAmount = $totalAmount - $totalDeductionAmount - ($voucher->withholding_tax_amount ?? 0);
+            $voucher->update([
+                'total_amount' => $totalAmount,
+                'total_deduction_amount' => $totalDeductionAmount,
+                'net_amount' => $netAmount,
+            ]);
 
             // บันทึก Log
             PaymentVoucherLog::create([

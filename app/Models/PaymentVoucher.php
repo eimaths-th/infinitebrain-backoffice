@@ -20,6 +20,7 @@ class PaymentVoucher extends Model
         'pay_to_bank_name',
         'payee_id',
         'total_amount',
+        'total_deduction_amount',
         'withholding_tax_rate',
         'withholding_tax_amount',
         'net_amount',
@@ -81,6 +82,20 @@ class PaymentVoucher extends Model
     public function items()
     {
         return $this->hasMany(PaymentVoucherItem::class)->orderBy('item_no');
+    }
+
+    public function expenseItems()
+    {
+        return $this->hasMany(PaymentVoucherItem::class)
+            ->where('type', PaymentVoucherItem::TYPE_ITEM)
+            ->orderBy('item_no');
+    }
+
+    public function deductions()
+    {
+        return $this->hasMany(PaymentVoucherItem::class)
+            ->where('type', PaymentVoucherItem::TYPE_DEDUCTION)
+            ->orderBy('item_no');
     }
 
     public function logs()
