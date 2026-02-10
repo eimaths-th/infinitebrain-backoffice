@@ -341,6 +341,14 @@
                     method: 'GET',
                     success: function(res) {
                         $('#CreateModalBody').html(res.html);
+                        // Re-initialize Flatpickr for AJAX-loaded date inputs
+                        flatpickr('#CreateModalBody .datepicker', {
+                            dateFormat: 'Y-m-d',
+                            altInput: true,
+                            altFormat: 'd/m/Y',
+                            locale: 'th',
+                            allowInput: true
+                        });
                         $('#CreateModal').modal('show');
                     }
                 });
@@ -361,8 +369,15 @@
                     method: 'GET',
                     success: function(res) {
                         $('#EditModalBody').html(res.html);
+                        // Re-initialize Flatpickr for AJAX-loaded date inputs
+                        flatpickr('#EditModalBody .datepicker', {
+                            dateFormat: 'Y-m-d',
+                            altInput: true,
+                            altFormat: 'd/m/Y',
+                            locale: 'th',
+                            allowInput: true
+                        });
                         $('#EditModal').modal('show');
-                        // Re-initialize tabs if needed (Bootstrap 5 usually works automatically)
                     }
                 });
             })

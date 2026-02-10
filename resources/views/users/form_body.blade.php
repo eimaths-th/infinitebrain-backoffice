@@ -349,7 +349,7 @@
 </div>
 
 <script>
-    let salaryItemCounter = {{ $salary_items->count() }};
+    var salaryItemCounter = {{ $salary_items->count() }};
 
     function addSalaryItem(prefix) {
         const container = document.getElementById(prefix + 'salary_items_container');
