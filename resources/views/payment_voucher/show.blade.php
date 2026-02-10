@@ -440,7 +440,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($voucher->items as $item)
+                                @foreach ($voucher->expenseItems as $item)
                                     <tr>
                                         <td class="text-center">{{ $item->item_no }}</td>
                                         <td>{{ $item->description }}</td>
@@ -475,6 +475,18 @@
                                     <td colspan="3" class="text-end">รวมเป็นเงิน</td>
                                     <td class="text-end">{{ number_format($voucher->total_amount, 2) }} บาท</td>
                                 </tr>
+                                @if (($voucher->total_deduction_amount ?? 0) > 0)
+                                    @foreach ($voucher->deductions as $deduction)
+                                        <tr>
+                                            <td colspan="3" class="text-end text-danger">
+                                                <i class="fa fa-minus-circle"></i> หัก: {{ $deduction->description }}
+                                            </td>
+                                            <td class="text-end text-danger">
+                                                -{{ number_format($deduction->amount, 2) }} บาท
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                                 @if ($voucher->withholding_tax_amount > 0)
                                     <tr>
                                         <td colspan="3" class="text-end text-danger">
@@ -488,6 +500,8 @@
                                             -{{ number_format($voucher->withholding_tax_amount, 2) }} บาท
                                         </td>
                                     </tr>
+                                @endif
+                                @if ($voucher->withholding_tax_amount > 0 || ($voucher->total_deduction_amount ?? 0) > 0)
                                     <tr class="total-row" style="background-color: #d1e7dd;">
                                         <td colspan="3" class="text-end">ยอดสุทธิ</td>
                                         <td class="text-end fw-bold text-success">

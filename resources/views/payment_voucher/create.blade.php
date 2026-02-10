@@ -303,6 +303,20 @@
                         </button>
                     </div>
 
+                    <!-- Deduction Items Section -->
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fa fa-minus-circle text-danger"></i> รายการหัก
+                            <small class="text-muted">(ถ้ามี)</small>
+                        </h5>
+
+                        <div id="deductionsContainer"></div>
+
+                        <button type="button" class="btn btn-outline-danger btn-sm mt-2" onclick="addDeduction()">
+                            <i class="fa fa-plus"></i> เพิ่มรายการหัก
+                        </button>
+                    </div>
+
                     <!-- Total Section -->
                     <div class="row mb-4">
                         <div class="col-md-7">
@@ -314,8 +328,14 @@
                         <div class="col-md-5">
                             <div class="total-section">
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span class="fw-bold">ยอดรวม:</span>
-                                    <span id="subTotalDisplay">0.00</span>
+                                    <span class="fw-bold">ยอดรวมเบิก:</span>
+                                    <span id="subTotalDisplay">0.00 บาท</span>
+                                </div>
+
+                                <div class="d-flex justify-content-between mb-2" id="deductionTotalRow"
+                                    style="display: none !important;">
+                                    <span class="fw-bold text-danger">รายการหัก:</span>
+                                    <span class="text-danger fw-bold" id="deductionTotalDisplay">-0.00 บาท</span>
                                 </div>
 
                                 <div class="d-flex flex-column mb-2">
@@ -403,6 +423,51 @@
 @section('script')
     <script>
         let itemIndex = 0;
+        let deductionIndex = -1;
+
+        // === Deduction Items Functions ===
+        function addDeduction() {
+            deductionIndex++;
+            const container = document.getElementById('deductionsContainer');
+            const html = `
+                <div class="deduction-row mb-2" data-deduction-index="${deductionIndex}">
+                    <div class="row align-items-end">
+                        <div class="col-md-1">
+                            <label class="form-label">ลำดับ</label>
+                            <input type="text" class="form-control text-center deduction-no" value="${deductionIndex + 1}" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">รายละเอียดรายการหัก <span class="required-mark">*</span></label>
+                            <input type="text" name="deductions[${deductionIndex}][description]" class="form-control" placeholder="เช่น ค่าธรรมเนียม, ค่าประกัน" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">จำนวนเงิน <span class="required-mark">*</span></label>
+                            <input type="number" name="deductions[${deductionIndex}][amount]" class="form-control deduction-amount" step="0.01" min="0" placeholder="0.00" required>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeDeduction(this)">
+                                <i class="fa fa-trash"></i> ลบ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+            updateDeductionNumbers();
+        }
+
+        function removeDeduction(btn) {
+            btn.closest('.deduction-row').remove();
+            updateDeductionNumbers();
+            calculateTotal();
+        }
+
+        function updateDeductionNumbers() {
+            const rows = document.querySelectorAll('.deduction-row');
+            rows.forEach((row, index) => {
+                row.querySelector('.deduction-no').value = index + 1;
+            });
+        }
 
         function addItem() {
             itemIndex++;
@@ -470,9 +535,31 @@
                 total += value;
             });
 
-            // แสดงยอดรวม
+            // แสดงยอดรวมเบิก
             document.getElementById('subTotalDisplay').textContent =
                 total.toLocaleString('th-TH', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }) + ' บาท';
+
+            // คำนวณยอดรวมรายการหัก
+            const deductionAmounts = document.querySelectorAll('.deduction-amount');
+            let totalDeduction = 0;
+            deductionAmounts.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                totalDeduction += value;
+            });
+
+            // แสดง/ซ่อนแถวรายการหัก
+            const deductionRow = document.getElementById('deductionTotalRow');
+            if (totalDeduction > 0) {
+                deductionRow.style.display = '';
+                deductionRow.classList.remove('d-none');
+            } else {
+                deductionRow.style.display = 'none';
+            }
+            document.getElementById('deductionTotalDisplay').textContent =
+                '-' + totalDeduction.toLocaleString('th-TH', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 }) + ' บาท';
@@ -482,17 +569,13 @@
             const isManualMode = document.getElementById('manualTaxSwitch').checked;
 
             if (isManualMode) {
-                // โหมดระบุเอง
                 taxAmount = parseFloat(document.getElementById('manualTaxInput').value) || 0;
-                // อัปเดต dropdown เป็น 0 เพื่อให้รู้ว่าเป็น manual ในฝั่ง server (หรืออาจจะส่งค่า tax rate เดิมไปด้วยก็ได้ แต่นี่ง่ายกว่า)
                 document.getElementById('withholdingTaxRate').value = 0;
             } else {
-                // โหมดอัตโนมัติ
                 const taxRate = parseFloat(document.getElementById('withholdingTaxRate').value) || 0;
                 taxAmount = total * (taxRate / 100);
             }
 
-            // ป้องกันภาษีเกินยอดรวม
             if (taxAmount > total) {
                 taxAmount = total;
                 if (isManualMode) {
@@ -507,8 +590,8 @@
                     maximumFractionDigits: 2
                 }) + ' บาท';
 
-            // คำนวณยอดสุทธิ
-            let netAmount = total - taxAmount;
+            // สูตร: ยอดเบิก - รายการหัก - หัก ณ ที่จ่าย = ยอดสุทธิ
+            let netAmount = total - totalDeduction - taxAmount;
             if (netAmount < 0) netAmount = 0;
 
             document.getElementById('netAmount').value = netAmount.toFixed(2);
@@ -521,7 +604,7 @@
 
         // Event listeners
         document.addEventListener('input', function(e) {
-            if (e.target.classList.contains('item-amount')) {
+            if (e.target.classList.contains('item-amount') || e.target.classList.contains('deduction-amount')) {
                 calculateTotal();
             }
         });

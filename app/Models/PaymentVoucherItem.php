@@ -10,8 +10,12 @@ class PaymentVoucherItem extends Model
 {
     use HasFactory;
 
+    const TYPE_ITEM = 'item';           // รายการเบิก
+    const TYPE_DEDUCTION = 'deduction'; // รายการหัก
+
     protected $fillable = [
         'payment_voucher_id',
+        'type',
         'item_no',
         'description',
         'amount',
