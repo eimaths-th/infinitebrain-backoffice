@@ -101,18 +101,12 @@
                             <label class="form-label">สถานะ</label>
                             <select name="status" class="form-select">
                                 <option value="">-- ทั้งหมด --</option>
-                                <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>ร่าง</option>
-                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>รออนุมัติ
-                                </option>
-                                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>อนุมัติแล้ว
-                                </option>
-                                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>ปฏิเสธ
-                                </option>
-                                <option value="reviewed" {{ request('status') == 'reviewed' ? 'selected' : '' }}>ตรวจสอบแล้ว
-                                </option>
-                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>
-                                    เสร็จสิ้น
-                                </option>
+                                @foreach (\App\Models\PaymentVoucher::$statusLabels as $status_value => $status_text)
+                                    <option value="{{ $status_value }}"
+                                        {{ request('status') == $status_value ? 'selected' : '' }}>
+                                        {{ $status_text }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-2">
