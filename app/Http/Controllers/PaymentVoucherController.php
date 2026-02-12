@@ -42,7 +42,10 @@ class PaymentVoucherController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('voucher_no', 'like', "%$search%")
-                    ->orWhere('pay_to', 'like', "%$search%");
+                    ->orWhere('pay_to', 'like', "%$search%")
+                    ->orWhere('remark', 'like', "%$search%")
+                    ->orWhere('created_by_name', 'like', "%$search%")
+                    ->orWhere('payment_cycle', 'like', "%$search%");
             });
         }
 

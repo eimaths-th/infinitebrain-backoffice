@@ -82,6 +82,7 @@ class LineMessagingService
         $message = "";
         $targetGroup = null;
         $icon = "💰";
+        $all = false;
 
         switch ($status) {
             case \App\Models\PaymentVoucher::STATUS_PENDING:
@@ -93,6 +94,7 @@ class LineMessagingService
                 $message = "✅ ใบสำคัญจ่ายผ่านการตรวจสอบ (รออนุมัติ)";
                 $targetGroup = config('services.line_messaging.approver_group_id');
                 $icon = "🔵";
+                $all = true;
                 break;
             case \App\Models\PaymentVoucher::STATUS_APPROVED:
                 $message = "🎉 ใบสำคัญจ่ายอนุมัติแล้ว";
@@ -129,6 +131,10 @@ class LineMessagingService
         }
 
         $content .= "\n🔗 ดูรายละเอียด: " . route('payment-voucher.show', $voucher->id);
+
+        if ($all) {
+            $content .= "\n🔗 ดูรายการที่รอตรวจสอบทั้งหมด: " . route('payment-voucher.pending');
+        }
 
         return $this->Send($content, $targetGroup);
     }
