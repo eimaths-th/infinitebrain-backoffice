@@ -297,6 +297,7 @@
                         </a>
                     </li>
                 @endcan
+
                 @can('payment-voucher.view')
 
                     <li>
@@ -307,6 +308,14 @@
                         </a>
 
                         <ul>
+                            @can('payment-voucher.dashboard')
+                                <li>
+                                    <a href="{{ route('finance-dashboard.index') }}">
+                                        <i class="metismenu-icon pe-7s-graph1"></i>
+                                        Finance Dashboard
+                                    </a>
+                                </li>
+                            @endcan
                             {{-- <li>
                                     <a href="{{ route('payment-voucher.index') }}">
                                         <i class="metismenu-icon"></i>
