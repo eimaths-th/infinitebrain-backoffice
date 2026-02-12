@@ -47,6 +47,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\FinanceDashboardController;
 // use App\Http\Controllers\RouteToggleController;
 
 /*
@@ -120,6 +121,11 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
         ];
     });
 });
+
+// Finance Dashboard
+Route::get('/finance-dashboard', [FinanceDashboardController::class, 'index'])
+    ->name('finance-dashboard.index')
+    ->middleware('auth');
 
 Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')->group(function () {
     Route::get('/', [PaymentVoucherController::class, 'index'])->name('index');

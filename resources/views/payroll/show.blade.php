@@ -63,7 +63,7 @@
                     <i class="fas fa-print me-1"></i> ใบปะหน้า
                 </a>
                 <a href="{{ route('payroll.index') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-1"></i> กลับ111
+                    <i class="fas fa-arrow-left me-1"></i> กลับ
                 </a>
             </div>
         </div>
