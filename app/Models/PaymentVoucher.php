@@ -185,11 +185,13 @@ class PaymentVoucher extends Model
         'MT' => 'META Knowledge (MT)',
         'EiRP' => 'eiMaths RP (EiRP)',
         'EiBK' => 'eiMaths BK (EiBK)',
+        'EiHQ' => 'eiMaths HQ (EiHQ)',
+
     ];
     public static $gropBranchCodes = [
         'INF' => ['IF', 'EL'],
         'META' => ['MT'],
-        'META2' => ['EiRP', 'EiBK'],
+        'META2' => ['EiRP', 'EiBK' ,'EiHQ'],
     ];
 
     // Generate Voucher Number: EL20260112 = รหัสสาขา + ปี + เดือน + ลำดับ
