@@ -249,6 +249,7 @@
                 </style>
             @break
 
+            @case('EiHQ')
             @case('EiBK')
             @case('EiRP')
                 <div class="header-section">
