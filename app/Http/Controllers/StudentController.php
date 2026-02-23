@@ -50,7 +50,7 @@ class StudentController extends Controller
         $this->check_permission();
 
         $newStudentCode = Student::generateNextStudentCode();
-      
+
         if ($request->ajax()) {
             // sleep(2);
             $students = Student::orderBy("code", "asc")
@@ -98,7 +98,7 @@ class StudentController extends Controller
                     $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     $html .= '<a href="#" data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
-                })->rawColumns(['checkbox', 'photo', 'status', 'action'])->toJson();
+                })->rawColumns(['checkbox', 'photo', 'status', 'action', 'sex', 'birth_date'])->toJson();
         }
         $parent = ParentRegister::orderBy("id", "asc")->get();
         return view('students.index', [
@@ -218,6 +218,8 @@ class StudentController extends Controller
             'nick_name' => $request->get('nick_name'),
             'mobile' => $request->get('mobile'),
             'grade' => $request->get('grade'),
+            'birth_date' => $request->get('birth_date'),
+            'sex' => $request->get('sex'),
             'pid' => $request->get('parent'),
         ]);
         $student->save();
@@ -348,6 +350,16 @@ class StudentController extends Controller
                 <div class="form-group">
                     <label for="Name">ชื่อเล่น:</label>
                     <input type="text" class="form-control" name="nickname" id="EditNickname" value="' . $data->nick_name . '">
+                </div>
+
+                <div class="form-group">
+                    <label for="Name">วันเกิด:</label>
+                    <input type="text" class="form-control" name="birth_date" value="' . $data->birth_date . '" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="Name">เพศ:</label>
+                    <input type="text" class="form-control" name="sex" value="' . $data->sex . '" readonly>
                 </div>
 
                 <div class="form-group">
@@ -833,6 +845,19 @@ class StudentController extends Controller
                 </div>
 
                 <div class="form-group">
+                    <label for="Name">Birth Date:</label>
+                    <input type="date" class="form-control" name="birth_date" id="EditBirthDate" value="' . $data->birth_date . '">
+                </div>
+
+                <div class="form-group">
+                    <label for="Name">Gender:</label>
+                    <select class="form-control" name="sex" id="EditSex">
+                        <option value="ชาย" ' . ($data->sex == 'ชาย' ? 'selected' : '') . '>ชาย</option>
+                        <option value="หญิง" ' . ($data->sex == 'หญิง' ? 'selected' : '') . '>หญิง</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label for="Name">Mobile:</label>
                     <input type="text" class="form-control" name="mobile" id="EditMobile" value="' . $data->mobile . '">
                 </div>
@@ -947,7 +972,7 @@ class StudentController extends Controller
         $arr_del  = $request->get('table_records'); //$arr_ans is Array MacAddress
 
         for ($xx = 0; $xx < count($arr_del); $xx++) {
-           $student = Student::find($arr_del[$xx]);
+            $student = Student::find($arr_del[$xx]);
             if ($student) {
                 $old = $student->toArray();
                 LogActivity::modelEvent($student, 'student deleted', $old, null);

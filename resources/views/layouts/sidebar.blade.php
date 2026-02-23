@@ -427,6 +427,16 @@
                     </li>
                 @endcan
 
+                @can('recruitment.view')
+                    <li class="app-sidebar__heading">HR / รับสมัครงาน</li>
+                    <li>
+                        <a href="{{ route('recruitment.index') }}">
+                            <i class="metismenu-icon pe-7s-add-user"></i>
+                            รายชื่อผู้สมัคร
+                        </a>
+                    </li>
+                @endcan
+
                 {{-- ส่วนผู้ดูแลระบบ --}}
 
                 @can(['general.admin.view'])

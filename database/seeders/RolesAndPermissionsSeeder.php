@@ -20,14 +20,14 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Define all modules and their actions
         $modules = [
-            'users' => ['view', 'create', 'edit', 'delete'],
+            'users' => ['view', 'create', 'edit', 'delete', 'edit.detail', 'edit.salary'],
             'roles' => ['view', 'create', 'edit', 'delete'],
             'permissions' => ['view', 'create', 'edit', 'delete'],
             'students' => ['view', 'create', 'edit', 'delete', 'export'],
             'parents' => ['view', 'create', 'edit', 'delete', 'export'],
             'receipts' => ['view', 'create', 'edit', 'delete', 'export'],
             'receipt-school' => ['view', 'create', 'edit', 'delete', 'export'],
-            'payment-voucher' => ['view', 'create', 'edit', 'delete', 'approve', 'review', 'export'],
+            'payment-voucher' => ['view', 'create', 'edit', 'delete', 'approve', 'review', 'export', 'dashboard', 'test'],
             'courses' => ['view', 'create', 'edit', 'delete'],
             'subjects' => ['view', 'create', 'edit', 'delete'],
             'form-manage' => ['view', 'create', 'edit', 'delete'],
@@ -38,6 +38,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'leave-requests' => ['view', 'view-all', 'create', 'edit', 'delete', 'approve', 'reject', 'export'],
             'general' => ['view', 'admin.view'],
             'system' => ['view'],
+            'recruitment' => ['view', 'upload', 'review', 'verify', 'view_all'],
         ];
 
         // Create permissions
@@ -55,7 +56,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Create Roles
         // 1. Super Admin - has all permissions
         $superAdmin = Role::firstOrCreate(['name' => 'super-admin', 'guard_name' => 'web']);
-        $superAdmin->syncPermissions($allPermissions);
+        $superAdmin->givePermissionTo($allPermissions);
         $this->command->info('Created super-admin role with all permissions');
 
         // 2. Admin - has most permissions except role/permission management
@@ -63,7 +64,9 @@ class RolesAndPermissionsSeeder extends Seeder
             return !str_starts_with($p, 'roles.') && !str_starts_with($p, 'permissions.');
         });
         $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
-        $admin->syncPermissions($adminPermissions);
+        $admin->givePermissionTo($adminPermissions);
+        // Add recruitment permissions for admin
+        $admin->givePermissionTo(['recruitment.view', 'recruitment.upload', 'recruitment.view_all']);
         $this->command->info('Created admin role');
 
         // 3. Finance - focus on financial operations
@@ -86,7 +89,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'reports.export',
         ];
         $finance = Role::firstOrCreate(['name' => 'finance', 'guard_name' => 'web']);
-        $finance->syncPermissions($financePermissions);
+        $finance->givePermissionTo($financePermissions);
         $this->command->info('Created finance role');
 
         // 4. Reviewer - can review payment vouchers
@@ -97,7 +100,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'receipt-school.view',
         ];
         $reviewer = Role::firstOrCreate(['name' => 'reviewer', 'guard_name' => 'web']);
-        $reviewer->syncPermissions($reviewerPermissions);
+        $reviewer->givePermissionTo($reviewerPermissions);
+        // Add recruitment review permissions
+        $reviewer->givePermissionTo(['recruitment.view', 'recruitment.review']);
         $this->command->info('Created reviewer role');
 
         // 5. Approver - can approve payment vouchers
@@ -108,7 +113,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'receipt-school.view',
         ];
         $approver = Role::firstOrCreate(['name' => 'approver', 'guard_name' => 'web']);
-        $approver->syncPermissions($approverPermissions);
+        $approver->givePermissionTo($approverPermissions);
+        // Add recruitment verify permissions
+        $approver->givePermissionTo(['recruitment.view', 'recruitment.verify', 'recruitment.view_all']);
         $this->command->info('Created approver role');
 
         // 6. Staff - basic staff access
@@ -133,7 +140,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'general.view',
         ];
         $staff = Role::firstOrCreate(['name' => 'staff', 'guard_name' => 'web']);
-        $staff->syncPermissions($staffPermissions);
+        $staff->givePermissionTo($staffPermissions);
         $this->command->info('Created staff role');
 
         // 7. Parent - limited access for parents
@@ -143,7 +150,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'receipt-school.view',
         ];
         $parent = Role::firstOrCreate(['name' => 'parent', 'guard_name' => 'web']);
-        $parent->syncPermissions($parentPermissions);
+        $parent->givePermissionTo($parentPermissions);
         $this->command->info('Created parent role');
 
         $this->command->info('');
