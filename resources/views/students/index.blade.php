@@ -67,6 +67,8 @@
                                 <th>Name</th>
                                 <th>Lastname</th>
                                 <th>Nickname</th>
+                                <th>วันเกิด</th>
+                                <th>เพศ</th>
                                 <th>Mobile</th>
                                 <th>status</th>
                                 <th width="280px">Action</th>
@@ -203,6 +205,19 @@
                             <label for="Name">Nickname:</label>
                             <input type="text" class="form-control" name="nick_name" id="AddNickname"
                                 value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="Name">วันเกิด:</label>
+                            <input type="date" class="form-control" name="birth_date" id="AddBirthDate"
+                                value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="Name">เพศ:</label>
+                            <select class="form-control" name="sex" id="AddSex">
+                                <option value="">เลือกเพศ</option>
+                                <option value="ชาย">ชาย</option>
+                                <option value="หญิง">หญิง</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="Name">Mobile:</label>
@@ -436,6 +451,14 @@
                         name: 'nick_name'
                     },
                     {
+                        data: 'birth_date',
+                        name: 'birth_date'
+                    },
+                    {
+                        data: 'sex',
+                        name: 'sex'
+                    },
+                    {
                         data: 'mobile',
                         name: 'mobile'
                     },
@@ -563,6 +586,8 @@
                         name: $('#AddName').val(),
                         lastname: $('#AddLastname').val(),
                         nick_name: $('#AddNickname').val(),
+                        birth_date: $('#AddBirthDate').val(),
+                        sex: $('#AddSex').val(),
                         mobile: $('#AddMobile').val(),
                         grade: $('#AddGrade').val(),
                         parent: $('#AddParent').val()[0],
@@ -613,6 +638,8 @@
                         first_name: $('#EditName').val(),
                         last_name: $('#EditLastname').val(),
                         nick_name: $('#EditNickname').val(),
+                        birth_date: $('#EditBirthDate').val(),
+                        sex: $('#EditSex').val(),
                         mobile: $('#EditMobile').val(),
                         grade: $('#Editgrade').val(),
                         // reason: $('#Editreason').val()[0],

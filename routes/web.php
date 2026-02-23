@@ -48,7 +48,17 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\FinanceDashboardController;
+use App\Http\Controllers\RecruitmentController;
 // use App\Http\Controllers\RouteToggleController;
+
+Route::middleware(['auth'])->prefix('recruitment')->name('recruitment.')->group(function () {
+    Route::get('/', [RecruitmentController::class, 'index'])->name('index');
+    Route::get('/create', [RecruitmentController::class, 'create'])->name('create');
+    Route::post('/store', [RecruitmentController::class, 'store'])->name('store');
+    Route::get('/show/{id}', [RecruitmentController::class, 'show'])->name('show');
+    Route::post('/review/{id}', [RecruitmentController::class, 'review'])->name('review');
+    Route::post('/verify/{id}', [RecruitmentController::class, 'verify'])->name('verify');
+});
 
 /*
 |--------------------------------------------------------------------------
