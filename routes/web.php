@@ -112,6 +112,7 @@ Route::group(['middleware' => ['auth', 'checkUserId']], function () {
     // Route::get('/stdLog-search', [StdlogController::class, 'searchTestLog'])->name('stdlog.search');
     Route::get('/report-reciept-student', [StdlogController::class, 'reportRecieptStd'])->name('reportRecieptStd');
     Route::get('/report-reciept-student-search', [StdlogController::class, 'reportRecieptStdSearch'])->name('reportRecieptStdSearch');
+    Route::get('/report-reciept-student-print', [StdlogController::class, 'reportRecieptStdPrint'])->name('reportRecieptStdPrint');
     Route::get('/report-reciept-student/{id}', [StdlogController::class, 'reportRecieptStdShow'])->name('reportRecieptStdShow');
 
     // Payment Voucher Routes (ใบสำคัญจ่าย)

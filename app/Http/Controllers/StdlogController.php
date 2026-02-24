@@ -589,6 +589,44 @@ class StdlogController extends Controller
         ]);
     }
 
+    /**
+     * Standalone print page for student report
+     * Query params: year, sections (comma-separated), orientation (portrait|landscape)
+     */
+    public function reportRecieptStdPrint(Request $request)
+    {
+        $year = $request->get('year', date('Y'));
+        $sections = explode(',', $request->get('sections', 'timeline,summary-table,demographics'));
+        $orientation = $request->get('orientation', 'portrait');
+
+        $month = date('m');
+        $months = date('F');
+
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($year, $year);
+
+        $paper = PaperReport::whereMonth('submission_date', $month)
+            ->whereYear('submission_date', $year)
+            ->orderBy('rec_id', 'desc')
+            ->get();
+
+        $stdlog = Statuslog::all();
+        $totalForAllMonths = $this->queryGrafgh1($stdlog);
+        $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
+
+        return view('students.print_report_recipt_std', [
+            'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
+            'reportYear_schoolPrice' => $reportYear_schoolPrice,
+            'totalForAllMonths' => $totalForAllMonths,
+            'percentageChangeForAllMonths' => $percentageChangeForAllMonths,
+            'paper' => $paper,
+            'year' => $year,
+            'month' => $months,
+            'sections' => $sections,
+            'orientation' => $orientation,
+        ]);
+    }
+
     public function reportRecieptStdSearch(Request $request)
     {
         // dd($request);
@@ -637,7 +675,7 @@ class StdlogController extends Controller
         $matchingSchoolPrices = [];
         $schoolPrice_id = [];
         $test_scp = SchoolPrice::all();
-        
+
         // แปลงเป็น integer
         $periodYearInt = (int) $periodYear;
 
@@ -646,11 +684,11 @@ class StdlogController extends Controller
                 // ตรวจสอบว่า period มีปีที่เลือกหรือไม่ (รองรับข้ามปี)
                 $period = $schoolPrice->period;
                 $periodContainsYear = false;
-                
+
                 if ($period) {
                     // แยก period เป็น start และ end
                     $periodParts = explode(' - ', $period);
-                    
+
                     if (count($periodParts) == 1) {
                         // Format: 2025-08-2026-04 หรือ 2025-10-2026-02
                         $parts = explode('-', $period);
@@ -676,7 +714,7 @@ class StdlogController extends Controller
                         }
                     }
                 }
-                
+
                 if ($periodContainsYear && $schoolPrice->course_type == 1) {
                     $matchingSchoolPrices[] = [
                         'id' => $schoolPrice->id,
