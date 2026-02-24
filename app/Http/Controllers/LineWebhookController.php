@@ -65,29 +65,36 @@ class LineWebhookController extends Controller
 
     protected function SendWelcomeMessage(string $group_id)
     {
-        $channel_access_token = config('services.line_messaging.channel_access_token');
+        $tokens = [
+            config('services.line_messaging.channel_access_token'),
+            config('services.line_messaging.channel_access_token_finance')
+        ];
 
-        if (empty($channel_access_token)) {
-            return;
-        }
+        foreach ($tokens as $token) {
+            if (empty($token)) {
+                continue;
+            }
 
-        try {
-            $response = \Illuminate\Support\Facades\Http::withHeaders([
-                'Authorization' => 'Bearer ' . $channel_access_token,
-                'Content-Type' => 'application/json',
-            ])->post('https://api.line.me/v2/bot/message/push', [
-                'to' => $group_id,
-                'messages' => [
-                    [
-                        'type' => 'text',
-                        'text' => "🎉 สวัสดีครับ! Bot แจ้งเตือนใบลาพร้อมใช้งานแล้ว\n\n📋 เมื่อมีพนักงานส่งใบลา จะมีการแจ้งเตือนมาที่กลุ่มนี้\n\n🔑 Group ID: {$group_id}\n\n(กรุณา copy Group ID นี้ไปใส่ใน .env)",
+            try {
+                $response = \Illuminate\Support\Facades\Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json',
+                ])->post('https://api.line.me/v2/bot/message/push', [
+                    'to' => $group_id,
+                    'messages' => [
+                        [
+                            'type' => 'text',
+                            'text' => "🎉 บอทถูกเพิ่มเข้ากลุ่มเรียบร้อยแล้ว!\n\n📋 ระบบแจ้งเตือนพร้อมใช้งาน\n\n🔑 Group ID ของกลุ่มนี้คือ:\n{$group_id}\n\n(กรุณาคัดลอก Group ID ด้านบนไปใส่ในไฟล์ .env ของระบบ)",
+                        ]
                     ]
-                ]
-            ]);
+                ]);
 
-            Log::info('Welcome message sent', ['response' => $response->body()]);
-        } catch (\Exception $e) {
-            Log::error('Failed to send welcome message', ['error' => $e->getMessage()]);
+                if ($response->successful()) {
+                    Log::info('Welcome message sent successfully', ['token_prefix' => substr($token, 0, 10)]);
+                }
+            } catch (\Exception $e) {
+                Log::error('Failed to send welcome message', ['error' => $e->getMessage()]);
+            }
         }
     }
 }
