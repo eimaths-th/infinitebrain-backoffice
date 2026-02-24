@@ -1,7 +1,8 @@
 @extends('layouts.main_template')
 
 @section('style')
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js">
+    </script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -950,9 +951,15 @@
 
                                 {{-- ===== DEMOGRAPHICS SECTION ===== --}}
                                 @php
-                                    // Collect unique students per group for demographics
+                                    // Pre-calculate unique students per group AND month for demographics
                                     $demoGroups = ['M', 'E', 'C', 'CHN', 'S', 'Sci', 'T', 'J', 'K'];
-                                    $demoData = []; // $demoData['M'][$studentId] = ['age', 'sex', 'grade']
+                                    $monthlyDemoData = [];
+                                    $yearlyDemoData = []; // Unique students per year per group
+
+                                    // Initialize for all 12 months
+                                    for ($m = 1; $m <= 12; $m++) {
+                                        $monthlyDemoData[$m] = [];
+                                    }
 
                                     foreach ($reportYear_schoolPrice as $studentId => $groupedData) {
                                         foreach ($groupedData as $data1) {
@@ -961,25 +968,59 @@
                                             if (!$std) {
                                                 continue;
                                             }
-                                            if (!isset($demoData[$group][$studentId])) {
-                                                // Age calculation
-                                                $age = null;
-                                                if ($std->birth_date) {
-                                                    try {
-                                                        $age = Carbon::parse($std->birth_date)->age;
-                                                    } catch (\Exception $e) {
-                                                    }
+
+                                            $age = null;
+                                            if ($std->birth_date) {
+                                                try {
+                                                    $age = Carbon::parse($std->birth_date)->age;
+                                                } catch (\Exception $e) {
                                                 }
-                                                $demoData[$group][$studentId] = [
+                                            }
+
+                                            // Yearly - unique per student-group
+                                            if (!isset($yearlyDemoData[$group][$studentId])) {
+                                                $yearlyDemoData[$group][$studentId] = [
                                                     'age' => $age,
                                                     'sex' => $std->sex ?? null,
                                                     'grade' => $std->grade ?? null,
                                                 ];
                                             }
+
+                                            // Monthly - period based
+                                            $period = $data1->period;
+                                            $periods = explode('-', str_replace(' - ', '-', $period));
+                                            if (count($periods) >= 4) {
+                                                $startYear = intval($periods[0]);
+                                                $startMonth = intval($periods[1]);
+                                                $endYear = intval($periods[2]);
+                                                $endMonth = intval($periods[3]);
+                                            } elseif (count($periods) >= 2) {
+                                                $startYear = intval($periods[0]);
+                                                $startMonth = intval($periods[1]);
+                                                $endYear = $startYear;
+                                                $endMonth = $startMonth;
+                                            } else {
+                                                continue;
+                                            }
+
+                                            for ($m = 1; $m <= 12; $m++) {
+                                                $checkDate = Carbon::create($year, $m, 15);
+                                                $startDate = Carbon::create($startYear, $startMonth, 1);
+                                                $endDate = Carbon::create($endYear, $endMonth, 1)->endOfMonth();
+
+                                                if ($checkDate->between($startDate, $endDate)) {
+                                                    if (!isset($monthlyDemoData[$m][$group][$studentId])) {
+                                                        $monthlyDemoData[$m][$group][$studentId] = [
+                                                            'age' => $age,
+                                                            'sex' => $std->sex ?? null,
+                                                            'grade' => $std->grade ?? null,
+                                                        ];
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
 
-                                    // colour palette
                                     $groupColors = [
                                         'M' => '#4CAF50',
                                         'E' => '#2196F3',
@@ -1002,12 +1043,34 @@
                                         'J' => 'J - ภาษาญี่ปุ่น',
                                         'K' => 'K - ภาษาเกาหลี',
                                     ];
+
+                                    $currentViewMonth = (int) date('m');
                                 @endphp
                                 <div id="section-demographics">
-                                    <h4 class="mt-5 mb-3">
-                                        <i class="fa fa-users"></i>
-                                        ข้อมูลประชากรนักเรียนแต่ละวิชา ปี {{ $year }}
-                                    </h4>
+                                    <div class="row align-items-center mt-5 mb-3">
+                                        <div class="col-md-7">
+                                            <h4>
+                                                <i class="fa fa-users"></i>
+                                                ข้อมูลประชากรนักเรียนแต่ละวิชา ปี {{ $year }}
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-5 text-end no-print">
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" id="btn-demo-all"
+                                                    class="btn btn-outline-primary demo-month-btn active"
+                                                    onclick="ShowDemoMonth('all')">
+                                                    รายปี
+                                                </button>
+                                                @for ($m = 1; $m <= 12; $m++)
+                                                    <button type="button" id="btn-demo-{{ $m }}"
+                                                        class="btn btn-outline-primary demo-month-btn"
+                                                        onclick="ShowDemoMonth({{ $m }})">
+                                                        {{ str_pad($m, 2, '0', STR_PAD_LEFT) }}
+                                                    </button>
+                                                @endfor
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <style>
                                         .demo-card {
@@ -1095,259 +1158,88 @@
                                             color: #6c757d;
                                             margin-top: 2px;
                                         }
-                                    </style>
 
-                                    <div class="row">
-                                        @foreach ($demoData as $group => $students)
-                                            @php
-                                                $color = $groupColors[$group] ?? '#607D8B';
-                                                $groupName = $groupNames[$group] ?? $group;
-                                                $total = count($students);
-
-                                                // Gender
-                                                $maleCount = collect($students)->where('sex', 'ชาย')->count();
-                                                $femaleCount = collect($students)->where('sex', 'หญิง')->count();
-                                                $noSex = $total - $maleCount - $femaleCount;
-
-                                                // Age ranges
-                                                $ageRanges = [
-                                                    '< 7' => 0,
-                                                    '7-9' => 0,
-                                                    '10-12' => 0,
-                                                    '13-15' => 0,
-                                                    '> 15' => 0,
-                                                    'ไม่ระบุ' => 0,
-                                                ];
-                                                foreach ($students as $s) {
-                                                    $a = $s['age'];
-                                                    if ($a === null) {
-                                                        $ageRanges['ไม่ระบุ']++;
-                                                    } elseif ($a < 7) {
-                                                        $ageRanges['< 7']++;
-                                                    } elseif ($a <= 9) {
-                                                        $ageRanges['7-9']++;
-                                                    } elseif ($a <= 12) {
-                                                        $ageRanges['10-12']++;
-                                                    } elseif ($a <= 15) {
-                                                        $ageRanges['13-15']++;
-                                                    } else {
-                                                        $ageRanges['> 15']++;
+                                        {{-- ANNUAL SUMMARY BLOCK --}} <div class="row demo-month-content" id="demo-month-block-all" style="display: flex;"><div class="col-12 mb-3 no-print"><span class="badge bg-primary p-2 px-3 fs-6">สรุปภาพรวมรายปี {{ $year }} </span></div>@if (empty($yearlyDemoData))<div class="col-12 text-center py-5 text-muted"><i class="fa fa-info-circle fa-2x mb-2"></i><p>ไม่มีข้อมูลประชากรในปีนี้</p></div>@else @foreach ($yearlyDemoData as $group => $students)@php
+                                            $color = $groupColors[$group] ?? '#6c757d';
+                                            $groupName = $groupNames[$group] ?? $group;
+                                            $total = count($students);
+                                            $maleCount = collect($students)->where('sex', 'ชาย')->count();
+                                            $femaleCount = collect($students)->where('sex', 'หญิง')->count();
+                                        @endphp <div class="col-xl-4 col-lg-6 mb-4 d-flex"><div class="card border-0 shadow-sm w-100" style="border-radius: 12px; overflow: hidden;"><div class="card-header border-0 d-flex align-items-center justify-content-between py-3" style="background: {{ $color }}; color: #fff;"><div class="d-flex align-items-center gap-2"><div class="bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; color: {{ $color }};"><span class="fw-bold">{{ substr($group, 0, 1) }}</span></div><h6 class="mb-0 fw-bold">{{ $groupName }}</h6></div><span class="badge bg-white text-dark">{{ $total }} คน</span></div><div class="card-body"><div class="row g-2 mb-3"><div class="col-4"><div class="demo-stat-box"><div class="demo-stat-num">{{ $total }}</div><div class="demo-stat-label">ทั้งหมด</div></div></div><div class="col-4"><div class="demo-stat-box" style="color: #2196F3;"><div class="demo-stat-num">{{ $maleCount }}</div><div class="demo-stat-label">ชาย</div></div></div><div class="col-4"><div class="demo-stat-box" style="color: #E91E63;"><div class="demo-stat-num">{{ $femaleCount }}</div><div class="demo-stat-label">หญิง</div></div></div></div><div class="mb-3"><div class="demo-bar-label"><span>ช่วงอายุ</span></div>@php
+                                            $ageGroups = collect($students)
+                                                ->groupBy(function ($s) {
+                                                    if (!$s['age']) {
+                                                        return 'ไม่ระบุ';
                                                     }
-                                                }
-
-                                                // Grade (for M & E only, else skip)
-                                                $showGrade = in_array($group, ['M', 'E']);
-                                                $grades = [];
-                                                if ($showGrade) {
-                                                    foreach ($students as $s) {
-                                                        $g = trim($s['grade'] ?? 'ไม่ระบุ');
-                                                        if ($g === '' || $g === null) {
-                                                            $g = 'ไม่ระบุ';
-                                                        }
-                                                        $grades[$g] = ($grades[$g] ?? 0) + 1;
+                                                    if ($s['age'] <= 6) {
+                                                        return '0-6';
                                                     }
-                                                    arsort($grades);
+                                                    if ($s['age'] <= 9) {
+                                                        return '7-9';
+                                                    }
+                                                    if ($s['age'] <= 12) {
+                                                        return '10-12';
+                                                    }
+                                                    return '13+';
+                                                })
+                                                ->map->count();
+                                            $ageLabels = [
+                                                '0-6' => '0-6',
+                                                '7-9' => '7-9',
+                                                '10-12' => '10-12',
+                                                '13+' => '13+',
+                                                'ไม่ระบุ' => 'ไม่ระบุ',
+                                            ];
+                                        @endphp @foreach ($ageLabels as $k => $label)@if (isset($ageGroups[$k]))<div class="demo-bar-wrap"><div class="demo-bar-label"><span>{{ $label }}</span><span>{{ $ageGroups[$k] }} คน</span></div><div class="demo-bar-bg"><div class="demo-bar-fill" style="width:{{ ($ageGroups[$k] / $total) * 100 }}%; background:{{ $color }};"></div></div></div>@endif@endforeach</div><div><div class="demo-bar-label mb-1"><span>ระดับชั้น</span></div><div class="d-flex flex-wrap gap-1">@php
+                                            $grades = collect($students)->groupBy('grade')->map->count()->sortKeys();
+                                        @endphp @foreach ($grades as $grade => $count)<span class="demo-pill">{{ $grade ? $grade : 'ไม่ระบุ' }} <span class="badge rounded-pill bg-dark ms-1" style="font-size: 10px;">{{ $count }}</span></span>@endforeach</div></div></div></div></div>@endforeach@endif</div>@for ($m = 1; $m <= 12; $m++)<div class="row demo-month-content" id="demo-month-block-{{ $m }}" style="display: none;"><div class="col-12 mb-3 no-print"><span class="badge bg-info p-2 px-3 fs-6">ประจำเดือน {{ thaidate('F', Carbon::create($year, $m, 1)->format('F')) }} {{ $year }} </span></div>@if (empty($monthlyDemoData[$m]))<div class="col-12 text-center py-5 text-muted"><i class="fa fa-info-circle fa-2x mb-2"></i><p>ไม่มีข้อมูลประชากรในเดือนนี้</p></div>@else @foreach ($monthlyDemoData[$m] as $group => $students)@php
+                                            $color = $groupColors[$group] ?? '#6c757d';
+                                            $groupName = $groupNames[$group] ?? $group;
+                                            $total = count($students);
+                                            $maleCount = collect($students)->where('sex', 'ชาย')->count();
+                                            $femaleCount = collect($students)->where('sex', 'หญิง')->count();
+
+                                            $ageRanges = [
+                                                '< 7' => 0,
+                                                '7-9' => 0,
+                                                '10-12' => 0,
+                                                '13-15' => 0,
+                                                '> 15' => 0,
+                                                'ไม่ระบุ' => 0,
+                                            ];
+                                            foreach ($students as $student) {
+                                                $age = $student['age'];
+                                                if ($age === null) {
+                                                    $ageRanges['ไม่ระบุ']++;
+                                                } elseif ($age < 7) {
+                                                    $ageRanges['< 7']++;
+                                                } elseif ($age <= 9) {
+                                                    $ageRanges['7-9']++;
+                                                } elseif ($age <= 12) {
+                                                    $ageRanges['10-12']++;
+                                                } elseif ($age <= 15) {
+                                                    $ageRanges['13-15']++;
+                                                } else {
+                                                    $ageRanges['> 15']++;
                                                 }
-
-                                                $maxAge = max(array_values($ageRanges)) ?: 1;
-                                            @endphp
-                                            <div class="col-lg-6">
-                                                <div class="demo-card">
-                                                    <div class="demo-card-header"
-                                                        style="background: {{ $color }};">
-                                                        <i class="fa fa-book"></i>
-                                                        {{ $groupName }}
-                                                        <span class="ms-auto badge bg-white"
-                                                            style="color: {{ $color }}; font-size: 13px;">{{ $total }}
-                                                            คน</span>
-                                                    </div>
-                                                    <div class="demo-card-body">
-                                                        <div class="row mb-3">
-                                                            <div class="col-4">
-                                                                <div class="demo-stat-box">
-                                                                    <div class="demo-stat-num"
-                                                                        style="color: {{ $color }};">
-                                                                        {{ $total }}</div>
-                                                                    <div class="demo-stat-label">นักเรียนทั้งหมด</div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <div class="demo-stat-box">
-                                                                    <div class="demo-stat-num text-primary">
-                                                                        {{ $maleCount }}</div>
-                                                                    <div class="demo-stat-label">ชาย</div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <div class="demo-stat-box">
-                                                                    <div class="demo-stat-num text-danger">
-                                                                        {{ $femaleCount }}
-                                                                    </div>
-                                                                    <div class="demo-stat-label">หญิง</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        {{-- Gender bar --}}
-                                                        <div class="demo-section-title">เพศ</div>
-                                                        @if ($total > 0)
-                                                            @php
-                                                                $malePct = round(($maleCount / $total) * 100);
-                                                                $femalePct = round(($femaleCount / $total) * 100);
-                                                            @endphp
-                                                            <div class="demo-bar-wrap">
-                                                                <div class="demo-bar-label">
-                                                                    <span>ชาย</span><span>{{ $maleCount }}
-                                                                        คน ({{ $malePct }}%)</span>
-                                                                </div>
-                                                                <div class="demo-bar-bg">
-                                                                    <div class="demo-bar-fill"
-                                                                        style="width:{{ $malePct }}%; background:#2196F3;">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="demo-bar-wrap">
-                                                                <div class="demo-bar-label">
-                                                                    <span>หญิง</span><span>{{ $femaleCount }}
-                                                                        คน ({{ $femalePct }}%)</span>
-                                                                </div>
-                                                                <div class="demo-bar-bg">
-                                                                    <div class="demo-bar-fill"
-                                                                        style="width:{{ $femalePct }}%; background:#E91E63;">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            @if ($noSex > 0)
-                                                                <div class="demo-bar-wrap">
-                                                                    <div class="demo-bar-label">
-                                                                        <span>ไม่ระบุ</span><span>{{ $noSex }}
-                                                                            คน</span>
-                                                                    </div>
-                                                                    <div class="demo-bar-bg">
-                                                                        <div class="demo-bar-fill"
-                                                                            style="width:{{ round(($noSex / $total) * 100) }}%; background:#9e9e9e;">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            @endif
-                                                        @endif
-
-                                                        {{-- Age distribution --}}
-                                                        <div class="demo-section-title mt-3">ช่วงอายุ</div>
-                                                        @foreach ($ageRanges as $label => $cnt)
-                                                            @if ($cnt > 0)
-                                                                <div class="demo-bar-wrap">
-                                                                    <div class="demo-bar-label"><span>{{ $label }}
-                                                                            ปี</span><span>{{ $cnt }} คน</span>
-                                                                    </div>
-                                                                    <div class="demo-bar-bg">
-                                                                        <div class="demo-bar-fill"
-                                                                            style="width:{{ round(($cnt / $maxAge) * 100) }}%; background:{{ $color }};">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
-
-                                                        {{-- Grade (M & E only) --}}
-                                                        @if ($showGrade && count($grades) > 0)
-                                                            <div class="demo-section-title mt-3">ชั้นเรียน (ป./ม.)</div>
-                                                            <div>
-                                                                @foreach ($grades as $grade => $cnt)
-                                                                    <span class="demo-pill"
-                                                                        style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
-                                                                        {{ $grade }}
-                                                                        <strong>{{ $cnt }}</strong>
-                                                                    </span>
-                                                                @endforeach
-                                                            </div>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    {{-- ===== END DEMOGRAPHICS SECTION ===== --}}
-                                </div>{{-- end #section-demographics --}}
-                            </div>{{-- end .tab-content (tab-2 body) --}}
-                            <div class="tab-pane fade print-section" id="default-tab-3">
-                                <div id="section-paper-table">
-                                    <blockquote class="blockquote">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <p class="mb-0">ตารางแสดงผลบันทึกใบปะหน้าประจำเดือน
-                                                {{ thaidate('F', date('F')) }}
-                                                {{ date('Y') }}</p>
-
-                                        </div>
-
-                                    </blockquote>
-                                    <table style="width: 100%;" id="Listview2"
-                                        class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5">
-
-                                        <thead>
-                                            <tr>
-                                                <th width='1%' class="text-center">#</th>
-                                                <th width='1%' class="text-center">NO.</th>
-                                                <th>Submission Date</th>
-                                                <th>Student Nickname</th>
-                                                <th>Reciept Number</th>
-
-                                                <th>Period</th>
-                                                <th>Group</th>
-                                                <th>total</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            @foreach ($paper as $key => $paper_rep)
-                                                <tr>
-                                                    <td class="text-center">{{ $key + 1 }}</td>
-                                                    <td class="text-center">{{ $paper_rep->no }}</td>
-                                                    <td>{{ $paper_rep->submission_date }}</td>
-                                                    <td>{{ $paper_rep->student->nick_name }}</td>
-                                                    <td>{{ $paper_rep->receipt_number }}</td>
-                                                    <td>{{ $paper_rep->school_price->period ?? null }}</td>
-                                                    <td>{{ $paper_rep->school_price->group ?? null }}</td>
-                                                    <td class="text-end">
-                                                        {{ number_format($paper_rep->school_price->total) ?? null }}
-                                                        บาท</td>
-
-                                                </tr>
-                                            @endforeach
-
-                                        </tbody>
-
-
-                                    </table>
-                                </div>{{-- end #section-paper-table --}}
-                            </div>{{-- end tab-pane #default-tab-3 --}}
-                        </div>{{-- end .tab-content --}}
-
-                    </div>{{-- end .card-body --}}
-                </div>{{-- end .card --}}
-
-            </div>
-        @endsection
-
-        @section('script')
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            {{-- <script src="https://d3js.org/d3.v7.min.js"></script> --}}
-            <script src="../assets/plugins/d3/d3.min.js"></script>
-            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-            {{-- <script src="../assets/plugins/nvd3/build/nv.d3.min.js"></script> --}}
-            {{-- <script src="../assets/plugins/chart.js/dist/Chart.min.js"></script> --}}
-            <script src="../assets/plugins/flot/source/jquery.canvaswrapper.js"></script>
-            <script src="../assets/plugins/flot/source/jquery.colorhelpers.js"></script>
-            <script src="../assets/plugins/flot/source/jquery.flot.js"></script>
-            <script src="../assets/plugins/flot/source/jquery.flot.saturated.js"></script>
-            <script src="../assets/plugins/flot/source/jquery.flot.browser.js"></script>
-            <script src="../assets/plugins/flot/source/jquery.flot.drawSeries.js"></script>
-            <script src="../assets/plugins/flot/source/jquery.flot.uiConstants.js"></script>
-            <script src="/assets/plugins/switchery/dist/switchery.min.js"></script>
-
-            <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
-            <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
-            {{-- <script>
+                                            }
+                                            $showGrade = in_array($group, ['M', 'E']);
+                                            $grades = [];
+                                            if ($showGrade) {
+                                                foreach ($students as $student) {
+                                                    $grade = trim($student['grade'] ?? 'ไม่ระบุ');
+                                                    if ($grade === '' || $grade === null) {
+                                                        $grade = 'ไม่ระบุ';
+                                                    }
+                                                    $grades[$grade] = ($grades[$grade] ?? 0) + 1;
+                                                }
+                                                arsort($grades);
+                                            }
+                                            $maxAge = max(array_values($ageRanges)) ?: 1;
+                                        @endphp <div class="col-lg-4 col-md-6"><div class="demo-card"><div class="demo-card-header" style="background: {{ $color }};"><div class="icon-circle" style="width: 24px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px;">{{ substr($group, 0, 1) }} </div>{{ $groupName }} <span class="ms-auto badge bg-white text-dark">{{ $total }} คน</span></div><div class="demo-card-body"><div class="row text-center mb-3 g-2"><div class="col-4"><div class="demo-stat-box"><div class="demo-stat-num" style="color: {{ $color }};">{{ $total }}</div><div class="demo-stat-label">ทั้งหมด</div></div></div><div class="col-4"><div class="demo-stat-box"><div class="demo-stat-num text-primary">{{ $maleCount }}</div><div class="demo-stat-label">ชาย</div></div></div><div class="col-4"><div class="demo-stat-box"><div class="demo-stat-num text-danger">{{ $femaleCount }}</div><div class="demo-stat-label">หญิง</div></div></div></div>@if ($total > 0)@php
+                                            $malePct = round(($maleCount / ($total ?: 1)) * 100);
+                                            $femalePct = round(($femaleCount / ($total ?: 1)) * 100);
+                                        @endphp <p class="demo-section-title">สัดส่วนเพศ</p><div class="demo-bar-wrap"><div class="demo-bar-label"><span>ชาย</span><span>{{ $maleCount }} คน ({{ $malePct }}%)</span></div><div class="demo-bar-bg"><div class="demo-bar-fill" style="width: {{ $malePct }}%; background: #2196F3;"></div></div></div><div class="demo-bar-wrap mb-3"><div class="demo-bar-label"><span>หญิง</span><span>{{ $femaleCount }} คน ({{ $femalePct }}%)</span></div><div class="demo-bar-bg"><div class="demo-bar-fill" style="width: {{ $femalePct }}%; background: #E91E63;"></div></div></div><p class="demo-section-title">ช่วงอายุ</p>@foreach ($ageRanges as $label => $count)@if ($count > 0)<div class="demo-bar-wrap"><div class="demo-bar-label"><span>{{ $label }}</span><span>{{ $count }} คน</span></div><div class="demo-bar-bg"><div class="demo-bar-fill" style="width: {{ round(($count / $maxAge) * 100) }}%; background: {{ $color }};"></div></div></div>@endif@endforeach@if ($showGrade && count($grades) > 0)<p class="demo-section-title mt-3">ระดับชั้น</p><div class="d-flex flex-wrap gap-1">@foreach ($grades as $grade => $count)<span class="demo-pill" style="border: 1.5px solid {{ $color }}; color: {{ $color }};">{{ $grade }} <strong>{{ $count }}</strong></span>@endforeach</div>@endif@endif</div></div></div>@endforeach@endif</div>@endfor{{-- ===== END DEMOGRAPHICS SECTION ===== --}} </div>{{-- end #section-demographics --}} </div>{{-- end .tab-content (tab-2 body) --}} <div class="tab-pane fade print-section" id="default-tab-3"><div id="section-paper-table"><blockquote class="blockquote"><div class="d-flex justify-content-between align-items-center"><p class="mb-0">ตารางแสดงผลบันทึกใบปะหน้าประจำเดือน {{ thaidate('F', date('F')) }} {{ date('Y') }}</p></div></blockquote><table style="width: 100%;" id="Listview2" class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action my-5"><thead><tr><th width='1%' class="text-center">#</th><th width='1%' class="text-center">NO.</th><th>Submission Date</th><th>Student Nickname</th><th>Reciept Number</th><th>Period</th><th>Group</th><th>total</th></tr></thead><tbody>@foreach ($paper as $key => $paper_rep)<tr><td class="text-center">{{ $key + 1 }}</td><td class="text-center">{{ $paper_rep->no }}</td><td>{{ $paper_rep->submission_date }}</td><td>{{ $paper_rep->student->nick_name }}</td><td>{{ $paper_rep->receipt_number }}</td><td>{{ $paper_rep->school_price->period ?? null }}</td><td>{{ $paper_rep->school_price->group ?? null }}</td><td class="text-end">{{ number_format($paper_rep->school_price->total) ?? null }} บาท</td></tr>@endforeach</tbody></table></div>{{-- end #section-paper-table --}} </div>{{-- end tab-pane #default-tab-3 --}} </div>{{-- end .tab-content --}} </div>{{-- end .card-body --}} </div>{{-- end .card --}} </div>@endsection @section('script') <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>{{-- <script src="https://d3js.org/d3.v7.min.js"></script> --}} <script src="../assets/plugins/d3/d3.min.js"></script><script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>{{-- <script src="../assets/plugins/nvd3/build/nv.d3.min.js"></script> --}} {{-- <script src="../assets/plugins/chart.js/dist/Chart.min.js"></script> --}} <script src="../assets/plugins/flot/source/jquery.canvaswrapper.js"></script><script src="../assets/plugins/flot/source/jquery.colorhelpers.js"></script><script src="../assets/plugins/flot/source/jquery.flot.js"></script><script src="../assets/plugins/flot/source/jquery.flot.saturated.js"></script><script src="../assets/plugins/flot/source/jquery.flot.browser.js"></script><script src="../assets/plugins/flot/source/jquery.flot.drawSeries.js"></script><script src="../assets/plugins/flot/source/jquery.flot.uiConstants.js"></script><script src="/assets/plugins/switchery/dist/switchery.min.js"></script><script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script><script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>{{-- <script>
     {{-- <script>
         var checkboxes = document.querySelectorAll('input[id^="switchery-default-"]');
         checkboxes.forEach(function(checkbox) {
@@ -1355,286 +1247,288 @@
                 color: '#00acac'
             });
         });
-    </script> --}}
-            <script>
-                $(document).ready(function() {
-                    var selectMonth1 = document.getElementById('selectMonth1');
+    </script> --}} <script>
+                                            $(document).ready(function() {
+                                                var selectMonth1 = document.getElementById('selectMonth1');
 
-                    if (selectMonth1) {
-                        selectMonth1.disabled = true;
-                    }
-                    var table1 = $('#Listview').DataTable({
-                        lengthMenu: [-1],
-                    });
+                                                if (selectMonth1) {
+                                                    selectMonth1.disabled = true;
+                                                }
+                                                var table1 = $('#Listview').DataTable({
+                                                    lengthMenu: [-1],
+                                                });
 
-                    var table2 = $('#Listview2').DataTable({
-                        lengthMenu: [-1],
-                    });
+                                                var table2 = $('#Listview2').DataTable({
+                                                    lengthMenu: [-1],
+                                                });
 
-                    // Timeline Search
-                    $('#timelineSearch').on('keyup', function() {
-                        var searchText = $(this).val().toLowerCase();
-                        var visibleCount = 0;
+                                                // Timeline Search
+                                                $('#timelineSearch').on('keyup', function() {
+                                                    var searchText = $(this).val().toLowerCase();
+                                                    var visibleCount = 0;
 
-                        $('.timeline-row').each(function() {
-                            var studentName = $(this).data('student');
-                            if (studentName.includes(searchText)) {
-                                $(this).show();
-                                visibleCount++;
-                            } else {
-                                $(this).hide();
-                            }
-                        });
+                                                    $('.timeline-row').each(function() {
+                                                        var studentName = $(this).data('student');
+                                                        if (studentName.includes(searchText)) {
+                                                            $(this).show();
+                                                            visibleCount++;
+                                                        } else {
+                                                            $(this).hide();
+                                                        }
+                                                    });
 
-                        $('#visibleCount').text(visibleCount);
-                    });
+                                                    $('#visibleCount').text(visibleCount);
+                                                });
 
-                    // Timeline bar tooltip
-                    $('.timeline-bar').tooltip();
+                                                // Timeline bar tooltip
+                                                $('.timeline-bar').tooltip();
 
-                    $('input[type="checkbox"]').change(function() {
-                        var isChecked = $(this).is(":checked");
-                        if (isChecked) {
-                            $(this).closest('tr').addClass('bg-success');
-                            var id = $(this).attr('id');
-                            localStorage.setItem(id, 'checked');
-                        } else {
-                            $(this).closest('tr').removeClass('bg-success');
-                            var id = $(this).attr('id');
-                            localStorage.setItem(id, 'unchecked');
-                        }
-                    });
-                    $(document).ready(function() {
-                        $('input[type="checkbox"]').each(function() {
-                            var id = $(this).attr('id');
-                            var state = localStorage.getItem(id);
-                            if (state === 'checked') {
-                                $(this).prop('checked', true);
-                                $(this).closest('tr').addClass('bg-success');
-                            }
-                        });
-                    });
-
-
-                })
-
-                // document.addEventListener('DOMContentLoaded', function() {
-                //     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-                //     checkboxes.forEach(function(checkbox) {
-                //         checkbox.addEventListener('change', function() {
-                //             var isChecked = this.checked;
-                //             if (isChecked) {
-                //                 this.closest('tr').style.backgroundColor = 'green';
-                //             } else {
-                //                 this.closest('tr').style.backgroundColor = '';
-                //             }
-                //         });
-                //     });
-                // });
-
-                $(document).ready(function() {
-
-                });
-            </script>
-            <script>
-                var groupLabels = [
-                    @foreach ($totalForAllMonths as $month => $total)
-
-                        '{{ $month }} ',
-                    @endforeach
-                ];
-
-                var groupLabels2 = [
-                    @foreach ($totalForAllMonths as $month => $total)
-                        @if (isset($percentageChangeForAllMonths[$month]))
-                            @if ($percentageChangeForAllMonths[$month] > 0)
-                                '{{ $month }}\n+{{ $percentageChangeForAllMonths[$month] }}%',
-                            @else
-                                '{{ $month }}\n{{ $percentageChangeForAllMonths[$month] }}%',
-                            @endif
-                        @else
-                            '{{ $month }}  ',
-                        @endif
-                    @endforeach
-                ];
-
-                // var data = {
-                //     labels: groupLabels2,
-                //     // label: groupLabels,
-                //     datasets: [{
-                //         label: 'ยอดรวมแต่ละเดือน ',
-                //         data: [
-                //             @foreach ($totalForAllMonths as $month => $total)
-                //                 {{ $total }},
-                //             @endforeach
-                //         ],
-                //         pointBackgroundColor: 'rgba(52, 143, 226,.65)',
-                //         borderColor: 'rgba(52, 143, 226,.65)',
-                //         backgroundColor: 'rgba(52, 143, 226,.65)',
-                //         pointRadius: 4,
-                //         borderWidth: 2,
-                //     }, ]
-                // };
-                var ctx = document.getElementById('lineChart').getContext('2d');
-                var lineChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: groupLabels2,
-                        // label: groupLabels,
-                        datasets: [{
-                            label: 'ยอดรวมแต่ละเดือน ',
-                            data: [
-                                @foreach ($totalForAllMonths as $month => $total)
-                                    {{ $total }},
-                                @endforeach
-                            ],
-                            pointBackgroundColor: 'rgba(52, 143, 226,.65)',
-                            borderColor: 'rgba(52, 143, 226,.65)',
-                            backgroundColor: 'rgba(52, 143, 226,.65)',
-                            pointRadius: 4,
-                            borderWidth: 2,
-                        }, ]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        },
-                        plugins: {
-                            tooltip: {
-                                mode: 'index', // Display multiple tooltips at once
-                                intersect: false, // Don't intersect with other elements
-                            },
-                            // title: {
-                            //     display: true,
-                            //     text: 'Chart Title',
-                            // },
-                            legend: {
-                                display: true,
-                                position: 'top',
-                            },
-                        },
-                        animation: {
-                            duration: 2000, // Animation duration in milliseconds
-                            easing: 'easeInOutQuad', // Easing function
-                        },
-
-                    }
-                });
-            </script>
+                                                $('input[type="checkbox"]').change(function() {
+                                                    var isChecked = $(this).is(":checked");
+                                                    if (isChecked) {
+                                                        $(this).closest('tr').addClass('bg-success');
+                                                        var id = $(this).attr('id');
+                                                        localStorage.setItem(id, 'checked');
+                                                    } else {
+                                                        $(this).closest('tr').removeClass('bg-success');
+                                                        var id = $(this).attr('id');
+                                                        localStorage.setItem(id, 'unchecked');
+                                                    }
+                                                });
+                                                $(document).ready(function() {
+                                                    $('input[type="checkbox"]').each(function() {
+                                                        var id = $(this).attr('id');
+                                                        var state = localStorage.getItem(id);
+                                                        if (state === 'checked') {
+                                                            $(this).prop('checked', true);
+                                                            $(this).closest('tr').addClass('bg-success');
+                                                        }
+                                                    });
+                                                });
 
 
-            <script>
-                var groupLabels = [
-                    @foreach ($totalForAllMonths as $month => $total)
-                        '{{ $month }}',
-                    @endforeach
-                ];
-                var groupLabels2 = [
-                    @foreach ($totalForAllMonths as $month => $total)
-                        @if (isset($percentageChangeForAllMonths[$month]))
-                            @if ($percentageChangeForAllMonths[$month] > 0)
-                                '{{ $month }}\n+{{ $percentageChangeForAllMonths[$month] }}%',
-                            @else
-                                '{{ $month }}\n{{ $percentageChangeForAllMonths[$month] }}%',
-                            @endif
-                        @else
-                            '{{ $month }}  ',
-                        @endif
-                    @endforeach
-                ];
+                                            })
 
-                var data = {
-                    labels: groupLabels2,
-                    datasets: [{
-                        label: 'ยอดรวมแต่ละเดือน ',
-                        data: [
-                            @foreach ($totalForAllMonths as $month => $total)
-                                {{ $total }},
-                            @endforeach
-                        ],
-                        pointBackgroundColor: 'rgba(52, 143, 226,.65)',
-                        borderColor: 'rgba(52, 143, 226,.65)',
-                        backgroundColor: 'rgba(52, 143, 226,.65)',
-                        pointRadius: 4,
-                        borderWidth: 2,
-                    }]
-                };
-                var ctx = document.getElementById('barChart').getContext('2d');
-                var barChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: data,
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        },
-                        plugins: {
-                            tooltip: {
-                                mode: 'index', // Display multiple tooltips at once
-                                intersect: false, // Don't intersect with other elements
-                            },
-                            // title: {
-                            //     display: true,
-                            //     text: 'Chart Title',
-                            // },
-                            legend: {
-                                display: true,
-                                position: 'top',
-                            },
-                        },
-                        animation: {
-                            duration: 2000, // Animation duration in milliseconds
-                            easing: 'easeInOutQuad', // Easing function
-                        },
-                    }
-                });
-            </script>
+                                            // document.addEventListener('DOMContentLoaded', function() {
+                                            //     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                                            //     checkboxes.forEach(function(checkbox) {
+                                            //         checkbox.addEventListener('change', function() {
+                                            //             var isChecked = this.checked;
+                                            //             if (isChecked) {
+                                            //                 this.closest('tr').style.backgroundColor = 'green';
+                                            //             } else {
+                                            //                 this.closest('tr').style.backgroundColor = '';
+                                            //             }
+                                            //         });
+                                            //     });
+                                            // });
 
-            {{-- ====== PRINT JAVASCRIPT ====== --}}
-            <script>
-                document.getElementById('doPrint').addEventListener('click', function() {
-                    const SECTION_MAP = {
-                        'chk-monthly-table': 'monthly-table',
-                        'chk-all-month-chart': 'all-month-chart',
-                        'chk-timeline': 'timeline',
-                        'chk-summary-table': 'summary-table',
-                        'chk-demographics': 'demographics',
-                        'chk-paper-table': 'paper-table',
-                    };
+                                            $(document).ready(function() {
+                                                // Initialize if needed
+                                            });
 
-                    const selected = [];
-                    for (const [checkboxId, sectionName] of Object.entries(SECTION_MAP)) {
-                        const el = document.getElementById(checkboxId);
-                        if (el && el.checked) selected.push(sectionName);
-                    }
+                                            let currentDemoMonth = 'all';
 
-                    if (selected.length === 0) {
-                        alert('กรุณาเลือกอย่างน้อย 1 ส่วน');
-                        return;
-                    }
+                                            function ShowDemoMonth(month) {
+                                                currentDemoMonth = month;
+                                                // Update buttons
+                                                $('.demo-month-btn').removeClass('active');
+                                                $('#btn-demo-' + month).addClass('active');
 
-                    const orientation = document.querySelector('input[name="orientation"]:checked').value;
+                                                // Update content blocks
+                                                $('.demo-month-content').hide();
+                                                $('#demo-month-block-' + month).fadeIn(300).css('display', 'flex');
+                                            }
+                                        </script><script>
+                                            var groupLabels = [
+                                                @foreach ($totalForAllMonths as $month => $total)
 
-                    // Get current year from the year selector
-                    const yearSelect = document.getElementById('selectMonth');
-                    const year = yearSelect ? yearSelect.value : '{{ $year }}';
+                                                    '{{ $month }} ',
+                                                @endforeach
+                                            ];
 
-                    // Close modal
-                    const bsModal = bootstrap.Modal.getInstance(document.getElementById('printModal'));
-                    if (bsModal) bsModal.hide();
+                                            var groupLabels2 = [
+                                                @foreach ($totalForAllMonths as $month => $total)
+                                                    @if (isset($percentageChangeForAllMonths[$month]))
+                                                        @if ($percentageChangeForAllMonths[$month] > 0)
+                                                            '{{ $month }}\n+{{ $percentageChangeForAllMonths[$month] }}%',
+                                                        @else
+                                                            '{{ $month }}\n{{ $percentageChangeForAllMonths[$month] }}%',
+                                                        @endif
+                                                    @else
+                                                        '{{ $month }}  ',
+                                                    @endif
+                                                @endforeach
+                                            ];
 
-                    // Build URL and open in new window
-                    const url =
-                        `{{ route('reportRecieptStdPrint') }}?year=${year}&sections=${selected.join(',')}&orientation=${orientation}`;
-                    window.open(url, '_blank');
-                });
-            </script>
-        @endsection
+                                            // var data = {
+                                            //     labels: groupLabels2,
+                                            //     // label: groupLabels,
+                                            //     datasets: [{
+                                            //         label: 'ยอดรวมแต่ละเดือน ',
+                                            //         data: [
+                                            //             @foreach ($totalForAllMonths as $month => $total)
+                                            //                 {{ $total }},
+                                            //             @endforeach
+                                            //         ],
+                                            //         pointBackgroundColor: 'rgba(52, 143, 226,.65)',
+                                            //         borderColor: 'rgba(52, 143, 226,.65)',
+                                            //         backgroundColor: 'rgba(52, 143, 226,.65)',
+                                            //         pointRadius: 4,
+                                            //         borderWidth: 2,
+                                            //     }, ]
+                                            // };
+                                            var ctx = document.getElementById('lineChart').getContext('2d');
+                                            var lineChart = new Chart(ctx, {
+                                                type: 'line',
+                                                data: {
+                                                    labels: groupLabels2,
+                                                    // label: groupLabels,
+                                                    datasets: [{
+                                                        label: 'ยอดรวมแต่ละเดือน ',
+                                                        data: [
+                                                            @foreach ($totalForAllMonths as $month => $total)
+                                                                {{ $total }},
+                                                            @endforeach
+                                                        ],
+                                                        pointBackgroundColor: 'rgba(52, 143, 226,.65)',
+                                                        borderColor: 'rgba(52, 143, 226,.65)',
+                                                        backgroundColor: 'rgba(52, 143, 226,.65)',
+                                                        pointRadius: 4,
+                                                        borderWidth: 2,
+                                                    }, ]
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        y: {
+                                                            beginAtZero: true
+                                                        }
+                                                    },
+                                                    plugins: {
+                                                        tooltip: {
+                                                            mode: 'index', // Display multiple tooltips at once
+                                                            intersect: false, // Don't intersect with other elements
+                                                        },
+                                                        // title: {
+                                                        //     display: true,
+                                                        //     text: 'Chart Title',
+                                                        // },
+                                                        legend: {
+                                                            display: true,
+                                                            position: 'top',
+                                                        },
+                                                    },
+                                                    animation: {
+                                                        duration: 2000, // Animation duration in milliseconds
+                                                        easing: 'easeInOutQuad', // Easing function
+                                                    },
 
-        {{-- @php
+                                                }
+                                            });
+                                        </script><script>
+                                            var groupLabels = [
+                                                @foreach ($totalForAllMonths as $month => $total)
+                                                    '{{ $month }}',
+                                                @endforeach
+                                            ];
+                                            var groupLabels2 = [
+                                                @foreach ($totalForAllMonths as $month => $total)
+                                                    @if (isset($percentageChangeForAllMonths[$month]))
+                                                        @if ($percentageChangeForAllMonths[$month] > 0)
+                                                            '{{ $month }}\n+{{ $percentageChangeForAllMonths[$month] }}%',
+                                                        @else
+                                                            '{{ $month }}\n{{ $percentageChangeForAllMonths[$month] }}%',
+                                                        @endif
+                                                    @else
+                                                        '{{ $month }}  ',
+                                                    @endif
+                                                @endforeach
+                                            ];
+
+                                            var data = {
+                                                labels: groupLabels2,
+                                                datasets: [{
+                                                    label: 'ยอดรวมแต่ละเดือน ',
+                                                    data: [
+                                                        @foreach ($totalForAllMonths as $month => $total)
+                                                            {{ $total }},
+                                                        @endforeach
+                                                    ],
+                                                    pointBackgroundColor: 'rgba(52, 143, 226,.65)',
+                                                    borderColor: 'rgba(52, 143, 226,.65)',
+                                                    backgroundColor: 'rgba(52, 143, 226,.65)',
+                                                    pointRadius: 4,
+                                                    borderWidth: 2,
+                                                }]
+                                            };
+                                            var ctx = document.getElementById('barChart').getContext('2d');
+                                            var barChart = new Chart(ctx, {
+                                                type: 'bar',
+                                                data: data,
+                                                options: {
+                                                    scales: {
+                                                        y: {
+                                                            beginAtZero: true
+                                                        }
+                                                    },
+                                                    plugins: {
+                                                        tooltip: {
+                                                            mode: 'index', // Display multiple tooltips at once
+                                                            intersect: false, // Don't intersect with other elements
+                                                        },
+                                                        // title: {
+                                                        //     display: true,
+                                                        //     text: 'Chart Title',
+                                                        // },
+                                                        legend: {
+                                                            display: true,
+                                                            position: 'top',
+                                                        },
+                                                    },
+                                                    animation: {
+                                                        duration: 2000, // Animation duration in milliseconds
+                                                        easing: 'easeInOutQuad', // Easing function
+                                                    },
+                                                }
+                                            });
+                                        </script>{{-- ====== PRINT JAVASCRIPT ====== --}} <script>
+                                            document.getElementById('doPrint').addEventListener('click', function() {
+                                                const SECTION_MAP = {
+                                                    'chk-monthly-table': 'monthly-table',
+                                                    'chk-all-month-chart': 'all-month-chart',
+                                                    'chk-timeline': 'timeline',
+                                                    'chk-summary-table': 'summary-table',
+                                                    'chk-demographics': 'demographics',
+                                                    'chk-paper-table': 'paper-table',
+                                                };
+
+                                                const selected = [];
+                                                for (const [checkboxId, sectionName] of Object.entries(SECTION_MAP)) {
+                                                    const el = document.getElementById(checkboxId);
+                                                    if (el && el.checked) selected.push(sectionName);
+                                                }
+
+                                                if (selected.length === 0) {
+                                                    alert('กรุณาเลือกอย่างน้อย 1 ส่วน');
+                                                    return;
+                                                }
+
+                                                const orientation = document.querySelector('input[name="orientation"]:checked').value;
+
+                                                // Get current year from the year selector
+                                                const yearSelect = document.getElementById('selectMonth');
+                                                const year = yearSelect ? yearSelect.value : '{{ $year }}';
+
+                                                // Close modal
+                                                const bsModal = bootstrap.Modal.getInstance(document.getElementById('printModal'));
+                                                if (bsModal) bsModal.hide();
+
+                                                // Build URL and open in new window
+                                                const url =
+                                                    `{{ route('reportRecieptStdPrint') }}?year=${year}&sections=${selected.join(',')}&orientation=${orientation}&demo_month=${currentDemoMonth}`;
+                                                window.open(url, '_blank');
+                                            });
+                                        </script>@endsection {{-- @php
                                                     $mark = [];
                                                     $countdata = 0;
                                                     $ignorId = [];
@@ -1669,8 +1563,7 @@
                                                         }
                                                     } //endforeach
 
-                                                @endphp --}}
-        {{-- @php
+                                                @endphp --}} {{-- @php
                                                     $mark = [];
                                                     $countdata = 0;
                                                     $ignorId = [];

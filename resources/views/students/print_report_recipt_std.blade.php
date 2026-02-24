@@ -731,27 +731,62 @@
             </div>
 
             @php
+                $demoMonthParam = request()->get('demo_month', 'all');
+                $isAnnual = $demoMonthParam === 'all';
+                $demoMonth = $isAnnual ? null : (int) $demoMonthParam;
                 $demoData = [];
+
                 foreach ($reportYear_schoolPrice as $studentId => $groupedData) {
                     foreach ($groupedData as $data1) {
+                        $period = $data1->period;
                         $group = $data1->group;
                         $std = $data1->std;
                         if (!$std) {
                             continue;
                         }
-                        if (!isset($demoData[$group][$studentId])) {
-                            $age = null;
-                            if ($std->birth_date) {
-                                try {
-                                    $age = Carbon::parse($std->birth_date)->age;
-                                } catch (\Exception $e) {
-                                }
+
+                        $isIncluded = false;
+                        if ($isAnnual) {
+                            $isIncluded = true;
+                        } else {
+                            $periods = explode('-', str_replace(' - ', '-', $period));
+                            if (count($periods) >= 4) {
+                                $startYear = (int) $periods[0];
+                                $startMonth = (int) $periods[1];
+                                $endYear = (int) $periods[2];
+                                $endMonth = (int) $periods[3];
+                            } elseif (count($periods) >= 2) {
+                                $startYear = (int) $periods[0];
+                                $startMonth = (int) $periods[1];
+                                $endYear = $startYear;
+                                $endMonth = $startMonth;
+                            } else {
+                                continue;
                             }
-                            $demoData[$group][$studentId] = [
-                                'age' => $age,
-                                'sex' => $std->sex ?? null,
-                                'grade' => $std->grade ?? null,
-                            ];
+
+                            $checkDate = Carbon::create($year, $demoMonth, 15);
+                            $startDate = Carbon::create($startYear, $startMonth, 1);
+                            $endDate = Carbon::create($endYear, $endMonth, 1)->endOfMonth();
+                            if ($checkDate->between($startDate, $endDate)) {
+                                $isIncluded = true;
+                            }
+                        }
+
+                        if ($isIncluded) {
+                            if (!isset($demoData[$group][$studentId])) {
+                                $age = null;
+                                if ($std->birth_date) {
+                                    try {
+                                        $age = Carbon::parse($std->birth_date)->age;
+                                    } catch (\Exception $e) {
+                                    }
+                                }
+                                $demoData[$group][$studentId] = [
+                                    'age' => $age,
+                                    'sex' => $std->sex ?? null,
+                                    'grade' => $std->grade ?? null,
+                                ];
+                            }
                         }
                     }
                 }
@@ -779,6 +814,17 @@
                     'K' => 'K - ภาษาเกาหลี',
                 ];
             @endphp
+
+            <div class="mb-3 text-center">
+                <span class="badge bg-dark p-2 px-3 fs-6" style="color: #fff;">
+                    @if ($isAnnual)
+                        สรุปภาพรวมรายปี {{ $year }}
+                    @else
+                        ประจำเดือน {{ thaidate('F', Carbon::create($year, (int) $demoMonth, 1)->format('F')) }}
+                        {{ $year }}
+                    @endif
+                </span>
+            </div>
 
             <div class="demo-grid">
                 @foreach ($demoData as $group => $students)

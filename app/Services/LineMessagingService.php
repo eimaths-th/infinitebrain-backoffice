@@ -8,27 +8,30 @@ use Illuminate\Support\Facades\Log;
 class LineMessagingService
 {
     protected $channel_access_token;
+    protected $channel_access_token_finance;
     protected $group_id;
     protected $api_url = 'https://api.line.me/v2/bot/message/push';
 
     public function __construct()
     {
         $this->channel_access_token = config('services.line_messaging.channel_access_token');
+        $this->channel_access_token_finance = config('services.line_messaging.channel_access_token_finance');
         $this->group_id = config('services.line_messaging.group_id');
     }
 
-    public function Send(string $message, ?string $targetGroupId = null): bool
+    public function Send(string $message, ?string $targetGroupId = null, ?string $token = null): bool
     {
         $groupId = $targetGroupId ?? $this->group_id;
+        $accessToken = $token ?? $this->channel_access_token;
 
-        if (empty($this->channel_access_token) || empty($groupId)) {
+        if (empty($accessToken) || empty($groupId)) {
             Log::warning('LINE Messaging API credentials or Group ID are not configured');
             return false;
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->channel_access_token,
+                'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
             ])->post($this->api_url, [
                 'to' => $groupId,
@@ -136,6 +139,6 @@ class LineMessagingService
             $content .= "\n🔗 ดูรายการที่รอตรวจสอบทั้งหมด: " . route('payment-voucher.pending');
         }
 
-        return $this->Send($content, $targetGroup);
+        return $this->Send($content, $targetGroup, $this->channel_access_token_finance);
     }
 }
