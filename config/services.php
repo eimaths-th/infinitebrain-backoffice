@@ -38,6 +38,7 @@ return [
 
     'line_messaging' => [
         'channel_access_token' => env('LINE_CHANNEL_ACCESS_TOKEN'),
+        'channel_access_token_finance' => env('LINE_CHANNEL_ACCESS_TOKEN_FINANCE'),
         'group_id' => env('LINE_GROUP_ID'),
         'reviewer_group_id' => env('LINE_REVIEWER_GROUP_ID'),
         'approver_group_id' => env('LINE_APPROVER_GROUP_ID'),
