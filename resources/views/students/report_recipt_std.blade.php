@@ -1221,7 +1221,7 @@
                                                     }
                                                     $maxAge = max(array_values($ageRanges)) ?: 1;
                                                 @endphp
-                                                <div class="col-lg-4 col-md-6">
+                                                <div class="col-lg-6 col-md-6">
                                                     <div class="demo-card">
                                                         <div class="demo-card-header"
                                                             style="background: {{ $color }};">
