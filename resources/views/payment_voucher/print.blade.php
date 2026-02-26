@@ -251,6 +251,7 @@
 
             @case('EiHQ')
             @case('EiBK')
+
             @case('EiRP')
                 <div class="header-section">
                     <img src="{{ asset('images/logo_meta.png') }}" alt="Logo" class="logo">
@@ -373,10 +374,12 @@
             </thead>
             <tbody>
                 @foreach ($voucher->items as $index => $item)
-                    <tr>
+                    <tr class="{{ $item->type === 'deduction' ? 'text-red' : '' }}">
                         <td class="center">{{ $index + 1 }}</td>
                         <td>{{ $item->description }}</td>
-                        <td class="right">{{ number_format($item->amount, 2) }}</td>
+                        <td class="right">
+                            {{ $item->type === 'deduction' ? '-' : '' }}{{ number_format($item->amount, 2) }}
+                        </td>
                     </tr>
                 @endforeach
 
