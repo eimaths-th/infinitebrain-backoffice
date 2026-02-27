@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\CompanyHoliday;
+use App\Models\LeaveRequest;
 use App\Models\Recordtime;
 use App\Models\Statuswork;
 use App\Models\User;
@@ -216,8 +217,8 @@ class RecordtimeImport implements ToCollection, WithStartRow
     {
         $row_text = implode(' ', array_filter($row));
         return mb_strpos($row_text, 'วันทำงาน:') !== false ||
-               mb_strpos($row_text, 'ลาป่วย') !== false ||
-               mb_strpos($row_text, 'เงินสุทธิ') !== false;
+            mb_strpos($row_text, 'ลาป่วย') !== false ||
+            mb_strpos($row_text, 'เงินสุทธิ') !== false;
     }
 
     protected function IsEmptyRow($row)
@@ -507,7 +508,32 @@ class RecordtimeImport implements ToCollection, WithStartRow
                 $status_id = 16;
                 $explain = 'กำลังรอข้อมูล';
             } else {
-                $status_id = 13;
+                // เช็คใบลาที่อนุมัติแล้ว
+                $approved_leave = LeaveRequest::where('user_id', $user->id)
+                    ->where('status', LeaveRequest::STATUS_APPROVED)
+                    ->where('start_date', '<=', $date->format('Y-m-d'))
+                    ->where('end_date', '>=', $date->format('Y-m-d'))
+                    ->first();
+
+                if ($approved_leave) {
+                    $status_map = [
+                        'sick' => 3,        // ลาป่วย
+                        'personal' => 4,    // ลากิจ
+                        'maternity' => 10,  // ลาคลอด
+                        'ordination' => 11, // ลาบวช
+                        'military' => 12,   // ลารับราชการทหาร
+                        'vacation' => 2,    // ลาพักผ่อน
+                        'compensate' => 14, // วันหยุดชดเชย
+                        'swap_day' => 14,   // สลับวันหยุด
+                        'remote_work' => 17, // ทำงานนอกสถานที่
+                    ];
+
+                    $status_id = $status_map[$approved_leave->leave_type] ?? 4;
+                    $status_name_thai = LeaveRequest::LEAVE_TYPES[$approved_leave->leave_type] ?? 'ลางาน';
+                    $explain = $status_name_thai . ' (ใบลา #' . $approved_leave->id . ')';
+                } else {
+                    $status_id = 13; // ขาดงาน
+                }
             }
         }
 
