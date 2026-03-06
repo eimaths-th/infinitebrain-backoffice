@@ -44,6 +44,7 @@ Route::prefix('income')->group(function () {
     Route::get('/weekly', [DailyIncomeController::class, 'weeklySummary']);       // ?start_date=&end_date=
     Route::get('/monthly', [DailyIncomeController::class, 'monthlySummary']);     // ?year=2026&month=1
     Route::get('/simulation-test', [DailyIncomeController::class, 'simulationTest']); // Test 3 days
+    Route::post('/save-report', [DailyIncomeController::class, 'SaveReport']);       // บันทึกยอดที่รายงานแล้ว (n8n เรียกหลังส่ง LINE)
 
 });
 
