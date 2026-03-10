@@ -180,8 +180,8 @@ class PaymentVoucher extends Model
     const BRANCH_EB = 'EB'; // สาขาย่อย (ถ้ามี)
 
     public static $branchCodes = [
-        'EL' => 'EyeLavel (EL)',
-        'IF' => 'InfiniteBrain (IF)',
+        'ELPV' => 'EyeLavel (EL)',
+        'IFPV' => 'InfiniteBrain (IF)',
         'MT' => 'META Knowledge (MT)',
         'EiRP' => 'eiMaths RP (EiRP)',
         'EiBK' => 'eiMaths BK (EiBK)',
@@ -189,7 +189,7 @@ class PaymentVoucher extends Model
 
     ];
     public static $gropBranchCodes = [
-        'INF' => ['IF', 'EL'],
+        'INF' => ['IFPV', 'ELPV'],
         'META' => ['MT'],
         'META2' => ['EiRP', 'EiBK' ,'EiHQ'],
     ];
