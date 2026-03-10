@@ -195,7 +195,7 @@ class PaymentVoucher extends Model
     ];
 
     // Generate Voucher Number: EL20260112 = รหัสสาขา + ปี + เดือน + ลำดับ
-    public static function generateVoucherNo($branchCode = 'EL')
+    public static function generateVoucherNo($branchCode = 'ELPV')
     {
         $year = date('Y');
         $month = date('m');
