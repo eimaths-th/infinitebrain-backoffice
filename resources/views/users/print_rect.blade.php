@@ -165,7 +165,7 @@
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
                 <table align="center" width="98%" cellpadding="0" cellspacing="0">
-                    <thead>
+                    {{-- <thead>
                         <tr>
                             <td width="15%" rowspan="4"><img src="{{ asset('images/infinite.jpg') }}"
                                     alt="..." height="106" style="padding-bottom: 5px"></td>
@@ -180,7 +180,8 @@
                         <tr>
                             <td>โทร 098 509 8554</td>
                         </tr>
-                    </thead>
+                    </thead> --}}
+                    @include('company_header.header')
                 </table>
 
                 <div class="tbr">
@@ -566,14 +567,14 @@
 <script>
     var signaturePad = null;
     var canvas = document.getElementById('employeeSignaturePad');
-    
+
     // Initialize Signature Pad if canvas exists
     if (canvas) {
         signaturePad = new SignaturePad(canvas, {
             backgroundColor: 'rgb(255, 255, 255)',
             penColor: 'rgb(0, 0, 0)'
         });
-        
+
         function resizeCanvas() {
             var ratio = Math.max(window.devicePixelRatio || 1, 1);
             canvas.width = canvas.offsetWidth * ratio;
@@ -582,7 +583,7 @@
             signaturePad.clear();
         }
     }
-    
+
     // Saved signature URL
     @if(isset($selected_user) && $selected_user && $selected_user->signature)
         @if($selected_user->signature_is_image)
@@ -593,14 +594,14 @@
     @else
         var savedSignatureUrl = null;
     @endif
-    
+
     function useNoSignature() {
         document.getElementById('savedSignatureContainer').style.display = 'none';
         document.getElementById('drawSignatureContainer').style.display = 'none';
         document.getElementById('emptySignatureContainer').style.display = 'block';
         document.getElementById('clearSignatureRow').style.display = 'none';
     }
-    
+
     function useSavedSignature() {
         if (savedSignatureUrl) {
             document.getElementById('savedSignatureImg').src = savedSignatureUrl;
@@ -610,26 +611,26 @@
             document.getElementById('clearSignatureRow').style.display = 'none';
         }
     }
-    
+
     function useDrawSignature() {
         document.getElementById('savedSignatureContainer').style.display = 'none';
         document.getElementById('drawSignatureContainer').style.display = 'block';
         document.getElementById('emptySignatureContainer').style.display = 'none';
         document.getElementById('clearSignatureRow').style.display = 'table-row';
-        
+
         if (signaturePad) {
             setTimeout(function() {
                 resizeCanvas();
             }, 100);
         }
     }
-    
+
     function clearSignaturePad() {
         if (signaturePad) {
             signaturePad.clear();
         }
     }
-    
+
     function printDocument() {
         // If using draw signature, convert canvas to image for printing
         if (document.getElementById('drawSignatureContainer').style.display === 'block' && signaturePad && !signaturePad.isEmpty()) {
@@ -639,16 +640,16 @@
             img.className = 'signature-image';
             img.style.maxHeight = '60px';
             img.style.maxWidth = '150px';
-            
+
             // Replace canvas with image for printing
             var container = document.getElementById('drawSignatureContainer');
             container.innerHTML = '';
             container.appendChild(img);
         }
-        
+
         window.print();
     }
-    
+
     // Auto print only if no user selected (fallback behavior)
     @if(!isset($selected_user) || !$selected_user)
     function printrep() {

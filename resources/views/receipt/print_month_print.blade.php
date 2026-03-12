@@ -183,7 +183,7 @@
                             </thead>
                         @endif
                     @else
-                        <thead>
+                        {{-- <thead>
                             <tr>
                                 <td width="15%" rowspan="4"><img src="{{ asset('images/infinite.jpg') }}"
                                         alt="..." height="106" style="padding-bottom: 5px"></td>
@@ -198,7 +198,8 @@
                             <tr>
                                 <td>โทร 098 509 8554</td>
                             </tr>
-                        </thead>
+                        </thead> --}}
+                        @include('company_header.header')
                     @endif
                 </table>
 
@@ -209,7 +210,8 @@
                             <td align="center" width="15%" class="active_left grey"></td>
                             <td align="center" width="40%">
                                 <font size="{{ $fontsize }}" class="grey">รวมรายรับ <b>{{ $sfielda[$sfield] }}</b>
-                                    <b>{{ $thaimonth }} {{ $thaiyear }} </b></font>
+                                    <b>{{ $thaimonth }} {{ $thaiyear }} </b>
+                                </font>
                             </td>
                             <td align="center" width="15%"></td>
                             <td align="center" width="15%">
