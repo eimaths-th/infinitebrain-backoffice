@@ -235,12 +235,12 @@
                     <div class="header-section">
                         <img src="{{ asset('images/infinite-b-icon-3.png') }}" alt="...">
 
-                        {{-- <div class="company-info">
-                            <div class="company-name">บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่)</div>
+                        <div class="company-info">
+                            {{-- <div class="company-name">บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่)</div>
                             <div>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</div>
                             <div>เลขประจำตัวผู้เสียภาษี : 0125563031038</div>
-                            <div>โทร. 098-5098554</div>
-                        </div> --}}
+                            <div>โทร. 098-5098554</div> --}}
+                        </div>
                     </div>
                 </div>
                 <style>
