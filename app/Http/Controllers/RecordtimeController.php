@@ -29,7 +29,15 @@ class RecordtimeController extends Controller
     {
         //
         $users = User::active()->get();
-        $rec_times = Recordtime::orderBy('id', 'desc')->get();
+
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+
+        $rec_times = Recordtime::whereMonth('date', $currentMonth)
+            ->whereYear('date', $currentYear)
+            ->orderBy('id', 'desc')
+            ->get();
+
         $checkCd = 0;
         return view('users.def_working', [
             'rec_times' => $rec_times,
@@ -753,7 +761,7 @@ class RecordtimeController extends Controller
         $statusworks = Statuswork::all();
 
         return view('users.working_edit', [
-            'rect' => $rect, 
+            'rect' => $rect,
             'statusworks' => $statusworks
         ]);
     }
@@ -938,7 +946,6 @@ class RecordtimeController extends Controller
                 'users' => $users,
                 'import_results' => $results,
             ])->with('success', "นำเข้าข้อมูลสำเร็จ {$results['success_count']} รายการ");
-
         } catch (\Exception $e) {
             return redirect()->route('recordtime.import')
                 ->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
@@ -979,7 +986,6 @@ class RecordtimeController extends Controller
                 'success' => true,
                 'message' => 'บันทึกสำเร็จ'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

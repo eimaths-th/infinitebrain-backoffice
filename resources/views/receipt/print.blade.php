@@ -93,7 +93,7 @@
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
                 <table align="center" width="99%" cellpadding="0" cellspacing="0">
-                    <thead>
+                    {{-- <thead>
                         <tr>
                             <td width="25%" rowspan="6" align="center"><img
                                     src="{{ asset('images/infinite.jpg') }}" alt="..." height="150"
@@ -117,7 +117,8 @@
                         <tr>
                             <td style="vertical-align: top;" height="50px"></td>
                         </tr>
-                    </thead>
+                    </thead> --}}
+                    @include('company_header.header')
                 </table>
 
 

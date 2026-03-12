@@ -89,22 +89,7 @@
         <div class="main-card mb-3 card " id="x_content">
             <div class="card-body">
                 <table align="center" width="98%" cellpadding="0" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <td width="15%" rowspan="4"><img src="{{ asset('images/infinite.jpg') }}"
-                                    alt="..." height="106" style="padding-bottom: 5px"></td>
-                            <td>บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่) </td>
-                        </tr>
-                        <tr>
-                            <td>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</td>
-                        </tr>
-                        <tr>
-                            <td>เลขประจำตัวผู้เสียภาษี: 0125563031038</td>
-                        </tr>
-                        <tr>
-                            <td>โทร 098 509 8554</td>
-                        </tr>
-                    </thead>
+                    @include('company_header.header')
                 </table>
 
 
@@ -113,7 +98,8 @@
                         <tr class="active" height="30">
                             <td align="center" width="10%" class="active_left grey"></td>
                             <td align="center" width="50%">
-                                <font class="grey">ประวัติการเรียนประจำวันที่ </font> <b>{{ $thaidate }} {{ $thaimonth }} {{ $thaiyear }}
+                                <font class="grey">ประวัติการเรียนประจำวันที่ </font> <b>{{ $thaidate }}
+                                    {{ $thaimonth }} {{ $thaiyear }}
                                 </b>
                             </td>
                             <td align="center" width="10%"><b></b></td>
@@ -141,17 +127,29 @@
                         </tr>
                         @foreach ($data as $histories)
                             <tr class="activeda" height="15">
-                                <td align="center" width="15%" class="actived"><b><font size="{{ $fontsize }}">{{ $histories['datetime'] }}</font></b></td>
-                                <td align="left" width="40%" class="actived">&nbsp;<b><font size="{{ $fontsize }}">{{ $histories['firstname'] }} {{ $histories['lastname'] }}  ({{ $histories['nickname'] }})</font></b>
+                                <td align="center" width="15%" class="actived"><b>
+                                        <font size="{{ $fontsize }}">{{ $histories['datetime'] }}</font>
+                                    </b></td>
+                                <td align="left" width="40%" class="actived">&nbsp;<b>
+                                        <font size="{{ $fontsize }}">{{ $histories['firstname'] }}
+                                            {{ $histories['lastname'] }} ({{ $histories['nickname'] }})</font>
+                                    </b>
                                 </td>
                                 <td align="center" width="15%" class="actived">
-                                    <b><font size="{{ $fontsize }}">{{ $histories['stime'] }} - {{ $histories['etime'] }}</font></b>
+                                    <b>
+                                        <font size="{{ $fontsize }}">{{ $histories['stime'] }} -
+                                            {{ $histories['etime'] }}</font>
+                                    </b>
                                 </td>
                                 <td align="center" width="15%" class="actived">
-                                    <b><font size="{{ $fontsize }}">{{ $histories['subject'] }}</font></b>
+                                    <b>
+                                        <font size="{{ $fontsize }}">{{ $histories['subject'] }}</font>
+                                    </b>
                                 </td>
                                 <td align="center" width="15%" class="activedr grey">
-                                    <b><font size="{{ $fontsize }}">{{ $histories['duration'] }} ชั่วโมง</font></b>
+                                    <b>
+                                        <font size="{{ $fontsize }}">{{ $histories['duration'] }} ชั่วโมง</font>
+                                    </b>
                                 </td>
                             </tr>
                         @endforeach
@@ -159,7 +157,8 @@
                             <td align="center" colspan="3" width="15%" class="actived activebottomd grey">
                                 <font size="{{ $fontsize }}"><b>รวมทั้งสิ้น</b></font>
                             </td>
-                            <td align="center" width="15%" class="actived activebottomd"><font size="{{ $fontsize }}"><b></b></font>
+                            <td align="center" width="15%" class="actived activebottomd">
+                                <font size="{{ $fontsize }}"><b></b></font>
                             </td>
                             <td align="center" width="15%" class="activedr activebottomd grey">
                                 <font size="{{ $fontsize }}"><b>{{ $total_hour }} ชั่วโมง</b></font>

@@ -219,15 +219,28 @@
         <!-- Header -->
 
         @switch($voucher->branch_code)
-            @case('EL')
+            @case('ELPV')
             @case('IF')
+
+            @case('EL')
+            @case('IFPV')
                 <div class="header-section">
-                    <img src="{{ asset('images/infinite_logo.png') }}" alt="Logo" class="logo">
+                    {{-- <img src="{{ asset('images/infinite_logo.png') }}" alt="Logo" class="logo">
                     <div class="company-info">
                         <div class="company-name">บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่)</div>
                         <div>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</div>
                         <div>เลขประจำตัวผู้เสียภาษี : 0125563031038</div>
                         <div>โทร. 098-5098554</div>
+                    </div> --}}
+                    <div class="header-section">
+                        <img src="{{ asset('images/infinite-b-icon-3.png') }}" alt="...">
+
+                        {{-- <div class="company-info">
+                            <div class="company-name">บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่)</div>
+                            <div>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</div>
+                            <div>เลขประจำตัวผู้เสียภาษี : 0125563031038</div>
+                            <div>โทร. 098-5098554</div>
+                        </div> --}}
                     </div>
                 </div>
                 <style>
