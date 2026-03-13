@@ -135,8 +135,10 @@
                                                     $text_g = 'Chinese';
                                                 } elseif ($group === 'Sci') {
                                                     $text_g = 'Science';
+                                                } elseif ($group === 'TH') {
+                                                    $text_g = 'Thai';
                                                 } else {
-                                                    $text_g = 'null_group';
+                                                    $text_g = empty($group) ? 'ไม่ระบุกลุ่ม' : $group;
                                                 }
                                             @endphp
                                             {{ $text_g }}
@@ -502,8 +504,10 @@
                         $text_g = 'Chinese';
                     } elseif ($group === 'Sci') {
                         $text_g = 'Science';
+                    } elseif ($group === 'TH') {
+                        $text_g = 'Thai';
                     } else {
-                        $text_g = 'null_group';
+                        $text_g = empty($group) ? 'ไม่ระบุกลุ่ม' : $group;
                     }
                 @endphp
                  {
