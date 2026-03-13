@@ -104,7 +104,7 @@
             <div class="main-card mb-3 card " id="x_content">
                 <div class="card-body">
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                        {{-- <thead>
+                        <thead>
                             <tr>
                                 <td width="15%" rowspan="4"><img src="{{ asset('images/infinite.jpg') }}"
                                         alt="..." height="106" style="padding-bottom: 5px"></td>
@@ -119,8 +119,8 @@
                             <tr>
                                 <td>โทร 098 509 8554</td>
                             </tr>
-                        </thead> --}}
-                        @include('company_header.header')
+                        </thead>
+                        {{-- @include('company_header.header') --}}
                     </table>
 
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
@@ -463,7 +463,7 @@
 
 
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                        {{-- <thead>
+                        <thead>
                             <tr>
                                 <td width="15%" rowspan="4"><img src="{{ asset('images/infinite.jpg') }}"
                                         alt="..." height="106" style="padding-bottom: 5px"></td>
@@ -478,8 +478,8 @@
                             <tr>
                                 <td>โทร 098 509 8554</td>
                             </tr>
-                        </thead> --}}
-                        @include('company_header.header')
+                        </thead>
+                        {{-- @include('company_header.header') --}}
                     </table>
 
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
@@ -794,7 +794,7 @@
             <div class="main-card mb-3 card " id="x_content">
                 <div class="card-body">
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
-                        {{-- <thead>
+                        <thead>
                             <tr>
                                 <td width="15%" rowspan="4"><img src="{{ asset('images/infinite.jpg') }}"
                                         alt="..." height="106" style="padding-bottom: 5px"></td>
@@ -809,8 +809,8 @@
                             <tr>
                                 <td>โทร 098 509 8554</td>
                             </tr>
-                        </thead> --}}
-                        @include('company_header.header')
+                        </thead>
+                        {{-- @include('company_header.header') --}}
                     </table>
 
                     <table align="center" width="85%" cellpadding="0" cellspacing="0">
