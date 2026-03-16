@@ -68,7 +68,7 @@
 
         .logo {
             width: 250px;
-            height: auto;
+            height: 106px;
             margin-right: 20px;
         }
 
@@ -265,7 +265,7 @@
 
             @case('EiRP')
                 <div class="header-section">
-                    <img src="{{ asset('images/logo_meta.png') }}" alt="Logo" class="logo">
+                    <img src="{{ asset('images/logo_meta.png') }}" alt="Logo" class="logo" height="106">
                     <div class="company-info">
                         <div class="company-name">META KNOWLEDGE CO., LTD.</div>
                         <div>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</div>
@@ -294,7 +294,7 @@
 
             @case('MT')
                 <div class="header-section">
-                    <img src="{{ asset('images/logo_meta_2.png') }}" alt="Logo" class="logo">
+                    <img src="{{ asset('images/logo_meta_2.png') }}" alt="Logo" class="logo" height="106">
                     <div class="company-info">
                         <div class="company-name">บริษัท เมต้า2 โนวเลจ จำกัด (สำนักงานใหญ่)</div>
                         <div>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</div>
