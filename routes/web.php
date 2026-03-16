@@ -139,6 +139,10 @@ Route::get('/finance-dashboard', [FinanceDashboardController::class, 'index'])
     ->name('finance-dashboard.index')
     ->middleware('auth');
 
+Route::get('/finance-dashboard/branch-detail', [FinanceDashboardController::class, 'branchDetail'])
+    ->name('finance-dashboard.branch-detail')
+    ->middleware('auth');
+
 Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')->group(function () {
     Route::get('/', [PaymentVoucherController::class, 'index'])->name('index');
     Route::get('/create', [PaymentVoucherController::class, 'create'])->name('create');
@@ -193,11 +197,19 @@ Route::middleware(['auth'])->prefix('receipt-voucher')->name('receipt-voucher.')
     Route::put('/update/{id}', [ReceiptVoucherController::class, 'update'])->name('update');
     Route::delete('/destroy/{id}', [ReceiptVoucherController::class, 'destroy'])->name('destroy');
 
+    // Force Delete (ลบถาวรพร้อมข้อมูลที่เกี่ยวข้องทั้งหมด)
+    Route::delete('/force-destroy/{id}', [ReceiptVoucherController::class, 'forceDestroy'])->name('force-destroy');
+
     // Workflow
     Route::post('/verify/{id}', [ReceiptVoucherController::class, 'verify'])->name('verify');
     Route::post('/reject/{id}', [ReceiptVoucherController::class, 'reject'])->name('reject');
     Route::post('/complete/{id}', [ReceiptVoucherController::class, 'complete'])->name('complete');
     Route::post('/undo-complete/{id}', [ReceiptVoucherController::class, 'undoComplete'])->name('undo-complete');
+
+    // Payee & Voucher Number APIs
+    Route::get('/search-payee', [ReceiptVoucherController::class, 'searchPayee'])->name('search-payee');
+    Route::get('/next-voucher-no', [ReceiptVoucherController::class, 'getNextVoucherNo'])->name('next-voucher-no');
+    Route::post('/save-payee', [ReceiptVoucherController::class, 'savePayee'])->name('save-payee');
 
     // Print
     Route::get('/print-pdf/{id}', [ReceiptVoucherController::class, 'printPdf'])->name('print-pdf');

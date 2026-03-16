@@ -223,6 +223,8 @@
             @case('IFRV')
             @case('EL')
             @case('IF')
+            @case('ELPV')
+            @case('IFPV')
                 <div class="header-section">
                     <img src="{{ asset('images/infinite-b-icon-3.png') }}" alt="Logo" class="logo">
                     <div class="company-info">
@@ -320,14 +322,13 @@
         <!-- Info Grid -->
         <div class="info-grid">
             <div class="info-label">รับจาก / Receive From</div>
-            <div class="info-value">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $voucher->receive_from }}</div>
+            <div class="info-value">{{ $voucher->receive_from }}</div>
 
             <div class="info-label">เลขที่ / Voucher NO.</div>
             <div class="info-value">{{ $voucher->voucher_no }}</div>
 
             <div class="info-label">เลขที่บัญชี</div>
             <div class="info-value">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 @if ($voucher->receive_from_account_no)
                     {{ $voucher->receive_from_account_no }}
                     @if ($voucher->receive_from_bank_name)
@@ -347,9 +348,8 @@
                 {{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}
             </div>
 
-            <div style="width: 100px; color: #666;">ที่อยู่</div>
-            <div style="flex: 1;">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="info-label">ที่อยู่</div>
+            <div class="info-value">
                 {{ $voucher->receive_from_address ?? '-' }}
             </div>
 
@@ -370,7 +370,7 @@
                 @foreach ($voucher->items as $index => $item)
                     <tr class="{{ $item->type === 'deduction' ? 'text-red' : '' }}">
                         <td class="center">{{ $index + 1 }}</td>
-                        <td>{{ $item->type === 'deduction' ? '(หัก) ' : '' }}{{ $item->description }}</td>
+                        <td>{{ $item->description }}</td>
                         <td class="right">
                             {{ $item->type === 'deduction' ? '-' : '' }}{{ number_format($item->amount, 2) }}
                         </td>
@@ -392,10 +392,10 @@
         <div class="footer-section">
             <div class="signature-block">
                 <div class="signature-line">
-                    <div>ผู้รับเงิน</div>
+                    <div>ผู้อนุมัติ</div>
                     <div class="info-value">
-                        @if ($voucher->receiver_name)
-                            {{ $voucher->receiver_name }}
+                        @if ($voucher->completed_by_name)
+                            {{ $voucher->completed_by_name }}
                         @else
                             <div class="sig-dots"></div>
                         @endif
@@ -405,7 +405,7 @@
                 <div class="signature-line">
                     <div>วันที่</div>
                     <div>
-                        {{ $voucher->received_date ? \Carbon\Carbon::parse($voucher->received_date)->format('d/m/Y') : '' }}
+                        {{ $voucher->completed_at ? \Carbon\Carbon::parse($voucher->completed_at)->format('d/m/Y') : '' }}
                     </div>
                 </div>
             </div>
@@ -432,10 +432,10 @@
 
             <div class="signature-block">
                 <div class="signature-line">
-                    <div>ผู้อนุมัติ</div>
+                    <div>ผู้รับเงิน</div>
                     <div class="info-value">
-                        @if ($voucher->completed_by_name)
-                            {{ $voucher->completed_by_name }}
+                        @if ($voucher->receiver_name || $voucher->created_by_name)
+                            {{ $voucher->receiver_name ?? $voucher->created_by_name }}
                         @else
                             <div class="sig-dots"></div>
                         @endif
@@ -445,7 +445,7 @@
                 <div class="signature-line">
                     <div>วันที่</div>
                     <div>
-                        {{ $voucher->completed_at ? \Carbon\Carbon::parse($voucher->completed_at)->format('d/m/Y') : '' }}
+                        {{ $voucher->received_date ? \Carbon\Carbon::parse($voucher->received_date)->format('d/m/Y') : ($voucher->created_at ? $voucher->created_at->format('d/m/Y') : '') }}
                     </div>
                 </div>
             </div>
@@ -461,7 +461,7 @@
                     <div style="font-weight: bold; margin-bottom: 20px; text-align: left; width: 100%;">
                         เอกสารแนบ: {{ $attachment->original_name }} <br>
                     </div>
-                    <img src="{{ Storage::url($attachment->file_path) }}"
+                    <img src="{{ asset('storage/' . $attachment->file_path) }}"
                         style="max-width: 100%; max-height: 250mm; object-fit: contain;">
                 </div>
             @endif

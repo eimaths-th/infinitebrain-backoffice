@@ -1,11 +1,73 @@
 @extends('layouts.main_template')
 
 @section('style')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
-        .item-row, .deduction-row { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #dee2e6; }
-        .required-mark { color: red; }
-        .total-section { background: #e7f3ff; padding: 20px; border-radius: 8px; border: 2px solid #0d6efd; }
-        .total-amount { font-size: 1.5rem; font-weight: bold; color: #0d6efd; }
+        .item-row, .deduction-row { 
+            background: #ffffff; 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .item-row:hover, .deduction-row:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-color: #bbdefb;
+        }
+        .required-mark { color: #f44336; font-weight: bold; }
+        .total-section { 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px; 
+            border-radius: 15px; 
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .total-amount { 
+            font-size: 2rem; 
+            font-weight: 800; 
+            color: #1a237e;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .section-header {
+            border-bottom: 2px solid #673ab7;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #4527a0;
+            font-weight: 700;
+        }
+        .attachment-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .attachment-item {
+            position: relative;
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            width: 100px;
+        }
+        .attachment-item img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .attachment-item .file-icon {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            border-radius: 6px;
+            color: #d32f2f;
+        }
     </style>
 @endsection
 
@@ -14,241 +76,371 @@
         <div class="app-page-title">
             <div class="page-title-wrapper">
                 <div class="page-title-heading">
-                    <div class="page-title-icon"><i class="pe-7s-note2 icon-gradient bg-tempting-azure"></i></div>
-                    <div>สร้างใบสำคัญรับ (Receipt Voucher)<div class="page-title-subheading">กรอกข้อมูลเพื่อสร้างใบสำคัญรับใหม่</div></div>
+                    <div class="page-title-icon">
+                        <i class="pe-7s-note2 icon-gradient bg-plum-plate"></i>
+                    </div>
+                    <div>
+                        สร้างใบสำคัญรับ
+                        <div class="page-title-subheading">สร้างเอกสารใบสำคัญรับใหม่ในระบบ</div>
+                    </div>
                 </div>
                 <div class="page-title-actions">
-                    <a href="{{ route('receipt-voucher.index') }}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> กลับ</a>
+                    <a href="{{ route('receipt-voucher.index') }}" class="btn btn-secondary shadow-sm">
+                        <i class="fa fa-arrow-left"></i> กลับ
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="main-card mb-3 card">
-            <div class="card-body">
-                <form action="{{ route('receipt-voucher.store') }}" method="POST" enctype="multipart/form-data" id="voucherForm">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="border-bottom pb-2 mb-3">ข้อมูลหลัก</h5>
-                            <div class="mb-3">
-                                <label class="form-label">วันที่ <span class="required-mark">*</span></label>
-                                <input type="date" name="voucher_date" class="form-control" value="{{ date('Y-m-d') }}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">เลขที่ใบสำคัญรับ (ตัวอย่าง)</label>
-                                <input type="text" class="form-control" id="voucherNoPreview" value="{{ $voucherNo }}" readonly disabled>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">สาขา / แผนก</label>
-                                <select name="branch_code" id="branchCode" class="form-control">
-                                    @foreach($branchCodes as $code => $name)
-                                        <option value="{{ $code }}">{{ $name }} ({{ $code }})</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h5 class="border-bottom pb-2 mb-3">ข้อมูลผู้รับเงิน / รับจาก</h5>
-                            <div class="mb-3">
-                                <label class="form-label">รับจาก (ชื่อ/บริษัท) <span class="required-mark">*</span></label>
-                                <input type="text" name="receive_from" class="form-control" required placeholder="ชื่อผู้ที่ได้รับเงินมา">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">ที่อยู่</label>
-                                <textarea name="receive_from_address" class="form-control" rows="2"></textarea>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">เลขที่บัญชี (ถ้ามี)</label>
-                                    <input type="text" name="receive_from_account_no" class="form-control">
+        <div class="col-12">
+            <div class="main-card mb-3 card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form action="{{ route('receipt-voucher.store') }}" method="POST" enctype="multipart/form-data" id="voucherForm">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="section-header"><i class="fa fa-file-text"></i> ข้อมูลหลัก</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">วันที่ <span class="required-mark">*</span></label>
+                                        <input type="date" name="voucher_date" class="form-control" value="{{ date('Y-m-d') }}" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">เลขที่ใบสำคัญรับ (ตัวอย่าง)</label>
+                                        <input type="text" class="form-control bg-light" id="voucherNoPreview" value="{{ $voucherNo }}" readonly disabled>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">ธนาคาร (ถ้ามี)</label>
-                                    <input type="text" name="receive_from_bank_name" class="form-control">
+                                <div class="mb-3">
+                                    <label class="form-label">สาขา / แผนก <span class="required-mark">*</span></label>
+                                    <select name="branch_code" id="branchCode" class="form-select select2-basic" required>
+                                        @foreach($branchCodes as $code => $name)
+                                            <option value="{{ $code }}">{{ $name }} ({{ $code }})</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <h5 class="section-header"><i class="fa fa-user"></i> ข้อมูลผู้รับเงิน / รับจาก</h5>
+                                <div class="mb-3">
+                                    <label class="form-label">รับจาก (ชื่อ/บริษัท) <span class="required-mark">*</span></label>
+                                    <select name="receive_from" id="receiveFromSelect" class="form-control" required>
+                                        <option value="">-- พิมพ์เพื่อค้นหาหรือเพิ่มใหม่ --</option>
+                                    </select>
+                                    <input type="hidden" name="payee_id" id="payeeId" value="">
+                                    <small class="text-muted">พิมพ์เพื่อค้นหาข้อมูลเดิม หรือเพิ่มใหม่โดยการพิมพ์ชื่อแล้วกด Enter</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">ที่อยู่</label>
+                                    <textarea name="receive_from_address" id="receiveFromAddress" class="form-control" rows="2" placeholder="ที่อยู่ผู้รับเงิน"></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">เลขที่บัญชี</label>
+                                        <input type="text" name="receive_from_account_no" id="receiveFromAccountNo" class="form-control" placeholder="เช่น 123-4-56789-0">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">ธนาคาร</label>
+                                        <select name="receive_from_bank_name" id="receiveFromBankName" class="form-select">
+                                            <option value="">-- เลือกธนาคาร --</option>
+                                            <option value="ธนาคารกสิกรไทย">ธนาคารกสิกรไทย</option>
+                                            <option value="ธนาคารไทยพาณิชย์">ธนาคารไทยพาณิชย์</option>
+                                            <option value="ธนาคารกรุงเทพ">ธนาคารกรุงเทพ</option>
+                                            <option value="ธนาคารกรุงไทย">ธนาคารกรุงไทย</option>
+                                            <option value="ธนาคารกรุงศรีอยุธยา">ธนาคารกรุงศรีอยุธยา</option>
+                                            <option value="ธนาคารทหารไทยธนชาต">ธนาคารทหารไทยธนชาต</option>
+                                            <option value="ธนาคารออมสิน">ธนาคารออมสิน</option>
+                                            <option value="ธนาคาร ธ.ก.ส.">ธนาคาร ธ.ก.ส.</option>
+                                            <option value="ธนาคารอาคารสงเคราะห์">ธนาคารอาคารสงเคราะห์</option>
+                                            <option value="ธนาคารซีไอเอ็มบี ไทย">ธนาคารซีไอเอ็มบี ไทย</option>
+                                            <option value="ธนาคารยูโอบี">ธนาคารยูโอบี</option>
+                                            <option value="ธนาคารแลนด์ แอนด์ เฮ้าส์">ธนาคารแลนด์ แอนด์ เฮ้าส์</option>
+                                            <option value="ธนาคารเกียรตินาคินภัทร">ธนาคารเกียรตินาคินภัทร</option>
+                                            <option value="เงินสด">เงินสด</option>
+                                            <option value="อื่นๆ">อื่นๆ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <h5 class="border-bottom pb-2 mb-3 mt-4">รายการรับ <span class="required-mark">*</span></h5>
-                    <div id="itemsContainer">
-                        <div class="item-row">
-                            <div class="row align-items-end">
-                                <div class="col-md-1">
-                                    <label class="form-label">ลำดับ</label>
-                                    <input type="text" class="form-control text-center item-no" value="1" readonly>
+                        <div class="mt-4">
+                            <h5 class="section-header"><i class="fa fa-list"></i> รายการรับ <span class="required-mark">*</span></h5>
+                            <div id="itemsContainer">
+                                <div class="item-row">
+                                    <div class="row align-items-end">
+                                        <div class="col-md-1 mb-2">
+                                            <label class="form-label">ลำดับ</label>
+                                            <input type="text" class="form-control text-center bg-light item-no" value="1" readonly>
+                                        </div>
+                                        <div class="col-md-8 mb-2">
+                                            <label class="form-label">รายละเอียด <span class="required-mark">*</span></label>
+                                            <input type="text" name="items[0][description]" class="form-control" placeholder="ระบุรายละเอียดรายการ" required>
+                                        </div>
+                                        <div class="col-md-2 mb-2">
+                                            <label class="form-label">จำนวนเงิน <span class="required-mark">*</span></label>
+                                            <div class="input-group">
+                                                <input type="number" name="items[0][amount]" class="form-control item-amount text-end" step="0.01" min="0" required placeholder="0.00">
+                                                <span class="input-group-text">บาท</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 mb-2">
+                                            <button type="button" class="btn btn-outline-danger btn-remove-item w-100" onclick="removeItem(this)" disabled>
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <label class="form-label">รายละเอียด <span class="required-mark">*</span></label>
-                                    <input type="text" name="items[0][description]" class="form-control" required>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary btn-sm mb-4 radius-round px-4" onclick="addItem()">
+                                <i class="fa fa-plus"></i> เพิ่มรายการรับ
+                            </button>
+                        </div>
+
+                        <div class="mt-2">
+                            <h5 class="section-header text-danger"><i class="fa fa-minus-circle"></i> รายการหัก (ถ้ามี)</h5>
+                            <div id="deductionsContainer"></div>
+                            <button type="button" class="btn btn-outline-danger btn-sm mb-4 radius-round px-4" onclick="addDeduction()">
+                                <i class="fa fa-plus"></i> เพิ่มรายการหัก
+                            </button>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-7">
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold"><i class="fa fa-commenting"></i> หมายเหตุ</label>
+                                    <textarea name="remark" class="form-control" rows="3" placeholder="ระบุหมายเหตุเพิ่มเติม (ถ้ามี)"></textarea>
                                 </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">จำนวนเงิน <span class="required-mark">*</span></label>
-                                    <input type="number" name="items[0][amount]" class="form-control item-amount" step="0.01" min="0" required placeholder="0.00">
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold"><i class="fa fa-paperclip"></i> แนบไฟล์เอกสาร</label>
+                                    <div class="p-3 border rounded bg-light">
+                                        <input type="file" name="attachments[]" id="attachmentInput" class="form-control" multiple accept="image/*,.pdf">
+                                        <small class="text-muted d-block mt-1">รองรับ: JPG, PNG, PDF (สูงสุด 10MB ต่อไฟล์)</small>
+                                        <div id="attachmentPreview" class="attachment-preview"></div>
+                                    </div>
                                 </div>
-                                <div class="col-md-1">
-                                    <button type="button" class="btn btn-danger btn-remove-item" onclick="removeItem(this)" disabled><i class="fa fa-trash"></i></button>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="total-section">
+                                    <div class="d-flex justify-content-between mb-3 h6">
+                                        <span class="text-muted">ยอดรวมรับ:</span>
+                                        <span id="subTotalDisplay" class="fw-bold text-dark">0.00 บาท</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-3 h6 text-danger">
+                                        <span>ยอดรวมหัก:</span>
+                                        <span id="deductionTotalDisplay" class="fw-bold">-0.00 บาท</span>
+                                    </div>
+                                    <hr style="border-top: 2px dashed #99aab5;">
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <span class="h5 mb-0 fw-bold">จำนวนเงินสุทธิ:</span>
+                                        <div class="total-amount" id="netTotalDisplay">0.00 บาท</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <button type="button" class="btn btn-outline-primary btn-sm mb-4" onclick="addItem()"><i class="fa fa-plus"></i> เพิ่มรายการรับ</button>
 
-                    <h5 class="border-bottom pb-2 mb-3 mt-4 text-danger">รายการหัก (ถ้ามี)</h5>
-                    <div id="deductionsContainer"></div>
-                    <button type="button" class="btn btn-outline-danger btn-sm mb-4" onclick="addDeduction()"><i class="fa fa-plus"></i> เพิ่มรายการหัก</button>
-
-                    <div class="row mt-4">
-                        <div class="col-md-7">
-                            <div class="mb-3">
-                                <label class="form-label">หมายเหตุ</label>
-                                <textarea name="remark" class="form-control" rows="4"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">แนบไฟล์ (เอกสารอ้างอิง/หลักฐานการรับเงิน)</label>
-                                <input type="file" name="attachments[]" class="form-control" multiple>
-                            </div>
+                        <div class="text-center mt-5 border-top pt-4">
+                            <button type="submit" name="submit" value="0" class="btn btn-lg btn-outline-secondary px-5 me-3 shadow-sm">
+                                <i class="fa fa-save"></i> บันทึกฉบับร่าง
+                            </button>
+                            <button type="submit" name="submit" value="1" class="btn btn-lg btn-primary px-5 shadow-sm">
+                                <i class="fa fa-paper-plane"></i> บันทึกและส่งตรวจสอบ
+                            </button>
                         </div>
-                        <div class="col-md-5">
-                            <div class="total-section">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>ยอดรวมรับ:</span>
-                                    <span id="subTotalDisplay">0.00</span>
-                                </div>
-                                <div class="d-flex justify-content-between mb-2 text-danger">
-                                    <span>ยอดรวมหัก:</span>
-                                    <span id="deductionTotalDisplay">0.00</span>
-                                </div>
-                                <hr>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="h5 mb-0">จำนวนเงินสุทธิ:</span>
-                                    <div class="total-amount" id="netTotalDisplay">0.00</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center mt-5 border-top pt-3">
-                        <button type="submit" name="submit" value="0" class="btn btn-secondary btn-lg me-2">
-                            <i class="fa fa-save"></i> บันทึกฉบับร่าง
-                        </button>
-                        <button type="submit" name="submit" value="1" class="btn btn-primary btn-lg">
-                            <i class="fa fa-paper-plane"></i> บันทึกและส่งตรวจสอบ
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 @endsection
 
 @section('script')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         let itemIndex = 1;
         let deductionIndex = 0;
+
+        $(document).ready(function() {
+            $('.select2-basic').select2();
+
+            $('#receiveFromSelect').select2({
+                placeholder: 'พิมพ์ชื่อผู้จ่ายเงินหรือบริษัท...',
+                allowClear: true,
+                tags: true,
+                ajax: {
+                    url: '{{ route('receipt-voucher.search-payee') }}',
+                    dataType: 'json',
+                    delay: 300,
+                    data: function(params) {
+                        return { q: params.term };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.map(function(item) {
+                                return {
+                                    id: item.name,
+                                    text: item.name + (item.account_no ? ' (' + item.account_no + ')' : ''),
+                                    payee: item
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 0
+            });
+
+            $('#receiveFromSelect').on('select2:select', function(e) {
+                var data = e.params.data;
+                if (data.payee) {
+                    $('#payeeId').val(data.payee.id);
+                    $('#receiveFromAddress').val(data.payee.address || '');
+                    $('#receiveFromAccountNo').val(data.payee.account_no || '');
+                    if (data.payee.bank_name) {
+                        $('#receiveFromBankName').val(data.payee.bank_name);
+                    }
+                } else {
+                    $('#payeeId').val('');
+                }
+            });
+
+            $('#receiveFromSelect').on('select2:clear', function(e) {
+                $('#payeeId').val('');
+                $('#receiveFromAddress').val('');
+                $('#receiveFromAccountNo').val('');
+                $('#receiveFromBankName').val('');
+            });
+
+            // Voucher No Preview
+            $('#branchCode').on('change', function() {
+                const branchCode = this.value;
+                const previewInput = $('#voucherNoPreview');
+                previewInput.val('กำลังโหลด...');
+                
+                fetch(`{{ route('receipt-voucher.next-voucher-no') }}?branch_code=${branchCode}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        previewInput.val(data.voucher_no);
+                    });
+            });
+
+            // Attachment Preview
+            $('#attachmentInput').on('change', function(e) {
+                const preview = $('#attachmentPreview');
+                preview.empty();
+                
+                Array.from(e.target.files).forEach(file => {
+                    const item = $('<div class="attachment-item"></div>');
+                    if (file.type.startsWith('image/')) {
+                        const img = $('<img>').attr('src', URL.createObjectURL(file));
+                        item.append(img);
+                    } else {
+                        const icon = $('<div class="file-icon"><i class="fa fa-file-pdf-o fa-2x"></i></div>');
+                        item.append(icon);
+                    }
+                    const name = $('<small class="d-block text-center text-truncate mt-1"></small>').text(file.name);
+                    item.append(name);
+                    preview.append(item);
+                });
+            });
+        });
 
         function addItem() {
             const html = `
                 <div class="item-row">
                     <div class="row align-items-end">
-                        <div class="col-md-1">
-                            <input type="text" class="form-control text-center item-no" value="${itemIndex + 1}" readonly>
+                        <div class="col-md-1 mb-2">
+                            <input type="text" class="form-control text-center bg-light item-no" value="${itemIndex + 1}" readonly>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-8 mb-2">
                             <input type="text" name="items[${itemIndex}][description]" class="form-control" required>
                         </div>
-                        <div class="col-md-2">
-                            <input type="number" name="items[${itemIndex}][amount]" class="form-control item-amount" step="0.01" min="0" required placeholder="0.00">
+                        <div class="col-md-2 mb-2">
+                            <div class="input-group">
+                                <input type="number" name="items[${itemIndex}][amount]" class="form-control item-amount text-end" step="0.01" min="0" required placeholder="0.00">
+                                <span class="input-group-text">บาท</span>
+                            </div>
                         </div>
-                        <div class="col-md-1">
-                            <button type="button" class="btn btn-danger" onclick="removeItem(this)"><i class="fa fa-trash"></i></button>
+                        <div class="col-md-1 mb-2">
+                            <button type="button" class="btn btn-outline-danger w-100" onclick="removeItem(this)"><i class="fa fa-trash"></i></button>
                         </div>
                     </div>
                 </div>`;
-            document.getElementById('itemsContainer').insertAdjacentHTML('beforeend', html);
+            $('#itemsContainer').append(html);
             itemIndex++;
             updateNumbers('item-no');
             updateRemoveButtons('btn-remove-item');
+            calculateTotal();
         }
 
         function addDeduction() {
             const html = `
                 <div class="deduction-row">
                     <div class="row align-items-end">
-                        <div class="col-md-1">
-                            <input type="text" class="form-control text-center deduction-no" value="${deductionIndex + 1}" readonly>
+                        <div class="col-md-1 mb-2">
+                            <input type="text" class="form-control text-center bg-light deduction-no" value="${deductionIndex + 1}" readonly>
                         </div>
-                        <div class="col-md-8">
-                            <input type="text" name="deductions[${deductionIndex}][description]" class="form-control" required placeholder="เช่น ค่าธรรมเนียม">
+                        <div class="col-md-8 mb-2">
+                            <input type="text" name="deductions[${deductionIndex}][description]" class="form-control" required placeholder="ระบุรายการหัก เช่น ค่าธรรมเนียม">
                         </div>
-                        <div class="col-md-2">
-                            <input type="number" name="deductions[${deductionIndex}][amount]" class="form-control deduction-amount" step="0.01" min="0" required placeholder="0.00">
+                        <div class="col-md-2 mb-2">
+                            <div class="input-group">
+                                <input type="number" name="deductions[${deductionIndex}][amount]" class="form-control deduction-amount text-end" step="0.01" min="0" required placeholder="0.00">
+                                <span class="input-group-text text-danger">บาท</span>
+                            </div>
                         </div>
-                        <div class="col-md-1">
-                            <button type="button" class="btn btn-danger" onclick="removeDeduction(this)"><i class="fa fa-trash"></i></button>
+                        <div class="col-md-1 mb-2">
+                            <button type="button" class="btn btn-outline-danger w-100" onclick="removeDeduction(this)"><i class="fa fa-trash"></i></button>
                         </div>
                     </div>
                 </div>`;
-            document.getElementById('deductionsContainer').insertAdjacentHTML('beforeend', html);
+            $('#deductionsContainer').append(html);
             deductionIndex++;
             updateNumbers('deduction-no');
+            calculateTotal();
         }
 
         function removeItem(btn) {
-            btn.closest('.item-row').remove();
+            $(btn).closest('.item-row').remove();
             updateNumbers('item-no');
             updateRemoveButtons('btn-remove-item');
             calculateTotal();
         }
 
         function removeDeduction(btn) {
-            btn.closest('.deduction-row').remove();
+            $(btn).closest('.deduction-row').remove();
             updateNumbers('deduction-no');
             calculateTotal();
         }
 
         function updateNumbers(className) {
-            const inputs = document.querySelectorAll('.' + className);
-            inputs.forEach((input, i) => input.value = i + 1);
+            $('.' + className).each((i, input) => $(input).val(i + 1));
         }
 
         function updateRemoveButtons(className) {
-            const buttons = document.querySelectorAll('.btn-remove-item');
-            if (buttons.length === 1) buttons[0].disabled = true;
-            else buttons.forEach(b => b.disabled = false);
+            const buttons = $('.btn-remove-item');
+            buttons.prop('disabled', buttons.length === 1);
         }
 
         function calculateTotal() {
             let total = 0;
-            document.querySelectorAll('.item-amount').forEach(input => {
-                total += parseFloat(input.value) || 0;
+            $('.item-amount').each(function() {
+                total += parseFloat($(this).val()) || 0;
             });
-            document.getElementById('subTotalDisplay').innerText = total.toLocaleString('th-TH', {minimumFractionDigits: 2});
+            $('#subTotalDisplay').text(total.toLocaleString('th-TH', {minimumFractionDigits: 2}) + ' บาท');
 
             let deductionTotal = 0;
-            document.querySelectorAll('.deduction-amount').forEach(input => {
-                deductionTotal += parseFloat(input.value) || 0;
+            $('.deduction-amount').each(function() {
+                deductionTotal += parseFloat($(this).val()) || 0;
             });
-            document.getElementById('deductionTotalDisplay').innerText = deductionTotal.toLocaleString('th-TH', {minimumFractionDigits: 2});
+            $('#deductionTotalDisplay').text('-' + deductionTotal.toLocaleString('th-TH', {minimumFractionDigits: 2}) + ' บาท');
 
             const netTotal = total - deductionTotal;
-            document.getElementById('netTotalDisplay').innerText = netTotal.toLocaleString('th-TH', {minimumFractionDigits: 2});
+            $('#netTotalDisplay').text(netTotal.toLocaleString('th-TH', {minimumFractionDigits: 2}) + ' บาท');
         }
 
-        document.addEventListener('input', function(e) {
-            if (e.target.classList.contains('item-amount') || e.target.classList.contains('deduction-amount')) {
-                calculateTotal();
-            }
-        });
-
-        // Voucher No Preview
-        document.getElementById('branchCode').addEventListener('change', function() {
-            const branchCode = this.value;
-            fetch(`{{ route('receipt-voucher.next-voucher-no') }}?branch_code=${branchCode}`)
-                .then(r => r.json())
-                .then(data => {
-                    document.getElementById('voucherNoPreview').value = data.voucher_no;
-                });
+        $(document).on('input', '.item-amount, .deduction-amount', function() {
+            calculateTotal();
         });
     </script>
 @endsection
+

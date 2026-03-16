@@ -26,11 +26,19 @@ class ReceiptVoucherController extends Controller
 
     public function index(Request $request)
     {
-        $query = ReceiptVoucher::with(['items', 'logs'])
+        $query = ReceiptVoucher::with(['creator'])
             ->orderBy('created_at', 'desc');
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('voucher_date', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('voucher_date', '<=', $request->to_date);
         }
 
         if ($request->filled('search')) {
@@ -40,6 +48,12 @@ class ReceiptVoucherController extends Controller
                     ->orWhere('receive_from', 'like', "%$search%")
                     ->orWhere('remark', 'like', "%$search%");
             });
+        }
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if ($user->hasRole('account')) {
+            $query->where('created_by', Auth::id());
         }
 
         $vouchers = $query->paginate(20);
@@ -74,10 +88,19 @@ class ReceiptVoucherController extends Controller
             $totalDeductionAmount = collect($request->deductions)->sum('amount');
             $netAmount = $totalAmount - $totalDeductionAmount;
 
+            // Handle Payee (Remember recipient)
+            $payee = \App\Models\Payee::findOrCreateByName($request->receive_from, [
+                'address' => $request->receive_from_address,
+                'account_no' => $request->receive_from_account_no,
+                'bank_name' => $request->receive_from_bank_name,
+                'created_by' => Auth::id(),
+            ]);
+
             $voucher = ReceiptVoucher::create([
                 'voucher_no' => ReceiptVoucher::generateVoucherNo($request->branch_code ?? 'ELRV'),
                 'voucher_date' => $request->voucher_date,
                 'branch_code' => $request->branch_code,
+                'payee_id' => $payee->id,
                 'receive_from' => $request->receive_from,
                 'receive_from_address' => $request->receive_from_address,
                 'receive_from_account_no' => $request->receive_from_account_no,
@@ -131,10 +154,7 @@ class ReceiptVoucherController extends Controller
                 'user_name' => Auth::user()->name,
             ]);
 
-            if ($request->submit) {
-                $lineService = new LineMessagingService();
-                $lineService->SendReceiptVoucherNotification($voucher, ReceiptVoucher::STATUS_PENDING, $request->boolean('is_test'));
-            }
+            // User requested not to send line notification for pending status
 
             DB::commit();
             return redirect()->route('receipt-voucher.show', $voucher->id)->with('success', 'บันทึกใบสำคัญรับเรียบร้อยแล้ว');
@@ -153,7 +173,9 @@ class ReceiptVoucherController extends Controller
     public function edit($id)
     {
         $voucher = ReceiptVoucher::with('items')->findOrFail($id);
-        if (!$voucher->canEdit() || !Auth::user()->can('receipt-voucher.edit')) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$voucher->canEdit() || !$user->can('receipt-voucher.edit')) {
             return back()->with('error', 'ไม่สามารถแก้ไขใบสำคัญรับนี้ได้ หรือคุณไม่มีสิทธิ์แก้ไข');
         }
         $branchCodes = ReceiptVoucher::$branchCodes;
@@ -163,7 +185,9 @@ class ReceiptVoucherController extends Controller
     public function update(Request $request, $id)
     {
         $voucher = ReceiptVoucher::findOrFail($id);
-        if (!$voucher->canEdit() || !Auth::user()->can('receipt-voucher.edit')) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$voucher->canEdit() || !$user->can('receipt-voucher.edit')) {
             return back()->with('error', 'ไม่สามารถแก้ไขได้ หรือคุณไม่มีสิทธิ์');
         }
 
@@ -181,10 +205,19 @@ class ReceiptVoucherController extends Controller
             $totalDeductionAmount = collect($request->deductions)->sum('amount');
             $netAmount = $totalAmount - $totalDeductionAmount;
 
+            // Handle Payee (Remember recipient)
+            $payee = \App\Models\Payee::findOrCreateByName($request->receive_from, [
+                'address' => $request->receive_from_address,
+                'account_no' => $request->receive_from_account_no,
+                'bank_name' => $request->receive_from_bank_name,
+                'created_by' => Auth::id(),
+            ]);
+
             $oldStatus = $voucher->status;
             $voucher->update([
                 'voucher_date' => $request->voucher_date,
                 'branch_code' => $request->branch_code,
+                'payee_id' => $payee->id,
                 'receive_from' => $request->receive_from,
                 'receive_from_address' => $request->receive_from_address,
                 'receive_from_account_no' => $request->receive_from_account_no,
@@ -234,10 +267,7 @@ class ReceiptVoucherController extends Controller
                 'user_name' => Auth::user()->name,
             ]);
 
-            if ($request->submit && $oldStatus !== ReceiptVoucher::STATUS_PENDING) {
-                $lineService = new LineMessagingService();
-                $lineService->SendReceiptVoucherNotification($voucher, ReceiptVoucher::STATUS_PENDING, $request->boolean('is_test'));
-            }
+            // User requested not to send line notification for pending status
 
             DB::commit();
             return redirect()->route('receipt-voucher.show', $voucher->id)->with('success', 'อัปเดตใบสำคัญรับเรียบร้อยแล้ว');
@@ -250,7 +280,9 @@ class ReceiptVoucherController extends Controller
     public function verify(Request $request, $id)
     {
         $voucher = ReceiptVoucher::findOrFail($id);
-        if (!$voucher->canVerify() || !Auth::user()->can('receipt-voucher.verify')) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$voucher->canVerify() || !$user->can('receipt-voucher.verify')) {
             return back()->with('error', 'ไม่สามารถตรวจสอบใบสำคัญรับนี้ได้ หรือคุณไม่มีสิทธิ์');
         }
 
@@ -308,7 +340,9 @@ class ReceiptVoucherController extends Controller
     public function complete(Request $request, $id)
     {
         $voucher = ReceiptVoucher::findOrFail($id);
-        if (!$voucher->canComplete() || !Auth::user()->can('receipt-voucher.complete')) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$voucher->canComplete() || !$user->can('receipt-voucher.complete')) {
             return back()->with('error', 'ไม่สามารถทำเสร็จสิ้นได้ หรือคุณไม่มีสิทธิ์');
         }
 
@@ -367,7 +401,9 @@ class ReceiptVoucherController extends Controller
     public function destroy($id)
     {
         $voucher = ReceiptVoucher::findOrFail($id);
-        if (!$voucher->canEdit() || !Auth::user()->can('receipt-voucher.delete')) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$voucher->canEdit() || !$user->can('receipt-voucher.delete')) {
             return back()->with('error', 'ไม่สามารถลบได้ หรือคุณไม่มีสิทธิ์');
         }
         $voucher->delete();
@@ -422,5 +458,91 @@ class ReceiptVoucherController extends Controller
         $attachment->delete();
 
         return back()->with('success', 'ลบไฟล์แนบเรียบร้อยแล้ว');
+    }
+
+    public function searchPayee(Request $request)
+    {
+        $keyword = $request->get('q', '');
+        $payees = \App\Models\Payee::active()
+            ->when($keyword, function ($query) use ($keyword) {
+                $query->search($keyword);
+            })
+            ->orderBy('name')
+            ->limit(20)
+            ->get(['id', 'name', 'address', 'account_no', 'bank_name']);
+
+        return response()->json($payees);
+    }
+
+    public function savePayee(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'nullable|string',
+            'account_no' => 'nullable|string|max:50',
+            'bank_name' => 'nullable|string|max:100',
+        ]);
+
+        $payee = \App\Models\Payee::findOrCreateByName($request->name, [
+            'address' => $request->address,
+            'account_no' => $request->account_no,
+            'bank_name' => $request->bank_name,
+            'created_by' => Auth::id(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'payee' => $payee,
+        ]);
+    }
+
+    /**
+     * ลบใบสำคัญรับและข้อมูลที่เกี่ยวข้องทั้งหมด (Force Delete)
+     */
+    public function forceDestroy($id)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->can('receipt-voucher.delete')) {
+            return back()->with('error', 'คุณไม่มีสิทธิ์ดำเนินการนี้');
+        }
+
+        DB::beginTransaction();
+        try {
+            $voucher = ReceiptVoucher::withTrashed()->findOrFail($id);
+
+            // 1. ลบไฟล์แนบทั้งหมดจาก storage
+            foreach ($voucher->attachments as $attachment) {
+                if (Storage::disk('public')->exists($attachment->file_path)) {
+                    Storage::disk('public')->delete($attachment->file_path);
+                }
+            }
+
+            // 2. ลบ folder ของ voucher (ถ้ามี)
+            $folder_path = 'receipt_vouchers/' . $voucher->id;
+            if (Storage::disk('public')->exists($folder_path)) {
+                Storage::disk('public')->deleteDirectory($folder_path);
+            }
+
+            // 3. ลบ attachments records
+            $voucher->attachments()->delete();
+
+            // 4. ลบ items ทั้งหมด
+            $voucher->items()->delete();
+
+            // 5. ลบ logs ทั้งหมด
+            $voucher->logs()->delete();
+
+            // 6. ลบ voucher (force delete จริงๆ)
+            $voucher->forceDelete();
+
+            DB::commit();
+
+            return redirect()->route('receipt-voucher.index')
+                ->with('success', 'ลบใบสำคัญรับและข้อมูลที่เกี่ยวข้องทั้งหมดเรียบร้อยแล้ว');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+        }
     }
 }

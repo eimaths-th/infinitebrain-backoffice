@@ -1,246 +1,456 @@
 @extends('layouts.main_template')
 
 @section('style')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
-        .voucher-header { border-bottom: 2px solid #333; margin-bottom: 20px; padding-bottom: 10px; }
-        .section-title { background: #f4f4f4; padding: 5px 10px; font-weight: bold; margin-top: 20px; border-left: 4px solid #007bff; }
-        .items-table th { background: #eee; }
-        .total-row { font-weight: bold; background: #fafafa; }
-        .status-badge { padding: 5px 15px; border-radius: 20px; font-weight: bold; }
-        .attachment-card { border: 1px solid #ddd; border-radius: 5px; padding: 10px; margin-bottom: 10px; }
+        .status-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-draft { background-color: #6c757d; color: white; }
+        .status-pending { background-color: #ffc107; color: #212529; }
+        .status-verified { background-color: #007bff; color: white; }
+        .status-completed { background-color: #28a745; color: white; }
+        .status-rejected { background-color: #dc3545; color: white; }
+
+        .voucher-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .voucher-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            height: 100%;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: #212529;
+        }
+
+        .items-table th {
+            background: #343a40;
+            color: white;
+        }
+
+        .total-row {
+            background: #e7f3ff;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 40px;
+            padding-bottom: 20px;
+            border-left: 2px solid #dee2e6;
+        }
+
+        .timeline-item:last-child {
+            border-left: none;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #007bff;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #007bff;
+        }
+
+        .timeline-action {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 2px;
+            font-size: 0.95rem;
+        }
+
+        .timeline-user {
+            font-size: 0.85rem;
+            color: #495057;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .timeline-time {
+            font-size: 0.75rem;
+            color: #6c757d;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .approval-card {
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            background: #f8fff9;
+        }
+
+        .attachment-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .attachment-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            width: 150px;
+            background: #f8f9fa;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            .card { border: none !important; box-shadow: none !important; }
+        }
     </style>
 @endsection
 
 @section('content')
     <div class="row">
-        <div class="col-md-12">
-            <div class="main-card mb-3 card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center voucher-header">
-                        <div>
-                            <h2 class="mb-0">ใบสำคัญรับ (Receipt Voucher)</h2>
-                            <h4 class="text-muted">เลขที่: {{ $voucher->voucher_no }}</h4>
-                        </div>
-                        <div class="text-end">
-                            <span class="status-badge bg-{{ $voucher->status_color }} text-white">
-                                {{ $voucher->status_label }}
-                            </span>
-                            <div class="mt-2">
-                                <a href="{{ route('receipt-voucher.index') }}" class="btn btn-secondary">
-                                    <i class="fa fa-arrow-left"></i> กลับ
-                                </a>
-                                <a href="{{ route('receipt-voucher.print-pdf', $voucher->id) }}" target="_blank" class="btn btn-primary">
-                                    <i class="fa fa-print"></i> พิมพ์
-                                </a>
-                            </div>
-                        </div>
+        <div class="app-page-title no-print">
+            <div class="page-title-wrapper">
+                <div class="page-title-heading">
+                    <div class="page-title-icon">
+                        <i class="pe-7s-note2 icon-gradient bg-tempting-azure"></i>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p><strong>วันที่:</strong> {{ $voucher->voucher_date->format('d/m/Y') }}</p>
-                            <p><strong>รับจาก:</strong> {{ $voucher->receive_from }}</p>
-                            <p><strong>ที่อยู่:</strong> {{ $voucher->receive_from_address ?: '-' }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <p><strong>ธนาคาร:</strong> {{ $voucher->receive_from_bank_name ?: '-' }}</p>
-                            <p><strong>เลขที่บัญชี:</strong> {{ $voucher->receive_from_account_no ?: '-' }}</p>
-                            <p><strong>สาขา:</strong> {{ $voucher->branch_code ?: '-' }}</p>
-                        </div>
+                    <div>
+                        ใบสำคัญรับ
+                        <div class="page-title-subheading">รายละเอียดใบสำคัญรับ</div>
                     </div>
-
-                    <div class="section-title">รายการรับ</div>
-                    <table class="table table-bordered items-table mt-2">
-                        <thead>
-                            <tr>
-                                <th width="10%" class="text-center">ลำดับ</th>
-                                <th>รายการ</th>
-                                <th width="20%" class="text-end">จำนวนเงิน</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($voucher->receiptItems as $index => $item)
-                                <tr>
-                                    <td class="text-center">{{ $index + 1 }}</td>
-                                    <td>{{ $item->description }}</td>
-                                    <td class="text-end">{{ number_format($item->amount, 2) }}</td>
-                                </tr>
-                            @endforeach
-                            <tr class="total-row">
-                                <td colspan="2" class="text-end">รวมเงิน</td>
-                                <td class="text-end">{{ number_format($voucher->total_amount, 2) }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    @if($voucher->deductions->count() > 0)
-                        <div class="section-title">รายการหัก</div>
-                        <table class="table table-bordered items-table mt-2">
-                            <thead>
-                                <tr>
-                                    <th width="10%" class="text-center">ลำดับ</th>
-                                    <th>รายการหัก</th>
-                                    <th width="20%" class="text-end">จำนวนเงิน</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($voucher->deductions as $index => $item)
-                                    <tr>
-                                        <td class="text-center">{{ $index + 1 }}</td>
-                                        <td>{{ $item->description }}</td>
-                                        <td class="text-end text-danger">{{ number_format($item->amount, 2) }}</td>
-                                    </tr>
-                                @endforeach
-                                <tr class="total-row">
-                                    <td colspan="2" class="text-end">รวมรายการหัก</td>
-                                    <td class="text-end text-danger">{{ number_format($voucher->total_deduction_amount, 2) }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                </div>
+                <div class="page-title-actions">
+                    <a href="{{ route('receipt-voucher.index') }}" class="btn btn-secondary">
+                        <i class="fa fa-arrow-left"></i> กลับ
+                    </a>
+                    <a href="{{ route('receipt-voucher.print-pdf', $voucher->id) }}" target="_blank"
+                        class="btn btn-primary">
+                        <i class="fa fa-print"></i> พิมพ์
+                    </a>
+                    @if ($voucher->canEdit())
+                        <a href="{{ route('receipt-voucher.edit', $voucher->id) }}" class="btn btn-warning">
+                            <i class="fa fa-edit"></i> แก้ไข
+                        </a>
                     @endif
+                </div>
+            </div>
+        </div>
 
-                    <div class="row mt-3">
-                        <div class="col-md-12">
-                            <div class="alert alert-info d-flex justify-content-between align-items-center">
-                                <h4 class="mb-0">จำนวนเงินสุทธิ (Net Amount)</h4>
-                                <h3 class="mb-0 font-weight-bold">{{ number_format($voucher->net_amount, 2) }} บาท</h3>
-                            </div>
-                        </div>
+        <div class="col-12">
+            <!-- Voucher Header -->
+            <div class="voucher-header">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="voucher-number">{{ $voucher->voucher_no }}</div>
+                        <div>วันที่: {{ $voucher->voucher_date->format('d/m/Y') }}</div>
                     </div>
-
-                    <div class="section-title">หมายเหตุ / ข้อมูลเพิ่มเติม</div>
-                    <div class="p-2 border rounded mt-2">
-                        {{ $voucher->remark ?: 'ไม่มีหมายเหตุ' }}
-                    </div>
-
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <div class="section-title">ไฟล์แนบ</div>
-                            <div class="mt-2">
-                                @forelse($voucher->attachments as $file)
-                                    <div class="attachment-card d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <i class="fa fa-file"></i> {{ $file->original_name }}
-                                            <small class="text-muted d-block">อัปโหลดโดย: {{ $file->uploaded_by_name }}</small>
-                                        </div>
-                                        <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" class="btn btn-sm btn-info">เปิด</a>
-                                    </div>
-                                @empty
-                                    <p class="text-muted">ไม่มีไฟล์แนบ</p>
-                                @endforelse
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="section-title">ประวัติการดำเนินการ (Logs)</div>
-                            <div class="mt-2">
-                                <ul class="list-group list-group-flush">
-                                    @foreach($voucher->logs as $log)
-                                        <li class="list-group-item p-2">
-                                            <small class="text-primary">{{ $log->created_at->format('d/m/Y H:i') }}</small>
-                                            <strong>{{ $log->user_name }}</strong>: {{ $log->action }}
-                                            @if($log->remark)
-                                                <small class="d-block text-muted">หมายเหตุ: {{ $log->remark }}</small>
-                                            @endif
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr>
-                    <div class="workflow-actions text-center p-3">
-                        @if($voucher->canVerify())
-                            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#verifyModal">
-                                <i class="fa fa-check"></i> ตรวจสอบแล้ว (Verify)
-                            </button>
-                            <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#rejectModal">
-                                <i class="fa fa-times"></i> ปฏิเสธ (Reject)
-                            </button>
-                        @endif
-
-                        @if($voucher->canComplete())
-                            <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#completeModal">
-                                <i class="fa fa-flag-checkered"></i> ดำเนินการเสร็จสิ้น (Complete)
-                            </button>
-                        @endif
-
-                        @if($voucher->status === \App\Models\ReceiptVoucher::STATUS_COMPLETED)
-                            <form action="{{ route('receipt-voucher.undo-complete', $voucher->id) }}" method="POST" class="d-inline" onsubmit="return confirm('ยืนยันการยกเลิกสถานะเสร็จสิ้น?')">
-                                @csrf
-                                <button type="submit" class="btn btn-warning">ยกเลิกสถานะเสร็จสิ้น</button>
-                            </form>
-                        @endif
+                    <div class="col-md-6 text-md-end">
+                        <span class="status-badge status-{{ $voucher->status }}">
+                            {{ $voucher->status_label }}
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modals -->
-    <div class="modal fade" id="verifyModal" tabindex="-1">
-        <div class="modal-dialog">
-            <form action="{{ route('receipt-voucher.verify', $voucher->id) }}" method="POST">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white"><h5>ตรวจสอบใบสำคัญรับ</h5></div>
-                    <div class="modal-body">
-                        <label>หมายเหตุการตรวจสอบ</label>
-                        <textarea name="remark" class="form-control" rows="3"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                        <button type="submit" class="btn btn-primary">ยืนยันการตรวจสอบ</button>
-                    </div>
+        <div class="col-md-6 mb-3">
+            <!-- Payee Info -->
+            <div class="info-card">
+                <h6 class="border-bottom pb-2 mb-3"><i class="fa fa-user"></i> ข้อมูลผู้รับเงิน / รับจาก</h6>
+                <div class="mb-2">
+                    <div class="info-label">รับจาก</div>
+                    <div class="info-value">{{ $voucher->receive_from }}</div>
                 </div>
-            </form>
+                @if ($voucher->receive_from_address)
+                    <div class="mb-2">
+                        <div class="info-label">ที่อยู่</div>
+                        <div class="info-value">{{ $voucher->receive_from_address }}</div>
+                    </div>
+                @endif
+                @if ($voucher->receive_from_account_no || $voucher->receive_from_bank_name)
+                    <div class="row">
+                        @if ($voucher->receive_from_account_no)
+                            <div class="col-6 mb-2">
+                                <div class="info-label">เลขที่บัญชี</div>
+                                <div class="info-value">{{ $voucher->receive_from_account_no }}</div>
+                            </div>
+                        @endif
+                        @if ($voucher->receive_from_bank_name)
+                            <div class="col-6 mb-2">
+                                <div class="info-label">ธนาคาร</div>
+                                <div class="info-value">{{ $voucher->receive_from_bank_name }}</div>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+            </div>
         </div>
-    </div>
 
-    <div class="modal fade" id="rejectModal" tabindex="-1">
-        <div class="modal-dialog">
-            <form action="{{ route('receipt-voucher.reject', $voucher->id) }}" method="POST">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header bg-danger text-white"><h5>ปฏิเสธใบสำคัญรับ</h5></div>
-                    <div class="modal-body">
-                        <label>เหตุผลที่ปฏิเสธ (จำเป็น)</label>
-                        <textarea name="remark" class="form-control" rows="3" required></textarea>
+        <div class="col-md-6 mb-3">
+            <!-- Creator Info -->
+            <div class="info-card">
+                <h6 class="border-bottom pb-2 mb-3"><i class="fa fa-info-circle"></i> ข้อมูลเอกสาร</h6>
+                <div class="row">
+                    <div class="col-6 mb-2">
+                        <div class="info-label">ผู้สร้าง</div>
+                        <div class="info-value">{{ $voucher->creator->name ?? $voucher->created_by_name }}</div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                        <button type="submit" class="btn btn-danger">ยืนยันการปฏิเสธ</button>
+                    <div class="col-6 mb-2">
+                        <div class="info-label">วันที่สร้าง</div>
+                        <div class="info-value">{{ $voucher->created_at->format('d/m/Y H:i') }}</div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="info-label">สาขา</div>
+                        <div class="info-value">{{ $voucher->branch_code }}</div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
 
-    <div class="modal fade" id="completeModal" tabindex="-1">
-        <div class="modal-dialog">
-            <form action="{{ route('receipt-voucher.complete', $voucher->id) }}" method="POST">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header bg-success text-white"><h5>ดำเนินการเสร็จสิ้น</h5></div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label>ชื่อผู้รับเงิน / ผู้ดำเนินการภายนอก</label>
-                            <input type="text" name="receiver_name" class="form-control" placeholder="เช่น นาย A">
-                        </div>
-                        <div class="mb-3">
-                            <label>วันที่ดำเนินการเสร็จสิ้น</label>
-                            <input type="date" name="received_date" class="form-control" value="{{ date('Y-m-d') }}">
-                        </div>
-                        <label>หมายเหตุเพิ่มเติม</label>
-                        <textarea name="remark" class="form-control" rows="3"></textarea>
+        <div class="col-12">
+            <!-- Items Table -->
+            <div class="main-card mb-3 card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fa fa-list"></i> รายการ</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered items-table">
+                            <thead>
+                                <tr>
+                                    <th width="8%" class="text-center">ลำดับ</th>
+                                    <th>รายละเอียด</th>
+                                    <th width="20%" class="text-end">จำนวนเงิน</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($voucher->receiptItems as $index => $item)
+                                    <tr>
+                                        <td class="text-center">{{ $index + 1 }}</td>
+                                        <td>{{ $item->description }}</td>
+                                        <td class="text-end">{{ number_format($item->amount, 2) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr class="total-row">
+                                    <td colspan="2" class="text-end">รวมเป็นเงิน</td>
+                                    <td class="text-end text-success">{{ number_format($voucher->total_amount, 2) }} บ.</td>
+                                </tr>
+                                @if ($voucher->deductions->count() > 0)
+                                    @foreach ($voucher->deductions as $deduction)
+                                        <tr>
+                                            <td colspan="2" class="text-end text-danger">
+                                                <i class="fa fa-minus-circle"></i> หัก: {{ $deduction->description }}
+                                            </td>
+                                            <td class="text-end text-danger">
+                                                -{{ number_format($deduction->amount, 2) }} บ.
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    <tr class="total-row" style="background-color: #d1e7dd;">
+                                        <td colspan="2" class="text-end">ยอดสุทธิ</td>
+                                        <td class="text-end fw-bold">
+                                            {{ number_format($voucher->net_amount, 2) }} บ.
+                                        </td>
+                                    </tr>
+                                @endif
+                            </tfoot>
+                        </table>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                        <button type="submit" class="btn btn-success">ยืนยันเสร็จสิ้น</button>
+
+                    @if ($voucher->remark)
+                        <div class="mt-3">
+                            <strong>หมายเหตุ:</strong> {{ $voucher->remark }}
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <!-- Voucher Attachments -->
+            @if ($voucher->attachments->count() > 0)
+                <div class="main-card mb-3 card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fa fa-paperclip"></i> เอกสารแนบ</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="attachment-gallery">
+                            @foreach ($voucher->attachments as $attachment)
+                                <div class="attachment-card">
+                                    <a href="{{ Storage::url($attachment->file_path) }}" target="_blank">
+                                        @if (Str::contains($attachment->file_path, ['.jpg', '.jpeg', '.png', '.gif']))
+                                            <img src="{{ Storage::url($attachment->file_path) }}"
+                                                style="max-width: 100px; max-height: 100px; object-fit: cover;">
+                                        @else
+                                            <i class="fa fa-file-pdf-o fa-3x text-danger"></i>
+                                        @endif
+                                    </a>
+                                    <div class="mt-1 small text-truncate" title="{{ $attachment->original_name }}">
+                                        {{ $attachment->original_name }}
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
-            </form>
+            @endif
+        </div>
+
+        <div class="col-12">
+            <!-- Approval Actions -->
+            @if ($voucher->canVerify() || $voucher->canComplete())
+                <div class="main-card mb-3 card no-print">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0"><i class="fa fa-check-circle"></i> ดำเนินการ</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @if ($voucher->canVerify())
+                                <div class="col-md-6 mb-3">
+                                    <div class="approval-card" style="border-color: #17a2b8; background: #f0fafc;">
+                                        <h6><i class="fa fa-search text-info"></i> ตรวจสอบใบสำคัญรับ</h6>
+                                        <form action="{{ route('receipt-voucher.verify', $voucher->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <label class="form-label">หมายเหตุ (ถ้ามี)</label>
+                                                <textarea name="remark" class="form-control" rows="2"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-info">
+                                                <i class="fa fa-check"></i> ตรวจสอบเรียบร้อย
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="approval-card" style="border-color: #dc3545; background: #fff8f8;">
+                                        <h6><i class="fa fa-thumbs-down text-danger"></i> ปฏิเสธใบสำคัญรับ</h6>
+                                        <form action="{{ route('receipt-voucher.reject', $voucher->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <label class="form-label">เหตุผลที่ปฏิเสธ <span
+                                                        class="text-danger">*</span></label>
+                                                <textarea name="remark" class="form-control" rows="2" required></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="fa fa-times"></i> ปฏิเสธ
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if ($voucher->canComplete())
+                                <div class="col-md-6 mb-3">
+                                    <div class="approval-card">
+                                        <h6><i class="fa fa-flag-checkered text-success"></i> บันทึกเสร็จสิ้น</h6>
+                                        <form action="{{ route('receipt-voucher.complete', $voucher->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <div class="mb-2">
+                                                    <label class="form-label">ชื่อผู้รับเงิน / ผู้ดำเนินการภายนอก</label>
+                                                    <input type="text" name="receiver_name" class="form-control" placeholder="เช่น นาย A">
+                                                </div>
+                                                <div class="mb-2">
+                                                    <label class="form-label">วันที่ดำเนินการเสร็จสิ้น</label>
+                                                    <input type="date" name="received_date" class="form-control" value="{{ date('Y-m-d') }}">
+                                                </div>
+                                                <label class="form-label">หมายเหตุ (ถ้ามี)</label>
+                                                <textarea name="remark" class="form-control" rows="2"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fa fa-check"></i> บันทึกเสร็จสิ้น
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if ($voucher->status === \App\Models\ReceiptVoucher::STATUS_COMPLETED && Auth::user()->can('receipt-voucher.complete'))
+                <div class="no-print mb-3">
+                    <form action="{{ route('receipt-voucher.undo-complete', $voucher->id) }}" method="POST"
+                        onsubmit="return confirm('ยืนยันการยกเลิกสถานะเสร็จสิ้น?')">
+                        @csrf
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fa fa-undo"></i> ยกเลิกสถานะเสร็จสิ้น
+                        </button>
+                    </form>
+                </div>
+            @endif
+        </div>
+
+        <div class="col-12">
+            <!-- Activity Log -->
+            <div class="main-card mb-3 card no-print">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fa fa-history"></i> ประวัติการดำเนินการ</h6>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        @foreach ($voucher->logs->sortByDesc('created_at') as $log)
+                            <div class="timeline-item">
+                                <div class="timeline-action">
+                                    @switch($log->action)
+                                        @case('create') <span class="text-primary">สร้างเอกสาร</span> @break
+                                        @case('submit') <span class="text-warning">ส่งตรวจสอบ</span> @break
+                                        @case('verify') <span class="text-info">ตรวจสอบแล้ว</span> @break
+                                        @case('complete') <span class="text-success">เสร็จสิ้น</span> @break
+                                        @case('reject') <span class="text-danger">ปฏิเสธ</span> @break
+                                        @case('update') <span class="text-secondary">แก้ไข</span> @break
+                                        @case('undo_complete') <span class="text-warning">ยกเลิกเสร็จสิ้น</span> @break
+                                        @default <span>{{ $log->action }}</span>
+                                    @endswitch
+                                </div>
+                                <div class="timeline-user">โดย {{ $log->user_name }}</div>
+                                <div class="timeline-time">{{ $log->created_at->format('d/m/Y H:i') }}</div>
+                                @if ($log->remark)
+                                    <div class="text-muted small">{{ $log->remark }}</div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

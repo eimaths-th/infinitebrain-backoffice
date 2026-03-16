@@ -159,14 +159,9 @@ class LineMessagingService
                 $icon = "🔵";
                 break;
             case \App\Models\ReceiptVoucher::STATUS_COMPLETED:
-                $message = "🎉 ใบสำคัญรับดำเนินการเสร็จสิ้น (Completed)";
-                $targetGroup = config('services.line_messaging.manager_rv_group_id');
-                $icon = "🟢";
-                break;
+                return false;
             case \App\Models\ReceiptVoucher::STATUS_REJECTED:
-                $message = "❌ ใบสำคัญรับถูกปฏิเสธ (Rejected)";
-                $targetGroup = config('services.line_messaging.manager_rv_group_id');
-                break;
+                return false;
             default:
                 return false;
         }
