@@ -315,6 +315,8 @@
                                         Finance Dashboard
                                     </a>
                                 </li>
+                            @endcan
+                            @can('performance.view')
                                 <li>
                                     <a href="{{ route('performance.index') }}">
                                         <i class="metismenu-icon pe-7s-graph1"></i>
