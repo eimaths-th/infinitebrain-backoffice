@@ -39,6 +39,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'general' => ['view', 'admin.view'],
             'system' => ['view'],
             'recruitment' => ['view', 'upload', 'review', 'verify', 'view_all'],
+            'receipt-voucher' => ['view', 'create', 'edit', 'delete', 'verify', 'complete', 'export'],
         ];
 
         // Create permissions
@@ -87,6 +88,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'parents.view',
             'reports.view',
             'reports.export',
+            'receipt-voucher.view',
+            'receipt-voucher.create',
+            'receipt-voucher.edit',
+            'receipt-voucher.export',
         ];
         $finance = Role::firstOrCreate(['name' => 'finance', 'guard_name' => 'web']);
         $finance->givePermissionTo($financePermissions);
@@ -98,6 +103,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'payment-voucher.review',
             'receipts.view',
             'receipt-school.view',
+            'receipt-voucher.view',
+            'receipt-voucher.verify',
         ];
         $reviewer = Role::firstOrCreate(['name' => 'reviewer', 'guard_name' => 'web']);
         $reviewer->givePermissionTo($reviewerPermissions);
@@ -111,6 +118,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'payment-voucher.approve',
             'receipts.view',
             'receipt-school.view',
+            'receipt-voucher.view',
+            'receipt-voucher.complete',
         ];
         $approver = Role::firstOrCreate(['name' => 'approver', 'guard_name' => 'web']);
         $approver->givePermissionTo($approverPermissions);

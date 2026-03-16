@@ -49,6 +49,7 @@ use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\FinanceDashboardController;
 use App\Http\Controllers\RecruitmentController;
+use App\Http\Controllers\ReceiptVoucherController;
 // use App\Http\Controllers\RouteToggleController;
 
 Route::middleware(['auth'])->prefix('recruitment')->name('recruitment.')->group(function () {
@@ -180,6 +181,33 @@ Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')
     Route::post('/import', [PaymentVoucherController::class, 'importExcel'])->name('import.process');
     Route::post('/import/store', [PaymentVoucherController::class, 'storeImport'])->name('import.store');
     Route::get('/import/template', [PaymentVoucherController::class, 'downloadTemplate'])->name('import.template');
+});
+
+// Receipt Voucher Routes (ใบสำคัญรับ)
+Route::middleware(['auth'])->prefix('receipt-voucher')->name('receipt-voucher.')->group(function () {
+    Route::get('/', [ReceiptVoucherController::class, 'index'])->name('index');
+    Route::get('/create', [ReceiptVoucherController::class, 'create'])->name('create');
+    Route::post('/store', [ReceiptVoucherController::class, 'store'])->name('store');
+    Route::get('/show/{id}', [ReceiptVoucherController::class, 'show'])->name('show');
+    Route::get('/edit/{id}', [ReceiptVoucherController::class, 'edit'])->name('edit');
+    Route::put('/update/{id}', [ReceiptVoucherController::class, 'update'])->name('update');
+    Route::delete('/destroy/{id}', [ReceiptVoucherController::class, 'destroy'])->name('destroy');
+
+    // Workflow
+    Route::post('/verify/{id}', [ReceiptVoucherController::class, 'verify'])->name('verify');
+    Route::post('/reject/{id}', [ReceiptVoucherController::class, 'reject'])->name('reject');
+    Route::post('/complete/{id}', [ReceiptVoucherController::class, 'complete'])->name('complete');
+    Route::post('/undo-complete/{id}', [ReceiptVoucherController::class, 'undoComplete'])->name('undo-complete');
+
+    // Print
+    Route::get('/print-pdf/{id}', [ReceiptVoucherController::class, 'printPdf'])->name('print-pdf');
+
+    // Attachments
+    Route::post('/{id}/upload-attachment', [ReceiptVoucherController::class, 'uploadAttachment'])->name('upload-attachment');
+    Route::delete('/attachment/{id}', [ReceiptVoucherController::class, 'deleteAttachment'])->name('delete-attachment');
+
+    // Next Voucher No API
+    Route::get('/next-voucher-no', [ReceiptVoucherController::class, 'getNextVoucherNo'])->name('next-voucher-no');
 });
 
 // Bank Statement Routes

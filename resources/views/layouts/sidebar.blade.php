@@ -349,16 +349,33 @@
                                             </a>
                                         </li>
                                     @endcan
-                                    @can('payment-voucher.review')
-                                        <li>
-                                            <a href="{{ route('payment-voucher.approved') }}">
-                                                <i class="metismenu-icon"></i>
-                                                รอตรวจสอบ
-                                            </a>
-                                        </li>
+                                </ul>
+                            </li>
+                            @can('receipt-voucher.view')
+                            <li>
+                                <a href="#">
+                                    <i class="metismenu-icon pe-7s-note2"></i>
+                                    ใบสำคัญรับ
+                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ route('receipt-voucher.index') }}">
+                                            <i class="metismenu-icon"></i>
+                                            รายการทั้งหมด
+                                        </a>
+                                    </li>
+                                    @can('receipt-voucher.create')
+                                    <li>
+                                        <a href="{{ route('receipt-voucher.create') }}">
+                                            <i class="metismenu-icon"></i>
+                                            สร้างใบสำคัญรับ
+                                        </a>
+                                    </li>
                                     @endcan
                                 </ul>
                             </li>
+                            @endcan
                         </ul>
                         @can('payroll.view')
                             <ul>
