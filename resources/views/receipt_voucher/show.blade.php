@@ -312,7 +312,7 @@
                             @foreach ($voucher->attachments as $attachment)
                                 <div class="attachment-card">
                                     <a href="{{ Storage::url($attachment->file_path) }}" target="_blank">
-                                        @if (Str::contains($attachment->file_path, ['.jpg', '.jpeg', '.png', '.gif']))
+                                        @if ($attachment->isImage())
                                             <img src="{{ Storage::url($attachment->file_path) }}"
                                                 style="max-width: 100px; max-height: 100px; object-fit: cover;">
                                         @else
