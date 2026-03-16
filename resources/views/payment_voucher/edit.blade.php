@@ -536,6 +536,15 @@
                                         </label>
                                     </div>
                                 @endcan
+                                @can('payment-voucher.approve')
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="skip_approval" id="skip_approval"
+                                            value="1">
+                                        <label class="form-check-label text-primary fw-bold" for="skip_approval">
+                                            ข้ามการอนุมัติ (Skip Approval)
+                                        </label>
+                                    </div>
+                                @endcan
                                 <div>
                                     <button type="submit" class="btn btn-primary" name="submit" value="">
                                         <i class="fa fa-save"></i> บันทึกร่าง

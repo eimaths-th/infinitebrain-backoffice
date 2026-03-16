@@ -322,13 +322,14 @@
         <!-- Info Grid -->
         <div class="info-grid">
             <div class="info-label">รับจาก / Receive From</div>
-            <div class="info-value">{{ $voucher->receive_from }}</div>
+            <div class="info-value">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $voucher->receive_from }}</div>
 
             <div class="info-label">เลขที่ / Voucher NO.</div>
             <div class="info-value">{{ $voucher->voucher_no }}</div>
 
             <div class="info-label">เลขที่บัญชี</div>
             <div class="info-value">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 @if ($voucher->receive_from_account_no)
                     {{ $voucher->receive_from_account_no }}
                     @if ($voucher->receive_from_bank_name)
@@ -350,6 +351,7 @@
 
             <div class="info-label">ที่อยู่</div>
             <div class="info-value">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 {{ $voucher->receive_from_address ?? '-' }}
             </div>
 

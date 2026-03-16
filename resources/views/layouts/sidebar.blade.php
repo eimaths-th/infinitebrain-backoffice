@@ -315,6 +315,12 @@
                                         Finance Dashboard
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('performance.index') }}">
+                                        <i class="metismenu-icon pe-7s-graph1"></i>
+                                        ผลประกอบการ
+                                    </a>
+                                </li>
                             @endcan
                             {{-- <li>
                                     <a href="{{ route('payment-voucher.index') }}">

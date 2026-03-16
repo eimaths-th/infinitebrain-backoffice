@@ -143,21 +143,40 @@ class PaymentVoucherController extends Controller
             // สูตร: ยอดเบิก - รายการหัก - หัก ณ ที่จ่าย = ยอดสุทธิ
             $netAmount = $totalAmount - $totalDeductionAmount - $taxAmount;
 
+            // กำหนดสถานะ
+            $status = PaymentVoucher::STATUS_DRAFT;
+            $isSkipApproval = false;
+            
+            if ($request->submit) {
+                if ($request->skip_approval && Auth::user()->can('payment-voucher.approve')) {
+                    $status = PaymentVoucher::STATUS_APPROVED;
+                    $isSkipApproval = true;
+                } else {
+                    $status = PaymentVoucher::STATUS_PENDING;
+                }
+            }
+
             // สร้างใบสำคัญจ่าย
             $voucher = PaymentVoucher::create([
                 'voucher_no' => PaymentVoucher::generateVoucherNo($branchCode),
                 'branch_code' => $branchCode,
                 'voucher_date' => $request->voucher_date,
-                'payment_cycle' => $request->payment_cycle, // Added payment_cycle
+                'payment_cycle' => $request->payment_cycle,
                 'pay_to' => $request->pay_to,
                 'pay_to_address' => $request->pay_to_address,
                 'pay_to_account_no' => $request->pay_to_account_no,
                 'pay_to_bank_name' => $request->pay_to_bank_name,
                 'payee_id' => $payee?->id,
                 'remark' => $request->remark,
-                'status' => $request->submit ? PaymentVoucher::STATUS_PENDING : PaymentVoucher::STATUS_DRAFT,
+                'status' => $status,
                 'created_by' => Auth::id(),
                 'created_by_name' => Auth::user()->name ?? 'System',
+                'reviewed_by' => $isSkipApproval ? Auth::id() : null,
+                'reviewed_by_name' => $isSkipApproval ? (Auth::user()->name ?? 'System') : null,
+                'reviewed_at' => $isSkipApproval ? now() : null,
+                'approved_by' => $isSkipApproval ? Auth::id() : null,
+                'approved_by_name' => $isSkipApproval ? (Auth::user()->name ?? 'System') : null,
+                'approved_at' => $isSkipApproval ? now() : null,
                 'withholding_tax_rate' => $taxRate,
                 'withholding_tax_amount' => $taxAmount,
                 'total_deduction_amount' => $totalDeductionAmount,
@@ -231,19 +250,59 @@ class PaymentVoucherController extends Controller
             ]);
 
             if ($request->submit) {
-                PaymentVoucherLog::create([
-                    'payment_voucher_id' => $voucher->id,
-                    'action' => PaymentVoucherLog::ACTION_SUBMIT,
-                    'from_status' => PaymentVoucher::STATUS_DRAFT,
-                    'to_status' => PaymentVoucher::STATUS_PENDING,
-                    'user_id' => Auth::id(),
-                    'user_name' => Auth::user()->name ?? 'System',
-                ]);
+                if ($isSkipApproval) {
+                    // Log Submit
+                    PaymentVoucherLog::create([
+                        'payment_voucher_id' => $voucher->id,
+                        'action' => PaymentVoucherLog::ACTION_SUBMIT,
+                        'from_status' => PaymentVoucher::STATUS_DRAFT,
+                        'to_status' => PaymentVoucher::STATUS_PENDING,
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->name ?? 'System',
+                        'remark' => 'ข้ามการอนุมัติ (Skip Approval)',
+                    ]);
 
-                // Notify via LINE
-                $lineService = new \App\Services\LineMessagingService();
-                $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_PENDING, $request->boolean('is_test'));
+                    // Log Review
+                    PaymentVoucherLog::create([
+                        'payment_voucher_id' => $voucher->id,
+                        'action' => PaymentVoucherLog::ACTION_REVIEW,
+                        'from_status' => PaymentVoucher::STATUS_PENDING,
+                        'to_status' => PaymentVoucher::STATUS_REVIEWED,
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->name ?? 'System',
+                        'remark' => 'ข้ามการอนุมัติ (Skip Approval)',
+                    ]);
+
+                    // Log Approve
+                    PaymentVoucherLog::create([
+                        'payment_voucher_id' => $voucher->id,
+                        'action' => PaymentVoucherLog::ACTION_APPROVE,
+                        'from_status' => PaymentVoucher::STATUS_REVIEWED,
+                        'to_status' => PaymentVoucher::STATUS_APPROVED,
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->name ?? 'System',
+                        'remark' => 'ข้ามการอนุมัติ (Skip Approval)',
+                    ]);
+
+                    // Notify via LINE (Approved)
+                    $lineService = new \App\Services\LineMessagingService();
+                    $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_APPROVED, $request->boolean('is_test'));
+                } else {
+                    PaymentVoucherLog::create([
+                        'payment_voucher_id' => $voucher->id,
+                        'action' => PaymentVoucherLog::ACTION_SUBMIT,
+                        'from_status' => PaymentVoucher::STATUS_DRAFT,
+                        'to_status' => PaymentVoucher::STATUS_PENDING,
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->name ?? 'System',
+                    ]);
+
+                    // Notify via LINE (Pending)
+                    $lineService = new \App\Services\LineMessagingService();
+                    $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_PENDING, $request->boolean('is_test'));
+                }
             }
+
 
             DB::commit();
 
@@ -360,17 +419,32 @@ class PaymentVoucherController extends Controller
 
             $netAmount = $totalAmount - $totalDeductionAmount - $taxAmount;
 
+            // กำหนดสถานะ
+            $status = $request->submit ? PaymentVoucher::STATUS_PENDING : PaymentVoucher::STATUS_DRAFT;
+            $isSkipApproval = false;
+            
+            if ($request->submit && $request->skip_approval && Auth::user()->can('payment-voucher.approve')) {
+                $status = PaymentVoucher::STATUS_APPROVED;
+                $isSkipApproval = true;
+            }
+
             // อัพเดทข้อมูลหลัก
             $voucher->update([
                 'voucher_date' => $request->voucher_date,
-                'payment_cycle' => $request->payment_cycle, // Added payment_cycle
+                'payment_cycle' => $request->payment_cycle,
                 'pay_to' => $request->pay_to,
                 'pay_to_address' => $request->pay_to_address,
                 'pay_to_account_no' => $request->pay_to_account_no,
                 'pay_to_bank_name' => $request->pay_to_bank_name,
                 'payee_id' => $payee->id ?? $voucher->payee_id,
                 'remark' => $request->remark,
-                'status' => $request->submit ? PaymentVoucher::STATUS_PENDING : PaymentVoucher::STATUS_DRAFT,
+                'status' => $status,
+                'reviewed_by' => $isSkipApproval ? Auth::id() : $voucher->reviewed_by,
+                'reviewed_by_name' => $isSkipApproval ? (Auth::user()->name ?? 'System') : $voucher->reviewed_by_name,
+                'reviewed_at' => $isSkipApproval ? now() : $voucher->reviewed_at,
+                'approved_by' => $isSkipApproval ? Auth::id() : $voucher->approved_by,
+                'approved_by_name' => $isSkipApproval ? (Auth::user()->name ?? 'System') : $voucher->approved_by_name,
+                'approved_at' => $isSkipApproval ? now() : $voucher->approved_at,
                 'withholding_tax_rate' => $taxRate,
                 'withholding_tax_amount' => $taxAmount,
                 'total_deduction_amount' => $totalDeductionAmount,
@@ -446,18 +520,57 @@ class PaymentVoucherController extends Controller
             ]);
 
             if ($request->submit) {
-                PaymentVoucherLog::create([
-                    'payment_voucher_id' => $voucher->id,
-                    'action' => PaymentVoucherLog::ACTION_SUBMIT,
-                    'from_status' => PaymentVoucher::STATUS_DRAFT,
-                    'to_status' => PaymentVoucher::STATUS_PENDING,
-                    'user_id' => Auth::id(),
-                    'user_name' => Auth::user()->name ?? 'System',
-                ]);
+                if ($isSkipApproval) {
+                    // Log Submit
+                    PaymentVoucherLog::create([
+                        'payment_voucher_id' => $voucher->id,
+                        'action' => PaymentVoucherLog::ACTION_SUBMIT,
+                        'from_status' => PaymentVoucher::STATUS_DRAFT,
+                        'to_status' => PaymentVoucher::STATUS_PENDING,
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->name ?? 'System',
+                        'remark' => 'ข้ามการอนุมัติ (Skip Approval)',
+                    ]);
 
-                // Notify via LINE
-                $lineService = new \App\Services\LineMessagingService();
-                $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_PENDING, $request->boolean('is_test'));
+                    // Log Review
+                    PaymentVoucherLog::create([
+                        'payment_voucher_id' => $voucher->id,
+                        'action' => PaymentVoucherLog::ACTION_REVIEW,
+                        'from_status' => PaymentVoucher::STATUS_PENDING,
+                        'to_status' => PaymentVoucher::STATUS_REVIEWED,
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->name ?? 'System',
+                        'remark' => 'ข้ามการอนุมัติ (Skip Approval)',
+                    ]);
+
+                    // Log Approve
+                    PaymentVoucherLog::create([
+                        'payment_voucher_id' => $voucher->id,
+                        'action' => PaymentVoucherLog::ACTION_APPROVE,
+                        'from_status' => PaymentVoucher::STATUS_REVIEWED,
+                        'to_status' => PaymentVoucher::STATUS_APPROVED,
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->name ?? 'System',
+                        'remark' => 'ข้ามการอนุมัติ (Skip Approval)',
+                    ]);
+
+                    // Notify via LINE (Approved)
+                    $lineService = new \App\Services\LineMessagingService();
+                    $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_APPROVED, $request->boolean('is_test'));
+                } else {
+                    PaymentVoucherLog::create([
+                        'payment_voucher_id' => $voucher->id,
+                        'action' => PaymentVoucherLog::ACTION_SUBMIT,
+                        'from_status' => PaymentVoucher::STATUS_DRAFT,
+                        'to_status' => PaymentVoucher::STATUS_PENDING,
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->name ?? 'System',
+                    ]);
+
+                    // Notify via LINE (Pending)
+                    $lineService = new \App\Services\LineMessagingService();
+                    $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_PENDING, $request->boolean('is_test'));
+                }
             }
 
             DB::commit();
