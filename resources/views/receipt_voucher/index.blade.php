@@ -68,7 +68,17 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-2">
+                            <label class="form-label">จากวันที่</label>
+                            <input type="text" name="from_date" class="form-control datepicker"
+                                value="{{ request('from_date') }}" placeholder="วว/ดด/ปปปป">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">ถึงวันที่</label>
+                            <input type="text" name="to_date" class="form-control datepicker"
+                                value="{{ request('to_date') }}" placeholder="วว/ดด/ปปปป">
+                        </div>
+                        <div class="col-md-3">
                             <label class="form-label">ค้นหา</label>
                             <input type="text" name="search" class="form-control" placeholder="เลขที่/รับจาก/หมายเหตุ..." value="{{ request('search') }}">
                         </div>
@@ -84,11 +94,12 @@
                         <thead class="table-dark">
                             <tr>
                                 <th width="5%">#</th>
-                                <th width="15%">เลขที่</th>
-                                <th width="12%">วันที่</th>
+                                <th width="12%">เลขที่</th>
+                                <th width="10%">วันที่</th>
                                 <th>รับจาก</th>
-                                <th width="15%" class="text-end">จำนวนเงินสุทธิ</th>
-                                <th width="12%">สถานะ</th>
+                                <th width="12%" class="text-end">จำนวนเงิน</th>
+                                <th width="10%">สถานะ</th>
+                                <th width="12%">ผู้สร้าง</th>
                                 <th width="15%">การดำเนินการ</th>
                             </tr>
                         </thead>
@@ -102,13 +113,14 @@
                                         </a>
                                     </td>
                                     <td>{{ $voucher->voucher_date->format('d/m/Y') }}</td>
-                                    <td>{{ Str::limit($voucher->receive_from, 40) }}</td>
+                                    <td>{{ Str::limit($voucher->receive_from, 30) }}</td>
                                     <td class="text-end fw-bold">{{ number_format($voucher->net_amount, 2) }}</td>
                                     <td>
                                         <span class="status-badge status-{{ $voucher->status }}">
                                             {{ $voucher->status_label }}
                                         </span>
                                     </td>
+                                    <td>{{ $voucher->creator->name ?? $voucher->created_by_name }}</td>
                                     <td>
                                         <a href="{{ route('receipt-voucher.show', $voucher->id) }}" class="btn btn-info btn-action" title="ดูรายละเอียด">
                                             <i class="fa fa-eye"></i>
@@ -123,11 +135,18 @@
                                                 <button type="submit" class="btn btn-danger btn-action" title="ลบ"><i class="fa fa-trash"></i></button>
                                             </form>
                                         @endif
+                                        @can('receipt-voucher.delete')
+                                            <form action="{{ route('receipt-voucher.force-destroy', $voucher->id) }}" method="POST" class="d-inline" onsubmit="return confirm('ยืนยันการลบถาวร? การดำเนินการนี้ไม่สามารถกู้คืนได้')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger btn-action" title="ลบถาวร"><i class="fa fa-fire"></i></button>
+                                            </form>
+                                        @endcan
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center py-4">ไม่พบข้อมูลใบสำคัญรับ</td>
+                                    <td colspan="8" class="text-center py-4">ไม่พบข้อมูลใบสำคัญรับ</td>
                                 </tr>
                             @endforelse
                         </tbody>

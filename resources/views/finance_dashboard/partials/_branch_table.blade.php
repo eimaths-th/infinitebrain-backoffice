@@ -1,4 +1,4 @@
-<div class="table-responsive">
+﻿<div class="table-responsive">
     <table class="table table-dashboard mb-0">
         <thead>
             <tr>
@@ -9,12 +9,25 @@
         </thead>
         <tbody>
             @forelse($data as $branch)
-                <tr>
+                @php
+                    $detail_url = route('finance-dashboard.branch-detail', [
+                        'type'        => $type ?? 'pv',
+                        'branch_code' => $branch->branch_code,
+                        'period'      => $period ?? 'all',
+                        'year'        => $year ?? date('Y'),
+                        'month'       => $month ?? date('n'),
+                    ]);
+                @endphp
+                <tr class="branch-row-clickable" style="cursor: pointer;" onclick="window.open('{{ $detail_url }}', '_blank');">
                     <td>
                         <span class="badge bg-light text-dark me-1">{{ $branch->branch_code }}</span>
                         {{ $branch->branch_name }}
                     </td>
-                    <td class="text-center">{{ number_format($branch->count) }}</td>
+                    <td class="text-center">
+                        <span class="badge rounded-pill" style="background: {{ ($type ?? 'pv') === 'rv' ? '#059669' : '#3f6ad8' }}; color: #fff;">
+                            {{ number_format($branch->count) }}
+                        </span>
+                    </td>
                     <td class="text-end fw-bold">฿{{ number_format($branch->total, 2) }}</td>
                 </tr>
             @empty
@@ -32,3 +45,10 @@
         </tbody>
     </table>
 </div>
+
+<style>
+    .branch-row-clickable:hover td {
+        background-color: #f0f4ff !important;
+        transition: background-color 0.15s ease;
+    }
+</style>

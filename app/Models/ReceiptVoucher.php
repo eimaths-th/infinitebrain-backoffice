@@ -14,6 +14,7 @@ class ReceiptVoucher extends Model
         'voucher_no',
         'voucher_date',
         'branch_code',
+        'payee_id',
         'receive_from',
         'receive_from_address',
         'receive_from_account_no',
@@ -71,6 +72,11 @@ class ReceiptVoucher extends Model
     ];
 
     // Relationships
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
     public function items()
     {
         return $this->hasMany(ReceiptVoucherItem::class)->orderBy('item_no');

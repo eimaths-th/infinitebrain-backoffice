@@ -1,4 +1,4 @@
-@extends('layouts.main_template')
+﻿@extends('layouts.main_template')
 
 @section('style')
     <style>
@@ -128,7 +128,7 @@
 
         /* ── Filter Card ── */
         .filter-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #059669 100%);
             border: none;
             border-radius: 12px;
             color: #fff;
@@ -298,6 +298,84 @@
     </div>
 
     {{-- ══════════════════════════════════════════ --}}
+    {{-- ROW 1.5: RECEIPT VOUCHER SUMMARY CARDS --}}
+    {{-- ══════════════════════════════════════════ --}}
+    <div class="row g-3 mb-4">
+        {{-- Card 1: ใบสำคัญรับทั้งหมด --}}
+        <div class="col-md-6 col-xl-3">
+            <div class="card dashboard-card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="card-icon" style="background: rgba(118, 75, 162, 0.12); color: #059669;">
+                            <i class="pe-7s-news-paper"></i>
+                        </div>
+                        <div class="text-end">
+                            <div class="card-value" style="color: #059669;">{{ number_format($rv_total_count) }}</div>
+                            <div class="card-label">ใบสำคัญรับเดือนนี้</div>
+                        </div>
+                    </div>
+                    <div class="card-sub">
+                        ยอดรวมสะสมทั้งหมด ฿{{ number_format($rv_total_amount_all, 2) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Card 2: รอดำเนินการ --}}
+        <div class="col-md-6 col-xl-3">
+            <div class="card dashboard-card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="card-icon icon-warning">
+                            <i class="pe-7s-hourglass"></i>
+                        </div>
+                        <div class="text-end">
+                            <div class="card-value text-warning">{{ number_format($rv_pending_count) }}</div>
+                            <div class="card-label">รอดำเนินการ (เดือนนี้)</div>
+                        </div>
+                    </div>
+                    <div class="card-sub">
+                        รอตรวจสอบ {{ $rv_status_counts['pending'] ?? 0 }} |
+                        ตรวจสอบแล้ว {{ $rv_status_counts['verified'] ?? 0 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Card 3: ยอดรับจริง (เดือนปัจจุบัน) --}}
+        <div class="col-md-6 col-xl-3">
+            <div class="card dashboard-card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="card-icon icon-success">
+                            <i class="pe-7s-piggy"></i>
+                        </div>
+                        <div class="text-end">
+                            <div class="card-value text-success">฿{{ number_format($rv_month_amount, 2) }}</div>
+                            <div class="card-label">ยอดรับจริง (เดือน
+                                {{ \App\Models\PayrollPeriod::$thaiMonths[$selected_month] ?? $selected_month }})</div>
+                        </div>
+                    </div>
+                    <div class="card-sub">
+                        เฉพาะรายการที่สถานะเสร็จสิ้น
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Card 4: Placeholder --}}
+        <div class="col-md-6 col-xl-3">
+            <div class="card dashboard-card shadow-sm bg-light">
+                <div class="card-body text-center d-flex align-items-center justify-content-center" style="min-height: 100px;">
+                    <div class="text-muted" style="font-size: 0.85rem;">
+                        <i class="fa fa-info-circle me-1"></i> ระบบใบสำคัญรับ (Receipt Voucher)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ══════════════════════════════════════════ --}}
     {{-- ROW 2: PAYMENT VOUCHER CHARTS --}}
     {{-- ══════════════════════════════════════════ --}}
     <div class="row g-3 mb-4">
@@ -378,15 +456,33 @@
                     <div class="tab-content" id="branchTabContent">
                         {{-- รายเดือน --}}
                         <div class="tab-pane fade show active" id="monthly" role="tabpanel">
-                            @include('finance_dashboard.partials._branch_table', ['data' => $pv_branch_monthly_summary])
+                            @include('finance_dashboard.partials._branch_table', [
+                                'data' => $pv_branch_monthly_summary,
+                                'type' => 'pv',
+                                'period' => 'monthly',
+                                'year' => $selected_year,
+                                'month' => $selected_month
+                            ])
                         </div>
                         {{-- รายปี --}}
                         <div class="tab-pane fade" id="yearly" role="tabpanel">
-                            @include('finance_dashboard.partials._branch_table', ['data' => $pv_branch_yearly_summary])
+                            @include('finance_dashboard.partials._branch_table', [
+                                'data' => $pv_branch_yearly_summary,
+                                'type' => 'pv',
+                                'period' => 'yearly',
+                                'year' => $selected_year,
+                                'month' => $selected_month
+                            ])
                         </div>
                         {{-- ทั้งหมด --}}
                         <div class="tab-pane fade" id="alltime" role="tabpanel">
-                            @include('finance_dashboard.partials._branch_table', ['data' => $pv_branch_summary])
+                            @include('finance_dashboard.partials._branch_table', [
+                                'data' => $pv_branch_summary,
+                                'type' => 'pv',
+                                'period' => 'all',
+                                'year' => $selected_year,
+                                'month' => $selected_month
+                            ])
                         </div>
                     </div>
                 </div>
@@ -436,6 +532,169 @@
                                 @empty
                                     <tr>
                                         <td colspan="5" class="text-center text-muted py-4">ไม่มีข้อมูลใบสำคัญจ่าย</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ══════════════════════════════════════════ --}}
+    {{-- ROW 3.5: RECEIPT VOUCHER CHARTS & TABLES --}}
+    {{-- ══════════════════════════════════════════ --}}
+    <div class="row g-3 mb-4">
+        {{-- Doughnut: สถานะใบสำคัญรับ --}}
+        <div class="col-lg-5">
+            <div class="card shadow-sm" style="border-radius:12px; border:none;">
+                <div class="card-body">
+                    <h6 class="section-header" style="border-bottom-color: #059669;">
+                        <i class="pe-7s-graph3" style="color: #059669;"></i>สถานะใบสำคัญรับ ({{ \App\Models\PayrollPeriod::$thaiMonths[$selected_month] ?? $selected_month }})
+                    </h6>
+                    <div class="chart-wrapper" style="height:260px;">
+                        <canvas id="rvStatusChart"></canvas>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 mt-3 justify-content-center">
+                        @php
+                            $rv_status_chart_colors = [
+                                'draft' => '#6c757d',
+                                'pending' => '#f7b924',
+                                'verified' => '#30b1ff',
+                                'completed' => '#3ac47d',
+                                'rejected' => '#d92550',
+                            ];
+                        @endphp
+                        @foreach (\App\Models\ReceiptVoucher::$statusLabels as $status => $label)
+                            <span class="status-pill bg-light">
+                                <span class="dot"
+                                    style="background: {{ $rv_status_chart_colors[$status] ?? '#ccc' }};"></span>
+                                {{ $label }} ({{ $rv_status_counts[$status] ?? 0 }})
+                            </span>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Bar: ยอดรายเดือน --}}
+        <div class="col-lg-7">
+            <div class="card shadow-sm" style="border-radius:12px; border:none;">
+                <div class="card-body">
+                    <h6 class="section-header" style="border-bottom-color: #059669;">
+                        <i class="pe-7s-graph1" style="color: #059669;"></i>ยอดใบสำคัญรับรายเดือน (6 เดือนย้อนหลัง)
+                    </h6>
+                    <div class="chart-wrapper">
+                        <canvas id="rvMonthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        {{-- RV Branch Summary --}}
+        <div class="col-lg-5">
+            <div class="card shadow-sm" style="border-radius:12px; border:none;">
+                <div class="card-body">
+                    <h6 class="section-header" style="border-bottom-color: #059669;">
+                        <i class="pe-7s-map-marker" style="color: #059669;"></i>ยอดแยกตามสาขา (เฉพาะที่รับแล้ว)
+                    </h6>
+                    <ul class="nav nav-pills nav-justified mb-3 shadow-sm" id="rvBranchTab" role="tablist" style="border-radius: 8px; padding: 2px; background: #f8f9fa;">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active btn-sm" id="rv-monthly-tab" data-bs-toggle="tab"
+                                data-bs-target="#rv-monthly" type="button" role="tab" style="font-size: 0.75rem; border-radius: 6px;">รายเดือน</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link btn-sm" id="rv-yearly-tab" data-bs-toggle="tab" data-bs-target="#rv-yearly"
+                                type="button" role="tab" style="font-size: 0.75rem; border-radius: 6px;">รายปี</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link btn-sm" id="rv-alltime-tab" data-bs-toggle="tab" data-bs-target="#rv-alltime"
+                                type="button" role="tab" style="font-size: 0.75rem; border-radius: 6px;">ทั้งหมด</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="rvBranchTabContent">
+                        {{-- รายเดือน --}}
+                        <div class="tab-pane fade show active" id="rv-monthly" role="tabpanel">
+                            @include('finance_dashboard.partials._branch_table', [
+                                'data' => $rv_branch_monthly_summary,
+                                'type' => 'rv',
+                                'period' => 'monthly',
+                                'year' => $selected_year,
+                                'month' => $selected_month
+                            ])
+                        </div>
+                        {{-- รายปี --}}
+                        <div class="tab-pane fade" id="rv-yearly" role="tabpanel">
+                            @include('finance_dashboard.partials._branch_table', [
+                                'data' => $rv_branch_yearly_summary,
+                                'type' => 'rv',
+                                'period' => 'yearly',
+                                'year' => $selected_year,
+                                'month' => $selected_month
+                            ])
+                        </div>
+                        {{-- ทั้งหมด --}}
+                        <div class="tab-pane fade" id="rv-alltime" role="tabpanel">
+                            @include('finance_dashboard.partials._branch_table', [
+                                'data' => $rv_branch_summary,
+                                'type' => 'rv',
+                                'period' => 'all',
+                                'year' => $selected_year,
+                                'month' => $selected_month
+                            ])
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Recent Receipt Vouchers --}}
+        <div class="col-lg-7">
+            <div class="card shadow-sm" style="border-radius:12px; border:none;">
+                <div class="card-body">
+                    <h6 class="section-header" style="border-bottom-color: #059669;">
+                        <i class="pe-7s-news-paper" style="color: #059669;"></i>ใบสำคัญรับล่าสุด
+                        <a href="{{ route('receipt-voucher.index') }}" class="float-end text-decoration-none"
+                            style="font-size:0.8rem; color: #059669;">
+                            ดูทั้งหมด <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </h6>
+                    <div class="table-responsive">
+                        <table class="table table-dashboard table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>เลขที่</th>
+                                    <th>วันที่</th>
+                                    <th>รับจาก</th>
+                                    <th class="text-end">ยอด</th>
+                                    <th class="text-center">สถานะ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($rv_recent as $voucher)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('receipt-voucher.show', $voucher->id) }}"
+                                                class="text-decoration-none fw-bold" style="color: #059669;">
+                                                {{ $voucher->voucher_no }}
+                                            </a>
+                                        </td>
+                                        <td>{{ optional($voucher->voucher_date)->format('d/m/Y') }}</td>
+                                        <td>{{ Str::limit($voucher->receive_from, 25) }}</td>
+                                        <td class="text-end">฿{{ number_format($voucher->total_amount, 2) }}</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-{{ $voucher->status_color }}">
+                                                {{ $voucher->status_label }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-4">ไม่มีข้อมูลใบสำคัญรับ</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -635,7 +894,7 @@
                 rejected: '#d92550',
                 completed: '#3f6ad8'
             };
-            const INCOME_COLORS = ['#3ac47d', '#f7b924', '#30b1ff', '#d92550', '#764ba2', '#6c757d'];
+            const INCOME_COLORS = ['#3ac47d', '#f7b924', '#30b1ff', '#d92550', '#059669', '#6c757d'];
             const CHART_FONT = {
                 family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
             };
@@ -719,6 +978,88 @@
                             callbacks: {
                                 label: ctx =>
                                     `฿${ctx.raw.toLocaleString('th-TH', {minimumFractionDigits: 2})}`
+                            }
+                        }
+                    }
+                }
+            });
+
+            // ════════════════════════════════════════════
+            // 2.1) RV Status Doughnut
+            // ════════════════════════════════════════════
+            const rvStatusData = @json($rv_status_counts);
+            const rvLabels = @json(\App\Models\ReceiptVoucher::$statusLabels);
+            const RV_STATUS_COLORS = {
+                draft: '#6c757d',
+                pending: '#f7b924',
+                verified: '#30b1ff',
+                completed: '#3ac47d',
+                rejected: '#d92550'
+            };
+
+            new Chart(document.getElementById('rvStatusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(rvStatusData).map(k => rvLabels[k] || k),
+                    datasets: [{
+                        data: Object.values(rvStatusData),
+                        backgroundColor: Object.keys(rvStatusData).map(k => RV_STATUS_COLORS[k] || '#ccc'),
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `${ctx.label}: ${ctx.raw} รายการ`
+                            }
+                        }
+                    }
+                }
+            });
+
+            // ════════════════════════════════════════════
+            // 2.2) RV Monthly Bar
+            // ════════════════════════════════════════════
+            const rvMonthly = @json($rv_monthly_data);
+
+            new Chart(document.getElementById('rvMonthlyChart'), {
+                type: 'bar',
+                data: {
+                    labels: rvMonthly.labels,
+                    datasets: [{
+                        label: 'ยอดเงิน (฿)',
+                        data: rvMonthly.amounts,
+                        backgroundColor: 'rgba(118, 126, 234, 0.7)',
+                        borderColor: '#059669',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: v => '฿' + v.toLocaleString(),
+                                font: CHART_FONT
+                            }
+                        },
+                        x: { ticks: { font: CHART_FONT } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `฿${ctx.raw.toLocaleString('th-TH', {minimumFractionDigits: 2})}`
                             }
                         }
                     }

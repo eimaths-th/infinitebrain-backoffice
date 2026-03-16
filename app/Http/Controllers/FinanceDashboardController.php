@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PaymentVoucher;
+use App\Models\ReceiptVoucher;
 use App\Models\PayrollPeriod;
 use App\Models\Payroll;
 use App\Models\PayrollIncomeItem;
@@ -102,6 +103,85 @@ class FinanceDashboardController extends Controller
         $pv_monthly_data = $this->GetMonthlyVoucherData($selected_year, $selected_month);
 
         // ════════════════════════════════════════════════════
+        // RECEIPT VOUCHER
+        // ════════════════════════════════════════════════════
+
+        // 1) จำนวนแยกตามสถานะ (เฉพาะเดือนที่เลือก)
+        $rv_status_counts = ReceiptVoucher::select('status', DB::raw('COUNT(*) as count'))
+            ->whereYear('voucher_date', $selected_year)
+            ->whereMonth('voucher_date', $selected_month)
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        $rv_total_count = array_sum($rv_status_counts);
+
+        // 2) ยอดรวมทั้งหมด (Global) และ ยอดเดือนที่เลือก
+        $rv_total_amount_all = ReceiptVoucher::sum('total_amount');
+        $rv_month_amount = ReceiptVoucher::whereYear('voucher_date', $selected_year)
+            ->whereMonth('voucher_date', $selected_month)
+            ->where('status', ReceiptVoucher::STATUS_COMPLETED)
+            ->sum('total_amount');
+
+        // 3) จำนวนรอดำเนินการ (เฉพาะเดือนที่เลือก: pending + verified)
+        $rv_pending_count = ($rv_status_counts[ReceiptVoucher::STATUS_PENDING] ?? 0)
+            + ($rv_status_counts[ReceiptVoucher::STATUS_VERIFIED] ?? 0);
+
+        // 4) ยอดแยกตามสาขา (เฉพาะที่รับแล้ว/เสร็จสิ้น)
+        // 4.1) ทั้งหมด
+        $rv_branch_summary = ReceiptVoucher::select(
+            'branch_code',
+            DB::raw('COUNT(*) as count'),
+            DB::raw('SUM(total_amount) as total')
+        )
+            ->where('status', ReceiptVoucher::STATUS_COMPLETED)
+            ->groupBy('branch_code')
+            ->get()
+            ->map(function ($item) {
+                $item->branch_name = ReceiptVoucher::$branchCodes[$item->branch_code] ?? $item->branch_code;
+                return $item;
+            });
+
+        // 4.2) เฉพาะเดือนที่เลือก
+        $rv_branch_monthly_summary = ReceiptVoucher::select(
+            'branch_code',
+            DB::raw('COUNT(*) as count'),
+            DB::raw('SUM(total_amount) as total')
+        )
+            ->where('status', ReceiptVoucher::STATUS_COMPLETED)
+            ->whereYear('voucher_date', $selected_year)
+            ->whereMonth('voucher_date', $selected_month)
+            ->groupBy('branch_code')
+            ->get()
+            ->map(function ($item) {
+                $item->branch_name = ReceiptVoucher::$branchCodes[$item->branch_code] ?? $item->branch_code;
+                return $item;
+            });
+
+        // 4.3) เฉพาะปีที่เลือก
+        $rv_branch_yearly_summary = ReceiptVoucher::select(
+            'branch_code',
+            DB::raw('COUNT(*) as count'),
+            DB::raw('SUM(total_amount) as total')
+        )
+            ->where('status', ReceiptVoucher::STATUS_COMPLETED)
+            ->whereYear('voucher_date', $selected_year)
+            ->groupBy('branch_code')
+            ->get()
+            ->map(function ($item) {
+                $item->branch_name = ReceiptVoucher::$branchCodes[$item->branch_code] ?? $item->branch_code;
+                return $item;
+            });
+
+        // 5) รายการล่าสุด 5 รายการ
+        $rv_recent = ReceiptVoucher::orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        // 6) ยอดรายเดือน 6 เดือนย้อนหลัง
+        $rv_monthly_data = $this->GetMonthlyReceiptVoucherData($selected_year, $selected_month);
+
+        // ════════════════════════════════════════════════════
         // PAYROLL
         // ════════════════════════════════════════════════════
 
@@ -181,6 +261,17 @@ class FinanceDashboardController extends Controller
             'pv_branch_yearly_summary',
             'pv_recent',
             'pv_monthly_data',
+            // Receipt Voucher
+            'rv_status_counts',
+            'rv_total_count',
+            'rv_total_amount_all',
+            'rv_month_amount',
+            'rv_pending_count',
+            'rv_branch_summary',
+            'rv_branch_monthly_summary',
+            'rv_branch_yearly_summary',
+            'rv_recent',
+            'rv_monthly_data',
             // Payroll
             'pr_status_counts',
             'pr_selected_period',
@@ -223,6 +314,61 @@ class FinanceDashboardController extends Controller
     }
 
     /**
+     * แสดงรายละเอียดรายการในสาขา (สำหรับ Drill-down)
+     */
+    public function branchDetail(Request $request)
+    {
+        $type = $request->query('type'); // 'pv' or 'rv'
+        $branch_code = $request->query('branch_code');
+        $period = $request->query('period', 'monthly'); // 'monthly', 'yearly', 'all'
+        $year = (int) $request->get('year', date('Y'));
+        $month = (int) $request->get('month', date('n'));
+
+        $branch_name = '';
+        $vouchers = [];
+
+        if ($type === 'rv') {
+            $branch_name = ReceiptVoucher::$branchCodes[$branch_code] ?? $branch_code;
+            $query = ReceiptVoucher::where('branch_code', $branch_code)
+                ->where('status', ReceiptVoucher::STATUS_COMPLETED);
+
+            if ($period === 'monthly') {
+                $query->whereYear('voucher_date', $year)->whereMonth('voucher_date', $month);
+            } elseif ($period === 'yearly') {
+                $query->whereYear('voucher_date', $year);
+            }
+
+            $vouchers = $query->orderBy('voucher_date', 'desc')->get();
+            $title = "รายละเอียดใบสำคัญรับ: $branch_name";
+        } else {
+            // Default to PV
+            $branch_name = PaymentVoucher::$branchCodes[$branch_code] ?? $branch_code;
+            $query = PaymentVoucher::where('branch_code', $branch_code)
+                ->where('status', PaymentVoucher::STATUS_COMPLETED);
+
+            if ($period === 'monthly') {
+                $query->whereYear('voucher_date', $year)->whereMonth('voucher_date', $month);
+            } elseif ($period === 'yearly') {
+                $query->whereYear('voucher_date', $year);
+            }
+
+            $vouchers = $query->orderBy('voucher_date', 'desc')->get();
+            $title = "รายละเอียดใบสำคัญจ่าย: $branch_name";
+        }
+
+        return view('finance_dashboard.branch_detail', compact(
+            'vouchers',
+            'title',
+            'type',
+            'branch_code',
+            'branch_name',
+            'period',
+            'year',
+            'month'
+        ));
+    }
+
+    /**
      * ดึงยอด Payroll รายเดือน 6 เดือนย้อนหลัง
      */
     private function GetMonthlyPayrollData(int $year, int $month): array
@@ -260,6 +406,35 @@ class FinanceDashboardController extends Controller
             'net_pays'   => $net_pays,
             'incomes'    => $incomes,
             'deductions' => $deductions,
+        ];
+    }
+
+    /**
+     * ดึงยอด Receipt Voucher รายเดือน 6 เดือนย้อนหลัง
+     */
+    private function GetMonthlyReceiptVoucherData(int $year, int $month): array
+    {
+        $labels = [];
+        $amounts = [];
+        $counts = [];
+
+        $start_date = Carbon::create($year, $month, 1)->subMonths(5)->startOfMonth();
+
+        for ($i = 0; $i < 6; $i++) {
+            $current_date = $start_date->copy()->addMonths($i);
+            $labels[] = $current_date->locale('th')->translatedFormat('M Y');
+
+            $query = ReceiptVoucher::whereYear('voucher_date', $current_date->year)
+                ->whereMonth('voucher_date', $current_date->month);
+
+            $amounts[] = (float) $query->sum('total_amount');
+            $counts[] = (int) $query->count();
+        }
+
+        return [
+            'labels'  => $labels,
+            'amounts' => $amounts,
+            'counts'  => $counts,
         ];
     }
 }
