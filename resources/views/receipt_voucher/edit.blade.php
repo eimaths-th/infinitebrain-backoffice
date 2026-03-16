@@ -264,10 +264,10 @@
                                         <label class="form-label fw-bold small text-muted">ไฟล์ที่แนบไว้เดิม:</label>
                                         @foreach($voucher->attachments as $att)
                                             <div class="existing-attachment shadow-sm">
-                                                <i class="fa {{ str_contains($att->file_type, 'pdf') ? 'fa-file-pdf-o text-danger' : 'fa-image text-primary' }} fa-lg me-3"></i>
+                                                <i class="fa {{ $att->isPdf() ? 'fa-file-pdf-o text-danger' : ($att->isImage() ? 'fa-image text-primary' : 'fa-file-o') }} fa-lg me-3"></i>
                                                 <span class="flex-grow-1 text-truncate">{{ $att->original_name }}</span>
-                                                <small class="text-muted mx-3">{{ number_format($att->file_size / 1024, 2) }} KB</small>
-                                                <a href="{{ asset('storage/' . $att->file_path) }}" target="_blank" class="btn btn-sm btn-link"><i class="fa fa-eye"></i> ดูไฟล์</a>
+                                                <small class="text-muted mx-3">{{ $att->file_size_formatted }}</small>
+                                                <a href="{{ $att->file_url }}" target="_blank" class="btn btn-sm btn-link"><i class="fa fa-eye"></i> ดูไฟล์</a>
                                             </div>
                                         @endforeach
                                     @endif
