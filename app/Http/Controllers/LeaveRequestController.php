@@ -325,6 +325,46 @@ class LeaveRequestController extends Controller
             ->with('success', 'แก้ไขใบลาเรียบร้อยแล้ว');
     }
 
+    public function AddAttachments(Request $request, $id)
+    {
+        $leave_request = LeaveRequest::findOrFail($id);
+        $user = Auth::user();
+
+        // ตรวจสอบสิทธิ์: ต้องเป็นเจ้าของใบลา หรือมีสิทธิ์จัดการ หรือมี role super-admin/admin
+        $can_manage = $user->hasPermissionTo('leave-requests.view-all') || $user->hasAnyRole(['super-admin', 'admin']);
+        if ($leave_request->user_id !== $user->id && !$can_manage) {
+            return back()->with('error', 'ไม่มีสิทธิ์เพิ่มเอกสารในใบลานี้');
+        }
+
+        if (!$leave_request->IsPending()) {
+            return back()->with('error', 'ไม่สามารถเพิ่มเอกสารในใบลาที่พิจารณาแล้ว');
+        }
+
+        $request->validate([
+            'attachments' => 'required|array',
+            'attachments.*' => 'required|file|max:10240', // 10MB
+        ]);
+
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $original_name = $file->getClientOriginalName();
+                $file_name = time() . '_' . $user->id . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file_path = $file->storeAs('leave_attachments', $file_name, 'public');
+
+                LeaveRequestAttachment::create([
+                    'leave_request_id' => $leave_request->id,
+                    'file_name' => $file_name,
+                    'original_name' => $original_name,
+                    'file_path' => $file_path,
+                    'file_type' => $file->getMimeType(),
+                    'file_size' => $file->getSize(),
+                ]);
+            }
+        }
+
+        return back()->with('success', 'เพิ่มเอกสารเรียบร้อยแล้ว');
+    }
+
     public function PendingApprovals()
     {
         $user = Auth::user();
