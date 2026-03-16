@@ -219,22 +219,52 @@
         .timeline-bars {
             flex: 1;
             display: flex;
-            height: 16px;
-            gap: 1px;
+            position: relative;
+            background: #f8f9fa;
+            border-radius: 4px;
+            flex-direction: column;
+            gap: 2px;
+            padding: 2px 0;
+        }
+
+        .timeline-bars-inner {
+            position: relative;
+            height: 18px;
+            display: flex;
+            width: 100%;
+        }
+
+        .timeline-month-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
         }
 
         .timeline-month {
             flex: 1;
+            border-right: 1px solid #e9ecef;
             position: relative;
+        }
+
+        .timeline-month:last-child {
+            border-right: none;
         }
 
         .timeline-bar {
             position: absolute;
+            height: 16px;
             top: 1px;
-            bottom: 1px;
-            border-radius: 3px;
-            left: 0;
-            right: 0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: white;
+            font-weight: 600;
+            z-index: 1;
         }
 
         .timeline-months-header {
@@ -549,37 +579,50 @@
                         $studentCode = $groupedData->first()->std->code ?? 'N/A';
                         $studentName = $groupedData->first()->std->nick_name ?? 'Unknown';
 
-                        $monthBars = [];
-                        for ($m = 1; $m <= 12; $m++) {
-                            $monthBars[$m] = [];
-                        }
-
+                        // Group bars by subject
+                        $timelineBars = [];
                         foreach ($groupedData as $data1) {
-                            $period = $data1->period;
-                            $group = $data1->group;
-
-                            $periods = explode('-', str_replace(' - ', '-', $period));
-                            if (count($periods) >= 4) {
-                                $startYear = intval($periods[0]);
-                                $startMonth = intval($periods[1]);
-                                $endYear = intval($periods[2]);
-                                $endMonth = intval($periods[3]);
-                            } elseif (count($periods) >= 2) {
-                                $startYear = intval($periods[0]);
-                                $startMonth = intval($periods[1]);
-                                $endYear = $startYear;
-                                $endMonth = $startMonth;
+                            $period = explode(' - ', str_replace(' - ', '-', $data1->period));
+                            if (count($period) == 1) {
+                                $periods = explode('-', $data1->period);
+                                if (count($periods) >= 2) {
+                                    $startYear = intval($periods[0]);
+                                    $startMonth = intval($periods[1]);
+                                    $endYear = count($periods) >= 4 ? intval($periods[2]) : $startYear;
+                                    $endMonth = count($periods) >= 4 ? intval($periods[3]) : $startMonth;
+                                } else {
+                                    continue;
+                                }
                             } else {
-                                continue;
+                                try {
+                                    $startDate = Carbon::parse($period[0]);
+                                    $endDate = Carbon::parse($period[1]);
+                                    $startMonth = $startDate->month;
+                                    $endMonth = $endDate->month;
+                                    $startYear = $startDate->year;
+                                    $endYear = $endDate->year;
+                                } catch (\Exception $e) {
+                                    continue;
+                                }
                             }
 
-                            for ($m = 1; $m <= 12; $m++) {
-                                $checkDate = Carbon::create($year, $m, 15);
-                                $startDate = Carbon::create($startYear, $startMonth, 1);
-                                $endDate = Carbon::create($endYear, $endMonth, 1)->endOfMonth();
-                                if ($checkDate->between($startDate, $endDate)) {
-                                    $monthBars[$m][] = $group;
+                            $group = $data1->group;
+                            $groupMark = $group === 'CHN' ? 'C' : ($group === 'Sci' ? 'S' : $group);
+
+                            $yearInt = (int) $year;
+                            if (($startYear <= $yearInt && $endYear >= $yearInt)) {
+                                $barStart = $startYear < $yearInt ? 1 : $startMonth;
+                                $barEnd = $endYear > $yearInt ? 12 : $endMonth;
+
+                                if (!isset($timelineBars[$groupMark])) {
+                                    $timelineBars[$groupMark] = [];
                                 }
+
+                                $timelineBars[$groupMark][] = [
+                                    'start' => $barStart,
+                                    'end' => $barEnd,
+                                    'group' => $groupMark,
+                                ];
                             }
                         }
                     @endphp
@@ -589,14 +632,25 @@
                             <div class="student-code">{{ $studentCode }}</div>
                         </div>
                         <div class="timeline-bars">
-                            @for ($m = 1; $m <= 12; $m++)
-                                <div class="timeline-month">
-                                    @if (!empty($monthBars[$m]))
-                                        @php $firstGroup = $monthBars[$m][0]; @endphp
-                                        <div class="timeline-bar group-{{ $firstGroup }}"></div>
-                                    @endif
+                            @foreach ($timelineBars as $groupMark => $bars)
+                                <div class="timeline-bars-inner">
+                                    <div class="timeline-month-grid">
+                                        @for ($m = 1; $m <= 12; $m++)
+                                            <div class="timeline-month"></div>
+                                        @endfor
+                                    </div>
+                                    @foreach ($bars as $bar)
+                                        @php
+                                            $left = (($bar['start'] - 1) / 12) * 100;
+                                            $width = (($bar['end'] - $bar['start'] + 1) / 12) * 100;
+                                        @endphp
+                                        <div class="timeline-bar group-{{ $bar['group'] }}"
+                                            style="left: {{ $left }}%; width: {{ $width }}%;">
+                                            {{ $bar['group'] }}
+                                        </div>
+                                    @endforeach
                                 </div>
-                            @endfor
+                            @endforeach
                         </div>
                     </div>
                 @endforeach
