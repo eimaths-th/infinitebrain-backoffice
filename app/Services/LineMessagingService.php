@@ -151,10 +151,8 @@ class LineMessagingService
 
         switch ($status) {
             case \App\Models\ReceiptVoucher::STATUS_PENDING:
-                $message = "🆕 มีใบสำคัญรับรอตรวจสอบ (Pending)";
-                $targetGroup = config('services.line_messaging.manager_rv_group_id');
-                $icon = "🟡";
-                break;
+                // No notification for pending status as per user request
+                return false;
             case \App\Models\ReceiptVoucher::STATUS_VERIFIED:
                 $message = "✅ ใบสำคัญรับผ่านการตรวจสอบแล้ว (Verified)";
                 $targetGroup = config('services.line_messaging.manager_rv_group_id');
