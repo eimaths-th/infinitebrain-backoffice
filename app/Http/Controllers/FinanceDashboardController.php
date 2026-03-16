@@ -47,12 +47,44 @@ class FinanceDashboardController extends Controller
             + ($pv_status_counts[PaymentVoucher::STATUS_REVIEWED] ?? 0);
 
         // 4) ยอดแยกตามสาขา (เฉพาะที่จ่ายแล้ว)
+        // 4.1) ทั้งหมด
         $pv_branch_summary = PaymentVoucher::select(
             'branch_code',
             DB::raw('COUNT(*) as count'),
             DB::raw('SUM(total_amount) as total')
         )
             ->where('status', PaymentVoucher::STATUS_COMPLETED)
+            ->groupBy('branch_code')
+            ->get()
+            ->map(function ($item) {
+                $item->branch_name = PaymentVoucher::$branchCodes[$item->branch_code] ?? $item->branch_code;
+                return $item;
+            });
+
+        // 4.2) เฉพาะเดือนที่เลือก
+        $pv_branch_monthly_summary = PaymentVoucher::select(
+            'branch_code',
+            DB::raw('COUNT(*) as count'),
+            DB::raw('SUM(total_amount) as total')
+        )
+            ->where('status', PaymentVoucher::STATUS_COMPLETED)
+            ->whereYear('voucher_date', $selected_year)
+            ->whereMonth('voucher_date', $selected_month)
+            ->groupBy('branch_code')
+            ->get()
+            ->map(function ($item) {
+                $item->branch_name = PaymentVoucher::$branchCodes[$item->branch_code] ?? $item->branch_code;
+                return $item;
+            });
+
+        // 4.3) เฉพาะปีที่เลือก
+        $pv_branch_yearly_summary = PaymentVoucher::select(
+            'branch_code',
+            DB::raw('COUNT(*) as count'),
+            DB::raw('SUM(total_amount) as total')
+        )
+            ->where('status', PaymentVoucher::STATUS_COMPLETED)
+            ->whereYear('voucher_date', $selected_year)
             ->groupBy('branch_code')
             ->get()
             ->map(function ($item) {
@@ -140,6 +172,8 @@ class FinanceDashboardController extends Controller
             'pv_month_amount',
             'pv_pending_count',
             'pv_branch_summary',
+            'pv_branch_monthly_summary',
+            'pv_branch_yearly_summary',
             'pv_recent',
             'pv_monthly_data',
             // Payroll

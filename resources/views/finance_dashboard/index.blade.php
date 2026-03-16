@@ -360,38 +360,34 @@
                     <h6 class="section-header">
                         <i class="pe-7s-map-marker"></i>ยอดแยกตามสาขา (เฉพาะที่จ่ายแล้ว)
                     </h6>
-                    <div class="table-responsive">
-                        <table class="table table-dashboard mb-0">
-                            <thead>
-                                <tr>
-                                    <th>สาขา</th>
-                                    <th class="text-center">จำนวน</th>
-                                    <th class="text-end">ยอดรวม</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($pv_branch_summary as $branch)
-                                    <tr>
-                                        <td>
-                                            <span class="badge bg-light text-dark me-1">{{ $branch->branch_code }}</span>
-                                            {{ $branch->branch_name }}
-                                        </td>
-                                        <td class="text-center">{{ number_format($branch->count) }}</td>
-                                        <td class="text-end fw-bold">฿{{ number_format($branch->total, 2) }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="3" class="text-center text-muted py-3">ไม่มีข้อมูล</td>
-                                    </tr>
-                                @endforelse
-                                <tr>
-                                    <td colspan="1" class="text-end fw-bold">รวมทั้งหมด</td>
-                                    <td></td>
-                                    <td class="text-end fw-bold">฿{{ number_format($pv_branch_summary->sum('total'), 2) }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <ul class="nav nav-pills nav-justified mb-3 shadow-sm" id="branchTab" role="tablist" style="border-radius: 8px; padding: 2px; background: #f8f9fa;">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active btn-sm" id="monthly-tab" data-bs-toggle="tab"
+                                data-bs-target="#monthly" type="button" role="tab" style="font-size: 0.75rem; border-radius: 6px;">รายเดือน</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link btn-sm" id="yearly-tab" data-bs-toggle="tab" data-bs-target="#yearly"
+                                type="button" role="tab" style="font-size: 0.75rem; border-radius: 6px;">รายปี</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link btn-sm" id="alltime-tab" data-bs-toggle="tab" data-bs-target="#alltime"
+                                type="button" role="tab" style="font-size: 0.75rem; border-radius: 6px;">ทั้งหมด</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="branchTabContent">
+                        {{-- รายเดือน --}}
+                        <div class="tab-pane fade show active" id="monthly" role="tabpanel">
+                            @include('finance_dashboard.partials._branch_table', ['data' => $pv_branch_monthly_summary])
+                        </div>
+                        {{-- รายปี --}}
+                        <div class="tab-pane fade" id="yearly" role="tabpanel">
+                            @include('finance_dashboard.partials._branch_table', ['data' => $pv_branch_yearly_summary])
+                        </div>
+                        {{-- ทั้งหมด --}}
+                        <div class="tab-pane fade" id="alltime" role="tabpanel">
+                            @include('finance_dashboard.partials._branch_table', ['data' => $pv_branch_summary])
+                        </div>
                     </div>
                 </div>
             </div>
