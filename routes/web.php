@@ -143,6 +143,12 @@ Route::get('/finance-dashboard/branch-detail', [FinanceDashboardController::clas
     ->name('finance-dashboard.branch-detail')
     ->middleware('auth');
 
+// Financial Performance Routes (ผลประกอบการ)
+Route::middleware(['auth'])->prefix('performance')->name('performance.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Finance\PerformanceController::class, 'index'])->name('index');
+    Route::get('/monthly/{year}/{month}', [\App\Http\Controllers\Finance\PerformanceController::class, 'monthly'])->name('monthly');
+});
+
 Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')->group(function () {
     Route::get('/', [PaymentVoucherController::class, 'index'])->name('index');
     Route::get('/create', [PaymentVoucherController::class, 'create'])->name('create');
