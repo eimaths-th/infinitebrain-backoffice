@@ -44,6 +44,8 @@ return [
         'approver_group_id' => env('LINE_APPROVER_GROUP_ID'),
         'manager_group_id' => env('LINE_MANAGER_GROUP_ID'),
         'system_test_group_id' => env('LINE_SYSTEM_TEST_GROUP_ID'),
+        'manager_rv_group_id' => env('LINE_MANAGER_RV_GROUP_ID'),
+        'system_test_rv_group_id' => env('LINE_SYSTEM_TEST_RV_GROUP_ID'),
     ],
 
     'libreoffice' => [

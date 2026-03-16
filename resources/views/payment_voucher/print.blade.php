@@ -398,7 +398,9 @@
                     <tr>
                         <td class="center">{{ $voucher->items->count() + 1 }}</td>
                         <td class="text-red">
-                            ภาษีเงินได้หัก ณ ที่จ่าย {{ $voucher->withholding_tax_rate + 0 }} %
+                            ภาษีเงินได้หัก ณ ที่จ่าย @if ($voucher->withholding_tax_rate > 0)
+                                {{ $voucher->withholding_tax_rate + 0 }} %
+                            @endif
                         </td>
                         <td class="right text-red">
                             -{{ number_format($voucher->withholding_tax_amount, 2) }}

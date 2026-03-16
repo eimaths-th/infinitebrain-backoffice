@@ -191,7 +191,7 @@
                         </div>
                         <div class="col-auto">
                             <button type="submit" class="btn btn-sm btn-light">
-                                <i class="fa fa-filter me-1"></i>กรอง
+                                <i class="fa fa-filter me-1"></i>ค้นหา
                             </button>
                         </div>
                     </form>
@@ -214,11 +214,11 @@
                         </div>
                         <div class="text-end">
                             <div class="card-value text-primary">{{ number_format($pv_total_count) }}</div>
-                            <div class="card-label">ใบสำคัญจ่ายทั้งหมด</div>
+                            <div class="card-label">ใบสำคัญจ่ายเดือนนี้</div>
                         </div>
                     </div>
                     <div class="card-sub">
-                        ยอดรวม ฿{{ number_format($pv_total_amount, 2) }}
+                        ยอดรวมสะสมทั้งหมด ฿{{ number_format($pv_total_amount_all, 2) }}
                     </div>
                 </div>
             </div>
@@ -234,7 +234,7 @@
                         </div>
                         <div class="text-end">
                             <div class="card-value text-warning">{{ number_format($pv_pending_count) }}</div>
-                            <div class="card-label">รอดำเนินการ</div>
+                            <div class="card-label">รอดำเนินการ (เดือนนี้)</div>
                         </div>
                     </div>
                     <div class="card-sub">
@@ -255,20 +255,20 @@
                         </div>
                         <div class="text-end">
                             <div class="card-value text-success">
-                                @if ($pr_latest_period)
-                                    ฿{{ number_format($pr_latest_period->total_net_pay, 0) }}
+                                @if ($pr_selected_period)
+                                    ฿{{ number_format($pr_selected_period->total_net_pay, 0) }}
                                 @else
                                     -
                                 @endif
                             </div>
-                            <div class="card-label">เงินเดือนงวดล่าสุด</div>
+                            <div class="card-label">เงินเดือนงวดนี้</div>
                         </div>
                     </div>
                     <div class="card-sub">
-                        @if ($pr_latest_period)
-                            {{ $pr_latest_period->period_name }}
+                        @if ($pr_selected_period)
+                            {{ $pr_selected_period->period_name }}
                         @else
-                            ไม่มีข้อมูลงวด
+                            ไม่มีข้อมูลงวดนี้
                         @endif
                     </div>
                 </div>
@@ -306,7 +306,7 @@
             <div class="card shadow-sm" style="border-radius:12px; border:none;">
                 <div class="card-body">
                     <h6 class="section-header">
-                        <i class="pe-7s-graph3"></i>สถานะใบสำคัญจ่าย
+                        <i class="pe-7s-graph3"></i>สถานะใบสำคัญจ่าย ({{ \App\Models\PayrollPeriod::$thaiMonths[$selected_month] ?? $selected_month }})
                     </h6>
                     <div class="chart-wrapper" style="height:260px;">
                         <canvas id="pvStatusChart"></canvas>
@@ -456,8 +456,8 @@
                 <div class="card-body">
                     <h6 class="section-header">
                         <i class="pe-7s-graph3"></i>รายได้แยกประเภท
-                        @if ($pr_latest_period)
-                            <small class="text-muted">({{ $pr_latest_period->period_name }})</small>
+                        @if ($pr_selected_period)
+                            <small class="text-muted">({{ $pr_selected_period->period_name }})</small>
                         @endif
                     </h6>
                     @if (count($pr_income_breakdown) > 0)
@@ -500,27 +500,27 @@
     {{-- ══════════════════════════════════════════ --}}
     {{-- ROW 5: PAYROLL LATEST PERIOD DETAIL --}}
     {{-- ══════════════════════════════════════════ --}}
-    @if ($pr_latest_period)
+    @if ($pr_selected_period)
         <div class="row g-3 mb-4">
             <div class="col-lg-5">
                 <div class="card shadow-sm" style="border-radius:12px; border:none;">
                     <div class="card-body">
                         <h6 class="section-header">
-                            <i class="pe-7s-cash"></i>งวดล่าสุด: {{ $pr_latest_period->period_name }}
+                            <i class="pe-7s-cash"></i>งวดที่เลือก: {{ $pr_selected_period->period_name }}
                         </h6>
                         <div class="mb-3">
-                            {!! $pr_latest_period->GetStatusBadge() !!}
+                            {!! $pr_selected_period->GetStatusBadge() !!}
                             <span class="text-muted ms-2" style="font-size:0.82rem;">
-                                {{ optional($pr_latest_period->start_date)->format('d/m/Y') }}
-                                — {{ optional($pr_latest_period->end_date)->format('d/m/Y') }}
+                                {{ optional($pr_selected_period->start_date)->format('d/m/Y') }}
+                                — {{ optional($pr_selected_period->end_date)->format('d/m/Y') }}
                             </span>
                         </div>
 
                         {{-- Progress: Income → Deduction → Net --}}
                         @php
-                            $total_income_val = (float) $pr_latest_period->total_income;
-                            $total_deduction_val = (float) $pr_latest_period->total_deduction;
-                            $total_net_val = (float) $pr_latest_period->total_net_pay;
+                            $total_income_val = (float) $pr_selected_period->total_income;
+                            $total_deduction_val = (float) $pr_selected_period->total_deduction;
+                            $total_net_val = (float) $pr_selected_period->total_net_pay;
                             $income_pct = $total_income_val > 0 ? 100 : 0;
                             $deduction_pct =
                                 $total_income_val > 0 ? round(($total_deduction_val / $total_income_val) * 100, 1) : 0;

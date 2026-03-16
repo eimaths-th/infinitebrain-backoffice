@@ -141,4 +141,58 @@ class LineMessagingService
 
         return $this->Send($content, $targetGroup, $this->channel_access_token_finance);
     }
+
+    public function SendReceiptVoucherNotification($voucher, $status, $isTest = false): bool
+    {
+        $message = "";
+        $targetGroup = null;
+        $icon = "📝";
+        $all = false;
+
+        switch ($status) {
+            case \App\Models\ReceiptVoucher::STATUS_PENDING:
+                $message = "🆕 มีใบสำคัญรับรอตรวจสอบ (Pending)";
+                $targetGroup = config('services.line_messaging.manager_rv_group_id');
+                $icon = "🟡";
+                break;
+            case \App\Models\ReceiptVoucher::STATUS_VERIFIED:
+                $message = "✅ ใบสำคัญรับผ่านการตรวจสอบแล้ว (Verified)";
+                $targetGroup = config('services.line_messaging.manager_rv_group_id');
+                $icon = "🔵";
+                break;
+            case \App\Models\ReceiptVoucher::STATUS_COMPLETED:
+                $message = "🎉 ใบสำคัญรับดำเนินการเสร็จสิ้น (Completed)";
+                $targetGroup = config('services.line_messaging.manager_rv_group_id');
+                $icon = "🟢";
+                break;
+            case \App\Models\ReceiptVoucher::STATUS_REJECTED:
+                $message = "❌ ใบสำคัญรับถูกปฏิเสธ (Rejected)";
+                $targetGroup = config('services.line_messaging.manager_rv_group_id');
+                break;
+            default:
+                return false;
+        }
+
+        // Test Mode Override
+        if ($isTest) {
+            $targetGroup = config('services.line_messaging.system_test_rv_group_id');
+            $message = "[TEST] " . $message;
+        }
+
+        $formattedAmount = number_format($voucher->net_amount, 2);
+
+        $content = "{$icon} {$message}\n";
+        $content .= "เลขที่: {$voucher->voucher_no}\n";
+        $content .= "รับจาก: {$voucher->receive_from}\n";
+        $content .= "จำนวนสุทธิ: {$formattedAmount} บาท\n";
+        $content .= "โดย: {$voucher->created_by_name}\n";
+
+        if ($status === \App\Models\ReceiptVoucher::STATUS_REJECTED && $voucher->verify_remark) {
+            $content .= "เหตุผล: {$voucher->verify_remark}\n";
+        }
+
+        $content .= "\n🔗 ดูรายละเอียด: " . route('receipt-voucher.show', $voucher->id);
+
+        return $this->Send($content, $targetGroup, $this->channel_access_token_finance);
+    }
 }

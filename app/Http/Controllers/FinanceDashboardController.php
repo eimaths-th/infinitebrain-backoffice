@@ -26,23 +26,24 @@ class FinanceDashboardController extends Controller
         // PAYMENT VOUCHER
         // ════════════════════════════════════════════════════
 
-        // 1) จำนวนแยกตามสถานะ
+        // 1) จำนวนแยกตามสถานะ (เฉพาะเดือนที่เลือก)
         $pv_status_counts = PaymentVoucher::select('status', DB::raw('COUNT(*) as count'))
+            ->whereYear('voucher_date', $selected_year)
+            ->whereMonth('voucher_date', $selected_month)
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
 
         $pv_total_count = array_sum($pv_status_counts);
 
-        // 2) ยอดรวมทั้งหมด + ยอดเดือนที่เลือก
-        $pv_total_amount = PaymentVoucher::sum('total_amount');
-
+        // 2) ยอดรวมทั้งหมด (Global) และ ยอดเดือนที่เลือก
+        $pv_total_amount_all = PaymentVoucher::sum('total_amount');
         $pv_month_amount = PaymentVoucher::whereYear('voucher_date', $selected_year)
             ->whereMonth('voucher_date', $selected_month)
             ->where('status', PaymentVoucher::STATUS_COMPLETED)
             ->sum('total_amount');
 
-        // 3) จำนวนรอดำเนินการ (pending + reviewed)
+        // 3) จำนวนรอดำเนินการ (เฉพาะเดือนที่เลือก: pending + reviewed)
         $pv_pending_count = ($pv_status_counts[PaymentVoucher::STATUS_PENDING] ?? 0)
             + ($pv_status_counts[PaymentVoucher::STATUS_REVIEWED] ?? 0);
 
@@ -104,21 +105,22 @@ class FinanceDashboardController extends Controller
         // PAYROLL
         // ════════════════════════════════════════════════════
 
-        // 1) จำนวนงวดแยกสถานะ
+        // 1) จำนวนงวดแยกสถานะ (เฉพาะปีที่เลือก)
+        $pr_year_be = $selected_year + 543;
         $pr_status_counts = PayrollPeriod::select('status', DB::raw('COUNT(*) as count'))
+            ->where('year', $pr_year_be)
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
 
-        // 2) งวดล่าสุด (เฉพาะรายเดือน)
-        $pr_latest_period = PayrollPeriod::with('payrolls')
+        // 2) งวดของเดือนที่เลือก (เฉพาะรายเดือน)
+        $pr_selected_period = PayrollPeriod::with('payrolls')
             ->where('frequency', 'monthly')
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
-            ->orderBy('created_at', 'desc')
+            ->where('year', $pr_year_be)
+            ->where('month', $selected_month)
             ->first();
 
-        // 3) 10 งวดล่าสุด (เฉพาะรายเดือน)
+        // 3) 10 งวดล่าสุด (Global)
         $pr_recent_periods = PayrollPeriod::orderBy('year', 'desc')
             ->where('frequency', 'monthly')
             ->orderBy('month', 'desc')
@@ -126,29 +128,32 @@ class FinanceDashboardController extends Controller
             ->take(10)
             ->get();
 
-        // 4) จำนวนพนักงานทั้งหมด (unique)
-        $pr_employee_count = Payroll::distinct('user_id')->count('user_id');
-
-        // 5) จำนวนพนักงานแยกประเภท
-        $pr_employee_types = Payroll::select('employee_type', DB::raw('COUNT(DISTINCT user_id) as count'))
-            ->groupBy('employee_type')
-            ->pluck('count', 'employee_type')
-            ->toArray();
-
-        // 6) รายได้แยกประเภท (งวดล่าสุด) — สำหรับ Doughnut Chart
+        // 4) จำนวนพนักงาน (เฉพาะงวดที่เลือก)
+        $pr_employee_count = 0;
+        $pr_employee_types = [];
         $pr_income_breakdown = [];
         $pr_deduction_breakdown = [];
 
-        if ($pr_latest_period) {
-            $latest_payroll_ids = $pr_latest_period->payrolls()->pluck('id');
+        if ($pr_selected_period) {
+            $pr_employee_count = $pr_selected_period->payrolls()->distinct('user_id')->count('user_id');
 
-            $pr_income_breakdown = PayrollIncomeItem::whereIn('payroll_id', $latest_payroll_ids)
+            // 5) จำนวนพนักงานแยกประเภท (เฉพาะงวดที่เลือก)
+            $pr_employee_types = $pr_selected_period->payrolls()
+                ->select('employee_type', DB::raw('COUNT(DISTINCT user_id) as count'))
+                ->groupBy('employee_type')
+                ->pluck('count', 'employee_type')
+                ->toArray();
+
+            // 6) รายได้แยกประเภท (เฉพาะงวดที่เลือก)
+            $selected_payroll_ids = $pr_selected_period->payrolls()->pluck('id');
+
+            $pr_income_breakdown = PayrollIncomeItem::whereIn('payroll_id', $selected_payroll_ids)
                 ->select('income_type', DB::raw('SUM(amount * quantity) as total'))
                 ->groupBy('income_type')
                 ->pluck('total', 'income_type')
                 ->toArray();
 
-            $pr_deduction_breakdown = PayrollDeductionItem::whereIn('payroll_id', $latest_payroll_ids)
+            $pr_deduction_breakdown = PayrollDeductionItem::whereIn('payroll_id', $selected_payroll_ids)
                 ->select('deduction_type', DB::raw('SUM(amount) as total'))
                 ->groupBy('deduction_type')
                 ->pluck('total', 'deduction_type')
@@ -168,7 +173,7 @@ class FinanceDashboardController extends Controller
             // Payment Voucher
             'pv_status_counts',
             'pv_total_count',
-            'pv_total_amount',
+            'pv_total_amount_all',
             'pv_month_amount',
             'pv_pending_count',
             'pv_branch_summary',
@@ -178,7 +183,7 @@ class FinanceDashboardController extends Controller
             'pv_monthly_data',
             // Payroll
             'pr_status_counts',
-            'pr_latest_period',
+            'pr_selected_period',
             'pr_recent_periods',
             'pr_employee_count',
             'pr_employee_types',
