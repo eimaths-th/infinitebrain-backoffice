@@ -301,6 +301,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/leave-requests/{id}/pdf', [App\Http\Controllers\LeaveRequestController::class, 'ExportPdf'])->name('leave-requests.pdf');
     Route::post('/leave-requests/{id}/approve', [App\Http\Controllers\LeaveRequestController::class, 'Approve'])->name('leave-requests.approve');
     Route::post('/leave-requests/{id}/reject', [App\Http\Controllers\LeaveRequestController::class, 'Reject'])->name('leave-requests.reject');
+    Route::post('/leave-requests/{id}/add-attachments', [App\Http\Controllers\LeaveRequestController::class, 'AddAttachments'])->name('leave-requests.add-attachments');
     Route::delete('/leave-requests/{id}', [App\Http\Controllers\LeaveRequestController::class, 'Destroy'])->name('leave-requests.destroy');
     Route::post('/user/signature', [App\Http\Controllers\LeaveRequestController::class, 'SaveSignature'])->name('user.signature.save');
 

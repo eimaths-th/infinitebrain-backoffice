@@ -106,12 +106,12 @@
                     <div class="card-body text-center">
                         @if ($leave_request->signature_is_image)
                             <img src="{{ Storage::url($leave_request->employee_signature) }}" alt="ลายเซ็น"
-                                style="max-height: 150px;" onerror="this.style.display='none'">
+                                style="max-height: 150px; max-width: 100%; object-fit: contain;" onerror="this.style.display='none'">
                         @elseif(str_starts_with($leave_request->employee_signature, 'data:image'))
-                            <img src="{{ $leave_request->employee_signature }}" alt="ลายเซ็น" style="max-height: 150px;">
+                            <img src="{{ $leave_request->employee_signature }}" alt="ลายเซ็น" style="max-height: 150px; max-width: 100%; object-fit: contain;">
                         @else
                             <img src="{{ Storage::url($leave_request->employee_signature) }}" alt="ลายเซ็น"
-                                style="max-height: 150px;" onerror="this.src='{{ $leave_request->employee_signature }}'">
+                                style="max-height: 150px; max-width: 100%; object-fit: contain;" onerror="this.src='{{ $leave_request->employee_signature }}'">
                         @endif
                     </div>
                 </div>
@@ -148,6 +148,34 @@
                                 </div>
                             @endforeach
                         </div>
+                    </div>
+                </div>
+            @endif
+
+            @if ($leave_request->IsPending() && ($leave_request->user_id == Auth::id() || Auth::user()->hasAnyRole(['super-admin', 'admin'])))
+                <div class="main-card mb-3 card">
+                    <div class="card-header">
+                        <i class="fas fa-upload me-2"></i> อัปโหลดเอกสารเพิ่มเติม
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('leave-requests.add-attachments', $leave_request->id) }}" method="POST"
+                            enctype="multipart/form-data" id="addAttachmentsForm">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="attachments" class="form-label">เลือกไฟล์เอกสาร (รูปภาพ หรือ PDF)</label>
+                                <input type="file" name="attachments[]" id="attachments" class="form-control"
+                                    multiple accept="image/*,.pdf">
+                                <small class="text-muted">สามารถเลือกได้หลายไฟล์พร้อมกัน (ขนาดไม่เกิน 10MB ต่อไฟล์)</small>
+                            </div>
+                            <div id="fileListWrapper" class="mb-3" style="display: none;">
+                                <h6>ไฟล์ที่เลือก:</h6>
+                                <ul class="list-group list-group-flush border rounded" id="selectedFilesList">
+                                </ul>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="uploadBtn">
+                                <i class="fas fa-save me-1"></i> อัปโหลดเอกสาร
+                            </button>
+                        </form>
                     </div>
                 </div>
             @endif
@@ -444,6 +472,40 @@
                     });
                 });
             @endif
+
+            $('#attachments').on('change', function() {
+                var files = $(this)[0].files;
+                var list = $('#selectedFilesList');
+                var wrapper = $('#fileListWrapper');
+
+                list.empty();
+                if (files.length > 0) {
+                    for (var i = 0; i < files.length; i++) {
+                        var file = files[i];
+                        var size = (file.size / (1024 * 1024)).toFixed(2);
+                        var icon = 'fa-file';
+
+                        if (file.type.match('image.*')) icon = 'fa-file-image';
+                        else if (file.type.match('application/pdf')) icon = 'fa-file-pdf';
+
+                        list.append(
+                            '<li class="list-group-item d-flex justify-content-between align-items-center">' +
+                            '<div><i class="fas ' + icon + ' me-2"></i>' + file.name + '</div>' +
+                            '<span class="badge bg-secondary rounded-pill">' + size + ' MB</span>' +
+                            '</li>'
+                        );
+                    }
+                    wrapper.show();
+                } else {
+                    wrapper.hide();
+                }
+            });
+
+            $('#addAttachmentsForm').on('submit', function() {
+                var btn = $('#uploadBtn');
+                btn.prop('disabled', true).html(
+                    '<i class="fas fa-spinner fa-spin"></i> กำลังอัปโหลด...');
+            });
         });
     </script>
 @endsection
