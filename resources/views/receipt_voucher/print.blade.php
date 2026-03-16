@@ -1,123 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receipt Voucher - {{ $voucher->voucher_no }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Sarabun', sans-serif; font-size: 14px; color: #000; margin: 0; padding: 0; background-color: #525659; }
-        .page { width: 210mm; min-height: 297mm; padding: 10mm 15mm; margin: 10mm auto; border: 1px solid #D3D3D3; border-radius: 5px; background: white; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); position: relative; box-sizing: border-box; }
-        @media print {
-            @page { size: auto; margin: 0; }
-            body { background: none; margin: 0; }
-            .page { margin: 0; border: initial; border-radius: initial; width: initial; min-height: initial; box-shadow: initial; background: initial; page-break-after: always; }
-            .no-print { display: none; }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            font-size: 14px;
+            color: #000;
+            margin: 0;
+            padding: 0;
+            background-color: #525659;
+            /* PDF viewer bg feel */
         }
-        .header-section { display: flex; margin-bottom: 20px; align-items: flex-start; }
-        .logo { width: 200px; height: auto; margin-right: 20px; }
-        .doc-title { text-align: center; margin-top: 10px; margin-bottom: 20px; }
-        .doc-title h1 { font-size: 22px; font-weight: bold; margin: 0; color: #007bff; }
-        .doc-title h2 { font-size: 16px; font-weight: bold; margin: 0; color: #666; }
-        .info-grid { display: grid; grid-template-columns: 120px 1fr 120px 1fr; gap: 8px; margin-bottom: 20px; font-size: 13px; }
-        .info-label { color: #666; font-weight: bold; }
-        .items-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .items-table th { border-top: 2px solid #007bff; border-bottom: 2px solid #007bff; padding: 8px; text-align: center; background: #f8f9fa; }
-        .items-table td { padding: 8px; border-bottom: 1px solid #eee; }
-        .total-row { border-top: 2px solid #007bff; border-bottom: 2px solid #007bff; font-weight: bold; background: #e7f3ff; }
-        .footer-section { margin-top: 40px; display: flex; justify-content: space-between; }
-        .signature-block { width: 30%; font-size: 12px; border: 1px solid #ddd; padding: 10px; border-radius: 5px; text-align: center; }
-        .sig-line { border-bottom: 1px dotted #999; margin: 15px 0 5px; height: 20px; }
-        .text-red { color: red; }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 10mm 15mm;
+            margin: 10mm auto;
+            border: 1px solid #D3D3D3;
+            border-radius: 5px;
+            background: white;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        @media print {
+            @page {
+                size: auto;
+                margin: 0;
+            }
+
+            body {
+                background: none;
+                margin: 0;
+            }
+
+            .page {
+                margin: 0;
+                border: initial;
+                border-radius: initial;
+                width: initial;
+                min-height: initial;
+                box-shadow: initial;
+                background: initial;
+                page-break-after: always;
+            }
+
+            .page:last-child {
+                page-break-after: auto;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+
+        .header-section {
+            display: flex;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: auto;
+            height: 106px;
+            margin-right: 20px;
+        }
+
+        .company-info {
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .company-name {
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .doc-title {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .doc-title h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .doc-title h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 110px 1fr 140px 150px;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .info-value {
+            font-weight: 500;
+        }
+
+        .underline {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 2px;
+            display: inline-block;
+            width: 100%;
+            min-height: 20px;
+        }
+
+        /* Table Styles */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .items-table th {
+            border-top: 1px solid #81c784;
+            /* Greenish border like in sample */
+            border-bottom: 1px solid #81c784;
+            padding: 8px;
+            text-align: center;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .items-table td {
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        .items-table td.center {
+            text-align: center;
+        }
+
+        .items-table td.right {
+            text-align: right;
+        }
+
+        .text-red {
+            color: red;
+        }
+
+        .total-row {
+            border-top: 1px solid #81c784;
+            border-bottom: 1px solid #81c784;
+            font-weight: bold;
+        }
+
+        .total-label {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .total-amount {
+            text-align: right;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        /* Footer / Signatures */
+        .footer-section {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signature-block {
+            width: 30%;
+            font-size: 12px;
+        }
+
+        .signature-line {
+            display: grid;
+            grid-template-columns: 75px 1fr;
+            margin-bottom: 15px;
+            align-items: end;
+        }
+
+        .signature-line>div:first-child {
+            white-space: nowrap;
+        }
+
+        .sig-dots {
+            border-bottom: 1px dotted #999;
+            height: 20px;
+        }
+
+        .bank-info-section {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: 10px;
+            font-size: 12px;
+        }
     </style>
 </head>
+
 <body onload="window.print()">
     <div class="page">
-        <div class="header-section">
-            <img src="{{ asset('images/infinite-b-icon-3.png') }}" alt="Logo" class="logo">
-            <div style="font-size: 11px;">
-                <strong>บริษัท อินฟินิท เบรน จำกัด</strong><br>
-                555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130
-            </div>
-        </div>
+        <!-- Header -->
+
+        @switch($voucher->branch_code)
+            @case('ELRV')
+            @case('IFRV')
+            @case('EL')
+            @case('IF')
+                <div class="header-section">
+                    <img src="{{ asset('images/infinite-b-icon-3.png') }}" alt="Logo" class="logo">
+                    <div class="company-info">
+                        {{-- <div class="company-name">บริษัท อินฟินิท เบรน จำกัด (สำนักงานใหญ่)</div>
+                        <div>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</div>
+                        <div>เลขประจำตัวผู้เสียภาษี : 0125563031038</div>
+                        <div>โทร. 098-5098554</div> --}}
+                    </div>
+                </div>
+                <style>
+                    .items-table th {
+                        border-top: 1px solid #81c784;
+                        border-bottom: 1px solid #81c784;
+                        padding: 8px;
+                        text-align: center;
+                        color: #666;
+                        font-weight: normal;
+                    }
+
+                    .total-row {
+                        border-top: 1px solid #81c784;
+                        border-bottom: 1px solid #81c784;
+                        font-weight: bold;
+                    }
+                </style>
+            @break
+
+            @case('EiHQ')
+            @case('EiBK')
+            @case('EiRP')
+                <div class="header-section">
+                    <img src="{{ asset('images/logo_meta.png') }}" alt="Logo" class="logo" height="106">
+                    <div class="company-info">
+                        <div class="company-name">META KNOWLEDGE CO., LTD.</div>
+                        <div>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</div>
+                        <div>เลขประจำตัวผู้เสียภาษี: 0125565026368</div>
+                        <div>โทร 093-358-6333</div>
+                    </div>
+                </div>
+                <style>
+                    .items-table th {
+                        border-top: 1px solid rgb(255, 115, 0);
+                        border-bottom: 1px solid rgb(255, 115, 0);
+                        padding: 8px;
+                        text-align: center;
+                        color: #666;
+                        font-weight: normal;
+                    }
+
+                    .total-row {
+                        border-top: 1px solid rgb(255, 115, 0);
+                        border-bottom: 1px solid rgb(255, 115, 0);
+                        font-weight: bold;
+                    }
+                </style>
+            @break
+
+            @case('MT')
+            @case('MTRV')
+                <div class="header-section">
+                    <img src="{{ asset('images/logo_meta_2.png') }}" alt="Logo" class="logo" height="106">
+                    <div class="company-info">
+                        <div class="company-name">บริษัท เมต้า2 โนวเลจ จำกัด (สำนักงานใหญ่)</div>
+                        <div>555/9 ม.1 ต.บางขนุน อ.บางกรวย จ.นนทบุรี 11130</div>
+                        <div>เลขประจำตัวผู้เสียภาษี: 0125567041160</div>
+                        <div>โทร 093-358-6333</div>
+                    </div>
+                </div>
+                <style>
+                    .items-table th {
+                        border-top: 1px solid rgb(255, 115, 0);
+                        border-bottom: 1px solid rgb(255, 115, 0);
+                        padding: 8px;
+                        text-align: center;
+                        color: #666;
+                        font-weight: normal;
+                    }
+
+                    .total-row {
+                        border-top: 1px solid rgb(255, 115, 0);
+                        border-bottom: 1px solid rgb(255, 115, 0);
+                        font-weight: bold;
+                    }
+                </style>
+            @break
+
+            @default
+        @endswitch
 
         <div class="doc-title">
             <h1>ใบสำคัญรับ</h1>
             <h2>Receipt Voucher</h2>
         </div>
 
+        <!-- Info Grid -->
         <div class="info-grid">
-            <div class="info-label">รับจาก / Received From:</div>
-            <div style="grid-column: span 3; border-bottom: 1px solid #ddd;">{{ $voucher->receive_from }}</div>
-            
-            <div class="info-label">เลขที่ / Voucher NO.:</div>
-            <div style="border-bottom: 1px solid #ddd;">{{ $voucher->voucher_no }}</div>
-            
-            <div class="info-label">วันที่ / Date:</div>
-            <div style="border-bottom: 1px solid #ddd;">{{ $voucher->voucher_date->format('d/m/Y') }}</div>
-            
-            <div class="info-label">ที่อยู่ / Address:</div>
-            <div style="grid-column: span 3; border-bottom: 1px solid #ddd;">{{ $voucher->receive_from_address ?: '-' }}</div>
+            <div class="info-label">รับจาก / Receive From</div>
+            <div class="info-value">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $voucher->receive_from }}</div>
+
+            <div class="info-label">เลขที่ / Voucher NO.</div>
+            <div class="info-value">{{ $voucher->voucher_no }}</div>
+
+            <div class="info-label">เลขที่บัญชี</div>
+            <div class="info-value">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                @if ($voucher->receive_from_account_no)
+                    {{ $voucher->receive_from_account_no }}
+                    @if ($voucher->receive_from_bank_name)
+                        @if (str_starts_with($voucher->receive_from_bank_name, 'ธนาคาร'))
+                            {{ $voucher->receive_from_bank_name }}
+                        @else
+                            ธนาคาร{{ $voucher->receive_from_bank_name }}
+                        @endif
+                    @endif
+                @else
+                    -
+                @endif
+            </div>
+
+            <div class="info-label">วันที่ / Date</div>
+            <div class="info-value">
+                {{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}
+            </div>
+
+            <div style="width: 100px; color: #666;">ที่อยู่</div>
+            <div style="flex: 1;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {{ $voucher->receive_from_address ?? '-' }}
+            </div>
+
+            <div class="info-label"></div>
+            <div class="info-value"></div>
         </div>
 
+        <!-- Table -->
         <table class="items-table">
             <thead>
                 <tr>
-                    <th width="10%">ลำดับ</th>
-                    <th>รายการ / Description</th>
-                    <th width="20%">จำนวนเงิน / Amount</th>
+                    <th style="width: 10%;">ลำดับที่ / NO.</th>
+                    <th style="width: 60%;">รายการ / Description</th>
+                    <th style="width: 30%;">จำนวนเงิน / Amount</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($voucher->receiptItems as $index => $item)
-                    <tr>
-                        <td align="center">{{ $index + 1 }}</td>
-                        <td>{{ $item->description }}</td>
-                        <td align="right">{{ number_format($item->amount, 2) }}</td>
+                @foreach ($voucher->items as $index => $item)
+                    <tr class="{{ $item->type === 'deduction' ? 'text-red' : '' }}">
+                        <td class="center">{{ $index + 1 }}</td>
+                        <td>{{ $item->type === 'deduction' ? '(หัก) ' : '' }}{{ $item->description }}</td>
+                        <td class="right">
+                            {{ $item->type === 'deduction' ? '-' : '' }}{{ number_format($item->amount, 2) }}
+                        </td>
                     </tr>
                 @endforeach
-                
-                @if($voucher->deductions->count() > 0)
-                    @foreach($voucher->deductions as $index => $item)
-                        <tr class="text-red">
-                            <td align="center">{{ $voucher->receiptItems->count() + $index + 1 }}</td>
-                            <td>(หัก) {{ $item->description }}</td>
-                            <td align="right">-{{ number_format($item->amount, 2) }}</td>
-                        </tr>
-                    @endforeach
-                @endif
             </tbody>
             <tfoot>
                 <tr class="total-row">
-                    <td colspan="2" align="right">ยอดรับสุทธิ / Net Total Amount</td>
-                    <td align="right">{{ number_format($voucher->net_amount, 2) }}</td>
+                    <td colspan="2" class="total-label">รวมรับทั้งสิ้น / Net Amount Received</td>
+                    <td class="total-amount">
+                        {{ number_format($voucher->net_amount, 2) }}
+                        <span style="font-size: 12px; font-weight: normal; margin-left:10px;">บาท</span>
+                    </td>
                 </tr>
             </tfoot>
         </table>
 
-        @if($voucher->remark)
-            <div style="margin-bottom: 20px;">
-                <strong>หมายเหตุ:</strong> {{ $voucher->remark }}
-            </div>
-        @endif
-
+        <!-- Signatures -->
         <div class="footer-section">
             <div class="signature-block">
-                <div>ผู้รับเงิน</div>
-                <div class="sig-line">{{ $voucher->receiver_name }}</div>
-                <div>วันที่: {{ $voucher->received_date ? $voucher->received_date->format('d/m/Y') : '..../..../....' }}</div>
+                <div class="signature-line">
+                    <div>ผู้รับเงิน</div>
+                    <div class="info-value">
+                        @if ($voucher->receiver_name)
+                            {{ $voucher->receiver_name }}
+                        @else
+                            <div class="sig-dots"></div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="signature-line">
+                    <div>วันที่</div>
+                    <div>
+                        {{ $voucher->received_date ? \Carbon\Carbon::parse($voucher->received_date)->format('d/m/Y') : '' }}
+                    </div>
+                </div>
             </div>
+
             <div class="signature-block">
-                <div>ผู้ตรวจสอบ</div>
-                <div class="sig-line">{{ $voucher->verified_by_name }}</div>
-                <div>วันที่: {{ $voucher->verified_at ? $voucher->verified_at->format('d/m/Y') : '..../..../....' }}</div>
+                <div class="signature-line">
+                    <div>ผู้ตรวจสอบ</div>
+                    <div class="info-value">
+                        @if ($voucher->verified_by_name)
+                            {{ $voucher->verified_by_name }}
+                        @else
+                            <div class="sig-dots"></div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="signature-line">
+                    <div>วันที่</div>
+                    <div>
+                        {{ $voucher->verified_at ? \Carbon\Carbon::parse($voucher->verified_at)->format('d/m/Y') : '' }}
+                    </div>
+                </div>
             </div>
+
             <div class="signature-block">
-                <div>ผู้อนุมัติ/ผู้รับเงินทางการ</div>
-                <div class="sig-line">{{ $voucher->completed_by_name }}</div>
-                <div>วันที่: {{ $voucher->completed_at ? $voucher->completed_at->format('d/m/Y') : '..../..../....' }}</div>
+                <div class="signature-line">
+                    <div>ผู้อนุมัติ</div>
+                    <div class="info-value">
+                        @if ($voucher->completed_by_name)
+                            {{ $voucher->completed_by_name }}
+                        @else
+                            <div class="sig-dots"></div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="signature-line">
+                    <div>วันที่</div>
+                    <div>
+                        {{ $voucher->completed_at ? \Carbon\Carbon::parse($voucher->completed_at)->format('d/m/Y') : '' }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Attachments -->
+    @if ($voucher->attachments && $voucher->attachments->count() > 0)
+        @foreach ($voucher->attachments as $attachment)
+            @if ($attachment->isImage())
+                <div class="page"
+                    style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div style="font-weight: bold; margin-bottom: 20px; text-align: left; width: 100%;">
+                        เอกสารแนบ: {{ $attachment->original_name }} <br>
+                    </div>
+                    <img src="{{ Storage::url($attachment->file_path) }}"
+                        style="max-width: 100%; max-height: 250mm; object-fit: contain;">
+                </div>
+            @endif
+        @endforeach
+    @endif
 </body>
+
 </html>
