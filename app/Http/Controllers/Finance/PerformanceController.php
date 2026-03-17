@@ -60,8 +60,7 @@ class PerformanceController extends Controller
 
         // ... (Revenue and Expense calculation remains same)  ... //
         // 1. Revenue: School Receipts
-        $schoolRevenue = SchoolPrice::where('course_type', 1)
-            ->whereHas('rec_school', function ($query) use ($year, $month) {
+        $schoolRevenue = SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
                 $query->whereYear('submission_date', $year)
                     ->whereMonth('submission_date', $month);
             })
@@ -140,7 +139,7 @@ class PerformanceController extends Controller
                     ->whereIn('branch_code', ['EL', 'ELPV', 'ELBF'])
                     ->where('is_salary', false)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
-                    ->with(['payee', 'expenseItems'])
+                    ->with(['payee', 'expenseItems', 'deductions'])
                     ->get(),
 
                 'pv_groups' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
