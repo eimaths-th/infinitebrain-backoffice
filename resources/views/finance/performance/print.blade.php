@@ -171,26 +171,6 @@
                     <td></td>
                 </tr>
             @endforeach
-            
-            {{-- รายการหัก (Deductions) --}}
-            @foreach ($voucher->deductions as $deduction)
-                <tr style="color: #666; font-style: italic;">
-                    <td class="sub-item">- {{ $deduction->description }} (รายการหัก)</td>
-                    <td></td>
-                    <td class="text-right">({{ number_format($deduction->amount, 2) }})</td>
-                    <td></td>
-                </tr>
-            @endforeach
-
-            {{-- ภาษีหัก ณ ที่จ่าย (Withholding Tax) --}}
-            @if($voucher->withholding_tax_amount > 0)
-                <tr style="color: #666; font-style: italic;">
-                    <td class="sub-item">- ภาษีหัก ณ ที่จ่าย ({{ number_format($voucher->withholding_tax_rate, 0) }}%)</td>
-                    <td></td>
-                    <td class="text-right">({{ number_format($voucher->withholding_tax_amount, 2) }})</td>
-                    <td></td>
-                </tr>
-            @endif
         @endforeach
 
         <tr class="summary-row">
