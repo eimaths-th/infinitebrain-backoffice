@@ -98,6 +98,18 @@
                 <div class="filter-section">
                     <form method="GET" action="{{ route('payment-voucher.index') }}" class="row g-3">
                         <div class="col-md-2">
+                            <label class="form-label">สาขา</label>
+                            <select name="branch_code" class="form-select">
+                                <option value="">-- ทั้งหมด --</option>
+                                @foreach (\App\Models\PaymentVoucher::$branchCodes as $code => $name)
+                                    <option value="{{ $code }}"
+                                        {{ request('branch_code') == $code ? 'selected' : '' }}>
+                                        {{ $name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
                             <label class="form-label">สถานะ</label>
                             <select name="status" class="form-select">
                                 <option value="">-- ทั้งหมด --</option>
@@ -165,6 +177,10 @@
                                         <a href="{{ route('payment-voucher.show', $voucher->id) }}"
                                             class="fw-bold text-primary">
                                             {{ $voucher->voucher_no }}
+
+                                            @if ($voucher->is_salary)
+                                                <i class="fa fa-money-bill text-success" title="ใบจ่ายเงินเดือน"></i>
+                                            @endif
                                         </a>
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}</td>

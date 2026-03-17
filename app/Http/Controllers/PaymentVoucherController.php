@@ -29,6 +29,11 @@ class PaymentVoucherController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Filter by branch
+        if ($request->filled('branch_code')) {
+            $query->where('branch_code', $request->branch_code);
+        }
+
         // Filter by date range
         if ($request->filled('from_date')) {
             $query->whereDate('voucher_date', '>=', $request->from_date);
@@ -91,6 +96,7 @@ class PaymentVoucherController extends Controller
             'deductions.*.amount' => 'required_with:deductions|numeric|min:0',
             'withholding_tax_rate' => 'nullable|numeric|min:0|max:100',
             'withholding_tax_amount' => 'nullable|numeric|min:0',
+            'is_salary' => 'nullable|boolean',
             'voucher_attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
             'items.*.attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
         ]);
@@ -182,6 +188,7 @@ class PaymentVoucherController extends Controller
                 'total_deduction_amount' => $totalDeductionAmount,
                 'net_amount' => $netAmount,
                 'total_amount' => $totalAmount,
+                'is_salary' => $request->boolean('is_salary'),
             ]);
 
             // อัพโหลดไฟล์แนบของ Voucher
@@ -364,6 +371,7 @@ class PaymentVoucherController extends Controller
             'deductions.*.amount' => 'required_with:deductions|numeric|min:0',
             'withholding_tax_rate' => 'nullable|numeric|min:0|max:100',
             'withholding_tax_amount' => 'nullable|numeric|min:0',
+            'is_salary' => 'nullable|boolean',
             'voucher_attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
             'items.*.attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
         ]);
@@ -450,6 +458,7 @@ class PaymentVoucherController extends Controller
                 'total_deduction_amount' => $totalDeductionAmount,
                 'net_amount' => $netAmount,
                 'total_amount' => $totalAmount,
+                'is_salary' => $request->boolean('is_salary'),
             ]);
 
             // อัพโหลดไฟล์แนบของ Voucher (เพิ่มใหม่)
