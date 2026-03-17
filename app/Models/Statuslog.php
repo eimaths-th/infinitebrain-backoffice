@@ -28,7 +28,7 @@ class Statuslog extends Model
     /**
      * @var array
      */
-    protected $fillable = ['student_id','schoolprice_id', 'group', 'nick_name', 'status', 'status_date', 'created_at', 'updated_at'];
+    protected $fillable = ['student_id', 'schoolprice_id', 'group', 'nick_name', 'status', 'status_date', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -147,6 +147,7 @@ Route::get('/finance-dashboard/branch-detail', [FinanceDashboardController::clas
 Route::middleware(['auth', 'can:performance.view'])->prefix('performance')->name('performance.')->group(function () {
     Route::get('/', [\App\Http\Controllers\Finance\PerformanceController::class, 'index'])->name('index');
     Route::get('/monthly/{year}/{month}', [\App\Http\Controllers\Finance\PerformanceController::class, 'monthly'])->name('monthly');
+    Route::get('/monthly/{year}/{month}/print', [\App\Http\Controllers\Finance\PerformanceController::class, 'printMonthly'])->name('monthly.print');
 });
 
 Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')->group(function () {
