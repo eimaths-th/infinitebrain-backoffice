@@ -77,6 +77,11 @@ class ReceiptVoucher extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function payee()
+    {
+        return $this->belongsTo(Payee::class);
+    }
+
     public function items()
     {
         return $this->hasMany(ReceiptVoucherItem::class)->orderBy('item_no');
@@ -104,7 +109,7 @@ class ReceiptVoucher extends Model
     public function attachments()
     {
         return $this->hasMany(ReceiptVoucherAttachment::class)
-            ->where('attachment_type', 'voucher');
+            ->where('attachment_type', 'voucher'); 
     }
 
     public function allAttachments()

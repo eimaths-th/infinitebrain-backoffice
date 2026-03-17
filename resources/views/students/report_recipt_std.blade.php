@@ -532,6 +532,7 @@
 
                                                 <td class="{{ $class }}">
                                                     {{-- @if ($data->std->status_log && $data->std->status_log->count() > 0 && $status->last()->group == $data->group) --}}
+
                                                     @if (
                                                         $data->std &&
                                                             $data->std->status_log &&

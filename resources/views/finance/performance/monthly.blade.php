@@ -13,6 +13,9 @@
                 </div>
             </div>
             <div class="page-title-actions">
+                <a href="{{ route('performance.monthly.print', ['year' => $year, 'month' => $month]) }}" target="_blank" class="btn btn-info">
+                    <i class="fa fa-print"></i> พิมพ์รายงาน
+                </a>
                 <a href="{{ route('performance.index', ['year' => $year]) }}" class="btn btn-secondary">
                     <i class="fa fa-arrow-left"></i> กลับไปหน้าภาพรวม
                 </a>
@@ -137,5 +140,164 @@
             </div>
         </div>
     </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="card-header-tab card-header">
+                    <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                        <i class="header-icon pe-7s-notebook icon-gradient bg-happy-itmeo"></i>
+                        รายละเอียดรายรับ (Revenue Details)
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><a data-bs-toggle="tab" href="#tab-school-revenue" class="nav-link active">School Receipts</a></li>
+                        <li class="nav-item"><a data-bs-toggle="tab" href="#tab-rv-revenue" class="nav-link">Receipt Vouchers</a></li>
+                    </ul>
+                    <div class="tab-content mt-3">
+                        <div class="tab-pane active" id="tab-school-revenue" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>กลุ่มวิชา (Subject Group)</th>
+                                            <th class="text-center">จำนวนนักเรียน</th>
+                                            <th class="text-center">จำนวนใบเสร็จ</th>
+                                            <th class="text-end">ยอดรวม (Amount)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($data['details']['school_groups'] as $item)
+                                            <tr>
+                                                <td>{{ $item->title }} ({{ $item->group }})</td>
+                                                <td class="text-center">{{ number_format($item->student_count) }}</td>
+                                                <td class="text-center">{{ number_format($item->receipt_count) }}</td>
+                                                <td class="text-end text-success font-weight-bold">{{ number_format($item->total_amount, 2) }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr><td colspan="4" class="text-center">ไม่มีข้อมูล</td></tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab-rv-revenue" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Voucher No.</th>
+                                            <th>Received From</th>
+                                            <th>Remark</th>
+                                            <th class="text-end">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($data['details']['rv_items'] as $item)
+                                            <tr>
+                                                <td>{{ $item->voucher_date->format('Y-m-d') }}</td>
+                                                <td>
+                                                    <a href="{{ route('receipt-voucher.show', $item->id) }}" target="_blank">
+                                                        {{ $item->voucher_no }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    @php $from = $item->payee ? $item->payee->name : $item->received_from; @endphp
+                                                    {{ $from ?: '-' }}
+                                                </td>
+                                                <td>{{ $item->remark }}</td>
+                                                <td class="text-end">{{ number_format($item->net_amount, 2) }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr><td colspan="5" class="text-center">No data available</td></tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="card-header-tab card-header">
+                    <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                        <i class="header-icon pe-7s-cash icon-gradient bg-mixed-hopes"></i>
+                        รายละเอียดรายจ่าย (Expense Details)
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><a data-bs-toggle="tab" href="#tab-pv-expense" class="nav-link active">Payment Vouchers</a></li>
+                        <li class="nav-item"><a data-bs-toggle="tab" href="#tab-payroll-expense" class="nav-link">Payroll</a></li>
+                    </ul>
+                    <div class="tab-content mt-3">
+                        <div class="tab-pane active" id="tab-pv-expense" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Voucher No.</th>
+                                            <th>Branch</th>
+                                            <th>Pay To</th>
+                                            <th class="text-end">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($data['details']['pv_items'] as $item)
+                                            <tr>
+                                                <td>{{ $item->voucher_date->format('Y-m-d') }}</td>
+                                                <td>
+                                                    <a href="{{ route('payment-voucher.show', $item->id) }}" target="_blank">
+                                                        {{ $item->voucher_no }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ $item->branch_code }}</td>
+                                                <td>{{ $item->payee ? $item->payee->name : $item->pay_to }}</td>
+                                                <td class="text-end">{{ number_format($item->net_amount, 2) }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr><td colspan="5" class="text-center">No data available</td></tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab-payroll-expense" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>แผนก (Department)</th>
+                                            <th class="text-center">จำนวนพนักงาน</th>
+                                            <th class="text-end">ยอดรวม (Net Pay)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($data['details']['payroll_groups'] as $item)
+                                            <tr>
+                                                <td>พนักงาน {{ $item->department }}</td>
+                                                <td class="text-center">{{ number_format($item->employee_count) }}</td>
+                                                <td class="text-end text-danger font-weight-bold">{{ number_format($item->total_amount, 2) }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr><td colspan="3" class="text-center">ไม่มีข้อมูล</td></tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
+
