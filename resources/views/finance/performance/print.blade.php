@@ -15,7 +15,7 @@
             font-family: 'Sarabun', 'Cordia New', sans-serif;
             margin: 0;
             padding: 0;
-            font-size: 16pt;
+            font-size: 10pt;
             color: #000;
         }
 
@@ -98,22 +98,23 @@
 
     <table>
         <colgroup>
-            <col style="width: 70%;">
+            <col style="width: 45%;">
+            <col style="width: 25%;">
             <col style="width: 20%;">
             <col style="width: 10%;">
         </colgroup>
         <!-- รายรับ -->
         <tr class="section-header">
-            <td colspan="3">รายรับ</td>
+            <td colspan="4">รายรับ</td>
         </tr>
         <tr class="col-headings">
-            <th>รายการ</th>
+            <th colspan="2">รายการ</th>
             <th class="text-right" colspan="2">จำนวนเงิน</th>
         </tr>
 
         @foreach ($data['details']['school_groups'] as $item)
             <tr>
-                <td>ค่าคอร์ส {{ $item->group }}</td>
+                <td colspan="2">ค่าคอร์ส {{ $item->group }}</td>
                 <td class="text-right">{{ number_format($item->total_amount, 2) }}</td>
                 <td></td>
             </tr>
@@ -121,12 +122,10 @@
 
         @foreach ($data['details']['rv_items'] as $item)
             <tr>
+                <td>{{ $item->remark ?: 'รายรับอื่นๆ' }}</td>
                 <td>
-                    {{ $item->remark ?: 'รายรับอื่นๆ' }}
                     @php $from = $item->payee ? $item->payee->name : $item->received_from; @endphp
-                    @if($from)
-                        ({{ $from }})
-                    @endif
+                    {{ $from ? '('.$from.')' : '' }}
                 </td>
                 <td class="text-right">{{ number_format($item->net_amount, 2) }}</td>
                 <td></td>
@@ -134,45 +133,48 @@
         @endforeach
 
         <tr class="summary-row">
-            <td>รวมรายรับ</td>
+            <td colspan="2">รวมรายรับ</td>
             <td class="text-right">{{ number_format($data['total_revenue'], 2) }}</td>
             <td style="font-weight: normal; text-align: left; padding-left: 10px;">บาท</td>
         </tr>
 
         <!-- รายจ่าย -->
         <tr class="section-header">
-            <td colspan="3" style="border-top: none;">รายจ่าย</td>
+            <td colspan="4" style="border-top: none;">รายจ่าย</td>
         </tr>
         <tr class="col-headings">
-            <th>รายการ</th>
+            <th colspan="2">รายการ</th>
             <th class="text-right" colspan="2">จำนวนเงิน</th>
         </tr>
 
         @if (count($data['details']['payroll_groups']) > 0)
             <tr>
-                <td class="font-bold">เงินเดือนพนักงาน</td>
-                <td></td>
-                <td></td>
+                <td class="font-bold" colspan="4">เงินเดือนพนักงาน</td>
             </tr>
             @foreach ($data['details']['payroll_groups'] as $item)
                 <tr>
-                    <td class="sub-item">พนักงาน {{ $item->department }}</td>
+                    <td class="sub-item" colspan="2">พนักงาน {{ $item->department }}</td>
                     <td class="text-right">{{ number_format($item->total_amount, 2) }}</td>
                     <td></td>
                 </tr>
             @endforeach
         @endif
 
-        @foreach ($data['details']['pv_groups'] as $item)
-            <tr>
-                <td>{{ $item->pay_to }}</td>
-                <td class="text-right">{{ number_format($item->total_amount, 2) }}</td>
-                <td></td>
-            </tr>
+        @foreach ($data['details']['pv_items'] as $voucher)
+            @foreach ($voucher->expenseItems as $item)
+                <tr>
+                    <td class="sub-item">{{ $item->description }}</td>
+                    <td style="font-size: 10pt; color: #666;">
+                        {{ $voucher->payee ? $voucher->payee->name : $voucher->pay_to }}
+                    </td>
+                    <td class="text-right">{{ number_format($item->amount, 2) }}</td>
+                    <td></td>
+                </tr>
+            @endforeach
         @endforeach
 
         <tr class="summary-row">
-            <td>รวมรายจ่าย</td>
+            <td colspan="2">รวมรายจ่าย</td>
             <td class="text-right">{{ number_format($data['total_expense'], 2) }}</td>
             <td style="font-weight: normal; text-align: left; padding-left: 10px;">บาท</td>
         </tr>
