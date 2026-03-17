@@ -61,9 +61,9 @@ class PerformanceController extends Controller
         // ... (Revenue and Expense calculation remains same)  ... //
         // 1. Revenue: School Receipts
         $schoolRevenue = SchoolPrice::where('course_type', 1)
-            ->whereHas('rec_school', function($query) use ($year, $month) {
+            ->whereHas('rec_school', function ($query) use ($year, $month) {
                 $query->whereYear('submission_date', $year)
-                      ->whereMonth('submission_date', $month);
+                    ->whereMonth('submission_date', $month);
             })
             ->sum('total');
 
@@ -76,14 +76,14 @@ class PerformanceController extends Controller
         $pvExpense = PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
             ->whereIn('branch_code', ['EL', 'ELPV', 'ELBF'])
             ->whereBetween('voucher_date', [$startDate, $endDate])
-                ->sum('net_amount');
+            ->sum('net_amount');
 
         // 4. Expense: Payroll (Specific Departments)
         $payrollExpense = Payroll::where('status', Payroll::STATUS_PAID)
-            ->whereHas('user', function($query) {
+            ->whereHas('user', function ($query) {
                 $query->whereIn('department', ['วิชาการ', 'สำนักงาน']);
             })
-            ->whereHas('payrollPeriod', function($query) use ($year, $month) {
+            ->whereHas('payrollPeriod', function ($query) use ($year, $month) {
                 $thaiYear = $year + 543;
                 $query->where('year', $thaiYear)->where('month', $month);
             })
@@ -106,10 +106,14 @@ class PerformanceController extends Controller
         if ($getDetails) {
             // Detailed Records
             $summary['details'] = [
-                'school_groups' => SchoolPrice::where('course_type', 1)
-                    ->whereHas('rec_school', function($query) use ($year, $month) {
+                // 'school_groups' => SchoolPrice::where('course_type', 1)
+                //     ->whereHas('rec_school', function($query) use ($year, $month) {
+                //         $query->whereYear('submission_date', $year)
+                //               ->whereMonth('submission_date', $month);
+                //     })
+                'school_groups' => SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
                         $query->whereYear('submission_date', $year)
-                              ->whereMonth('submission_date', $month);
+                            ->whereMonth('submission_date', $month);
                     })
                     ->with(['school_sub'])
                     ->get()
@@ -142,7 +146,7 @@ class PerformanceController extends Controller
                     ->whereBetween('voucher_date', [$startDate, $endDate])
                     ->with(['payee'])
                     ->get()
-                    ->groupBy(function($item) {
+                    ->groupBy(function ($item) {
                         return $item->payee ? $item->payee->name : ($item->pay_to ?? 'อื่นๆ');
                     })
                     ->map(function ($items, $payee) {
@@ -153,16 +157,16 @@ class PerformanceController extends Controller
                     })->sortByDesc('total_amount')->values(),
 
                 'payroll_groups' => Payroll::where('status', Payroll::STATUS_PAID)
-                    ->whereHas('user', function($query) {
+                    ->whereHas('user', function ($query) {
                         $query->whereIn('department', ['วิชาการ', 'สำนักงาน']);
                     })
-                    ->whereHas('payrollPeriod', function($query) use ($year, $month) {
+                    ->whereHas('payrollPeriod', function ($query) use ($year, $month) {
                         $thaiYear = $year + 543;
                         $query->where('year', $thaiYear)->where('month', $month);
                     })
                     ->with(['user'])
                     ->get()
-                    ->groupBy(function($item) {
+                    ->groupBy(function ($item) {
                         return $item->user->department ?? 'Unknown';
                     })
                     ->map(function ($items, $department) {
