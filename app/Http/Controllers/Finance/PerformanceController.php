@@ -75,6 +75,7 @@ class PerformanceController extends Controller
         // 3. Expense: Payment Vouchers (Completed)
         $pvExpense = PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
             ->whereIn('branch_code', ['EL', 'ELPV', 'ELBF'])
+            ->where('is_salary', false)
             ->whereBetween('voucher_date', [$startDate, $endDate])
             ->sum('net_amount');
 
@@ -137,12 +138,14 @@ class PerformanceController extends Controller
 
                 'pv_items' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
                     ->whereIn('branch_code', ['EL', 'ELPV', 'ELBF'])
+                    ->where('is_salary', false)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
                     ->with(['payee'])
                     ->get(),
 
                 'pv_groups' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
                     ->whereIn('branch_code', ['EL', 'ELPV', 'ELBF'])
+                    ->where('is_salary', false)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
                     ->with(['payee'])
                     ->get()

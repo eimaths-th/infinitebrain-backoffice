@@ -41,6 +41,7 @@ class PaymentVoucher extends Model
         'payer_name',
         'paid_date',
         'payment_cycle',
+        'is_salary',
     ];
 
     protected $casts = [
@@ -50,6 +51,7 @@ class PaymentVoucher extends Model
         'received_date' => 'date',
         'paid_date' => 'date',
         'total_amount' => 'decimal:2',
+        'is_salary' => 'boolean',
     ];
 
     // Status Constants

@@ -185,6 +185,16 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
+                            <div class="mb-3">
+                                <div class="form-check form-switch pt-2">
+                                    <input class="form-check-input" type="checkbox" name="is_salary" id="isSalary" value="1" 
+                                        {{ old('is_salary', $voucher->is_salary) ? 'checked' : '' }}>
+                                    <label class="form-check-label fw-bold text-primary" for="isSalary">
+                                        <i class="fa fa-money"></i> ใบจ่ายเงินเดือน (Salary Payment)
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-md-6">

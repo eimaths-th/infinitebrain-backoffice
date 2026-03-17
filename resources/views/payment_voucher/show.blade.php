@@ -329,6 +329,11 @@
                         <div>วันที่: {{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}</div>
                     </div>
                     <div class="col-md-6 text-md-end">
+                        @if ($voucher->is_salary)
+                            <span class="status-badge bg-info text-white me-2">
+                                <i class="fa fa-money"></i> จ่ายเงินเดือน
+                            </span>
+                        @endif
                         <span class="status-badge status-{{ $voucher->status }}">
                             {{ $voucher->status_label }}
                         </span>
