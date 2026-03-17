@@ -442,12 +442,14 @@ class StdlogController extends Controller
         if ($month) {
             # code...
             $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
+                ->whereHas('std')
                 ->orderBy('rid', 'desc')
                 ->get()
                 ->groupBy('student_id', 'group');
         } else {
             # code...
             $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
+                ->whereHas('std')
                 ->orderBy('student_id')
                 ->orderBy('rid', 'asc')
                 ->get()
@@ -731,6 +733,7 @@ class StdlogController extends Controller
         // dd($periodYearInt, $schoolPrice_id);
 
         $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
+            ->whereHas('std')
             ->with('std')
             ->orderBy('student_id')
             ->orderBy('rid', 'asc')
