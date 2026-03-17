@@ -21,10 +21,10 @@ class PerformanceController extends Controller
     public function index(Request $request)
     {
         $year = $request->input('year', date('Y'));
-        
+
         // Sum revenue and expenses per month for the given year
         $monthlyPerformance = [];
-        
+
         for ($m = 1; $m <= 12; $m++) {
             $monthlyPerformance[$m] = $this->calculateMonthlyData($year, $m);
         }
@@ -117,7 +117,6 @@ class PerformanceController extends Controller
                     ->map(function ($items, $group) {
                         $model = new SchoolPrice();
                         $groupName = $model->getGroupName($group);
-                        
                         return (object) [
                             'group' => $groupName,
                             'title' => $groupName,
@@ -126,18 +125,18 @@ class PerformanceController extends Controller
                             'student_count' => $items->pluck('student_id')->unique()->count(),
                         ];
                     })->sortByDesc('total_amount')->values(),
-                    
+
                 'rv_items' => ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
                     ->with(['payee'])
                     ->get(),
-                    
+
                 'pv_items' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
                     ->whereIn('branch_code', ['EL', 'ELPV', 'ELBF'])
                     ->whereBetween('voucher_date', [$startDate, $endDate])
                     ->with(['payee'])
                     ->get(),
-                    
+
                 'pv_groups' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
                     ->whereIn('branch_code', ['EL', 'ELPV', 'ELBF'])
                     ->whereBetween('voucher_date', [$startDate, $endDate])
@@ -152,7 +151,7 @@ class PerformanceController extends Controller
                             'total_amount' => $items->sum('net_amount'),
                         ];
                     })->sortByDesc('total_amount')->values(),
-                    
+
                 'payroll_groups' => Payroll::where('status', Payroll::STATUS_PAID)
                     ->whereHas('user', function($query) {
                         $query->whereIn('department', ['วิชาการ', 'สำนักงาน']);
