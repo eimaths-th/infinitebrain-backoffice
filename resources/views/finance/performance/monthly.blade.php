@@ -251,7 +251,6 @@
                                     </thead>
                                     <tbody>
                                         @forelse($data['details']['pv_items'] as $voucher)
-                                            {{-- รายการเบิก (Items) --}}
                                             @foreach($voucher->expenseItems as $item)
                                                 <tr>
                                                     <td>{{ $voucher->voucher_date->format('Y-m-d') }}</td>
@@ -265,31 +264,9 @@
                                                         <div class="font-weight-bold">{{ $item->description }}</div>
                                                         <div class="small text-muted">{{ $voucher->payee ? $voucher->payee->name : $voucher->pay_to }}</div>
                                                     </td>
-                                                    <td class="text-end text-danger">{{ number_format($item->amount, 2) }}</td>
+                                                    <td class="text-end">{{ number_format($item->amount, 2) }}</td>
                                                 </tr>
                                             @endforeach
-
-                                            {{-- รายการหัก (Deductions) --}}
-                                            @foreach($voucher->deductions as $deduction)
-                                                <tr class="text-muted italic">
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td class="ps-4">- {{ $deduction->description }} (รายการหัก)</td>
-                                                    <td class="text-end">({{ number_format($deduction->amount, 2) }})</td>
-                                                </tr>
-                                            @endforeach
-
-                                            {{-- ภาษีหัก ณ ที่จ่าย (Withholding Tax) --}}
-                                            @if($voucher->withholding_tax_amount > 0)
-                                                <tr class="text-muted italic">
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td class="ps-4">- ภาษีหัก ณ ที่จ่าย ({{ number_format($voucher->withholding_tax_rate, 0) }}%)</td>
-                                                    <td class="text-end">({{ number_format($voucher->withholding_tax_amount, 2) }})</td>
-                                                </tr>
-                                            @endif
                                         @empty
                                             <tr><td colspan="5" class="text-center">No data available</td></tr>
                                         @endforelse
