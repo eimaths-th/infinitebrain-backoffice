@@ -250,18 +250,23 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($data['details']['pv_items'] as $item)
-                                            <tr>
-                                                <td>{{ $item->voucher_date->format('Y-m-d') }}</td>
-                                                <td>
-                                                    <a href="{{ route('payment-voucher.show', $item->id) }}" target="_blank">
-                                                        {{ $item->voucher_no }}
-                                                    </a>
-                                                </td>
-                                                <td>{{ $item->branch_code }}</td>
-                                                <td>{{ $item->payee ? $item->payee->name : $item->pay_to }}</td>
-                                                <td class="text-end">{{ number_format($item->net_amount, 2) }}</td>
-                                            </tr>
+                                        @forelse($data['details']['pv_items'] as $voucher)
+                                            @foreach($voucher->expenseItems as $item)
+                                                <tr>
+                                                    <td>{{ $voucher->voucher_date->format('Y-m-d') }}</td>
+                                                    <td>
+                                                        <a href="{{ route('payment-voucher.show', $voucher->id) }}" target="_blank">
+                                                            {{ $voucher->voucher_no }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ $voucher->branch_code }}</td>
+                                                    <td>
+                                                        <div class="font-weight-bold">{{ $item->description }}</div>
+                                                        <div class="small text-muted">{{ $voucher->payee ? $voucher->payee->name : $voucher->pay_to }}</div>
+                                                    </td>
+                                                    <td class="text-end">{{ number_format($item->amount, 2) }}</td>
+                                                </tr>
+                                            @endforeach
                                         @empty
                                             <tr><td colspan="5" class="text-center">No data available</td></tr>
                                         @endforelse

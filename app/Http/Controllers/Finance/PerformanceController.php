@@ -140,7 +140,7 @@ class PerformanceController extends Controller
                     ->whereIn('branch_code', ['EL', 'ELPV', 'ELBF'])
                     ->where('is_salary', false)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
-                    ->with(['payee'])
+                    ->with(['payee', 'expenseItems'])
                     ->get(),
 
                 'pv_groups' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
