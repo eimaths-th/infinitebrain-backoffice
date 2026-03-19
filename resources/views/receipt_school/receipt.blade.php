@@ -398,6 +398,13 @@
                 </div>
 
                 <div class="page-title-actions">
+                    <div class="d-inline-block">
+                        <select id="type_filter" class="form-control" style="width: 200px; display: inline-block; margin-right: 10px;">
+                            <option value="">-- All Types --</option>
+                            <option value="0">Normal Receipt</option>
+                            <option value="2">Credit Note</option>
+                        </select>
+                    </div>
                     <div class="d-inline-block dropdown">
                         <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
@@ -1675,15 +1682,17 @@
                         </div>
 
                         <div id="ConvModalBody">
+                            <input type="hidden" id="conv_original_id" name="original_id">
+                            <input type="hidden" id="conv_pid" name="pid">
                             <ul class="nav nav-tabs">
-                                <li class="nav-item"><a data-toggle="tab" href="#tab-eg20-0"
+                                <li class="nav-item"><a data-bs-toggle="tab" href="#tab-cn-0"
                                         class="active nav-link">ข้อมูลลูกค้า</a></li>
-                                <li class="nav-item"><a data-toggle="tab" href="#tab-eg20-1"
+                                <li class="nav-item"><a data-bs-toggle="tab" href="#tab-cn-1"
                                         class="nav-link">รายการในใบเสร็จ</a></li>
 
                             </ul>
                             <div class="tab-content">
-                                <div class="tab-pane active" id="tab-eg20-0" role="tabpanel">
+                                <div class="tab-pane active" id="tab-cn-0" role="tabpanel">
                                     <div class="form-row">
                                         <div class="col-md-6">
                                             <div class="position-relative form-group">
@@ -1780,7 +1789,7 @@
                                         <textarea class="form-control" name="conv_address" id="ConvAddress"></textarea>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab-eg20-1" role="tabpanel">
+                                <div class="tab-pane" id="tab-cn-1" role="tabpanel">
 
                                     <table id="myTbl2"
                                         class="table table-striped table-bordered responsive-utilities jambo_table "
@@ -2008,7 +2017,12 @@
 
             var table = $('#Listview').DataTable({
 
-                ajax: '',
+                ajax: {
+                    url: '',
+                    data: function(d) {
+                        d.type_filter = $('#type_filter').val();
+                    }
+                },
                 serverSide: true,
                 processing: true,
                 language: {
@@ -2069,7 +2083,9 @@
                         data: 'action',
                         name: 'action',
                         render: function(data, type, full, meta) {
-                            return '<span class="text-nowrap">' + data + '</span>';
+                            var btn = '<span class="text-nowrap">' + data + '</span>';
+                            btn += '<button type="button" class="btn btn-sm btn-warning btn-conv" data-id="' + full.id + '" title="Credit Note"><i class="fa fa-retweet"></i></button>';
+                            return btn;
                         }
                     },
                 ],
@@ -2079,13 +2095,15 @@
                     console.log('type:' + type);
 
                     if (firstTwoDigits === '01' || firstTwoDigits === '71') {
-                        // $(row).find('td:eq(3)').addClass('bg-danger');
-                        // $(row).addClass('bg-cyan');
-                        $(row).addClass('bg-red');
+                         // $(row).find('td:eq(3)').addClass('bg-danger');
+                         // $(row).addClass('bg-cyan');
+                         $(row).addClass('bg-red');
                     } else if (firstTwoDigits === '03' || firstTwoDigits === '73') {
-                        // $(row).find('td:eq(3)').addClass('bg-danger');
-                        $(row).addClass('bg-cyan');
-                        // $(row).addClass('bg-red');
+                         // $(row).find('td:eq(3)').addClass('bg-danger');
+                         $(row).addClass('bg-cyan');
+                         // $(row).addClass('bg-red');
+                    } else if (firstTwoDigits === 'CN') {
+                        $(row).addClass('bg-warning');
                     }
                     // else if (type === '9') {
                     //     // $(row).find('td:eq(3)').addClass('bg-danger');
@@ -2093,6 +2111,10 @@
                     //     // $(row).addClass('bg-red');
                     // }
                 }
+            });
+
+            $('#type_filter').on('change', function() {
+                table.draw();
             });
 
             $('.dropdown-menu li #printr1').on('click', function(e) {
@@ -3154,6 +3176,36 @@
                 });
             });
 
+            $(document).on('click', '.btn-conv', function(e) {
+                e.preventDefault();
+                $('.app-container').addClass('closed-sidebar-mobile closed-sidebar');
+                $('.alert-danger').html('').hide();
+                $('.alert-success').html('').hide();
+
+                let id = $(this).data('id');
+                $.ajax({
+                    url: "receipt_school/get_conv/" + id,
+                    method: 'GET',
+                    success: function(res) {
+                        $('#conv_original_id').val(id);
+                        $('#conv_pid').val(res.data.pid);
+                        $('#conv_receipt_number').val(res.data.receipt_number);
+                        $('#conv_customer_code').val(res.parent ? res.parent.code : '');
+                        $('#ConvSubmissiondate').val(new Date().toISOString().slice(0, 10)); // Default to today
+                        $('#ConvFirstname').val(res.parent ? res.parent.first_name : '');
+                        $('#ConvLastname').val(res.parent ? res.parent.last_name : '');
+                        $('#ConvGrade').val(res.data.grade);
+                        $('#ConvAddress').val(res.data.street_address);
+                        $('#ConvPostcode').val(res.data.postcode);
+                        $('#ConvParent').val(res.parent ? res.parent.name_parent : res.data.name_parent);
+                        $('#ConvMobile').val(res.data.mobile);
+                        
+                        $('#myTbl2 tbody').html(res.data_html);
+                        $('#ConvModal').modal('show');
+                    }
+                });
+            });
+
             $('#SubmitConvForm').click(function(e) {
                 e.preventDefault();
                 $('.alert-danger').html('');
@@ -3172,7 +3224,6 @@
                 $("input[name='rrid[]']").each(function() {
                     rrid.push(this.value);
                 });
-
 
                 $("input[name='rrdes[]']").each(function() {
                     rrdes.push(this.value);
@@ -3194,9 +3245,8 @@
                     rrdis.push(this.value);
                 });
 
-
                 $.ajax({
-                    url: "{{ route('receipts.conv') }}",
+                    url: "{{ route('receipt_school.conv') }}",
                     method: 'post',
                     data: {
                         type: 2,
@@ -3206,24 +3256,19 @@
                         first_name: $('#ConvFirstname').val(),
                         last_name: $('#ConvLastname').val(),
                         grade: $('#ConvGrade').val(),
-                        //description: $('#ConvDes').val(),
                         street_address: $('#ConvAddress').val(),
-                        //street_address2: $('#AddAddress2').val(),
-                        //city: $('#AddCity').val(),
-                        //province: $('#AddProvince').val(),
                         postcode: $('#ConvPostcode').val(),
                         name_parent: $('#ConvParent').val(),
                         mobile: $('#ConvMobile').val(),
-                        //package: $('#ConvPackage').val(),
-                        //file_att: $('#AddFile').val(),
-                        // sfield: $('#Sfield').val(),
+                        pid: $('#conv_pid').val(),
+                        original_id: $('#conv_original_id').val(),
                         rrdid: rrid,
                         rrdes: rrdes,
                         rrqty: rrqty,
                         rrunit: rrunit,
                         rrunitp: rrunitp,
                         rrdis: rrdis,
-                        _token: token,
+                        _token: $('meta[name="csrf-token"]').attr('content'),
                     },
                     success: function(result) {
                         if (result.errors) {
@@ -3241,15 +3286,9 @@
                             toastr.success(result.success, {
                                 timeOut: 5000
                             });
-                            $('#CreateModal').modal('hide');
+                            $('#ConvModal').modal('hide');
                             $('#Listview').DataTable().ajax.reload();
                             $('.form').trigger('reset');
-                            //$('#SubmitCreateForm').hide();
-                            //setTimeout(function() {
-                            //$('.alert-success').hide();
-                            //$('#CreateModal').modal('hide');
-                            //}, 10000);
-
                         }
                     }
                 });

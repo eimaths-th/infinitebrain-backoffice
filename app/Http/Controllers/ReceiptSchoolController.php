@@ -632,91 +632,48 @@ class ReceiptSchoolController extends Controller
                 "receipt_school.receipt_number as receipt_number",
                 "receipt_school.pid as pid",
             )
-
                 //->join("students", "students.id", "=", "receipts.student_id")
-                ->join("parent", "parent.id", "=", "receipt_school.name_parent")
-                //->join("levels", "levels.id", "=", "receipts.level_id")
+                ->join("parent", "parent.id", "=", "receipt_school.name_parent");
+            //->join("levels", "levels.id", "=", "receipts.level_id")
 
-                ->orderBy("receipt_school.id", "desc")
+            if ($request->has('type_filter') && $request->type_filter != "") {
+                $receipt->where('receipt_school.type', $request->type_filter);
+            }
+
+            $receipt = $receipt->orderBy("receipt_school.id", "desc")
                 ->get();
 
-            // echo "<pre>";
-            // print_r($receipt);
-            // echo "</pre>";
-            // exit();
+            // Pre-fetch students to avoid N+1 queries in the pid editColumn
+            $studentIds = $receipt->pluck('pid')->flatMap(fn($p) => explode('|', $p))->unique()->filter()->toArray();
+            $students = Student::whereIn('id', $studentIds)->get()->keyBy('id');
+
             return datatables()->of($receipt)
-                ->editColumn('pid', function ($row) {
-                    $student = "";
-                    $stu = explode('|', $row->pid);
-                    // dd($stu);
-                    $numname = 0;
-
-                    if ($row->pid !== "") {
-                        foreach ($stu as $stus) {
-
-                            if (Student::where('id', $stus)->exists()) {
-                                $stusq = Student::where('id', $stus)->get();
-                                //$student .= $stusq[0]->nick_name . " ," . $stusq[0]->last_name . ' ';
-                                if ($numname < 1) {
-                                    # code...
-                                    $student .= $stusq[0]->nick_name;
-                                } else {
-
-                                    $student .= " , " . $stusq[0]->nick_name;
-                                }
-                            } else {
-                                $student .= '-';
-                            }
-
-                            $numname++;
+                ->editColumn('pid', function ($row) use ($students) {
+                    $studentNames = [];
+                    $ids = explode('|', $row->pid);
+                    foreach ($ids as $id) {
+                        if (isset($students[$id])) {
+                            $studentNames[] = $students[$id]->nick_name;
+                        } elseif (!empty($id)) {
+                             $studentNames[] = '-';
                         }
-                    } else {
-                        $student = '-';
                     }
-                    return $student;
+                    return !empty($studentNames) ? implode(' , ', $studentNames) : '-';
                 })
                 ->editColumn('name_parent', function ($row) {
-                    //$parent = ParentRegister::where('id', $row->name_parent)->get();
-                    //$parents = "";
-                    //foreach ($parent as $value) {
-                    //$parents .= $value->name_parent . ",";
-                    //}
-
-                    //return $parents;
                     return $row->name_parent;
                 })
-                // ->editColumn('receipt_number', function ($row) {
-
-                //     $receipt = SchoolPrice::where('rid',$row->id)->get();
-                //     $receipts = "";
-                //     foreach($receipt as $value){
-                //         $receipts .= $value->receipt_number .",";
-
-                //     }
-
-                //     return $receipts ;
-                // })
                 ->editColumn('type', function (Receipt_School $receipt) {
                     if ($receipt->type == 2) {
                         $mes = "ใบลดหนี้";
-                        $text = "Credit Note";
                     } else {
-
                         $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
-                        $text = "Tax Invoice/Receipt";
                     }
                     return $mes;
                 })
                 ->editColumn('type2', function (Receipt_School $receipt) {
-                    if ($receipt->type == 9) {
-                        $mes = "yes";
-                    } else {
-
-                        $mes = "no";
-                    }
-                    return $mes;
+                    return ($receipt->type == 9) ? "yes" : "no";
                 })
-
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
@@ -724,28 +681,16 @@ class ReceiptSchoolController extends Controller
                     $html = '<a href=" ' . route('receipt_school.show', ['type' => 'view', 'id' => $row->id]) . '" class="btn btn-xs btn-success btn-view" id="ViewData" data-id="' . $row->id . '"><i class="fa fa-eye"></i> View </a> ';
                     $html .= '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $row->id . '"><i class="fa fa-edit"></i> Edit</a> ';
                     if (auth()->user()->id === 16) {
-                        # code...
                         $html .= '<a href="#" class="btn btn-xs btn-danger btn-delete" id="DeleteData" data-id="' . $row->id . '"><i class="fa fa-trash"></i> Delete</a> ';
                     }
-                    //$html .= '<a href="#" data-rowid="' . $row->receipt_id . '" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Delete</a>';
                     return $html;
                 })->toJson();
         }
-
-
 
         $student = Student::orderBy("first_name", "asc")->get();
         $subject = Subject::orderBy("id", "asc")->get();
         $parent = ParentRegister::orderBy("id", "asc")->get();
 
-        $school_picei_update_group = SchoolPrice::all();
-        // $subject_ids = $school_picei_update_group->pluck('subject')->toArray();
-        foreach ($school_picei_update_group as $upg) {
-            # code...
-            $group = $upg->school_sub->group;
-            $upg->update(['group' => $group]);
-        }
-        // dd('update complete');
         return view('receipt_school.receipt')->with(['data2' => $student])->with(['data3' => $subject])->with(['data4' => $parent])
             ->with(['datap' => self::datap]);
     }
@@ -1213,12 +1158,20 @@ class ReceiptSchoolController extends Controller
         foreach ($receipts_detail as $dresult) {
             if ($dresult['course_type'] == 2) {
                 $price = $dresult['bookprice'];
-                $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+                if ($data->type == 2) {
+                    $mes = "ใบลดหนี้";
+                } else {
+                    $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+                }
 
                 $group_rec = '';
             } elseif ($dresult['course_type'] == 3) {
                 $price = $dresult['media_price'];
-                $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+                if ($data->type == 2) {
+                    $mes = "ใบลดหนี้";
+                } else {
+                    $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+                }
 
                 $group_rec = '';
             } else {
@@ -1249,6 +1202,8 @@ class ReceiptSchoolController extends Controller
             } else {
                 if ($dresult['group'] === 'CHN') {
                     $message = "คอร์ส";
+                } elseif ($dresult['course_type'] == 3) {
+                    $message = "ครั้ง";
                 } else {
                     # code...
                     $message = "เดือน";
@@ -1287,9 +1242,9 @@ class ReceiptSchoolController extends Controller
 
                     $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] - $dresult['discount']) / $dresult['book'], 2);
                 } elseif ($dresult['course_type'] == 3) {
-                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['media_price']), 2);
+                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['media_price'] + $dresult['discount']) / ($dresult['qty'] ?: 1), 2);
                 } else {
-                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] + $dresult['discount'] - $dresult['bookprice'] - $dresult['entrance_fee']) / $dresult['qty'], 2);
+                    $receipt_detail_arr[$x]['unitprice'] = number_format(($dresult['total'] + $dresult['discount'] - $dresult['bookprice'] - $dresult['entrance_fee']) / ($dresult['qty'] ?: 1), 2);
                 }
                 $receipt_detail_arr[$x]['quantity'] =  $qty; //$dresult['qty'];
                 $receipt_detail_arr[$x]['discount'] = number_format($dresult['discount'], 2);
@@ -1300,6 +1255,7 @@ class ReceiptSchoolController extends Controller
             }
 
 
+            $sub = (object)['title' => '-', 'id' => 0];
             $subject = Subject::where('id', $dresult['subject'])
                 ->get();
 
@@ -1307,12 +1263,14 @@ class ReceiptSchoolController extends Controller
                 $sub = $sresult;
             }
 
+            $titless = (object)['level_sort' => '-'];
             $level = Level::where('subject', $sub->id)->where('id', $dresult['level'])
                 ->get();
             foreach ($level as $titles) {
                 $titless = $titles;
             }
 
+            $booktotal = (object)['book_price' => 0];
             $data0 = SubjectPrice::Where('subject_id', $sub->id)->Where('level_id', $dresult['level'])
                 ->get();
 
@@ -1325,8 +1283,17 @@ class ReceiptSchoolController extends Controller
             //- $dresult['discount']
 
             // $receipt_detail_arr[$x]['books'] = $bookp->book_price;
-            $receipt_detail_arr[$x]['books'] = $dresult['bookprice'] / $dresult['book'];
-            $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort;
+            $receipt_detail_arr[$x]['books'] = $dresult['book'] > 0 ? $dresult['bookprice'] / $dresult['book'] : 0;
+            
+            if ($sub->id == 0 && !empty($dresult['media_name'])) {
+                 $desc = $dresult['media_name'];
+                 if (mb_strlen($desc) > 50 && preg_match('/^(.*?Level\s*[A-Za-z0-9]+)\s+(.+)$/i', $desc, $matches)) {
+                     $desc = trim($matches[1]);
+                 }
+                 $receipt_detail_arr[$x]['description'] = $desc;
+            } else {
+                 $receipt_detail_arr[$x]['description'] = $sub->title . "  " . "Level " . $titless->level_sort;
+            }
             $booksum = $booksum + $dresult['bookprice'] + $dresult['media_price'];
             $discount = $discount + $dresult['discount'];
             $all_price =  $booksum + $pricesub;
@@ -2168,5 +2135,225 @@ class ReceiptSchoolController extends Controller
         $data->delete(); // Delete main receipt
 
         return response()->json(['success' => 'Receipt deleted successfully']);
+    }
+
+    public function getConvData($id)
+    {
+        $data = Receipt_School::find($id);
+        if (!$data) {
+            return response()->json(['error' => 'Receipt not found'], 404);
+        }
+
+        // Parse student IDs (pid is stored as "id1|id2|...")
+        $studentIds = explode('|', $data->pid);
+        
+        // Find parent - if multiple students, we just take the first one's parent (they should have the same parent)
+        $parent = null;
+        if (!empty($studentIds[0])) {
+            $student = Student::find($studentIds[0]);
+            if ($student) {
+                $parent = ParentRegister::find($student->parent_id);
+            }
+        }
+
+        // Get line items (SchoolPrice)
+        $prices = SchoolPrice::where('rid', $id)->get();
+        
+        $data_html = '';
+        $x = 1;
+        foreach ($prices as $item) {
+            $subject = Subject::find($item->subject);
+            $level = Level::where('id', $item->level)->first();
+            
+            // Build base description and unit message
+            $unit_msg = "";
+            if ($item->week == 1 || $item->week == 2 || $item->week == 3) {
+                $unit_msg = " (" . $item->week . " สัปดาห์)";
+            } else {
+                $unit_msg = " (" . ($item->qty ?: 1) . " เดือน)";
+            }
+
+            $base_desc = "";
+            if ($item->subject == 0 && !empty($item->media_name)) {
+                 $base_desc = $item->media_name;
+                 if (mb_strlen($base_desc) > 50 && preg_match('/^(.*?Level\s*[A-Za-z0-9]+)\s+(.+)$/i', $base_desc, $matches)) {
+                     $base_desc = trim($matches[1]);
+                 }
+            } elseif ($item->course_type == 3) {
+                 $base_desc = $item->media_name;
+            } else {
+                 $base_desc = ($subject ? $subject->title : '') . ' ' . ($level ? 'Level ' . $level->level_sort : '');
+            }
+
+            // Prepare rows to split Course and Book if bookprice > 0
+            $rows = [];
+            $bookprice = floatval($item->bookprice);
+            $discount = floatval($item->discount);
+            $total = floatval($item->total);
+            $qty = floatval($item->qty ?: 1);
+
+            if ($bookprice > 0 && ($item->course_type == 1 || $item->course_type == 0)) {
+                // Course Row
+                $course_gross = ($total - $bookprice + $discount);
+                $rows[] = [
+                    'description' => "ค่าคอร์สเรียน " . $base_desc . $unit_msg,
+                    'qty' => $qty,
+                    'unit_price' => $course_gross / $qty,
+                    'discount' => $discount,
+                    'course_type' => 1,
+                    'unit' => 'รายการ'
+                ];
+                // Book Row
+                $rows[] = [
+                    'description' => "ค่าหนังสือ " . $base_desc,
+                    'qty' => floatval($item->book ?: 1),
+                    'unit_price' => $bookprice / (floatval($item->book) ?: 1),
+                    'discount' => 0,
+                    'course_type' => 2,
+                    'unit' => 'ชุด'
+                ];
+            } else {
+                // Single row
+                $rows[] = [
+                    'description' => ($item->course_type == 2 ? "ค่าหนังสือ " : ($item->course_type == 3 ? "" : "ค่าคอร์สเรียน ")) . $base_desc . ($item->course_type == 3 ? "" : $unit_msg),
+                    'qty' => $qty,
+                    'unit_price' => ($total + $discount) / $qty,
+                    'discount' => $discount,
+                    'course_type' => $item->course_type ?: 1,
+                    'unit' => ($item->course_type == 2 ? 'ชุด' : 'รายการ')
+                ];
+            }
+
+            foreach ($rows as $row) {
+                $data_html .= '<tr class="firstTr">
+                <td width="3%">' . $x . '</td>
+                <td width="35%">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="text" name="rrdes[]" class="form-control" value="' . htmlspecialchars($row['description']) . '">
+                        <input type="hidden" name="rrperiod[]" value="' . htmlspecialchars($item->period) . '">
+                        <input type="hidden" name="rrcourse_type[]" value="' . $row['course_type'] . '">
+                    </div>
+                </td>
+                <td width="10%">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="number" step="any" name="rrqty[]" class="form-control" value="' . $row['qty'] . '">
+                    </div>
+                </td>
+                <td width="10%">
+                     <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="text" name="rrunit[]" class="form-control" value="' . $row['unit'] . '">
+                    </div>
+                </td>
+                <td width="15%">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="number" step="0.01" name="rrunitp[]" class="form-control" value="' . number_format($row['unit_price'], 2, '.', '') . '">
+                    </div>
+                </td>
+                <td width="15%">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="number" step="0.01" name="rrdis[]" class="form-control" value="' . $row['discount'] . '">
+                    </div>
+                </td>
+            </tr>';
+                $x++;
+            }
+        }
+
+        return response()->json([
+            'data' => $data,
+            'parent' => $parent,
+            'data_html' => $data_html
+        ]);
+    }
+
+    public function conv(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'submission_date' => 'required|string',
+            'name_parent' => 'required|string',
+            'mobile' => 'required|string',
+            'rrdes' => 'required|array',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        $pid = $request->get('pid');
+        $original_id = $request->get('original_id');
+        
+        // If pid is not provided in request, try to get it from original record
+        if (!$pid && $original_id) {
+            $orig = Receipt_School::find($original_id);
+            if ($orig) {
+                $pid = $orig->pid;
+            }
+        }
+
+        // Generate a dummy CN number or use what's provided
+        // Since the generator doesn't have CN type, we'll just follow patterns or use prefix
+        $rnumber = $request->get('receipt_number');
+        if (substr($rnumber, 0, 2) !== 'CN') {
+             $rnumber = "CN-" . $rnumber;
+        }
+
+        $data = new Receipt_School([
+            'submission_date' => $request->get('submission_date'),
+            'payment_type' => 1, // Credit
+            'street_address' => $request->get('street_address'),
+            'postcode' => $request->get('postcode'),
+            'mobile' => $request->get('mobile'),
+            'name_parent' => $request->get('name_parent'),
+            'type' => 2, // Credit Note
+            'receipt_number' => $rnumber,
+            'pid' => $pid,
+            'approv_id' => auth()->user()->id,
+            'approv_name' => auth()->user()->name,
+        ]);
+        $data->save();
+
+        $rid = $data->id;
+        $rdes = $request->get('rrdes');
+        $rqty = $request->get('rrqty');
+        $runitp = $request->get('rrunitp');
+        $rdis = $request->get('rrdis');
+        $rperiod = $request->get('rrperiod'); // Capture period
+
+        $rrcourse_type = $request->get('rrcourse_type');
+
+        for ($i = 0; $i < count($rdes); $i++) {
+            $qty = floatval($rqty[$i] ?? 1);
+            $u_price = floatval($runitp[$i] ?? 0);
+            $discount = floatval($rdis[$i] ?? 0);
+            $period = $rperiod[$i] ?? '';
+            $ctype = $rrcourse_type[$i] ?? 1;
+            
+            $total_val = ($qty * $u_price) - $discount;
+
+            $price_record = new SchoolPrice([
+                'rid' => $rid,
+                'qty' => ($ctype == 2 ? 1 : $qty), // For course_type 2, qty is usually 1 while 'book' has the count
+                'book' => ($ctype == 2 ? $qty : 0),
+                'subject' => 0,
+                'level' => 0,
+                'group' => $period, 
+                'week' => 0,
+                'price' => $u_price, 
+                'total' => $total_val,
+                'media_price' => 0,
+                'bookprice' => ($ctype == 2 ? $total_val : 0),
+                'entrance_fee' => 0,
+                'discount' => $discount,
+                'media_name' => $rdes[$i] ?? '',
+                'course_type' => $ctype,
+                'type' => 0,
+                'receipt_number' => 0,
+                'approv_id' => auth()->user()->id,
+                'approv_name' => auth()->user()->name,
+            ]);
+            $price_record->save();
+        }
+
+        return response()->json(['success' => 'Credit Note created successfully']);
     }
 }
