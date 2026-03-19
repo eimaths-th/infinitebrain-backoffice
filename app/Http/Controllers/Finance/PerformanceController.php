@@ -92,7 +92,7 @@ class PerformanceController extends Controller
         $rvRevenueQuery = ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
             ->whereBetween('voucher_date', [$startDate, $endDate]);
 
-        if (!empty($rvBranchCodes)) {
+        if (!empty($selectedGroups)) {
             $rvRevenueQuery->whereIn('branch_code', $rvBranchCodes);
         }
         $rvRevenue = $rvRevenueQuery->sum('net_amount');
@@ -102,7 +102,7 @@ class PerformanceController extends Controller
             ->where('is_salary', false)
             ->whereBetween('voucher_date', [$startDate, $endDate]);
 
-        if (!empty($pvBranchCodes)) {
+        if (!empty($selectedGroups)) {
             $pvExpenseQuery->whereIn('branch_code', $pvBranchCodes);
         }
         $pvExpense = $pvExpenseQuery->sum('net_amount');
@@ -161,14 +161,14 @@ class PerformanceController extends Controller
 
                 'rv_items' => ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
-                    ->when(!empty($rvBranchCodes), function ($query) use ($rvBranchCodes) {
+                    ->when(!empty($selectedGroups), function ($query) use ($rvBranchCodes) {
                         return $query->whereIn('branch_code', $rvBranchCodes);
                     })
                     ->with(['payee', 'receiptItems'])
                     ->get(),
 
                 'pv_items' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
-                    ->when(!empty($pvBranchCodes), function ($query) use ($pvBranchCodes) {
+                    ->when(!empty($selectedGroups), function ($query) use ($pvBranchCodes) {
                         return $query->whereIn('branch_code', $pvBranchCodes);
                     })
                     ->where('is_salary', false)
@@ -177,7 +177,7 @@ class PerformanceController extends Controller
                     ->get(),
 
                 'pv_groups' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
-                    ->when(!empty($pvBranchCodes), function ($query) use ($pvBranchCodes) {
+                    ->when(!empty($selectedGroups), function ($query) use ($pvBranchCodes) {
                         return $query->whereIn('branch_code', $pvBranchCodes);
                     })
                     ->where('is_salary', false)
