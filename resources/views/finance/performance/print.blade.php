@@ -15,8 +15,9 @@
             font-family: 'Sarabun', 'Cordia New', sans-serif;
             margin: 0;
             padding: 0;
-            font-size: 10pt;
+            font-size: 14pt;
             color: #000;
+            line-height: 1.5;
         }
 
         .text-center {
@@ -33,9 +34,9 @@
 
         .header {
             text-align: center;
-            font-size: 18pt;
+            font-size: 20pt;
             font-weight: bold;
-            margin-bottom: 2px;
+            margin-bottom: 20px;
             line-height: 1.2;
         }
 
@@ -47,7 +48,7 @@
 
         th,
         td {
-            padding: 2px 5px;
+            padding: 4px 5px;
             border: none;
             vertical-align: top;
         }
@@ -57,8 +58,8 @@
             font-weight: bold;
             border-top: 2px solid #5B9541;
             /* Green line */
-            padding-top: 5px;
-            padding-bottom: 2px;
+            padding-top: 10px;
+            padding-bottom: 5px;
         }
 
         .col-headings th {

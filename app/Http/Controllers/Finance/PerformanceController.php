@@ -62,17 +62,25 @@ class PerformanceController extends Controller
         $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
 
         // Resolve selected groups to branch codes
-        $branchCodes = [];
+        $pvBranchCodes = [];
+        $rvBranchCodes = [];
         if (!empty($selectedGroups)) {
             foreach ($selectedGroups as $group) {
                 if (isset(PaymentVoucher::$groupBranchCodes[$group])) {
-                    $branchCodes = array_merge($branchCodes, PaymentVoucher::$groupBranchCodes[$group]);
+                    $pvBranchCodes = array_merge($pvBranchCodes, PaymentVoucher::$groupBranchCodes[$group]);
+                }
+                if (isset(ReceiptVoucher::$groupBranchCodes[$group])) {
+                    $rvBranchCodes = array_merge($rvBranchCodes, ReceiptVoucher::$groupBranchCodes[$group]);
                 }
             }
         }
-        $branchCodes = array_unique($branchCodes);
+        $pvBranchCodes = array_unique($pvBranchCodes);
+        $rvBranchCodes = array_unique($rvBranchCodes);
 
-        // ... (Revenue and Expense calculation remains same)  ... //
+        // Flags for other data types
+        $showSchoolRevenue = in_array('EL', $selectedGroups) || in_array('EiMaths', $selectedGroups);
+        $showPayroll = in_array('EL', $selectedGroups) || in_array('IF', $selectedGroups); // Assuming payroll is still centered on these for now
+
         // 1. Revenue: School Receipts
         $schoolRevenue = SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
                 $query->whereYear('submission_date', $year)
@@ -84,8 +92,8 @@ class PerformanceController extends Controller
         $rvRevenueQuery = ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
             ->whereBetween('voucher_date', [$startDate, $endDate]);
 
-        if (!empty($branchCodes)) {
-            $rvRevenueQuery->whereIn('branch_code', $branchCodes);
+        if (!empty($rvBranchCodes)) {
+            $rvRevenueQuery->whereIn('branch_code', $rvBranchCodes);
         }
         $rvRevenue = $rvRevenueQuery->sum('net_amount');
 
@@ -94,8 +102,8 @@ class PerformanceController extends Controller
             ->where('is_salary', false)
             ->whereBetween('voucher_date', [$startDate, $endDate]);
 
-        if (!empty($branchCodes)) {
-            $pvExpenseQuery->whereIn('branch_code', $branchCodes);
+        if (!empty($pvBranchCodes)) {
+            $pvExpenseQuery->whereIn('branch_code', $pvBranchCodes);
         }
         $pvExpense = $pvExpenseQuery->sum('net_amount');
 
@@ -153,15 +161,15 @@ class PerformanceController extends Controller
 
                 'rv_items' => ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
-                    ->when(!empty($branchCodes), function ($query) use ($branchCodes) {
-                        return $query->whereIn('branch_code', $branchCodes);
+                    ->when(!empty($rvBranchCodes), function ($query) use ($rvBranchCodes) {
+                        return $query->whereIn('branch_code', $rvBranchCodes);
                     })
                     ->with(['payee'])
                     ->get(),
 
                 'pv_items' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
-                    ->when(!empty($branchCodes), function ($query) use ($branchCodes) {
-                        return $query->whereIn('branch_code', $branchCodes);
+                    ->when(!empty($pvBranchCodes), function ($query) use ($pvBranchCodes) {
+                        return $query->whereIn('branch_code', $pvBranchCodes);
                     })
                     ->where('is_salary', false)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
@@ -169,8 +177,8 @@ class PerformanceController extends Controller
                     ->get(),
 
                 'pv_groups' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
-                    ->when(!empty($branchCodes), function ($query) use ($branchCodes) {
-                        return $query->whereIn('branch_code', $branchCodes);
+                    ->when(!empty($pvBranchCodes), function ($query) use ($pvBranchCodes) {
+                        return $query->whereIn('branch_code', $pvBranchCodes);
                     })
                     ->where('is_salary', false)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
