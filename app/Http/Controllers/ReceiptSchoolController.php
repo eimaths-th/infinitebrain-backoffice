@@ -2165,14 +2165,7 @@ class ReceiptSchoolController extends Controller
             $subject = Subject::find($item->subject);
             $level = Level::where('id', $item->level)->first();
             
-            // Build base description and unit message
-            $unit_msg = "";
-            if ($item->week == 1 || $item->week == 2 || $item->week == 3) {
-                $unit_msg = " (" . $item->week . " สัปดาห์)";
-            } else {
-                $unit_msg = " (" . ($item->qty ?: 1) . " เดือน)";
-            }
-
+            // Build base description
             $base_desc = "";
             if ($item->subject == 0 && !empty($item->media_name)) {
                  $base_desc = $item->media_name;
@@ -2185,27 +2178,35 @@ class ReceiptSchoolController extends Controller
                  $base_desc = ($subject ? $subject->title : '') . ' ' . ($level ? 'Level ' . $level->level_sort : '');
             }
 
+            // Determine Qty and Unit for Course (match show() logic)
+            if ($item->week >= 1 && $item->week <= 3) {
+                $c_qty = floatval($item->week);
+                $c_unit = 'สัปดาห์';
+            } else {
+                $c_qty = floatval($item->qty ?: 1);
+                $c_unit = ($item->group === 'CHN' ? 'คอร์ส' : 'เดือน');
+            }
+
             // Prepare rows to split Course and Book if bookprice > 0
             $rows = [];
             $bookprice = floatval($item->bookprice);
             $discount = floatval($item->discount);
             $total = floatval($item->total);
-            $qty = floatval($item->qty ?: 1);
 
             if ($bookprice > 0 && ($item->course_type == 1 || $item->course_type == 0)) {
                 // Course Row
                 $course_gross = ($total - $bookprice + $discount);
                 $rows[] = [
-                    'description' => "ค่าคอร์สเรียน " . $base_desc . $unit_msg,
-                    'qty' => $qty,
-                    'unit_price' => $course_gross / $qty,
+                    'description' => (strpos($base_desc, 'ค่าคอร์สเรียน') === false ? "ค่าคอร์สเรียน " : "") . $base_desc,
+                    'qty' => $c_qty,
+                    'unit_price' => $course_gross / $c_qty,
                     'discount' => $discount,
                     'course_type' => 1,
-                    'unit' => 'รายการ'
+                    'unit' => $c_unit
                 ];
                 // Book Row
                 $rows[] = [
-                    'description' => "ค่าหนังสือ " . $base_desc,
+                    'description' => (strpos($base_desc, 'ค่าหนังสือ') === false ? "ค่าหนังสือ " : "") . $base_desc,
                     'qty' => floatval($item->book ?: 1),
                     'unit_price' => $bookprice / (floatval($item->book) ?: 1),
                     'discount' => 0,
@@ -2214,13 +2215,24 @@ class ReceiptSchoolController extends Controller
                 ];
             } else {
                 // Single row
+                $qty_for_row = ($item->course_type == 2 ? floatval($item->book ?: 1) : $c_qty);
+                $unit_for_row = ($item->course_type == 2 ? 'ชุด' : ($item->course_type == 3 ? 'ชุด' : $c_unit));
+                $prefix = "";
+                if ($item->course_type == 2) {
+                    $prefix = (strpos($base_desc, 'ค่าหนังสือ') === false ? "ค่าหนังสือ " : "");
+                } elseif ($item->course_type == 3) {
+                    $prefix = "";
+                } else {
+                    $prefix = (strpos($base_desc, 'ค่าคอร์สเรียน') === false ? "ค่าคอร์สเรียน " : "");
+                }
+
                 $rows[] = [
-                    'description' => ($item->course_type == 2 ? "ค่าหนังสือ " : ($item->course_type == 3 ? "" : "ค่าคอร์สเรียน ")) . $base_desc . ($item->course_type == 3 ? "" : $unit_msg),
-                    'qty' => $qty,
-                    'unit_price' => ($total + $discount) / $qty,
+                    'description' => $prefix . $base_desc,
+                    'qty' => $qty_for_row,
+                    'unit_price' => ($total + $discount) / $qty_for_row,
                     'discount' => $discount,
                     'course_type' => $item->course_type ?: 1,
-                    'unit' => ($item->course_type == 2 ? 'ชุด' : 'รายการ')
+                    'unit' => $unit_for_row
                 ];
             }
 

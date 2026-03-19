@@ -165,11 +165,20 @@
                             </div>
 
                             <div class="mb-3">
-                                <div class="form-check form-switch pt-2">
+                                <div class="form-check form-switch pt-2 mb-2">
                                     <input class="form-check-input" type="checkbox" name="is_salary" id="isSalary" value="1" {{ old('is_salary') ? 'checked' : '' }}>
                                     <label class="form-check-label fw-bold text-primary" for="isSalary">
                                         <i class="fa fa-money"></i> ใบจ่ายเงินเดือน (Salary Payment)
                                     </label>
+                                </div>
+                                <div id="categoryWrapper">
+                                    <label class="form-label">หมวดหมู่ <span class="required-mark">*</span></label>
+                                    <select name="category" id="category" class="form-select" {{ old('is_salary') ? 'disabled' : 'required' }}>
+                                        <option value="">-- เลือกหมวดหมู่ --</option>
+                                        @foreach (\App\Models\PaymentVoucher::$categoryLabels as $key => $label)
+                                            <option value="{{ $key }}" {{ old('category') == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -802,6 +811,25 @@
                 $('#payToAccountNo').val('');
                 $('#payToBankName').val('');
             });
+
+            // Logic สำหรับ disable/enable หมวดหมู่ตาม is_salary
+            const isSalaryCheck = document.getElementById('isSalary');
+            const categorySelect = document.getElementById('category');
+
+            function toggleCategory() {
+                if (isSalaryCheck.checked) {
+                    categorySelect.disabled = true;
+                    categorySelect.value = '';
+                    categorySelect.removeAttribute('required');
+                } else {
+                    categorySelect.disabled = false;
+                    categorySelect.setAttribute('required', 'required');
+                }
+            }
+
+            isSalaryCheck.addEventListener('change', toggleCategory);
+            // รันครั้งแรกเผื่อกรณี old value
+            toggleCategory();
         });
     </script>
 @endsection

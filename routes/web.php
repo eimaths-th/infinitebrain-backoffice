@@ -158,6 +158,7 @@ Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')
     Route::get('/edit/{id}', [PaymentVoucherController::class, 'edit'])->name('edit');
     Route::put('/update/{id}', [PaymentVoucherController::class, 'update'])->name('update');
     Route::delete('/destroy/{id}', [PaymentVoucherController::class, 'destroy'])->name('destroy');
+    Route::post('/update-category/{id}', [PaymentVoucherController::class, 'updateCategory'])->name('update-category');
 
     // Force Delete (ลบถาวรพร้อมข้อมูลที่เกี่ยวข้องทั้งหมด)
     Route::delete('/force-destroy/{id}', [PaymentVoucherController::class, 'forceDestroy'])->name('force-destroy');
