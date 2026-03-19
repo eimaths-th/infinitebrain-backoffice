@@ -22,9 +22,43 @@
                     </button>
                     <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
                         @for ($y = date('Y'); $y >= 2024; $y--)
-                            <a href="{{ route('performance.index', ['year' => $y]) }}" tabindex="0" class="dropdown-item">ปี {{ $y + 543 }}</a>
+                            <a href="{{ route('performance.index', array_merge(request()->query(), ['year' => $y])) }}" tabindex="0" class="dropdown-item">ปี {{ $y + 543 }}</a>
                         @endfor
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="main-card card">
+                <div class="card-body">
+                    <form action="{{ route('performance.index') }}" method="GET" class="row align-items-center">
+                        <input type="hidden" name="year" value="{{ $year }}">
+                        <div class="col-md-9">
+                            <label class="form-label font-weight-bold">กลุ่มสาขาที่ต้องการดูผลประกอบการ:</label>
+                            <div class="d-flex flex-wrap gap-3">
+                                @foreach(\App\Models\PaymentVoucher::$groupBranchCodes as $groupName => $codes)
+                                    <div class="form-check me-4">
+                                        <input class="form-check-input" type="checkbox" name="groups[]" value="{{ $groupName }}" 
+                                            id="group_{{ $groupName }}" {{ in_array($groupName, $selectedGroups) ? 'checked' : '' }}>
+                                        <label class="form-check-label text-primary font-weight-bold" for="group_{{ $groupName }}">
+                                            {{ $groupName }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-filter"></i> กรองข้อมูล
+                            </button>
+                            <a href="{{ route('performance.index', ['year' => $year, 'groups[]' => 'EL']) }}" class="btn btn-secondary ms-2">
+                                รีเซ็ต (EL)
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -75,7 +109,7 @@
                                     {{ number_format($data['profit'], 2) }}
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{ route('performance.monthly', ['year' => $year, 'month' => $month]) }}" class="btn btn-primary btn-sm">
+                                    <a href="{{ route('performance.monthly', array_merge(request()->query(), ['year' => $year, 'month' => $month])) }}" class="btn btn-primary btn-sm">
                                         รายละเอียด
                                     </a>
                                 </td>

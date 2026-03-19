@@ -21,15 +21,16 @@ class PerformanceController extends Controller
     public function index(Request $request)
     {
         $year = $request->input('year', date('Y'));
+        $selectedGroups = $request->input('groups', ['EL']); // Default to EL as requested
 
         // Sum revenue and expenses per month for the given year
         $monthlyPerformance = [];
 
         for ($m = 1; $m <= 12; $m++) {
-            $monthlyPerformance[$m] = $this->calculateMonthlyData($year, $m);
+            $monthlyPerformance[$m] = $this->calculateMonthlyData($year, $m, false, $selectedGroups);
         }
 
-        return view('finance.performance.index', compact('monthlyPerformance', 'year'));
+        return view('finance.performance.index', compact('monthlyPerformance', 'year', 'selectedGroups'));
     }
 
     /**
@@ -37,8 +38,9 @@ class PerformanceController extends Controller
      */
     public function monthly(Request $request, $year, $month)
     {
-        $data = $this->calculateMonthlyData($year, $month, true);
-        return view('finance.performance.monthly', compact('data', 'year', 'month'));
+        $selectedGroups = $request->input('groups', ['EL']);
+        $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups);
+        return view('finance.performance.monthly', compact('data', 'year', 'month', 'selectedGroups'));
     }
 
     /**
@@ -46,17 +48,29 @@ class PerformanceController extends Controller
      */
     public function printMonthly(Request $request, $year, $month)
     {
-        $data = $this->calculateMonthlyData($year, $month, true);
-        return view('finance.performance.print', compact('data', 'year', 'month'));
+        $selectedGroups = $request->input('groups', ['EL']);
+        $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups);
+        return view('finance.performance.print', compact('data', 'year', 'month', 'selectedGroups'));
     }
 
     /**
      * Calculate all financial data for a specific month.
      */
-    private function calculateMonthlyData($year, $month, $getDetails = false)
+    private function calculateMonthlyData($year, $month, $getDetails = false, $selectedGroups = [])
     {
         $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
         $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+
+        // Resolve selected groups to branch codes
+        $branchCodes = [];
+        if (!empty($selectedGroups)) {
+            foreach ($selectedGroups as $group) {
+                if (isset(PaymentVoucher::$groupBranchCodes[$group])) {
+                    $branchCodes = array_merge($branchCodes, PaymentVoucher::$groupBranchCodes[$group]);
+                }
+            }
+        }
+        $branchCodes = array_unique($branchCodes);
 
         // ... (Revenue and Expense calculation remains same)  ... //
         // 1. Revenue: School Receipts
@@ -67,16 +81,23 @@ class PerformanceController extends Controller
             ->sum('total');
 
         // 2. Revenue: Receipt Vouchers (Completed)
-        $rvRevenue = ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
-            ->whereBetween('voucher_date', [$startDate, $endDate])
-            ->sum('net_amount');
+        $rvRevenueQuery = ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
+            ->whereBetween('voucher_date', [$startDate, $endDate]);
+
+        if (!empty($branchCodes)) {
+            $rvRevenueQuery->whereIn('branch_code', $branchCodes);
+        }
+        $rvRevenue = $rvRevenueQuery->sum('net_amount');
 
         // 3. Expense: Payment Vouchers (Completed)
-        $pvExpense = PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
-            ->whereIn('branch_code', ['EL', 'ELPV', 'ELBF'])
+        $pvExpenseQuery = PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
             ->where('is_salary', false)
-            ->whereBetween('voucher_date', [$startDate, $endDate])
-            ->sum('net_amount');
+            ->whereBetween('voucher_date', [$startDate, $endDate]);
+
+        if (!empty($branchCodes)) {
+            $pvExpenseQuery->whereIn('branch_code', $branchCodes);
+        }
+        $pvExpense = $pvExpenseQuery->sum('net_amount');
 
         // 4. Expense: Payroll (Specific Departments)
         $payrollExpense = Payroll::where('status', Payroll::STATUS_PAID)
@@ -132,18 +153,25 @@ class PerformanceController extends Controller
 
                 'rv_items' => ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
+                    ->when(!empty($branchCodes), function ($query) use ($branchCodes) {
+                        return $query->whereIn('branch_code', $branchCodes);
+                    })
                     ->with(['payee'])
                     ->get(),
 
                 'pv_items' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
-                    ->whereIn('branch_code', ['EL', 'ELPV', 'ELBF'])
+                    ->when(!empty($branchCodes), function ($query) use ($branchCodes) {
+                        return $query->whereIn('branch_code', $branchCodes);
+                    })
                     ->where('is_salary', false)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
                     ->with(['payee', 'expenseItems'])
                     ->get(),
 
                 'pv_groups' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
-                    ->whereIn('branch_code', ['EL', 'ELPV', 'ELBF'])
+                    ->when(!empty($branchCodes), function ($query) use ($branchCodes) {
+                        return $query->whereIn('branch_code', $branchCodes);
+                    })
                     ->where('is_salary', false)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
                     ->with(['payee'])

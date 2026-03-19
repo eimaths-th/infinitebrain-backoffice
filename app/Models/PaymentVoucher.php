@@ -226,10 +226,11 @@ class PaymentVoucher extends Model
         'EiBKBF' => 'eiMaths BK (EiBKBF)',
         'EiHQBF' => 'eiMaths HQ (EiHQBF)',
     ];
-    public static $gropBranchCodes = [
-        'INF' => ['IFPV', 'ELPV', 'IFBF', 'ELBF'],
+    public static $groupBranchCodes = [
+        'EL' => ['EL', 'ELPV', 'ELBF'],
+        'IF' => ['IF', 'IFPV', 'IFBF'],
         'META' => ['MT'],
-        'META2' => ['EiRP', 'EiBK', 'EiHQ', 'EiRPRF', 'EiBKBF', 'EiHQBF'],
+        'EiMaths' => ['EiRP', 'EiBK', 'EiHQ', 'EiRPRF', 'EiBKBF', 'EiHQBF'],
     ];
 
     // Generate Voucher Number: EL20260112 = รหัสสาขา + ปี + เดือน + ลำดับ

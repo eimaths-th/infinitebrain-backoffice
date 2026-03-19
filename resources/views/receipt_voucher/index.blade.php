@@ -58,6 +58,30 @@
                 <div class="filter-section">
                     <form method="GET" action="{{ route('receipt-voucher.index') }}" class="row g-3">
                         <div class="col-md-2">
+                            <label class="form-label">กลุ่มสาขา</label>
+                            <select name="branch_group" class="form-select">
+                                <option value="">-- ทั้งหมด --</option>
+                                @foreach (\App\Models\ReceiptVoucher::$groupBranchCodes as $group_name => $codes)
+                                    <option value="{{ $group_name }}"
+                                        {{ request('branch_group') == $group_name ? 'selected' : '' }}>
+                                        {{ $group_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">สาขา</label>
+                            <select name="branch_code" class="form-select">
+                                <option value="">-- ทั้งหมด --</option>
+                                @foreach (\App\Models\ReceiptVoucher::$branchCodes as $code => $name)
+                                    <option value="{{ $code }}"
+                                        {{ request('branch_code') == $code ? 'selected' : '' }}>
+                                        {{ $code }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
                             <label class="form-label">สถานะ</label>
                             <select name="status" class="form-select">
                                 <option value="">-- ทั้งหมด --</option>
