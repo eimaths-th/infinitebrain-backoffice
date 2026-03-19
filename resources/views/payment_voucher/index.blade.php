@@ -52,6 +52,16 @@
             border-radius: 8px;
             margin-bottom: 20px;
         }
+
+        .text-nowrap {
+            white-space: nowrap;
+        }
+
+        .action-container {
+            display: flex;
+            gap: 2px;
+            flex-wrap: nowrap;
+        }
     </style>
 @endsection
 
@@ -122,6 +132,18 @@
                             </select>
                         </div>
                         <div class="col-md-2">
+                            <label class="form-label">หมวดหมู่</label>
+                            <select name="category" class="form-select">
+                                <option value="">-- ทั้งหมด --</option>
+                                @foreach (\App\Models\PaymentVoucher::$categoryLabels as $cat_value => $cat_text)
+                                    <option value="{{ $cat_value }}"
+                                        {{ request('category') == $cat_value ? 'selected' : '' }}>
+                                        {{ $cat_text }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
                             <label class="form-label">จากวันที่</label>
                             <input type="text" name="from_date" class="form-control datepicker"
                                 value="{{ request('from_date') }}" placeholder="วว/ดด/ปปปป">
@@ -152,14 +174,15 @@
                     <table class="table table-hover table-striped" id="voucherTable">
                         <thead class="table-dark">
                             <tr>
-                                <th width="5%">#</th>
-                                <th width="12%">เลขที่</th>
-                                <th width="10%">วันที่</th>
-                                <th width="20%">จ่ายให้</th>
-                                <th width="12%" class="text-end">จำนวนเงิน</th>
-                                <th width="10%">สถานะ</th>
+                                <th width="3%">#</th>
+                                <th width="13%" class="text-nowrap">เลขที่</th>
+                                <th width="10%" class="text-nowrap">วันที่</th>
+                                <th width="14%">หมวดหมู่</th>
+                                <th width="16%">จ่ายให้</th>
+                                <th width="10%" class="text-end text-nowrap">จำนวนเงิน</th>
+                                <th width="10%" class="text-nowrap">สถานะ</th>
                                 <th width="12%">ผู้สร้าง</th>
-                                <th width="19%">การดำเนินการ</th>
+                                <th width="12%" class="text-nowrap">การดำเนินการ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -183,53 +206,71 @@
                                             @endif
                                         </a>
                                     </td>
-                                    <td>{{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}</td>
-                                    <td>{{ Str::limit($voucher->pay_to, 30) }}</td>
-                                    <td class="text-end">{{ number_format($voucher->total_amount, 2) }}</td>
+                                    <td class="text-nowrap">{{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}</td>
                                     <td>
+                                        @if ($voucher->category)
+                                            <span class="badge bg-light text-dark border text-nowrap">{{ $voucher->category_label }}</span>
+                                        @else
+                                            <span class="text-muted small">-</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ Str::limit($voucher->pay_to, 40) }}</td>
+                                    <td class="text-end text-nowrap fw-bold">{{ number_format($voucher->total_amount, 2) }}</td>
+                                    <td class="text-nowrap">
                                         <span class="status-badge status-{{ $voucher->status }}">
                                             {{ $voucher->status_label }}
                                         </span>
                                     </td>
                                     <td>{{ $voucher->created_by_name }}</td>
-                                    <td>
-                                        <a href="{{ route('payment-voucher.show', $voucher->id) }}"
-                                            class="btn btn-info btn-action" title="ดูรายละเอียด">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-                                        @if ($voucher->canEdit())
-                                            <a href="{{ route('payment-voucher.edit', $voucher->id) }}"
-                                                class="btn btn-warning btn-action" title="แก้ไข">
-                                                <i class="fa fa-edit"></i>
+                                    <td class="text-nowrap">
+                                        <div class="action-container">
+                                            <a href="{{ route('payment-voucher.show', $voucher->id) }}"
+                                                class="btn btn-info btn-action" title="ดูรายละเอียด">
+                                                <i class="fa fa-eye"></i>
                                             </a>
-                                            <form action="{{ route('payment-voucher.destroy', $voucher->id) }}"
-                                                method="POST" class="d-inline" onsubmit="return confirm('ยืนยันการลบ?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-action" title="ลบ">
-                                                    <i class="fa fa-trash"></i>
+                                            @if ($voucher->canEdit())
+                                                <a href="{{ route('payment-voucher.edit', $voucher->id) }}"
+                                                    class="btn btn-warning btn-action" title="แก้ไข">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <form action="{{ route('payment-voucher.destroy', $voucher->id) }}"
+                                                    method="POST" class="d-inline" onsubmit="return confirm('ยืนยันการลบ?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-action" title="ลบ">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            {{-- ปุ่มลบถาวร (Force Delete) - สำหรับ admin หรือผู้มีสิทธิ์ --}}
+                                            @can('payment-voucher.delete')
+                                                <form action="{{ route('payment-voucher.force-destroy', $voucher->id) }}"
+                                                    method="POST" class="d-inline"
+                                                    onsubmit="return confirm('⚠️ คำเตือน!\n\nการลบนี้จะลบข้อมูลทั้งหมดที่เกี่ยวข้อง:\n- รายการย่อยทั้งหมด\n- ประวัติการดำเนินการ\n- ไฟล์แนบทั้งหมด\n\nการดำเนินการนี้ไม่สามารถกู้คืนได้!\n\nยืนยันการลบถาวร?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-dark btn-action" title="ลบถาวร">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endcan
+                                            @if ($voucher->canApprove())
+                                                <button type="button" class="btn btn-success btn-action"
+                                                    data-bs-toggle="modal" data-bs-target="#approveModal{{ $voucher->id }}"
+                                                    title="อนุมัติ" {{ $enableFinance }}>
+                                                    <i class="fa fa-check"></i>
                                                 </button>
-                                            </form>
-                                        @endif
-                                        {{-- ปุ่มลบถาวร (Force Delete) - สำหรับ admin หรือผู้มีสิทธิ์ --}}
-                                        @can('payment-voucher.delete')
-                                            <form action="{{ route('payment-voucher.force-destroy', $voucher->id) }}"
-                                                method="POST" class="d-inline"
-                                                onsubmit="return confirm('⚠️ คำเตือน!\n\nการลบนี้จะลบข้อมูลทั้งหมดที่เกี่ยวข้อง:\n- รายการย่อยทั้งหมด\n- ประวัติการดำเนินการ\n- ไฟล์แนบทั้งหมด\n\nการดำเนินการนี้ไม่สามารถกู้คืนได้!\n\nยืนยันการลบถาวร?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-dark btn-action" title="ลบถาวร">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        @endcan
-                                        @if ($voucher->canApprove())
-                                            <button type="button" class="btn btn-success btn-action"
-                                                data-bs-toggle="modal" data-bs-target="#approveModal{{ $voucher->id }}"
-                                                title="อนุมัติ" {{ $enableFinance }}>
-                                                <i class="fa fa-check"></i>
+                                            @endif
+                                            {{-- ปุ่มแก้ไขหมวดหมู่พิเศษ (ใช้ได้ทุกสถานะ) --}}
+                                            <button type="button" class="btn btn-outline-primary btn-action btn-edit-category"
+                                                data-id="{{ $voucher->id }}" 
+                                                data-category="{{ $voucher->category }}"
+                                                data-voucher-no="{{ $voucher->voucher_no }}"
+                                                data-is-salary="{{ $voucher->is_salary ? '1' : '0' }}"
+                                                title="แก้ไขหมวดหมู่">
+                                                <i class="fa fa-tags"></i>
                                             </button>
-                                        @endif
+                                        </div>
                                     </td>
                                 </tr>
 
@@ -291,6 +332,42 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal แก้ไขหมวดหมู่พิเศษ --}}
+    <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="editCategoryForm" method="POST">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">แก้ไขหมวดหมู่พิเศษ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info py-2">
+                            ใบสำคัญจ่ายเลขที่: <strong id="modalVoucherNo"></strong>
+                        </div>
+                        <div id="salaryWarning" class="alert alert-warning py-2 mb-3 d-none">
+                            <i class="fa fa-info-circle"></i> รายการนี้เป็นใบจ่ายเงินเดือน ไม่สามารถเลือกหมวดหมู่ได้
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">หมวดหมู่</label>
+                            <select name="category" id="modalCategorySelect" class="form-select">
+                                <option value="">-- ไม่ระบุ --</option>
+                                @foreach (\App\Models\PaymentVoucher::$categoryLabels as $value => $label)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                        <button type="submit" class="btn btn-primary">บันทึกการเปลี่ยนแปลง</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -300,6 +377,29 @@
             setTimeout(function() {
                 $('.alert').fadeOut('slow');
             }, 5000);
+
+            // จัดการ Modal แก้ไขหมวดหมู่
+            $('.btn-edit-category').on('click', function() {
+                const id = $(this).data('id');
+                const category = $(this).data('category');
+                const voucherNo = $(this).data('voucher-no');
+                const isSalary = $(this).data('is-salary');
+                
+                const form = $('#editCategoryForm');
+                const url = "{{ route('payment-voucher.update-category', ':id') }}".replace(':id', id);
+                
+                form.attr('action', url);
+                $('#modalVoucherNo').text(voucherNo);
+                $('#modalCategorySelect').val(category).prop('disabled', isSalary == '1');
+                
+                if (isSalary == '1') {
+                    $('#salaryWarning').removeClass('d-none');
+                } else {
+                    $('#salaryWarning').addClass('d-none');
+                }
+                
+                $('#editCategoryModal').modal('show');
+            });
         });
     </script>
 @endsection

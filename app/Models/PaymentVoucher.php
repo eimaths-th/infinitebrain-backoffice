@@ -42,7 +42,37 @@ class PaymentVoucher extends Model
         'paid_date',
         'payment_cycle',
         'is_salary',
+        'category',
     ];
+
+    // Voucher Categories
+    const CAT_SHOP_RENT = 'shop_rent';                       // ค่าเช่าร้าน
+    const CAT_FRANCHISE_SHARE = 'franchise_share';           // ค่าส่วนแบ่ง แฟรนไชส์
+    const CAT_OFFICE_EXPENSE = 'office_expense';             // ค่าใช้จ่ายสำนักงาน
+    const CAT_SOCIAL_SECURITY = 'social_security';           // ค่าประกันสังคมและเงินสมทบ
+    const CAT_WHT = 'wht';                                   // ภงด. 1,3,53
+    const CAT_VAT30 = 'vat30';                               // ภพ.30
+    const CAT_ACCOUNTING_FEE = 'accounting_fee';             // ค่าทำบัญชี
+    const CAT_BANK_FEE = 'bank_fee';                         // ค่าธรรมเนียมธนาคาร
+    const CAT_OTHER = 'other';                               // อื่นๆ
+
+    public static $categoryLabels = [
+        self::CAT_SHOP_RENT => 'ค่าเช่าร้าน',
+        self::CAT_FRANCHISE_SHARE => 'ค่าส่วนแบ่ง แฟรนไชส์',
+        self::CAT_OFFICE_EXPENSE => 'ค่าใช้จ่ายสำนักงาน',
+        self::CAT_SOCIAL_SECURITY => 'ค่าประกันสังคมและเงินสมทบ',
+        self::CAT_WHT => 'ภงด. 1,3,53',
+        self::CAT_VAT30 => 'ภพ.30',
+        self::CAT_ACCOUNTING_FEE => 'ค่าทำบัญชี',
+        self::CAT_BANK_FEE => 'ค่าธรรมเนียมธนาคาร',
+        self::CAT_OTHER => 'อื่นๆ',
+    ];
+
+    public function getCategoryLabelAttribute()
+    {
+        return self::$categoryLabels[$this->category] ?? $this->category;
+    }
+
 
     protected $casts = [
         'voucher_date' => 'date',

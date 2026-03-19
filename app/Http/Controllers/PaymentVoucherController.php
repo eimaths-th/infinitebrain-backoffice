@@ -34,6 +34,11 @@ class PaymentVoucherController extends Controller
             $query->where('branch_code', $request->branch_code);
         }
 
+        // Filter by category
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
         // Filter by date range
         if ($request->filled('from_date')) {
             $query->whereDate('voucher_date', '>=', $request->from_date);
@@ -97,6 +102,7 @@ class PaymentVoucherController extends Controller
             'withholding_tax_rate' => 'nullable|numeric|min:0|max:100',
             'withholding_tax_amount' => 'nullable|numeric|min:0',
             'is_salary' => 'nullable|boolean',
+            'category' => 'nullable|string|max:100',
             'voucher_attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
             'items.*.attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
         ]);
@@ -189,6 +195,8 @@ class PaymentVoucherController extends Controller
                 'net_amount' => $netAmount,
                 'total_amount' => $totalAmount,
                 'is_salary' => $request->boolean('is_salary'),
+                'category' => $request->boolean('is_salary') ? null : $request->category,
+
             ]);
 
             // อัพโหลดไฟล์แนบของ Voucher
@@ -372,6 +380,7 @@ class PaymentVoucherController extends Controller
             'withholding_tax_rate' => 'nullable|numeric|min:0|max:100',
             'withholding_tax_amount' => 'nullable|numeric|min:0',
             'is_salary' => 'nullable|boolean',
+            'category' => 'nullable|string|max:100',
             'voucher_attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
             'items.*.attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
         ]);
@@ -459,6 +468,8 @@ class PaymentVoucherController extends Controller
                 'net_amount' => $netAmount,
                 'total_amount' => $totalAmount,
                 'is_salary' => $request->boolean('is_salary'),
+                'category' => $request->boolean('is_salary') ? null : $request->category,
+
             ]);
 
             // อัพโหลดไฟล์แนบของ Voucher (เพิ่มใหม่)
@@ -1176,5 +1187,35 @@ class PaymentVoucherController extends Controller
         }
 
         return back()->with('error', 'ไม่พบไฟล์ Template');
+    }
+
+    /**
+     * อัพเดทหมวดหมู่ของใบสำคัญจ่าย (พิเศษ - ใช้ได้ทุกสถานะ)
+     */
+    public function updateCategory(Request $request, $id)
+    {
+        $voucher = PaymentVoucher::findOrFail($id);
+        
+        $request->validate([
+            'category' => 'nullable|string|max:100',
+        ]);
+
+        $oldCategory = $voucher->category;
+        $newCategory = $voucher->is_salary ? null : $request->category;
+
+        $voucher->update([
+            'category' => $newCategory,
+        ]);
+
+        // บันทึก Log
+        PaymentVoucherLog::create([
+            'payment_voucher_id' => $voucher->id,
+            'user_id' => Auth::id(),
+            'user_name' => Auth::user()->name ?? 'System',
+            'action' => 'update_category',
+            'remark' => "แก้ไขหมวดหมู่จาก '" . ($voucher->categoryLabels[$oldCategory] ?? '-') . "' เป็น '" . ($voucher->categoryLabels[$newCategory] ?? '-') . "'",
+        ]);
+
+        return back()->with('success', 'อัพเดทหมวดหมู่เรียบร้อยแล้ว');
     }
 }

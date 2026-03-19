@@ -412,6 +412,14 @@
                             </div>
                         </div>
                     @endif
+                    @if ($voucher->category)
+                        <div class="col-12 mb-2">
+                            <div class="info-label">หมวดหมู่</div>
+                            <div class="info-value">
+                                <span class="badge bg-primary text-white">{{ $voucher->category_label }}</span>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
