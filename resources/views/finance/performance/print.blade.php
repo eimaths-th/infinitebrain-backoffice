@@ -92,13 +92,21 @@
 
 <body onload="window.print()">
     <div class="header">
-        รายงานผลประกอบการ ปี {{ $year + 543 }}<br>
-        ประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }}<br>
-        @if(!empty($selectedGroups))
-            <div style="font-size: 11pt; font-weight: normal; margin-top: 5px;">
-                กลุ่มสาขา: {{ implode(', ', $selectedGroups) }}
-            </div>
-        @endif
+        @php
+            $groupMap = [
+                'EL' => 'Eye Level',
+                'IF' => 'Infinite Brain',
+                'META' => 'META Knowledge',
+                'EiMaths' => 'eiMaths',
+            ];
+            $titles = [];
+            foreach(($selectedGroups ?? []) as $g) {
+                $titles[] = $groupMap[$g] ?? $g;
+            }
+            $displayTitle = implode(' & ', $titles);
+        @endphp
+        รายงานผลประกอบการ {{ $displayTitle }} ปี {{ $year + 543 }}<br>
+        ประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }}
     </div>
 
     <table>
