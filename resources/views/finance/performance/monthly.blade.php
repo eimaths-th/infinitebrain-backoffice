@@ -8,12 +8,23 @@
                 <div class="page-title-icon">
                     <i class="pe-7s-graph1 icon-gradient bg-midnight-bloom"></i>
                 </div>
-                <div>รายละเอียดผลประกอบการ (Monthly Breakdown)
+                <div>
+                    @php
+                        $groupMap = [
+                            'EL' => 'Eye Level',
+                            'IF' => 'Infinite Brain',
+                            'META' => 'META Knowledge',
+                            'EiMaths' => 'eiMaths',
+                        ];
+                        $titles = [];
+                        foreach(($selectedGroups ?? []) as $g) {
+                            $titles[] = $groupMap[$g] ?? $g;
+                        }
+                        $displayTitle = implode(' & ', $titles);
+                    @endphp
+                    รายละเอียดผลประกอบการ {{ $displayTitle }}
                     <div class="page-title-subheading">
                         {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }} {{ $year + 543 }}
-                        @if(!empty($selectedGroups))
-                            <span class="ms-2 badge bg-info text-white">กลุ่มสาขา: {{ implode(', ', $selectedGroups) }}</span>
-                        @endif
                     </div>
                 </div>
             </div>
