@@ -164,7 +164,7 @@ class PerformanceController extends Controller
                     ->when(!empty($rvBranchCodes), function ($query) use ($rvBranchCodes) {
                         return $query->whereIn('branch_code', $rvBranchCodes);
                     })
-                    ->with(['payee'])
+                    ->with(['payee', 'receiptItems'])
                     ->get(),
 
                 'pv_items' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)

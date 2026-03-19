@@ -205,26 +205,28 @@
                                             <th>Date</th>
                                             <th>Voucher No.</th>
                                             <th>Received From</th>
-                                            <th>Remark</th>
+                                            <th>Description</th>
                                             <th class="text-end">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($data['details']['rv_items'] as $item)
-                                            <tr>
-                                                <td>{{ $item->voucher_date->format('Y-m-d') }}</td>
-                                                <td>
-                                                    <a href="{{ route('receipt-voucher.show', $item->id) }}" target="_blank">
-                                                        {{ $item->voucher_no }}
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    @php $from = $item->payee ? $item->payee->name : $item->received_from; @endphp
-                                                    {{ $from ?: '-' }}
-                                                </td>
-                                                <td>{{ $item->remark }}</td>
-                                                <td class="text-end">{{ number_format($item->net_amount, 2) }}</td>
-                                            </tr>
+                                        @forelse($data['details']['rv_items'] as $voucher)
+                                            @foreach($voucher->receiptItems as $item)
+                                                <tr>
+                                                    <td>{{ $voucher->voucher_date->format('Y-m-d') }}</td>
+                                                    <td>
+                                                        <a href="{{ route('receipt-voucher.show', $voucher->id) }}" target="_blank">
+                                                            {{ $voucher->voucher_no }}
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        @php $from = $voucher->payee ? $voucher->payee->name : $voucher->received_from; @endphp
+                                                        {{ $from ?: '-' }}
+                                                    </td>
+                                                    <td>{{ $item->description }}</td>
+                                                    <td class="text-end">{{ number_format($item->amount, 2) }}</td>
+                                                </tr>
+                                            @endforeach
                                         @empty
                                             <tr><td colspan="5" class="text-center">No data available</td></tr>
                                         @endforelse

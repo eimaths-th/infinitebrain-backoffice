@@ -134,16 +134,15 @@
             </tr>
         @endforeach
 
-        @foreach ($data['details']['rv_items'] as $item)
-            <tr>
-                <td>{{ $item->remark ?: 'รายรับอื่นๆ' }}</td>
-                <td>
-                    {{-- @php $from = $item->payee ? $item->payee->name : $item->received_from; @endphp
-                    {{ $from ? '('.$from.')' : '' }} --}}
-                </td>
-                <td class="text-right">{{ number_format($item->net_amount, 2) }}</td>
-                <td></td>
-            </tr>
+        @foreach ($data['details']['rv_items'] as $voucher)
+            @foreach ($voucher->receiptItems as $item)
+                <tr>
+                    <td>{{ $item->description }}</td>
+                    <td></td>
+                    <td class="text-right">{{ number_format($item->amount, 2) }}</td>
+                    <td></td>
+                </tr>
+            @endforeach
         @endforeach
 
         <tr class="summary-row">
