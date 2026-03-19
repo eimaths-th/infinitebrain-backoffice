@@ -178,7 +178,7 @@
                 $categoryTotal = $vouchers->sum('net_amount');
             @endphp
             <tr>
-                <td colspan="2">หมวดหมู่: {{ \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ' }}</td>
+                <td colspan="2">{{ \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ' }}</td>
                 <td class="text-right">{{ number_format($categoryTotal, 2) }}</td>
                 <td></td>
             </tr>
