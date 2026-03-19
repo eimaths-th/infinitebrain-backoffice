@@ -55,10 +55,10 @@ class HomeController extends Controller
         $school_picei_update_group = SchoolPrice::all();
         // $subject_ids = $school_picei_update_group->pluck('subject')->toArray();
         foreach ($school_picei_update_group as $upg) {
-            # code...
-            $group = $upg->school_sub->group;
-            $upg->update(['group' => $group]);
-            // dd($upg->id,$group);
+            if ($upg->school_sub) {
+                $group = $upg->school_sub->group;
+                $upg->update(['group' => $group]);
+            }
         }
 
 
