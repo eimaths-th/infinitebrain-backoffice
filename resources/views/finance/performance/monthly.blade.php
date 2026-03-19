@@ -258,19 +258,33 @@
                                 <table class="align-middle mb-0 table table-borderless table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th colspan="4">Category</th>
+                                            <th>Date</th>
+                                            <th>Voucher No.</th>
+                                            <th>Branch</th>
+                                            <th>Category</th>
+                                            <th>Pay To</th>
                                             <th class="text-end">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($data['details']['pv_items']->groupBy('category') as $category => $vouchers)
-                                            @php
-                                                $categoryTotal = $vouchers->sum('net_amount');
-                                            @endphp
-                                            <tr>
-                                                <td colspan="4" class="font-weight-bold">หมวดหมู่: {{ \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ' }}</td>
-                                                <td class="text-end font-weight-bold">{{ number_format($categoryTotal, 2) }}</td>
-                                            </tr>
+                                        @forelse($data['details']['pv_items'] as $voucher)
+                                            @foreach($voucher->expenseItems as $item)
+                                                <tr>
+                                                    <td>{{ $voucher->voucher_date->format('Y-m-d') }}</td>
+                                                    <td>
+                                                        <a href="{{ route('payment-voucher.show', $voucher->id) }}" target="_blank">
+                                                            {{ $voucher->voucher_no }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ $voucher->branch_code }}</td>
+                                                    <td>{{ \App\Models\PaymentVoucher::$categoryLabels[$voucher->category] ?? 'อื่นๆ' }}</td>
+                                                    <td>
+                                                        <div class="font-weight-bold">{{ $item->description }}</div>
+                                                        <div class="small text-muted">{{ $voucher->payee ? $voucher->payee->name : $voucher->pay_to }}</div>
+                                                    </td>
+                                                    <td class="text-end">{{ number_format($item->amount, 2) }}</td>
+                                                </tr>
+                                            @endforeach
                                         @empty
                                             <tr><td colspan="5" class="text-center">No data available</td></tr>
                                         @endforelse
@@ -283,20 +297,22 @@
                                 <table class="align-middle mb-0 table table-borderless table-striped table-hover">
                                     <thead>
                                         <tr>
+                                            <th>ชื่อ-นามสกุล</th>
                                             <th>แผนก (Department)</th>
-                                            <th class="text-center">จำนวนพนักงาน</th>
-                                            <th class="text-end">ยอดรวม (Net Pay)</th>
+                                            <th>งวด (Period)</th>
+                                            <th class="text-end">ยอดสุทธิ (Net Pay)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($data['details']['payroll_groups'] as $item)
+                                        @forelse($data['details']['payroll_items'] as $item)
                                             <tr>
-                                                <td>พนักงาน {{ $item->department }}</td>
-                                                <td class="text-center">{{ number_format($item->employee_count) }}</td>
-                                                <td class="text-end text-danger font-weight-bold">{{ number_format($item->total_amount, 2) }}</td>
+                                                <td>{{ $item->user->name ?? $item->user_id }}</td>
+                                                <td>{{ $item->user->department ?? '-' }}</td>
+                                                <td>{{ $item->payrollPeriod->month }}/{{ $item->payrollPeriod->year }}</td>
+                                                <td class="text-end font-weight-bold">{{ number_format($item->net_pay, 2) }}</td>
                                             </tr>
                                         @empty
-                                            <tr><td colspan="3" class="text-center">ไม่มีข้อมูล</td></tr>
+                                            <tr><td colspan="4" class="text-center">ไม่มีข้อมูล</td></tr>
                                         @endforelse
                                     </tbody>
                                 </table>
