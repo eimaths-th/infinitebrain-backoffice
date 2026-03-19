@@ -247,36 +247,19 @@
                                 <table class="align-middle mb-0 table table-borderless table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Date</th>
-                                            <th>Voucher No.</th>
-                                            <th>Branch</th>
-                                            <th>Pay To</th>
+                                            <th colspan="4">Category</th>
                                             <th class="text-end">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse($data['details']['pv_items']->groupBy('category') as $category => $vouchers)
-                                            <tr class="table-info">
-                                                <td colspan="5" class="font-weight-bold">หมวดหมู่: {{ \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ' }}</td>
+                                            @php
+                                                $categoryTotal = $vouchers->sum('net_amount');
+                                            @endphp
+                                            <tr>
+                                                <td colspan="4" class="font-weight-bold">หมวดหมู่: {{ \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ' }}</td>
+                                                <td class="text-end font-weight-bold">{{ number_format($categoryTotal, 2) }}</td>
                                             </tr>
-                                            @foreach($vouchers as $voucher)
-                                                @foreach($voucher->expenseItems as $item)
-                                                    <tr>
-                                                        <td>{{ $voucher->voucher_date->format('Y-m-d') }}</td>
-                                                        <td>
-                                                            <a href="{{ route('payment-voucher.show', $voucher->id) }}" target="_blank">
-                                                                {{ $voucher->voucher_no }}
-                                                            </a>
-                                                        </td>
-                                                        <td>{{ $voucher->branch_code }}</td>
-                                                        <td>
-                                                            <div class="font-weight-bold">{{ $item->description }}</div>
-                                                            <div class="small text-muted">{{ $voucher->payee ? $voucher->payee->name : $voucher->pay_to }}</div>
-                                                        </td>
-                                                        <td class="text-end">{{ number_format($item->amount, 2) }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            @endforeach
                                         @empty
                                             <tr><td colspan="5" class="text-center">No data available</td></tr>
                                         @endforelse

@@ -166,21 +166,14 @@
         @endif
 
         @foreach ($data['details']['pv_items']->groupBy('category') as $category => $vouchers)
+            @php
+                $categoryTotal = $vouchers->sum('net_amount');
+            @endphp
             <tr>
-                <td class="font-bold" colspan="4">หมวดหมู่: {{ \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ' }}</td>
+                <td colspan="2">หมวดหมู่: {{ \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ' }}</td>
+                <td class="text-right">{{ number_format($categoryTotal, 2) }}</td>
+                <td></td>
             </tr>
-            @foreach ($vouchers as $voucher)
-                @foreach ($voucher->expenseItems as $item)
-                    <tr>
-                        <td class="sub-item">{{ $item->description }}</td>
-                        <td style="font-size: 10pt; color: #666;">
-                            {{ $voucher->payee ? $voucher->payee->name : $voucher->pay_to }}
-                        </td>
-                        <td class="text-right">{{ number_format($item->amount, 2) }}</td>
-                        <td></td>
-                    </tr>
-                @endforeach
-            @endforeach
         @endforeach
 
         <tr class="summary-row">
