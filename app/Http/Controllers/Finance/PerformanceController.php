@@ -194,6 +194,17 @@ class PerformanceController extends Controller
                         ];
                     })->sortByDesc('total_amount')->values(),
 
+                'payroll_items' => Payroll::where('status', Payroll::STATUS_PAID)
+                    ->whereHas('user', function ($query) {
+                        $query->whereIn('department', ['วิชาการ', 'สำนักงาน']);
+                    })
+                    ->whereHas('payrollPeriod', function ($query) use ($year, $month) {
+                        $thaiYear = $year + 543;
+                        $query->where('year', $thaiYear)->where('month', $month);
+                    })
+                    ->with(['user'])
+                    ->get(),
+
                 'payroll_groups' => Payroll::where('status', Payroll::STATUS_PAID)
                     ->whereHas('user', function ($query) {
                         $query->whereIn('department', ['วิชาการ', 'สำนักงาน']);
