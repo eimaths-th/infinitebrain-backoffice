@@ -157,10 +157,11 @@ class ReceiptVoucher extends Model
         'EiHQ' => 'eiMaths HQ (EiHQ)',
     ];
 
-    public static $gropBranchCodes = [
-        'INF' => ['IFRV', 'ELRV'],
+    public static $groupBranchCodes = [
+        'EL' => ['EL', 'ELRV'],
+        'IF' => ['IF', 'IFRV'],
         'META' => ['MTRV'],
-        'META2' => ['EiRP', 'EiBK', 'EiHQ'],
+        'EiMaths' => ['EiRP', 'EiBK', 'EiHQ'],
     ];
 
     public static function generateVoucherNo($branchCode = 'ELRV')

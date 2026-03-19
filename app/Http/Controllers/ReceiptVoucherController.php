@@ -33,6 +33,19 @@ class ReceiptVoucherController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Filter by branch
+        if ($request->filled('branch_code')) {
+            $query->where('branch_code', $request->branch_code);
+        }
+
+        // Filter by branch group
+        if ($request->filled('branch_group')) {
+            $groupBranchCodes = ReceiptVoucher::$groupBranchCodes;
+            if (isset($groupBranchCodes[$request->branch_group])) {
+                $query->whereIn('branch_code', $groupBranchCodes[$request->branch_group]);
+            }
+        }
+
         if ($request->filled('from_date')) {
             $query->whereDate('voucher_date', '>=', $request->from_date);
         }

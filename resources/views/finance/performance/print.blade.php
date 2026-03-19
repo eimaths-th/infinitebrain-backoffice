@@ -92,8 +92,13 @@
 
 <body onload="window.print()">
     <div class="header">
-        รายงานผลประกอบการ อายเลเวล ปี {{ $year + 543 }}<br>
-        ประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }}
+        รายงานผลประกอบการ ปี {{ $year + 543 }}<br>
+        ประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }}<br>
+        @if(!empty($selectedGroups))
+            <div style="font-size: 11pt; font-weight: normal; margin-top: 5px;">
+                กลุ่มสาขา: {{ implode(', ', $selectedGroups) }}
+            </div>
+        @endif
     </div>
 
     <table>
@@ -160,16 +165,21 @@
             @endforeach
         @endif
 
-        @foreach ($data['details']['pv_items'] as $voucher)
-            @foreach ($voucher->expenseItems as $item)
-                <tr>
-                    <td class="sub-item">{{ $item->description }}</td>
-                    <td style="font-size: 10pt; color: #666;">
-                        {{ $voucher->payee ? $voucher->payee->name : $voucher->pay_to }}
-                    </td>
-                    <td class="text-right">{{ number_format($item->amount, 2) }}</td>
-                    <td></td>
-                </tr>
+        @foreach ($data['details']['pv_items']->groupBy('category') as $category => $vouchers)
+            <tr>
+                <td class="font-bold" colspan="4">หมวดหมู่: {{ \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ' }}</td>
+            </tr>
+            @foreach ($vouchers as $voucher)
+                @foreach ($voucher->expenseItems as $item)
+                    <tr>
+                        <td class="sub-item">{{ $item->description }}</td>
+                        <td style="font-size: 10pt; color: #666;">
+                            {{ $voucher->payee ? $voucher->payee->name : $voucher->pay_to }}
+                        </td>
+                        <td class="text-right">{{ number_format($item->amount, 2) }}</td>
+                        <td></td>
+                    </tr>
+                @endforeach
             @endforeach
         @endforeach
 

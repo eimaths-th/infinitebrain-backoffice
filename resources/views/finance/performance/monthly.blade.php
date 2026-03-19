@@ -9,14 +9,19 @@
                     <i class="pe-7s-graph1 icon-gradient bg-midnight-bloom"></i>
                 </div>
                 <div>รายละเอียดผลประกอบการ (Monthly Breakdown)
-                    <div class="page-title-subheading">{{ \App\Models\PayrollPeriod::$thaiMonths[$month] }} {{ $year + 543 }}</div>
+                    <div class="page-title-subheading">
+                        {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }} {{ $year + 543 }}
+                        @if(!empty($selectedGroups))
+                            <span class="ms-2 badge bg-info text-white">กลุ่มสาขา: {{ implode(', ', $selectedGroups) }}</span>
+                        @endif
+                    </div>
                 </div>
             </div>
             <div class="page-title-actions">
-                <a href="{{ route('performance.monthly.print', ['year' => $year, 'month' => $month]) }}" target="_blank" class="btn btn-info">
+                <a href="{{ route('performance.monthly.print', array_merge(request()->query(), ['year' => $year, 'month' => $month])) }}" target="_blank" class="btn btn-info">
                     <i class="fa fa-print"></i> พิมพ์รายงาน
                 </a>
-                <a href="{{ route('performance.index', ['year' => $year]) }}" class="btn btn-secondary">
+                <a href="{{ route('performance.index', array_merge(request()->query(), ['year' => $year])) }}" class="btn btn-secondary">
                     <i class="fa fa-arrow-left"></i> กลับไปหน้าภาพรวม
                 </a>
             </div>
@@ -250,22 +255,27 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($data['details']['pv_items'] as $voucher)
-                                            @foreach($voucher->expenseItems as $item)
-                                                <tr>
-                                                    <td>{{ $voucher->voucher_date->format('Y-m-d') }}</td>
-                                                    <td>
-                                                        <a href="{{ route('payment-voucher.show', $voucher->id) }}" target="_blank">
-                                                            {{ $voucher->voucher_no }}
-                                                        </a>
-                                                    </td>
-                                                    <td>{{ $voucher->branch_code }}</td>
-                                                    <td>
-                                                        <div class="font-weight-bold">{{ $item->description }}</div>
-                                                        <div class="small text-muted">{{ $voucher->payee ? $voucher->payee->name : $voucher->pay_to }}</div>
-                                                    </td>
-                                                    <td class="text-end">{{ number_format($item->amount, 2) }}</td>
-                                                </tr>
+                                        @forelse($data['details']['pv_items']->groupBy('category') as $category => $vouchers)
+                                            <tr class="table-info">
+                                                <td colspan="5" class="font-weight-bold">หมวดหมู่: {{ \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ' }}</td>
+                                            </tr>
+                                            @foreach($vouchers as $voucher)
+                                                @foreach($voucher->expenseItems as $item)
+                                                    <tr>
+                                                        <td>{{ $voucher->voucher_date->format('Y-m-d') }}</td>
+                                                        <td>
+                                                            <a href="{{ route('payment-voucher.show', $voucher->id) }}" target="_blank">
+                                                                {{ $voucher->voucher_no }}
+                                                            </a>
+                                                        </td>
+                                                        <td>{{ $voucher->branch_code }}</td>
+                                                        <td>
+                                                            <div class="font-weight-bold">{{ $item->description }}</div>
+                                                            <div class="small text-muted">{{ $voucher->payee ? $voucher->payee->name : $voucher->pay_to }}</div>
+                                                        </td>
+                                                        <td class="text-end">{{ number_format($item->amount, 2) }}</td>
+                                                    </tr>
+                                                @endforeach
                                             @endforeach
                                         @empty
                                             <tr><td colspan="5" class="text-center">No data available</td></tr>

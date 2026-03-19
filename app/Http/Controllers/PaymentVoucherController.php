@@ -34,6 +34,14 @@ class PaymentVoucherController extends Controller
             $query->where('branch_code', $request->branch_code);
         }
 
+        // Filter by branch group
+        if ($request->filled('branch_group')) {
+            $groupBranchCodes = PaymentVoucher::$groupBranchCodes;
+            if (isset($groupBranchCodes[$request->branch_group])) {
+                $query->whereIn('branch_code', $groupBranchCodes[$request->branch_group]);
+            }
+        }
+
         // Filter by category
         if ($request->filled('category')) {
             $query->where('category', $request->category);
