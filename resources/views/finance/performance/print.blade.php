@@ -138,8 +138,8 @@
             <tr>
                 <td>{{ $item->remark ?: 'รายรับอื่นๆ' }}</td>
                 <td>
-                    @php $from = $item->payee ? $item->payee->name : $item->received_from; @endphp
-                    {{ $from ? '('.$from.')' : '' }}
+                    {{-- @php $from = $item->payee ? $item->payee->name : $item->received_from; @endphp
+                    {{ $from ? '('.$from.')' : '' }} --}}
                 </td>
                 <td class="text-right">{{ number_format($item->net_amount, 2) }}</td>
                 <td></td>
