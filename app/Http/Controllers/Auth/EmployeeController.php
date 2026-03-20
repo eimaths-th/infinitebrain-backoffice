@@ -225,6 +225,8 @@ class EmployeeController extends Controller
             'bank_account' => 'nullable|string|max:50',
             'tax_id' => 'nullable|string|max:20',
             'social_security_no' => 'nullable|string|max:20',
+            'branches' => 'nullable|array',
+            'branches.*' => 'string'
         ]);
 
         if ($validator->fails()) {
@@ -233,6 +235,7 @@ class EmployeeController extends Controller
 
         $data = $request->all();
         $data['password'] = Hash::make($request->get('password'));
+        $data['branches'] = $request->input('branches', []);
 
         $user = User::create($data);
 
@@ -304,6 +307,8 @@ class EmployeeController extends Controller
             'bank_account' => 'nullable|string|max:50',
             'tax_id' => 'nullable|string|max:20',
             'social_security_no' => 'nullable|string|max:20',
+            'branches' => 'nullable|array',
+            'branches.*' => 'string'
         ];
 
         if ($request->get('password')) {
@@ -320,6 +325,7 @@ class EmployeeController extends Controller
         $old = $user->toArray();
 
         $data = $request->except(['password', 'password_confirmation', '_token', '_method']);
+        $data['branches'] = $request->input('branches', []);
 
         if ($request->get('password')) {
             $data['password'] = Hash::make($request->get('password'));

@@ -36,6 +36,7 @@ class User extends Authenticatable
         'type_user',
         'password',
         'level',
+        'branches',
         // Payroll fields
         'nickname',
         'gender',
@@ -92,6 +93,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'is_disabled' => 'boolean',
         'disabled_at' => 'date',
+        'branches' => 'array',
         // Payroll date fields
         'birth_date' => 'date',
         'start_date' => 'date',
