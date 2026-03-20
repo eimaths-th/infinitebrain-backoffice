@@ -695,13 +695,13 @@
         var longestMatch = 0;
 
         links.forEach(function(link) {
+            var rawHref = link.getAttribute('href');
+            // Ignore empty links, hash links, or javascript
+            if (!rawHref || rawHref === '#' || rawHref.startsWith('javascript')) return;
+
             var href = link.href.split('?')[0].split('#')[0];
-            
-            // Ignore empty links or hash links
-            if (!href || href.endsWith('#')) return;
 
             // Check if current URL starts with the link's href
-            // e.g. /students/1/edit starts with /students
             if (currentUrl.startsWith(href)) {
                 // Find the most specific match (longest href)
                 if (href.length > longestMatch) {
