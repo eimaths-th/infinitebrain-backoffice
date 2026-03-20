@@ -455,8 +455,8 @@
                     </li>
                 @endcan
                 @can(['teacher-revenue.view'])
-                    <li>
-                        <a href="{{ route('teacher-revenue.index') }}">
+                    <li class="{{ request()->routeIs('teacher-revenue.*') ? 'mm-active' : '' }}">
+                        <a href="{{ route('teacher-revenue.index') }}" class="{{ request()->routeIs('teacher-revenue.*') ? 'mm-active' : '' }}">
                             <i class="metismenu-icon pe-7s-note2"></i>
                             รายได้ครู
                         </a>
@@ -684,3 +684,64 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var currentUrl = window.location.href.split('?')[0].split('#')[0];
+        
+        // Find all links in the sidebar
+        var links = document.querySelectorAll('.vertical-nav-menu a');
+        var matchedLink = null;
+        var longestMatch = 0;
+
+        links.forEach(function(link) {
+            var href = link.href.split('?')[0].split('#')[0];
+            
+            // Ignore empty links or hash links
+            if (!href || href.endsWith('#')) return;
+
+            // Check if current URL starts with the link's href
+            // e.g. /students/1/edit starts with /students
+            if (currentUrl.startsWith(href)) {
+                // Find the most specific match (longest href)
+                if (href.length > longestMatch) {
+                    matchedLink = link;
+                    longestMatch = href.length;
+                }
+            }
+        });
+
+        if (matchedLink) {
+            // Add active class to the matched link
+            matchedLink.classList.add('mm-active');
+            
+            // Setup parent elements
+            var currentElement = matchedLink;
+            while (currentElement) {
+                if (currentElement.tagName === 'LI') {
+                    currentElement.classList.add('mm-active');
+                } else if (currentElement.tagName === 'UL' && currentElement.classList.contains('vertical-nav-menu') === false) {
+                    // It's a submenu (dropdown)
+                    currentElement.classList.add('mm-show');
+                    
+                    // Also need to set the parent a tag to active
+                    var parentLi = currentElement.parentElement;
+                    if (parentLi && parentLi.tagName === 'LI') {
+                        parentLi.classList.add('mm-active');
+                        var parentA = parentLi.querySelector('a:first-child');
+                        if (parentA) {
+                            parentA.classList.add('mm-active');
+                        }
+                    }
+                }
+                
+                currentElement = currentElement.parentElement;
+                
+                // Stop when we reach the top-level menu container
+                if (currentElement && currentElement.classList.contains('vertical-nav-menu')) {
+                    break;
+                }
+            }
+        }
+    });
+</script>
