@@ -148,6 +148,8 @@ Route::middleware(['auth', 'can:performance.view'])->prefix('performance')->name
     Route::get('/', [\App\Http\Controllers\Finance\PerformanceController::class, 'index'])->name('index');
     Route::get('/monthly/{year}/{month}', [\App\Http\Controllers\Finance\PerformanceController::class, 'monthly'])->name('monthly');
     Route::get('/monthly/{year}/{month}/print', [\App\Http\Controllers\Finance\PerformanceController::class, 'printMonthly'])->name('monthly.print');
+    Route::get('/monthly/{year}/{month}/print-revenue', [\App\Http\Controllers\Finance\PerformanceController::class, 'printRevenue'])->name('monthly.print-revenue');
+    Route::get('/monthly/{year}/{month}/print-expense', [\App\Http\Controllers\Finance\PerformanceController::class, 'printExpense'])->name('monthly.print-expense');
 });
 
 Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')->group(function () {
@@ -492,6 +494,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/receipts/destroy_all', [ReceiptController::class, 'destroy_all'])->name('receipts.destroy_all');
 
 
+    //teacher revenue dashboard
+    Route::get('/teacher-revenue', [\App\Http\Controllers\TeacherRevenueController::class, 'index'])->name('teacher-revenue.index');
 
     //history
 
