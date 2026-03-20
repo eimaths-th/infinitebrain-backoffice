@@ -42,7 +42,27 @@ class TeacherRevenueController extends Controller
     {
         // ตรวจสอบสิทธิ์การเข้าถึง
         $this->CheckPermission();
+        $data = $this->getRevenueData($request);
 
+        return view('teacher-revenue.index', $data);
+    }
+
+    /**
+     * สำหรับพิมพ์รายงานหน้า A4 (Portrait)
+     */
+    public function print(Request $request)
+    {
+        $this->CheckPermission();
+        $data = $this->getRevenueData($request);
+
+        return view('teacher-revenue.print', $data);
+    }
+
+    /**
+     * ดึงข้อมูลและคำนวณรายได้ของครู
+     */
+    private function getRevenueData(Request $request)
+    {
         $year = $request->input('year', date('Y'));
         $month = $request->input('month', null);
 
@@ -146,13 +166,13 @@ class TeacherRevenueController extends Controller
         }
         unset($record);
 
-        return view('teacher-revenue.index', compact(
+        return compact(
             'teacher_revenue',
             'unmatched_records',
             'year',
             'month',
             'teachers'
-        ));
+        );
     }
 
     /**

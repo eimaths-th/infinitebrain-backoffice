@@ -41,11 +41,14 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fa fa-search"></i> ค้นหา
                             </button>
                             <a href="{{ route('teacher-revenue.index') }}" class="btn btn-secondary ms-1">รีเซ็ต</a>
+                            <a href="{{ route('teacher-revenue.print', ['year' => $year, 'month' => $month]) }}" target="_blank" class="btn btn-success ms-1">
+                                <i class="fa fa-print"></i> พิมพ์รายงาน
+                            </a>
                         </div>
                     </form>
                 </div>

@@ -496,6 +496,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     //teacher revenue dashboard
     Route::get('/teacher-revenue', [\App\Http\Controllers\TeacherRevenueController::class, 'index'])->name('teacher-revenue.index');
+    Route::get('/teacher-revenue/print', [\App\Http\Controllers\TeacherRevenueController::class, 'print'])->name('teacher-revenue.print');
 
     //history
 
