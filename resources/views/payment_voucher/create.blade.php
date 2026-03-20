@@ -125,7 +125,7 @@
         <div class="main-card mb-3 card">
             <div class="card-body">
                 <form action="{{ route('payment-voucher.store') }}" method="POST" id="voucherForm"
-                    enctype="multipart/form-data">
+                    enctype="multipart/form-data" novalidate>
                     @csrf
 
                     <div class="row mb-4">
@@ -139,7 +139,7 @@
                                 <select name="branch_code" id="branchCode" class="form-select" required>
                                     @foreach ($branchCodes as $code => $name)
                                         <option value="{{ $code }}"
-                                            {{ old('branch_code', 'EL') == $code ? 'selected' : '' }}>{{ $name }}
+                                            {{ old('branch_code', $defaultBranch) == $code ? 'selected' : '' }}>{{ $name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -173,12 +173,18 @@
                                 </div>
                                 <div id="categoryWrapper">
                                     <label class="form-label">หมวดหมู่ <span class="required-mark">*</span></label>
-                                    <select name="category" id="category" class="form-select" {{ old('is_salary') ? 'disabled' : 'required' }}>
+                                    <select name="category" id="category" class="form-select @error('category') is-invalid @enderror" {{ old('is_salary') ? 'disabled' : 'required' }}>
                                         <option value="">-- เลือกหมวดหมู่ --</option>
                                         @foreach (\App\Models\PaymentVoucher::$categoryLabels as $key => $label)
                                             <option value="{{ $key }}" {{ old('category') == $key ? 'selected' : '' }}>{{ $label }}</option>
                                         @endforeach
                                     </select>
+                                    @error('category')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div id="categoryError" class="text-danger small mt-1" style="display:none;">
+                                        <i class="fa fa-exclamation-circle"></i> กรุณาเลือกหมวดหมู่
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -691,19 +697,126 @@
             });
         });
 
-        // Form validation
+        // Form validation — ตรวจสอบทุก field ก่อน submit พร้อมแสดง alert แดง
         document.getElementById('voucherForm').addEventListener('submit', function(e) {
-            const amounts = document.querySelectorAll('.item-amount');
+            let errors = [];
+            let firstErrorField = null;
+
+            // ล้าง error เดิมทั้งหมด
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            const existingAlert = document.querySelector('#validationAlert');
+            if (existingAlert) existingAlert.remove();
+
+            // 1. ตรวจสอบสาขา
+            const branchCode = document.getElementById('branchCode');
+            if (branchCode && !branchCode.value) {
+                errors.push('กรุณาเลือกสาขา');
+                branchCode.classList.add('is-invalid');
+                if (!firstErrorField) firstErrorField = branchCode;
+            }
+
+            // 2. ตรวจสอบวันที่
+            const voucherDate = document.querySelector('input[name="voucher_date"]');
+            if (voucherDate && !voucherDate.value) {
+                errors.push('กรุณาระบุวันที่');
+                voucherDate.classList.add('is-invalid');
+                if (!firstErrorField) firstErrorField = voucherDate;
+            }
+
+            // 3. ตรวจสอบหมวดหมู่ (บังคับเมื่อไม่ใช่ใบจ่ายเงินเดือน)
+            const isSalary = document.getElementById('isSalary').checked;
+            const categorySelect = document.getElementById('category');
+            const categoryError = document.getElementById('categoryError');
+
+            if (!isSalary && (!categorySelect.value || categorySelect.value === '')) {
+                errors.push('กรุณาเลือกหมวดหมู่');
+                categorySelect.classList.add('is-invalid');
+                categoryError.style.display = 'block';
+                if (!firstErrorField) firstErrorField = categorySelect;
+            } else {
+                categorySelect.classList.remove('is-invalid');
+                categoryError.style.display = 'none';
+            }
+
+            // 4. ตรวจสอบผู้รับเงิน
+            const payTo = document.getElementById('payToSelect');
+            if (payTo && !payTo.value) {
+                errors.push('กรุณาระบุชื่อผู้รับเงิน');
+                if (!firstErrorField) firstErrorField = payTo;
+            }
+
+            // 5. ตรวจสอบรายการ
+            const items = document.querySelectorAll('.item-row');
             let hasValidItem = false;
-            amounts.forEach(input => {
-                if (parseFloat(input.value) > 0) {
-                    hasValidItem = true;
+
+            items.forEach((item, index) => {
+                const description = item.querySelector('input[name*="[description]"]');
+                const amount = item.querySelector('.item-amount');
+
+                if (description && !description.value.trim()) {
+                    errors.push(`รายการที่ ${index + 1}: กรุณาระบุรายละเอียด`);
+                    description.classList.add('is-invalid');
+                    if (!firstErrorField) firstErrorField = description;
+                }
+
+                if (amount) {
+                    const val = parseFloat(amount.value);
+                    if (!amount.value || isNaN(val) || val <= 0) {
+                        errors.push(`รายการที่ ${index + 1}: กรุณาระบุจำนวนเงินให้ถูกต้อง`);
+                        amount.classList.add('is-invalid');
+                        if (!firstErrorField) firstErrorField = amount;
+                    } else {
+                        hasValidItem = true;
+                    }
                 }
             });
 
-            if (!hasValidItem) {
+            if (!hasValidItem && items.length > 0) {
+                errors.push('กรุณาเพิ่มรายการอย่างน้อย 1 รายการที่มีจำนวนเงินมากกว่า 0');
+            }
+
+            // แสดง error alert แดงด้านบน
+            if (errors.length > 0) {
                 e.preventDefault();
-                alert('กรุณาเพิ่มรายการอย่างน้อย 1 รายการที่มีจำนวนเงินมากกว่า 0');
+                e.stopPropagation();
+
+                let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" id="validationAlert" role="alert">';
+                errorHtml += '<h5 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> พบข้อผิดพลาด ' + errors.length + ' รายการ:</h5>';
+                errorHtml += '<ul class="mb-0">';
+                errors.forEach(err => {
+                    errorHtml += `<li>${err}</li>`;
+                });
+                errorHtml += '</ul>';
+                errorHtml += '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                errorHtml += '</div>';
+
+                const mainCard = document.querySelector('.main-card');
+                if (mainCard) {
+                    mainCard.insertAdjacentHTML('afterbegin', errorHtml);
+                }
+
+                // เลื่อนไปยัง error แรก
+                if (firstErrorField) {
+                    firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => firstErrorField.focus(), 500);
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        });
+
+        // ลบ error styling เมื่อผู้ใช้แก้ไขข้อมูล
+        document.body.addEventListener('input', function(e) {
+            if (e.target.classList.contains('form-control') || e.target.classList.contains('form-select')) {
+                e.target.classList.remove('is-invalid');
+            }
+        });
+
+        // ซ่อน error เมื่อเลือกหมวดหมู่แล้ว
+        document.getElementById('category').addEventListener('change', function() {
+            if (this.value) {
+                this.classList.remove('is-invalid');
+                document.getElementById('categoryError').style.display = 'none';
             }
         });
 

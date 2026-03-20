@@ -67,17 +67,37 @@ class PaymentVoucherController extends Controller
             });
         }
 
-        // ใช้ role-based permission แทน level
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $branchCodes = PaymentVoucher::$branchCodes;
+        $groupBranchCodes = PaymentVoucher::$groupBranchCodes;
+
+        // Filter branch and group lists for external users
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $resolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
+            
+            $branchCodes = array_filter($branchCodes, function ($code) use ($resolvedBranches) {
+                return in_array($code, $resolvedBranches);
+            }, ARRAY_FILTER_USE_KEY);
+
+            $groupBranchCodes = array_filter($groupBranchCodes, function ($name) use ($userBranches) {
+                return in_array($name, $userBranches);
+            }, ARRAY_FILTER_USE_KEY);
+        }
+
+        // Use role-based permission
         // บัญชีทั่วไปดูได้เฉพาะที่ตัวเองสร้าง
-        if (Auth::user()->hasRole('account')) {
+        if ($user->hasRole('account')) {
             $query->where('created_by', Auth::id());
         }
 
-        // External user filter by assigned branches
-        if (Auth::user()->hasRole('external-branch')) {
-            $userBranches = Auth::user()->branches;
-            if (is_array($userBranches) && count($userBranches) > 0) {
-                $query->whereIn('branch_code', $userBranches);
+        // External user filter by assigned branches (รองรับการขยายกลุ่มสาขา)
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $resolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
+            if (count($resolvedBranches) > 0) {
+                $query->whereIn('branch_code', $resolvedBranches);
             } else {
                 $query->where('id', '<', 0); // No branches = no data
             }
@@ -85,7 +105,7 @@ class PaymentVoucherController extends Controller
 
         $vouchers = $query->paginate(20);
 
-        return view('payment_voucher.index', compact('vouchers'));
+        return view('payment_voucher.index', compact('vouchers', 'branchCodes', 'groupBranchCodes'));
     }
 
     /**
@@ -94,16 +114,26 @@ class PaymentVoucherController extends Controller
     public function create()
     {
         $branchCodes = PaymentVoucher::$branchCodes;
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
 
-        if (Auth::user()->hasRole('external-branch')) {
-            $userBranches = Auth::user()->branches ?? [];
-            $branchCodes = array_filter($branchCodes, function($code) use ($userBranches) {
-                return in_array($code, $userBranches);
+        $defaultBranch = 'ELPV'; // Default for admin
+
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $resolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
+            $branchCodes = array_filter($branchCodes, function ($code) use ($resolvedBranches) {
+                return in_array($code, $resolvedBranches);
             }, ARRAY_FILTER_USE_KEY);
+
+            // Set default branch to the first assigned one
+            if (!empty($branchCodes)) {
+                $defaultBranch = array_key_first($branchCodes);
+            }
         }
 
-        $voucherNo = PaymentVoucher::generateVoucherNo();
-        return view('payment_voucher.create', compact('voucherNo', 'branchCodes'));
+        $voucherNo = PaymentVoucher::generateVoucherNo($defaultBranch);
+        return view('payment_voucher.create', compact('voucherNo', 'branchCodes', 'defaultBranch'));
     }
 
     /**
@@ -128,7 +158,7 @@ class PaymentVoucherController extends Controller
             'withholding_tax_rate' => 'nullable|numeric|min:0|max:100',
             'withholding_tax_amount' => 'nullable|numeric|min:0',
             'is_salary' => 'nullable|boolean',
-            'category' => 'nullable|string|max:100',
+            'category' => 'required_without:is_salary|nullable|string|max:100',
             'voucher_attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
             'items.*.attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
         ]);
@@ -139,7 +169,8 @@ class PaymentVoucherController extends Controller
 
             if (Auth::user()->hasRole('external-branch')) {
                 $userBranches = Auth::user()->branches ?? [];
-                if (!in_array($branchCode, $userBranches)) {
+                $resolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
+                if (!in_array($branchCode, $resolvedBranches)) {
                     return back()->with('error', 'คุณไม่มีสิทธิ์สร้างและจัดการใบสำคัญจ่ายของสาขานี้')->withInput();
                 }
             }
@@ -193,7 +224,10 @@ class PaymentVoucherController extends Controller
             $isSkipApproval = false;
             
             if ($request->submit) {
-                if ($request->skip_approval && Auth::user()->can('payment-voucher.approve')) {
+                /** @var \App\Models\User $user */
+                $user = Auth::user();
+
+                if ($request->skip_approval && $user->can('payment-voucher.approve')) {
                     $status = PaymentVoucher::STATUS_APPROVED;
                     $isSkipApproval = true;
                 } else {
@@ -369,9 +403,13 @@ class PaymentVoucherController extends Controller
     {
         $voucher = PaymentVoucher::with(['items.attachments', 'attachments', 'logs'])->findOrFail($id);
 
-        if (Auth::user()->hasRole('external-branch')) {
-            $userBranches = Auth::user()->branches ?? [];
-            if (!in_array($voucher->branch_code, $userBranches)) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $resolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
+            if (!in_array($voucher->branch_code, $resolvedBranches)) {
                 return back()->with('error', 'คุณไม่มีสิทธิ์เข้าถึงใบสำคัญจ่ายของสาขานี้');
             }
         }
@@ -386,9 +424,13 @@ class PaymentVoucherController extends Controller
     {
         $voucher = PaymentVoucher::with(['items.attachments', 'attachments'])->findOrFail($id);
 
-        if (Auth::user()->hasRole('external-branch')) {
-            $userBranches = Auth::user()->branches ?? [];
-            if (!in_array($voucher->branch_code, $userBranches)) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $resolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
+            if (!in_array($voucher->branch_code, $resolvedBranches)) {
                 return back()->with('error', 'คุณไม่มีสิทธิ์เข้าถึงใบสำคัญจ่ายของสาขานี้');
             }
         }
@@ -408,9 +450,13 @@ class PaymentVoucherController extends Controller
     {
         $voucher = PaymentVoucher::findOrFail($id);
 
-        if (Auth::user()->hasRole('external-branch')) {
-            $userBranches = Auth::user()->branches ?? [];
-            if (!in_array($voucher->branch_code, $userBranches)) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $resolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
+            if (!in_array($voucher->branch_code, $resolvedBranches)) {
                 return back()->with('error', 'คุณไม่มีสิทธิ์แก้ไขใบสำคัญจ่ายของสาขานี้');
             }
         }
@@ -435,7 +481,7 @@ class PaymentVoucherController extends Controller
             'withholding_tax_rate' => 'nullable|numeric|min:0|max:100',
             'withholding_tax_amount' => 'nullable|numeric|min:0',
             'is_salary' => 'nullable|boolean',
-            'category' => 'nullable|string|max:100',
+            'category' => 'required_without:is_salary|nullable|string|max:100',
             'voucher_attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
             'items.*.attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,pdf|max:10240',
         ]);
@@ -495,7 +541,7 @@ class PaymentVoucherController extends Controller
             $status = $request->submit ? PaymentVoucher::STATUS_PENDING : PaymentVoucher::STATUS_DRAFT;
             $isSkipApproval = false;
             
-            if ($request->submit && $request->skip_approval && Auth::user()->can('payment-voucher.approve')) {
+            if ($request->submit && $request->skip_approval && $user->can('payment-voucher.approve')) {
                 $status = PaymentVoucher::STATUS_APPROVED;
                 $isSkipApproval = true;
             }

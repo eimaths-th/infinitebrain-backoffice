@@ -164,6 +164,25 @@ class ReceiptVoucher extends Model
         'EiMaths' => ['EiRP', 'EiBK', 'EiHQ'],
     ];
 
+    /**
+     * แปลงกลุ่มสาขา (เช่น META, EiMaths) ให้เป็นรหัสสาขาจริง (เช่น MTRV, EiRP, EiBK, ...)
+     */
+    public static function resolveBranchCodes($branches)
+    {
+        if (empty($branches)) return [];
+        if (!is_array($branches)) $branches = [$branches];
+
+        $resolved = [];
+        foreach ($branches as $branch) {
+            if (isset(self::$groupBranchCodes[$branch])) {
+                $resolved = array_merge($resolved, self::$groupBranchCodes[$branch]);
+            } else {
+                $resolved[] = $branch;
+            }
+        }
+        return array_unique($resolved);
+    }
+
     public static function generateVoucherNo($branchCode = 'ELRV')
     {
         $year = date('Y');

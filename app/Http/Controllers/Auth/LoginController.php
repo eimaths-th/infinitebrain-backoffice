@@ -34,9 +34,16 @@ class LoginController extends Controller
     protected $redirectTo = RouteServiceProvider::HOME;
     protected function redirectTo()
     {
-        if (Auth::user()->level == 1 ||Auth::user()->level == 0) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole('external-branch')) {
+            return '/payment-voucher';
+        }
+
+        if ($user->level == 1 || $user->level == 0) {
             return '/home';
-        } elseif (Auth::user()->level == 2) {
+        } elseif ($user->level == 2) {
             return '/home';
         } else {
             return '/home';

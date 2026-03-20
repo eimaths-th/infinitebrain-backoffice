@@ -23,6 +23,18 @@ class FinanceDashboardController extends Controller
         $selected_year  = $request->input('year', now()->year);
         $selected_month = $request->input('month', now()->month);
 
+        /** @var \App\Models\User $user */
+        $user = \Illuminate\Support\Facades\Auth::user();
+        $allowedResolvedBranches = [];
+        $allowedGroups = ['EL', 'IF', 'META', 'EiMaths'];
+        $isExternal = $user->hasRole('external-branch');
+
+        if ($isExternal) {
+            $userBranches = $user->branches ?? [];
+            $allowedResolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
+            $allowedGroups = array_intersect($allowedGroups, $userBranches);
+        }
+
         // ════════════════════════════════════════════════════
         // PAYMENT VOUCHER
         // ════════════════════════════════════════════════════
@@ -31,6 +43,9 @@ class FinanceDashboardController extends Controller
         $pv_status_counts = PaymentVoucher::select('status', DB::raw('COUNT(*) as count'))
             ->whereYear('voucher_date', $selected_year)
             ->whereMonth('voucher_date', $selected_month)
+            ->when($isExternal, function ($q) use ($allowedResolvedBranches) {
+                return $q->whereIn('branch_code', $allowedResolvedBranches);
+            })
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
@@ -38,10 +53,16 @@ class FinanceDashboardController extends Controller
         $pv_total_count = array_sum($pv_status_counts);
 
         // 2) ยอดรวมทั้งหมด (Global) และ ยอดเดือนที่เลือก
-        $pv_total_amount_all = PaymentVoucher::sum('total_amount');
+        $pv_total_amount_all = PaymentVoucher::when($isExternal, function ($q) use ($allowedResolvedBranches) {
+                return $q->whereIn('branch_code', $allowedResolvedBranches);
+            })->sum('total_amount');
+            
         $pv_month_amount = PaymentVoucher::whereYear('voucher_date', $selected_year)
             ->whereMonth('voucher_date', $selected_month)
             ->where('status', PaymentVoucher::STATUS_COMPLETED)
+            ->when($isExternal, function ($q) use ($allowedResolvedBranches) {
+                return $q->whereIn('branch_code', $allowedResolvedBranches);
+            })
             ->sum('total_amount');
 
         // 3) จำนวนรอดำเนินการ (เฉพาะเดือนที่เลือก: pending + reviewed)
@@ -56,6 +77,9 @@ class FinanceDashboardController extends Controller
             DB::raw('SUM(total_amount) as total')
         )
             ->where('status', PaymentVoucher::STATUS_COMPLETED)
+            ->when($isExternal, function ($q) use ($allowedResolvedBranches) {
+                return $q->whereIn('branch_code', $allowedResolvedBranches);
+            })
             ->groupBy('branch_code')
             ->get()
             ->map(function ($item) {
@@ -72,6 +96,9 @@ class FinanceDashboardController extends Controller
             ->where('status', PaymentVoucher::STATUS_COMPLETED)
             ->whereYear('voucher_date', $selected_year)
             ->whereMonth('voucher_date', $selected_month)
+            ->when($isExternal, function ($q) use ($allowedResolvedBranches) {
+                return $q->whereIn('branch_code', $allowedResolvedBranches);
+            })
             ->groupBy('branch_code')
             ->get()
             ->map(function ($item) {
@@ -110,6 +137,9 @@ class FinanceDashboardController extends Controller
         $rv_status_counts = ReceiptVoucher::select('status', DB::raw('COUNT(*) as count'))
             ->whereYear('voucher_date', $selected_year)
             ->whereMonth('voucher_date', $selected_month)
+            ->when($isExternal, function ($q) use ($allowedResolvedBranches) {
+                return $q->whereIn('branch_code', $allowedResolvedBranches);
+            })
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
@@ -117,10 +147,16 @@ class FinanceDashboardController extends Controller
         $rv_total_count = array_sum($rv_status_counts);
 
         // 2) ยอดรวมทั้งหมด (Global) และ ยอดเดือนที่เลือก
-        $rv_total_amount_all = ReceiptVoucher::sum('total_amount');
+        $rv_total_amount_all = ReceiptVoucher::when($isExternal, function ($q) use ($allowedResolvedBranches) {
+                return $q->whereIn('branch_code', $allowedResolvedBranches);
+            })->sum('total_amount');
+
         $rv_month_amount = ReceiptVoucher::whereYear('voucher_date', $selected_year)
             ->whereMonth('voucher_date', $selected_month)
             ->where('status', ReceiptVoucher::STATUS_COMPLETED)
+            ->when($isExternal, function ($q) use ($allowedResolvedBranches) {
+                return $q->whereIn('branch_code', $allowedResolvedBranches);
+            })
             ->sum('total_amount');
 
         // 3) จำนวนรอดำเนินการ (เฉพาะเดือนที่เลือก: pending + verified)
@@ -135,6 +171,9 @@ class FinanceDashboardController extends Controller
             DB::raw('SUM(total_amount) as total')
         )
             ->where('status', ReceiptVoucher::STATUS_COMPLETED)
+            ->when($isExternal, function ($q) use ($allowedResolvedBranches) {
+                return $q->whereIn('branch_code', $allowedResolvedBranches);
+            })
             ->groupBy('branch_code')
             ->get()
             ->map(function ($item) {
@@ -151,6 +190,9 @@ class FinanceDashboardController extends Controller
             ->where('status', ReceiptVoucher::STATUS_COMPLETED)
             ->whereYear('voucher_date', $selected_year)
             ->whereMonth('voucher_date', $selected_month)
+            ->when($isExternal, function ($q) use ($allowedResolvedBranches) {
+                return $q->whereIn('branch_code', $allowedResolvedBranches);
+            })
             ->groupBy('branch_code')
             ->get()
             ->map(function ($item) {
@@ -247,10 +289,10 @@ class FinanceDashboardController extends Controller
         // PERFORMANCE (ผลประกอบการ) - Breakdown by group
         // ════════════════════════════════════════════════════
         $perf_all = $this->calculateGroupPerformance($selected_year, $selected_month, 'ALL');
-        $perf_el = $this->calculateGroupPerformance($selected_year, $selected_month, 'EL');
-        $perf_if = $this->calculateGroupPerformance($selected_year, $selected_month, 'IF');
-        $perf_meta = $this->calculateGroupPerformance($selected_year, $selected_month, 'META');
-        $perf_eimaths = $this->calculateGroupPerformance($selected_year, $selected_month, 'EiMaths');
+        $perf_el = in_array('EL', $allowedGroups) ? $this->calculateGroupPerformance($selected_year, $selected_month, 'EL') : ['total_revenue'=>0, 'total_expense'=>0, 'school_revenue'=>0, 'rv_revenue'=>0, 'pv_expense'=>0, 'payroll_expense'=>0, 'net_profit'=>0];
+        $perf_if = in_array('IF', $allowedGroups) ? $this->calculateGroupPerformance($selected_year, $selected_month, 'IF') : ['total_revenue'=>0, 'total_expense'=>0, 'school_revenue'=>0, 'rv_revenue'=>0, 'pv_expense'=>0, 'payroll_expense'=>0, 'net_profit'=>0];
+        $perf_meta = in_array('META', $allowedGroups) ? $this->calculateGroupPerformance($selected_year, $selected_month, 'META') : ['total_revenue'=>0, 'total_expense'=>0, 'school_revenue'=>0, 'rv_revenue'=>0, 'pv_expense'=>0, 'payroll_expense'=>0, 'net_profit'=>0];
+        $perf_eimaths = in_array('EiMaths', $allowedGroups) ? $this->calculateGroupPerformance($selected_year, $selected_month, 'EiMaths') : ['total_revenue'=>0, 'total_expense'=>0, 'school_revenue'=>0, 'rv_revenue'=>0, 'pv_expense'=>0, 'payroll_expense'=>0, 'net_profit'=>0];
 
         // Yearly
         $perf_yearly_el = $this->calculateGroupPerformance($selected_year, null, 'EL');
@@ -465,6 +507,16 @@ class FinanceDashboardController extends Controller
 
         $branch_name = '';
         $vouchers = [];
+
+        /** @var \App\Models\User $user */
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $allVoucherBranches = ($type === 'rv') ? ReceiptVoucher::resolveBranchCodes($userBranches) : PaymentVoucher::resolveBranchCodes($userBranches);
+            if (!in_array($branch_code, $allVoucherBranches)) {
+                return back()->with('error', 'คุณไม่มีสิทธิ์เข้าถึงข้อมูลสาขานี้');
+            }
+        }
 
         if ($type === 'rv') {
             $branch_name = ReceiptVoucher::$branchCodes[$branch_code] ?? $branch_code;
