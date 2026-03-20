@@ -104,7 +104,7 @@
         <div class="col-12">
             <div class="main-card mb-3 card shadow-sm border-0">
                 <div class="card-body p-4">
-                    <form action="{{ route('receipt-voucher.update', $voucher->id) }}" method="POST" enctype="multipart/form-data" id="voucherForm">
+                    <form action="{{ route('receipt-voucher.update', $voucher->id) }}" method="POST" enctype="multipart/form-data" id="voucherForm" novalidate>
                         @csrf
                         @method('PUT')
                         <div class="row">
@@ -473,6 +473,105 @@
 
         $(document).on('input', '.item-amount, .deduction-amount', function() {
             calculateTotal();
+        });
+
+        // Form validation — ตรวจสอบทุก field ก่อน submit พร้อมแสดง alert แดง
+        document.getElementById('voucherForm').addEventListener('submit', function(e) {
+            let errors = [];
+            let firstErrorField = null;
+
+            // ล้าง error เดิมทั้งหมด
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            const existingAlert = document.querySelector('#validationAlert');
+            if (existingAlert) existingAlert.remove();
+
+            // 1. ตรวจสอบวันที่
+            const voucherDate = document.querySelector('input[name="voucher_date"]');
+            if (voucherDate && !voucherDate.value) {
+                errors.push('กรุณาระบุวันที่');
+                voucherDate.classList.add('is-invalid');
+                if (!firstErrorField) firstErrorField = voucherDate;
+            }
+
+            // 2. ตรวจสอบสาขา
+            const branchCode = document.getElementById('branchCode');
+            if (branchCode && !branchCode.value) {
+                errors.push('กรุณาเลือกสาขา');
+                branchCode.classList.add('is-invalid');
+                if (!firstErrorField) firstErrorField = branchCode;
+            }
+
+            // 3. ตรวจสอบผู้จ่ายเงิน (รับจาก)
+            const receiveFrom = document.getElementById('receiveFromSelect');
+            if (receiveFrom && !receiveFrom.value) {
+                errors.push('กรุณาระบุชื่อผู้จ่ายเงิน (รับจาก)');
+                if (!firstErrorField) firstErrorField = receiveFrom;
+            }
+
+            // 4. ตรวจสอบรายการรับ
+            const items = document.querySelectorAll('.item-row');
+            let hasValidItem = false;
+
+            items.forEach((item, index) => {
+                const description = item.querySelector('input[name*="[description]"]');
+                const amount = item.querySelector('.item-amount');
+
+                if (description && !description.value.trim()) {
+                    errors.push(`รายการที่ ${index + 1}: กรุณาระบุรายละเอียด`);
+                    description.classList.add('is-invalid');
+                    if (!firstErrorField) firstErrorField = description;
+                }
+
+                if (amount) {
+                    const val = parseFloat(amount.value);
+                    if (!amount.value || isNaN(val) || val <= 0) {
+                        errors.push(`รายการที่ ${index + 1}: กรุณาระบุจำนวนเงินให้ถูกต้อง`);
+                        amount.classList.add('is-invalid');
+                        if (!firstErrorField) firstErrorField = amount;
+                    } else {
+                        hasValidItem = true;
+                    }
+                }
+            });
+
+            if (!hasValidItem && items.length > 0) {
+                errors.push('กรุณาเพิ่มรายการรับอย่างน้อย 1 รายการที่มีจำนวนเงินมากกว่า 0');
+            }
+
+            // แสดง error alert แดงด้านบน
+            if (errors.length > 0) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" id="validationAlert" role="alert">';
+                errorHtml += '<h5 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> พบข้อผิดพลาด ' + errors.length + ' รายการ:</h5>';
+                errorHtml += '<ul class="mb-0">';
+                errors.forEach(err => {
+                    errorHtml += `<li>${err}</li>`;
+                });
+                errorHtml += '</ul>';
+                errorHtml += '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                errorHtml += '</div>';
+
+                const mainCard = document.querySelector('.main-card');
+                if (mainCard) {
+                    mainCard.insertAdjacentHTML('afterbegin', errorHtml);
+                }
+
+                if (firstErrorField) {
+                    firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => firstErrorField.focus(), 500);
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        });
+
+        // ลบ error styling เมื่อผู้ใช้แก้ไขข้อมูล
+        document.body.addEventListener('input', function(e) {
+            if (e.target.classList.contains('form-control') || e.target.classList.contains('form-select')) {
+                e.target.classList.remove('is-invalid');
+            }
         });
     </script>
 @endsection

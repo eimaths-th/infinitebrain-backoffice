@@ -63,22 +63,65 @@ class ReceiptVoucherController extends Controller
             });
         }
 
+        $branchCodes = ReceiptVoucher::$branchCodes;
+        $groupBranchCodes = ReceiptVoucher::$groupBranchCodes;
+
         /** @var \App\Models\User $user */
         $user = Auth::user();
         if ($user->hasRole('account')) {
             $query->where('created_by', Auth::id());
         }
 
+        // External user filter by assigned branches (รองรับการขยายกลุ่มสาขา)
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches;
+            $resolvedBranches = ReceiptVoucher::resolveBranchCodes($userBranches);
+            if (count($resolvedBranches) > 0) {
+                $query->whereIn('branch_code', $resolvedBranches);
+
+                // กรองตัวเลือกใน Filter dropdown ให้เหลือเฉพาะที่เกี่ยวข้อง
+                $branchCodes = array_filter($branchCodes, function ($code) use ($resolvedBranches) {
+                    return in_array($code, $resolvedBranches);
+                }, ARRAY_FILTER_USE_KEY);
+
+                $groupBranchCodes = array_filter($groupBranchCodes, function ($name) use ($userBranches) {
+                    return in_array($name, $userBranches);
+                }, ARRAY_FILTER_USE_KEY);
+            } else {
+                $query->where('id', '<', 0); // No branches = no data
+                $branchCodes = [];
+                $groupBranchCodes = [];
+            }
+        }
+
         $vouchers = $query->paginate(20);
 
-        return view('receipt_voucher.index', compact('vouchers'));
+        return view('receipt_voucher.index', compact('vouchers', 'branchCodes', 'groupBranchCodes'));
     }
 
     public function create()
     {
         $branchCodes = ReceiptVoucher::$branchCodes;
-        $voucherNo = ReceiptVoucher::generateVoucherNo();
-        return view('receipt_voucher.create', compact('voucherNo', 'branchCodes'));
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $defaultBranch = 'ELRV'; // Default for admin
+
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $resolvedBranches = ReceiptVoucher::resolveBranchCodes($userBranches);
+            $branchCodes = array_filter($branchCodes, function ($code) use ($resolvedBranches) {
+                return in_array($code, $resolvedBranches);
+            }, ARRAY_FILTER_USE_KEY);
+
+            // Set default branch to the first assigned one
+            if (!empty($branchCodes)) {
+                $defaultBranch = array_key_first($branchCodes);
+            }
+        }
+
+        $voucherNo = ReceiptVoucher::generateVoucherNo($defaultBranch);
+        return view('receipt_voucher.create', compact('voucherNo', 'branchCodes', 'defaultBranch'));
     }
 
     public function store(Request $request)
@@ -97,6 +140,18 @@ class ReceiptVoucherController extends Controller
 
         DB::beginTransaction();
         try {
+            $branchCode = $request->branch_code ?? 'ELRV';
+
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+            if ($user->hasRole('external-branch')) {
+                $userBranches = $user->branches ?? [];
+                $resolvedBranches = ReceiptVoucher::resolveBranchCodes($userBranches);
+                if (!in_array($branchCode, $resolvedBranches)) {
+                    return back()->with('error', 'คุณไม่มีสิทธิ์สร้างและจัดการใบสำคัญรับของสาขานี้')->withInput();
+                }
+            }
+
             $totalAmount = collect($request->items)->sum('amount');
             $totalDeductionAmount = collect($request->deductions)->sum('amount');
             $netAmount = $totalAmount - $totalDeductionAmount;
@@ -180,6 +235,17 @@ class ReceiptVoucherController extends Controller
     public function show($id)
     {
         $voucher = ReceiptVoucher::with(['items', 'attachments', 'logs'])->findOrFail($id);
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $resolvedBranches = ReceiptVoucher::resolveBranchCodes($userBranches);
+            if (!in_array($voucher->branch_code, $resolvedBranches)) {
+                return back()->with('error', 'คุณไม่มีสิทธิ์เข้าถึงใบสำคัญรับของสาขานี้');
+            }
+        }
+
         return view('receipt_voucher.show', compact('voucher'));
     }
 
@@ -188,10 +254,27 @@ class ReceiptVoucherController extends Controller
         $voucher = ReceiptVoucher::with('items')->findOrFail($id);
         /** @var \App\Models\User $user */
         $user = Auth::user();
+
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $resolvedBranches = ReceiptVoucher::resolveBranchCodes($userBranches);
+            if (!in_array($voucher->branch_code, $resolvedBranches)) {
+                return back()->with('error', 'คุณไม่มีสิทธิ์เข้าถึงใบสำคัญรับของสาขานี้');
+            }
+        }
+
         if (!$voucher->canEdit() || !$user->can('receipt-voucher.edit')) {
             return back()->with('error', 'ไม่สามารถแก้ไขใบสำคัญรับนี้ได้ หรือคุณไม่มีสิทธิ์แก้ไข');
         }
         $branchCodes = ReceiptVoucher::$branchCodes;
+
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $resolvedBranches = ReceiptVoucher::resolveBranchCodes($userBranches);
+            $branchCodes = array_filter($branchCodes, function($code) use ($resolvedBranches) {
+                return in_array($code, $resolvedBranches);
+            }, ARRAY_FILTER_USE_KEY);
+        }
         return view('receipt_voucher.edit', compact('voucher', 'branchCodes'));
     }
 
@@ -200,6 +283,15 @@ class ReceiptVoucherController extends Controller
         $voucher = ReceiptVoucher::findOrFail($id);
         /** @var \App\Models\User $user */
         $user = Auth::user();
+
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $resolvedBranches = ReceiptVoucher::resolveBranchCodes($userBranches);
+            if (!in_array($voucher->branch_code, $resolvedBranches)) {
+                return back()->with('error', 'คุณไม่มีสิทธิ์แก้ไขใบสำคัญรับของสาขานี้');
+            }
+        }
+
         if (!$voucher->canEdit() || !$user->can('receipt-voucher.edit')) {
             return back()->with('error', 'ไม่สามารถแก้ไขได้ หรือคุณไม่มีสิทธิ์');
         }

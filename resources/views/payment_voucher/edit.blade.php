@@ -196,12 +196,18 @@
                                 </div>
                                 <div id="categoryWrapper">
                                     <label class="form-label">หมวดหมู่ <span class="required-mark">*</span></label>
-                                    <select name="category" id="category" class="form-select" {{ old('is_salary', $voucher->is_salary) ? 'disabled' : 'required' }}>
+                                    <select name="category" id="category" class="form-select @error('category') is-invalid @enderror" {{ old('is_salary', $voucher->is_salary) ? 'disabled' : 'required' }}>
                                         <option value="">-- เลือกหมวดหมู่ --</option>
                                         @foreach (\App\Models\PaymentVoucher::$categoryLabels as $key => $label)
                                             <option value="{{ $key }}" {{ old('category', $voucher->category) == $key ? 'selected' : '' }}>{{ $label }}</option>
                                         @endforeach
                                     </select>
+                                    @error('category')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div id="categoryError" class="text-danger small mt-1" style="display:none;">
+                                        <i class="fa fa-exclamation-circle"></i> กรุณาเลือกหมวดหมู่
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -874,17 +880,25 @@
                 });
         }
 
-        // Form validation
+        // Form validation — ตรวจสอบทุก field ก่อน submit พร้อมแสดง alert แดง
         document.getElementById('voucherForm').addEventListener('submit', function(e) {
             let errors = [];
             let firstErrorField = null;
 
-            // Clear previous error states
+            // ล้าง error เดิมทั้งหมด
             document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
             const existingAlert = document.querySelector('#validationAlert');
             if (existingAlert) existingAlert.remove();
 
-            // 1. Check Voucher Date
+            // 1. ตรวจสอบสาขา
+            const branchCode = document.querySelector('select[name="branch_code"]');
+            if (branchCode && !branchCode.value) {
+                errors.push('กรุณาเลือกสาขา');
+                branchCode.classList.add('is-invalid');
+                if (!firstErrorField) firstErrorField = branchCode;
+            }
+
+            // 2. ตรวจสอบวันที่
             const voucherDate = document.querySelector('input[name="voucher_date"]');
             if (voucherDate && !voucherDate.value) {
                 errors.push('กรุณาระบุวันที่');
@@ -892,7 +906,16 @@
                 if (!firstErrorField) firstErrorField = voucherDate;
             }
 
-            // 2. Check Pay To
+            // 3. ตรวจสอบหมวดหมู่ (บังคับกรอกเมื่อไม่ใช่ใบจ่ายเงินเดือน)
+            const isSalary = document.getElementById('isSalary').checked;
+            const catSelect = document.getElementById('category');
+            if (!isSalary && (!catSelect.value || catSelect.value === '')) {
+                errors.push('กรุณาเลือกหมวดหมู่');
+                catSelect.classList.add('is-invalid');
+                if (!firstErrorField) firstErrorField = catSelect;
+            }
+
+            // 4. ตรวจสอบผู้รับเงิน
             const payTo = document.querySelector('input[name="pay_to"]');
             if (payTo && !payTo.value.trim()) {
                 errors.push('กรุณาระบุผู้รับเงิน');
@@ -900,23 +923,20 @@
                 if (!firstErrorField) firstErrorField = payTo;
             }
 
-            // 3. Check Items
+            // 5. ตรวจสอบรายการ
             const items = document.querySelectorAll('.item-row');
             let hasValidItem = false;
 
             items.forEach((item, index) => {
-                // Use simplified selectors using class or partial name match
                 const description = item.querySelector('input[name*="[description]"]');
                 const amount = item.querySelector('.item-amount');
 
-                // Validate Description
                 if (description && !description.value.trim()) {
                     errors.push(`รายการที่ ${index + 1}: กรุณาระบุรายละเอียด`);
                     description.classList.add('is-invalid');
                     if (!firstErrorField) firstErrorField = description;
                 }
 
-                // Validate Amount
                 if (amount) {
                     const val = parseFloat(amount.value);
                     if (!amount.value || isNaN(val) || val <= 0) {
@@ -933,59 +953,39 @@
                 errors.push('กรุณาเพิ่มรายการอย่างน้อย 1 รายการที่มีจำนวนเงินมากกว่า 0');
             }
 
-            // Show errors
+            // แสดง error alert แดงด้านบน
             if (errors.length > 0) {
                 e.preventDefault();
-                e.stopPropagation(); // Stop event bubbling
+                e.stopPropagation();
 
-                // Create alert HTML
-                let errorHtml =
-                    '<div class="alert alert-danger alert-dismissible fade show" id="validationAlert" role="alert">';
-                errorHtml += '<h5 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> พบข้อผิดพลาด ' +
-                    errors.length + ' รายการ:</h5>';
+                let errorHtml = '<div class="alert alert-danger alert-dismissible fade show" id="validationAlert" role="alert">';
+                errorHtml += '<h5 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> พบข้อผิดพลาด ' + errors.length + ' รายการ:</h5>';
                 errorHtml += '<ul class="mb-0">';
                 errors.forEach(err => {
                     errorHtml += `<li>${err}</li>`;
                 });
                 errorHtml += '</ul>';
-                errorHtml +=
-                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                errorHtml += '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
                 errorHtml += '</div>';
 
-                // Insert alert at the top of the main card
                 const mainCard = document.querySelector('.main-card');
                 if (mainCard) {
                     mainCard.insertAdjacentHTML('afterbegin', errorHtml);
-                } else {
-                    // Fallback using form parent
-                    const form = document.getElementById('voucherForm');
-                    form.parentNode.insertBefore(errorHtml, form);
                 }
 
-                // Scroll to top or first error
                 if (firstErrorField) {
-                    firstErrorField.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
+                    firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     setTimeout(() => firstErrorField.focus(), 500);
                 } else {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             }
         });
 
-        // Remove invalid class on input
+        // ลบ error styling เมื่อผู้ใช้แก้ไขข้อมูล
         document.body.addEventListener('input', function(e) {
-            if (e.target.classList.contains('form-control')) {
+            if (e.target.classList.contains('form-control') || e.target.classList.contains('form-select')) {
                 e.target.classList.remove('is-invalid');
-                const feedback = e.target.nextElementSibling;
-                if (feedback && feedback.classList.contains('invalid-feedback')) {
-                    feedback.style.display = 'none';
-                }
             }
         });
     </script>

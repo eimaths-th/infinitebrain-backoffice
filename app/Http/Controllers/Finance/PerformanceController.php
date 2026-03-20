@@ -10,6 +10,7 @@ use App\Models\Payroll;
 use App\Models\SchoolPrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class PerformanceController extends Controller
@@ -21,7 +22,19 @@ class PerformanceController extends Controller
     public function index(Request $request)
     {
         $year = $request->input('year', date('Y'));
-        $selectedGroups = $request->input('groups', ['EL']); // Default to EL as requested
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $allowedGroups = ['EL', 'IF', 'META', 'EiMaths'];
+        if ($user->hasRole('external-branch')) {
+            $allowedGroups = array_intersect($allowedGroups, $user->branches ?? []);
+        }
+
+        $selectedGroups = $request->input('groups', [$allowedGroups[0] ?? 'EL']);
+        $selectedGroups = array_intersect($selectedGroups, $allowedGroups);
+        
+        if (empty($selectedGroups) && !empty($allowedGroups)) {
+            $selectedGroups = [$allowedGroups[0]];
+        }
 
         // Sum revenue and expenses per month for the given year
         $monthlyPerformance = [];
@@ -38,7 +51,16 @@ class PerformanceController extends Controller
      */
     public function monthly(Request $request, $year, $month)
     {
-        $selectedGroups = $request->input('groups', ['EL']);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $allowedGroups = ['EL', 'IF', 'META', 'EiMaths'];
+        if ($user->hasRole('external-branch')) {
+            $allowedGroups = array_intersect($allowedGroups, $user->branches ?? []);
+        }
+
+        $selectedGroups = $request->input('groups', [$allowedGroups[0] ?? 'EL']);
+        $selectedGroups = array_intersect($selectedGroups, $allowedGroups);
+
         $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups);
         return view('finance.performance.monthly', compact('data', 'year', 'month', 'selectedGroups'));
     }
@@ -48,7 +70,16 @@ class PerformanceController extends Controller
      */
     public function printMonthly(Request $request, $year, $month)
     {
-        $selectedGroups = $request->input('groups', ['EL']);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $allowedGroups = ['EL', 'IF', 'META', 'EiMaths'];
+        if ($user->hasRole('external-branch')) {
+            $allowedGroups = array_intersect($allowedGroups, $user->branches ?? []);
+        }
+
+        $selectedGroups = $request->input('groups', [$allowedGroups[0] ?? 'EL']);
+        $selectedGroups = array_intersect($selectedGroups, $allowedGroups);
+
         $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups);
         return view('finance.performance.print', compact('data', 'year', 'month', 'selectedGroups'));
     }
@@ -59,7 +90,16 @@ class PerformanceController extends Controller
      */
     public function printRevenue(Request $request, $year, $month)
     {
-        $selectedGroups = $request->input('groups', ['EL']);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $allowedGroups = ['EL', 'IF', 'META', 'EiMaths'];
+        if ($user->hasRole('external-branch')) {
+            $allowedGroups = array_intersect($allowedGroups, $user->branches ?? []);
+        }
+
+        $selectedGroups = $request->input('groups', [$allowedGroups[0] ?? 'EL']);
+        $selectedGroups = array_intersect($selectedGroups, $allowedGroups);
+
         $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups);
 
         // ดึงข้อมูลใบเสร็จ School Receipts แบบละเอียด (เฉพาะสาขา EL เท่านั้น)
@@ -95,7 +135,16 @@ class PerformanceController extends Controller
      */
     public function printExpense(Request $request, $year, $month)
     {
-        $selectedGroups = $request->input('groups', ['EL']);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $allowedGroups = ['EL', 'IF', 'META', 'EiMaths'];
+        if ($user->hasRole('external-branch')) {
+            $allowedGroups = array_intersect($allowedGroups, $user->branches ?? []);
+        }
+
+        $selectedGroups = $request->input('groups', [$allowedGroups[0] ?? 'EL']);
+        $selectedGroups = array_intersect($selectedGroups, $allowedGroups);
+
         $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups);
         return view('finance.performance.print-expense', compact('data', 'year', 'month', 'selectedGroups'));
     }

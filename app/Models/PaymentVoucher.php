@@ -54,6 +54,7 @@ class PaymentVoucher extends Model
     const CAT_VAT30 = 'vat30';                               // ภพ.30
     const CAT_ACCOUNTING_FEE = 'accounting_fee';             // ค่าทำบัญชี
     const CAT_BANK_FEE = 'bank_fee';                         // ค่าธรรมเนียมธนาคาร
+    const CAT_WAGE = 'wage';                                 // ค่าแรง
     const CAT_OTHER = 'other';                               // อื่นๆ
 
     public static $categoryLabels = [
@@ -65,6 +66,7 @@ class PaymentVoucher extends Model
         self::CAT_VAT30 => 'ภพ.30',
         self::CAT_ACCOUNTING_FEE => 'ค่าทำบัญชี',
         self::CAT_BANK_FEE => 'ค่าธรรมเนียมธนาคาร',
+        self::CAT_WAGE => 'ค่าแรง',
         self::CAT_OTHER => 'อื่นๆ',
     ];
 
@@ -232,6 +234,25 @@ class PaymentVoucher extends Model
         'META' => ['MT'],
         'EiMaths' => ['EiRP', 'EiBK', 'EiHQ', 'EiRPRF', 'EiBKBF', 'EiHQBF'],
     ];
+
+    /**
+     * แปลงกลุ่มสาขา (เช่น META, EiMaths) ให้เป็นรหัสสาขาจริง (เช่น MT, EiRP, EiBK, ...)
+     */
+    public static function resolveBranchCodes($branches)
+    {
+        if (empty($branches)) return [];
+        if (!is_array($branches)) $branches = [$branches];
+
+        $resolved = [];
+        foreach ($branches as $branch) {
+            if (isset(self::$groupBranchCodes[$branch])) {
+                $resolved = array_merge($resolved, self::$groupBranchCodes[$branch]);
+            } else {
+                $resolved[] = $branch;
+            }
+        }
+        return array_unique($resolved);
+    }
 
     // Generate Voucher Number: EL20260112 = รหัสสาขา + ปี + เดือน + ลำดับ
     public static function generateVoucherNo($branchCode = 'ELPV')
