@@ -159,11 +159,14 @@
     <div class="row mt-4">
         <div class="col-12">
             <div class="card mb-3">
-                <div class="card-header-tab card-header">
+                <div class="card-header-tab card-header d-flex justify-content-between align-items-center">
                     <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
                         <i class="header-icon pe-7s-notebook icon-gradient bg-happy-itmeo"></i>
                         รายละเอียดรายรับ (Revenue Details)
                     </div>
+                    <a href="{{ route('performance.monthly.print-revenue', array_merge(request()->query(), ['year' => $year, 'month' => $month])) }}" target="_blank" class="btn btn-sm btn-outline-success">
+                        <i class="fa fa-print"></i> พิมพ์รายรับ
+                    </a>
                 </div>
                 <div class="card-body">
                     <ul class="nav nav-tabs">
@@ -243,11 +246,14 @@
     <div class="row">
         <div class="col-12">
             <div class="card mb-3">
-                <div class="card-header-tab card-header">
+                <div class="card-header-tab card-header d-flex justify-content-between align-items-center">
                     <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
                         <i class="header-icon pe-7s-cash icon-gradient bg-mixed-hopes"></i>
                         รายละเอียดรายจ่าย (Expense Details)
                     </div>
+                    <a href="{{ route('performance.monthly.print-expense', array_merge(request()->query(), ['year' => $year, 'month' => $month])) }}" target="_blank" class="btn btn-sm btn-outline-danger">
+                        <i class="fa fa-print"></i> พิมพ์รายจ่าย
+                    </a>
                 </div>
                 <div class="card-body">
                     <ul class="nav nav-tabs">

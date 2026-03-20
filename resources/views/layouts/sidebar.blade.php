@@ -283,6 +283,9 @@
                 {{-- ส่วนพนักงาน - แสดงทุก role ยกเว้น parent --}}
 
                 <li class="app-sidebar__heading"> ทั่วไป </li>
+
+
+
                 @can(['general.view'])
                     <li>
                         <a href="{{ route('home2') }}">
@@ -360,29 +363,29 @@
                                 </ul>
                             </li>
                             @can('receipt-voucher.view')
-                            <li>
-                                <a href="#">
-                                    <i class="metismenu-icon pe-7s-note2"></i>
-                                    ใบสำคัญรับ
-                                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
-                                </a>
-                                <ul>
-                                    <li>
-                                        <a href="{{ route('receipt-voucher.index') }}">
-                                            <i class="metismenu-icon"></i>
-                                            รายการทั้งหมด
-                                        </a>
-                                    </li>
-                                    @can('receipt-voucher.create')
-                                    <li>
-                                        <a href="{{ route('receipt-voucher.create') }}">
-                                            <i class="metismenu-icon"></i>
-                                            สร้างใบสำคัญรับ
-                                        </a>
-                                    </li>
-                                    @endcan
-                                </ul>
-                            </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="metismenu-icon pe-7s-note2"></i>
+                                        ใบสำคัญรับ
+                                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ route('receipt-voucher.index') }}">
+                                                <i class="metismenu-icon"></i>
+                                                รายการทั้งหมด
+                                            </a>
+                                        </li>
+                                        @can('receipt-voucher.create')
+                                            <li>
+                                                <a href="{{ route('receipt-voucher.create') }}">
+                                                    <i class="metismenu-icon"></i>
+                                                    สร้างใบสำคัญรับ
+                                                </a>
+                                            </li>
+                                        @endcan
+                                    </ul>
+                                </li>
                             @endcan
                         </ul>
                         @can('payroll.view')
@@ -449,6 +452,14 @@
 
                             </ul>
                         @endcan
+                    </li>
+                @endcan
+                @can(['teacher-revenue.view'])
+                    <li>
+                        <a href="{{ route('teacher-revenue.index') }}">
+                            <i class="metismenu-icon pe-7s-note2"></i>
+                            รายได้ครู
+                        </a>
                     </li>
                 @endcan
 

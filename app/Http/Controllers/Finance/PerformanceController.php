@@ -54,6 +54,53 @@ class PerformanceController extends Controller
     }
 
     /**
+     * พิมพ์รายละเอียดรายรับ (Revenue Details Print - A4)
+     * ดึงข้อมูลใบเสร็จทั้งหมดแบ่งตามกลุ่มวิชาสำหรับ School Receipts
+     */
+    public function printRevenue(Request $request, $year, $month)
+    {
+        $selectedGroups = $request->input('groups', ['EL']);
+        $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups);
+
+        // ดึงข้อมูลใบเสร็จ School Receipts แบบละเอียด (เฉพาะสาขา EL เท่านั้น)
+        $school_receipts_detail = collect();
+        if (in_array('EL', $selectedGroups)) {
+            $school_receipts_detail = SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
+                    $query->whereYear('submission_date', $year)
+                        ->whereMonth('submission_date', $month);
+                })
+                ->with(['rec_school', 'school_sub', 'std'])
+                ->get()
+                ->groupBy('group')
+                ->map(function ($items, $group) {
+                    $model = new SchoolPrice();
+                    return (object) [
+                        'group_code' => $group,
+                        'group_name' => $model->getGroupName($group),
+                        'items' => $items->sortBy(function ($item) {
+                            return $item->rec_school->submission_date ?? '';
+                        })->values(),
+                        'total' => $items->sum('total'),
+                    ];
+                })
+                ->sortByDesc('total')
+                ->values();
+        }
+
+        return view('finance.performance.print-revenue', compact('data', 'year', 'month', 'selectedGroups', 'school_receipts_detail'));
+    }
+
+    /**
+     * พิมพ์รายละเอียดรายจ่าย (Expense Details Print - A4)
+     */
+    public function printExpense(Request $request, $year, $month)
+    {
+        $selectedGroups = $request->input('groups', ['EL']);
+        $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups);
+        return view('finance.performance.print-expense', compact('data', 'year', 'month', 'selectedGroups'));
+    }
+
+    /**
      * Calculate all financial data for a specific month.
      */
     private function calculateMonthlyData($year, $month, $getDetails = false, $selectedGroups = [])
@@ -77,16 +124,32 @@ class PerformanceController extends Controller
         $pvBranchCodes = array_unique($pvBranchCodes);
         $rvBranchCodes = array_unique($rvBranchCodes);
 
-        // Flags for other data types
-        $showSchoolRevenue = in_array('EL', $selectedGroups) || in_array('EiMaths', $selectedGroups);
-        $showPayroll = in_array('EL', $selectedGroups) || in_array('IF', $selectedGroups); // Assuming payroll is still centered on these for now
+        // กำหนดเงื่อนไขตามสาขาที่เลือก
+        // School Receipts แสดงเฉพาะสาขา EL เท่านั้น
+        $showSchoolRevenue = in_array('EL', $selectedGroups);
 
-        // 1. Revenue: School Receipts
-        $schoolRevenue = SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
-                $query->whereYear('submission_date', $year)
-                    ->whereMonth('submission_date', $month);
-            })
-            ->sum('total');
+        // Payroll แต่ละสาขาดึงแผนกที่แตกต่างกัน
+        // EL → วิชาการ, สำนักงาน | IF → คอมพิวเตอร์ | META, EiMaths → ไม่มี Payroll
+        $payrollDepartments = [];
+        if (in_array('EL', $selectedGroups)) {
+            $payrollDepartments = array_merge($payrollDepartments, ['วิชาการ', 'สำนักงาน']);
+        }
+        if (in_array('IF', $selectedGroups)) {
+            $payrollDepartments = array_merge($payrollDepartments, ['คอมพิวเตอร์']);
+        }
+        // META และ EiMaths ไม่เพิ่มแผนกใดๆ (ไม่มี Payroll)
+        $payrollDepartments = array_unique($payrollDepartments);
+        $showPayroll = !empty($payrollDepartments);
+
+        // 1. Revenue: School Receipts (เฉพาะสาขา EL เท่านั้น)
+        $schoolRevenue = 0;
+        if ($showSchoolRevenue) {
+            $schoolRevenue = SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
+                    $query->whereYear('submission_date', $year)
+                        ->whereMonth('submission_date', $month);
+                })
+                ->sum('total');
+        }
 
         // 2. Revenue: Receipt Vouchers (Completed)
         $rvRevenueQuery = ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
@@ -107,16 +170,19 @@ class PerformanceController extends Controller
         }
         $pvExpense = $pvExpenseQuery->sum('net_amount');
 
-        // 4. Expense: Payroll (Specific Departments)
-        $payrollExpense = Payroll::where('status', Payroll::STATUS_PAID)
-            ->whereHas('user', function ($query) {
-                $query->whereIn('department', ['วิชาการ', 'สำนักงาน']);
-            })
-            ->whereHas('payrollPeriod', function ($query) use ($year, $month) {
-                $thaiYear = $year + 543;
-                $query->where('year', $thaiYear)->where('month', $month);
-            })
-            ->sum('net_pay');
+        // 4. Expense: Payroll (ดึงตามแผนกที่กำหนดของแต่ละสาขา)
+        $payrollExpense = 0;
+        if ($showPayroll) {
+            $payrollExpense = Payroll::where('status', Payroll::STATUS_PAID)
+                ->whereHas('user', function ($query) use ($payrollDepartments) {
+                    $query->whereIn('department', $payrollDepartments);
+                })
+                ->whereHas('payrollPeriod', function ($query) use ($year, $month) {
+                    $thaiYear = $year + 543;
+                    $query->where('year', $thaiYear)->where('month', $month);
+                })
+                ->sum('net_pay');
+        }
 
         $totalRevenue = $schoolRevenue + $rvRevenue;
         $totalExpense = $pvExpense + $payrollExpense;
@@ -135,29 +201,27 @@ class PerformanceController extends Controller
         if ($getDetails) {
             // Detailed Records
             $summary['details'] = [
-                // 'school_groups' => SchoolPrice::where('course_type', 1)
-                //     ->whereHas('rec_school', function($query) use ($year, $month) {
-                //         $query->whereYear('submission_date', $year)
-                //               ->whereMonth('submission_date', $month);
-                //     })
-                'school_groups' => SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
-                        $query->whereYear('submission_date', $year)
-                            ->whereMonth('submission_date', $month);
-                    })
-                    ->with(['school_sub'])
-                    ->get()
-                    ->groupBy('group')
-                    ->map(function ($items, $group) {
-                        $model = new SchoolPrice();
-                        $groupName = $model->getGroupName($group);
-                        return (object) [
-                            'group' => $groupName,
-                            'title' => $groupName,
-                            'total_amount' => $items->sum('total'),
-                            'receipt_count' => $items->pluck('rid')->unique()->count(),
-                            'student_count' => $items->pluck('student_id')->unique()->count(),
-                        ];
-                    })->sortByDesc('total_amount')->values(),
+                // School Receipts (เฉพาะสาขา EL)
+                'school_groups' => $showSchoolRevenue
+                    ? SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
+                            $query->whereYear('submission_date', $year)
+                                ->whereMonth('submission_date', $month);
+                        })
+                        ->with(['school_sub'])
+                        ->get()
+                        ->groupBy('group')
+                        ->map(function ($items, $group) {
+                            $model = new SchoolPrice();
+                            $groupName = $model->getGroupName($group);
+                            return (object) [
+                                'group' => $groupName,
+                                'title' => $groupName,
+                                'total_amount' => $items->sum('total'),
+                                'receipt_count' => $items->pluck('rid')->unique()->count(),
+                                'student_count' => $items->pluck('student_id')->unique()->count(),
+                            ];
+                        })->sortByDesc('total_amount')->values()
+                    : collect(), // ถ้าไม่ใช่ EL จะส่ง collection ว่าง
 
                 'rv_items' => ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
@@ -194,37 +258,43 @@ class PerformanceController extends Controller
                         ];
                     })->sortByDesc('total_amount')->values(),
 
-                'payroll_items' => Payroll::where('status', Payroll::STATUS_PAID)
-                    ->whereHas('user', function ($query) {
-                        $query->whereIn('department', ['วิชาการ', 'สำนักงาน']);
-                    })
-                    ->whereHas('payrollPeriod', function ($query) use ($year, $month) {
-                        $thaiYear = $year + 543;
-                        $query->where('year', $thaiYear)->where('month', $month);
-                    })
-                    ->with(['user'])
-                    ->get(),
+                // Payroll Items (ดึงตามแผนกที่กำหนดของสาขาที่เลือก)
+                'payroll_items' => $showPayroll
+                    ? Payroll::where('status', Payroll::STATUS_PAID)
+                        ->whereHas('user', function ($query) use ($payrollDepartments) {
+                            $query->whereIn('department', $payrollDepartments);
+                        })
+                        ->whereHas('payrollPeriod', function ($query) use ($year, $month) {
+                            $thaiYear = $year + 543;
+                            $query->where('year', $thaiYear)->where('month', $month);
+                        })
+                        ->with(['user'])
+                        ->get()
+                    : collect(),
 
-                'payroll_groups' => Payroll::where('status', Payroll::STATUS_PAID)
-                    ->whereHas('user', function ($query) {
-                        $query->whereIn('department', ['วิชาการ', 'สำนักงาน']);
-                    })
-                    ->whereHas('payrollPeriod', function ($query) use ($year, $month) {
-                        $thaiYear = $year + 543;
-                        $query->where('year', $thaiYear)->where('month', $month);
-                    })
-                    ->with(['user'])
-                    ->get()
-                    ->groupBy(function ($item) {
-                        return $item->user->department ?? 'Unknown';
-                    })
-                    ->map(function ($items, $department) {
-                        return (object) [
-                            'department' => $department,
-                            'total_amount' => $items->sum('net_pay'),
-                            'employee_count' => $items->count(),
-                        ];
-                    })->sortByDesc('total_amount')->values(),
+                // Payroll Groups (ดึงตามแผนกที่กำหนดของสาขาที่เลือก)
+                'payroll_groups' => $showPayroll
+                    ? Payroll::where('status', Payroll::STATUS_PAID)
+                        ->whereHas('user', function ($query) use ($payrollDepartments) {
+                            $query->whereIn('department', $payrollDepartments);
+                        })
+                        ->whereHas('payrollPeriod', function ($query) use ($year, $month) {
+                            $thaiYear = $year + 543;
+                            $query->where('year', $thaiYear)->where('month', $month);
+                        })
+                        ->with(['user'])
+                        ->get()
+                        ->groupBy(function ($item) {
+                            return $item->user->department ?? 'Unknown';
+                        })
+                        ->map(function ($items, $department) {
+                            return (object) [
+                                'department' => $department,
+                                'total_amount' => $items->sum('net_pay'),
+                                'employee_count' => $items->count(),
+                            ];
+                        })->sortByDesc('total_amount')->values()
+                    : collect(),
             ];
         }
 

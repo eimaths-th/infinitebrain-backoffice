@@ -40,6 +40,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'system' => ['view'],
             'recruitment' => ['view', 'upload', 'review', 'verify', 'view_all'],
             'receipt-voucher' => ['view', 'create', 'edit', 'delete', 'verify', 'complete', 'export'],
+            'teacher-revenue' => ['view'],
         ];
 
         // Create permissions
@@ -92,6 +93,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'receipt-voucher.create',
             'receipt-voucher.edit',
             'receipt-voucher.export',
+            'teacher-revenue.view',
         ];
         $finance = Role::firstOrCreate(['name' => 'finance', 'guard_name' => 'web']);
         $finance->givePermissionTo($financePermissions);
