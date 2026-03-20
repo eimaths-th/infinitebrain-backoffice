@@ -73,6 +73,16 @@ class PaymentVoucherController extends Controller
             $query->where('created_by', Auth::id());
         }
 
+        // External user filter by assigned branches
+        if (Auth::user()->hasRole('external-branch')) {
+            $userBranches = Auth::user()->branches;
+            if (is_array($userBranches) && count($userBranches) > 0) {
+                $query->whereIn('branch_code', $userBranches);
+            } else {
+                $query->where('id', '<', 0); // No branches = no data
+            }
+        }
+
         $vouchers = $query->paginate(20);
 
         return view('payment_voucher.index', compact('vouchers'));
@@ -84,6 +94,14 @@ class PaymentVoucherController extends Controller
     public function create()
     {
         $branchCodes = PaymentVoucher::$branchCodes;
+
+        if (Auth::user()->hasRole('external-branch')) {
+            $userBranches = Auth::user()->branches ?? [];
+            $branchCodes = array_filter($branchCodes, function($code) use ($userBranches) {
+                return in_array($code, $userBranches);
+            }, ARRAY_FILTER_USE_KEY);
+        }
+
         $voucherNo = PaymentVoucher::generateVoucherNo();
         return view('payment_voucher.create', compact('voucherNo', 'branchCodes'));
     }
@@ -118,6 +136,13 @@ class PaymentVoucherController extends Controller
         DB::beginTransaction();
         try {
             $branchCode = $request->branch_code ?? 'EL';
+
+            if (Auth::user()->hasRole('external-branch')) {
+                $userBranches = Auth::user()->branches ?? [];
+                if (!in_array($branchCode, $userBranches)) {
+                    return back()->with('error', 'คุณไม่มีสิทธิ์สร้างและจัดการใบสำคัญจ่ายของสาขานี้')->withInput();
+                }
+            }
 
             // บันทึกหรืออัปเดตข้อมูลผู้รับเงิน (Payee)
             $payee = null;
@@ -343,6 +368,14 @@ class PaymentVoucherController extends Controller
     public function show($id)
     {
         $voucher = PaymentVoucher::with(['items.attachments', 'attachments', 'logs'])->findOrFail($id);
+
+        if (Auth::user()->hasRole('external-branch')) {
+            $userBranches = Auth::user()->branches ?? [];
+            if (!in_array($voucher->branch_code, $userBranches)) {
+                return back()->with('error', 'คุณไม่มีสิทธิ์เข้าถึงใบสำคัญจ่ายของสาขานี้');
+            }
+        }
+
         return view('payment_voucher.show', compact('voucher'));
     }
 
@@ -352,6 +385,13 @@ class PaymentVoucherController extends Controller
     public function edit($id)
     {
         $voucher = PaymentVoucher::with(['items.attachments', 'attachments'])->findOrFail($id);
+
+        if (Auth::user()->hasRole('external-branch')) {
+            $userBranches = Auth::user()->branches ?? [];
+            if (!in_array($voucher->branch_code, $userBranches)) {
+                return back()->with('error', 'คุณไม่มีสิทธิ์เข้าถึงใบสำคัญจ่ายของสาขานี้');
+            }
+        }
 
         if (!$voucher->canEdit()) {
             return back()->with('error', 'ไม่สามารถแก้ไขใบสำคัญจ่ายนี้ได้');
@@ -367,6 +407,13 @@ class PaymentVoucherController extends Controller
     public function update(Request $request, $id)
     {
         $voucher = PaymentVoucher::findOrFail($id);
+
+        if (Auth::user()->hasRole('external-branch')) {
+            $userBranches = Auth::user()->branches ?? [];
+            if (!in_array($voucher->branch_code, $userBranches)) {
+                return back()->with('error', 'คุณไม่มีสิทธิ์แก้ไขใบสำคัญจ่ายของสาขานี้');
+            }
+        }
 
         if (!$voucher->canEdit()) {
             return back()->with('error', 'ไม่สามารถแก้ไขใบสำคัญจ่ายนี้ได้');
