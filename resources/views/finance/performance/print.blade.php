@@ -160,7 +160,7 @@
             <th class="text-right" colspan="2">จำนวนเงิน</th>
         </tr>
 
-        @if (count($data['details']['payroll_groupทำs']) > 0)
+        @if (count($data['details']['payroll_groups']) > 0)
             <tr>
                 <td class="font-bold" colspan="4">เงินเดือนพนักงาน</td>
             </tr>
