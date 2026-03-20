@@ -193,6 +193,7 @@ class TeacherRevenueController extends Controller
         // ต้องตรวจสอบข้อมูล period เพื่อความแม่นยำ (เพราะอาจจ่ายเงินก่อนเดือนเรียน)
         $matched_prices = SchoolPrice::where('student_id', $history->student_id)
             ->where('subject', $history->subject_id)
+            ->where('course_type', 1)
             ->where('total', '>', 0)
             ->orderBy('id', 'desc')
             ->get();
@@ -218,7 +219,7 @@ class TeacherRevenueController extends Controller
 
                 // บวกเพิ่ม 1 เดือนตาม logic ใบเสร็จ (ครอบคลุมถึงสิ้นเดือนของ endMonth)
                 $endMonth = Carbon::parse($endMonth)->addMonth()->format('Y-m');
-                
+
                 $startMonth_parsed = Carbon::parse($startMonth)->startOfMonth();
                 $endMonth_parsed = Carbon::parse($endMonth)->endOfMonth();
 
