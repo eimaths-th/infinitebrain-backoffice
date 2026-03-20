@@ -144,6 +144,7 @@
         @php $grand_school_total = 0; @endphp
         @foreach($school_receipts_detail as $group)
             <!-- หัวข้อกลุ่มวิชา -->
+            <div class="no-break">
             <div class="group-title">
                 กลุ่มวิชา: {{ $group->group_name }} ({{ $group->group_code }})
                 <span style="float: right;">รวม: {{ number_format($group->total, 2) }} บาท</span>
@@ -191,6 +192,7 @@
                     </tr>
                 </tfoot>
             </table>
+            </div>
             @php $grand_school_total += $group->total; @endphp
         @endforeach
 
@@ -204,6 +206,7 @@
     @endif
 
     <!-- ส่วน Receipt Vouchers (ใบสำคัญรับ) -->
+    <div class="no-break">
     <div class="section-title">{{ $is_el ? '2' : '1' }}. Receipt Vouchers (ใบสำคัญรับอื่นๆ)</div>
     <table>
         <thead>
@@ -244,6 +247,7 @@
             </tr>
         </tfoot>
     </table>
+    </div>
 
     <!-- สรุปรวมรายรับทั้งหมด -->
     <table>

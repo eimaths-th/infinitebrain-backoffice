@@ -1,4 +1,4 @@
-﻿@extends('layouts.main_template')
+@extends('layouts.main_template')
 
 @section('style')
     <style>
@@ -195,6 +195,133 @@
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ══════════════════════════════════════════ --}}
+    {{-- ROW 0: PERFORMANCE SUMMARY (ผลประกอบการ) --}}
+    {{-- ══════════════════════════════════════════ --}}
+
+    <!-- 1) ภาพรวมทั้งหมด (Global Overall) -->
+    <div class="row g-3 mb-3">
+        <div class="col-12">
+            <h6 class="text-muted fw-bold mb-0">ภาพรวมผลประกอบการแบบรวมทุกสาขา (Global)</h6>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white shadow-sm border-0">
+                <div class="card-body p-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-white small" style="opacity: 0.85;">รายรับรวม (เดือนนี้)</div>
+                        <h4 class="mb-0 fw-bold">฿{{ number_format($perf_all['total_revenue'], 2) }}</h4>
+                    </div>
+                    <i class="pe-7s-cash" style="font-size: 2.5rem; opacity: 0.4;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-danger text-white shadow-sm border-0">
+                <div class="card-body p-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-white small" style="opacity: 0.85;">รายจ่ายรวม (เดือนนี้)</div>
+                        <h4 class="mb-0 fw-bold">฿{{ number_format($perf_all['total_expense'], 2) }}</h4>
+                    </div>
+                    <i class="pe-7s-graph3" style="font-size: 2.5rem; opacity: 0.4;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            @php
+                $all_profit_is_positive = $perf_all['net_profit'] >= 0;
+                $all_profit_bg = $all_profit_is_positive ? 'bg-primary' : 'bg-warning text-dark';
+                $all_profit_icon = $all_profit_is_positive ? 'pe-7s-up-arrow' : 'pe-7s-bottom-arrow';
+                $all_profit_text = $all_profit_is_positive ? 'text-white' : 'text-dark';
+                $all_profit_sub = $all_profit_is_positive ? 'text-white' : 'text-dark';
+            @endphp
+            <div class="card {{ $all_profit_bg }} {{ $all_profit_text }} shadow-sm border-0">
+                <div class="card-body p-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="{{ $all_profit_sub }} small" style="opacity: 0.85;">กำไรสุทธิ (เดือนนี้)</div>
+                        <h4 class="mb-0 fw-bold">฿{{ number_format($perf_all['net_profit'], 2) }}</h4>
+                    </div>
+                    <i class="{{ $all_profit_icon }}" style="font-size: 2.5rem; opacity: 0.4;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2) แยกตามกลุ่มสาขา (Breakdown by Groups) -->
+    <div class="row g-3 mb-4">
+        @php
+            $groups = [
+                ['name' => 'Eye Level (EL)', 'data' => $perf_el, 'color' => '#d92550', 'icon' => 'pe-7s-study'],
+                ['name' => 'Infinite Brain (IF)', 'data' => $perf_if, 'color' => '#3f6ad8', 'icon' => 'pe-7s-monitor'],
+                ['name' => 'META Knowledge', 'data' => $perf_meta, 'color' => '#f7b924', 'icon' => 'pe-7s-light'],
+                ['name' => 'EiMaths', 'data' => $perf_eimaths, 'color' => '#3ac47d', 'icon' => 'pe-7s-calculator'],
+            ];
+        @endphp
+
+        @foreach($groups as $group)
+        <div class="col-md-6 col-xl-3">
+            <div class="card dashboard-card shadow-sm" style="border-top: 4px solid {{ $group['color'] }}; transition: all 0.3s ease;">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="me-2 rounded shadow-sm d-flex align-items-center justify-content-center" style="background: {{ $group['color'] }}15; color: {{ $group['color'] }}; width: 42px; height: 42px;">
+                            <i class="{{ $group['icon'] }}" style="font-size: 1.6rem;"></i>
+                        </div>
+                        <h6 class="mb-0 fw-bold text-dark">{{ $group['name'] }}</h6>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom border-light">
+                        <span class="text-secondary small d-flex align-items-center"><i class="pe-7s-bottom-arrow text-success me-1"></i> รายรับ</span>
+                        <span class="fw-bold text-success">฿{{ number_format($group['data']['total_revenue'], 2) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-light">
+                        <span class="text-secondary small d-flex align-items-center"><i class="pe-7s-up-arrow text-danger me-1"></i> รายจ่าย</span>
+                        <span class="fw-bold text-danger">฿{{ number_format($group['data']['total_expense'], 2) }}</span>
+                    </div>
+
+                    @php
+                        $g_profit_is_positive = $group['data']['net_profit'] >= 0;
+                        $g_profit_color = $g_profit_is_positive ? '#3f6ad8' : '#d92550';
+                        $g_profit_bg = $g_profit_is_positive ? 'rgba(63, 106, 216, 0.1)' : 'rgba(217, 37, 80, 0.1)';
+                    @endphp
+                    <div class="d-flex justify-content-between align-items-center rounded p-2" style="background-color: {{ $g_profit_bg }};">
+                        <span class="fw-bold text-dark" style="font-size: 0.85rem;">สุทธิ</span>
+                        <span class="fw-bold" style="color: {{ $g_profit_color }}; font-size: 1.15rem;">
+                            ฿{{ number_format($group['data']['net_profit'], 2) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+
+    <!-- 3) กราฟเปรียบเทียบ (Bar Charts) -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card dashboard-card shadow-sm">
+                <div class="card-header bg-white border-bottom pt-3 pb-3">
+                    <h6 class="mb-0 fw-bold"><i class="pe-7s-graph2 text-primary me-2"></i>ผลประกอบการรายเดือน (เปรียบเทียบสาขา)</h6>
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas id="monthlyGroupPerformanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card dashboard-card shadow-sm">
+                <div class="card-header bg-white border-bottom pt-3 pb-3">
+                    <h6 class="mb-0 fw-bold"><i class="pe-7s-graph1 text-success me-2"></i>ผลประกอบการรายปี (เปรียบเทียบสาขา)</h6>
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas id="yearlyGroupPerformanceChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1179,6 +1306,117 @@
                             callbacks: {
                                 label: ctx =>
                                     `${ctx.dataset.label}: ฿${ctx.raw.toLocaleString('th-TH', {minimumFractionDigits: 2})}`
+                            }
+                        }
+                    }
+                }
+            });
+
+            // ════════════════════════════════════════════
+            // 5) Performance: Monthly Group Chart
+            // ════════════════════════════════════════════
+            const chartGroupsLabels = @json($chart_groups_labels);
+            const chartMonthlyRev = @json($chart_monthly_revenue);
+            const chartMonthlyExp = @json($chart_monthly_expense);
+
+            new Chart(document.getElementById('monthlyGroupPerformanceChart'), {
+                type: 'bar',
+                data: {
+                    labels: chartGroupsLabels,
+                    datasets: [
+                        {
+                            label: 'รายรับ',
+                            data: chartMonthlyRev,
+                            backgroundColor: 'rgba(58, 196, 125, 0.8)', // Success green
+                            borderColor: '#3ac47d',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'รายจ่าย',
+                            data: chartMonthlyExp,
+                            backgroundColor: 'rgba(217, 37, 80, 0.8)', // Danger red
+                            borderColor: '#d92550',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: v => '฿' + v.toLocaleString(),
+                                font: CHART_FONT
+                            }
+                        },
+                        x: {
+                            ticks: { font: CHART_FONT }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top', labels: { font: CHART_FONT, usePointStyle: true } },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `${ctx.dataset.label}: ฿${ctx.raw.toLocaleString('th-TH', {minimumFractionDigits: 2})}`
+                            }
+                        }
+                    }
+                }
+            });
+
+            // ════════════════════════════════════════════
+            // 6) Performance: Yearly Group Chart
+            // ════════════════════════════════════════════
+            const chartYearlyRev = @json($chart_yearly_revenue);
+            const chartYearlyExp = @json($chart_yearly_expense);
+
+            new Chart(document.getElementById('yearlyGroupPerformanceChart'), {
+                type: 'bar',
+                data: {
+                    labels: chartGroupsLabels,
+                    datasets: [
+                        {
+                            label: 'รายรับสะสม',
+                            data: chartYearlyRev,
+                            backgroundColor: 'rgba(58, 196, 125, 0.8)',
+                            borderColor: '#3ac47d',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'รายจ่ายสะสม',
+                            data: chartYearlyExp,
+                            backgroundColor: 'rgba(217, 37, 80, 0.8)',
+                            borderColor: '#d92550',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: v => '฿' + v.toLocaleString(),
+                                font: CHART_FONT
+                            }
+                        },
+                        x: {
+                            ticks: { font: CHART_FONT }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top', labels: { font: CHART_FONT, usePointStyle: true } },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `${ctx.dataset.label}: ฿${ctx.raw.toLocaleString('th-TH', {minimumFractionDigits: 2})}`
                             }
                         }
                     }

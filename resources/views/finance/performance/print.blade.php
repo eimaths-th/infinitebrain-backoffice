@@ -8,16 +8,18 @@
     <style>
         @page {
             size: A4 portrait;
-            margin: 8mm; /* ลดจาก 15mm เพื่อเพิ่มพื้นที่ */
+            margin: 8mm;
+            /* ลดจาก 15mm เพื่อเพิ่มพื้นที่ */
         }
 
         body {
             font-family: 'Sarabun', 'Cordia New', sans-serif;
             margin: 0;
             padding: 0;
-            font-size: 12pt; /* ลดจาก 14pt */
+            font-size: 12pt;
+            /* ลดจาก 14pt */
             color: #000;
-            line-height: 1; 
+            line-height: 1;
         }
 
         .text-center {
@@ -34,9 +36,11 @@
 
         .header {
             text-align: center;
-            font-size: 14pt; /* ลดจาก 16pt */
+            font-size: 14pt;
+            /* ลดจาก 16pt */
             font-weight: bold;
-            margin-bottom: 10px; /* ลดจาก 20px */
+            margin-bottom: 10px;
+            /* ลดจาก 20px */
             line-height: 1.1;
         }
 
@@ -48,7 +52,8 @@
 
         th,
         td {
-            padding: 1px 5px; /* ลดจาก 2px เพื่อความกะทัดรัดสูงสุด */
+            padding: 1px 5px;
+            /* ลดจาก 2px เพื่อความกะทัดรัดสูงสุด */
             border: none;
             vertical-align: top;
         }
@@ -58,8 +63,10 @@
             font-weight: bold;
             border-top: 2px solid #5B9541;
             /* Green line */
-            padding-top: 5px; /* ลดจาก 8px */
-            padding-bottom: 2px; /* ลดจาก 3px */
+            padding-top: 5px;
+            /* ลดจาก 8px */
+            padding-bottom: 2px;
+            /* ลดจาก 3px */
         }
 
         .col-headings th {
@@ -88,10 +95,31 @@
             border-bottom: 1px solid #000;
             padding-top: 5px;
         }
+
+        @if (isset($selectedGroups) && (in_array('EL', $selectedGroups) || in_array('IF', $selectedGroups)))
+            .watermark-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: auto;
+            max-height: 70%;
+            opacity: 0.2; /* ความจางของลายน้ำ */
+            z-index: -100;
+            pointer-events: none; /* เพื่อไม่ให้ภาพบังการคลิกหรือการใช้งานอื่นๆ */
+            object-fit: contain;
+        }
+        @endif
+
     </style>
 </head>
 
 <body onload="window.print()">
+    @if(isset($selectedGroups) && (in_array('EL', $selectedGroups) || in_array('IF', $selectedGroups)))
+        <img src="{{ asset('images/infinite.jpg') }}" class="watermark-bg" alt="watermark">
+    @endif
+
     <div class="header">
         @php
             $groupMap = [
@@ -101,7 +129,7 @@
                 'EiMaths' => 'eiMaths',
             ];
             $titles = [];
-            foreach(($selectedGroups ?? []) as $g) {
+            foreach ($selectedGroups ?? [] as $g) {
                 $titles[] = $groupMap[$g] ?? $g;
             }
             $displayTitle = implode(' & ', $titles);

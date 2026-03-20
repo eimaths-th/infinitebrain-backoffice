@@ -42,7 +42,8 @@
             margin-bottom: 15px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 3px 6px;
             border: 1px solid #ccc;
             vertical-align: top;
@@ -60,10 +61,21 @@
             background-color: #f9f9f9;
         }
 
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
-        .text-end { text-align: right; }
-        .font-bold { font-weight: bold; }
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .font-bold {
+            font-weight: bold;
+        }
 
         /* แถวสรุปรวม */
         .summary-row {
@@ -80,6 +92,17 @@
             margin-bottom: 5px;
             padding: 4px 8px;
             background-color: #f0f0f0;
+            border-left: 4px solid #e74c3c;
+        }
+
+        /* หัวข้อกลุ่มวิชา / หมวดหมู่คล้าย print-revenue */
+        .group-title {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            background-color: #fde8e8;
+            padding: 5px 10px;
             border-left: 4px solid #e74c3c;
         }
 
@@ -102,7 +125,10 @@
         }
 
         @media print {
-            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
         }
     </style>
 </head>
@@ -118,7 +144,7 @@
                 'EiMaths' => 'eiMaths',
             ];
             $titles = [];
-            foreach(($selectedGroups ?? []) as $g) {
+            foreach ($selectedGroups ?? [] as $g) {
                 $titles[] = $groupMap[$g] ?? $g;
             }
             $displayTitle = implode(' & ', $titles);
@@ -129,90 +155,149 @@
 
     <!-- ส่วนที่ 1: Payment Vouchers (ใบสำคัญจ่าย) -->
     <div class="section-title">1. Payment Vouchers (ใบสำคัญจ่าย)</div>
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 4%;">#</th>
-                <th style="width: 10%;">วันที่</th>
-                <th style="width: 11%;">เลขที่</th>
-                {{-- <th style="width: 8%;">สาขา</th> --}}
-                <th style="width: 22%;">หมวดหมู่</th>
-                <th style="width: 33%;">รายละเอียด / จ่ายให้</th>
-                <th style="width: 20%;">จำนวนเงิน</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php $pv_total = 0; $idx = 1; @endphp
-            @forelse($data['details']['pv_items'] as $voucher)
-                @foreach($voucher->expenseItems as $item)
-                    <tr>
-                        <td class="text-center">{{ $idx++ }}</td>
-                        <td>{{ $voucher->voucher_date->format('d/m/Y') }}</td>
-                        <td>{{ $voucher->voucher_no }}</td>
-                        {{-- <td class="text-center">{{ $voucher->branch_code }}</td> --}}
-                        <td>{{ \App\Models\PaymentVoucher::$categoryLabels[$voucher->category] ?? 'อื่นๆ' }}</td>
-                        <td>
-                            {{ $item->description }}
-                            <div class="small-text">{{ $voucher->payee ? $voucher->payee->name : $voucher->pay_to }}</div>
-                        </td>
-                        <td class="text-right">{{ number_format($item->amount, 2) }}</td>
-                    </tr>
-                    @php $pv_total += $item->amount; @endphp
-                @endforeach
-            @empty
-                <tr><td colspan="6" class="text-center">ไม่มีข้อมูล</td></tr>
-            @endforelse
-        </tbody>
-        <tfoot>
-            <tr class="summary-row">
-                <td colspan="5" class="text-right">รวม Payment Vouchers</td>
-                <td class="text-right">{{ number_format($pv_total, 2) }}</td>
-            </tr>
-        </tfoot>
-    </table>
+    @php
+        $groupedPV = collect($data['details']['pv_items'])->groupBy('category');
+        $pv_grand_total = 0;
+    @endphp
 
-    <!-- ส่วนที่ 2: Payroll (เงินเดือน) - แสดงเฉพาะสาขา EL/IF ที่มี Payroll -->
-    @if($data['details']['payroll_items']->count() > 0)
+    @forelse($groupedPV as $category => $vouchers)
+        @php
+            $categoryName = \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ';
+            // คำนวณยอดรวมของหมวดหมู่ก่อนเพื่อแสดงบนแถบ title
+            $category_total = $vouchers->sum(function ($voucher) {
+                return $voucher->expenseItems->sum('amount');
+            });
+            $idx = 1;
+        @endphp
+
         <div class="no-break">
-            <div class="section-title">2. Payroll (เงินเดือนพนักงาน)</div>
+            <div class="group-title">
+                หมวดหมู่: {{ $categoryName }}
+                <span style="float: right;">รวม: {{ number_format($category_total, 2) }} บาท</span>
+            </div>
             <table>
                 <thead>
                     <tr>
                         <th style="width: 5%;">#</th>
-                        <th style="width: 35%;">ชื่อ-นามสกุล</th>
-                        <th style="width: 20%;">แผนก (Department)</th>
-                        <th style="width: 15%;">งวด (Period)</th>
-                        <th style="width: 25%;">ยอดสุทธิ (Net Pay)</th>
+                        <th style="width: 15%;">วันที่</th>
+                        <th style="width: 15%;">เลขที่</th>
+                        <th style="width: 45%;">รายละเอียด / จ่ายให้</th>
+                        <th style="width: 20%;">จำนวนเงิน</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php $payroll_total = 0; $idx = 1; @endphp
-                    @foreach($data['details']['payroll_items'] as $item)
-                        <tr>
-                            <td class="text-center">{{ $idx++ }}</td>
-                            <td>{{ $item->user->name ?? $item->user_id }}</td>
-                            <td>{{ $item->user->department ?? '-' }}</td>
-                            <td class="text-center">{{ $item->payrollPeriod->month }}/{{ $item->payrollPeriod->year }}</td>
-                            <td class="text-right">{{ number_format($item->net_pay, 2) }}</td>
-                        </tr>
-                        @php $payroll_total += $item->net_pay; @endphp
+                    @foreach ($vouchers as $voucher)
+                        @foreach ($voucher->expenseItems as $item)
+                            <tr>
+                                <td class="text-center">{{ $idx++ }}</td>
+                                <td class="text-center">{{ $voucher->voucher_date->format('d/m/Y') }}</td>
+                                <td class="text-center">{{ $voucher->voucher_no }}</td>
+                                <td>
+                                    {{ $item->description }}
+                                    <div class="small-text">
+                                        {{ $voucher->payee ? $voucher->payee->name : $voucher->pay_to }}</div>
+                                </td>
+                                <td class="text-right">{{ number_format($item->amount, 2) }}</td>
+                            </tr>
+                        @endforeach
                     @endforeach
                 </tbody>
                 <tfoot>
                     <tr class="summary-row">
-                        <td colspan="4" class="text-right">รวม Payroll</td>
-                        <td class="text-right">{{ number_format($payroll_total, 2) }}</td>
+                        <td colspan="4" class="text-right">รวมหมวดหมู่ {{ $categoryName }}</td>
+                        <td class="text-right">{{ number_format($category_total, 2) }}</td>
                     </tr>
                 </tfoot>
             </table>
+        </div>
+        @php $pv_grand_total += $category_total; @endphp
+    @empty
+        <table style="margin-top: 10px;">
+            <tr>
+                <td class="text-center">ไม่มีข้อมูล Payment Vouchers</td>
+            </tr>
+        </table>
+    @endforelse
+
+    @if ($groupedPV->isNotEmpty())
+        <table>
+            <tr class="summary-row" style="border: 2px solid #e74c3c;">
+                <td style="width: 70%;" class="text-right font-bold">ยอดรวม Payment Vouchers ทั้งหมด</td>
+                <td style="width: 30%;" class="text-right font-bold">{{ number_format($pv_grand_total, 2) }}
+                    บาท</td>
+            </tr>
+        </table>
+    @endif
+
+    <!-- ส่วนที่ 2: Payroll (เงินเดือน) - แสดงเฉพาะสาขา EL/IF ที่มี Payroll -->
+    @if ($data['details']['payroll_items']->count() > 0)
+        <div class="no-break">
+            <div class="section-title">2. Payroll (เงินเดือนพนักงาน)</div>
+            @php
+                // จัดกลุ่มตามแผนก
+                $groupedPayroll = collect($data['details']['payroll_items'])->groupBy(function ($item) {
+                    return $item->user->department ?? 'ไม่ระบุแผนก';
+                });
+                $payroll_grand_total = 0;
+            @endphp
+
+            @foreach ($groupedPayroll as $department => $items)
+                @php
+                    $dept_total = $items->sum('net_pay');
+                    $idx = 1;
+                @endphp
+
+                <div class="no-break">
+                    <div class="group-title">
+                        แผนก: {{ $department }}
+                        <span style="float: right;">รวม: {{ number_format($dept_total, 2) }} บาท</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">#</th>
+                                <th style="width: 45%;">ชื่อ-นามสกุล</th>
+                                <th style="width: 20%;">งวด (Period)</th>
+                                <th style="width: 30%;">ยอดสุทธิ (Net Pay)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($items as $item)
+                                <tr>
+                                    <td class="text-center">{{ $idx++ }}</td>
+                                    <td>{{ $item->user->name ?? $item->user_id }}</td>
+                                    <td class="text-center">
+                                        {{ $item->payrollPeriod->month }}/{{ $item->payrollPeriod->year }}</td>
+                                    <td class="text-right">{{ number_format($item->net_pay, 2) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr class="summary-row">
+                                <td colspan="3" class="text-right">รวมแผนก {{ $department }}</td>
+                                <td class="text-right">{{ number_format($dept_total, 2) }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                @php $payroll_grand_total += $dept_total; @endphp
+            @endforeach
+
+
         </div>
     @endif
 
     <!-- สรุปรวมรายจ่ายทั้งหมด -->
     <table>
         <tr class="summary-row" style="border: 2px solid #e74c3c;">
+            <td style="width: 70%;" class="text-right font-bold"> ยอดรวม Payroll ทั้งหมด </td>
+            <td style="width: 30%;" class="text-right font-bold">{{ number_format($payroll_grand_total, 2) }}
+                บาท</td>
+        </tr>
+        <tr class="summary-row" style="border: 2px solid #e74c3c;">
             <td style="width: 70%;" class="text-right font-bold">รวมรายจ่ายทั้งหมด (Total Expense)</td>
-            <td style="width: 30%;" class="text-right font-bold">{{ number_format($data['total_expense'], 2) }} บาท</td>
+            <td style="width: 30%;" class="text-right font-bold">{{ number_format($data['total_expense'], 2) }} บาท
+            </td>
         </tr>
     </table>
 

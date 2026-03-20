@@ -244,6 +244,37 @@ class FinanceDashboardController extends Controller
         $pr_monthly_data = $this->GetMonthlyPayrollData($selected_year, $selected_month);
 
         // ════════════════════════════════════════════════════
+        // PERFORMANCE (ผลประกอบการ) - Breakdown by group
+        // ════════════════════════════════════════════════════
+        $perf_all = $this->calculateGroupPerformance($selected_year, $selected_month, 'ALL');
+        $perf_el = $this->calculateGroupPerformance($selected_year, $selected_month, 'EL');
+        $perf_if = $this->calculateGroupPerformance($selected_year, $selected_month, 'IF');
+        $perf_meta = $this->calculateGroupPerformance($selected_year, $selected_month, 'META');
+        $perf_eimaths = $this->calculateGroupPerformance($selected_year, $selected_month, 'EiMaths');
+
+        // Yearly
+        $perf_yearly_el = $this->calculateGroupPerformance($selected_year, null, 'EL');
+        $perf_yearly_if = $this->calculateGroupPerformance($selected_year, null, 'IF');
+        $perf_yearly_meta = $this->calculateGroupPerformance($selected_year, null, 'META');
+        $perf_yearly_eimaths = $this->calculateGroupPerformance($selected_year, null, 'EiMaths');
+
+        $chart_groups_labels = ['Eye Level', 'Infinite Brain', 'META Knowledge', 'EiMaths'];
+        
+        $chart_monthly_revenue = [
+            $perf_el['total_revenue'], $perf_if['total_revenue'], $perf_meta['total_revenue'], $perf_eimaths['total_revenue']
+        ];
+        $chart_monthly_expense = [
+            $perf_el['total_expense'], $perf_if['total_expense'], $perf_meta['total_expense'], $perf_eimaths['total_expense']
+        ];
+
+        $chart_yearly_revenue = [
+            $perf_yearly_el['total_revenue'], $perf_yearly_if['total_revenue'], $perf_yearly_meta['total_revenue'], $perf_yearly_eimaths['total_revenue']
+        ];
+        $chart_yearly_expense = [
+            $perf_yearly_el['total_expense'], $perf_yearly_if['total_expense'], $perf_yearly_meta['total_expense'], $perf_yearly_eimaths['total_expense']
+        ];
+
+        // ════════════════════════════════════════════════════
         // PASS TO VIEW
         // ════════════════════════════════════════════════════
 
@@ -280,8 +311,116 @@ class FinanceDashboardController extends Controller
             'pr_employee_types',
             'pr_income_breakdown',
             'pr_deduction_breakdown',
-            'pr_monthly_data'
+            'pr_monthly_data',
+            // Performance
+            'perf_all',
+            'perf_el',
+            'perf_if',
+            'perf_meta',
+            'perf_eimaths',
+            'chart_groups_labels',
+            'chart_monthly_revenue',
+            'chart_monthly_expense',
+            'chart_yearly_revenue',
+            'chart_yearly_expense'
         ));
+    }
+
+    /**
+     * คำนวณผลประกอบการแยกตามสาขา (EL, IF, META, EiMaths) หรือทั้งหมด (ALL)
+     */
+    private function calculateGroupPerformance($year, $month, $groupName = 'ALL')
+    {
+        $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+        $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+
+        $pvBranchCodes = [];
+        $rvBranchCodes = [];
+        $payrollDepartments = [];
+        $showSchoolRevenue = false;
+
+        if ($groupName !== 'ALL') {
+            if (isset(PaymentVoucher::$groupBranchCodes[$groupName])) {
+                $pvBranchCodes = PaymentVoucher::$groupBranchCodes[$groupName];
+            }
+            if (isset(ReceiptVoucher::$groupBranchCodes[$groupName])) {
+                $rvBranchCodes = ReceiptVoucher::$groupBranchCodes[$groupName];
+            }
+
+            if ($groupName === 'EL') {
+                $showSchoolRevenue = true;
+                $payrollDepartments = ['วิชาการ', 'สำนักงาน'];
+            } elseif ($groupName === 'IF') {
+                $payrollDepartments = ['คอมพิวเตอร์'];
+            }
+        } else {
+            // ALL groups
+            $showSchoolRevenue = true;
+        }
+
+        // 1. Revenue: School Receipts (Only EL or ALL)
+        $schoolRevenue = 0;
+        if ($showSchoolRevenue) {
+            $schoolRevenue = \App\Models\SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
+                $query->whereYear('submission_date', $year)
+                    ->whereMonth('submission_date', $month);
+            })->sum('total');
+        }
+
+        // 2. Revenue: Receipt Vouchers (Completed)
+        $rvQuery = \App\Models\ReceiptVoucher::where('status', \App\Models\ReceiptVoucher::STATUS_COMPLETED)
+            ->whereBetween('voucher_date', [$startDate, $endDate]);
+        
+        if ($groupName !== 'ALL' && !empty($rvBranchCodes)) {
+            $rvQuery->whereIn('branch_code', $rvBranchCodes);
+        } elseif ($groupName !== 'ALL' && empty($rvBranchCodes)) {
+            $rvQuery->whereRaw('1 = 0');
+        }
+        $rvRevenue = $rvQuery->sum('net_amount');
+
+        // 3. Expense: Payment Vouchers (Completed & Not Salary)
+        $pvQuery = \App\Models\PaymentVoucher::where('status', \App\Models\PaymentVoucher::STATUS_COMPLETED)
+            ->where('is_salary', false)
+            ->whereBetween('voucher_date', [$startDate, $endDate]);
+
+        if ($groupName !== 'ALL' && !empty($pvBranchCodes)) {
+            $pvQuery->whereIn('branch_code', $pvBranchCodes);
+        } elseif ($groupName !== 'ALL' && empty($pvBranchCodes)) {
+            $pvQuery->whereRaw('1 = 0');
+        }
+        $pvExpense = $pvQuery->sum('net_amount');
+
+        // 4. Expense: Payroll (Paid)
+        $payrollQuery = \App\Models\Payroll::where('status', \App\Models\Payroll::STATUS_PAID)
+            ->whereHas('payrollPeriod', function ($query) use ($year, $month) {
+                $thaiYear = $year + 543;
+                $query->where('year', $thaiYear)->where('month', $month);
+            });
+
+        if ($groupName !== 'ALL') {
+            if (!empty($payrollDepartments)) {
+                $payrollQuery->whereHas('user', function ($query) use ($payrollDepartments) {
+                    $query->whereIn('department', $payrollDepartments);
+                });
+            } else {
+                $payrollQuery->whereRaw('1 = 0');
+            }
+        }
+        $payrollExpense = $payrollQuery->sum('net_pay');
+
+        $totalRevenue = $schoolRevenue + $rvRevenue;
+        $totalExpense = $pvExpense + $payrollExpense;
+        $netProfit = $totalRevenue - $totalExpense;
+
+        return [
+            'school_revenue'  => $schoolRevenue,
+            'rv_revenue'      => $rvRevenue,
+            'pv_expense'      => $pvExpense,
+            'payroll_expense' => $payrollExpense,
+            'total_revenue'   => $totalRevenue,
+            'total_expense'   => $totalExpense,
+            'net_profit'      => $netProfit,
+        ];
     }
 
     /**
