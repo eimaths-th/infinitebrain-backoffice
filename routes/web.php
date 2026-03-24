@@ -146,6 +146,10 @@ Route::get('/finance-dashboard/branch-detail', [FinanceDashboardController::clas
 // Financial Performance Routes (ผลประกอบการ)
 Route::middleware(['auth', 'can:performance.view'])->prefix('performance')->name('performance.')->group(function () {
     Route::get('/', [\App\Http\Controllers\Finance\PerformanceController::class, 'index'])->name('index');
+    Route::get('/yearly/{year}', [\App\Http\Controllers\Finance\PerformanceController::class, 'yearly'])->name('yearly');
+    Route::get('/yearly/{year}/print', [\App\Http\Controllers\Finance\PerformanceController::class, 'printYearly'])->name('yearly.print');
+    Route::get('/yearly/{year}/print-revenue', [\App\Http\Controllers\Finance\PerformanceController::class, 'printYearlyRevenue'])->name('yearly.print-revenue');
+    Route::get('/yearly/{year}/print-expense', [\App\Http\Controllers\Finance\PerformanceController::class, 'printYearlyExpense'])->name('yearly.print-expense');
     Route::get('/monthly/{year}/{month}', [\App\Http\Controllers\Finance\PerformanceController::class, 'monthly'])->name('monthly');
     Route::get('/monthly/{year}/{month}/print', [\App\Http\Controllers\Finance\PerformanceController::class, 'printMonthly'])->name('monthly.print');
     Route::get('/monthly/{year}/{month}/print-revenue', [\App\Http\Controllers\Finance\PerformanceController::class, 'printRevenue'])->name('monthly.print-revenue');

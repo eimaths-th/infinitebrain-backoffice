@@ -67,6 +67,12 @@
                 </div>
             </div>
             <div class="page-title-actions">
+                <a href="{{ route('performance.yearly', array_merge(request()->query(), ['year' => $year])) }}" class="btn-shadow btn btn-success me-2">
+                    <span class="btn-icon-wrapper pr-2 opacity-7">
+                        <i class="fa fa-file-invoice-dollar fa-w-20"></i>
+                    </span>
+                    ดูรายละเอียดรายปี
+                </a>
                 <div class="d-inline-block dropdown">
                     <button type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn-shadow dropdown-toggle btn btn-info">
                         <span class="btn-icon-wrapper pr-2 opacity-7">

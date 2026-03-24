@@ -16,7 +16,7 @@
             font-family: 'Sarabun', 'Cordia New', sans-serif;
             margin: 0;
             padding: 0;
-            font-size: 12pt;
+            font-size: 16pt;
             /* ลดจาก 14pt */
             color: #000;
             line-height: 1;
@@ -36,7 +36,7 @@
 
         .header {
             text-align: center;
-            font-size: 14pt;
+            font-size: 18pt;
             /* ลดจาก 16pt */
             font-weight: bold;
             margin-bottom: 10px;
@@ -127,7 +127,7 @@
                 $titles[] = $groupMap[$g] ?? $g;
             }
             $displayTitle = implode(' & ', $titles);
-            
+
             $branchTitles = [];
             if (!empty($selectedBranches)) {
                 $branchTitles = \App\Models\Branch::whereIn('code', $selectedBranches)->pluck('name')->toArray();

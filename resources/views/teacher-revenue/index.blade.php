@@ -63,38 +63,53 @@
         $total_all_sessions = collect($teacher_revenue)->sum('session_count');
     @endphp
     <div class="row mb-3">
-        <div class="col-md-4">
+        <div class="col-md">
             <div class="card widget-content bg-midnight-bloom">
                 <div class="widget-content-wrapper text-white">
                     <div class="widget-content-left">
-                        <div class="widget-heading">รายได้รวมทั้งหมด</div>
-                        <div class="widget-subheading">ครู {{ count($teacher_revenue) }} คน</div>
+                        <div class="widget-heading">รายได้สถาบัน (Gross)</div>
+                        <div class="widget-subheading">ยอดรับชำระ - ต้นทุนวัสดุ</div>
                     </div>
                     <div class="widget-content-right">
-                        <div class="widget-numbers text-white"><span>{{ number_format($total_all_revenue, 0) }}</span></div>
+                        <div class="widget-numbers text-white">
+                            <span>{{ number_format($total_all_revenue, 0) }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md">
+            <div class="card widget-content bg-love-kiss">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">ค่าจ้างครูรวม</div>
+                        <div class="widget-subheading">คำนวณตามรายชั่วโมง</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-white"><span>{{ number_format($total_all_wage, 0) }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md">
             <div class="card widget-content bg-happy-green">
                 <div class="widget-content-wrapper text-white">
                     <div class="widget-content-left">
-                        <div class="widget-heading">ชั่วโมงสอนรวม</div>
-                        <div class="widget-subheading">{{ $total_all_sessions }} ครั้ง</div>
+                        <div class="widget-heading">กำไรขั้นต้น (GP)</div>
+                        <div class="widget-subheading">รายได้สุทธิ - ค่าจ้างครู</div>
                     </div>
                     <div class="widget-content-right">
-                        <div class="widget-numbers text-white"><span>{{ number_format($total_all_hours, 1) }}</span></div>
+                        <div class="widget-numbers text-white"><span>{{ number_format($total_all_profit, 0) }}</span></div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md">
             <div class="card widget-content bg-premium-dark">
                 <div class="widget-content-wrapper text-white">
                     <div class="widget-content-left">
-                        <div class="widget-heading">ไม่พบใบเสร็จ</div>
-                        <div class="widget-subheading">ไม่สามารถคำนวณรายได้ได้</div>
+                        <div class="widget-heading">สอนรวม</div>
+                        <div class="widget-subheading">{{ $total_all_sessions }} ครั้ง | {{ number_format($total_all_hours, 1) }} ชม.</div>
                     </div>
                     <div class="widget-content-right">
                         <div class="widget-numbers text-warning"><span>{{ count($unmatched_records) }}</span></div>
@@ -125,10 +140,14 @@
                             <tr>
                                 <th class="text-center" style="width: 5%;">#</th>
                                 <th>ชื่อครู</th>
-                                <th class="text-center">จำนวนครั้ง</th>
+                                <th class="text-center">ครั้ง</th>
                                 <th class="text-end">ชั่วโมงสอน</th>
-                                <th class="text-end">รายได้ (บาท)</th>
-                                <th class="text-end">เฉลี่ย/ชม.</th>
+                                <th class="text-end">รายได้สุทธิ</th>
+                                <th class="text-end text-danger">
+                                    ค่าจ้างครู
+                                    <i class="fa fa-info-circle text-muted" title="อ้างอิงรายจ่ายจริงจากระบบ Payroll รายเดือน"></i>
+                                </th>
+                                <th class="text-end">กำไร</th>
                                 <th class="text-center">รายละเอียด</th>
                             </tr>
                         </thead>
@@ -139,14 +158,9 @@
                                     <td class="font-weight-bold">{{ $t['teacher_name'] }}</td>
                                     <td class="text-center">{{ $t['session_count'] }}</td>
                                     <td class="text-end">{{ number_format($t['total_hours'], 1) }} ชม.</td>
-                                    <td class="text-end font-weight-bold text-success">{{ number_format($t['total_revenue'], 2) }}</td>
-                                    <td class="text-end">
-                                        @if($t['total_hours'] > 0)
-                                            {{ number_format($t['total_revenue'] / $t['total_hours'], 2) }}
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
+                                    <td class="text-end">{{ number_format($t['total_revenue'], 2) }}</td>
+                                    <td class="text-end text-danger">{{ number_format($t['total_wage'], 2) }}</td>
+                                    <td class="text-end font-weight-bold text-success">{{ number_format($t['total_revenue'] - $t['total_wage'], 2) }}</td>
                                     <td class="text-center">
                                         <button class="btn btn-sm btn-outline-primary" type="button"
                                                 data-bs-toggle="collapse"
@@ -162,10 +176,12 @@
                                         <table class="table table-sm table-bordered mb-0" style="background: #f8f9fa;">
                                             <thead style="background: #e9ecef;">
                                                 <tr>
-                                                    <th class="text-center" style="width: 30%;">เดือน</th>
-                                                    <th class="text-center" style="width: 20%;">จำนวนครั้ง</th>
-                                                    <th class="text-end" style="width: 25%;">ชั่วโมง</th>
-                                                    <th class="text-end" style="width: 25%;">รายได้ (บาท)</th>
+                                                    <th class="text-center" style="width: 20%;">เดือน</th>
+                                                    <th class="text-center" style="width: 10%;">ครั้ง</th>
+                                                    <th class="text-end" style="width: 15%;">ชั่วโมง</th>
+                                                    <th class="text-end" style="width: 15%;">รายได้สุทธิ</th>
+                                                    <th class="text-end" style="width: 20%;">ค่าจ้าง</th>
+                                                    <th class="text-end" style="width: 20%;">กำไร</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -178,7 +194,9 @@
                                                         <td class="text-center">{{ $m_label }}</td>
                                                         <td class="text-center">{{ $m_data['sessions'] }}</td>
                                                         <td class="text-end">{{ number_format($m_data['hours'], 1) }}</td>
-                                                        <td class="text-end text-success font-weight-bold">{{ number_format($m_data['revenue'], 2) }}</td>
+                                                        <td class="text-end">{{ number_format($m_data['revenue'], 2) }}</td>
+                                                        <td class="text-end text-danger">{{ number_format($m_data['wage'], 2) }}</td>
+                                                        <td class="text-end text-success font-weight-bold">{{ number_format($m_data['revenue'] - $m_data['wage'], 2) }}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -200,8 +218,10 @@
                                     <td colspan="2" class="text-end">รวมทั้งหมด</td>
                                     <td class="text-center">{{ $total_all_sessions }}</td>
                                     <td class="text-end">{{ number_format($total_all_hours, 1) }} ชม.</td>
-                                    <td class="text-end text-success">{{ number_format($total_all_revenue, 2) }}</td>
-                                    <td colspan="2"></td>
+                                    <td class="text-end">{{ number_format($total_all_revenue, 2) }}</td>
+                                    <td class="text-end text-danger">{{ number_format($total_all_wage, 2) }}</td>
+                                    <td class="text-end text-success">{{ number_format($total_all_profit, 2) }}</td>
+                                    <td></td>
                                 </tr>
                             </tfoot>
                         @endif
