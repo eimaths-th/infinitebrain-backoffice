@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class PayrollController extends Controller
 {
@@ -136,10 +137,12 @@ class PayrollController extends Controller
         $period = PayrollPeriod::with(['payrolls.user', 'payrolls.incomeItems', 'payrolls.deductionItems'])
             ->findOrFail($id);
 
+        // ดึงรายการ payroll ทั้งหมดและเรียงตามรหัสพนักงาน (employee_code) จากน้อยไปมาก
+        $all_payrolls = $period->payrolls->sortBy('employee_code');
+
         // จัดกลุ่มตามแผนก สำหรับ fulltime (ใช้ user->department ที่เป็นข้อมูลล่าสุด)
-        $fulltime_by_department = $period->payrolls
+        $fulltime_by_department = $all_payrolls
             ->where('employee_type', 'fulltime')
-            ->sortBy(fn($p) => $p->user?->department ?: 'ไม่ระบุแผนก')  // Sort ตามชื่อแผนก
             ->groupBy(fn($p) => $p->user?->department ?: 'ไม่ระบุแผนก');
 
         // เรียงลำดับ key (แผนก) ตามตัวอักษร โดย "ไม่ระบุแผนก" อยู่ท้ายสุด
@@ -147,9 +150,9 @@ class PayrollController extends Controller
             return $key === 'ไม่ระบุแผนก' ? 'zzz' : $key;
         });
 
-        // Part-time และ Contract ยังคงเหมือนเดิม
-        $parttime_payrolls = $period->payrolls->where('employee_type', 'parttime');
-        $contract_payrolls = $period->payrolls->where('employee_type', 'contract');
+        // Part-time และ Contract เรียงตาม employee_code เช่นกัน
+        $parttime_payrolls = $all_payrolls->where('employee_type', 'parttime');
+        $contract_payrolls = $all_payrolls->where('employee_type', 'contract');
 
         return view('payroll.show', compact('period', 'fulltime_by_department', 'parttime_payrolls', 'contract_payrolls'));
     }
