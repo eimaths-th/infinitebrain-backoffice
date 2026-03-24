@@ -6,6 +6,8 @@ use App\Models\ReceiptVoucher;
 use App\Models\ReceiptVoucherItem;
 use App\Models\ReceiptVoucherLog;
 use App\Models\ReceiptVoucherAttachment;
+use App\Models\Branch;
+use App\Models\BranchGroup;
 use App\Services\LineMessagingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,10 +42,7 @@ class ReceiptVoucherController extends Controller
 
         // Filter by branch group
         if ($request->filled('branch_group')) {
-            $groupBranchCodes = ReceiptVoucher::$groupBranchCodes;
-            if (isset($groupBranchCodes[$request->branch_group])) {
-                $query->whereIn('branch_code', $groupBranchCodes[$request->branch_group]);
-            }
+            $query->where('group_branch_code', $request->branch_group);
         }
 
         if ($request->filled('from_date')) {
@@ -63,11 +62,27 @@ class ReceiptVoucherController extends Controller
             });
         }
 
-        $branchCodes = ReceiptVoucher::$branchCodes;
-        $groupBranchCodes = ReceiptVoucher::$groupBranchCodes;
-
         /** @var \App\Models\User $user */
         $user = Auth::user();
+
+        // Database-driven branch and group lists
+        $branchQuery = Branch::active();
+        $groupQuery = BranchGroup::has('branches');
+
+        // Filter for external users
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            
+            $branchQuery->whereHas('group', function($q) use ($userBranches) {
+                $q->whereIn('code', $userBranches);
+            });
+
+            $groupQuery->whereIn('code', $userBranches);
+        }
+
+        $branchCodes = $branchQuery->pluck('name', 'code')->toArray();
+        $groupBranchCodes = $groupQuery->pluck('name', 'code')->toArray();
+
         if ($user->hasRole('account')) {
             $query->where('created_by', Auth::id());
         }
@@ -78,19 +93,8 @@ class ReceiptVoucherController extends Controller
             $resolvedBranches = ReceiptVoucher::resolveBranchCodes($userBranches);
             if (count($resolvedBranches) > 0) {
                 $query->whereIn('branch_code', $resolvedBranches);
-
-                // กรองตัวเลือกใน Filter dropdown ให้เหลือเฉพาะที่เกี่ยวข้อง
-                $branchCodes = array_filter($branchCodes, function ($code) use ($resolvedBranches) {
-                    return in_array($code, $resolvedBranches);
-                }, ARRAY_FILTER_USE_KEY);
-
-                $groupBranchCodes = array_filter($groupBranchCodes, function ($name) use ($userBranches) {
-                    return in_array($name, $userBranches);
-                }, ARRAY_FILTER_USE_KEY);
             } else {
                 $query->where('id', '<', 0); // No branches = no data
-                $branchCodes = [];
-                $groupBranchCodes = [];
             }
         }
 
@@ -101,26 +105,31 @@ class ReceiptVoucherController extends Controller
 
     public function create()
     {
-        $branchCodes = ReceiptVoucher::$branchCodes;
-
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        $defaultBranch = 'ELRV'; // Default for admin
-
+        
+        $branchQuery = Branch::active();
         if ($user->hasRole('external-branch')) {
             $userBranches = $user->branches ?? [];
-            $resolvedBranches = ReceiptVoucher::resolveBranchCodes($userBranches);
-            $branchCodes = array_filter($branchCodes, function ($code) use ($resolvedBranches) {
-                return in_array($code, $resolvedBranches);
-            }, ARRAY_FILTER_USE_KEY);
-
-            // Set default branch to the first assigned one
-            if (!empty($branchCodes)) {
-                $defaultBranch = array_key_first($branchCodes);
-            }
+            $branchQuery->whereHas('group', function($q) use ($userBranches) {
+                $q->whereIn('code', $userBranches);
+            });
         }
+        
+        $branchCodes = $branchQuery->pluck('name', 'code')->toArray();
+        $defaultBranch = array_key_first($branchCodes) ?? 'EL';
 
-        $voucherNo = ReceiptVoucher::generateVoucherNo($defaultBranch);
+        $branch = Branch::where('code', $defaultBranch)->first();
+        $voucherCode = $branch->rv_prefix ?? ($defaultBranch . 'RV');
+
+        $voucherCodeMap = ReceiptVoucher::$voucherCodes[$defaultBranch] ?? null;
+        if (is_array($voucherCodeMap)) {
+            $voucherCode = $voucherCodeMap['default'] ?? ($defaultBranch . 'RV');
+        } else {
+            $voucherCode = $voucherCodeMap ?? ($defaultBranch . 'RV');
+        }
+        
+        $voucherNo = ReceiptVoucher::generateVoucherNo($voucherCode);
         return view('receipt_voucher.create', compact('voucherNo', 'branchCodes', 'defaultBranch'));
     }
 
@@ -140,7 +149,7 @@ class ReceiptVoucherController extends Controller
 
         DB::beginTransaction();
         try {
-            $branchCode = $request->branch_code ?? 'ELRV';
+            $branchCode = $request->branch_code ?? 'EL';
 
             /** @var \App\Models\User $user */
             $user = Auth::user();
@@ -151,6 +160,14 @@ class ReceiptVoucherController extends Controller
                     return back()->with('error', 'คุณไม่มีสิทธิ์สร้างและจัดการใบสำคัญรับของสาขานี้')->withInput();
                 }
             }
+
+            $branch = Branch::where('code', $branchCode)->with('group')->first();
+            if (!$branch) {
+                return back()->with('error', 'ไม่พบข้อมูลสาขาที่ระบุ')->withInput();
+            }
+
+            $voucherCode = $branch->rv_prefix ?? ($branchCode . 'RV');
+            $groupBranchCode = $branch->group->code ?? '';
 
             $totalAmount = collect($request->items)->sum('amount');
             $totalDeductionAmount = collect($request->deductions)->sum('amount');
@@ -165,9 +182,11 @@ class ReceiptVoucherController extends Controller
             ]);
 
             $voucher = ReceiptVoucher::create([
-                'voucher_no' => ReceiptVoucher::generateVoucherNo($request->branch_code ?? 'ELRV'),
+                'voucher_no' => ReceiptVoucher::generateVoucherNo($voucherCode),
+                'voucher_code' => $voucherCode,
                 'voucher_date' => $request->voucher_date,
-                'branch_code' => $request->branch_code,
+                'branch_code' => $branchCode,
+                'group_branch_code' => $groupBranchCode,
                 'payee_id' => $payee->id,
                 'receive_from' => $request->receive_from,
                 'receive_from_address' => $request->receive_from_address,
@@ -266,15 +285,16 @@ class ReceiptVoucherController extends Controller
         if (!$voucher->canEdit() || !$user->can('receipt-voucher.edit')) {
             return back()->with('error', 'ไม่สามารถแก้ไขใบสำคัญรับนี้ได้ หรือคุณไม่มีสิทธิ์แก้ไข');
         }
-        $branchCodes = ReceiptVoucher::$branchCodes;
 
+        $branchQuery = Branch::active();
         if ($user->hasRole('external-branch')) {
             $userBranches = $user->branches ?? [];
-            $resolvedBranches = ReceiptVoucher::resolveBranchCodes($userBranches);
-            $branchCodes = array_filter($branchCodes, function($code) use ($resolvedBranches) {
-                return in_array($code, $resolvedBranches);
-            }, ARRAY_FILTER_USE_KEY);
+            $branchQuery->whereHas('group', function($q) use ($userBranches) {
+                $q->whereIn('code', $userBranches);
+            });
         }
+        
+        $branchCodes = $branchQuery->pluck('name', 'code')->toArray();
         return view('receipt_voucher.edit', compact('voucher', 'branchCodes'));
     }
 
@@ -318,10 +338,29 @@ class ReceiptVoucherController extends Controller
                 'created_by' => Auth::id(),
             ]);
 
+            $branchCode = $request->branch_code ?? $voucher->branch_code;
+            $branch = Branch::where('code', $branchCode)->with('group')->first();
+            if (!$branch) {
+                return back()->with('error', 'ไม่พบข้อมูลสาขาที่ระบุ')->withInput();
+            }
+
+            $voucherCode = $branch->rv_prefix ?? ($branchCode . 'RV');
+            $groupBranchCode = $branch->group->code ?? '';
+
+            // If it's a draft and branch/voucher_code changed, regenerate voucher_no
+            if ($voucher->status == ReceiptVoucher::STATUS_DRAFT) {
+                if ($branchCode != $voucher->branch_code || $voucherCode != $voucher->voucher_code) {
+                    $voucher->voucher_no = ReceiptVoucher::generateVoucherNo($voucherCode);
+                    $voucher->voucher_code = $voucherCode;
+                }
+            }
+
             $oldStatus = $voucher->status;
             $voucher->update([
                 'voucher_date' => $request->voucher_date,
-                'branch_code' => $request->branch_code,
+                'branch_code' => $branchCode,
+                'group_branch_code' => $groupBranchCode,
+                'voucher_code' => $voucherCode,
                 'payee_id' => $payee->id,
                 'receive_from' => $request->receive_from,
                 'receive_from_address' => $request->receive_from_address,
@@ -534,8 +573,13 @@ class ReceiptVoucherController extends Controller
 
     public function getNextVoucherNo(Request $request)
     {
-        $branchCode = $request->branch_code ?? 'ELRV';
-        return response()->json(['voucher_no' => ReceiptVoucher::generateVoucherNo($branchCode)]);
+        $branchCode = $request->branch_code ?? 'EL';
+        $branch = Branch::where('code', $branchCode)->first();
+        if (!$branch) {
+            return response()->json(['error' => 'ไม่พบรหัสสาขา'], 404);
+        }
+        $voucherCode = $branch->rv_prefix ?? ($branchCode . 'RV');
+        return response()->json(['voucher_no' => ReceiptVoucher::generateVoucherNo($voucherCode)]);
     }
 
     public function printPdf($id)

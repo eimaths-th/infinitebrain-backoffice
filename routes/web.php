@@ -295,6 +295,15 @@ Route::group(['middleware' => ['auth', 'role:super-admin']], function () {
         Route::get('/user-roles', [UserRoleController::class, 'index'])->name('user-roles.index');
         Route::get('/user-roles/{id}/edit', [UserRoleController::class, 'edit'])->name('user-roles.edit');
         Route::put('/user-roles/{id}', [UserRoleController::class, 'update'])->name('user-roles.update');
+
+    });
+});
+
+// Branch Management (Permission-based)
+Route::group(['middleware' => ['auth']], function () {
+    Route::prefix('system-admin')->name('admin.')->group(function () {
+        Route::resource('branch-groups', \App\Http\Controllers\BranchGroupController::class);
+        Route::resource('branches', \App\Http\Controllers\BranchController::class);
     });
 });
 

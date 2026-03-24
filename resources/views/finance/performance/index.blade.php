@@ -1,4 +1,58 @@
 @extends('layouts.main_template')
+@section('style')
+<style>
+    .filter-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 1.25rem;
+        background: #fff;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .filter-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        border-color: #3f6ad8;
+    }
+    .group-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: 700;
+        color: #3f6ad8;
+        cursor: pointer;
+    }
+    .branch-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 0.75rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+    .custom-checkbox {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+    .toggle-icon {
+        transition: transform 0.3s ease;
+    }
+    .toggle-icon.rotated {
+        transform: rotate(180deg);
+    }
+    .btn-filter {
+        padding: 0.75rem 1.5rem;
+        border-radius: 30px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    .btn-filter:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+</style>
+@endsection
 
 @section('content')
 <div class="app-main__inner">
@@ -36,27 +90,52 @@
                 <div class="card-body">
                     <form action="{{ route('performance.index') }}" method="GET" class="row align-items-center">
                         <input type="hidden" name="year" value="{{ $year }}">
-                        <div class="col-md-9">
-                            <label class="form-label font-weight-bold">กลุ่มสาขาที่ต้องการดูผลประกอบการ:</label>
-                            <div class="d-flex flex-wrap gap-3">
-                                @foreach(\App\Models\PaymentVoucher::$groupBranchCodes as $groupName => $codes)
-                                    <div class="form-check me-4">
-                                        <input class="form-check-input" type="checkbox" name="groups[]" value="{{ $groupName }}" 
-                                            id="group_{{ $groupName }}" {{ in_array($groupName, $selectedGroups) ? 'checked' : '' }}>
-                                        <label class="form-check-label text-primary font-weight-bold" for="group_{{ $groupName }}">
-                                            {{ $groupName }}
-                                        </label>
+                        <div class="col-md-12">
+                            <h6 class="text-muted text-uppercase mb-3" style="letter-spacing: 1px; font-weight: 800;">
+                                <i class="fa fa-sitemap me-2"></i>เลือกกลุ่มสาขาและสาขาที่ต้องการดูผลประกอบการ
+                            </h6>
+                            <div class="row g-4">
+                                @foreach($groupsWithBranches as $group)
+                                    <div class="col-lg-6 col-xl-3">
+                                        <div class="filter-card">
+                                            <div class="group-header" data-target="branches_{{ $group->code }}">
+                                                <div class="form-check mb-0">
+                                                    <input class="form-check-input group-checkbox custom-checkbox" type="checkbox" name="groups[]" value="{{ $group->code }}"
+                                                        id="group_{{ $group->code }}" data-group="{{ $group->code }}"
+                                                        {{ in_array($group->code, $selectedGroups) ? 'checked' : '' }}>
+                                                    <label class="form-check-label ps-2 fs-6 mb-0" for="group_{{ $group->code }}" style="cursor: pointer;">
+                                                        {{ $group->name }}
+                                                    </label>
+                                                </div>
+                                                <i class="fa fa-chevron-down text-muted toggle-icon {{ in_array($group->code, $selectedGroups) ? 'rotated' : '' }}"></i>
+                                            </div>
+
+                                            <div class="branch-grid mt-2" id="branches_{{ $group->code }}"
+                                                 style="display: {{ in_array($group->code, $selectedGroups) ? 'grid' : 'none' }};">
+                                                @foreach($group->branches as $branch)
+                                                    <div class="form-check">
+                                                        <input class="form-check-input branch-checkbox group_{{ $group->code }}" type="checkbox"
+                                                            name="branches[]" value="{{ $branch->code }}" id="branch_{{ $branch->code }}"
+                                                            {{ in_array($branch->code, $selectedBranches) ? 'checked' : '' }}>
+                                                        <label class="form-check-label small" for="branch_{{ $branch->code }}" style="cursor: pointer;">
+                                                            {{ $branch->name }}
+                                                        </label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
-                        </div>
-                        <div class="col-md-3 text-end">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-filter"></i> กรองข้อมูล
-                            </button>
-                            <a href="{{ route('performance.index', ['year' => $year, 'groups[]' => 'EL']) }}" class="btn btn-secondary ms-2">
-                                รีเซ็ต (EL)
-                            </a>
+
+                            <div class="mt-4 pt-3 border-top d-flex justify-content-center gap-3">
+                                <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm btn-filter">
+                                    <i class="fa fa-search me-2"></i>กรองข้อมูล
+                                </button>
+                                <a href="{{ route('performance.index', ['year' => $year]) }}" class="btn btn-outline-secondary btn-lg px-4 rounded-pill d-flex align-items-center">
+                                    <i class="fa fa-undo me-2"></i>คืนค่าเริ่มต้น
+                                </a>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -135,4 +214,50 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<script>
+    $(document).ready(function() {
+        // Toggle visibility click on header title/icon (avoid checkbox click)
+        $('.group-header').on('click', function(e) {
+            if ($(e.target).closest('.form-check').length) return;
+
+            const targetId = $(this).data('target');
+            const $branchList = $('#' + targetId);
+            const $icon = $(this).find('.toggle-icon');
+
+            $branchList.slideToggle(300, function() {
+                if ($branchList.is(':visible')) {
+                    $branchList.css('display', 'grid');
+                }
+            });
+            $icon.toggleClass('rotated');
+        });
+
+        // Toggle on checkbox change
+        $('.group-checkbox').on('change', function() {
+            const groupCode = $(this).data('group');
+            const $branchList = $('#branches_' + groupCode);
+            const $branches = $('.group_' + groupCode);
+            const $icon = $(this).closest('.group-header').find('.toggle-icon');
+
+            if ($(this).is(':checked')) {
+                $branchList.slideDown(300, function() {
+                    $(this).css('display', 'grid');
+                });
+                $icon.addClass('rotated');
+                // Auto check first branch if none are checked
+                const checkedInGroup = $branches.filter(':checked').length > 0;
+                if (!checkedInGroup && $branches.length > 0) {
+                    $branches.first().prop('checked', true);
+                }
+            } else {
+                $branchList.slideUp(300);
+                $icon.removeClass('rotated');
+                $branches.prop('checked', false);
+            }
+        });
+    });
+</script>
 @endsection

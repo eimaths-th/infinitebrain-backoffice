@@ -119,19 +119,21 @@
     <!-- ส่วนหัวรายงาน -->
     <div class="header">
         @php
-            $groupMap = [
-                'EL' => 'Eye Level',
-                'IF' => 'Infinite Brain',
-                'META' => 'META Knowledge',
-                'EiMaths' => 'eiMaths',
-            ];
             $titles = [];
             foreach(($selectedGroups ?? []) as $g) {
                 $titles[] = $groupMap[$g] ?? $g;
             }
             $displayTitle = implode(' & ', $titles);
+
+            $branchTitles = [];
+            if (!empty($selectedBranches)) {
+                $branchTitles = \App\Models\Branch::whereIn('code', $selectedBranches)->pluck('name')->toArray();
+            }
         @endphp
         รายงานรายละเอียดรายรับ {{ $displayTitle }}<br>
+        @if(!empty($branchTitles))
+            <small style="font-size: 10pt;">สาขา: {{ implode(', ', $branchTitles) }}</small><br>
+        @endif
         ประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }} ปี {{ $year + 543 }}
     </div>
 
@@ -205,9 +207,53 @@
         </table>
     @endif
 
+    <!-- ส่วนที่ 1.1: Eimaths API Revenue (ถ้ามี) -->
+    @if(!empty($data['details']['api_revenue_list']))
+        <div class="no-break">
+        <div class="section-title">{{ ($is_el && $school_receipts_detail->count() > 0) ? '1.1' : '1' }}. Math Course (ข้อมูลจากระบบ Eimaths API)</div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 10%;">#</th>
+                    <th style="width: 25%;">สาขา</th>
+                    <th style="width: 15%;">รหัสสาขา</th>
+                    <th style="width: 25%;">รายการ</th>
+                    <th style="width: 25%;">จำนวนเงิน</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php $idx = 1; $api_total = 0; @endphp
+                @foreach($data['details']['api_revenue_list'] as $item)
+                    <tr>
+                        <td class="text-center">{{ $idx++ }}</td>
+                        <td>{{ $item->branch_name }}</td>
+                        <td class="text-center">{{ $item->branch_code }}</td>
+                        <td>{{ $item->source }}</td>
+                        <td class="text-right">{{ number_format($item->revenue, 2) }}</td>
+                    </tr>
+                    @php $api_total += $item->revenue; @endphp
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr class="summary-row">
+                    <td colspan="4" class="text-right">รวม Math Course (API)</td>
+                    <td class="text-right">{{ number_format($api_total, 2) }}</td>
+                </tr>
+            </tfoot>
+        </table>
+        </div>
+    @endif
+
     <!-- ส่วน Receipt Vouchers (ใบสำคัญรับ) -->
     <div class="no-break">
-    <div class="section-title">{{ $is_el ? '2' : '1' }}. Receipt Vouchers (ใบสำคัญรับอื่นๆ)</div>
+    <div class="section-title">
+        @php 
+            $rv_num = 1;
+            if ($is_el && $school_receipts_detail->count() > 0) $rv_num++;
+            if (!empty($data['details']['api_revenue_list'])) $rv_num++;
+        @endphp
+        {{ $rv_num }}. Receipt Vouchers (ใบสำคัญรับอื่นๆ)
+    </div>
     <table>
         <thead>
             <tr>

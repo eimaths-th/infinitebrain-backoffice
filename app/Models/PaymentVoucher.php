@@ -12,8 +12,10 @@ class PaymentVoucher extends Model
 
     protected $fillable = [
         'voucher_no',
+        'voucher_code',
         'voucher_date',
         'branch_code',
+        'group_branch_code',
         'pay_to',
         'pay_to_address',
         'pay_to_account_no',
@@ -168,6 +170,11 @@ class PaymentVoucher extends Model
         return $this->belongsTo(User::class, 'reviewed_by');
     }
 
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_code', 'code');
+    }
+
     // Helpers
     public function getStatusLabelAttribute()
     {
@@ -209,57 +216,27 @@ class PaymentVoucher extends Model
         return $this->status === self::STATUS_COMPLETED;
     }
 
-    // Branch Codes
-    const BRANCH_EL = 'EL'; // สาขาหลัก
-    const BRANCH_EB = 'EB'; // สาขาย่อย (ถ้ามี)
-
-    public static $branchCodes = [
-        'ELPV' => 'EyeLavel (EL)',
-        'IFPV' => 'InfiniteBrain (IF)',
-        'MT' => 'META Knowledge (MT)',
-        'EiRP' => 'eiMaths RP (EiRP)',
-        'EiBK' => 'eiMaths BK (EiBK)',
-        'EiHQ' => 'eiMaths HQ (EiHQ)',
-
-        //bank fee
-        'ELBF' => 'EyeLavel (ELBF)',
-        'IFBF' => 'InfiniteBrain (IFBF)',
-        'EiRPRF' => 'eiMaths RP (EiRPRF)',
-        'EiBKBF' => 'eiMaths BK (EiBKBF)',
-        'EiHQBF' => 'eiMaths HQ (EiHQBF)',
-    ];
-    public static $groupBranchCodes = [
-        'EL' => ['EL', 'ELPV', 'ELBF'],
-        'IF' => ['IF', 'IFPV', 'IFBF'],
-        'META' => ['MT'],
-        'EiMaths' => ['EiRP', 'EiBK', 'EiHQ', 'EiRPRF', 'EiBKBF', 'EiHQBF'],
-    ];
-
     /**
      * แปลงกลุ่มสาขา (เช่น META, EiMaths) ให้เป็นรหัสสาขาจริง (เช่น MT, EiRP, EiBK, ...)
      */
-    public static function resolveBranchCodes($branches)
+    public static function resolveBranchCodes($groups)
     {
-        if (empty($branches)) return [];
-        if (!is_array($branches)) $branches = [$branches];
+        if (empty($groups)) return [];
+        if (!is_array($groups)) $groups = [$groups];
 
-        $resolved = [];
-        foreach ($branches as $branch) {
-            if (isset(self::$groupBranchCodes[$branch])) {
-                $resolved = array_merge($resolved, self::$groupBranchCodes[$branch]);
-            } else {
-                $resolved[] = $branch;
-            }
-        }
-        return array_unique($resolved);
+        return Branch::whereHas('group', function($query) use ($groups) {
+                $query->whereIn('code', $groups);
+            })
+            ->pluck('code')
+            ->toArray();
     }
 
     // Generate Voucher Number: EL20260112 = รหัสสาขา + ปี + เดือน + ลำดับ
-    public static function generateVoucherNo($branchCode = 'ELPV')
+    public static function generateVoucherNo($voucherCode = 'ELPV')
     {
         $year = date('Y');
         $month = date('m');
-        $prefix = $branchCode . $year . $month;
+        $prefix = $voucherCode . $year . $month;
 
         $lastVoucher = self::where('voucher_no', 'like', $prefix . '%')
             ->orderBy('voucher_no', 'desc')

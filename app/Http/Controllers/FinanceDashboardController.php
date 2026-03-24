@@ -8,6 +8,8 @@ use App\Models\PayrollPeriod;
 use App\Models\Payroll;
 use App\Models\PayrollIncomeItem;
 use App\Models\PayrollDeductionItem;
+use App\Models\Branch;
+use App\Models\BranchGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -26,12 +28,14 @@ class FinanceDashboardController extends Controller
         /** @var \App\Models\User $user */
         $user = \Illuminate\Support\Facades\Auth::user();
         $allowedResolvedBranches = [];
-        $allowedGroups = ['EL', 'IF', 'META', 'EiMaths'];
+        $allowedGroups = BranchGroup::pluck('code')->toArray();
         $isExternal = $user->hasRole('external-branch');
 
         if ($isExternal) {
             $userBranches = $user->branches ?? [];
-            $allowedResolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
+            $allowedResolvedBranches = Branch::whereHas('group', function($q) use ($userBranches) {
+                $q->whereIn('code', $userBranches);
+            })->pluck('code')->toArray();
             $allowedGroups = array_intersect($allowedGroups, $userBranches);
         }
 
@@ -83,7 +87,8 @@ class FinanceDashboardController extends Controller
             ->groupBy('branch_code')
             ->get()
             ->map(function ($item) {
-                $item->branch_name = PaymentVoucher::$branchCodes[$item->branch_code] ?? $item->branch_code;
+                $branch = Branch::where('code', $item->branch_code)->first();
+                $item->branch_name = $branch->name ?? $item->branch_code;
                 return $item;
             });
 
@@ -102,7 +107,8 @@ class FinanceDashboardController extends Controller
             ->groupBy('branch_code')
             ->get()
             ->map(function ($item) {
-                $item->branch_name = PaymentVoucher::$branchCodes[$item->branch_code] ?? $item->branch_code;
+                $branch = Branch::where('code', $item->branch_code)->first();
+                $item->branch_name = $branch->name ?? $item->branch_code;
                 return $item;
             });
 
@@ -117,7 +123,8 @@ class FinanceDashboardController extends Controller
             ->groupBy('branch_code')
             ->get()
             ->map(function ($item) {
-                $item->branch_name = PaymentVoucher::$branchCodes[$item->branch_code] ?? $item->branch_code;
+                $branch = Branch::where('code', $item->branch_code)->first();
+                $item->branch_name = $branch->name ?? $item->branch_code;
                 return $item;
             });
 
@@ -177,7 +184,8 @@ class FinanceDashboardController extends Controller
             ->groupBy('branch_code')
             ->get()
             ->map(function ($item) {
-                $item->branch_name = ReceiptVoucher::$branchCodes[$item->branch_code] ?? $item->branch_code;
+                $branch = Branch::where('code', $item->branch_code)->first();
+                $item->branch_name = $branch->name ?? $item->branch_code;
                 return $item;
             });
 
@@ -196,7 +204,8 @@ class FinanceDashboardController extends Controller
             ->groupBy('branch_code')
             ->get()
             ->map(function ($item) {
-                $item->branch_name = ReceiptVoucher::$branchCodes[$item->branch_code] ?? $item->branch_code;
+                $branch = Branch::where('code', $item->branch_code)->first();
+                $item->branch_name = $branch->name ?? $item->branch_code;
                 return $item;
             });
 
@@ -211,7 +220,8 @@ class FinanceDashboardController extends Controller
             ->groupBy('branch_code')
             ->get()
             ->map(function ($item) {
-                $item->branch_name = ReceiptVoucher::$branchCodes[$item->branch_code] ?? $item->branch_code;
+                $branch = Branch::where('code', $item->branch_code)->first();
+                $item->branch_name = $branch->name ?? $item->branch_code;
                 return $item;
             });
 
@@ -300,21 +310,28 @@ class FinanceDashboardController extends Controller
         $perf_yearly_meta = $this->calculateGroupPerformance($selected_year, null, 'META');
         $perf_yearly_eimaths = $this->calculateGroupPerformance($selected_year, null, 'EiMaths');
 
-        $chart_groups_labels = ['Eye Level', 'Infinite Brain', 'META Knowledge', 'EiMaths'];
+        $chart_groups = BranchGroup::orderBy('id')->get();
+        $chart_groups_labels = $chart_groups->pluck('name')->toArray();
         
-        $chart_monthly_revenue = [
-            $perf_el['total_revenue'], $perf_if['total_revenue'], $perf_meta['total_revenue'], $perf_eimaths['total_revenue']
-        ];
-        $chart_monthly_expense = [
-            $perf_el['total_expense'], $perf_if['total_expense'], $perf_meta['total_expense'], $perf_eimaths['total_expense']
-        ];
+        $chart_monthly_revenue = [];
+        $chart_monthly_expense = [];
+        foreach ($chart_groups as $group) {
+            $perf = in_array($group->code, $allowedGroups) 
+                ? $this->calculateGroupPerformance($selected_year, $selected_month, $group->code)
+                : ['total_revenue'=>0, 'total_expense'=>0];
+            $chart_monthly_revenue[] = $perf['total_revenue'];
+            $chart_monthly_expense[] = $perf['total_expense'];
+        }
 
-        $chart_yearly_revenue = [
-            $perf_yearly_el['total_revenue'], $perf_yearly_if['total_revenue'], $perf_yearly_meta['total_revenue'], $perf_yearly_eimaths['total_revenue']
-        ];
-        $chart_yearly_expense = [
-            $perf_yearly_el['total_expense'], $perf_yearly_if['total_expense'], $perf_yearly_meta['total_expense'], $perf_yearly_eimaths['total_expense']
-        ];
+        $chart_yearly_revenue = [];
+        $chart_yearly_expense = [];
+        foreach ($chart_groups as $group) {
+            $perfY = in_array($group->code, $allowedGroups) 
+                ? $this->calculateGroupPerformance($selected_year, null, $group->code)
+                : ['total_revenue'=>0, 'total_expense'=>0];
+            $chart_yearly_revenue[] = $perfY['total_revenue'];
+            $chart_yearly_expense[] = $perfY['total_expense'];
+        }
 
         // ════════════════════════════════════════════════════
         // PASS TO VIEW
@@ -373,8 +390,8 @@ class FinanceDashboardController extends Controller
      */
     private function calculateGroupPerformance($year, $month, $groupName = 'ALL')
     {
-        $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
-        $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+        $startDate = Carbon::createFromDate($year, $month ?? 1, 1)->startOfMonth();
+        $endDate = $month ? Carbon::createFromDate($year, $month, 1)->endOfMonth() : Carbon::createFromDate($year, 12, 31)->endOfMonth();
 
         $pvBranchCodes = [];
         $rvBranchCodes = [];
@@ -382,13 +399,6 @@ class FinanceDashboardController extends Controller
         $showSchoolRevenue = false;
 
         if ($groupName !== 'ALL') {
-            if (isset(PaymentVoucher::$groupBranchCodes[$groupName])) {
-                $pvBranchCodes = PaymentVoucher::$groupBranchCodes[$groupName];
-            }
-            if (isset(ReceiptVoucher::$groupBranchCodes[$groupName])) {
-                $rvBranchCodes = ReceiptVoucher::$groupBranchCodes[$groupName];
-            }
-
             if ($groupName === 'EL') {
                 $showSchoolRevenue = true;
                 $payrollDepartments = ['วิชาการ', 'สำนักงาน'];
@@ -413,10 +423,8 @@ class FinanceDashboardController extends Controller
         $rvQuery = \App\Models\ReceiptVoucher::where('status', \App\Models\ReceiptVoucher::STATUS_COMPLETED)
             ->whereBetween('voucher_date', [$startDate, $endDate]);
         
-        if ($groupName !== 'ALL' && !empty($rvBranchCodes)) {
-            $rvQuery->whereIn('branch_code', $rvBranchCodes);
-        } elseif ($groupName !== 'ALL' && empty($rvBranchCodes)) {
-            $rvQuery->whereRaw('1 = 0');
+        if ($groupName !== 'ALL') {
+            $rvQuery->where('group_branch_code', $groupName);
         }
         $rvRevenue = $rvQuery->sum('net_amount');
 
@@ -425,10 +433,8 @@ class FinanceDashboardController extends Controller
             ->where('is_salary', false)
             ->whereBetween('voucher_date', [$startDate, $endDate]);
 
-        if ($groupName !== 'ALL' && !empty($pvBranchCodes)) {
-            $pvQuery->whereIn('branch_code', $pvBranchCodes);
-        } elseif ($groupName !== 'ALL' && empty($pvBranchCodes)) {
-            $pvQuery->whereRaw('1 = 0');
+        if ($groupName !== 'ALL') {
+            $pvQuery->where('group_branch_code', $groupName);
         }
         $pvExpense = $pvQuery->sum('net_amount');
 
@@ -512,14 +518,18 @@ class FinanceDashboardController extends Controller
         $user = \Illuminate\Support\Facades\Auth::user();
         if ($user->hasRole('external-branch')) {
             $userBranches = $user->branches ?? [];
-            $allVoucherBranches = ($type === 'rv') ? ReceiptVoucher::resolveBranchCodes($userBranches) : PaymentVoucher::resolveBranchCodes($userBranches);
+            $allVoucherBranches = Branch::whereHas('group', function($q) use ($userBranches) {
+                $q->whereIn('code', $userBranches);
+            })->pluck('code')->toArray();
             if (!in_array($branch_code, $allVoucherBranches)) {
                 return back()->with('error', 'คุณไม่มีสิทธิ์เข้าถึงข้อมูลสาขานี้');
             }
         }
 
+        $branch = Branch::where('code', $branch_code)->first();
+        $branch_name = $branch->name ?? $branch_code;
+
         if ($type === 'rv') {
-            $branch_name = ReceiptVoucher::$branchCodes[$branch_code] ?? $branch_code;
             $query = ReceiptVoucher::where('branch_code', $branch_code)
                 ->where('status', ReceiptVoucher::STATUS_COMPLETED);
 
@@ -533,7 +543,6 @@ class FinanceDashboardController extends Controller
             $title = "รายละเอียดใบสำคัญรับ: $branch_name";
         } else {
             // Default to PV
-            $branch_name = PaymentVoucher::$branchCodes[$branch_code] ?? $branch_code;
             $query = PaymentVoucher::where('branch_code', $branch_code)
                 ->where('status', PaymentVoucher::STATUS_COMPLETED);
 

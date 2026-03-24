@@ -820,28 +820,35 @@
             }
         });
 
-        // Update voucher number preview when branch changes - ดึงจาก server
-        document.getElementById('branchCode').addEventListener('change', function() {
-            const branchCode = this.value;
+        // Update voucher number preview when branch, category or is_salary changes - ดึงจาก server
+        function updateVoucherNoPreview() {
+            const branchCode = document.getElementById('branchCode').value;
+            const category = document.getElementById('category').value;
+            const isSalary = document.getElementById('isSalary').checked;
             const previewInput = document.getElementById('voucherNoPreview');
 
             // แสดงสถานะกำลังโหลด
             previewInput.value = 'กำลังโหลด...';
 
+            let url = `{{ route('payment-voucher.next-voucher-no') }}?branch_code=${branchCode}`;
+            if (!isSalary && category) {
+                url += `&category=${category}`;
+            }
+
             // เรียก API เพื่อดึงเลขที่ใบสำคัญจ่ายถัดไปที่ถูกต้อง
-            fetch(`{{ route('payment-voucher.next-voucher-no') }}?branch_code=${branchCode}`)
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     previewInput.value = data.voucher_no;
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    // Fallback to simple format if API fails
-                    const year = new Date().getFullYear();
-                    const month = String(new Date().getMonth() + 1).padStart(2, '0');
-                    previewInput.value = branchCode + year + month + '01';
                 });
-        });
+        }
+
+        document.getElementById('branchCode').addEventListener('change', updateVoucherNoPreview);
+        document.getElementById('category').addEventListener('change', updateVoucherNoPreview);
+        document.getElementById('isSalary').addEventListener('change', updateVoucherNoPreview);
 
         // Initialize Select2 for payee search
         $(document).ready(function() {

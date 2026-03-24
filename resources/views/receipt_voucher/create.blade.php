@@ -268,6 +268,17 @@
                 placeholder: 'พิมพ์ชื่อผู้จ่ายเงินหรือบริษัท...',
                 allowClear: true,
                 tags: true,
+                createTag: function(params) {
+                    var term = $.trim(params.term);
+                    if (term === '') {
+                        return null;
+                    }
+                    return {
+                        id: term,
+                        text: term,
+                        newTag: true
+                    };
+                },
                 ajax: {
                     url: '{{ route('receipt-voucher.search-payee') }}',
                     dataType: 'json',
@@ -302,6 +313,12 @@
                     }
                 } else {
                     $('#payeeId').val('');
+                    // Clear other fields if it's a new tag
+                    if (data.newTag) {
+                        $('#receiveFromAddress').val('');
+                        $('#receiveFromAccountNo').val('');
+                        $('#receiveFromBankName').val('');
+                    }
                 }
             });
 
@@ -442,6 +459,18 @@
 
         $(document).on('input', '.item-amount, .deduction-amount', function() {
             calculateTotal();
+        });
+
+        // Update voucher number preview when branch changes
+        $('#branchCode').on('change', function() {
+            const branchCode = $(this).val();
+            const previewInput = $('#voucherNoPreview');
+            
+            previewInput.val('กำลังโหลด...');
+            
+            $.get(`{{ route('receipt-voucher.next-voucher-no') }}?branch_code=${branchCode}`, function(data) {
+                previewInput.val(data.voucher_no);
+            });
         });
 
         // Form validation — ตรวจสอบทุก field ก่อน submit พร้อมแสดง alert แดง

@@ -533,6 +533,23 @@
                                 </li>
                             </ul>
                         @endhasanyrole
+                        
+                        @can('system.view')
+                            <ul>
+                                <li>
+                                    <a href="{{ route('admin.branch-groups.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        จัดการกลุ่มสาขา
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.branches.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        จัดการสาขา
+                                    </a>
+                                </li>
+                            </ul>
+                        @endcan
 
                         @can('system.view')
                             <ul>
