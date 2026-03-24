@@ -107,11 +107,12 @@
         <thead>
             <tr>
                 <th style="width: 5%;">#</th>
-                <th style="width: 35%;">ชื่อครู</th>
-                <th style="width: 15%;">จำนวนครั้ง</th>
-                <th style="width: 15%;">ชั่วโมงสอน</th>
-                <th style="width: 15%;">เฉลี่ย/ชม.</th>
-                <th style="width: 15%;">รายได้ (บาท)</th>
+                <th style="width: 25%;">ชื่อครู</th>
+                <th style="width: 7%;">ครั้ง</th>
+                <th style="width: 13%;">ชั่วโมงสอน</th>
+                <th style="width: 15%;">รายได้สุทธิ</th>
+                <th style="width: 15%;">ค่าจ้างครู</th>
+                <th style="width: 20%;">กำไร</th>
             </tr>
         </thead>
         <tbody>
@@ -121,14 +122,9 @@
                     <td class="font-bold">{{ $t['teacher_name'] }}</td>
                     <td class="text-center">{{ $t['session_count'] }}</td>
                     <td class="text-right">{{ number_format($t['total_hours'], 1) }}</td>
-                    <td class="text-right">
-                        @if($t['total_hours'] > 0)
-                            {{ number_format($t['total_revenue'] / $t['total_hours'], 2) }}
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td class="text-right font-bold">{{ number_format($t['total_revenue'], 2) }}</td>
+                    <td class="text-right">{{ number_format($t['total_revenue'], 2) }}</td>
+                    <td class="text-right">{{ number_format($t['total_wage'], 2) }}</td>
+                    <td class="text-right font-bold">{{ number_format($t['total_revenue'] - $t['total_wage'], 2) }}</td>
                 </tr>
             @empty
                 <tr><td colspan="6" class="text-center">ไม่พบข้อมูลการสอนที่มีครู (user_id) ในช่วงเวลาที่เลือก</td></tr>
@@ -140,8 +136,9 @@
                 <td colspan="2" class="text-right">รวมทั้งหมด</td>
                 <td class="text-center">{{ $total_all_sessions }}</td>
                 <td class="text-right">{{ number_format($total_all_hours, 1) }} ชม.</td>
-                <td class="text-right"></td>
                 <td class="text-right">{{ number_format($total_all_revenue, 2) }}</td>
+                <td class="text-right text-danger">{{ number_format($total_all_wage, 2) }}</td>
+                <td class="text-right">{{ number_format($total_all_profit, 2) }}</td>
             </tr>
         </tfoot>
         @endif

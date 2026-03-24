@@ -41,12 +41,13 @@ class PerformanceController extends Controller
         // Get dynamic mapping code => name
         $groupMap = BranchGroup::whereIn('code', $allowedGroups)->pluck('name', 'code')->toArray();
 
-        $selectedGroups = $request->input('groups', [$allowedGroups[0] ?? 'EL']);
+        // Default to all allowed groups if none in request
+        $selectedGroups = $request->input('groups', $allowedGroups);
         // Ensure selectedGroups only contains valid codes
         $selectedGroups = array_intersect($selectedGroups, $allowedGroups);
 
         if (empty($selectedGroups) && !empty($allowedGroups)) {
-            $selectedGroups = [$allowedGroups[0]];
+            $selectedGroups = $allowedGroups;
         }
 
         // selectedBranches logic
@@ -95,6 +96,162 @@ class PerformanceController extends Controller
 
         $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups, $selectedBranches);
         return view('finance.performance.monthly', compact('data', 'year', 'month', 'selectedGroups', 'selectedBranches', 'groupMap'));
+    }
+
+    /**
+     * Show Yearly Breakdown.
+     */
+    public function yearly(Request $request, $year)
+    {
+        $viewData = $this->getYearlyData($request, $year);
+        return view('finance.performance.yearly', $viewData);
+    }
+
+    /**
+     * พิมพ์รายงานสรุปรายปี (Yearly Summary Print)
+     */
+    public function printYearly(Request $request, $year)
+    {
+        $viewData = $this->getYearlyData($request, $year);
+        return view('finance.performance.print-yearly', $viewData);
+    }
+
+    /**
+     * พิมพ์รายงานรายรับอย่างละเอียดรายปี (Yearly Revenue Detail Print)
+     */
+    public function printYearlyRevenue(Request $request, $year)
+    {
+        $viewData = $this->getYearlyData($request, $year);
+        return view('finance.performance.print-yearly-revenue', $viewData);
+    }
+
+    /**
+     * พิมพ์รายงานรายจ่ายอย่างละเอียดรายปี (Yearly Expense Detail Print)
+     */
+    public function printYearlyExpense(Request $request, $year)
+    {
+        $viewData = $this->getYearlyData($request, $year);
+        return view('finance.performance.print-yearly-expense', $viewData);
+    }
+
+    /**
+     * Helper to get yearly aggregated data
+     */
+    private function getYearlyData(Request $request, $year)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $allowedGroups = BranchGroup::pluck('code')->toArray();
+        if ($user->hasRole('external-branch')) {
+            $allowedGroups = array_intersect($allowedGroups, $user->branches ?? []);
+        }
+
+        $selectedGroups = $request->input('groups', $allowedGroups);
+        $selectedGroups = array_intersect($selectedGroups, $allowedGroups);
+        $selectedBranches = $request->input('branches', []);
+
+        $groupMap = BranchGroup::whereIn('code', $allowedGroups)->pluck('name', 'code')->toArray();
+
+        // Aggregate data for the whole year
+        $yearlyData = [
+            'school_revenue' => 0,
+            'local_school_revenue' => 0,
+            'api_school_revenue' => 0,
+            'rv_revenue' => 0,
+            'pv_expense' => 0,
+            'payroll_expense' => 0,
+            'total_revenue' => 0,
+            'total_expense' => 0,
+            'profit' => 0,
+            'details' => [
+                'school_groups' => collect(),
+                'rv_items' => collect(),
+                'pv_items' => collect(),
+                'pv_groups' => collect(),
+                'payroll_items' => collect(),
+                'payroll_groups' => collect(),
+                'api_revenue_list' => [],
+            ]
+        ];
+
+        for ($m = 1; $m <= 12; $m++) {
+            $data = $this->calculateMonthlyData($year, $m, true, $selectedGroups, $selectedBranches);
+            
+            $yearlyData['school_revenue'] += $data['school_revenue'];
+            $yearlyData['local_school_revenue'] += $data['local_school_revenue'];
+            $yearlyData['api_school_revenue'] += $data['api_school_revenue'];
+            $yearlyData['rv_revenue'] += $data['rv_revenue'];
+            $yearlyData['pv_expense'] += $data['pv_expense'];
+            $yearlyData['payroll_expense'] += $data['payroll_expense'];
+            $yearlyData['total_revenue'] += $data['total_revenue'];
+            $yearlyData['total_expense'] += $data['total_expense'];
+            $yearlyData['profit'] += $data['profit'];
+
+            // Merge details
+            $yearlyData['details']['school_groups'] = $yearlyData['details']['school_groups']->concat($data['details']['school_groups']);
+            $yearlyData['details']['rv_items'] = $yearlyData['details']['rv_items']->concat($data['details']['rv_items']);
+            $yearlyData['details']['pv_items'] = $yearlyData['details']['pv_items']->concat($data['details']['pv_items']);
+            $yearlyData['details']['pv_groups'] = $yearlyData['details']['pv_groups']->concat($data['details']['pv_groups']);
+            $yearlyData['details']['payroll_items'] = $yearlyData['details']['payroll_items']->concat($data['details']['payroll_items']);
+            $yearlyData['details']['payroll_groups'] = $yearlyData['details']['payroll_groups']->concat($data['details']['payroll_groups']);
+            $yearlyData['details']['api_revenue_list'] = array_merge($yearlyData['details']['api_revenue_list'], $data['details']['api_revenue_list']);
+        }
+
+        // Post-process merged details (grouping them again)
+        $yearlyData['details']['school_groups'] = $yearlyData['details']['school_groups']->groupBy('group')->map(function($items, $group) {
+            return (object)[
+                'group' => $group,
+                'title' => $items->first()->title,
+                'total_amount' => $items->sum('total_amount'),
+                'receipt_count' => $items->sum('receipt_count'),
+                'student_count' => $items->sum('student_count'),
+            ];
+        })->sortByDesc('total_amount')->values();
+
+        $yearlyData['details']['pv_groups'] = $yearlyData['details']['pv_groups']->groupBy('pay_to')->map(function($items, $payee) {
+            return (object)[
+                'pay_to' => $payee,
+                'total_amount' => $items->sum('total_amount'),
+            ];
+        })->sortByDesc('total_amount')->values();
+
+        $yearlyData['details']['payroll_groups'] = $yearlyData['details']['payroll_groups']->groupBy('department')->map(function($items, $dept) {
+            return (object)[
+                'department' => $dept,
+                'total_amount' => $items->sum('total_amount'),
+                'employee_count' => $items->max('employee_count'),
+            ];
+        })->sortByDesc('total_amount')->values();
+
+        // Group API list by branch
+        $apiMap = [];
+        foreach ($yearlyData['details']['api_revenue_list'] as $item) {
+            if (!isset($apiMap[$item->branch_code])) {
+                $apiMap[$item->branch_code] = (object)[
+                    'branch_code' => $item->branch_code,
+                    'branch_name' => $item->branch_name,
+                    'revenue' => 0,
+                    'source' => $item->source
+                ];
+            }
+            $apiMap[$item->branch_code]->revenue += $item->revenue;
+        }
+        $yearlyData['details']['api_revenue_list'] = array_values($apiMap);
+
+        // Fetch groups with branches for the UI filters
+        $groupsWithBranches = BranchGroup::with(['branches' => function($q) {
+            $q->active();
+        }])->whereIn('code', $allowedGroups)->get();
+        
+        return [
+            'data' => $yearlyData,
+            'year' => $year,
+            'selectedGroups' => $selectedGroups,
+            'selectedBranches' => $selectedBranches,
+            'groupMap' => $groupMap,
+            'groupsWithBranches' => $groupsWithBranches,
+            'allowedGroups' => $allowedGroups
+        ];
     }
 
     /**
@@ -490,11 +647,6 @@ class PerformanceController extends Controller
         return $summary;
     }
 
-    /**
-     * Fetch Revenue from Eimaths API with Internal Caching.
-     *
-     * @return array Map of branch_code => revenue
-     */
     private static $eimathsCache = [];
     private function fetchEimathsRevenue($year, $month)
     {

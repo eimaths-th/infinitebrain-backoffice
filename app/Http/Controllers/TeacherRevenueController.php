@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\History;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SchoolPrice;
+use App\Models\PayrollIncomeItem;
+use App\Models\PayrollPeriod;
+use App\Models\Payroll;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,6 +20,7 @@ class TeacherRevenueController extends Controller
 {
     /** จำนวนชั่วโมงต่อคอร์สมาตรฐาน */
     const HOURS_PER_COURSE = 8;
+    private $payroll_cache = [];
 
     public function __construct()
     {
@@ -75,24 +79,109 @@ class TeacherRevenueController extends Controller
             $query->whereMonth('datetime', $month);
         }
 
-        $histories = $query->with(['student', 'subject'])->get();
+        $histories = $query->with(['student', 'subject', 'user'])->get();
 
         // คำนวณรายได้ครูแต่ละคน
         $teacher_revenue = [];
         $unmatched_records = []; // รายการที่ไม่พบใบเสร็จ
+        
+        $total_all_hours = 0;
+        $total_all_revenue = 0;
+        $total_all_cost = 0;
+        $total_all_wage = 0;
+        $total_all_sessions = 0;
 
+        // ขั้นตอนที่ 1: รวบรวมข้อมูลพื้นฐานและชั่วโมงสอนรวมต่อเดือน
+        $temp_data = [];
+        $monthly_summary = []; // [teacher_id][month_key] => total_hours
+        
         foreach ($histories as $history) {
             $teacher_id = $history->user_id;
+            if (!$teacher_id) continue;
 
-            // คำนวณชั่วโมงสอนจาก stime → etime
             $teaching_hours = $this->CalculateHours($history->stime, $history->etime);
             if ($teaching_hours <= 0) continue;
 
-            // หาราคาคอร์สจาก school_price
-            $price_per_course = $this->FindCoursePrice($history);
+            $price_data = $this->FindCoursePrice($history);
+            $history_month = Carbon::parse($history->datetime)->format('Y-m');
 
-            if ($price_per_course === null) {
-                // ไม่พบใบเสร็จ → เก็บเป็นรายการ unmatched
+            if ($price_data === null) {
+                $temp_data[] = [
+                    'teacher_id' => $teacher_id,
+                    'is_valid' => false,
+                    'history' => $history,
+                    'hours' => $teaching_hours,
+                    'month_key' => $history_month
+                ];
+            } else {
+                $temp_data[] = [
+                    'teacher_id' => $teacher_id,
+                    'is_valid' => true,
+                    'history' => $history,
+                    'hours' => $teaching_hours,
+                    'price_data' => $price_data,
+                    'month_key' => $history_month
+                ];
+            }
+            
+            // สะสมชั่วโมงสอนรวมต่อเดือนของครูแต่ละคนเพื่อใช้หารเฉลี่ยค่าจ้าง
+            if (!isset($monthly_summary[$teacher_id][$history_month])) {
+                $monthly_summary[$teacher_id][$history_month] = 0;
+            }
+            $monthly_summary[$teacher_id][$history_month] += $teaching_hours;
+        }
+
+        // ขั้นตอนที่ 2: ดึงรายได้จาก Payroll และคำนวณสะสม
+        foreach ($temp_data as $data) {
+            $teacher_id = $data['teacher_id'];
+            $history = $data['history'];
+            $teaching_hours = $data['hours'];
+            $month_key = $data['month_key'];
+
+            if (!isset($teacher_revenue[$teacher_id])) {
+                $teacher_revenue[$teacher_id] = [
+                    'teacher_id' => $teacher_id,
+                    'teacher_name' => $history->user->name ?? 'User ID: ' . $teacher_id,
+                    'total_hours' => 0,
+                    'total_revenue' => 0,
+                    'total_cost' => 0,
+                    'total_wage' => 0,
+                    'session_count' => 0,
+                    'monthly' => [],
+                ];
+            }
+
+            // คำนวณค่าจ้าง (เฉลี่ยจาก Payroll รวมทุกรายการของครูในเดือนนั้น)
+            $total_paid_in_month = $this->GetMonthlyPayrollTotal($teacher_id, $history->datetime);
+            $total_hours_in_month = $monthly_summary[$teacher_id][$month_key] ?? 0;
+            
+            // ปันส่วนค่าจ้างตามชั่วโมงสอน: (ยอดรับจริงทั้งหมด / ชั่วโมงสอนรวมทั้งหมด) * ชั่วโมงสอนของ Session นี้
+            $wage = 0;
+            if ($total_hours_in_month > 0) {
+                $wage = ($total_paid_in_month / $total_hours_in_month) * $teaching_hours;
+            }
+
+            // สะสมยอดรวมครู (ชั่วโมงและค่าจ้าง คิดจากทุก Session ที่มีการบันทึกการสอน)
+            $teacher_revenue[$teacher_id]['total_hours'] += $teaching_hours;
+            $teacher_revenue[$teacher_id]['total_wage'] += $wage;
+            $teacher_revenue[$teacher_id]['session_count']++;
+
+            // สะสมยอดรายเดือน (ส่วนของค่าจ้างและชื่อเดือน)
+            if (!isset($teacher_revenue[$teacher_id]['monthly'][$month_key])) {
+                $teacher_revenue[$teacher_id]['monthly'][$month_key] = [
+                    'hours' => 0,
+                    'revenue' => 0,
+                    'cost' => 0,
+                    'wage' => 0,
+                    'sessions' => 0,
+                ];
+            }
+            $teacher_revenue[$teacher_id]['monthly'][$month_key]['hours'] += $teaching_hours;
+            $teacher_revenue[$teacher_id]['monthly'][$month_key]['wage'] += $wage;
+            $teacher_revenue[$teacher_id]['monthly'][$month_key]['sessions']++;
+
+            if (!$data['is_valid']) {
+                // จัดการรายการที่ไม่มีใบเสร็จ (Unmatched)
                 $unmatched_records[] = (object) [
                     'history_id' => $history->id,
                     'student_name' => $history->student
@@ -105,73 +194,58 @@ class TeacherRevenueController extends Controller
                     'etime' => $history->etime,
                     'teaching_hours' => $teaching_hours,
                     'teacher_id' => $teacher_id,
+                    'teacher_name' => $history->user->name ?? 'ครู ID: ' . $teacher_id,
                 ];
+                
+                // สะสมยอดรวมทั้งสถาบัน (เฉพาะส่วนที่เป็นต้นทุนครู)
+                $total_all_hours += $teaching_hours;
+                $total_all_wage += $wage;
+                $total_all_sessions++;
                 continue;
             }
 
-            // คำนวณรายได้: (ราคาคอร์ส / 8) × ชั่วโมงสอน
-            $revenue_per_hour = $price_per_course / self::HOURS_PER_COURSE;
+            $price_data = $data['price_data'];
+
+            // คำนวณรายได้และต้นทุนวัสดุ
+            $revenue_per_hour = $price_data['net_tuition'] / self::HOURS_PER_COURSE;
             $revenue = $revenue_per_hour * $teaching_hours;
+            $cost_share = ($price_data['cost'] / self::HOURS_PER_COURSE) * $teaching_hours;
 
-            // สะสมรายได้ตามครู
-            if (!isset($teacher_revenue[$teacher_id])) {
-                $teacher_revenue[$teacher_id] = [
-                    'teacher_id' => $teacher_id,
-                    'teacher_name' => '',
-                    'total_hours' => 0,
-                    'total_revenue' => 0,
-                    'session_count' => 0,
-                    'monthly' => [],
-                ];
-            }
-
-            $teacher_revenue[$teacher_id]['total_hours'] += $teaching_hours;
+            // สะสมยอดรวมครู (เฉพาะส่วนรายได้และต้นทุนวัสดุ)
             $teacher_revenue[$teacher_id]['total_revenue'] += $revenue;
-            $teacher_revenue[$teacher_id]['session_count']++;
+            $teacher_revenue[$teacher_id]['total_cost'] += $cost_share;
 
-            // สะสมรายเดือน
-            $history_month = Carbon::parse($history->datetime)->format('Y-m');
-            if (!isset($teacher_revenue[$teacher_id]['monthly'][$history_month])) {
-                $teacher_revenue[$teacher_id]['monthly'][$history_month] = [
-                    'hours' => 0,
-                    'revenue' => 0,
-                    'sessions' => 0,
-                ];
-            }
-            $teacher_revenue[$teacher_id]['monthly'][$history_month]['hours'] += $teaching_hours;
-            $teacher_revenue[$teacher_id]['monthly'][$history_month]['revenue'] += $revenue;
-            $teacher_revenue[$teacher_id]['monthly'][$history_month]['sessions']++;
+            // สะสมยอดรายเดือน (เฉพาะส่วนรายได้และต้นทุนวัสดุ)
+            $teacher_revenue[$teacher_id]['monthly'][$month_key]['revenue'] += $revenue;
+            $teacher_revenue[$teacher_id]['monthly'][$month_key]['cost'] += $cost_share;
+
+            // สะสมยอดรวมทั้งสถาบัน
+            $total_all_hours += $teaching_hours;
+            $total_all_revenue += $revenue;
+            $total_all_cost += $cost_share;
+            $total_all_wage += $wage;
+            $total_all_sessions++;
         }
 
-        // ดึงชื่อครูทั้งหมด
-        $teacher_ids = array_keys($teacher_revenue);
-        $all_teacher_ids = array_merge($teacher_ids, array_column($unmatched_records, 'teacher_id'));
-        $teachers = User::whereIn('id', array_unique($all_teacher_ids))->pluck('name', 'id');
+        $total_all_profit = $total_all_revenue - $total_all_wage;
 
+        // เรียงลำดับรายเดือน
         foreach ($teacher_revenue as &$data) {
-            $data['teacher_name'] = $teachers[$data['teacher_id']] ?? 'ครู ID: ' . $data['teacher_id'];
-            // เรียงลำดับรายเดือนตาม key
             ksort($data['monthly']);
         }
         unset($data);
-
-        // เรียงตามรายได้มากไปน้อย
-        usort($teacher_revenue, function ($a, $b) {
-            return $b['total_revenue'] <=> $a['total_revenue'];
-        });
-
-        // เพิ่มชื่อครูใน unmatched_records
-        foreach ($unmatched_records as &$record) {
-            $record->teacher_name = $teachers[$record->teacher_id] ?? 'ครู ID: ' . $record->teacher_id;
-        }
-        unset($record);
 
         return compact(
             'teacher_revenue',
             'unmatched_records',
             'year',
             'month',
-            'teachers'
+            'total_all_hours',
+            'total_all_revenue',
+            'total_all_cost',
+            'total_all_wage',
+            'total_all_profit',
+            'total_all_sessions'
         );
     }
 
@@ -194,23 +268,58 @@ class TeacherRevenueController extends Controller
     }
 
     /**
-     * ค้นหาราคาคอร์สจาก school_price
-     * 1. ถ้ามี school_price_id → ใช้ตรง
-     * 2. ถ้าไม่มี → ค้นหาตาม student_id + subject_id และกรองเวลาตาม period ใบเสร็จ
-     * 3. ถ้ายังไม่เจอ → return null
+     * ค้นหายอดเงินค่าจ้างครูรวมทุกรายการทั้งเดือน จากระบบ Payroll
      */
+    private function GetMonthlyPayrollTotal($teacher_id, $datetime)
+    {
+        $date = Carbon::parse($datetime);
+        $year = $date->year;
+        $month = $date->month;
+        $be_year = $year + 543;
+        $cache_key = "{$teacher_id}-{$year}-{$month}-total";
+
+        if (isset($this->payroll_cache[$cache_key])) {
+            return $this->payroll_cache[$cache_key];
+        }
+
+        $periods = PayrollPeriod::where('year', $be_year)
+            ->where('month', $month)
+            ->pluck('id');
+
+        if ($periods->isEmpty()) {
+            return $this->payroll_cache[$cache_key] = 0;
+        }
+
+        $payroll_records = Payroll::whereIn('payroll_period_id', $periods)
+            ->where('user_id', $teacher_id)
+            ->get();
+
+        if ($payroll_records->isEmpty()) {
+            return $this->payroll_cache[$cache_key] = 0;
+        }
+
+        // ใช้ยอด net_pay รวมทุกใบของเดือนนั้น เพื่อให้ตรงกับยอดที่ผู้ใช้เห็นจริงในใบ Payroll
+        $total_net_pay = $payroll_records->sum('net_pay');
+
+        return $this->payroll_cache[$cache_key] = (float)$total_net_pay;
+    }
+
     private function FindCoursePrice(History $history)
     {
         // กรณี 1: มี school_price_id → ใช้ตรง
         if ($history->school_price_id) {
-            $school_price = SchoolPrice::find($history->school_price_id);
-            if ($school_price && $school_price->total > 0) {
-                return (float) $school_price->total;
+            $sp = SchoolPrice::find($history->school_price_id);
+            if ($sp && $sp->total > 0) {
+                $cost = (float)($sp->bookprice ?? 0) + (float)($sp->media_price ?? 0) + (float)($sp->entrance_fee ?? 0);
+                return [
+                    'total' => (float)$sp->total,
+                    'cost' => $cost,
+                    'net_tuition' => (float)$sp->total - $cost
+                ];
             }
         }
 
         // กรณี 2: ไม่มี school_price_id → ค้นหาตาม student_id + subject_id
-        // ต้องตรวจสอบข้อมูล period เพื่อความแม่นยำ (เพราะอาจจ่ายเงินก่อนเดือนเรียน)
         $matched_prices = SchoolPrice::where('student_id', $history->student_id)
             ->where('subject', $history->subject_id)
             ->where('course_type', 1)
@@ -225,9 +334,7 @@ class TeacherRevenueController extends Controller
             if (empty($last_period)) continue;
 
             try {
-                // Logic แยก period แบบเดียวกับ HistoryController::store()
                 $period = explode(' - ', $last_period);
-
                 if (count($period) == 1) {
                     $periods = explode('-', $last_period);
                     $startMonth = Carbon::parse("$periods[0]-$periods[1]")->format('Y-m');
@@ -237,22 +344,23 @@ class TeacherRevenueController extends Controller
                     $endMonth = Carbon::parse($period[1])->format('Y-m');
                 }
 
-                // บวกเพิ่ม 1 เดือนตาม logic ใบเสร็จ (ครอบคลุมถึงสิ้นเดือนของ endMonth)
                 $endMonth = Carbon::parse($endMonth)->addMonth()->format('Y-m');
-
                 $startMonth_parsed = Carbon::parse($startMonth)->startOfMonth();
                 $endMonth_parsed = Carbon::parse($endMonth)->endOfMonth();
 
                 if ($req_date->between($startMonth_parsed, $endMonth_parsed)) {
-                    return (float) $sp->total;
+                    $cost = (float)($sp->bookprice ?? 0) + (float)($sp->media_price ?? 0) + (float)($sp->entrance_fee ?? 0);
+                    return [
+                        'total' => (float)$sp->total,
+                        'cost' => $cost,
+                        'net_tuition' => (float)$sp->total - $cost
+                    ];
                 }
             } catch (\Exception $e) {
-                // ข้ามไปเช็คใบเสร็จก่อนหน้าหาก parse period ไม่ผ่าน
                 continue;
             }
         }
 
-        // กรณี 3: ไม่เจอเลย → return null
         return null;
     }
 }
