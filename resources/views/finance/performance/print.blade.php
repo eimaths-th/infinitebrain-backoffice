@@ -122,19 +122,21 @@
 
     <div class="header">
         @php
-            $groupMap = [
-                'EL' => 'Eye Level',
-                'IF' => 'Infinite Brain',
-                'META' => 'META Knowledge',
-                'EiMaths' => 'eiMaths',
-            ];
             $titles = [];
             foreach ($selectedGroups ?? [] as $g) {
                 $titles[] = $groupMap[$g] ?? $g;
             }
             $displayTitle = implode(' & ', $titles);
+            
+            $branchTitles = [];
+            if (!empty($selectedBranches)) {
+                $branchTitles = \App\Models\Branch::whereIn('code', $selectedBranches)->pluck('name')->toArray();
+            }
         @endphp
         รายงานผลประกอบการ {{ $displayTitle }} ปี {{ $year + 543 }}<br>
+        @if(!empty($branchTitles))
+            <small style="font-size: 10pt;">สาขา: {{ implode(', ', $branchTitles) }}</small><br>
+        @endif
         ประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }}
     </div>
 
@@ -158,6 +160,14 @@
             <tr>
                 <td colspan="2">ค่าคอร์ส {{ $item->group }}</td>
                 <td class="text-right">{{ number_format($item->total_amount, 2) }}</td>
+                <td></td>
+            </tr>
+        @endforeach
+
+        @foreach ($data['details']['api_revenue_list'] as $item)
+            <tr>
+                <td colspan="2">ค่าคอร์ส (Math) {{ $item->branch_name }}</td>
+                <td class="text-right">{{ number_format($item->revenue, 2) }}</td>
                 <td></td>
             </tr>
         @endforeach

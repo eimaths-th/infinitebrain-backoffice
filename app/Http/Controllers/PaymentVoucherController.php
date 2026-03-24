@@ -6,6 +6,8 @@ use App\Models\PaymentVoucher;
 use App\Models\PaymentVoucherItem;
 use App\Models\PaymentVoucherLog;
 use App\Models\PaymentVoucherAttachment;
+use App\Models\Branch;
+use App\Models\BranchGroup;
 use App\Exports\PaymentVoucherExport;
 use App\Imports\PaymentVoucherImport;
 use Illuminate\Http\Request;
@@ -34,12 +36,9 @@ class PaymentVoucherController extends Controller
             $query->where('branch_code', $request->branch_code);
         }
 
-        // Filter by branch group
+        // Filter by branch group (using new field)
         if ($request->filled('branch_group')) {
-            $groupBranchCodes = PaymentVoucher::$groupBranchCodes;
-            if (isset($groupBranchCodes[$request->branch_group])) {
-                $query->whereIn('branch_code', $groupBranchCodes[$request->branch_group]);
-            }
+            $query->where('group_branch_code', $request->branch_group);
         }
 
         // Filter by category
@@ -69,30 +68,32 @@ class PaymentVoucherController extends Controller
 
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        $branchCodes = PaymentVoucher::$branchCodes;
-        $groupBranchCodes = PaymentVoucher::$groupBranchCodes;
 
-        // Filter branch and group lists for external users
+        // Database-driven branch and group lists
+        $branchQuery = Branch::active();
+        $groupQuery = BranchGroup::has('branches');
+
+        // Filter for external users
         if ($user->hasRole('external-branch')) {
             $userBranches = $user->branches ?? [];
-            $resolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
             
-            $branchCodes = array_filter($branchCodes, function ($code) use ($resolvedBranches) {
-                return in_array($code, $resolvedBranches);
-            }, ARRAY_FILTER_USE_KEY);
+            $branchQuery->whereHas('group', function($q) use ($userBranches) {
+                $q->whereIn('code', $userBranches);
+            });
 
-            $groupBranchCodes = array_filter($groupBranchCodes, function ($name) use ($userBranches) {
-                return in_array($name, $userBranches);
-            }, ARRAY_FILTER_USE_KEY);
+            $groupQuery->whereIn('code', $userBranches);
         }
 
+        $branchCodes = $branchQuery->pluck('name', 'code')->toArray();
+        $groupBranchCodes = $groupQuery->pluck('name', 'code')->toArray();
+
         // Use role-based permission
-        // บัญชีทั่วไปดูได้เฉพาะที่ตัวเองสร้าง
+        // บัญชีจะเห็นแค่ใบสำคัญจ่ายที่ตัวเองเป็นคนสร้างเท่านั้น
         if ($user->hasRole('account')) {
             $query->where('created_by', Auth::id());
         }
 
-        // External user filter by assigned branches (รองรับการขยายกลุ่มสาขา)
+        // External user filter by assigned branches (คัดกรองตามสาขาที่ได้รับมอบหมาย)
         if ($user->hasRole('external-branch')) {
             $userBranches = $user->branches ?? [];
             $resolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
@@ -113,26 +114,31 @@ class PaymentVoucherController extends Controller
      */
     public function create()
     {
-        $branchCodes = PaymentVoucher::$branchCodes;
         /** @var \App\Models\User $user */
         $user = Auth::user();
-
-        $defaultBranch = 'ELPV'; // Default for admin
-
+        
+        $branchQuery = Branch::active();
         if ($user->hasRole('external-branch')) {
             $userBranches = $user->branches ?? [];
-            $resolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
-            $branchCodes = array_filter($branchCodes, function ($code) use ($resolvedBranches) {
-                return in_array($code, $resolvedBranches);
-            }, ARRAY_FILTER_USE_KEY);
+            $branchQuery->whereHas('group', function($q) use ($userBranches) {
+                $q->whereIn('code', $userBranches);
+            });
+        }
+        
+        $branchCodes = $branchQuery->pluck('name', 'code')->toArray();
+        $defaultBranch = array_key_first($branchCodes) ?? 'EL';
 
-            // Set default branch to the first assigned one
-            if (!empty($branchCodes)) {
-                $defaultBranch = array_key_first($branchCodes);
-            }
+        $branch = Branch::where('code', $defaultBranch)->first();
+        $voucherCode = $branch->pv_prefix ?? ($defaultBranch . 'PV');
+
+        $voucherCodeMap = PaymentVoucher::$voucherCodes[$defaultBranch] ?? null;
+        if (is_array($voucherCodeMap)) {
+            $voucherCode = $voucherCodeMap['PV'] ?? ($voucherCodeMap['default'] ?? ($defaultBranch . 'PV'));
+        } else {
+            $voucherCode = $voucherCodeMap ?? ($defaultBranch . 'PV');
         }
 
-        $voucherNo = PaymentVoucher::generateVoucherNo($defaultBranch);
+        $voucherNo = PaymentVoucher::generateVoucherNo($voucherCode);
         return view('payment_voucher.create', compact('voucherNo', 'branchCodes', 'defaultBranch'));
     }
 
@@ -171,11 +177,11 @@ class PaymentVoucherController extends Controller
                 $userBranches = Auth::user()->branches ?? [];
                 $resolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
                 if (!in_array($branchCode, $resolvedBranches)) {
-                    return back()->with('error', 'คุณไม่มีสิทธิ์สร้างและจัดการใบสำคัญจ่ายของสาขานี้')->withInput();
+                    return back()->with('error', 'คุณไม่มีสิทธิ์เข้าถึงหรือแก้ไขใบสำคัญจ่ายของสาขานี้')->withInput();
                 }
             }
 
-            // บันทึกหรืออัปเดตข้อมูลผู้รับเงิน (Payee)
+            // ค้นหาหรือสร้างข้อมูลผู้รับเงิน (Payee)
             $payee = null;
             if ($request->pay_to) {
                 $payee = \App\Models\Payee::findOrCreateByName($request->pay_to, [
@@ -216,36 +222,40 @@ class PaymentVoucherController extends Controller
                 }
             }
 
-            // สูตร: ยอดเบิก - รายการหัก - หัก ณ ที่จ่าย = ยอดสุทธิ
+            // สูตร: ยอดเงินรวม - รายการหัก - หัก ณ ที่จ่าย = ยอดเงินสุทธิ
             $netAmount = $totalAmount - $totalDeductionAmount - $taxAmount;
 
-            // กำหนดสถานะ
-            $status = PaymentVoucher::STATUS_DRAFT;
-            $isSkipApproval = false;
-            
-            if ($request->submit) {
-                /** @var \App\Models\User $user */
-                $user = Auth::user();
-
-                if ($request->skip_approval && $user->can('payment-voucher.approve')) {
-                    $status = PaymentVoucher::STATUS_APPROVED;
-                    $isSkipApproval = true;
-                } else {
-                    $status = PaymentVoucher::STATUS_PENDING;
-                }
+            // Determine codes from DB
+            $branch = Branch::where('code', $request->branch_code)->with('group')->first();
+            if (!$branch) {
+                return back()->with('error', 'ไม่พบข้อมูลสาขาที่ระบุ')->withInput();
             }
 
-            // สร้างใบสำคัญจ่าย
+            $isBankFee = $request->category == PaymentVoucher::CAT_BANK_FEE;
+            $voucherCode = $isBankFee ? ($branch->bf_prefix ?? $branch->code . 'BF') : ($branch->pv_prefix ?? $branch->code . 'PV');
+            $groupBranchCode = $branch->group->code ?? '';
+
+            // กำหนดสถานะ
+            $status = $request->submit ? PaymentVoucher::STATUS_PENDING : PaymentVoucher::STATUS_DRAFT;
+            $isSkipApproval = false;
+            
+            if ($request->submit && $request->skip_approval && Auth::user()->can('payment-voucher.approve')) {
+                $status = PaymentVoucher::STATUS_APPROVED;
+                $isSkipApproval = true;
+            }
+
             $voucher = PaymentVoucher::create([
-                'voucher_no' => PaymentVoucher::generateVoucherNo($branchCode),
+                'voucher_no' => PaymentVoucher::generateVoucherNo($voucherCode),
+                'voucher_code' => $voucherCode,
                 'branch_code' => $branchCode,
+                'group_branch_code' => $groupBranchCode,
                 'voucher_date' => $request->voucher_date,
                 'payment_cycle' => $request->payment_cycle,
                 'pay_to' => $request->pay_to,
                 'pay_to_address' => $request->pay_to_address,
                 'pay_to_account_no' => $request->pay_to_account_no,
                 'pay_to_bank_name' => $request->pay_to_bank_name,
-                'payee_id' => $payee?->id,
+                'payee_id' => $payee->id ?? null,
                 'remark' => $request->remark,
                 'status' => $status,
                 'created_by' => Auth::id(),
@@ -263,10 +273,9 @@ class PaymentVoucherController extends Controller
                 'total_amount' => $totalAmount,
                 'is_salary' => $request->boolean('is_salary'),
                 'category' => $request->boolean('is_salary') ? null : $request->category,
-
             ]);
 
-            // อัพโหลดไฟล์แนบของ Voucher
+            // อัปโหลดไฟล์แนบของ Voucher
             if ($request->hasFile('voucher_attachments')) {
                 foreach ($request->file('voucher_attachments') as $file) {
                     $this->storeAttachment($file, $voucher->id, null, PaymentVoucherAttachment::TYPE_VOUCHER);
@@ -285,7 +294,7 @@ class PaymentVoucherController extends Controller
                     ]);
                     $totalAmount += $item['amount'];
 
-                    // อัพโหลดไฟล์แนบของ Item
+                    // อัปโหลดไฟล์แนบของ Item
                     if (isset($item['attachments']) && is_array($item['attachments'])) {
                         foreach ($item['attachments'] as $file) {
                             if ($file instanceof \Illuminate\Http\UploadedFile) {
@@ -313,7 +322,7 @@ class PaymentVoucherController extends Controller
                 }
             }
 
-            // อัพเดทยอดรวม (recalculate)
+            // อัปเดตยอดรวม (recalculate)
             $netAmount = $totalAmount - $totalDeductionAmount - ($voucher->withholding_tax_amount ?? 0);
             $voucher->update([
                 'total_amount' => $totalAmount,
@@ -436,17 +445,28 @@ class PaymentVoucherController extends Controller
         }
 
         if (!$voucher->canEdit()) {
-            return back()->with('error', 'ไม่สามารถแก้ไขใบสำคัญจ่ายนี้ได้');
+            return back()->with('error', 'ไม่สามารถแก้ไขใบสำคัญจ่ายนี้ได้แล้ว');
         }
 
-        $branchCodes = PaymentVoucher::$branchCodes;
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        
+        $branchQuery = Branch::active();
+        if ($user->hasRole('external-branch')) {
+            $userBranches = $user->branches ?? [];
+            $branchQuery->whereHas('group', function($q) use ($userBranches) {
+                $q->whereIn('code', $userBranches);
+            });
+        }
+        
+        $branchCodes = $branchQuery->pluck('name', 'code')->toArray();
         return view('payment_voucher.edit', compact('voucher', 'branchCodes'));
     }
 
     /**
-     * อัพเดทใบสำคัญจ่าย
+     * อัปเดตใบสำคัญจ่าย
      */
-    public function update(Request $request, $id)
+        public function update(Request $request, $id)
     {
         $voucher = PaymentVoucher::findOrFail($id);
 
@@ -462,16 +482,17 @@ class PaymentVoucherController extends Controller
         }
 
         if (!$voucher->canEdit()) {
-            return back()->with('error', 'ไม่สามารถแก้ไขใบสำคัญจ่ายนี้ได้');
+            return back()->with('error', 'ไม่สามารถแก้ไขใบสำคัญจ่ายนี้ได้แล้ว');
         }
 
         $request->validate([
             'voucher_date' => 'required|date',
-            'payment_cycle' => 'nullable|string|max:100', // Added payment_cycle
+            'payment_cycle' => 'nullable|string|max:100',
             'pay_to' => 'required|string|max:255',
             'pay_to_address' => 'nullable|string',
             'pay_to_account_no' => 'nullable|string|max:50',
             'pay_to_bank_name' => 'nullable|string|max:100',
+            'branch_code' => 'required|string|max:50',
             'items' => 'required|array|min:1',
             'items.*.description' => 'required|string',
             'items.*.amount' => 'required|numeric|min:0',
@@ -490,7 +511,8 @@ class PaymentVoucherController extends Controller
         try {
             $oldStatus = $voucher->status;
 
-            // อัปเดตข้อมูลผู้รับเงิน (Payee) ถ้ามี
+            // Handle Payee
+            $payee = null;
             if ($request->pay_to) {
                 $payee = \App\Models\Payee::findOrCreateByName($request->pay_to, [
                     'address' => $request->pay_to_address,
@@ -500,20 +522,14 @@ class PaymentVoucherController extends Controller
                 ]);
             }
 
-            // คำนวณยอดเงินรวมและภาษีหัก ณ ที่จ่าย (Server-side calculation)
+            // Calculate Amounts
             $totalAmount = 0;
-            // ต้อง loop items จาก request ไม่ใช่ $voucher->items เพราะ items จะถูกลบสร้างใหม่
-            // แต่ใน logic เดิมมีการวนลูปข้างล่างเพื่อ create items ใหม่
-            // เราจะคำนวณ totalAmount จาก loop ของ request items ก่อนเพื่อคำนวณภาษี
-            if ($request->items) {
-                foreach ($request->items as $item) {
-                    if (!empty($item['description']) && ($item['amount'] ?? 0) > 0) {
-                        $totalAmount += $item['amount'];
-                    }
+            foreach ($request->items as $item) {
+                if (!empty($item['description']) && $item['amount'] > 0) {
+                    $totalAmount += $item['amount'];
                 }
             }
 
-            // คำนวณยอดรวมรายการหัก
             $totalDeductionAmount = 0;
             if ($request->deductions) {
                 foreach ($request->deductions as $deduction) {
@@ -523,30 +539,42 @@ class PaymentVoucherController extends Controller
                 }
             }
 
-            // คำนวณภาษีหัก ณ ที่จ่าย
             $taxRate = $request->withholding_tax_rate ?? 0.00;
-
             if ($taxRate > 0) {
                 $taxAmount = $totalAmount * ($taxRate / 100);
             } else {
                 $taxAmount = $request->input('withholding_tax_amount', 0);
-                if ($taxAmount > $totalAmount) {
-                    $taxAmount = $totalAmount;
-                }
             }
 
             $netAmount = $totalAmount - $totalDeductionAmount - $taxAmount;
 
-            // กำหนดสถานะ
-            $status = $request->submit ? PaymentVoucher::STATUS_PENDING : PaymentVoucher::STATUS_DRAFT;
+            $branchCode = $request->branch_code ?? $voucher->branch_code;
+            $branch = Branch::where('code', $branchCode)->with('group')->first();
+            if (!$branch) {
+                return back()->with('error', 'ไม่พบข้อมูลสาขาที่ระบุ')->withInput();
+            }
+
+            $isBankFee = $request->category == PaymentVoucher::CAT_BANK_FEE;
+            $voucherCode = $isBankFee ? ($branch->bf_prefix ?? $branchCode . 'BF') : ($branch->pv_prefix ?? $branchCode . 'PV');
+            $groupBranchCode = $branch->group->code ?? '';
+
+            // Regenerate voucher_no if draft and prefix changed
+            if ($voucher->status == PaymentVoucher::STATUS_DRAFT) {
+                if ($branchCode != $voucher->branch_code || $voucherCode != $voucher->voucher_code) {
+                    $voucher->voucher_no = PaymentVoucher::generateVoucherNo($voucherCode);
+                    $voucher->voucher_code = $voucherCode;
+                }
+            }
+
+            $status = $request->submit ? PaymentVoucher::STATUS_PENDING : $voucher->status;
             $isSkipApproval = false;
             
-            if ($request->submit && $request->skip_approval && $user->can('payment-voucher.approve')) {
+            if ($request->submit && $request->skip_approval && Auth::user()->can('payment-voucher.approve')) {
                 $status = PaymentVoucher::STATUS_APPROVED;
                 $isSkipApproval = true;
             }
 
-            // อัพเดทข้อมูลหลัก
+            // Update Main Record
             $voucher->update([
                 'voucher_date' => $request->voucher_date,
                 'payment_cycle' => $request->payment_cycle,
@@ -554,6 +582,9 @@ class PaymentVoucherController extends Controller
                 'pay_to_address' => $request->pay_to_address,
                 'pay_to_account_no' => $request->pay_to_account_no,
                 'pay_to_bank_name' => $request->pay_to_bank_name,
+                'branch_code' => $branchCode,
+                'group_branch_code' => $groupBranchCode,
+                'voucher_code' => $voucherCode,
                 'payee_id' => $payee->id ?? $voucher->payee_id,
                 'remark' => $request->remark,
                 'status' => $status,
@@ -570,20 +601,18 @@ class PaymentVoucherController extends Controller
                 'total_amount' => $totalAmount,
                 'is_salary' => $request->boolean('is_salary'),
                 'category' => $request->boolean('is_salary') ? null : $request->category,
-
             ]);
 
-            // อัพโหลดไฟล์แนบของ Voucher (เพิ่มใหม่)
+            // Handle Attachments
             if ($request->hasFile('voucher_attachments')) {
                 foreach ($request->file('voucher_attachments') as $file) {
-                    $this->storeAttachment($file, $voucher->id, null, PaymentVoucherAttachment::TYPE_VOUCHER);
+                    $this->storeAttachment($file, $voucher->id, null, \App\Models\PaymentVoucherAttachment::TYPE_VOUCHER);
                 }
             }
 
-            // ลบรายการเดิมและ attachments ของ items (cascade)
+            // Update Items (delete and re-create)
             $voucher->items()->delete();
 
-            $totalAmount = 0;
             foreach ($request->items as $index => $item) {
                 if (!empty($item['description']) && $item['amount'] > 0) {
                     $voucherItem = PaymentVoucherItem::create([
@@ -592,21 +621,17 @@ class PaymentVoucherController extends Controller
                         'description' => $item['description'],
                         'amount' => $item['amount'],
                     ]);
-                    $totalAmount += $item['amount'];
 
-                    // อัพโหลดไฟล์แนบของ Item
                     if (isset($item['attachments']) && is_array($item['attachments'])) {
                         foreach ($item['attachments'] as $file) {
                             if ($file instanceof \Illuminate\Http\UploadedFile) {
-                                $this->storeAttachment($file, $voucher->id, $voucherItem->id, PaymentVoucherAttachment::TYPE_ITEM);
+                                $this->storeAttachment($file, $voucher->id, $voucherItem->id, \App\Models\PaymentVoucherAttachment::TYPE_ITEM);
                             }
                         }
                     }
                 }
             }
 
-            // สร้างรายการหัก
-            $totalDeductionAmount = 0;
             if ($request->deductions) {
                 foreach ($request->deductions as $index => $deduction) {
                     if (!empty($deduction['description']) && ($deduction['amount'] ?? 0) > 0) {
@@ -617,20 +642,18 @@ class PaymentVoucherController extends Controller
                             'description' => $deduction['description'],
                             'amount' => $deduction['amount'],
                         ]);
-                        $totalDeductionAmount += $deduction['amount'];
                     }
                 }
             }
 
-            // อัพเดทยอดรวม (recalculate)
-            $netAmount = $totalAmount - $totalDeductionAmount - ($voucher->withholding_tax_amount ?? 0);
+            // Final Update for amounts
             $voucher->update([
                 'total_amount' => $totalAmount,
                 'total_deduction_amount' => $totalDeductionAmount,
-                'net_amount' => $netAmount,
+                'net_amount' => $totalAmount - $totalDeductionAmount - $voucher->withholding_tax_amount,
             ]);
 
-            // บันทึก Log
+            // Log Update
             PaymentVoucherLog::create([
                 'payment_voucher_id' => $voucher->id,
                 'action' => PaymentVoucherLog::ACTION_UPDATE,
@@ -642,53 +665,14 @@ class PaymentVoucherController extends Controller
 
             if ($request->submit) {
                 if ($isSkipApproval) {
-                    // Log Submit
-                    PaymentVoucherLog::create([
-                        'payment_voucher_id' => $voucher->id,
-                        'action' => PaymentVoucherLog::ACTION_SUBMIT,
-                        'from_status' => PaymentVoucher::STATUS_DRAFT,
-                        'to_status' => PaymentVoucher::STATUS_PENDING,
-                        'user_id' => Auth::id(),
-                        'user_name' => Auth::user()->name ?? 'System',
-                        'remark' => 'ข้ามการอนุมัติ (Skip Approval)',
-                    ]);
+                    PaymentVoucherLog::create(['payment_voucher_id' => $voucher->id, 'action' => PaymentVoucherLog::ACTION_SUBMIT, 'from_status' => PaymentVoucher::STATUS_DRAFT, 'to_status' => PaymentVoucher::STATUS_PENDING, 'user_id' => Auth::id(), 'user_name' => Auth::user()->name ?? 'System', 'remark' => 'ข้ามการอนุมัติ (Skip Approval)']);
+                    PaymentVoucherLog::create(['payment_voucher_id' => $voucher->id, 'action' => PaymentVoucherLog::ACTION_REVIEW, 'from_status' => PaymentVoucher::STATUS_PENDING, 'to_status' => PaymentVoucher::STATUS_REVIEWED, 'user_id' => Auth::id(), 'user_name' => Auth::user()->name ?? 'System', 'remark' => 'ข้ามการอนุมัติ (Skip Approval)']);
+                    PaymentVoucherLog::create(['payment_voucher_id' => $voucher->id, 'action' => PaymentVoucherLog::ACTION_APPROVE, 'from_status' => PaymentVoucher::STATUS_REVIEWED, 'to_status' => PaymentVoucher::STATUS_APPROVED, 'user_id' => Auth::id(), 'user_name' => Auth::user()->name ?? 'System', 'remark' => 'ข้ามการอนุมัติ (Skip Approval)']);
 
-                    // Log Review
-                    PaymentVoucherLog::create([
-                        'payment_voucher_id' => $voucher->id,
-                        'action' => PaymentVoucherLog::ACTION_REVIEW,
-                        'from_status' => PaymentVoucher::STATUS_PENDING,
-                        'to_status' => PaymentVoucher::STATUS_REVIEWED,
-                        'user_id' => Auth::id(),
-                        'user_name' => Auth::user()->name ?? 'System',
-                        'remark' => 'ข้ามการอนุมัติ (Skip Approval)',
-                    ]);
-
-                    // Log Approve
-                    PaymentVoucherLog::create([
-                        'payment_voucher_id' => $voucher->id,
-                        'action' => PaymentVoucherLog::ACTION_APPROVE,
-                        'from_status' => PaymentVoucher::STATUS_REVIEWED,
-                        'to_status' => PaymentVoucher::STATUS_APPROVED,
-                        'user_id' => Auth::id(),
-                        'user_name' => Auth::user()->name ?? 'System',
-                        'remark' => 'ข้ามการอนุมัติ (Skip Approval)',
-                    ]);
-
-                    // Notify via LINE (Approved)
                     $lineService = new \App\Services\LineMessagingService();
                     $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_APPROVED, $request->boolean('is_test'));
                 } else {
-                    PaymentVoucherLog::create([
-                        'payment_voucher_id' => $voucher->id,
-                        'action' => PaymentVoucherLog::ACTION_SUBMIT,
-                        'from_status' => PaymentVoucher::STATUS_DRAFT,
-                        'to_status' => PaymentVoucher::STATUS_PENDING,
-                        'user_id' => Auth::id(),
-                        'user_name' => Auth::user()->name ?? 'System',
-                    ]);
-
-                    // Notify via LINE (Pending)
+                    PaymentVoucherLog::create(['payment_voucher_id' => $voucher->id, 'action' => PaymentVoucherLog::ACTION_SUBMIT, 'from_status' => PaymentVoucher::STATUS_DRAFT, 'to_status' => PaymentVoucher::STATUS_PENDING, 'user_id' => Auth::id(), 'user_name' => Auth::user()->name ?? 'System']);
                     $lineService = new \App\Services\LineMessagingService();
                     $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_PENDING, $request->boolean('is_test'));
                 }
@@ -712,7 +696,7 @@ class PaymentVoucherController extends Controller
         $voucher = PaymentVoucher::findOrFail($id);
 
         if (!$voucher->canEdit()) {
-            return back()->with('error', 'ไม่สามารถลบใบสำคัญจ่ายนี้ได้');
+            return back()->with('error', 'ไม่สามารถลบใบสำคัญจ่ายนี้ได้แล้ว');
         }
 
         $voucher->delete();
@@ -722,19 +706,19 @@ class PaymentVoucherController extends Controller
     }
 
     /**
-     * ลบใบสำคัญจ่ายและข้อมูลที่เกี่ยวข้องทั้งหมด (Force Delete)
+     * ลบใบสำคัญจ่ายถาวร (Force Delete)
      */
 
 
     /**
-     * ตรวจสอบใบสำคัญจ่าย (Reviewer)
+     * ตรวจสอบสิทธิใบสำคัญจ่าย (Reviewer)
      */
     public function review(Request $request, $id)
     {
         $voucher = PaymentVoucher::findOrFail($id);
 
         if (!$voucher->canReview()) {
-            return back()->with('error', 'ไม่สามารถตรวจสอบใบสำคัญจ่ายนี้ได้');
+            return back()->with('error', 'ไม่สามารถตรวจสอบสิทธิใบสำคัญจ่ายนี้ได้แล้ว');
         }
 
         $oldStatus = $voucher->status;
@@ -762,7 +746,7 @@ class PaymentVoucherController extends Controller
         $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_REVIEWED, $request->boolean('is_test'));
 
         return redirect()->route('payment-voucher.show', $voucher->id)
-            ->with('success', 'ตรวจสอบใบสำคัญจ่ายเรียบร้อยแล้ว');
+            ->with('success', 'ตรวจสอบสิทธิใบสำคัญจ่ายเรียบร้อยแล้ว');
     }
 
     /**
@@ -773,7 +757,7 @@ class PaymentVoucherController extends Controller
         $voucher = PaymentVoucher::findOrFail($id);
 
         if (!$voucher->canApprove()) {
-            return back()->with('error', 'ไม่สามารถอนุมัติใบสำคัญจ่ายนี้ได้');
+            return back()->with('error', 'ไม่สามารถอนุมัติใบสำคัญจ่ายนี้ได้แล้ว');
         }
 
         $oldStatus = $voucher->status;
@@ -816,7 +800,7 @@ class PaymentVoucherController extends Controller
         $voucher = PaymentVoucher::findOrFail($id);
 
         if (!$voucher->canApprove()) {
-            return back()->with('error', 'ไม่สามารถปฏิเสธใบสำคัญจ่ายนี้ได้');
+            return back()->with('error', 'ไม่สามารถปฏิเสธใบสำคัญจ่ายนี้ได้แล้ว');
         }
 
         $oldStatus = $voucher->status;
@@ -845,7 +829,7 @@ class PaymentVoucherController extends Controller
     }
 
     /**
-     * ส่งกลับเป็น Draft เพื่อแก้ไข (Reviewer)
+     * ส่งกลับไปเป็น Draft เพื่อแก้ไขใหม่ (Reviewer)
      */
     public function rejectToDraft(Request $request, $id)
     {
@@ -855,9 +839,9 @@ class PaymentVoucherController extends Controller
 
         $voucher = PaymentVoucher::findOrFail($id);
 
-        // เฉพาะผู้ที่มีสิทธิ review เท่านั้น
+        // ตรวจสอบสิทธิว่าสามารถ review ได้หรือไม่
         if (!$voucher->canReview()) {
-            return back()->with('error', 'ไม่สามารถส่งกลับแก้ไขได้');
+            return back()->with('error', 'ไม่สามารถส่งกลับไปแก้ไขใหม่ได้');
         }
 
         $oldStatus = $voucher->status;
@@ -882,7 +866,7 @@ class PaymentVoucherController extends Controller
         $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_REJECTED, $request->boolean('is_test'));
 
         return redirect()->route('payment-voucher.show', $voucher->id)
-            ->with('success', 'ส่งกลับแก้ไขเรียบร้อยแล้ว กรุณาแก้ไขและส่งใหม่อีกครั้ง');
+            ->with('success', 'ส่งกลับไปแก้ไขใหม่เรียบร้อยแล้ว กรุณาดำเนินการแก้ไขและส่งใหม่อีกครั้ง');
     }
 
     /**
@@ -893,7 +877,7 @@ class PaymentVoucherController extends Controller
         $voucher = PaymentVoucher::findOrFail($id);
 
         if (!$voucher->canComplete()) {
-            return back()->with('error', 'ไม่สามารถดำเนินการได้');
+            return back()->with('error', 'ไม่สามารถทำรายการได้');
         }
 
         $oldStatus = $voucher->status;
@@ -911,7 +895,7 @@ class PaymentVoucherController extends Controller
             'to_status' => PaymentVoucher::STATUS_COMPLETED,
             'user_id' => Auth::id(),
             'user_name' => Auth::user()->name ?? 'System',
-            'remark' => 'ผู้จ่ายเงิน: ' . $request->payer_name,
+            'remark' => 'บันทึกการจ่ายเงิน: ' . $request->payer_name,
         ]);
 
         return redirect()->route('payment-voucher.show', $voucher->id)
@@ -919,7 +903,7 @@ class PaymentVoucherController extends Controller
     }
 
     /**
-     * ยกเลิกสถานะเสร็จสิ้น (กรณีกดผิด) - Revert to Approved
+     * ยกเลิกสถานะเสร็จสิ้น (กรณีข้อผิดพลาด) - Revert to Approved
      */
     public function undoComplete(Request $request, $id)
     {
@@ -930,7 +914,7 @@ class PaymentVoucherController extends Controller
         $voucher = PaymentVoucher::findOrFail($id);
 
         if (!$voucher->canUndoComplete()) {
-            return back()->with('error', 'ไม่สามารถยกเลิกสถานะเสร็จสิ้นได้');
+            return back()->with('error', 'ไม่สามารถยกเลิกสถานะเสร็จสิ้นใบสำคัญจ่ายนี้ได้');
         }
 
         $oldStatus = $voucher->status;
@@ -950,35 +934,32 @@ class PaymentVoucherController extends Controller
             'to_status' => PaymentVoucher::STATUS_APPROVED,
             'user_id' => Auth::id(),
             'user_name' => Auth::user()->name ?? 'System',
-            'remark' => $request->remark ?? 'ยกเลิกสถานะเสร็จสิ้น (กดผิด)',
+            'remark' => $request->remark ?? 'ยกเลิกสถานะเสร็จสิ้น (ข้อผิดพลาด)',
         ]);
 
         return redirect()->route('payment-voucher.show', $voucher->id)
-            ->with('success', 'ยกเลิกสถานะเสร็จสิ้นเรียบร้อยแล้ว สถานะกลับเป็น "รอจ่ายเงิน"');
+            ->with('success', 'ยกเลิกสถานะเสร็จสิ้นเรียบร้อยแล้ว กลับไปเป็น "อนุมัติแล้ว"');
     }
 
     /**
-     * รายการรอตรวจสอบ (สำหรับ Approver)
-     */
-    /**
-     * รายการรอตรวจสอบ (สำหรับ Approver) -> จริงๆ คือรายการรออนุมัติ (ที่ Review แล้ว)
+     * รายการรออนุมัติ (สำหรับ Approver) -> แสดงรายการที่ Review แล้ว
      */
     public function pendingList()
     {
-        // แก้ไข: หน้า Pending (รออนุมัติ) ต้องดึงข้อมูลที่สถานะเป็น 'reviewed' (ตรวจสอบแล้ว)
+        // หมายเหตุ: เดิม Pending (รออนุมัติ) แสดงรายการที่ 'reviewed' (ตรวจสอบแล้ว)
         $vouchers = PaymentVoucher::where('status', PaymentVoucher::STATUS_REVIEWED)
-            ->orderBy('reviewed_at', 'asc') // เรียงตามวันที่ตรวจสอบล่าสุด
+            ->orderBy('reviewed_at', 'asc') // เรียงตามเวลาที่ตรวจสอบ เพื่อให้เห็นรายการที่รอนานก่อน
             ->paginate(20);
 
         return view('payment_voucher.pending', compact('vouchers'));
     }
 
     /**
-     * รายการรอ Review (สำหรับ Reviewer) -> จริงๆ คือรายการรอตรวจสอบ
+     * รายการรอ Review (สำหรับ Reviewer) -> แสดงรายการที่ยังไม่ Review
      */
     public function approvedList()
     {
-        // แก้ไข: หน้า Approved (รอตรวจสอบ/Review) ต้องดึงข้อมูลที่สถานะเป็น 'pending' (รอตรวจสอบ)
+        // หมายเหตุ: เดิม Approved (อนุมัติ/Review) แสดงรายการที่ 'pending' (รออนุมัติ)
         $vouchers = PaymentVoucher::where('status', PaymentVoucher::STATUS_PENDING)
             ->orderBy('created_at', 'asc')
             ->paginate(20);
@@ -1007,7 +988,7 @@ class PaymentVoucherController extends Controller
     }
 
     /**
-     * บันทึกไฟล์แนบ
+     * จัดเก็บไฟล์แนบ
      */
     private function storeAttachment($file, $voucherId, $itemId = null, $type = 'voucher')
     {
@@ -1037,7 +1018,7 @@ class PaymentVoucherController extends Controller
         $voucher = PaymentVoucher::find($attachment->payment_voucher_id);
 
         if (!$voucher || !$voucher->canEdit()) {
-            return response()->json(['error' => 'ไม่สามารถลบไฟล์แนบได้'], 403);
+            return response()->json(['error' => 'ไม่สามารถลบไฟล์แนบนี้ได้'], 403);
         }
 
         // ลบไฟล์จาก storage
@@ -1051,7 +1032,7 @@ class PaymentVoucherController extends Controller
     }
 
     /**
-     * อัพโหลดไฟล์แนบเพิ่มเติม (AJAX)
+     * อัปโหลดไฟล์แนบ (AJAX)
      */
     public function uploadAttachment(Request $request, $id)
     {
@@ -1064,7 +1045,7 @@ class PaymentVoucherController extends Controller
         $voucher = PaymentVoucher::findOrFail($id);
 
         if (!$voucher->canEdit()) {
-            return response()->json(['error' => 'ไม่สามารถอัพโหลดไฟล์ได้'], 403);
+            return response()->json(['error' => 'ไม่สามารถอัปโหลดไฟล์แนบได้'], 403);
         }
 
         $type = $request->type;
@@ -1103,21 +1084,32 @@ class PaymentVoucherController extends Controller
     }
 
     /**
-     * ดึงเลขที่ใบสำคัญจ่ายถัดไปตามสาขา
+     * สร้างเลขที่ใบสำคัญจ่ายถัดไป
      */
     public function getNextVoucherNo(Request $request)
     {
         $branchCode = $request->get('branch_code', 'EL');
-        $voucherNo = PaymentVoucher::generateVoucherNo($branchCode);
+        $category = $request->get('category');
+
+        $branch = Branch::where('code', $branchCode)->first();
+        if (!$branch) {
+            return response()->json(['error' => 'ไม่พบรหัสสาขา'], 404);
+        }
+
+        $isBankFee = $category == PaymentVoucher::CAT_BANK_FEE;
+        $voucherCode = $isBankFee ? ($branch->bf_prefix ?? $branchCode . 'BF') : ($branch->pv_prefix ?? $branchCode . 'PV');
+
+        $voucherNo = PaymentVoucher::generateVoucherNo($voucherCode);
 
         return response()->json([
             'voucher_no' => $voucherNo,
             'branch_code' => $branchCode,
+            'voucher_code' => $voucherCode,
         ]);
     }
 
     /**
-     * บันทึกหรืออัปเดตข้อมูลผู้รับเงิน
+     * บันทึกผู้รับเงิน
      */
     public function savePayee(Request $request)
     {
@@ -1142,7 +1134,7 @@ class PaymentVoucherController extends Controller
     }
 
     /**
-     * ลบใบสำคัญจ่ายและข้อมูลที่เกี่ยวข้องทั้งหมด (Force Delete)
+     * ลบใบสำคัญจ่ายทั้งหมด (Force Delete)
      */
 
     public function forceDestroy($id)
@@ -1173,24 +1165,24 @@ class PaymentVoucherController extends Controller
             // 5. ลบ logs ทั้งหมด
             $voucher->logs()->delete();
 
-            // 6. ลบ voucher (force delete จริงๆ)
+            // 6. ลบ voucher (force delete ด้วย)
             $voucher->forceDelete();
 
             DB::commit();
 
             return redirect()->route('payment-voucher.index')
-                ->with('success', 'ลบใบสำคัญจ่ายและข้อมูลที่เกี่ยวข้องทั้งหมดเรียบร้อยแล้ว');
+                ->with('success', 'ลบใบสำคัญจ่ายทั้งหมดเรียบร้อยแล้ว');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+            return back()->with('error', 'ไม่สามารถดำเนินการหักเงินได้');
         }
     }
     /**
-     * แสดงฟอร์ม Import Excel
+     * แสดงหน้า Import Excel
      */
     public function showImportForm()
     {
-        $branchCodes = PaymentVoucher::$branchCodes;
+        $branchCodes = Branch::active()->pluck('name', 'code')->toArray();
         return view('payment_voucher.import', compact('branchCodes'));
     }
 
@@ -1222,7 +1214,7 @@ class PaymentVoucherController extends Controller
                 return view('payment_voucher.import_preview', compact('data', 'previewResult'));
             } else {
                 return back()
-                    ->with('error', 'Import ไม่สำเร็จ: ' . implode(', ', $previewResult['errors']))
+                    ->with('error', 'ไม่สามารถ Import ได้: ' . implode(', ', $previewResult['errors']))
                     ->withInput();
             }
         } catch (\Exception $e) {
@@ -1248,10 +1240,10 @@ class PaymentVoucherController extends Controller
         ]);
 
         try {
-            // เตรียมข้อมูลสำหรับ importFromPreview
-            $data = $request->all(); // รับข้อมูลทั้งหมดจาก Form including items
+            // ใช้ข้อมูลจาก preview เพื่อ importFromPreview
+            $data = $request->all(); // ข้อมูลจาก Form including items
 
-            // เรียกใช้ Import Class (ใช้ dummy path เพราะไม่ได้อ่านไฟล์แล้ว)
+            // สร้าง Import Class (ใช้ dummy path เพราะข้อมูลมาจาก Form)
             $importer = new PaymentVoucherImport('', $request->branch_code);
             $result = $importer->importFromPreview($data);
 
@@ -1260,7 +1252,7 @@ class PaymentVoucherController extends Controller
                     ->with('success', "บันทึกข้อมูลเรียบร้อยแล้ว เลขที่: {$result['voucher_no']}");
             } else {
                 return back()
-                    ->with('error', 'บันทึกไม่สำเร็จ: ' . implode(', ', $result['errors']))
+                    ->with('error', 'ไม่สามารถบันทึกข้อมูลได้: ' . implode(', ', $result['errors']))
                     ->withInput();
             }
         } catch (\Exception $e) {
@@ -1281,7 +1273,7 @@ class PaymentVoucherController extends Controller
             return response()->download($templatePath, 'payment_voucher_template.xlsx');
         }
 
-        // ถ้าไม่มี template ให้ใช้ไฟล์ example
+        // ถ้าไม่มี template ให้ใช้ example
         $examplePath = base_path('docs/example.xlsx');
         if (file_exists($examplePath)) {
             return response()->download($examplePath, 'payment_voucher_template.xlsx');
@@ -1291,7 +1283,7 @@ class PaymentVoucherController extends Controller
     }
 
     /**
-     * อัพเดทหมวดหมู่ของใบสำคัญจ่าย (พิเศษ - ใช้ได้ทุกสถานะ)
+     * อัปเดตหมวดหมู่ (สำหรับใบสำคัญจ่าย - ไม่ใช่เงินเดือน)
      */
     public function updateCategory(Request $request, $id)
     {
@@ -1314,9 +1306,9 @@ class PaymentVoucherController extends Controller
             'user_id' => Auth::id(),
             'user_name' => Auth::user()->name ?? 'System',
             'action' => 'update_category',
-            'remark' => "แก้ไขหมวดหมู่จาก '" . ($voucher->categoryLabels[$oldCategory] ?? '-') . "' เป็น '" . ($voucher->categoryLabels[$newCategory] ?? '-') . "'",
+            'remark' => "เปลี่ยนหมวดหมู่จาก '" . ($voucher->categoryLabels[$oldCategory] ?? '-') . "' เป็น '" . ($voucher->categoryLabels[$newCategory] ?? '-') . "'",
         ]);
 
-        return back()->with('success', 'อัพเดทหมวดหมู่เรียบร้อยแล้ว');
+        return back()->with('success', 'อัปเดตหมวดหมู่เรียบร้อยแล้ว');
     }
 }

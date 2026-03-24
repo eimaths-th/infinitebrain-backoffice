@@ -166,8 +166,11 @@
 
                             <div class="mb-3">
                                 <label class="form-label">เลขที่ใบสำคัญจ่าย</label>
-                                <input type="text" class="form-control" value="{{ $voucher->voucher_no }}" readonly
+                                <input type="text" class="form-control" id="voucherNoPreview" value="{{ $voucher->voucher_no }}" readonly
                                     disabled>
+                                @if($voucher->status == \App\Models\PaymentVoucher::STATUS_DRAFT)
+                                    <small class="text-muted">รูปแบบ: รหัสสาขา + ปี + เดือน + ลำดับ (จะเปลี่ยนหากเปลี่ยนสาขา/หมวดหมู่ในสถานะร่าง)</small>
+                                @endif
                             </div>
 
                             <div class="mb-3">
@@ -219,12 +222,12 @@
 
                             <div class="mb-3">
                                 <label class="form-label">จ่ายให้ (ชื่อ/บริษัท) <span class="required-mark">*</span></label>
-                                <input type="text" name="pay_to"
-                                    class="form-control @error('pay_to') is-invalid @enderror"
-                                    value="{{ old('pay_to', $voucher->pay_to) }}" placeholder="ระบุชื่อผู้รับเงิน"
-                                    required>
+                                <select name="pay_to" id="payToSelect" class="form-control" required>
+                                    <option value="{{ $voucher->pay_to }}" selected>{{ $voucher->pay_to }}</option>
+                                </select>
+                                <input type="hidden" name="payee_id" id="payeeId" value="{{ $voucher->payee_id }}">
                                 @error('pay_to')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
 
@@ -588,7 +591,104 @@
 @endsection
 
 @section('script')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
+        $(document).ready(function() {
+            $('#payToSelect').select2({
+                placeholder: 'พิมพ์ชื่อผู้รับเงินหรือบริษัท...',
+                allowClear: true,
+                tags: true,
+                createTag: function(params) {
+                    var term = $.trim(params.term);
+                    if (term === '') {
+                        return null;
+                    }
+                    return {
+                        id: term,
+                        text: term,
+                        newTag: true
+                    };
+                },
+                ajax: {
+                    url: '{{ route('payment-voucher.search-payee') }}',
+                    dataType: 'json',
+                    delay: 300,
+                    data: function(params) {
+                        return {
+                            q: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.map(function(item) {
+                                return {
+                                    id: item.name,
+                                    text: item.name + (item.account_no ? ' (' + item.account_no + ')' : ''),
+                                    payee: item
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 0
+            });
+
+            $('#payToSelect').on('select2:select', function(e) {
+                var data = e.params.data;
+                if (data.payee) {
+                    $('#payeeId').val(data.payee.id);
+                    $('textarea[name="pay_to_address"]').val(data.payee.address || '');
+                    $('input[name="pay_to_account_no"]').val(data.payee.account_no || '');
+                    if (data.payee.bank_name) {
+                        $('select[name="pay_to_bank_name"]').val(data.payee.bank_name);
+                    }
+                } else {
+                    $('#payeeId').val('');
+                    // Clear other fields if it's a new tag
+                    if (data.newTag) {
+                        $('textarea[name="pay_to_address"]').val('');
+                        $('input[name="pay_to_account_no"]').val('');
+                        $('select[name="pay_to_bank_name"]').val('');
+                    }
+                }
+            });
+        });
+
+        // Update voucher number preview when branch, category or is_salary changes (Only for Draft)
+        @if($voucher->status == \App\Models\PaymentVoucher::STATUS_DRAFT)
+        function updateVoucherNoPreview() {
+            const branchCode = document.querySelector('select[name="branch_code"]').value;
+            const categoryElement = document.getElementById('category');
+            const category = categoryElement ? categoryElement.value : '';
+            const isSalaryElement = document.getElementById('isSalary');
+            const isSalary = isSalaryElement ? isSalaryElement.checked : false;
+            const previewInput = document.getElementById('voucherNoPreview');
+
+            // แสดงสถานะกำลังโหลด
+            previewInput.value = 'กำลังโหลด...';
+
+            let url = `{{ route('payment-voucher.next-voucher-no') }}?branch_code=${branchCode}`;
+            if (!isSalary && category) {
+                url += `&category=${category}`;
+            }
+
+            // เรียก API เพื่อดึงเลขที่ใบสำคัญจ่ายถัดไปที่ถูกต้อง
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    previewInput.value = data.voucher_no;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        document.querySelector('select[name="branch_code"]').addEventListener('change', updateVoucherNoPreview);
+        document.getElementById('category').addEventListener('change', updateVoucherNoPreview);
+        document.getElementById('isSalary').addEventListener('change', updateVoucherNoPreview);
+        @endif
+
         let itemIndex = {{ $voucher->expenseItems->count() - 1 }};
         let deductionIndex = {{ $voucher->deductions->count() - 1 }};
 

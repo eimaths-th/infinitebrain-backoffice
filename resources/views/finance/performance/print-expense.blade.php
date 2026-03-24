@@ -137,19 +137,21 @@
     <!-- ส่วนหัวรายงาน -->
     <div class="header">
         @php
-            $groupMap = [
-                'EL' => 'Eye Level',
-                'IF' => 'Infinite Brain',
-                'META' => 'META Knowledge',
-                'EiMaths' => 'eiMaths',
-            ];
             $titles = [];
             foreach ($selectedGroups ?? [] as $g) {
                 $titles[] = $groupMap[$g] ?? $g;
             }
             $displayTitle = implode(' & ', $titles);
+
+            $branchTitles = [];
+            if (!empty($selectedBranches)) {
+                $branchTitles = \App\Models\Branch::whereIn('code', $selectedBranches)->pluck('name')->toArray();
+            }
         @endphp
         รายงานรายละเอียดรายจ่าย {{ $displayTitle }}<br>
+        @if(!empty($branchTitles))
+            <small style="font-size: 10pt;">สาขา: {{ implode(', ', $branchTitles) }}</small><br>
+        @endif
         ประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }} ปี {{ $year + 543 }}
     </div>
 

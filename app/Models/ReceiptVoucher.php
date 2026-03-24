@@ -12,8 +12,10 @@ class ReceiptVoucher extends Model
 
     protected $fillable = [
         'voucher_no',
+        'voucher_code',
         'voucher_date',
         'branch_code',
+        'group_branch_code',
         'payee_id',
         'receive_from',
         'receive_from_address',
@@ -82,6 +84,11 @@ class ReceiptVoucher extends Model
         return $this->belongsTo(Payee::class);
     }
 
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_code', 'code');
+    }
+
     public function items()
     {
         return $this->hasMany(ReceiptVoucherItem::class)->orderBy('item_no');
@@ -148,46 +155,26 @@ class ReceiptVoucher extends Model
         return $this->status === self::STATUS_VERIFIED;
     }
 
-    public static $branchCodes = [
-        'ELRV' => 'EyeLavel (EL)',
-        'IFRV' => 'InfiniteBrain (IF)',
-        'MTRV' => 'META Knowledge (MT)',
-        'EiRP' => 'eiMaths RP (EiRP)',
-        'EiBK' => 'eiMaths BK (EiBK)',
-        'EiHQ' => 'eiMaths HQ (EiHQ)',
-    ];
-
-    public static $groupBranchCodes = [
-        'EL' => ['EL', 'ELRV'],
-        'IF' => ['IF', 'IFRV'],
-        'META' => ['MTRV'],
-        'EiMaths' => ['EiRP', 'EiBK', 'EiHQ'],
-    ];
-
     /**
      * แปลงกลุ่มสาขา (เช่น META, EiMaths) ให้เป็นรหัสสาขาจริง (เช่น MTRV, EiRP, EiBK, ...)
      */
-    public static function resolveBranchCodes($branches)
+    public static function resolveBranchCodes($groups)
     {
-        if (empty($branches)) return [];
-        if (!is_array($branches)) $branches = [$branches];
+        if (empty($groups)) return [];
+        if (!is_array($groups)) $groups = [$groups];
 
-        $resolved = [];
-        foreach ($branches as $branch) {
-            if (isset(self::$groupBranchCodes[$branch])) {
-                $resolved = array_merge($resolved, self::$groupBranchCodes[$branch]);
-            } else {
-                $resolved[] = $branch;
-            }
-        }
-        return array_unique($resolved);
+        return Branch::whereHas('group', function($query) use ($groups) {
+                $query->whereIn('code', $groups);
+            })
+            ->pluck('code')
+            ->toArray();
     }
 
-    public static function generateVoucherNo($branchCode = 'ELRV')
+    public static function generateVoucherNo($voucherCode = 'ELRV')
     {
         $year = date('Y');
         $month = date('m');
-        $prefix = $branchCode . $year . $month;
+        $prefix = $voucherCode . $year . $month;
 
         $lastVoucher = self::where('voucher_no', 'like', $prefix . '%')
             ->orderBy('voucher_no', 'desc')

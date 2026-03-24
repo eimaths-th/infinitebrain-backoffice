@@ -117,7 +117,10 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">เลขที่ใบสำคัญรับ</label>
-                                        <input type="text" class="form-control bg-light" value="{{ $voucher->voucher_no }}" readonly disabled>
+                                        <input type="text" class="form-control bg-light" id="voucherNoPreview" value="{{ $voucher->voucher_no }}" readonly disabled>
+                                        @if($voucher->status == \App\Models\ReceiptVoucher::STATUS_DRAFT)
+                                            <small class="text-muted">รูปแบบ: รหัสสาขา + ปี + เดือน + ลำดับ (จะเปลี่ยนหากเปลี่ยนสาขาในสถานะร่าง)</small>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -320,6 +323,17 @@
                 placeholder: 'พิมพ์ชื่อผู้จ่ายเงินหรือบริษัท...',
                 allowClear: true,
                 tags: true,
+                createTag: function(params) {
+                    var term = $.trim(params.term);
+                    if (term === '') {
+                        return null;
+                    }
+                    return {
+                        id: term,
+                        text: term,
+                        newTag: true
+                    };
+                },
                 ajax: {
                     url: '{{ route('receipt-voucher.search-payee') }}',
                     dataType: 'json',
@@ -354,6 +368,12 @@
                     }
                 } else {
                     $('#payeeId').val('');
+                    // Clear other fields if it's a new tag
+                    if (data.newTag) {
+                        $('#receiveFromAddress').val('');
+                        $('#receiveFromAccountNo').val('');
+                        $('#receiveFromBankName').val('');
+                    }
                 }
             });
 
