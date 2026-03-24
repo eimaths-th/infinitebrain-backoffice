@@ -22,23 +22,23 @@
 
         body {
             font-family: 'Sarabun', 'TH Sarabun New', sans-serif;
-            font-size: 11px;
-            line-height: 1.3;
-            padding: 15px;
+            font-size: 10.5px;
+            line-height: 1.25;
+            padding: 5px;
         }
 
         .payslip-container {
             max-width: 100%;
             margin: 0 auto;
             border: 2px solid #333;
-            padding: 12px;
+            padding: 6px 10px;
         }
 
         .header {
             text-align: center;
             border-bottom: 2px solid #333;
-            padding-bottom: 8px;
-            margin-bottom: 8px;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
         }
 
         .company-name {
@@ -60,8 +60,8 @@
         .employee-info {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            padding: 6px;
+            margin-bottom: 4px;
+            padding: 4px 6px;
             background: #f5f5f5;
             border-radius: 3px;
         }
@@ -156,7 +156,7 @@
 
         .signature-line {
             border-top: 1px solid #333;
-            margin-top: 30px;
+            margin-top: 20px;
             padding-top: 5px;
         }
 
@@ -267,7 +267,7 @@
         </div>
 
         <!-- Content -->
-        <div class="content-row" style="margin-top: 20px;">
+        <div class="content-row" style="margin-top: 10px;">
             @php
                 $incomeCount = $payroll->incomeItems->count();
                 $deductionCount = $payroll->deductionItems->count();
@@ -339,9 +339,9 @@
                 <div class="signature-line">ผู้รับเงิน</div>
             </div>
             <div class="signature-box">
-                <div style="height: 60px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: -10px;">
+                <div style="height: 45px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: -10px;">
                     @if (auth()->user()->signature && auth()->user()->signature_is_image)
-                        <img src="{{ asset('storage/' . auth()->user()->signature) }}" style="max-height: 60px; max-width: 140px;">
+                        <img src="{{ asset('storage/' . auth()->user()->signature) }}" style="max-height: 45px; max-width: 140px;">
                     @endif
                 </div>
                 <div class="signature-line">ผู้จ่ายเงิน</div>
