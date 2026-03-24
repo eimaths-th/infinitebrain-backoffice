@@ -339,7 +339,13 @@
                 <div class="signature-line">ผู้รับเงิน</div>
             </div>
             <div class="signature-box">
+                <div style="height: 60px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: -10px;">
+                    @if (auth()->user()->signature && auth()->user()->signature_is_image)
+                        <img src="{{ asset('storage/' . auth()->user()->signature) }}" style="max-height: 60px; max-width: 140px;">
+                    @endif
+                </div>
                 <div class="signature-line">ผู้จ่ายเงิน</div>
+                <div style="margin-top: 5px;">({{ auth()->user()->GetDisplayName() }})</div>
             </div>
         </div>
     </div>
