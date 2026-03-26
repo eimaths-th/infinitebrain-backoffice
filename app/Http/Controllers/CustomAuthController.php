@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class CustomAuthController extends Controller
 {
     public function index()
-    {   
+    {
         return view('auth.login');
     }
 
@@ -28,34 +28,30 @@ class CustomAuthController extends Controller
         $this_year = date("Y");
 
         if (Auth::attempt($credentials)) {
-            if (Auth::user()->level > 5) {
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+            $roles = $user->getRoleNames();
 
+            // 1. ถ้ามี role 'external-branch' อย่างเดียว
+            if ($roles->count() === 1 && $roles->contains('external-branch')) {
+                return redirect()->route('payment-voucher.index');
+            }
+
+            // 2. ยกเลิกการใช้ level แล้วใช้ Role แทน
+            // ถ้าไม่มี Role อะไรเลย
+            if ($roles->isEmpty()) {
                 Session::flush();
                 Auth::logout();
-                /*return back()->withErrors([
-                    'email' => 'You are users but not have permissions. Please Contact Administrator',
-                ]);*/
                 return back()->withErrors(['error' => 'You are users but not have permissions. Please Contact Administrator']);
             } else {
-                // dd($request);
-
-                if (Auth::user()->level == 1 || Auth::user()->level == 0) {
-                    //return redirect()->intended('users');
-                    //return redirect('/users');
+                if ($user->hasAnyRole(['super-admin', 'admin'])) {
                     return redirect(route('home'));
-                } elseif (Auth::user()->level == 2) {
-                    //return redirect()->intended('course');
-                    return redirect('/course');
-                } else if (Auth::user()->level == 3) {
-                    //return redirect()->intended('receipts');
-                    //return redirect('/receipts?sfield=2');
+                } elseif ($user->hasRole('parent')) {
                     return redirect('/receipts/print_month?pmsfield=9&type=report_view&print_month='.$this_month.'&Pmdescription=ค่าสมัคร OLPCS รอบแรก '. $this_year);
-                }elseif (Auth::user()->level == 4 || Auth::user()->level == 5) {
-                    //return redirect()->intended('course');
+                } else {
+                    // สำหรับ Role อื่นๆ (เช่น finance, staff, reviewer, approver)
                     return redirect(route('home2'));
                 }
-
-                //->withSuccess('Signed in');
             }
         }
 
