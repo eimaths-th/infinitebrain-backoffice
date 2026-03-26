@@ -51,20 +51,29 @@
                     value="{{ $user->email ?? '' }}" required>
             </div>
             <div class="col-md-6 mb-3">
-                <label for="{{ $prefix }}level" class="form-label">บทบาท (Role) <span
+                <label for="{{ $prefix }}roles" class="form-label">บทบาท (Role) <span
                         class="text-danger">*</span></label>
-                <select class="form-control" id="{{ $prefix }}level" name="level" required>
-                    <option value="">-- เลือกบทบาท --</option>
-                    <option value="0" {{ ($user->level ?? '') == '0' ? 'selected' : '' }}>Owner</option>
-                    <option value="1" {{ ($user->level ?? '') == '1' ? 'selected' : '' }}>Admin</option>
-                    <option value="2" {{ ($user->level ?? '') == '2' ? 'selected' : '' }}>Teacher</option>
-                    <option value="3" {{ ($user->level ?? '') == '3' ? 'selected' : '' }}>Account</option>
-                    <option value="4" {{ ($user->level ?? '') == '4' ? 'selected' : '' }}>Officer</option>
-                    <option value="5" {{ ($user->level ?? '') == '5' ? 'selected' : '' }}>Normal (Employee)
-                    </option>
-                    <option value="7" {{ ($user->level ?? '') == '7' ? 'selected' : '' }}>Finance</option>
-                    <option value="8" {{ ($user->level ?? '') == '8' ? 'selected' : '' }}>Header</option>
-                </select>
+                <div class="d-flex flex-wrap gap-2 p-2 border rounded bg-light">
+                    @php
+                        $user_roles = $user ? $user->roles->pluck('name')->toArray() : [];
+                    @endphp
+                    @if(isset($roles_list) && $roles_list->count() > 0)
+                        @foreach ($roles_list as $role)
+                            <div class="position-relative">
+                                <input type="checkbox" class="btn-check" name="roles[]"
+                                    id="{{ $prefix }}role_{{ $role->id }}" value="{{ $role->name }}"
+                                    {{ in_array($role->name, $user_roles) ? 'checked' : '' }} autocomplete="off">
+                                <label class="btn btn-outline-primary btn-sm rounded-pill"
+                                    for="{{ $prefix }}role_{{ $role->id }}">
+                                    {{ ucwords(str_replace('-', ' ', $role->name)) }}
+                                    <i class="fas fa-check check-icon d-none"></i>
+                                </label>
+                            </div>
+                        @endforeach
+                    @else
+                        <span class="text-danger small">ไม่พบข้อมูลการกำหนด Role กรุณาตรวจสอบ RoleController</span>
+                    @endif
+                </div>
             </div>
             <div class="col-md-6 mb-3">
                 <label for="{{ $prefix }}password" class="form-label">Password

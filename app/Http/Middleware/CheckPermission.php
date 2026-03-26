@@ -24,8 +24,8 @@ class CheckPermission
             return redirect()->route('login');
         }
 
-        // Super Admin (level 0) always has access
-        if ($user->level === 0) {
+        // Super Admin always has access
+        if ($user->hasRole('super-admin')) {
             return $next($request);
         }
 

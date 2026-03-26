@@ -24,11 +24,6 @@ class CheckRole
             return redirect()->route('login');
         }
 
-        // Super Admin (level 0) always has access
-        if ($user->level === 0) {
-            return $next($request);
-        }
-
         // Check if user has super-admin role
         if ($user->hasRole('super-admin')) {
             return $next($request);

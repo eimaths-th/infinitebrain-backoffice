@@ -39,7 +39,7 @@
     <div class="scrollbar-sidebar">
         <div class="app-sidebar__inner">
             <ul class="vertical-nav-menu">
-                @if (Auth::user()->level == 2 || Auth::user()->level == 1 || Auth::user()->level == 0)
+                @canany(['general.admin.view', 'general.view', 'parents.view'])
                     <li class="app-sidebar__heading"> </li>
                     <li>
                         <a href="{{ route('home') }}">
@@ -278,11 +278,11 @@
 
 
                     </li>
-                @endif
+                @endcanany
 
 
 
-                @if (Auth::user()->level == 3 || Auth::user()->level == 1 || Auth::user()->level == 0)
+                @canany(['parents.view', 'form-manage.view', 'general.admin.view', 'receipts.view'])
                     <li class="app-sidebar__heading">สนามสอบ</li>
                     <li>
                         <a href="{{ route('formsControl') }}">
@@ -313,7 +313,7 @@
                         </ul>
                     </li>
 
-                    @if (Auth::user()->level == 3 || Auth::user()->level == 1 || Auth::user()->level == 0)
+                    @canany(['form-manage.view', 'general.admin.view'])
                         <li>
                             <a href="#">
 
@@ -342,7 +342,7 @@
                                 </li>
                             </ul>
                         </li>
-                    @endif
+                    @endcanany
                     <li>
                         <a href="#">
                             <i class="metismenu-icon pe-7s-note2"></i>
@@ -790,6 +790,7 @@
                             @endforeach
                         </ul>
                     </li>
+                @endcanany
 
                     <li>
                         @php
