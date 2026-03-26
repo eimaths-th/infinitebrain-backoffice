@@ -7,7 +7,7 @@
     <style>
         @page {
             size: A4 portrait;
-            margin: 8mm;
+            margin: 25mm;
         }
 
         body {
@@ -151,7 +151,7 @@
         @endforeach
 
         <!-- สำหรับรายปี เราสรุป Receipt Vouchers ตามคำอธิบายแทนที่จะแยกตามใบ -->
-        @php 
+        @php
             $rv_grouped = $data['details']['rv_items']->flatMap->receiptItems->groupBy('description')->map->sum('amount');
         @endphp
         @foreach ($rv_grouped as $desc => $amount)

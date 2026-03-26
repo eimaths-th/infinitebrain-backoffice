@@ -7,7 +7,7 @@
     <style>
         @page {
             size: A4 portrait;
-            margin: 10mm;
+            margin: 25mm;
         }
 
         body {
@@ -182,7 +182,7 @@
     @endif
 
     <!-- 3. Receipt Vouchers (สรุปตามรายการ) -->
-    @php 
+    @php
         $rv_items = $data['details']['rv_items']->flatMap->receiptItems->groupBy('description')->map(function($items) {
             return (object)[
                 'description' => $items->first()->description,

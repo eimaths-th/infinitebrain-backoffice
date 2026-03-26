@@ -8,7 +8,7 @@
         /* การตั้งค่าหน้ากระดาษ A4 */
         @page {
             size: A4 portrait;
-            margin: 10mm;
+            margin: 25mm;
         }
 
         body {
@@ -247,7 +247,7 @@
     <!-- ส่วน Receipt Vouchers (ใบสำคัญรับ) -->
     <div class="no-break">
     <div class="section-title">
-        @php 
+        @php
             $rv_num = 1;
             if ($is_el && $school_receipts_detail->count() > 0) $rv_num++;
             if (!empty($data['details']['api_revenue_list'])) $rv_num++;

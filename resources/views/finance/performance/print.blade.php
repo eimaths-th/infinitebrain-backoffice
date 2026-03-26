@@ -8,8 +8,7 @@
     <style>
         @page {
             size: A4 portrait;
-            margin: 8mm;
-            /* ลดจาก 15mm เพื่อเพิ่มพื้นที่ */
+            margin: 25mm;
         }
 
         body {
