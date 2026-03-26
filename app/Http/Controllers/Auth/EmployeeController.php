@@ -23,7 +23,7 @@ class EmployeeController extends Controller
             /** @var \App\Models\User $user */
             $user = Auth::user();
             // ยกเลิกการใช้ level แล้วใช้ Role แทน
-            if ($user->hasAnyRole(['super-admin', 'admin'])) {
+            if ($user->can('employees.view') || $user->can('users.view')) {
             } else {
                 abort(403, 'Unauthorized action.');
             }
