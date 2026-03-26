@@ -35,7 +35,7 @@ class User extends Authenticatable
         'email',
         'type_user',
         'password',
-        'level',
+        // 'level', // เลิกใช้ level
         'branches',
         // Payroll fields
         'nickname',
@@ -125,26 +125,10 @@ class User extends Authenticatable
      * @deprecated ใช้ hasRole() จาก spatie/laravel-permission แทน
      * Legacy method สำหรับตรวจสอบ level เดิม - เปลี่ยนชื่อเพื่อไม่ให้ conflict กับ spatie
      */
-    public function getLevelRole()
-    {
-        switch ($this->level) {
-            case 0:
-                session(['level' => self::DEFAULT_TYPE]);
-                return  self::DEFAULT_TYPE;
-                break;
-            case 1:
-                session(['level' => self::DEFAULT_TYPE]);
-                return  self::ADMIN_TYPE;
-                break;
-            case 2:
-                session(['level' => self::DEFAULT_TYPE]);
-                return  self::DEFAULT_TYPE;
-                break;
-            default:
-                session(['level' => self::DEFAULT_TYPE]);
-                return self::DEFAULT_TYPE;
-        }
-    }
+    // public function getLevelRole()
+    // {
+    //     ... (รหัสเก่าถูกปรับใช้ Spatie Role ทั้งหมดแล้ว)
+    // }
 
     public function compensateDays()
     {

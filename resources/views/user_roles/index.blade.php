@@ -74,7 +74,6 @@
                                 <th width="60">#</th>
                                 <th>ชื่อ</th>
                                 <th>อีเมล</th>
-                                <th>Level (เดิม)</th>
                                 <th>Roles</th>
                                 <th width="100">จัดการ</th>
                             </tr>
@@ -87,24 +86,6 @@
                                     <strong>{{ $user->name }}</strong>
                                 </td>
                                 <td>{{ $user->email }}</td>
-                                <td>
-                                    @switch($user->level)
-                                        @case(0)
-                                            <span class="badge bg-danger">Super Admin (0)</span>
-                                            @break
-                                        @case(1)
-                                            <span class="badge bg-primary">Admin (1)</span>
-                                            @break
-                                        @case(2)
-                                            <span class="badge bg-info">Staff (2)</span>
-                                            @break
-                                        @case(3)
-                                            <span class="badge bg-secondary">Parent (3)</span>
-                                            @break
-                                        @default
-                                            <span class="badge bg-light text-dark">{{ $user->level }}</span>
-                                    @endswitch
-                                </td>
                                 <td>
                                     @forelse($user->roles as $role)
                                         <span class="badge bg-success role-badge">{{ $role->name }}</span>

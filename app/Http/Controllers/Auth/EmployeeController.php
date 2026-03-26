@@ -184,7 +184,8 @@ class EmployeeController extends Controller
     {
         $this->check_permission();
         $user = null;
-        $html = view('users.form_body', compact('user'))->render();
+        $roles_list = \Spatie\Permission\Models\Role::all();
+        $html = view('users.form_body', compact('user', 'roles_list'))->render();
         return response()->json(['html' => $html]);
     }
 
@@ -204,7 +205,8 @@ class EmployeeController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'level' => 'required',
+            'roles' => 'required|array',
+            'roles.*' => 'exists:roles,name',
             // Personal info
             'title_prefix' => 'nullable|string|max:50',
             'nickname' => 'nullable|string|max:100',
@@ -241,6 +243,11 @@ class EmployeeController extends Controller
         $data['branches'] = $request->input('branches', []);
 
         $user = User::create($data);
+        
+        // กำหนด Role ให้กับผู้ใช้ผ่าน Spatie โดยรับค่าจาก Checkbox
+        if ($request->has('roles')) {
+            $user->syncRoles($request->input('roles'));
+        }
 
         LogActivity::modelEvent($user, 'user created', null, $user->toArray());
 
@@ -268,7 +275,8 @@ class EmployeeController extends Controller
     {
         $this->check_permission();
         $user = User::find($id);
-        $html = view('users.form_body', compact('user'))->render();
+        $roles_list = \Spatie\Permission\Models\Role::all();
+        $html = view('users.form_body', compact('user', 'roles_list'))->render();
         return response()->json(['html' => $html]);
     }
 
@@ -373,6 +381,14 @@ class EmployeeController extends Controller
             \App\Models\UserSalaryItem::where('user_id', $user->id)
                 ->whereNotIn('id', $existing_ids)
                 ->update(['is_active' => false]);
+        }
+        
+        // อัปเดต Role
+        if ($request->has('roles')) {
+            $user->syncRoles($request->input('roles'));
+        } else {
+            // ถ้าไม่มีส่งมาเลย แปลว่าลบออกหมด
+            $user->syncRoles([]);
         }
 
         LogActivity::modelEvent($user, 'user updated', $old, $user->toArray());

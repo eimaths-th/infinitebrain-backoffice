@@ -128,22 +128,10 @@
                             <div class="widget-heading">
                                 {{ Str::upper(Auth::user()->name) }}
                             </div>
-                            <div class="widget-subheading">
-
-                                @if (Auth::user()->level == 1)
-                                    Admin
-                                @elseif (Auth::user()->level == 2)
-                                    Teacher
-                                @elseif (Auth::user()->level == 3)
-                                    Account
-                                @elseif (Auth::user()->level == 0)
-                                    Owner
-                                @elseif (Auth::user()->level == 4)
-                                    Officer
-                                @elseif (Auth::user()->level == 5)
-                                    Normal
+                                @if(Auth::check() && count(Auth::user()->getRoleNames()) > 0)
+                                    {{ implode(', ', array_map('ucwords', Auth::user()->getRoleNames()->toArray())) }}
                                 @else
-                                    Non
+                                    No Role
                                 @endif
                             </div>
                         </div>
