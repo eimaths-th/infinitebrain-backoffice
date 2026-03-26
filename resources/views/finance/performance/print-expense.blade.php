@@ -8,7 +8,7 @@
         /* การตั้งค่าหน้ากระดาษ A4 */
         @page {
             size: A4 portrait;
-            margin: 10mm;
+            margin: 25mm;
         }
 
         body {

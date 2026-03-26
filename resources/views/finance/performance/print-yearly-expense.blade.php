@@ -7,7 +7,7 @@
     <style>
         @page {
             size: A4 portrait;
-            margin: 10mm;
+            margin: 25mm;
         }
 
         body {
@@ -152,7 +152,7 @@
         <tbody>
             @php $idx = 1; $pv_total = 0; @endphp
             @foreach($data['details']['pv_items']->groupBy('category') as $category => $vouchers)
-                @php 
+                @php
                     $cat_total = $vouchers->sum('net_amount');
                     $label = \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ';
                 @endphp
