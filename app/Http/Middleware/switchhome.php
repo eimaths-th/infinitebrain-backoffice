@@ -22,7 +22,7 @@ class switchhome
         $user = Auth::user();
         
         // ยกเลิกการใช้ level แล้วใช้ Role แทน
-        if ($user->hasRole('parent')) {
+        if ($user->can('parents.view') && !$user->can('general.admin.view')) {
             return redirect(route('formsControl'));
         }
 

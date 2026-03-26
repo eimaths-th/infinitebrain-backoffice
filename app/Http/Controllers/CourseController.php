@@ -22,7 +22,7 @@ class CourseController extends Controller
             /** @var \App\Models\User $user */
             $user = Auth::user();
             // ยกเลิกการใช้ level แล้วใช้ Role แทน
-            if ($user->hasAnyRole(['super-admin', 'admin', 'finance', 'reviewer', 'approver', 'staff', 'external-branch'])) {
+            if ($user->can('courses.view')) {
             } else {
                 abort(403, 'Unauthorized action.');
             }

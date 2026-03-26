@@ -44,9 +44,9 @@ class CustomAuthController extends Controller
                 Auth::logout();
                 return back()->withErrors(['error' => 'You are users but not have permissions. Please Contact Administrator']);
             } else {
-                if ($user->hasAnyRole(['super-admin', 'admin'])) {
+                if ($user->can('general.admin.view')) {
                     return redirect(route('home'));
-                } elseif ($user->hasRole('parent')) {
+                } elseif ($user->can('parents.view') && !$user->can('general.admin.view')) {
                     return redirect('/receipts/print_month?pmsfield=9&type=report_view&print_month='.$this_month.'&Pmdescription=ค่าสมัคร OLPCS รอบแรก '. $this_year);
                 } else {
                     // สำหรับ Role อื่นๆ (เช่น finance, staff, reviewer, approver)
