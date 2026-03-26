@@ -36,18 +36,16 @@ class LoginController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        $roles = $user->getRoleNames();
 
-        if ($user->hasRole('external-branch')) {
-            return '/payment-voucher';
+        // 1. ถ้ามี role 'external-branch' อย่างเดียว
+        if ($roles->count() === 1 && $roles->contains('external-branch')) {
+            return redirect()->route('payment-voucher.index');
         }
 
-        if ($user->level == 1 || $user->level == 0) {
-            return '/home';
-        } elseif ($user->level == 2) {
-            return '/home';
-        } else {
-            return '/home';
-        }
+        // 2. ยกเลิกการใช้ level แล้วใช้ Role แทน
+        // สำหรับบทบาทอื่นๆ ให้ไปหน้า /home
+        return '/home';
     }
 
     /**

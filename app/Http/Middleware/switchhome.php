@@ -18,15 +18,14 @@ class switchhome
     public function handle(Request $request, Closure $next)
     {
 
-        if (Auth::user()->level >= 0 && Auth::user()->level < 3) {
-            # code...
-            return $next($request);
-        } elseif (Auth::user()->level == 3) {
-            # code...
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        
+        // ยกเลิกการใช้ level แล้วใช้ Role แทน
+        if ($user->hasRole('parent')) {
             return redirect(route('formsControl'));
-        } else {
-            # code...
-            return redirect(route('home2'));
         }
+
+        return $next($request);
     }
 }

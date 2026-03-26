@@ -19,7 +19,10 @@ class CourseController extends Controller
     public function check_permission()
     {
         if (Auth::check()) {
-            if (Auth::user()->level == 1 || Auth::user()->level == 2 || Auth::user()->level == 0) {
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+            // ยกเลิกการใช้ level แล้วใช้ Role แทน
+            if ($user->hasAnyRole(['super-admin', 'admin', 'finance', 'reviewer', 'approver', 'staff', 'external-branch'])) {
             } else {
                 abort(403, 'Unauthorized action.');
             }
