@@ -185,6 +185,12 @@ class EmployeeController extends Controller
         $this->check_permission();
         $user = null;
         $roles_list = \Spatie\Permission\Models\Role::all();
+        
+        // Prevent non-super-admins from assigning super-admin
+        if (!\Illuminate\Support\Facades\Auth::user()->hasRole('super-admin')) {
+            $roles_list = $roles_list->where('name', '!=', 'super-admin');
+        }
+        
         $html = view('users.form_body', compact('user', 'roles_list'))->render();
         return response()->json(['html' => $html]);
     }
@@ -244,9 +250,15 @@ class EmployeeController extends Controller
 
         $user = User::create($data);
         
+        $requestedRoles = $request->input('roles', []);
+        // Security check: Only super-admin can assign super-admin role
+        if (!\Illuminate\Support\Facades\Auth::user()->hasRole('super-admin')) {
+            $requestedRoles = array_diff($requestedRoles, ['super-admin']);
+        }
+        
         // กำหนด Role ให้กับผู้ใช้ผ่าน Spatie โดยรับค่าจาก Checkbox
-        if ($request->has('roles')) {
-            $user->syncRoles($request->input('roles'));
+        if (!empty($requestedRoles)) {
+            $user->syncRoles($requestedRoles);
         }
 
         LogActivity::modelEvent($user, 'user created', null, $user->toArray());
@@ -275,7 +287,17 @@ class EmployeeController extends Controller
     {
         $this->check_permission();
         $user = User::find($id);
+
+        // Security check: Prevent non-super-admins from editing a super-admin
+        if (!\Illuminate\Support\Facades\Auth::user()->hasRole('super-admin') && $user->hasRole('super-admin')) {
+            return response()->json(['html' => '<div class="alert alert-danger">คุณไม่มีสิทธิ์แก้ไขข้อมูลของ Super Admin</div>']);
+        }
+
         $roles_list = \Spatie\Permission\Models\Role::all();
+        if (!\Illuminate\Support\Facades\Auth::user()->hasRole('super-admin')) {
+            $roles_list = $roles_list->where('name', '!=', 'super-admin');
+        }
+
         $html = view('users.form_body', compact('user', 'roles_list'))->render();
         return response()->json(['html' => $html]);
     }
@@ -333,6 +355,12 @@ class EmployeeController extends Controller
         }
 
         $user = User::find($id);
+
+        // Security check: Prevent non-super-admins from editing a super-admin
+        if (!\Illuminate\Support\Facades\Auth::user()->hasRole('super-admin') && $user->hasRole('super-admin')) {
+            return response()->json(['errors' => ['คุณไม่มีสิทธิ์แก้ไขข้อมูลของ Super Admin']]);
+        }
+
         $old = $user->toArray();
 
         $data = $request->except(['password', 'password_confirmation', '_token', '_method']);
@@ -384,8 +412,15 @@ class EmployeeController extends Controller
         }
         
         // อัปเดต Role
-        if ($request->has('roles')) {
-            $user->syncRoles($request->input('roles'));
+        $requestedRoles = $request->input('roles', []);
+        
+        // Security check: Only super-admin can assign super-admin role
+        if (!\Illuminate\Support\Facades\Auth::user()->hasRole('super-admin')) {
+            $requestedRoles = array_diff($requestedRoles, ['super-admin']);
+        }
+        
+        if (!empty($requestedRoles)) {
+            $user->syncRoles($requestedRoles);
         } else {
             // ถ้าไม่มีส่งมาเลย แปลว่าลบออกหมด
             $user->syncRoles([]);
