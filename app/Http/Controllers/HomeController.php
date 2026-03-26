@@ -36,7 +36,7 @@ class HomeController extends Controller
         if (Auth::check()) {
             /** @var \App\Models\User $user */
             $user = Auth::user();
-            if ($user->can('general.admin.view') || $user->can('general.view')) {
+            if ($user->can('general.admin.view')) {
             } else {
                 abort(403, 'Unauthorized action.');
             }
