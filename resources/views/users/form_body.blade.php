@@ -57,7 +57,7 @@
                     @php
                         $user_roles = $user ? $user->roles->pluck('name')->toArray() : [];
                     @endphp
-                    @if(isset($roles_list) && $roles_list->count() > 0)
+                    @if (isset($roles_list) && $roles_list->count() > 0)
                         @foreach ($roles_list as $role)
                             <div class="position-relative">
                                 <input type="checkbox" class="btn-check" name="roles[]"
@@ -164,17 +164,18 @@
                 <input type="text" class="form-control" name="department" id="{{ $prefix }}department"
                     value="{{ $user->department ?? '' }}">
             </div>
-            
+
             {{-- Branches Section --}}
             <div class="col-md-12 mb-3">
-                <label class="form-label d-block mb-2"><i class="fas fa-building me-1"></i>สาขาที่ดูแล (สำหรับบัญชีภายนอกที่ต้องกรองสาขา)</label>
+                <label class="form-label d-block mb-2"><i class="fas fa-building me-1"></i>สาขาที่ดูแล
+                    (สำหรับบัญชีภายนอกที่ต้องกรองสาขา)</label>
                 <div class="d-flex flex-wrap gap-2 p-2 border rounded bg-light">
                     @php
                         $available_branches = [
                             'EL' => 'Eye Level',
                             'IF' => 'Infinite Brain',
                             'META' => 'META Knowledge',
-                            'EiMaths' => 'EiMaths'
+                            'EiMaths' => 'EiMaths',
                         ];
                         $user_branches = $user?->branches ?? [];
                     @endphp
@@ -182,7 +183,8 @@
                         <div class="position-relative">
                             <input type="checkbox" class="btn-check" name="branches[]"
                                 id="{{ $prefix }}branch_{{ $b_code }}" value="{{ $b_code }}"
-                                {{ is_array($user_branches) && in_array($b_code, $user_branches) ? 'checked' : '' }} autocomplete="off">
+                                {{ is_array($user_branches) && in_array($b_code, $user_branches) ? 'checked' : '' }}
+                                autocomplete="off">
                             <label class="btn btn-outline-primary btn-sm rounded-pill"
                                 for="{{ $prefix }}branch_{{ $b_code }}">
                                 {{ $b_name }} ({{ $b_code }})
@@ -192,7 +194,7 @@
                     @endforeach
                 </div>
             </div>
-            
+
             <div class="col-md-6 mb-3">
                 <label for="{{ $prefix }}employee_type" class="form-label">ประเภทพนักงาน</label>
                 <select class="form-control" name="employee_type" id="{{ $prefix }}employee_type">

@@ -8,14 +8,14 @@
                         style="padding-bottom: 5px">
                 </div>
             </a>
-        @elserole('finance')
+            @elserole('finance')
             <a href="{{ route('formsControl') }}">
                 <div class="logo-src">
                     <img src="{{ asset('images/logo_infinitebrain.png') }}" alt="..." height="36"
                         style="padding-bottom: 5px">
                 </div>
             </a>
-        @elserole('parent')
+            @elserole('parent')
             <a href="{{ route('home2') }}">
                 <div class="logo-src">
                     <img src="{{ asset('images/logo_infinitebrain.png') }}" alt="..." height="36"
@@ -106,7 +106,7 @@
                                     <button type="button" tabindex="0" class="dropdown-item" data-toggle="modal"
                                         data-target=".bd-example-modal-lg" id="EditUserButton"
                                         onclick="$('#EditUserModal').modal('show');">User Account</button>
-                                    <a class="dropdown-item" href="{{route('profile.signature')}}">Signature</a>
+                                    <a class="dropdown-item" href="{{ route('profile.signature') }}">Signature</a>
                                     <!--<button type="button" tabindex="0" class="dropdown-item">Settings</button>
                                     <h6 tabindex="-1" class="dropdown-header">Header</h6>
                                     <button type="button" tabindex="0" class="dropdown-item">Actions</button>-->
@@ -128,19 +128,20 @@
                             <div class="widget-heading">
                                 {{ Str::upper(Auth::user()->name) }}
                             </div>
-                                @if(Auth::check() && count(Auth::user()->getRoleNames()) > 0)
+                            <div class="widget-subheading">
+                                @if (Auth::check() && count(Auth::user()->getRoleNames()) > 0)
                                     {{ implode(', ', array_map('ucwords', Auth::user()->getRoleNames()->toArray())) }}
                                 @else
                                     No Role
                                 @endif
                             </div>
                         </div>
-                        <!--<div class="widget-content-right header-user-info ms-3">
+                    </div>
+                    <!--<div class="widget-content-right header-user-info ms-3">
                             <button type="button" class="btn-shadow p-1 btn btn-primary btn-sm show-toastr-example">
                                 <i class="fa text-white fa-calendar pe-1 ps-1"></i>
                             </button>-
                         </div>-->
-                    </div>
                 </div>
             </div>
         </div>
