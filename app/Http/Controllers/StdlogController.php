@@ -178,7 +178,11 @@ class StdlogController extends Controller
         $totalForAllMonths = [];
         foreach ($reportMonth_schoolPrice_all as $studentId => $groupedData) {
             foreach ($groupedData as $key => $data) {
-                $month = Carbon::parse($data->rec_school->submission_date)->format('F-Y');
+                $rec_school = $data->rec_school;
+                if (!$rec_school) {
+                    continue;
+                }
+                $month = Carbon::parse($rec_school->submission_date)->format('F-Y');
                 if (!isset($totalForAllMonths[$month])) {
                     $totalForAllMonths[$month] = 0;
                 }
@@ -207,7 +211,11 @@ class StdlogController extends Controller
         $totalForAllYears = [];
         foreach ($reportMonth_schoolPrice_all as $studentId => $groupedData) {
             foreach ($groupedData as $key => $data) {
-                $year = Carbon::parse($data->rec_school->submission_date)->format('Y');
+                $rec_school = $data->rec_school;
+                if (!$rec_school) {
+                    continue;
+                }
+                $year = Carbon::parse($rec_school->submission_date)->format('Y');
 
                 if (!isset($totalForAllYears[$year])) {
                     $totalForAllYears[$year] = 0;
@@ -238,7 +246,11 @@ class StdlogController extends Controller
 
             foreach ($groupedData as $data) {
 
-                $year = Carbon::parse($data->rec_school->submission_date)->format('Y');
+                $rec_school = $data->rec_school;
+                if (!$rec_school) {
+                    continue;
+                }
+                $year = Carbon::parse($rec_school->submission_date)->format('Y');
                 $group2 = $data->group;
 
                 if (!isset($totalForAllGroupYear[$group2][$year])) {
@@ -391,6 +403,9 @@ class StdlogController extends Controller
 
         $schoolPriceQuery = SchoolPrice::whereIn('rid', $receiptSchoolIds)
             ->where('course_type', 1)
+            ->whereHas('std')
+            ->whereHas('rec_school')
+            ->whereHas('school_sub')
             ->when($groupSubject, function ($query) use ($groupSubject) {
                 $query->where('group', $groupSubject);
             })
