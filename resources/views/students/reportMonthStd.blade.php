@@ -394,7 +394,7 @@
                                         @php
                                             $class = '';
 
-                                            $status = Statuslog::where('student_id', $data->std->id)
+                                            $status = Statuslog::where('student_id', $data->std?->id)
                                                 ->where('group', $data->group)
                                                 ->whereMonth('status_date', $cMonth)
                                                 ->whereYear('status_date', $cYear)
@@ -425,13 +425,13 @@
                                         {{-- @if ($checkStatus === 'all')
                                             <tr>
                                                 <td class="text-center">{{ $key + 1 }}</td>
-                                                <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
-                                                <td class="{{ $class }}">{{ $data->std->nick_name ?? 'Null' }}
+                                                <td class="text-center">{{ $data->std?->code ?? 'Null' }}</td>
+                                                <td class="{{ $class }}">{{ $data->std?->nick_name ?? 'Null' }}
                                                 </td>
-                                                <td>{{ $data->rec_school->submission_date }}</td>
+                                                <td>{{ $data->rec_school?->submission_date }}</td>
                                                 <td>{{ $data->period }}</td>
 
-                                                <td>{{ $data->rec_school->receipt_number }}</td>
+                                                <td>{{ $data->rec_school?->receipt_number }}</td>
                                                 <td>{{ $data->group }}</td>
 
 
@@ -443,7 +443,7 @@
                                                 <td class="text-center">
                                                     <div class="form-check form-switch form-switch-sm">
                                                         <input class="form-check-input" type="checkbox"
-                                                            id="flexSwitchCheckChecked-{{ $data->rec_school->receipt_number }}">
+                                                            id="flexSwitchCheckChecked-{{ $data->rec_school?->receipt_number }}">
                                                     </div>
                                                 </td>
 
@@ -455,13 +455,13 @@
                                             @if ($checkStatus && $checkStatus === $statusValue)
                                                 <tr>
                                                     <td class="text-center">{{ $key + 1 }}</td>
-                                                    <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
-                                                    <td class="{{ $class }}">{{ $data->std->nick_name ?? 'Null' }}
+                                                    <td class="text-center">{{ $data->std?->code ?? 'Null' }}</td>
+                                                    <td class="{{ $class }}">{{ $data->std?->nick_name ?? 'Null' }}
                                                     </td>
-                                                    <td>{{ $data->rec_school->submission_date }}</td>
+                                                    <td>{{ $data->rec_school?->submission_date }}</td>
                                                     <td>{{ $data->period }}</td>
 
-                                                    <td>{{ $data->rec_school->receipt_number }}</td>
+                                                    <td>{{ $data->rec_school?->receipt_number }}</td>
                                                     <td>{{ $data->group }}</td>
 
 
@@ -473,7 +473,7 @@
                                                     <td class="text-center">
                                                         <div class="form-check form-switch form-switch-sm">
                                                             <input class="form-check-input" type="checkbox"
-                                                                id="flexSwitchCheckChecked-{{ $data->rec_school->receipt_number }}">
+                                                                id="flexSwitchCheckChecked-{{ $data->rec_school?->receipt_number }}">
                                                         </div>
                                                     </td>
 
@@ -486,14 +486,14 @@
                                         @endif --}}
                                         <tr>
                                             <td class="text-center">{{ $key + 1 }}</td>
-                                            <td class="text-center">{{ $data->std->code ?? 'Null' }}</td>
-                                            <td class="{{ $class }}">{{ $data->std->nick_name ?? 'Null' }}
+                                            <td class="text-center">{{ $data->std?->code ?? 'Null' }}</td>
+                                            <td class="{{ $class }}">{{ $data->std?->nick_name ?? 'Null' }}
                                             </td>
-                                            <td>{{ $data->rec_school->submission_date ?? 'Null' }}</td>
+                                            <td>{{ $data->rec_school?->submission_date ?? 'Null' }}</td>
                                             <td>{{ $data->period ?? 'Null' }}</td>
 
-                                            <td>{{ $data->rec_school->receipt_number ?? 'Null' }}</td>
-                                            <td>{{ $data->school_sub->title }}</td>
+                                            <td>{{ $data->rec_school?->receipt_number ?? 'Null' }}</td>
+                                            <td>{{ $data->school_sub?->title }}</td>
                                             <td>{{ $data->group }}</td>
 
                                             <td class="{{ $class }}">
@@ -513,8 +513,8 @@
                                             </td> --}}
                                             @php
                                                 $routeParameters = [
-                                                    'student_id' => $data->std->id,
-                                                    'receipt_school_id' => $data->rec_school->id,
+                                                    'student_id' => $data->std?->id,
+                                                    'receipt_school_id' => $data->rec_school?->id,
                                                     'school_price_id' => $data->id,
                                                 ];
                                                 $routeUrl = htmlspecialchars_decode(
