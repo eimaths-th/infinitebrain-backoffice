@@ -1731,6 +1731,7 @@ class ReceiptSchoolController extends Controller
             'pid' => $stu,
             'name_parent' => $request->get('name_parent'),
             'type' => $typeRec,
+            'source' => $request->get('source'),
             // 'sid' => $request->get('student'),
             'receipt_number' => $rnumber,
             'file_att' => $filebs,
@@ -2367,5 +2368,51 @@ class ReceiptSchoolController extends Controller
         }
 
         return response()->json(['success' => 'Credit Note created successfully']);
+    }
+
+    public function sourceReport(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $receipt = Receipt_School::select(
+                "receipt_school.id as id",
+                "receipt_school.submission_date as submission_date",
+                "receipt_school.receipt_number as receipt_number",
+                "receipt_school.pid as pid",
+                "receipt_school.source as source",
+                "parent.name_parent as name_parent"
+            )->join("parent", "parent.id", "=", "receipt_school.name_parent");
+
+            if ($request->has('source_filter') && $request->source_filter != "") {
+                $receipt->where('receipt_school.source', $request->source_filter);
+            }
+
+            $receipt = $receipt->orderBy("receipt_school.id", "desc")->get();
+
+            // Pre-fetch students
+            $studentIds = $receipt->pluck('pid')->flatMap(fn($p) => explode('|', $p))->unique()->filter()->toArray();
+            $students = Student::whereIn('id', $studentIds)->get()->keyBy('id');
+
+            return datatables()->of($receipt)
+                ->editColumn('pid', function ($row) use ($students) {
+                    $studentNames = [];
+                    $ids = explode('|', $row->pid);
+                    foreach ($ids as $id) {
+                        if (isset($students[$id])) {
+                            $studentNames[] = $students[$id]->nick_name;
+                        } elseif (!empty($id)) {
+                             $studentNames[] = '-';
+                        }
+                    }
+                    return !empty($studentNames) ? implode(' , ', $studentNames) : '-';
+                })
+                ->editColumn('source', function ($row) {
+                    return $row->source ?: '-';
+                })
+                ->addIndexColumn()
+                ->toJson();
+        }
+
+        return view('receipt_school.source_report');
     }
 }
