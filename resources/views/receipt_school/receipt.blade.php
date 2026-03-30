@@ -749,6 +749,23 @@
 
                                     <div class="form-row">
                                         <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="Source">แหล่งที่มา (Source):</label>
+                                                <select class="form-control" id="AddSource" name="source">
+                                                    <option value="">-- เลือกแหล่งที่มา --</option>
+                                                    <option value="Facebook">Facebook</option>
+                                                    <option value="Line">Line</option>
+                                                    <option value="Website">Website</option>
+                                                    <option value="Walk-in">Walk-in</option>
+                                                    <option value="คนรู้จักแนะนำ">คนรู้จักแนะนำ</option>
+                                                    <option value="อื่นๆ">อื่นๆ (ระบุในหมายเหตุ)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="Parent">Name Parent:</label><br>
                                                 <select style="width: 100%;"
@@ -1400,6 +1417,23 @@
 
                                         </div>
 
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="Source">แหล่งที่มา (Source):</label>
+                                                <select class="form-control" id="EditSource" name="source">
+                                                    <option value="">-- เลือกแหล่งที่มา --</option>
+                                                    <option value="Facebook">Facebook</option>
+                                                    <option value="Line">Line</option>
+                                                    <option value="Website">Website</option>
+                                                    <option value="Walk-in">Walk-in</option>
+                                                    <option value="คนรู้จักแนะนำ">คนรู้จักแนะนำ</option>
+                                                    <option value="อื่นๆ">อื่นๆ (ระบุในหมายเหตุ)</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="form-row">
@@ -2253,6 +2287,7 @@
                         $('#customer_code').val(res.data2.code);
                         $('#EditSubmissiondate').val(res.data.submission_date);
                         $('#EditPayment').html(res.payment)
+                        $('#EditSource').val(res.data.source);
                         //$('#EditPackage').val(res.data.package);
                         $('#EditAddress').val(res.data.street_address);
                         //$('#EditAddress2').val(res.data.street_address2);

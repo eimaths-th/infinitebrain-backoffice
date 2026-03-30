@@ -80,6 +80,12 @@
                             Receipt (ค่าสมัครเรียน)
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('receipt_school.sourceReport') }}">
+                            <i class="metismenu-icon pe-7s-graph2"></i>
+                            รายงานแหล่งที่มา (Source)
+                        </a>
+                    </li>
 
                     <li>
                         <a href="#">

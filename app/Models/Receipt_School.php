@@ -25,6 +25,7 @@ class Receipt_School extends Model
         'file_att',
         'receipt_number',
         'pid',
+        'source',
         'approv_id',
         'approv_name',
     ];
