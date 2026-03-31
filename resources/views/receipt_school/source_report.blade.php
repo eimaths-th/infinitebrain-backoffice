@@ -48,7 +48,7 @@
                 <div class="row">
                     @foreach($summary as $item)
                     <div class="col-md-3 col-sm-6 mb-3">
-                        <div class="p-3 border rounded border-info bg-light text-center h-100 shadow-sm transition-hover">
+                        <div class="p-3 border rounded border-info bg-light text-center shadow-sm transition-hover">
                             <h6 class="text-secondary mb-2">{{ $item->source }}</h6>
                             <h2 class="font-weight-bold mb-0 text-primary">{{ number_format($item->total_count) }} <small class="h6 text-muted">รายการ</small></h2>
                         </div>
