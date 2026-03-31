@@ -170,10 +170,16 @@ class ReceiptVoucher extends Model
             ->toArray();
     }
 
-    public static function generateVoucherNo($voucherCode = 'ELRV')
+    public static function generateVoucherNo($voucherCode = 'ELRV', $voucherDate = null)
     {
-        $year = date('Y');
-        $month = date('m');
+        if ($voucherDate) {
+            $date = is_string($voucherDate) ? strtotime($voucherDate) : $voucherDate;
+            $year = date('Y', $date);
+            $month = date('m', $date);
+        } else {
+            $year = date('Y');
+            $month = date('m');
+        }
         $prefix = $voucherCode . $year . $month;
 
         $lastVoucher = self::where('voucher_no', 'like', $prefix . '%')

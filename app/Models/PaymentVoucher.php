@@ -232,10 +232,16 @@ class PaymentVoucher extends Model
     }
 
     // Generate Voucher Number: EL20260112 = รหัสสาขา + ปี + เดือน + ลำดับ
-    public static function generateVoucherNo($voucherCode = 'ELPV')
+    public static function generateVoucherNo($voucherCode = 'ELPV', $voucherDate = null)
     {
-        $year = date('Y');
-        $month = date('m');
+        if ($voucherDate) {
+            $date = is_string($voucherDate) ? strtotime($voucherDate) : $voucherDate;
+            $year = date('Y', $date);
+            $month = date('m', $date);
+        } else {
+            $year = date('Y');
+            $month = date('m');
+        }
         $prefix = $voucherCode . $year . $month;
 
         $lastVoucher = self::where('voucher_no', 'like', $prefix . '%')

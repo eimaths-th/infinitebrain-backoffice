@@ -245,7 +245,7 @@ class PaymentVoucherController extends Controller
             }
 
             $voucher = PaymentVoucher::create([
-                'voucher_no' => PaymentVoucher::generateVoucherNo($voucherCode),
+                'voucher_no' => PaymentVoucher::generateVoucherNo($voucherCode, $request->voucher_date),
                 'voucher_code' => $voucherCode,
                 'branch_code' => $branchCode,
                 'group_branch_code' => $groupBranchCode,
@@ -558,10 +558,11 @@ class PaymentVoucherController extends Controller
             $voucherCode = $isBankFee ? ($branch->bf_prefix ?? $branchCode . 'BF') : ($branch->pv_prefix ?? $branchCode . 'PV');
             $groupBranchCode = $branch->group->code ?? '';
 
-            // Regenerate voucher_no if draft and prefix changed
+            // Regenerate voucher_no if draft and prefix or voucher_date changed
             if ($voucher->status == PaymentVoucher::STATUS_DRAFT) {
-                if ($branchCode != $voucher->branch_code || $voucherCode != $voucher->voucher_code) {
-                    $voucher->voucher_no = PaymentVoucher::generateVoucherNo($voucherCode);
+                $expectedPrefixYearMonth = $voucherCode . date('Ym', strtotime($request->voucher_date));
+                if (!str_starts_with($voucher->voucher_no, $expectedPrefixYearMonth) || $branchCode != $voucher->branch_code || $voucherCode != $voucher->voucher_code) {
+                    $voucher->voucher_no = PaymentVoucher::generateVoucherNo($voucherCode, $request->voucher_date);
                     $voucher->voucher_code = $voucherCode;
                 }
             }
@@ -1099,7 +1100,7 @@ class PaymentVoucherController extends Controller
         $isBankFee = $category == PaymentVoucher::CAT_BANK_FEE;
         $voucherCode = $isBankFee ? ($branch->bf_prefix ?? $branchCode . 'BF') : ($branch->pv_prefix ?? $branchCode . 'PV');
 
-        $voucherNo = PaymentVoucher::generateVoucherNo($voucherCode);
+        $voucherNo = PaymentVoucher::generateVoucherNo($voucherCode, $request->voucher_date);
 
         return response()->json([
             'voucher_no' => $voucherNo,

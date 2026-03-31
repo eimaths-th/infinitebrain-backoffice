@@ -655,7 +655,7 @@
             });
         });
 
-        // Update voucher number preview when branch, category or is_salary changes (Only for Draft)
+        // Update voucher number preview when branch, category, is_salary or voucher_date changes (Only for Draft)
         @if($voucher->status == \App\Models\PaymentVoucher::STATUS_DRAFT)
         function updateVoucherNoPreview() {
             const branchCode = document.querySelector('select[name="branch_code"]').value;
@@ -663,6 +663,7 @@
             const category = categoryElement ? categoryElement.value : '';
             const isSalaryElement = document.getElementById('isSalary');
             const isSalary = isSalaryElement ? isSalaryElement.checked : false;
+            const voucherDate = document.querySelector('input[name="voucher_date"]').value;
             const previewInput = document.getElementById('voucherNoPreview');
 
             // แสดงสถานะกำลังโหลด
@@ -671,6 +672,9 @@
             let url = `{{ route('payment-voucher.next-voucher-no') }}?branch_code=${branchCode}`;
             if (!isSalary && category) {
                 url += `&category=${category}`;
+            }
+            if (voucherDate) {
+                url += `&voucher_date=${voucherDate}`;
             }
 
             // เรียก API เพื่อดึงเลขที่ใบสำคัญจ่ายถัดไปที่ถูกต้อง
@@ -687,6 +691,7 @@
         document.querySelector('select[name="branch_code"]').addEventListener('change', updateVoucherNoPreview);
         document.getElementById('category').addEventListener('change', updateVoucherNoPreview);
         document.getElementById('isSalary').addEventListener('change', updateVoucherNoPreview);
+        document.querySelector('input[name="voucher_date"]').addEventListener('change', updateVoucherNoPreview);
         @endif
 
         let itemIndex = {{ $voucher->expenseItems->count() - 1 }};
