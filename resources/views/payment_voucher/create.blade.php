@@ -820,11 +820,12 @@
             }
         });
 
-        // Update voucher number preview when branch, category or is_salary changes - ดึงจาก server
+        // Update voucher number preview when branch, category, is_salary or voucher_date changes - ดึงจาก server
         function updateVoucherNoPreview() {
             const branchCode = document.getElementById('branchCode').value;
             const category = document.getElementById('category').value;
             const isSalary = document.getElementById('isSalary').checked;
+            const voucherDate = document.querySelector('input[name="voucher_date"]').value;
             const previewInput = document.getElementById('voucherNoPreview');
 
             // แสดงสถานะกำลังโหลด
@@ -833,6 +834,9 @@
             let url = `{{ route('payment-voucher.next-voucher-no') }}?branch_code=${branchCode}`;
             if (!isSalary && category) {
                 url += `&category=${category}`;
+            }
+            if (voucherDate) {
+                url += `&voucher_date=${voucherDate}`;
             }
 
             // เรียก API เพื่อดึงเลขที่ใบสำคัญจ่ายถัดไปที่ถูกต้อง
@@ -849,6 +853,7 @@
         document.getElementById('branchCode').addEventListener('change', updateVoucherNoPreview);
         document.getElementById('category').addEventListener('change', updateVoucherNoPreview);
         document.getElementById('isSalary').addEventListener('change', updateVoucherNoPreview);
+        document.querySelector('input[name="voucher_date"]').addEventListener('change', updateVoucherNoPreview);
 
         // Initialize Select2 for payee search
         $(document).ready(function() {

@@ -182,7 +182,7 @@ class ReceiptVoucherController extends Controller
             ]);
 
             $voucher = ReceiptVoucher::create([
-                'voucher_no' => ReceiptVoucher::generateVoucherNo($voucherCode),
+                'voucher_no' => ReceiptVoucher::generateVoucherNo($voucherCode, $request->voucher_date),
                 'voucher_code' => $voucherCode,
                 'voucher_date' => $request->voucher_date,
                 'branch_code' => $branchCode,
@@ -347,10 +347,11 @@ class ReceiptVoucherController extends Controller
             $voucherCode = $branch->rv_prefix ?? ($branchCode . 'RV');
             $groupBranchCode = $branch->group->code ?? '';
 
-            // If it's a draft and branch/voucher_code changed, regenerate voucher_no
+            // If it's a draft and branch/voucher_code or voucher_date changed, regenerate voucher_no
             if ($voucher->status == ReceiptVoucher::STATUS_DRAFT) {
-                if ($branchCode != $voucher->branch_code || $voucherCode != $voucher->voucher_code) {
-                    $voucher->voucher_no = ReceiptVoucher::generateVoucherNo($voucherCode);
+                $expectedPrefixYearMonth = $voucherCode . date('Ym', strtotime($request->voucher_date));
+                if (!str_starts_with($voucher->voucher_no, $expectedPrefixYearMonth) || $branchCode != $voucher->branch_code || $voucherCode != $voucher->voucher_code) {
+                    $voucher->voucher_no = ReceiptVoucher::generateVoucherNo($voucherCode, $request->voucher_date);
                     $voucher->voucher_code = $voucherCode;
                 }
             }
@@ -579,7 +580,7 @@ class ReceiptVoucherController extends Controller
             return response()->json(['error' => 'ไม่พบรหัสสาขา'], 404);
         }
         $voucherCode = $branch->rv_prefix ?? ($branchCode . 'RV');
-        return response()->json(['voucher_no' => ReceiptVoucher::generateVoucherNo($voucherCode)]);
+        return response()->json(['voucher_no' => ReceiptVoucher::generateVoucherNo($voucherCode, $request->voucher_date)]);
     }
 
     public function printPdf($id)

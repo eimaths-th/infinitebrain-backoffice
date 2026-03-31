@@ -330,12 +330,18 @@
             });
 
             // Voucher No Preview
-            $('#branchCode').on('change', function() {
-                const branchCode = this.value;
+            $('#branchCode, input[name="voucher_date"]').on('change', function() {
+                const branchCode = $('#branchCode').val();
+                const voucherDate = $('input[name="voucher_date"]').val();
                 const previewInput = $('#voucherNoPreview');
                 previewInput.val('กำลังโหลด...');
                 
-                fetch(`{{ route('receipt-voucher.next-voucher-no') }}?branch_code=${branchCode}`)
+                let url = `{{ route('receipt-voucher.next-voucher-no') }}?branch_code=${branchCode}`;
+                if (voucherDate) {
+                    url += `&voucher_date=${voucherDate}`;
+                }
+                
+                fetch(url)
                     .then(r => r.json())
                     .then(data => {
                         previewInput.val(data.voucher_no);
@@ -461,17 +467,7 @@
             calculateTotal();
         });
 
-        // Update voucher number preview when branch changes
-        $('#branchCode').on('change', function() {
-            const branchCode = $(this).val();
-            const previewInput = $('#voucherNoPreview');
-            
-            previewInput.val('กำลังโหลด...');
-            
-            $.get(`{{ route('receipt-voucher.next-voucher-no') }}?branch_code=${branchCode}`, function(data) {
-                previewInput.val(data.voucher_no);
-            });
-        });
+        // (Duplicate event handler removed, handled above in document.ready)
 
         // Form validation — ตรวจสอบทุก field ก่อน submit พร้อมแสดง alert แดง
         document.getElementById('voucherForm').addEventListener('submit', function(e) {

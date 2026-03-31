@@ -119,7 +119,7 @@
                                         <label class="form-label">เลขที่ใบสำคัญรับ</label>
                                         <input type="text" class="form-control bg-light" id="voucherNoPreview" value="{{ $voucher->voucher_no }}" readonly disabled>
                                         @if($voucher->status == \App\Models\ReceiptVoucher::STATUS_DRAFT)
-                                            <small class="text-muted">รูปแบบ: รหัสสาขา + ปี + เดือน + ลำดับ (จะเปลี่ยนหากเปลี่ยนสาขาในสถานะร่าง)</small>
+                                            <small class="text-muted">รูปแบบ: รหัสสาขา + ปี + เดือน + ลำดับ (จะเปลี่ยนหากเปลี่ยนสาขาหรือวันที่ในสถานะร่าง)</small>
                                         @endif
                                     </div>
                                 </div>
@@ -395,6 +395,26 @@
                     preview.append(item);
                 });
             });
+            // Voucher No Preview for Draft
+            @if($voucher->status == \App\Models\ReceiptVoucher::STATUS_DRAFT)
+            $('#branchCode, input[name="voucher_date"]').on('change', function() {
+                const branchCode = $('#branchCode').val();
+                const voucherDate = $('input[name="voucher_date"]').val();
+                const previewInput = $('#voucherNoPreview');
+                previewInput.val('กำลังโหลด...');
+                
+                let url = `{{ route('receipt-voucher.next-voucher-no') }}?branch_code=${branchCode}`;
+                if (voucherDate) {
+                    url += `&voucher_date=${voucherDate}`;
+                }
+                
+                fetch(url)
+                    .then(r => r.json())
+                    .then(data => {
+                        previewInput.val(data.voucher_no);
+                    });
+            });
+            @endif
         });
 
         function addItem() {
