@@ -38,6 +38,28 @@
         </div>
     </div>
     
+    @if(isset($summary) && $summary->count() > 0)
+    <div class="col-12 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
+                <h5 class="card-title text-primary fw-bold"><i class="fa fa-pie-chart text-info"></i> สรุปข้อมูลแหล่งที่มา (Source Summary)</h5>
+            </div>
+            <div class="card-body pb-2">
+                <div class="row">
+                    @foreach($summary as $item)
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="p-3 border rounded border-info bg-light text-center h-100 shadow-sm transition-hover">
+                            <h6 class="text-secondary mb-2">{{ $item->source }}</h6>
+                            <h2 class="font-weight-bold mb-0 text-primary">{{ number_format($item->total_count) }} <small class="h6 text-muted">รายการ</small></h2>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    
     <div class="main-card mb-3 card">
         <div class="card-body">
             <table style="width: 100%;" id="Listview" class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">

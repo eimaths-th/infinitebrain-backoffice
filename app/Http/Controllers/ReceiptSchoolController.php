@@ -2381,7 +2381,9 @@ class ReceiptSchoolController extends Controller
                 "receipt_school.pid as pid",
                 "receipt_school.source as source",
                 "parent.name_parent as name_parent"
-            )->join("parent", "parent.id", "=", "receipt_school.name_parent");
+            )->join("parent", "parent.id", "=", "receipt_school.name_parent")
+             ->whereNotNull('receipt_school.source')
+             ->where('receipt_school.source', '!=', '');
 
             if ($request->has('source_filter') && $request->source_filter != "") {
                 $receipt->where('receipt_school.source', $request->source_filter);
@@ -2413,6 +2415,13 @@ class ReceiptSchoolController extends Controller
                 ->toJson();
         }
 
-        return view('receipt_school.source_report');
+        $summary = Receipt_School::select('source', \Illuminate\Support\Facades\DB::raw('count(*) as total_count'))
+            ->whereNotNull('source')
+            ->where('source', '!=', '')
+            ->groupBy('source')
+            ->orderByDesc('total_count')
+            ->get();
+
+        return view('receipt_school.source_report', compact('summary'));
     }
 }
