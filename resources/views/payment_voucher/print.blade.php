@@ -243,9 +243,9 @@
                 </div>
                 <style>
                     .items-table th {
-                        border-top: 1px solid #7cbd14;
+                        border-top: 1px solid #85ac30;
                         /* Greenish border like in sample */
-                        border-bottom: 1px solid #7cbd14;
+                        border-bottom: 1px solid #85ac30;
                         padding: 8px;
                         text-align: center;
                         color: #666;
@@ -253,8 +253,8 @@
                     }
 
                     .total-row {
-                        border-top: 1px solid #7cbd14;
-                        border-bottom: 1px solid #7cbd14;
+                        border-top: 1px solid #85ac30;
+                        border-bottom: 1px solid #85ac30;
                         font-weight: bold;
                     }
                 </style>
