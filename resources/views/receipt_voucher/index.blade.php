@@ -9,13 +9,56 @@
             font-size: 12px;
             font-weight: 600;
         }
-        .status-draft { background-color: #6c757d; color: white; }
-        .status-pending { background-color: #ffc107; color: #212529; }
-        .status-verified { background-color: #007bff; color: white; }
-        .status-completed { background-color: #28a745; color: white; }
-        .status-rejected { background-color: #dc3545; color: white; }
-        .btn-action { padding: 3px 8px; font-size: 12px; margin: 1px; }
-        .filter-section { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+
+        .status-draft {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .status-pending {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .status-verified {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .status-completed {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .status-rejected {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-action {
+            padding: 3px 8px;
+            font-size: 12px;
+            margin: 1px;
+        }
+
+        .filter-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .text-meta {
+            color: #ffc107;
+        }
+
+        .text-eimaths {
+            color: #ff9822;
+        }
+
+        .text-infinitebrain {
+            color: #28a745;
+        }
     </style>
 @endsection
 
@@ -62,8 +105,8 @@
                             <select name="branch_group" class="form-select">
                                 <option value="">-- ทั้งหมด --</option>
                                 @foreach ($groupBranchCodes as $group_name => $codes)
-                                    <option value="{{ $group_name }}"
-                                        {{ request('branch_group') == $group_name ? 'selected' : '' }}>
+                                    <option value="{{ $group_name }}" {{ request('branch_group') == $group_name ? 'selected' : ''
+                                        }}>
                                         {{ $group_name }}
                                     </option>
                                 @endforeach
@@ -74,8 +117,7 @@
                             <select name="branch_code" class="form-select">
                                 <option value="">-- ทั้งหมด --</option>
                                 @foreach ($branchCodes as $code => $name)
-                                    <option value="{{ $code }}"
-                                        {{ request('branch_code') == $code ? 'selected' : '' }}>
+                                    <option value="{{ $code }}" {{ request('branch_code') == $code ? 'selected' : '' }}>
                                         {{ $name }}
                                     </option>
                                 @endforeach
@@ -86,7 +128,8 @@
                             <select name="status" class="form-select">
                                 <option value="">-- ทั้งหมด --</option>
                                 @foreach (\App\Models\ReceiptVoucher::$statusLabels as $status_value => $status_text)
-                                    <option value="{{ $status_value }}" {{ request('status') == $status_value ? 'selected' : '' }}>
+                                    <option value="{{ $status_value }}" {{ request('status') == $status_value ? 'selected' : ''
+                                        }}>
                                         {{ $status_text }}
                                     </option>
                                 @endforeach
@@ -104,25 +147,30 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">ค้นหา</label>
-                            <input type="text" name="search" class="form-control" placeholder="เลขที่/รับจาก/หมายเหตุ..." value="{{ request('search') }}">
+                            <input type="text" name="search" class="form-control" placeholder="เลขที่/รับจาก/หมายเหตุ..."
+                                value="{{ request('search') }}">
                         </div>
                         <div class="col-md-3 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary me-2"><i class="fa fa-search"></i> ค้นหา</button>
-                            <a href="{{ route('receipt-voucher.index') }}" class="btn btn-secondary"><i class="fa fa-refresh"></i> รีเซ็ต</a>
+                            <a href="{{ route('receipt-voucher.index') }}" class="btn btn-secondary"><i
+                                    class="fa fa-refresh"></i> รีเซ็ต</a>
                         </div>
                     </form>
                 </div>
 
                 <!-- Action Panel -->
                 <div class="mb-3 d-none" id="bulk-action-panel">
-                    <form action="{{ route('receipt-voucher.bulk-action') }}" method="POST" id="bulkActionForm" class="d-inline">
+                    <form action="{{ route('receipt-voucher.bulk-action') }}" method="POST" id="bulkActionForm"
+                        class="d-inline">
                         @csrf
                         <input type="hidden" name="action" id="bulk_action_type" value="">
                         <div id="bulk_voucher_ids"></div>
-                        <button type="button" class="btn btn-warning me-2 d-none" id="btn-bulk-verify" onclick="openBulkConfirmModal('verify', 'ตรวจสอบหลายรายการ')">
+                        <button type="button" class="btn btn-warning me-2 d-none" id="btn-bulk-verify"
+                            onclick="openBulkConfirmModal('verify', 'ตรวจสอบหลายรายการ')">
                             <i class="fa fa-search"></i> ตรวจสอบหลายรายการ
                         </button>
-                        <button type="button" class="btn btn-success me-2 d-none" id="btn-bulk-complete" onclick="openBulkConfirmModal('complete', 'บันทึกเสร็จสิ้นหลายรายการ')">
+                        <button type="button" class="btn btn-success me-2 d-none" id="btn-bulk-complete"
+                            onclick="openBulkConfirmModal('complete', 'บันทึกเสร็จสิ้นหลายรายการ')">
                             <i class="fa fa-flag-checkered"></i> บันทึกเสร็จสิ้นหลายรายการ
                         </button>
                     </form>
@@ -159,21 +207,24 @@
                                         </tfoot>
                                     </table>
                                 </div>
-                                
+
                                 <div id="completeInputSection" class="d-none border-top pt-3">
                                     <div class="mb-3">
                                         <label class="form-label">ผู้รับเงิน <span class="text-danger">*</span></label>
-                                        <input type="text" id="bulk_receiver_name" class="form-control" value="{{ Auth::user()->name }}">
+                                        <input type="text" id="bulk_receiver_name" class="form-control"
+                                            value="{{ Auth::user()->name }}">
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">วันที่รับเงิน</label>
-                                        <input type="text" id="bulk_received_date" class="form-control datepicker" value="{{ date('Y-m-d') }}">
+                                        <input type="text" id="bulk_received_date" class="form-control datepicker"
+                                            value="{{ date('Y-m-d') }}">
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                                <button type="button" class="btn btn-primary" id="btnSubmitBulk" onclick="submitBulkAction()">ยืนยันทำรายการ</button>
+                                <button type="button" class="btn btn-primary" id="btnSubmitBulk"
+                                    onclick="submitBulkAction()">ยืนยันทำรายการ</button>
                             </div>
                         </div>
                     </div>
@@ -202,19 +253,30 @@
                                 $canComplete = Auth::user()->can('receipt-voucher.complete');
                             @endphp
                             @forelse($vouchers as $index => $voucher)
+                                @php
+                                    $class = '';
+                                    if ($voucher->group_branch_code == 'META') {
+                                        # code...
+                                        $class = 'text-meta';
+                                    } elseif ($voucher->group_branch_code == 'EiMaths') {
+                                        $class = 'text-eimaths';
+                                    } else {
+                                        $class = 'text-infinitebrain';
+                                    }
+
+                                @endphp
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="form-check-input voucher-checkbox" 
-                                            value="{{ $voucher->id }}" 
-                                            data-status="{{ $voucher->status }}"
+                                        <input type="checkbox" class="form-check-input voucher-checkbox"
+                                            value="{{ $voucher->id }}" data-status="{{ $voucher->status }}"
                                             data-no="{{ $voucher->voucher_no }}"
                                             data-date="{{ $voucher->voucher_date->format('d/m/Y') }}"
-                                            data-payee="{{ $voucher->receive_from }}"
-                                            data-amount="{{ $voucher->net_amount }}">
+                                            data-payee="{{ $voucher->receive_from }}" data-amount="{{ $voucher->net_amount }}">
                                     </td>
                                     <td>{{ $vouchers->firstItem() + $index }}</td>
                                     <td>
-                                        <a href="{{ route('receipt-voucher.show', $voucher->id) }}" class="fw-bold text-primary">
+                                        <a href="{{ route('receipt-voucher.show', $voucher->id) }}"
+                                            class="fw-bold {{ $class }}">
                                             {{ $voucher->voucher_no }}
                                         </a>
                                     </td>
@@ -228,24 +290,31 @@
                                     </td>
                                     <td>{{ $voucher->creator->name ?? $voucher->created_by_name }}</td>
                                     <td>
-                                        <a href="{{ route('receipt-voucher.show', $voucher->id) }}" class="btn btn-info btn-action" title="ดูรายละเอียด">
+                                        <a href="{{ route('receipt-voucher.show', $voucher->id) }}"
+                                            class="btn btn-info btn-action" title="ดูรายละเอียด">
                                             <i class="fa fa-eye"></i>
                                         </a>
                                         @if ($voucher->canEdit())
-                                            <a href="{{ route('receipt-voucher.edit', $voucher->id) }}" class="btn btn-warning btn-action" title="แก้ไข">
+                                            <a href="{{ route('receipt-voucher.edit', $voucher->id) }}"
+                                                class="btn btn-warning btn-action" title="แก้ไข">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <form action="{{ route('receipt-voucher.destroy', $voucher->id) }}" method="POST" class="d-inline" onsubmit="return confirm('ยืนยันการลบ?')">
+                                            <form action="{{ route('receipt-voucher.destroy', $voucher->id) }}" method="POST"
+                                                class="d-inline" onsubmit="return confirm('ยืนยันการลบ?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-action" title="ลบ"><i class="fa fa-trash"></i></button>
+                                                <button type="submit" class="btn btn-danger btn-action" title="ลบ"><i
+                                                        class="fa fa-trash"></i></button>
                                             </form>
                                         @endif
                                         @can('receipt-voucher.delete')
-                                            <form action="{{ route('receipt-voucher.force-destroy', $voucher->id) }}" method="POST" class="d-inline" onsubmit="return confirm('ยืนยันการลบถาวร? การดำเนินการนี้ไม่สามารถกู้คืนได้')">
+                                            <form action="{{ route('receipt-voucher.force-destroy', $voucher->id) }}" method="POST"
+                                                class="d-inline"
+                                                onsubmit="return confirm('ยืนยันการลบถาวร? การดำเนินการนี้ไม่สามารถกู้คืนได้')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger btn-action" title="ลบถาวร"><i class="fa fa-fire"></i></button>
+                                                <button type="submit" class="btn btn-outline-danger btn-action" title="ลบถาวร"><i
+                                                        class="fa fa-fire"></i></button>
                                             </form>
                                         @endcan
                                     </td>
@@ -269,14 +338,14 @@
 
 @section('script')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Bulk Checkbox Logic
-            $('#checkAll').change(function() {
+            $('#checkAll').change(function () {
                 $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
                 evaluateBulkActions();
             });
 
-            $('.voucher-checkbox').change(function() {
+            $('.voucher-checkbox').change(function () {
                 if ($('.voucher-checkbox:checked').length === $('.voucher-checkbox').length) {
                     $('#checkAll').prop('checked', true);
                 } else {
@@ -284,7 +353,7 @@
                 }
                 evaluateBulkActions();
             });
-            
+
             // Re-evalute on load in case of going back from history
             evaluateBulkActions();
         });
@@ -295,8 +364,8 @@
         function evaluateBulkActions() {
             let statuses = new Set();
             let checkedItems = $('.voucher-checkbox:checked');
-            
-            checkedItems.each(function() {
+
+            checkedItems.each(function () {
                 statuses.add($(this).data('status'));
             });
 
@@ -305,7 +374,7 @@
 
             if (checkedItems.length > 0) {
                 $('#bulk-action-panel').removeClass('d-none');
-                
+
                 // ถ้ารายการที่เลือกมีสถานะเดียวกันทั้งหมด
                 if (statuses.size === 1) {
                     const status = Array.from(statuses)[0];
@@ -323,11 +392,11 @@
         function openBulkConfirmModal(action, title) {
             $('#bulk_action_type').val(action);
             $('#bulkConfirmTitle').text(title);
-            
+
             // Set styles based on action
             let headerClass = 'bg-primary';
             let btnClass = 'btn-primary';
-            
+
             if (action === 'verify') {
                 headerClass = 'bg-warning text-dark';
                 btnClass = 'btn-warning text-dark';
@@ -335,35 +404,39 @@
                 headerClass = 'bg-success';
                 btnClass = 'btn-success text-white';
             }
-            
-            $('#bulkConfirmHeader').removeClass('bg-primary bg-warning bg-success text-dark text-white').addClass(headerClass);
+
+            $('#bulkConfirmHeader').removeClass('bg-primary bg-warning bg-success text-dark text-white').addClass(
+                headerClass);
             $('#btnSubmitBulk').removeClass('btn-primary btn-warning btn-success text-dark text-white').addClass(btnClass);
-            
+
             // Generate list
             let listHtml = '';
             let totalAmount = 0;
-            
-            $('.voucher-checkbox:checked').each(function() {
+
+            $('.voucher-checkbox:checked').each(function () {
                 const no = $(this).data('no');
                 const date = $(this).data('date');
                 const payee = $(this).data('payee');
                 const amount = parseFloat($(this).data('amount'));
-                
+
                 totalAmount += amount;
-                
+
                 listHtml += `
-                    <tr>
-                        <td><span class="badge ${headerClass}">${no}</span></td>
-                        <td>${date}</td>
-                        <td>${payee}</td>
-                        <td class="text-end">${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                    </tr>
-                `;
+                        <tr>
+                            <td><span class="badge ${headerClass}">${no}</span></td>
+                            <td>${date}</td>
+                            <td>${payee}</td>
+                            <td class="text-end">${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        </tr>
+                    `;
             });
-            
+
             $('#bulkConfirmList').html(listHtml);
-            $('#bulkConfirmTotal').text(totalAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-            
+            $('#bulkConfirmTotal').text(totalAmount.toLocaleString('en-US', {
+                minimumFractionDigits: 2
+                , maximumFractionDigits: 2
+            }));
+
             if (action === 'complete') {
                 $('#completeInputSection').removeClass('d-none');
                 $('#bulk_receiver_name').prop('required', true);
@@ -371,13 +444,13 @@
                 $('#completeInputSection').addClass('d-none');
                 $('#bulk_receiver_name').prop('required', false);
             }
-            
+
             $('#bulkConfirmModal').modal('show');
         }
 
         function submitBulkAction() {
             const action = $('#bulk_action_type').val();
-            
+
             if (action === 'complete') {
                 const receiverName = $('#bulk_receiver_name').val();
                 const receivedDate = $('#bulk_received_date').val();
@@ -386,25 +459,26 @@
                     alert('กรุณาระบุชื่อผู้รับเงิน');
                     return;
                 }
-                
+
                 // Add extra fields to form
                 $('#bulkActionForm input[name="receiver_name"]').remove();
                 $('#bulkActionForm input[name="received_date"]').remove();
-                
+
                 let extraFields = `
-                    <input type="hidden" name="receiver_name" value="${receiverName}">
-                    <input type="hidden" name="received_date" value="${receivedDate}">
-                `;
+                        <input type="hidden" name="receiver_name" value="${receiverName}">
+                        <input type="hidden" name="received_date" value="${receivedDate}">
+                    `;
                 $('#bulkActionForm').append(extraFields);
             }
-            
+
             let idsHtml = '';
-            $('.voucher-checkbox:checked').each(function() {
+            $('.voucher-checkbox:checked').each(function () {
                 idsHtml += `<input type="hidden" name="voucher_ids[]" value="${$(this).val()}">`;
             });
             $('#bulk_voucher_ids').html(idsHtml);
-            
+
             $('#bulkActionForm').submit();
         }
+
     </script>
 @endsection
