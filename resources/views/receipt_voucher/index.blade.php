@@ -113,11 +113,80 @@
                     </form>
                 </div>
 
+                <!-- Action Panel -->
+                <div class="mb-3 d-none" id="bulk-action-panel">
+                    <form action="{{ route('receipt-voucher.bulk-action') }}" method="POST" id="bulkActionForm" class="d-inline">
+                        @csrf
+                        <input type="hidden" name="action" id="bulk_action_type" value="">
+                        <div id="bulk_voucher_ids"></div>
+                        <button type="button" class="btn btn-warning me-2 d-none" id="btn-bulk-verify" onclick="openBulkConfirmModal('verify', 'ตรวจสอบหลายรายการ')">
+                            <i class="fa fa-search"></i> ตรวจสอบหลายรายการ
+                        </button>
+                        <button type="button" class="btn btn-success me-2 d-none" id="btn-bulk-complete" onclick="openBulkConfirmModal('complete', 'บันทึกเสร็จสิ้นหลายรายการ')">
+                            <i class="fa fa-flag-checkered"></i> บันทึกเสร็จสิ้นหลายรายการ
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Bulk Confirm Modal -->
+                <div class="modal fade" id="bulkConfirmModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white" id="bulkConfirmHeader">
+                                <h5 class="modal-title" id="bulkConfirmTitle">ยืนยันการทำรายการ</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="mb-2">คุณกำลังเลือกทำรายการใบสำคัญรับต่อไปนี้:</p>
+                                <div class="table-responsive mb-3">
+                                    <table class="table table-bordered table-sm">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>เลขที่</th>
+                                                <th>วันที่</th>
+                                                <th>รับจาก</th>
+                                                <th class="text-end">จำนวนเงิน</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="bulkConfirmList">
+                                            <!-- List goes here -->
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="3" class="text-end">รวมจำนวนเงินทั้งสิ้น</th>
+                                                <th id="bulkConfirmTotal" class="text-end text-danger fs-5">0.00</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                
+                                <div id="completeInputSection" class="d-none border-top pt-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">ผู้รับเงิน <span class="text-danger">*</span></label>
+                                        <input type="text" id="bulk_receiver_name" class="form-control" value="{{ Auth::user()->name }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">วันที่รับเงิน</label>
+                                        <input type="text" id="bulk_received_date" class="form-control datepicker" value="{{ date('Y-m-d') }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                                <button type="button" class="btn btn-primary" id="btnSubmitBulk" onclick="submitBulkAction()">ยืนยันทำรายการ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-hover table-striped">
                         <thead class="table-dark">
                             <tr>
-                                <th width="5%">#</th>
+                                <th width="3%">
+                                    <input type="checkbox" class="form-check-input" id="checkAll">
+                                </th>
+                                <th width="3%">#</th>
                                 <th width="12%">เลขที่</th>
                                 <th width="10%">วันที่</th>
                                 <th>รับจาก</th>
@@ -128,8 +197,21 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $canVerify = Auth::user()->can('receipt-voucher.verify');
+                                $canComplete = Auth::user()->can('receipt-voucher.complete');
+                            @endphp
                             @forelse($vouchers as $index => $voucher)
                                 <tr>
+                                    <td>
+                                        <input type="checkbox" class="form-check-input voucher-checkbox" 
+                                            value="{{ $voucher->id }}" 
+                                            data-status="{{ $voucher->status }}"
+                                            data-no="{{ $voucher->voucher_no }}"
+                                            data-date="{{ $voucher->voucher_date->format('d/m/Y') }}"
+                                            data-payee="{{ $voucher->receive_from }}"
+                                            data-amount="{{ $voucher->net_amount }}">
+                                    </td>
                                     <td>{{ $vouchers->firstItem() + $index }}</td>
                                     <td>
                                         <a href="{{ route('receipt-voucher.show', $voucher->id) }}" class="fw-bold text-primary">
@@ -183,4 +265,146 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            // Bulk Checkbox Logic
+            $('#checkAll').change(function() {
+                $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
+                evaluateBulkActions();
+            });
+
+            $('.voucher-checkbox').change(function() {
+                if ($('.voucher-checkbox:checked').length === $('.voucher-checkbox').length) {
+                    $('#checkAll').prop('checked', true);
+                } else {
+                    $('#checkAll').prop('checked', false);
+                }
+                evaluateBulkActions();
+            });
+            
+            // Re-evalute on load in case of going back from history
+            evaluateBulkActions();
+        });
+
+        const canVerify = @json(Auth::user()->can('receipt-voucher.verify'));
+        const canComplete = @json(Auth::user()->can('receipt-voucher.complete'));
+
+        function evaluateBulkActions() {
+            let statuses = new Set();
+            let checkedItems = $('.voucher-checkbox:checked');
+            
+            checkedItems.each(function() {
+                statuses.add($(this).data('status'));
+            });
+
+            $('#btn-bulk-verify').addClass('d-none');
+            $('#btn-bulk-complete').addClass('d-none');
+
+            if (checkedItems.length > 0) {
+                $('#bulk-action-panel').removeClass('d-none');
+                
+                // ถ้ารายการที่เลือกมีสถานะเดียวกันทั้งหมด
+                if (statuses.size === 1) {
+                    const status = Array.from(statuses)[0];
+                    if (status === 'pending' && canVerify) {
+                        $('#btn-bulk-verify').removeClass('d-none');
+                    } else if (status === 'verified' && canComplete) {
+                        $('#btn-bulk-complete').removeClass('d-none');
+                    }
+                }
+            } else {
+                $('#bulk-action-panel').addClass('d-none');
+            }
+        }
+
+        function openBulkConfirmModal(action, title) {
+            $('#bulk_action_type').val(action);
+            $('#bulkConfirmTitle').text(title);
+            
+            // Set styles based on action
+            let headerClass = 'bg-primary';
+            let btnClass = 'btn-primary';
+            
+            if (action === 'verify') {
+                headerClass = 'bg-warning text-dark';
+                btnClass = 'btn-warning text-dark';
+            } else if (action === 'complete') {
+                headerClass = 'bg-success';
+                btnClass = 'btn-success text-white';
+            }
+            
+            $('#bulkConfirmHeader').removeClass('bg-primary bg-warning bg-success text-dark text-white').addClass(headerClass);
+            $('#btnSubmitBulk').removeClass('btn-primary btn-warning btn-success text-dark text-white').addClass(btnClass);
+            
+            // Generate list
+            let listHtml = '';
+            let totalAmount = 0;
+            
+            $('.voucher-checkbox:checked').each(function() {
+                const no = $(this).data('no');
+                const date = $(this).data('date');
+                const payee = $(this).data('payee');
+                const amount = parseFloat($(this).data('amount'));
+                
+                totalAmount += amount;
+                
+                listHtml += `
+                    <tr>
+                        <td><span class="badge ${headerClass}">${no}</span></td>
+                        <td>${date}</td>
+                        <td>${payee}</td>
+                        <td class="text-end">${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    </tr>
+                `;
+            });
+            
+            $('#bulkConfirmList').html(listHtml);
+            $('#bulkConfirmTotal').text(totalAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+            
+            if (action === 'complete') {
+                $('#completeInputSection').removeClass('d-none');
+                $('#bulk_receiver_name').prop('required', true);
+            } else {
+                $('#completeInputSection').addClass('d-none');
+                $('#bulk_receiver_name').prop('required', false);
+            }
+            
+            $('#bulkConfirmModal').modal('show');
+        }
+
+        function submitBulkAction() {
+            const action = $('#bulk_action_type').val();
+            
+            if (action === 'complete') {
+                const receiverName = $('#bulk_receiver_name').val();
+                const receivedDate = $('#bulk_received_date').val();
+
+                if (!receiverName) {
+                    alert('กรุณาระบุชื่อผู้รับเงิน');
+                    return;
+                }
+                
+                // Add extra fields to form
+                $('#bulkActionForm input[name="receiver_name"]').remove();
+                $('#bulkActionForm input[name="received_date"]').remove();
+                
+                let extraFields = `
+                    <input type="hidden" name="receiver_name" value="${receiverName}">
+                    <input type="hidden" name="received_date" value="${receivedDate}">
+                `;
+                $('#bulkActionForm').append(extraFields);
+            }
+            
+            let idsHtml = '';
+            $('.voucher-checkbox:checked').each(function() {
+                idsHtml += `<input type="hidden" name="voucher_ids[]" value="${$(this).val()}">`;
+            });
+            $('#bulk_voucher_ids').html(idsHtml);
+            
+            $('#bulkActionForm').submit();
+        }
+    </script>
 @endsection

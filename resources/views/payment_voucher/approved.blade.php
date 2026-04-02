@@ -74,11 +74,66 @@
 
         <div class="main-card mb-3 card">
             <div class="card-body">
+                <!-- Action Panel -->
+                <div class="mb-3 d-none" id="bulk-action-panel">
+                    <form action="{{ route('payment-voucher.bulk-action') }}" method="POST" id="bulkActionForm" class="d-inline">
+                        @csrf
+                        <input type="hidden" name="action" id="bulk_action_type" value="">
+                        <div id="bulk_voucher_ids"></div>
+                        <button type="button" class="btn btn-info me-2" id="btn-bulk-review" onclick="openBulkConfirmModal('review', 'ตรวจสอบใบสำคัญจ่ายที่เลือก')">
+                            <i class="fa fa-search"></i> ตรวจสอบหลายรายการ
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Bulk Confirm Modal -->
+                <div class="modal fade" id="bulkConfirmModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header bg-info text-white">
+                                <h5 class="modal-title" id="bulkConfirmTitle">ยืนยันการทำรายการ</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="mb-2">คุณกำลังเลือกทำรายการใบสำคัญจ่ายต่อไปนี้:</p>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-sm">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>เลขที่</th>
+                                                <th>วันที่</th>
+                                                <th>จ่ายให้</th>
+                                                <th class="text-end">จำนวนเงิน</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="bulkConfirmList">
+                                            <!-- List goes here -->
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="3" class="text-end">รวมจำนวนเงินทั้งสิ้น</th>
+                                                <th id="bulkConfirmTotal" class="text-end text-danger fs-5">0.00</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                                <button type="button" class="btn btn-info text-white" onclick="submitBulkAction()">ยืนยันทำรายการ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-hover table-striped">
                         <thead class="table-info">
                             <tr>
-                                <th width="5%">#</th>
+                                <th width="3%">
+                                    <input type="checkbox" class="form-check-input" id="checkAll">
+                                </th>
+                                <th width="3%">#</th>
                                 <th width="12%">เลขที่</th>
                                 <th width="10%">วันที่</th>
                                 <th width="20%">จ่ายให้</th>
@@ -90,6 +145,14 @@
                         <tbody>
                             @forelse($vouchers as $index => $voucher)
                                 <tr>
+                                    <td>
+                                        <input type="checkbox" class="form-check-input voucher-checkbox" 
+                                            value="{{ $voucher->id }}"
+                                            data-no="{{ $voucher->voucher_no }}"
+                                            data-date="{{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}"
+                                            data-payee="{{ $voucher->pay_to }}"
+                                            data-amount="{{ $voucher->total_amount }}">
+                                    </td>
                                     <td>{{ $vouchers->firstItem() + $index }}</td>
                                     <td>
                                         <a href="{{ route('payment-voucher.show', $voucher->id) }}"
@@ -170,4 +233,76 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            // Bulk Checkbox Logic
+            $('#checkAll').change(function() {
+                $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
+                evaluateBulkActions();
+            });
+
+            $('.voucher-checkbox').change(function() {
+                if ($('.voucher-checkbox:checked').length === $('.voucher-checkbox').length) {
+                    $('#checkAll').prop('checked', true);
+                } else {
+                    $('#checkAll').prop('checked', false);
+                }
+                evaluateBulkActions();
+            });
+        });
+
+        function evaluateBulkActions() {
+            let checkedItems = $('.voucher-checkbox:checked');
+
+            if (checkedItems.length > 0) {
+                $('#bulk-action-panel').removeClass('d-none');
+            } else {
+                $('#bulk-action-panel').addClass('d-none');
+            }
+        }
+
+        function openBulkConfirmModal(action, title) {
+            $('#bulk_action_type').val(action);
+            $('#bulkConfirmTitle').text(title);
+            
+            let listHtml = '';
+            let totalAmount = 0;
+            
+            $('.voucher-checkbox:checked').each(function() {
+                const no = $(this).data('no');
+                const date = $(this).data('date');
+                const payee = $(this).data('payee');
+                const amount = parseFloat($(this).data('amount'));
+                
+                totalAmount += amount;
+                
+                listHtml += `
+                    <tr>
+                        <td><span class="badge bg-info text-white">${no}</span></td>
+                        <td>${date}</td>
+                        <td>${payee}</td>
+                        <td class="text-end">${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    </tr>
+                `;
+            });
+            
+            $('#bulkConfirmList').html(listHtml);
+            $('#bulkConfirmTotal').text(totalAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+            
+            $('#bulkConfirmModal').modal('show');
+        }
+
+        function submitBulkAction() {
+            let idsHtml = '';
+            $('.voucher-checkbox:checked').each(function() {
+                idsHtml += `<input type="hidden" name="voucher_ids[]" value="${$(this).val()}">`;
+            });
+            $('#bulk_voucher_ids').html(idsHtml);
+            
+            $('#bulkActionForm').submit();
+        }
+    </script>
 @endsection

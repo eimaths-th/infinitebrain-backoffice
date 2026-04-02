@@ -152,9 +152,9 @@
                     </div>
                 </div>
                 <div class="page-title-actions">
-                    <a href="{{ route('receipt-voucher.index') }}" class="btn btn-secondary">
+                    <button type="button" onclick="history.back()" class="btn btn-secondary">
                         <i class="fa fa-arrow-left"></i> กลับ
-                    </a>
+                    </button>
                     <a href="{{ route('receipt-voucher.print-pdf', $voucher->id) }}" target="_blank"
                         class="btn btn-primary">
                         <i class="fa fa-print"></i> พิมพ์

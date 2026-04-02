@@ -176,6 +176,7 @@ Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')
     Route::post('/reject-to-draft/{id}', [PaymentVoucherController::class, 'rejectToDraft'])->name('reject-to-draft');
     Route::post('/complete/{id}', [PaymentVoucherController::class, 'complete'])->name('complete');
     Route::post('/undo-complete/{id}', [PaymentVoucherController::class, 'undoComplete'])->name('undo-complete');
+    Route::post('/bulk-action', [PaymentVoucherController::class, 'bulkAction'])->name('bulk-action');
 
     // Lists
     Route::get('/pending', [PaymentVoucherController::class, 'pendingList'])->name('pending');
@@ -219,6 +220,7 @@ Route::middleware(['auth'])->prefix('receipt-voucher')->name('receipt-voucher.')
     Route::post('/reject/{id}', [ReceiptVoucherController::class, 'reject'])->name('reject');
     Route::post('/complete/{id}', [ReceiptVoucherController::class, 'complete'])->name('complete');
     Route::post('/undo-complete/{id}', [ReceiptVoucherController::class, 'undoComplete'])->name('undo-complete');
+    Route::post('/bulk-action', [ReceiptVoucherController::class, 'bulkAction'])->name('bulk-action');
 
     // Payee & Voucher Number APIs
     Route::get('/search-payee', [ReceiptVoucherController::class, 'searchPayee'])->name('search-payee');

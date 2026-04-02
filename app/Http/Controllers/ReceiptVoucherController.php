@@ -518,6 +518,126 @@ class ReceiptVoucherController extends Controller
         return redirect()->route('receipt-voucher.show', $voucher->id)->with('success', 'ดำเนินการใบสำคัญรับเสร็จสิ้นเรียบร้อยแล้ว');
     }
 
+    /**
+     * ดำเนินการ Action แบบทีละหลายรายการ (Bulk Action)
+     */
+    public function bulkAction(Request $request)
+    {
+        $request->validate([
+            'action' => 'required|string|in:verify,complete',
+            'voucher_ids' => 'required|array|min:1',
+            'voucher_ids.*' => 'integer|exists:receipt_vouchers,id',
+            'remark' => 'nullable|string|max:500',
+            // สำหรับ complete
+            'receiver_name' => 'required_if:action,complete|nullable|string|max:255',
+            'received_date' => 'required_if:action,complete|nullable|date',
+            'is_test' => 'nullable|boolean',
+        ]);
+
+        $action = $request->action;
+        $voucherIds = $request->voucher_ids;
+        $remark = $request->remark;
+        $receiverName = $request->receiver_name;
+        $receivedDate = $request->received_date;
+        $isTest = $request->boolean('is_test');
+
+        $vouchers = ReceiptVoucher::whereIn('id', $voucherIds)->get();
+        
+        $successCount = 0;
+        $errorCount = 0;
+        
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        DB::beginTransaction();
+        try {
+            $lineService = new LineMessagingService();
+            
+            foreach ($vouchers as $voucher) {
+                // External Branch check
+                if ($user->hasRole('external-branch')) {
+                    $userBranches = $user->branches ?? [];
+                    $resolvedBranches = ReceiptVoucher::resolveBranchCodes($userBranches);
+                    if (!in_array($voucher->branch_code, $resolvedBranches)) {
+                        $errorCount++;
+                        continue;
+                    }
+                }
+
+                $oldStatus = $voucher->status;
+
+                if ($action === 'verify') {
+                    if (!$voucher->canVerify() || !$user->can('receipt-voucher.verify')) {
+                        $errorCount++;
+                        continue;
+                    }
+                    
+                    $voucher->update([
+                        'status' => ReceiptVoucher::STATUS_VERIFIED,
+                        'verified_by' => Auth::id(),
+                        'verified_by_name' => $user->name,
+                        'verified_at' => now(),
+                        'verify_remark' => $remark,
+                    ]);
+
+                    ReceiptVoucherLog::create([
+                        'receipt_voucher_id' => $voucher->id,
+                        'action' => 'verify',
+                        'from_status' => $oldStatus,
+                        'to_status' => $voucher->status,
+                        'user_id' => Auth::id(),
+                        'user_name' => $user->name,
+                        'remark' => $remark,
+                    ]);
+                    
+                    $lineService->SendReceiptVoucherNotification($voucher, ReceiptVoucher::STATUS_VERIFIED, $isTest);
+                    $successCount++;
+                } 
+                elseif ($action === 'complete') {
+                    if (!$voucher->canComplete() || !$user->can('receipt-voucher.complete')) {
+                        $errorCount++;
+                        continue;
+                    }
+                    
+                    $voucher->update([
+                        'status' => ReceiptVoucher::STATUS_COMPLETED,
+                        'completed_by' => Auth::id(),
+                        'completed_by_name' => $user->name,
+                        'completed_at' => now(),
+                        'complete_remark' => $remark,
+                        'receiver_name' => $receiverName,
+                        'received_date' => $receivedDate ?? now(),
+                    ]);
+
+                    ReceiptVoucherLog::create([
+                        'receipt_voucher_id' => $voucher->id,
+                        'action' => 'complete',
+                        'from_status' => $oldStatus,
+                        'to_status' => $voucher->status,
+                        'user_id' => Auth::id(),
+                        'user_name' => $user->name,
+                        'remark' => $remark,
+                    ]);
+                    
+                    $lineService->SendReceiptVoucherNotification($voucher, ReceiptVoucher::STATUS_COMPLETED, $isTest);
+                    $successCount++;
+                }
+            }
+            DB::commit();
+            
+            $msg = "ทำรายการสำเร็จ {$successCount} รายการ";
+            if ($errorCount > 0) {
+                $msg .= ", ไม่สามารถทำรายการได้ {$errorCount} รายการ (เนื่องจากสถานะไม่ถูกต้องหรือไม่มีสิทธิ์)";
+            }
+            
+            return back()->with('success', $msg);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+        }
+    }
+
     public function undoComplete(Request $request, $id)
     {
         $voucher = ReceiptVoucher::findOrFail($id);

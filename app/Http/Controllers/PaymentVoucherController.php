@@ -904,6 +904,145 @@ class PaymentVoucherController extends Controller
     }
 
     /**
+     * ดำเนินการ Action แบบทีละหลายรายการ (Bulk Action)
+     */
+    public function bulkAction(Request $request)
+    {
+        $request->validate([
+            'action' => 'required|string|in:review,approve,complete',
+            'voucher_ids' => 'required|array|min:1',
+            'voucher_ids.*' => 'integer|exists:payment_vouchers,id',
+            'remark' => 'nullable|string|max:500',
+            // สำหรับ complete
+            'payer_name' => 'required_if:action,complete|nullable|string|max:255',
+            'paid_date' => 'required_if:action,complete|nullable|date',
+            'is_test' => 'nullable|boolean',
+        ]);
+
+        $action = $request->action;
+        $voucherIds = $request->voucher_ids;
+        $remark = $request->remark;
+        $payerName = $request->payer_name;
+        $paidDate = $request->paid_date;
+        $isTest = $request->boolean('is_test');
+
+        $vouchers = PaymentVoucher::whereIn('id', $voucherIds)->get();
+        
+        $successCount = 0;
+        $errorCount = 0;
+        
+        DB::beginTransaction();
+        try {
+            $lineService = new \App\Services\LineMessagingService();
+            
+            foreach ($vouchers as $voucher) {
+                // External Branch check
+                if (Auth::user()->hasRole('external-branch')) {
+                    $userBranches = Auth::user()->branches ?? [];
+                    $resolvedBranches = PaymentVoucher::resolveBranchCodes($userBranches);
+                    if (!in_array($voucher->branch_code, $resolvedBranches)) {
+                        $errorCount++;
+                        continue;
+                    }
+                }
+
+                $oldStatus = $voucher->status;
+
+                if ($action === 'review') {
+                    if (!$voucher->canReview()) {
+                        $errorCount++;
+                        continue;
+                    }
+                    
+                    $voucher->update([
+                        'status' => PaymentVoucher::STATUS_REVIEWED,
+                        'reviewed_by' => Auth::id(),
+                        'reviewed_by_name' => Auth::user()->name ?? 'System',
+                        'reviewed_at' => now(),
+                        'review_remark' => $remark,
+                    ]);
+
+                    PaymentVoucherLog::create([
+                        'payment_voucher_id' => $voucher->id,
+                        'action' => PaymentVoucherLog::ACTION_REVIEW,
+                        'from_status' => $oldStatus,
+                        'to_status' => PaymentVoucher::STATUS_REVIEWED,
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->name ?? 'System',
+                        'remark' => $remark,
+                    ]);
+                    
+                    $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_REVIEWED, $isTest);
+                    $successCount++;
+                } 
+                elseif ($action === 'approve') {
+                    if (!$voucher->canApprove()) {
+                        $errorCount++;
+                        continue;
+                    }
+                    
+                    $voucher->update([
+                        'status' => PaymentVoucher::STATUS_APPROVED,
+                        'approved_by' => Auth::id(),
+                        'approved_by_name' => Auth::user()->name ?? 'System',
+                        'approved_at' => now(),
+                        'approve_remark' => $remark,
+                    ]);
+
+                    PaymentVoucherLog::create([
+                        'payment_voucher_id' => $voucher->id,
+                        'action' => PaymentVoucherLog::ACTION_APPROVE,
+                        'from_status' => $oldStatus,
+                        'to_status' => PaymentVoucher::STATUS_APPROVED,
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->name ?? 'System',
+                        'remark' => $remark,
+                    ]);
+                    
+                    $lineService->SendPaymentVoucherNotification($voucher, PaymentVoucher::STATUS_APPROVED, $isTest);
+                    $successCount++;
+                }
+                elseif ($action === 'complete') {
+                    if (!$voucher->canComplete()) {
+                        $errorCount++;
+                        continue;
+                    }
+                    
+                    $voucher->update([
+                        'status' => PaymentVoucher::STATUS_COMPLETED,
+                        'payer_name' => $payerName,
+                        'paid_date' => $paidDate ?? now(),
+                    ]);
+
+                    PaymentVoucherLog::create([
+                        'payment_voucher_id' => $voucher->id,
+                        'action' => PaymentVoucherLog::ACTION_COMPLETE,
+                        'from_status' => $oldStatus,
+                        'to_status' => PaymentVoucher::STATUS_COMPLETED,
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->name ?? 'System',
+                        'remark' => 'บันทึกการจ่ายเงิน: ' . $payerName,
+                    ]);
+                    
+                    $successCount++;
+                }
+            }
+            DB::commit();
+            
+            $msg = "ทำรายการสำเร็จ {$successCount} รายการ";
+            if ($errorCount > 0) {
+                $msg .= ", ไม่สามารถทำรายการได้ {$errorCount} รายการ (เนื่องจากสถานะไม่ถูกต้องหรือไม่มีสิทธิ์)";
+            }
+            
+            return back()->with('success', $msg);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * ยกเลิกสถานะเสร็จสิ้น (กรณีข้อผิดพลาด) - Revert to Approved
      */
     public function undoComplete(Request $request, $id)
