@@ -121,13 +121,6 @@ class ReceiptVoucherController extends Controller
 
         $branch = Branch::where('code', $defaultBranch)->first();
         $voucherCode = $branch->rv_prefix ?? ($defaultBranch . 'RV');
-
-        $voucherCodeMap = ReceiptVoucher::$voucherCodes[$defaultBranch] ?? null;
-        if (is_array($voucherCodeMap)) {
-            $voucherCode = $voucherCodeMap['default'] ?? ($defaultBranch . 'RV');
-        } else {
-            $voucherCode = $voucherCodeMap ?? ($defaultBranch . 'RV');
-        }
         
         $voucherNo = ReceiptVoucher::generateVoucherNo($voucherCode);
         return view('receipt_voucher.create', compact('voucherNo', 'branchCodes', 'defaultBranch'));
