@@ -33,13 +33,11 @@ class Kernel extends ConsoleKernel
         // $schedule->command('export:database')->dailyAt('16:45');//now 16.10
         // $schedule->command('export:database')->everyTwoMinutes()->appendOutputTo('/storage/logs/worker.log');
         // $schedule->command('export:database')->everyFiveMinutes();
-        $schedule->command('updateStatus:student')->dailyAt('04.00'); // for test
-        //updated
-        //updated
+        // $schedule->command('updateStatus:student')->dailyAt('04.00'); // for test
+        // Automate student status update on the 1st of every month at 01:00 AM
+        $schedule->command('updateStatus:student')->monthlyOn(1, '01:00');
+
         $schedule->command('export:database')->dailyAt('05.00');
-        //test
-        // $schedule->command('updateStatus:student')->everyTwoMinutes()->appendOutputTo('/storage/logs/worker.log'); // for test
-        // $schedule->command('updateStatus2:student')->everyMinute(); // for test
     }
     // chmod -R 775 /var/www/html/infinite_backoffice/storage/logs
     // chown -R manon:manon /var/www/html/infinite_backoffice/storage/logs

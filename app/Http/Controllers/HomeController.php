@@ -111,11 +111,7 @@ class HomeController extends Controller
     }
     public function updateStudentStatus()
     {
-        $students = Student::with('rec_school')->get();
-        // $students = Student::where('id', 42)->get();
-
-        // $updateStatus = $this->updateStatus($students);
-        $updateStatus = $this->statusService->updateStatus($students); // call in service
+        $this->statusService->updateStudentStatus();
 
         return redirect()->route('home');
     }
