@@ -112,7 +112,7 @@
                                         <option value="">เลือกพนักงาน</option>
 
                                         @foreach ($users as $user_name)
-                                            <option value="{{ $user_name->id }}">{{ $user_name->name }}</option>
+                                            <option value="{{ $user_name->id }}" {{ (isset($user_id) && $user_id == $user_name->id) ? 'selected' : '' }}>{{ $user_name->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -220,7 +220,7 @@
                 <div class="card-header-tab card-header-tab-animation card-header mb-3">
                     <div class="card-header-title">
                         <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
-                        Work record of {{ $name }}
+                        Work record of {{ $name }} ({{ $date_display ?? $date }})
                     </div>
                 </div>
 
@@ -392,6 +392,37 @@
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.11/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.11/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/multimonth@6.1.11/index.global.min.js'></script>
+    
+    @php
+        $calendarEvents = [];
+        if (isset($rec_times_year2)) {
+            foreach ($rec_times_year2 as $rec_years) {
+                $color = 'rgba(52, 58, 64, 0.8)';
+                switch ($rec_years->status) {
+                    case 1: $color = 'rgba(58, 196, 125, 0.8)'; break;
+                    case 2: case 3: case 4: case 13: $color = 'rgba(247, 185, 36, 0.8)'; break;
+                    case 5: case 6: case 7: case 8: case 9: $color = 'rgba(255, 91, 87, 0.8)'; break;
+                    case 11: case 12: $color = 'rgba(63, 106, 216, 0.8)'; break;
+                    case 10: $color = 'rgba(52, 58, 64, 0.8)'; break;
+                }
+                
+                $text_late = '';
+                if ($rec_years->late_time) {
+                    $text_late = ' : ' . $rec_years->late_time . ' นาที';
+                }
+                
+                $calendarEvents[] = [
+                    'title' => ($rec_years->status_name ?? 'N/A') . $text_late,
+                    'start' => $rec_years->date,
+                    'color' => $color,
+                    'extendedProps' => [
+                        'description' => $rec_years->explain ?? ''
+                    ]
+                ];
+            }
+        }
+    @endphp
+
     <script>
         var table = $('#Listview').DataTable({
             // serverSide: true,
@@ -441,61 +472,7 @@
                     center: 'title',
                     right: 'dayGridMonth'
                 },
-                events: [
-
-                    @php
-                        foreach ($rec_times_year2 as $rec_years) {
-                            $class = '';
-                            switch ($rec_years->status) {
-                                case 1:
-                                    $color = 'rgba(58, 196, 125, 0.8)';
-                                    break;
-
-                                case 2:
-                                case 3:
-                                case 4:
-                                case 13:
-                                    $color = 'rgba(247, 185, 36, 0.8)';
-
-                                    break;
-
-                                case 5:
-                                case 6:
-                                case 7:
-                                case 8:
-                                case 9:
-                                    $color = 'rgba(255, 91, 87,0.8)';
-
-                                    break;
-
-                                case 11:
-                                case 12:
-                                    $color = 'rgba(63, 106, 216, 0.8)';
-                                    break;
-
-                                case 10:
-                                    $color = 'rgba(52, 58, 64, 0.8)';
-
-                                    break;
-
-                                default:
-                                    $color = 'rgba(52, 58, 64, 0.8)';
-                                    break;
-                            }
-                            $text_late = '';
-                            if ($rec_years->late_time) {
-                                $text_late = ' : ' . $rec_years->late_time . ' นาที';
-                            }
-                        }
-                    @endphp
-
-                    // {
-                    //     title: 'สาย : 5 นาที',
-                    //     start: '2024-03-10',
-                    //     color: 'rgba(255, 91, 87,0.8)',
-                    // },
-
-                ]
+                events: {!! json_encode($calendarEvents ?? []) !!},
             });
             calendar.render();
 

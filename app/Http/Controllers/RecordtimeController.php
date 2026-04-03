@@ -357,10 +357,13 @@ class RecordtimeController extends Controller
                 $name = '';
                 $rec_times_year2 = [];
             }
-            // สร้าง date สำหรับแสดงผล - แปลงเป็น d-m-Y สำหรับแสดงผล
+            // สร้าง date สำหรับแสดงผล (UI)
             $date_from_display = Carbon::parse($date_from)->format('d-m-Y');
             $date_to_display = Carbon::parse($date_to)->format('d-m-Y');
-            $date = $date_from_display . ' - ' . $date_to_display;
+            $date_display = $date_from_display . ' - ' . $date_to_display;
+            
+            // ส่งค่า $date ในรูปแบบ Y-m-d เพื่อเป็น initialDate ของปฏิทิน
+            $date = $start_date;
         } else {
             // ค้นหาแบบเดิม (เดือน/ปี)
             if ($user_id) {
@@ -383,7 +386,9 @@ class RecordtimeController extends Controller
                 $name = '';
                 $rec_times_year2 = [];
             }
-            $date = Carbon::create($year, $month)->format('Y-m');
+            // ส่งค่า $date ในรูปแบบ Y-m-d (วันที่ 1 ของเดือน) เพื่อเป็น initialDate ของปฏิทิน
+            $date = Carbon::create($year, $month, 1)->format('Y-m-d');
+            $date_display = Carbon::create($year, $month)->format('Y-m');
         }
 
         if ($request->type === 'print') {
@@ -407,6 +412,7 @@ class RecordtimeController extends Controller
             'fontsize' => 1,
             'checkCd' => $checkCd,
             'date' => $date,
+            'date_display' => $date_display ?? $date,
             'selected_user' => $selected_user,
             'date_from' => $date_from,
             'date_to' => $date_to,
