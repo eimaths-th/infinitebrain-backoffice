@@ -2424,4 +2424,49 @@ class ReceiptSchoolController extends Controller
 
         return view('receipt_school.source_report', compact('summary'));
     }
+
+    /**
+     * ดึงข้อมูลเพื่อแสดงผลในหน้าพิมพ์รายงานสรุปแหล่งที่มาลูกค้า (Professional Print)
+     */
+    public function printSourceReport(Request $request)
+    {
+        // 1. ดังข้อมูลรายการทั้งหมดตามแหล่งที่มา (ถ้ามีการเลือก)
+        $receipt = Receipt_School::select(
+            "receipt_school.id as id",
+            "receipt_school.submission_date as submission_date",
+            "receipt_school.receipt_number as receipt_number",
+            "receipt_school.pid as pid",
+            "receipt_school.source as source",
+            "parent.name_parent as name_parent"
+        )->join("parent", "parent.id", "=", "receipt_school.name_parent")
+         ->whereNotNull('receipt_school.source')
+         ->where('receipt_school.source', '!=', '');
+
+        $source_filter = $request->source_filter;
+        if (!empty($source_filter)) {
+            $receipt->where('receipt_school.source', $source_filter);
+        }
+
+        // ดึงข้อมูลทั้งหมดโดยไม่พาส (No Pagination)
+        $records = $receipt->orderBy("receipt_school.submission_date", "desc")->get();
+
+        // 2. ดึงข้อมูลนักเรียนสำหรับแสดงชื่อเล่น
+        $student_ids = $records->pluck('pid')->flatMap(fn($p) => explode('|', $p))->unique()->filter()->toArray();
+        $students = Student::whereIn('id', $student_ids)->get()->keyBy('id');
+
+        // 3. เตรียมข้อมูลสรุปแยกตามแหล่งที่มา
+        $summary = Receipt_School::select('source', \Illuminate\Support\Facades\DB::raw('count(*) as total_count'))
+            ->whereNotNull('source')
+            ->where('source', '!=', '');
+        
+        if (!empty($source_filter)) {
+            $summary->where('source', $source_filter);
+        }
+        
+        $summary = $summary->groupBy('source')
+            ->orderByDesc('total_count')
+            ->get();
+
+        return view('receipt_school.source_report_print', compact('records', 'summary', 'students', 'source_filter'));
+    }
 }

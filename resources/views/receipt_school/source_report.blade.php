@@ -5,6 +5,31 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+    <style>
+        /* ปรับสไตล์ปุ่ม Print ให้ดูดี (Premium Look) */
+        .btn-print-report {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            border: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-print-report:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+            color: white !important;
+        }
+        
+        .transition-hover {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .transition-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -34,6 +59,10 @@
                         <option value="อื่นๆ">อื่นๆ</option>
                     </select>
                 </div>
+                <!-- ปุ่มพิมพ์รายงานใหม่ที่เปิด Tab ใหม่ -->
+                <button type="button" class="btn btn-print-report shadow-sm" onclick="HandlePrintAsync()">
+                    <i class="fa fa-print me-1"></i> พิมพ์รายงาน (Print)
+                </button>
             </div>
         </div>
     </div>
@@ -141,5 +170,17 @@
             table.draw();
         });
     });
+
+    /**
+     * ฟังก์ชันสำหรับการพิมพ์รายงาน
+     * เปิดหน้าจอพิมพ์รายงานแบบมืออาชีพใน Tab ใหม่
+     */
+    function HandlePrintAsync() {
+        const SOURCE_FILTER = $('#source_filter').val() || '';
+        const PRINT_URL = "{{ route('receipt_school.sourceReportPrint') }}?source_filter=" + encodeURIComponent(SOURCE_FILTER);
+        
+        // เปิดหน้าต่างพิมพ์ใน Tab ใหม่
+        window.open(PRINT_URL, '_blank');
+    }
 </script>
 @endsection

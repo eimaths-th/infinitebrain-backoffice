@@ -36,28 +36,12 @@ class StdlogController extends Controller
         $month = date('m');
         $year = date('Y');
         $monthf  = date('F');
-        $latestStatusCounts = Statuslog::select('id', 'group', 'student_id', 'status')
-            ->whereIn('id', function ($query) {
-                $query->select(DB::raw('MAX(id)'))
-                    ->from('status_log')
-                    ->groupBy('group', 'student_id');
-            })
-            ->whereYear('status_date', $year)
-            ->whereMonth('status_date', $month)
-            ->orderBy('group')
-            ->get();
-
-        $latestStatusByStudent = Statuslog::select('status_log.student_id', 'status_log.group', 'status_log.status', 'status_log.status_date', 'status_log.nick_name')
-            ->whereIn('status_log.id', function ($query) {
-                $query->select(DB::raw('MAX(id)'))
-                    ->from('status_log')
-                    ->groupBy('student_id', 'group');
-            })
-            ->whereYear('status_log.status_date', $year)
-            ->whereMonth('status_log.status_date', $month)
-            ->join('students', 'status_log.student_id', '=', 'students.id')
-            ->orderBy('students.code')
-            ->get();
+        
+        // Use period-based calculation to sync with the receipt report
+        $activeStudents = $this->getActiveStudentsByPeriod($year, $month);
+        
+        $latestStatusCounts = $activeStudents;
+        $latestStatusByStudent = $activeStudents;
 
         return view($view, [
 
@@ -95,66 +79,11 @@ class StdlogController extends Controller
         $month_format = DateTime::createFromFormat('!m', $request->month);
         $monthf = $month_format->format('F');
         $year = $request->year;
-        if ($month == null) {
-            $latestStatusCounts = Statuslog::select('id', 'group', 'student_id', 'status')
-                ->whereIn('id', function ($query) {
-                    $query->select(DB::raw('MAX(id)'))
-                        ->from('status_log')
-                        ->groupBy('group', 'student_id');
-                })
-                ->whereYear('status_date', $year)
-                ->orderBy('group')
-                ->get();
-            $latestStatusByStudent = Statuslog::select('status_log.student_id', 'status_log.group', 'status_log.status', 'status_log.status_date', 'status_log.nick_name')
-                ->whereIn('status_log.id', function ($query) {
-                    $query->select(DB::raw('MAX(id)'))
-                        ->from('status_log')
-                        ->groupBy('student_id', 'group');
-                })
-                ->whereYear('status_log.status_date', $year)
-                ->join('students', 'status_log.student_id', '=', 'students.id')
-                ->orderBy('students.code')
-                ->get();
-        } else {
-            $latestStatusCounts = Statuslog::select(
-                'status_log.id',
-                'status_log.student_id',
-                'status_log.group',
-                'status_log.status',
-                'status_log.status_date',
-                'status_log.nick_name'
-            )
-                ->whereIn('status_log.id', function ($query) use ($year, $month) {
-                    $query->select(DB::raw('MAX(id)'))
-                        ->from('status_log')
-                        ->whereYear('status_date', $year)
-                        ->whereMonth('status_date', $month)
-                        ->groupBy('student_id', 'group');
-                })
-                ->join('students', 'status_log.student_id', '=', 'students.id')
-                ->orderBy('students.code')
-                ->get();
 
-
-            $latestStatusByStudent = Statuslog::select(
-                'status_log.id',
-                'status_log.student_id',
-                'status_log.group',
-                'status_log.status',
-                'status_log.status_date',
-                'status_log.nick_name'
-            )
-                ->whereIn('status_log.id', function ($query) use ($year, $month) {
-                    $query->select(DB::raw('MAX(id)'))
-                        ->from('status_log')
-                        ->whereYear('status_date', $year)
-                        ->whereMonth('status_date', $month)
-                        ->groupBy('student_id', 'group');
-                })
-                ->join('students', 'status_log.student_id', '=', 'students.id')
-                ->orderBy('students.code')
-                ->get();
-        }
+        // Use period-based calculation to sync with the receipt report
+        $activeStudents = $this->getActiveStudentsByPeriod($year, $month);
+        $latestStatusCounts = $activeStudents;
+        $latestStatusByStudent = $activeStudents;
 
         // dd($latestStatusByStudent);
         return view($view, [
@@ -1537,5 +1466,89 @@ class StdlogController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function getActiveStudentsByPeriod($year, $month)
+    {
+        $yearInt = (int)$year;
+        $monthInt = (int)$month;
+
+        // Get all school prices with period, student and receipt
+        $schoolPrices = SchoolPrice::whereHas('std')
+            ->whereHas('rec_school')
+            ->where('course_type', 1)
+            ->with(['std', 'rec_school'])
+            ->get();
+
+        $activeOnes = [];
+        foreach ($schoolPrices as $sp) {
+            if (!$sp->period) continue;
+
+            $periodParts = explode(' - ', $sp->period);
+            if (count($periodParts) == 1) {
+                $parts = explode('-', $sp->period);
+                if (count($parts) < 2) continue;
+                $pStartMonth = (int)$parts[1];
+                $pStartYear = (int)$parts[0];
+                $pEndMonth = count($parts) >= 4 ? (int)$parts[3] : $pStartMonth;
+                $pEndYear = count($parts) >= 3 ? (int)$parts[2] : $pStartYear;
+            } else {
+                try {
+                    $startDate = Carbon::parse($periodParts[0]);
+                    $endDate = Carbon::parse($periodParts[1]);
+                    $pStartMonth = $startDate->month;
+                    $pStartYear = $startDate->year;
+                    $pEndMonth = $endDate->month;
+                    $pEndYear = $endDate->year;
+                } catch (\Exception $e) {
+                    continue;
+                }
+            }
+
+            // Check if target month is within period
+            $checkDate = Carbon::create($yearInt, $monthInt, 1);
+            $startDate = Carbon::create($pStartYear, $pStartMonth, 1);
+            $endDate = Carbon::create($pEndYear, $pEndMonth, 1)->endOfMonth();
+
+            if ($checkDate->between($startDate, $endDate)) {
+                // To maintain "New Student" etc., we check if there's a status log entry for this specific month
+                $log = Statuslog::where('student_id', $sp->student_id)
+                    ->where('group', $sp->group)
+                    ->whereYear('status_date', $yearInt)
+                    ->whereMonth('status_date', $monthInt)
+                    ->orderBy('id', 'desc')
+                    ->first();
+
+                // If no log in this month, check latest log up to this month
+                if (!$log) {
+                    $log = Statuslog::where('student_id', $sp->student_id)
+                        ->where('group', $sp->group)
+                        ->where('status_date', '<=', $checkDate->endOfMonth())
+                        ->orderBy('id', 'desc')
+                        ->first();
+                }
+
+                $status = $log ? $log->status : 'studying . . .';
+
+                // Use a composite key to ensure uniqueness per student/group
+                $key = $sp->group . '_' . $sp->student_id;
+                
+                // If we already added this student/group, we might want the one from the most recent period if they overlap?
+                // But usually, one student has one period covering a month.
+                if (!isset($activeOnes[$key])) {
+                    $activeOnes[$key] = (object)[
+                        'id' => $log ? $log->id : 0,
+                        'student_id' => $sp->student_id,
+                        'group' => $sp->group,
+                        'status' => $status,
+                        'nick_name' => $sp->std->nick_name ?? 'N/A',
+                        'status_date' => $log ? $log->status_date : $checkDate->format('Y-m-d'),
+                        'code' => $sp->std->code ?? ''
+                    ];
+                }
+            }
+        }
+
+        return collect(array_values($activeOnes))->sortBy('code');
     }
 }
