@@ -1543,7 +1543,8 @@ class StdlogController extends Controller
                         'status' => $status,
                         'nick_name' => $sp->std->nick_name ?? 'N/A',
                         'status_date' => $log ? $log->status_date : $checkDate->format('Y-m-d'),
-                        'code' => $sp->std->code ?? ''
+                        'code' => $sp->std->code ?? '',
+                        'student' => $sp->std
                     ];
                 }
             }
