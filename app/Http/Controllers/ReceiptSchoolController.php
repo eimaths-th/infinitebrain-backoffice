@@ -2375,6 +2375,10 @@ class ReceiptSchoolController extends Controller
     {
         if ($request->ajax()) {
 
+            $source_filter = $request->source_filter;
+            $year_filter = $request->year_filter;
+            $month_filter = $request->month_filter;
+
             $receipt = Receipt_School::select(
                 "receipt_school.id as id",
                 "receipt_school.submission_date as submission_date",
@@ -2387,20 +2391,23 @@ class ReceiptSchoolController extends Controller
              ->whereNotNull('receipt_school.source')
              ->where('receipt_school.source', '!=', '');
 
-            if ($request->filled('source_filter')) {
-                $receipt->where('receipt_school.source', 'like', '%' . trim($request->source_filter) . '%');
+            // กรองตามแหล่งที่มา (Source)
+            if (!empty($source_filter)) {
+                $receipt->where('receipt_school.source', 'like', '%' . trim($source_filter) . '%');
             }
 
-            if ($request->has('year_filter') && $request->year_filter != "") {
-                $receipt->where('receipt_school.submission_date', 'like', '%' . $request->year_filter . '%');
+            // กรองตามปี (Year)
+            if (!empty($year_filter)) {
+                $receipt->where('receipt_school.submission_date', 'like', $year_filter . '%');
             }
 
-            if ($request->has('month_filter') && $request->month_filter != "") {
-                $month = str_pad($request->month_filter, 2, '0', STR_PAD_LEFT);
+            // กรองตามเดือน (Month)
+            if (!empty($month_filter)) {
+                $month = str_pad($month_filter, 2, '0', STR_PAD_LEFT);
                 $receipt->where('receipt_school.submission_date', 'like', '%-' . $month . '-%');
             }
 
-            $receipt = $receipt->orderBy("receipt_school.id", "desc")->get();
+            $receipt = $receipt->orderBy("receipt_school.submission_date", "desc")->get();
 
             // Pre-fetch students
             $studentIds = $receipt->pluck('pid')->flatMap(fn($p) => explode('|', $p))->unique()->filter()->toArray();
@@ -2433,8 +2440,9 @@ class ReceiptSchoolController extends Controller
             ->whereNotNull('source')
             ->where('source', '!=', '');
 
+        // นำเงื่อนไขการกรองเดียวกับตารางมาใช้กับ Summary
         if ($request->filled('year_filter')) {
-            $summary_query->where('submission_date', 'like', '%' . $request->year_filter . '%');
+            $summary_query->where('submission_date', 'like', $request->year_filter . '%');
         }
         if ($request->filled('month_filter')) {
             $month = str_pad($request->month_filter, 2, '0', STR_PAD_LEFT);

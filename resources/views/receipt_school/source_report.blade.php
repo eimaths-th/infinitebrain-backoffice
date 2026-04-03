@@ -200,16 +200,16 @@
 
         $('#source_filter, #year_filter, #month_filter').on('change', function() {
             // อัปเดต URL และโหลดหน้าใหม่เพื่อให้ Summary Boxes ตรงตามฟิลเตอร์
-            const SOURCE = $('#source_filter').val();
-            const YEAR = $('#year_filter').val();
-            const MONTH = $('#month_filter').val();
+            const source_val = $('#source_filter').val();
+            const year_val = $('#year_filter').val();
+            const month_val = $('#month_filter').val();
             
-            const URL = new URL(window.location.href);
-            URL.searchParams.set('source_filter', SOURCE);
-            URL.searchParams.set('year_filter', YEAR);
-            URL.searchParams.set('month_filter', MONTH);
+            const target_url = new URL(window.location.href);
+            target_url.searchParams.set('source_filter', source_val);
+            target_url.searchParams.set('year_filter', year_val);
+            target_url.searchParams.set('month_filter', month_val);
             
-            window.location.href = URL.toString();
+            window.location.href = target_url.toString();
         });
     });
 
