@@ -15,7 +15,7 @@ class StatusService
     protected $currentMonth;
     protected $cMonth;
     protected $cYear;
-    public function updateStudentStatus()
+    public function updateStudentStatus($chunkSize = 100)
     {
         // Initialize date variables
         $this->currentMonthYear = date('Y-m');
@@ -23,19 +23,19 @@ class StatusService
         $this->cMonth = date('m');
         $this->cYear = date('Y');
 
-        // Eager load ALL relationships at once to avoid N+1 queries
-        $students = Student::with([
+        // Process students in chunks to avoid memory and performance issues
+        Student::with([
             'rec_school',
             'status_log' => function ($query) {
                 $query->latest();
             }
-        ])->get();
-
-        $this->updateStatus($students);
+        ])->chunk($chunkSize, function ($students) {
+            $this->updateStatus($students);
+        });
     }
     public function updateStatus($students)
     {
-        // Pre-load all SchoolPrices for all students at once
+        // Pre-load all SchoolPrices for the current chunk of students
         $studentIds = $students->pluck('id')->toArray();
         $schoolPrices = SchoolPrice::whereIn('student_id', $studentIds)
             ->where('course_type', 1)
@@ -44,7 +44,7 @@ class StatusService
             ->get()
             ->groupBy('student_id');
 
-        // Pre-load all existing status logs for current month
+        // Pre-load all existing status logs for current month for current students
         $existingStatusLogs = Statuslog::whereIn('student_id', $studentIds)
             ->whereMonth('status_date', $this->cMonth)
             ->whereYear('status_date', $this->cYear)
@@ -53,7 +53,7 @@ class StatusService
                 return $item->student_id . '_' . $item->group;
             });
 
-        // Pre-load latest status logs per student per group
+        // Pre-load latest status logs per student per group for current students
         $latestStatusLogs = Statuslog::whereIn('student_id', $studentIds)
             ->get()
             ->groupBy(function ($item) {
@@ -63,7 +63,7 @@ class StatusService
                 return $group->sortByDesc('id')->first();
             });
 
-        // Cache SchoolPrice by ID
+        // Cache SchoolPrice details by ID for current chunk
         $allSchoolPriceIds = $schoolPrices->flatten()->pluck('id')->unique()->toArray();
         $this->schoolPricesCache = SchoolPrice::whereIn('id', $allSchoolPriceIds)
             ->get()

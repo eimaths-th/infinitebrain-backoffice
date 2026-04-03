@@ -23,17 +23,23 @@ class UpdateStatusStudent extends Command
 
     public function handle()
     {
-        // Your logic to update student status
-        $school_picei_update_group = SchoolPrice::all();
-        // $subject_ids = $school_picei_update_group->pluck('subject')->toArray();
-        foreach ($school_picei_update_group as $upg) {
-            # code...
-            $upg->update(['group' => $upg->school_sub->group]);
-            // dd($upg->id,$group);
-        }
-        $students = Student::with('rec_school')->get();
-        $this->statusService->updateStatus($students);
-        // $this->updateStatus($students);
+        $this->info('Starting student status update...');
+
+        // 1. Sync group from school_sub (subjects) efficiently - only for those missing group
+        $this->info('Syncing missing groups for school prices...');
+        SchoolPrice::where(function($query) {
+            $query->whereNull('group')->orWhere('group', '');
+        })->chunk(500, function ($prices) {
+            foreach ($prices as $upg) {
+                if ($upg->school_sub && $upg->school_sub->group) {
+                    $upg->update(['group' => $upg->school_sub->group]);
+                }
+            }
+        });
+
+        // 2. Update student statuses in chunks via StatusService
+        $this->info('Processing student status calculation...');
+        $this->statusService->updateStudentStatus();
 
         $this->info('Student status updated successfully.');
     }
