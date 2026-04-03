@@ -762,6 +762,12 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="Remark">หมายเหตุ (Remark):</label>
+                                                <textarea class="form-control" id="AddRemark" name="remark" rows="1" placeholder="ระบุรายละเอียดเพิ่มเติม"></textarea>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="form-row">
@@ -1432,6 +1438,12 @@
                                                     <option value="คนรู้จักแนะนำ">คนรู้จักแนะนำ</option>
                                                     <option value="อื่นๆ">อื่นๆ (ระบุในหมายเหตุ)</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="Remark">หมายเหตุ (Remark):</label>
+                                                <textarea class="form-control" id="EditRemark" name="remark" rows="1" placeholder="ระบุรายละเอียดเพิ่มเติม"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -2288,6 +2300,7 @@
                         $('#EditSubmissiondate').val(res.data.submission_date);
                         $('#EditPayment').html(res.payment)
                         $('#EditSource').val(res.data.source);
+                        $('#EditRemark').val(res.data.remark);
                         //$('#EditPackage').val(res.data.package);
                         $('#EditAddress').val(res.data.street_address);
                         //$('#EditAddress2').val(res.data.street_address2);
@@ -2971,6 +2984,7 @@
                         name_parent: $('#AddParent').val()[0],
                         mobile: $('#AddMobile').val(),
                         source: $('#AddSource').val(),
+                        remark: $('#AddRemark').val(),
                         receipt: arr,
                         // subject:$('#subject_id').val(),
                         // level:$('#level_id').val(),
@@ -3163,6 +3177,7 @@
                         name_parent2: $('#EditParent').val()[0],
                         mobile: $('#EditMobile').val(),
                         source: $('#EditSource').val(),
+                        remark: $('#EditRemark').val(),
                         // package: $('#EditPackage').val(),
                         // file_att: $('#EditFile').val(),
                         student_id: student_id,

@@ -177,8 +177,19 @@
         <!-- Title -->
         <div class="report-title-area">
             <h1 class="report-title">รายงานสรุปแหล่งที่มาลูกค้า (Customer Source Report)</h1>
+            @php
+                $months_th = [
+                    1 => 'มกราคม', 2 => 'กุมภาพันธ์', 3 => 'มีนาคม', 4 => 'เมษายน',
+                    5 => 'พฤษภาคม', 6 => 'มิถุนายน', 7 => 'กรกฎาคม', 8 => 'สิงหาคม',
+                    9 => 'กันยายน', 10 => 'ตุลาคม', 11 => 'พฤศจิกายน', 12 => 'ธันวาคม'
+                ];
+                $month_text = isset($month_filter) && $month_filter ? $months_th[$month_filter] : 'ทั้งหมด';
+                $year_text = isset($year_filter) && $year_filter ? $year_filter : 'ทั้งหมด';
+            @endphp
             <div class="report-subtitle">
-                เงื่อนไข: แหล่งที่มา = {{ $source_filter ? $source_filter : 'ทั้งหมด' }}
+                เงื่อนไข: แหล่งที่มา = {{ $source_filter ? $source_filter : 'ทั้งหมด' }} 
+                | ปี = {{ $year_text }} 
+                | เดือน = {{ $month_text }}
             </div>
         </div>
 
@@ -220,7 +231,8 @@
                         <th width="120">เลขที่ใบเสร็จ</th>
                         <th>ชื่อผู้ปกครอง</th>
                         <th>ชื่อนักเรียน</th>
-                        <th width="120">แหล่งที่มา</th>
+                        <th width="100">แหล่งที่มา</th>
+                        <th width="150">หมายเหตุ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -247,10 +259,11 @@
                             <td class="text-center">
                                 <span class="badge-source">{{ $row->source }}</span>
                             </td>
+                            <td>{{ $row->remark ?: '-' }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">ไม่พบข้อมูลที่ตรงกับเงื่อนไข</td>
+                            <td colspan="7" class="text-center py-4 text-muted">ไม่พบข้อมูลที่ตรงกับเงื่อนไข</td>
                         </tr>
                     @endforelse
                 </tbody>
