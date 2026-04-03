@@ -131,13 +131,6 @@ class PaymentVoucherController extends Controller
         $branch = Branch::where('code', $defaultBranch)->first();
         $voucherCode = $branch->pv_prefix ?? ($defaultBranch . 'PV');
 
-        $voucherCodeMap = PaymentVoucher::$voucherCodes[$defaultBranch] ?? null;
-        if (is_array($voucherCodeMap)) {
-            $voucherCode = $voucherCodeMap['PV'] ?? ($voucherCodeMap['default'] ?? ($defaultBranch . 'PV'));
-        } else {
-            $voucherCode = $voucherCodeMap ?? ($defaultBranch . 'PV');
-        }
-
         $voucherNo = PaymentVoucher::generateVoucherNo($voucherCode);
         return view('payment_voucher.create', compact('voucherNo', 'branchCodes', 'defaultBranch'));
     }
