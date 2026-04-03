@@ -47,16 +47,41 @@
             
             <div class="page-title-actions">
                 <div class="d-inline-block">
-                    <label class="mr-2">Filter Source:</label>
-                    <select id="source_filter" class="form-control" style="width: 250px; display: inline-block; margin-right: 10px;">
-                        <option value="">-- All Sources --</option>
-                        <option value="Facebook">Facebook</option>
-                        <option value="Line">Line</option>
-                        <option value="Website">Website</option>
-                        <option value="Walk-in">Walk-in</option>
-                        <option value="HQ">สำนักงานใหญ่</option>
-                        <option value="คนรู้จักแนะนำ">คนรู้จักแนะนำ</option>
-                        <option value="อื่นๆ">อื่นๆ</option>
+                    <label class="mr-1">ปี (Year):</label>
+                    <select id="year_filter" class="form-control" style="width: 110px; display: inline-block; margin-right: 10px;">
+                        <option value="">-- ทั้งหมด --</option>
+                        @for ($y = date('Y'); $y >= 2023; $y--)
+                            <option value="{{ $y }}" {{ request('year_filter') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                        @endfor
+                    </select>
+                </div>
+                <div class="d-inline-block">
+                    <label class="mr-1">เดือน (Month):</label>
+                    <select id="month_filter" class="form-control" style="width: 140px; display: inline-block; margin-right: 10px;">
+                        <option value="">-- ทั้งหมด --</option>
+                        @php
+                            $months_th = [
+                                1 => 'มกราคม', 2 => 'กุมภาพันธ์', 3 => 'มีนาคม', 4 => 'เมษายน',
+                                5 => 'พฤษภาคม', 6 => 'มิถุนายน', 7 => 'กรกฎาคม', 8 => 'สิงหาคม',
+                                9 => 'กันยายน', 10 => 'ตุลาคม', 11 => 'พฤศจิกายน', 12 => 'ธันวาคม'
+                            ];
+                        @endphp
+                        @foreach($months_th as $num => $month_name)
+                            <option value="{{ $num }}" {{ request('month_filter') == $num ? 'selected' : '' }}>{{ $month_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="d-inline-block">
+                    <label class="mr-1">แหล่งที่มา (Source):</label>
+                    <select id="source_filter" class="form-control" style="width: 180px; display: inline-block; margin-right: 10px;">
+                        <option value="">-- ทั้งหมด --</option>
+                        <option value="Facebook" {{ request('source_filter') == 'Facebook' ? 'selected' : '' }}>Facebook</option>
+                        <option value="Line" {{ request('source_filter') == 'Line' ? 'selected' : '' }}>Line</option>
+                        <option value="Website" {{ request('source_filter') == 'Website' ? 'selected' : '' }}>Website</option>
+                        <option value="Walk-in" {{ request('source_filter') == 'Walk-in' ? 'selected' : '' }}>Walk-in</option>
+                        <option value="HQ" {{ request('source_filter') == 'HQ' ? 'selected' : '' }}>สำนักงานใหญ่</option>
+                        <option value="คนรู้จักแนะนำ" {{ request('source_filter') == 'คนรู้จักแนะนำ' ? 'selected' : '' }}>คนรู้จักแนะนำ</option>
+                        <option value="อื่นๆ" {{ request('source_filter') == 'อื่นๆ' ? 'selected' : '' }}>อื่นๆ</option>
                     </select>
                 </div>
                 <!-- ปุ่มพิมพ์รายงานใหม่ที่เปิด Tab ใหม่ -->
@@ -100,6 +125,7 @@
                         <th>Parent Name</th>
                         <th>Student(s)</th>
                         <th>Source</th>
+                        <th>Remark</th>
                     </tr>
                 </thead>
             </table>
@@ -122,6 +148,8 @@
                 url: '{{ route("receipt_school.sourceReport") }}',
                 data: function(d) {
                     d.source_filter = $('#source_filter').val();
+                    d.year_filter = $('#year_filter').val();
+                    d.month_filter = $('#month_filter').val();
                 }
             },
             serverSide: true,
@@ -162,12 +190,26 @@
                 {
                     data: 'source',
                     name: 'source'
+                },
+                {
+                    data: 'remark',
+                    name: 'remark'
                 }
             ]
         });
 
-        $('#source_filter').on('change', function() {
-            table.draw();
+        $('#source_filter, #year_filter, #month_filter').on('change', function() {
+            // อัปเดต URL และโหลดหน้าใหม่เพื่อให้ Summary Boxes ตรงตามฟิลเตอร์
+            const SOURCE = $('#source_filter').val();
+            const YEAR = $('#year_filter').val();
+            const MONTH = $('#month_filter').val();
+            
+            const URL = new URL(window.location.href);
+            URL.searchParams.set('source_filter', SOURCE);
+            URL.searchParams.set('year_filter', YEAR);
+            URL.searchParams.set('month_filter', MONTH);
+            
+            window.location.href = URL.toString();
         });
     });
 
@@ -177,10 +219,16 @@
      */
     function HandlePrintAsync() {
         const SOURCE_FILTER = $('#source_filter').val() || '';
-        const PRINT_URL = "{{ route('receipt_school.sourceReportPrint') }}?source_filter=" + encodeURIComponent(SOURCE_FILTER);
+        const YEAR_FILTER = $('#year_filter').val() || '';
+        const MONTH_FILTER = $('#month_filter').val() || '';
+        
+        let printUrl = "{{ route('receipt_school.sourceReportPrint') }}?";
+        printUrl += "source_filter=" + encodeURIComponent(SOURCE_FILTER);
+        printUrl += "&year_filter=" + encodeURIComponent(YEAR_FILTER);
+        printUrl += "&month_filter=" + encodeURIComponent(MONTH_FILTER);
         
         // เปิดหน้าต่างพิมพ์ใน Tab ใหม่
-        window.open(PRINT_URL, '_blank');
+        window.open(printUrl, '_blank');
     }
 </script>
 @endsection

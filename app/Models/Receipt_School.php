@@ -26,6 +26,7 @@ class Receipt_School extends Model
         'receipt_number',
         'pid',
         'source',
+        'remark',
         'approv_id',
         'approv_name',
     ];

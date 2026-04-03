@@ -1732,6 +1732,7 @@ class ReceiptSchoolController extends Controller
             'name_parent' => $request->get('name_parent'),
             'type' => $typeRec,
             'source' => $request->get('source'),
+            'remark' => $request->get('remark'),
             // 'sid' => $request->get('student'),
             'receipt_number' => $rnumber,
             'file_att' => $filebs,
@@ -2380,13 +2381,23 @@ class ReceiptSchoolController extends Controller
                 "receipt_school.receipt_number as receipt_number",
                 "receipt_school.pid as pid",
                 "receipt_school.source as source",
+                "receipt_school.remark as remark",
                 "parent.name_parent as name_parent"
             )->join("parent", "parent.id", "=", "receipt_school.name_parent")
              ->whereNotNull('receipt_school.source')
              ->where('receipt_school.source', '!=', '');
 
-            if ($request->has('source_filter') && $request->source_filter != "") {
-                $receipt->where('receipt_school.source', $request->source_filter);
+            if ($request->filled('source_filter')) {
+                $receipt->where('receipt_school.source', 'like', '%' . trim($request->source_filter) . '%');
+            }
+
+            if ($request->has('year_filter') && $request->year_filter != "") {
+                $receipt->where('receipt_school.submission_date', 'like', '%' . $request->year_filter . '%');
+            }
+
+            if ($request->has('month_filter') && $request->month_filter != "") {
+                $month = str_pad($request->month_filter, 2, '0', STR_PAD_LEFT);
+                $receipt->where('receipt_school.submission_date', 'like', '%-' . $month . '-%');
             }
 
             $receipt = $receipt->orderBy("receipt_school.id", "desc")->get();
@@ -2411,14 +2422,29 @@ class ReceiptSchoolController extends Controller
                 ->editColumn('source', function ($row) {
                     return $row->source ?: '-';
                 })
+                ->editColumn('remark', function ($row) {
+                    return $row->remark ?: '-';
+                })
                 ->addIndexColumn()
                 ->toJson();
         }
 
-        $summary = Receipt_School::select('source', \Illuminate\Support\Facades\DB::raw('count(*) as total_count'))
+        $summary_query = Receipt_School::select('source', \Illuminate\Support\Facades\DB::raw('count(*) as total_count'))
             ->whereNotNull('source')
-            ->where('source', '!=', '')
-            ->groupBy('source')
+            ->where('source', '!=', '');
+
+        if ($request->filled('year_filter')) {
+            $summary_query->where('submission_date', 'like', '%' . $request->year_filter . '%');
+        }
+        if ($request->filled('month_filter')) {
+            $month = str_pad($request->month_filter, 2, '0', STR_PAD_LEFT);
+            $summary_query->where('submission_date', 'like', '%-' . $month . '-%');
+        }
+        if ($request->filled('source_filter')) {
+            $summary_query->where('source', 'like', '%' . trim($request->source_filter) . '%');
+        }
+
+        $summary = $summary_query->groupBy('source')
             ->orderByDesc('total_count')
             ->get();
 
@@ -2437,14 +2463,26 @@ class ReceiptSchoolController extends Controller
             "receipt_school.receipt_number as receipt_number",
             "receipt_school.pid as pid",
             "receipt_school.source as source",
+            "receipt_school.remark as remark",
             "parent.name_parent as name_parent"
         )->join("parent", "parent.id", "=", "receipt_school.name_parent")
          ->whereNotNull('receipt_school.source')
          ->where('receipt_school.source', '!=', '');
 
-        $source_filter = $request->source_filter;
-        if (!empty($source_filter)) {
-            $receipt->where('receipt_school.source', $source_filter);
+        $source_filter = $request->filled('source_filter') ? trim($request->source_filter) : null;
+        
+        if ($source_filter !== null) {
+            $receipt->where('receipt_school.source', 'like', '%' . $source_filter . '%');
+        }
+
+        if ($request->filled('year_filter')) {
+            $receipt->where('receipt_school.submission_date', 'like', '%' . $request->year_filter . '%');
+        }
+
+        if ($request->filled('month_filter')) {
+            $month = str_pad($request->month_filter, 2, '0', STR_PAD_LEFT);
+            // คัดกรองให้แม่นยำขึ้นโดยรวมแดชและรองรับช่องว่าง
+            $receipt->where('receipt_school.submission_date', 'like', '%-' . $month . '-%');
         }
 
         // ดึงข้อมูลทั้งหมดโดยไม่พาส (No Pagination)
@@ -2455,18 +2493,30 @@ class ReceiptSchoolController extends Controller
         $students = Student::whereIn('id', $student_ids)->get()->keyBy('id');
 
         // 3. เตรียมข้อมูลสรุปแยกตามแหล่งที่มา
-        $summary = Receipt_School::select('source', \Illuminate\Support\Facades\DB::raw('count(*) as total_count'))
+        $summary_query = Receipt_School::select('source', \Illuminate\Support\Facades\DB::raw('count(*) as total_count'))
             ->whereNotNull('source')
             ->where('source', '!=', '');
         
-        if (!empty($source_filter)) {
-            $summary->where('source', $source_filter);
+        if ($source_filter !== null) {
+            $summary_query->where('source', 'like', '%' . $source_filter . '%');
+        }
+
+        if ($request->filled('year_filter')) {
+            $summary_query->where('submission_date', 'like', '%' . $request->year_filter . '%');
+        }
+
+        if ($request->filled('month_filter')) {
+            $month = str_pad($request->month_filter, 2, '0', STR_PAD_LEFT);
+            $summary_query->where('submission_date', 'like', '%-' . $month . '-%');
         }
         
-        $summary = $summary->groupBy('source')
+        $summary = $summary_query->groupBy('source')
             ->orderByDesc('total_count')
             ->get();
 
-        return view('receipt_school.source_report_print', compact('records', 'summary', 'students', 'source_filter'));
+        $year_filter = $request->year_filter;
+        $month_filter = $request->month_filter;
+
+        return view('receipt_school.source_report_print', compact('records', 'summary', 'students', 'source_filter', 'year_filter', 'month_filter'));
     }
 }
