@@ -112,7 +112,7 @@
                                         <option value="">เลือกพนักงาน</option>
 
                                         @foreach ($users as $user_name)
-                                            <option value="{{ $user_name->id }}">{{ $user_name->name }}</option>
+                                            <option value="{{ $user_name->id }}" {{ (isset($user_id) && $user_id == $user_name->id) ? 'selected' : '' }}>{{ $user_name->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -126,7 +126,7 @@
                                         data-parsley-required="true" data-parsley-required-message="เลือกเดือน">
                                         <option value="">เลือกเดือน</option>
                                         @for ($i = 1; $i <= 12; $i++)
-                                            <option value="{{ $i }}">
+                                            <option value="{{ $i }}" {{ (isset($month) ? $month : date('m')) == $i ? 'selected' : '' }}>
                                                 {{ date('F', mktime(0, 0, 0, $i, 1)) }}
                                             </option>
                                         @endfor
@@ -143,8 +143,10 @@
                                         {{-- <option value="">เลือกปี</option> --}}
                                         @php
                                             $currentYear = date('Y');
+                                            $selectedYear = isset($year) ? $year : $currentYear;
                                             for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
-                                                echo "<option value='$i'>$i</option>";
+                                                $selected = ($selectedYear == $i) ? 'selected' : '';
+                                                echo "<option value='$i' $selected>$i</option>";
                                             }
                                         @endphp
                                     </select>
