@@ -139,17 +139,59 @@
 
                     <hr>
 
-                    <h5 class="card-title text-primary">Resume / เอกสารประกอบ</h5>
-                    @if ($applicant->resume_path)
-                        <div class="ratio ratio-16x9 border" style="height: 600px;">
-                            <iframe src="{{ asset('storage/' . $applicant->resume_path) }}" allow="autoplay"></iframe>
+                    <h5 class="card-title text-primary">Resume / เอกสารประกอบ ({{ $applicant->attachments->count() }} ฉบับ)</h5>
+                    @if ($applicant->attachments->count() > 0)
+                        <div class="list-group mb-3">
+                            @foreach ($applicant->attachments as $index => $attachment)
+                                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa fa-file-pdf fa-2x text-danger me-3"></i>
+                                        <div>
+                                            <div class="fw-bold">{{ $attachment->original_name }}</div>
+                                            <small class="text-muted">
+                                                ขนาด: {{ number_format($attachment->file_size / 1024, 2) }} KB | 
+                                                อัปโหลดโดย: {{ $attachment->uploader->name ?? 'System' }} | 
+                                                {{ $attachment->created_at->format('d/m/Y H:i') }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-sm btn-info view-pdf" 
+                                            data-url="{{ asset('storage/' . $attachment->file_path) }}"
+                                            data-name="{{ $attachment->original_name }}">
+                                            <i class="fa fa-eye"></i> ดูตัวอย่าง
+                                        </button>
+                                        <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank"
+                                            class="btn btn-sm btn-outline-primary">
+                                            <i class="fa fa-download"></i> ดาวน์โหลด
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="mt-2 text-center">
-                            <a href="{{ asset('storage/' . $applicant->resume_path) }}" target="_blank"
-                                class="btn btn-outline-info">
-                                <i class="fa fa-external-link-alt"></i> เปิดหน้าต่างใหม่ / ดาวน์โหลด
-                            </a>
+
+                        <div id="pdf-preview-container" class="mt-3">
+                            <h6 id="preview-title" class="fw-bold mb-2">แสดงตัวอย่าง: {{ $applicant->attachments->first()->original_name }}</h6>
+                            <div class="ratio ratio-16x9 border" style="height: 600px;">
+                                <iframe id="pdf-iframe" src="{{ asset('storage/' . $applicant->attachments->first()->file_path) }}" allow="autoplay"></iframe>
+                            </div>
                         </div>
+
+                        @section('scripts')
+                            <script>
+                                $('.view-pdf').on('click', function() {
+                                    const url = $(this).data('url');
+                                    const name = $(this).data('name');
+                                    $('#pdf-iframe').attr('src', url);
+                                    $('#preview-title').text('แสดงตัวอย่าง: ' + name);
+                                    
+                                    // Scroll to preview
+                                    $('html, body').animate({
+                                        scrollTop: $("#pdf-preview-container").offset().top - 100
+                                    }, 500);
+                                });
+                            </script>
+                        @endsection
                     @else
                         <div class="alert alert-warning">ไม่พบไฟล์เอกสาร</div>
                     @endif

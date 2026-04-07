@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RecruitmentApplicant;
 use App\Models\RecruitmentApplicantLog;
+use App\Models\RecruitmentApplicantAttachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -84,35 +85,51 @@ class RecruitmentController extends Controller
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:20',
             'position_applied' => 'nullable|string|max:255',
-            'resume' => 'required|file|mimes:pdf|max:10240',
+            'resumes' => 'required|array',
+            'resumes.*' => 'file|mimes:pdf|max:10240',
         ]);
 
         DB::beginTransaction();
         try {
-            $path = null;
-            if ($request->hasFile('resume')) {
-                $file = $request->file('resume');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $path = $file->storeAs('recruitment/resumes', $fileName, 'public');
-            }
-
             $applicant = RecruitmentApplicant::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'position_applied' => $request->position_applied,
-                'resume_path' => $path,
                 'status' => RecruitmentApplicant::STATUS_PENDING,
                 'admin_id' => Auth::id(),
             ]);
+
+            if ($request->hasFile('resumes')) {
+                foreach ($request->file('resumes') as $index => $file) {
+                    $originalName = $file->getClientOriginalName();
+                    $fileName = time() . '_' . $index . '_' . $originalName;
+                    $path = $file->storeAs('recruitment/resumes', $fileName, 'public');
+
+                    $attachment = RecruitmentApplicantAttachment::create([
+                        'applicant_id' => $applicant->id,
+                        'file_name' => $fileName,
+                        'original_name' => $originalName,
+                        'file_path' => $path,
+                        'file_type' => $file->getMimeType(),
+                        'file_size' => $file->getSize(),
+                        'uploaded_by' => Auth::id(),
+                    ]);
+
+                    // เก็บไฟล์แรกเป็น resume_path เพื่อความเข้ากันได้ย้อนหลัง
+                    if ($index === 0) {
+                        $applicant->update(['resume_path' => $path]);
+                    }
+                }
+            }
 
             RecruitmentApplicantLog::create([
                 'applicant_id' => $applicant->id,
                 'user_id' => Auth::id(),
                 'action' => 'uploaded',
                 'to_status' => RecruitmentApplicant::STATUS_PENDING,
-                'note' => 'อัปโหลดเอกสารผู้สมัครใหม่',
+                'note' => 'อัปโหลดเอกสารผู้สมัครใหม่ (' . count($request->file('resumes')) . ' ฉบับ)',
             ]);
 
             DB::commit();
@@ -130,7 +147,7 @@ class RecruitmentController extends Controller
     public function show($id)
     {
         $this->authorize('recruitment.view');
-        $applicant = RecruitmentApplicant::with(['admin', 'reviewer', 'manager', 'logs.user'])->findOrFail($id);
+        $applicant = RecruitmentApplicant::with(['admin', 'reviewer', 'manager', 'logs.user', 'attachments.uploader'])->findOrFail($id);
         return view('recruitment.show', compact('applicant'));
     }
 

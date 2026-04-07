@@ -55,6 +55,14 @@ class RecruitmentApplicant extends Model
         return $this->hasMany(RecruitmentApplicantLog::class, 'applicant_id');
     }
 
+    /**
+     * Get the attachments for the applicant.
+     */
+    public function attachments()
+    {
+        return $this->hasMany(RecruitmentApplicantAttachment::class, 'applicant_id');
+    }
+
     public function GetFullName()
     {
         return $this->first_name . ' ' . $this->last_name;

@@ -68,10 +68,10 @@
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label">เอกสาร Resume (PDF เท่านั้น) <span
+                            <label class="form-label">เอกสาร Resume และเอกสารอื่นๆ (PDF เท่านั้น) <span
                                     class="text-danger">*</span></label>
-                            <input type="file" name="resume" class="form-control" accept=".pdf" required>
-                            <div class="form-text text-muted">ขนาดไฟล์ไม่เกิน 10MB</div>
+                            <input type="file" name="resumes[]" class="form-control" accept=".pdf" multiple required>
+                            <div class="form-text text-muted">สามารถเลือกได้หลายไฟล์, ขนาดแต่ละไฟล์ไม่เกิน 10MB</div>
                         </div>
 
                         <div class="d-grid gap-2">
