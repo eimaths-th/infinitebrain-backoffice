@@ -154,10 +154,10 @@ class Receipt_School_RunningNumber extends Model
         // dd($tex);
         // Define the lookup table for types
         $types = [
-            'Sci' => ['0' => 'Sci', '1' => 'NTSci'],
-            'CHN' => ['0' => 'CHN', '1' => 'NTCHN'],
-            'TH' => ['0' => 'TH', '1' => 'NTTH'],
-            'default' => ['0' => 'def', '1' => 'NT'],
+            'Sci' => ['0' => 'Sci', '1' => 'Sci'],
+            'CHN' => ['0' => 'CHN', '1' => 'CHN'],
+            'TH' => ['0' => 'TH', '1' => 'TH'],
+            'default' => ['0' => 'def', '1' => 'def'],
         ];
 
         // Determine type based on group and tex
@@ -189,15 +189,14 @@ class Receipt_School_RunningNumber extends Model
 
         // Define the lookup table for typenumber
         $typenumbers = [
-            'Sci' => ['1' => '73', '0' => '03'],
-            'NTSci' => ['1' => '73', '0' => '03'],
-            'CHN' => ['1' => '71', '0' => '01'],
-            'NTCHN' => ['1' => '71', '0' => '01'],
+            'Sci' => ['1' => '03', '0' => '03'],
+            'NTSci' => ['1' => '03', '0' => '03'],
+            'CHN' => ['1' => '01', '0' => '01'],
+            'NTCHN' => ['1' => '01', '0' => '01'],
             'def' => ['1' => '00', '0' => '00'],
-            'NT'  => ['1' => '77', '0' => '77'],
-            'TH' => ['1' => '72', '0' => '02'],
-            'NTTH' => ['1' => '72', '0' => '02'],
-
+            'NT'  => ['1' => '00', '0' => '00'],
+            'TH' => ['1' => '02', '0' => '02'],
+            'NTTH' => ['1' => '02', '0' => '02'],
         ];
 
         // Determine typenumber based on type and tex

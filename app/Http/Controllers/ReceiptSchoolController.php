@@ -1135,6 +1135,9 @@ class ReceiptSchoolController extends Controller
         } elseif ($firstTwoDigits === '03' || $firstTwoDigits === '73') {
             # code...
             $group_rec = 'sci';
+        } elseif ($firstTwoDigits === '02' || $firstTwoDigits === '72') {
+            # code...
+            $group_rec = 'th';
         } else {
             # code...
             $group_rec = '';
@@ -1384,7 +1387,9 @@ class ReceiptSchoolController extends Controller
             if ($payment_type == 1 && $fixDate < $dataDate) {
                 # code...
                 $mes = "ใบเสร็จรับเงิน";
+                $mes2 = "ใบเสร็จรับเงิน";
                 $text = "Receipt";
+                $text2 = "Receipt";
                 $vat_price_val = number_format(0, 2);
                 $vat_val = number_format(0, 2);
                 $booksum = $booksum + $pricesub;
@@ -1619,6 +1624,9 @@ class ReceiptSchoolController extends Controller
 
                 'name_parent' => 'required|string',
                 'mobile' => 'required|string',
+                'student' => 'required|array',
+                'img' => 'required|array',
+                'receipt' => 'required|array',
                 'receipt.*.subject' => 'required',
                 'receipt.*.level' => 'required',
                 'receipt.*.week' => 'required',
@@ -1641,6 +1649,9 @@ class ReceiptSchoolController extends Controller
 
             ],
             [
+                'student.required' => 'กรุณาเลือกชื่อนักเรียน',
+                'img.required' => 'กรุณาแนบรูปภาพหลักฐานการชำระเงิน',
+                'receipt.required' => 'กรุณาระบุรายการในใบเสร็จ',
                 'receipt.*.subject.required' => 'The Subject field is required.  !',
                 'receipt.*.level.required' => 'The Start Level field is required.  !',
                 'receipt.*.week.required' => 'The Week field is required.  !',
