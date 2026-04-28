@@ -126,6 +126,7 @@
             <col style="width: 20%;">
             <col style="width: 10%;">
         </colgroup>
+        @if (empty($isEvaluation))
         <tr class="section-header">
             <td colspan="4">รายรับ</td>
         </tr>
@@ -168,9 +169,10 @@
             <td class="text-right">{{ number_format($data['total_revenue'], 2) }}</td>
             <td style="font-weight: normal; text-align: left; padding-left: 10px;">บาท</td>
         </tr>
+        @endif
 
         <tr class="section-header">
-            <td colspan="4" style="border-top: none;">รายจ่าย</td>
+            <td colspan="4">รายจ่าย</td>
         </tr>
         <tr class="col-headings">
             <th colspan="2">รายการ</th>
@@ -206,6 +208,7 @@
             <td class="text-right">{{ number_format($data['total_expense'], 2) }}</td>
             <td style="font-weight: normal; text-align: left; padding-left: 10px;">บาท</td>
         </tr>
+        @if (empty($isEvaluation))
         <tr>
             <td colspan="2">รายการหักประจำปี (ใบสำคัญจ่าย + Payroll)</td>
             <td class="text-right">{{ number_format($data['pv_deductions'] + $data['payroll_deductions'], 2) }}</td>
@@ -213,10 +216,12 @@
         </tr>
 
         <tr class="section-header">
-            <td colspan="3" style="border-top: none; padding-top: 15px;">ผลประกอบการ</td>
+            <td colspan="3" style="padding-top: 15px;">ผลประกอบการ</td>
         </tr>
+        @endif
     </table>
 
+    @if (empty($isEvaluation))
     <table class="profit-loss-table">
         <tr>
             <th style="width: 33%;">รายรับ</th>
@@ -232,6 +237,7 @@
             </td>
         </tr>
     </table>
+    @endif
 </body>
 
 </html>

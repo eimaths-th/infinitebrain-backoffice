@@ -133,7 +133,7 @@
         @endphp
         {{ isset($isEvaluation) && $isEvaluation ? 'ใบประเมิน' : 'รายงานผลประกอบการ' }} {{ $displayTitle }} ปี {{ $year + 543 }}<br>
         @if(!empty($branchTitles))
-            <small style="font-size: 10pt;">สาขา: {{ implode(', ', $branchTitles) }}</small><br>
+            <b style="font-size: 10pt;">สาขา: {{ implode(', ', $branchTitles) }}</b><br>
         @endif
         ประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }}
     </div>
@@ -145,6 +145,8 @@
             <col style="width: 20%;">
             <col style="width: 10%;">
         </colgroup>
+
+        @if (empty($isEvaluation))
         <!-- รายรับ -->
         <tr class="section-header">
             <td colspan="4">รายรับ</td>
@@ -186,10 +188,13 @@
             <td class="text-right">{{ number_format($data['total_revenue'], 2) }}</td>
             <td style="font-weight: normal; text-align: left; padding-left: 10px;">บาท</td>
         </tr>
+        @endif
+
+
 
         <!-- รายจ่าย -->
         <tr class="section-header">
-            <td colspan="4" style="border-top: none;">รายจ่าย</td>
+            <td colspan="4">รายจ่าย</td>
         </tr>
         <tr class="col-headings">
             <th colspan="2">รายการ</th>
@@ -225,17 +230,22 @@
             <td class="text-right">{{ number_format($data['total_expense'], 2) }}</td>
             <td style="font-weight: normal; text-align: left; padding-left: 10px;">บาท</td>
         </tr>
+        @if (empty($isEvaluation))
         <tr>
             <td colspan="2">รายการหักประจำเดือน (ใบสำคัญจ่าย + Payroll)</td>
             <td class="text-right">{{ number_format($data['pv_deductions'] + $data['payroll_deductions'], 2) }}</td>
             <td style="font-weight: normal; text-align: left; padding-left: 10px;">บาท</td>
         </tr>
 
+        
         <!-- ผลประกอบการ -->
         <tr class="section-header">
-            <td colspan="3" style="border-top: none; padding-top: 15px;">ผลประกอบการ</td>
+            <td colspan="3" style="padding-top: 15px;">ผลประกอบการ</td>
         </tr>
+        @endif
     </table>
+
+    @if (empty($isEvaluation))
 
     <table class="profit-loss-table">
         <tr>
@@ -252,6 +262,7 @@
             </td>
         </tr>
     </table>
+    @endif
 </body>
 
 </html>

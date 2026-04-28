@@ -56,7 +56,7 @@
         .section-header td {
             text-align: center;
             font-weight: bold;
-            border-top: 2px solid ##96c93d;
+            border-top: 2px solid #96c93d;
             padding-top: 8px;
             padding-bottom: 3px;
         }
@@ -143,6 +143,8 @@
         </div>
     @else
         {{-- สรุปตามหมวดหมู่ --}}
+
+        
         <table>
             <colgroup>
                 <col style="width: 8%;">
