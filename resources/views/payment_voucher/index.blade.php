@@ -330,12 +330,9 @@
                             </td>
                             <td class="text-center align-middle">
                                 @can('payment-voucher.evaluation.create')
-                                <form action="{{ route('payment-voucher.toggle-evaluation', $voucher->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <div class="form-check form-switch d-flex justify-content-center m-0 p-0">
-                                        <input class="form-check-input" type="checkbox" style="margin-left: 0; cursor: pointer;" name="is_evaluation" value="1" {{ $voucher->is_evaluation ? 'checked' : '' }} onchange="this.form.submit()">
-                                    </div>
-                                </form>
+                                <div class="form-check form-switch d-flex justify-content-center m-0 p-0">
+                                    <input class="form-check-input toggle-evaluation-switch" type="checkbox" style="margin-left: 0; cursor: pointer;" data-id="{{ $voucher->id }}" {{ $voucher->is_evaluation ? 'checked' : '' }}>
+                                </div>
                                 @else
                                     @if ($voucher->is_evaluation)
                                     <span class="badge bg-success" title="เข้าใบประเมินแล้ว"><i class="fa fa-check"></i></span>
@@ -653,6 +650,35 @@
 
         $('#bulkActionForm').submit();
     }
+
+    $(document).ready(function() {
+        $('.toggle-evaluation-switch').on('change', function() {
+            let checkbox = $(this);
+            let id = checkbox.data('id');
+            let is_evaluation = checkbox.is(':checked') ? 1 : 0;
+            
+            $.ajax({
+                url: `/payment-voucher/toggle-evaluation/${id}`,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    is_evaluation: is_evaluation
+                },
+                success: function(response) {
+                    if(response.success) {
+                        toastr.success(response.message);
+                    } else {
+                        toastr.error('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+                        checkbox.prop('checked', !is_evaluation); // revert
+                    }
+                },
+                error: function() {
+                    toastr.error('เกิดข้อผิดพลาดในการเชื่อมต่อ หรือไม่มีสิทธิ์ทำรายการ');
+                    checkbox.prop('checked', !is_evaluation); // revert
+                }
+            });
+        });
+    });
 
 </script>
 @endsection
