@@ -13,49 +13,40 @@ return new class extends Migration
      */
     public function up()
     {
-        // 1. ตาราง Statuslog
-        if (Schema::hasTable('status_log')) {
-            Schema::table('status_log', function (Blueprint $table) {
-                $table->index('student_id');
-                $table->index('status_date');
-                $table->index(['student_id', 'group']);
-            });
-        }
+        $indexes = [
+            'status_log' => [
+                'student_id',
+                'status_date',
+                ['student_id', 'group']
+            ],
+            'school_price' => [
+                'student_id',
+                'rid',
+                'course_type'
+            ],
+            'students' => [
+                'status',
+                'pid'
+            ],
+            'receipt_school' => [
+                'pid',
+                'status',
+                'receipt_date'
+            ]
+        ];
 
-        // 2. ตาราง SchoolPrice
-        if (Schema::hasTable('school_price')) {
-            Schema::table('school_price', function (Blueprint $table) {
-                $table->index('student_id');
-                $table->index('rid');
-                $table->index('course_type');
-            });
-        }
-
-        // 3. ตาราง Students
-        if (Schema::hasTable('students')) {
-            Schema::table('students', function (Blueprint $table) {
-                if (Schema::hasColumn('students', 'status')) {
-                    $table->index('status');
+        foreach ($indexes as $tableName => $colsArray) {
+            if (Schema::hasTable($tableName)) {
+                foreach ($colsArray as $cols) {
+                    try {
+                        Schema::table($tableName, function (Blueprint $t) use ($cols) {
+                            $t->index($cols);
+                        });
+                    } catch (\Exception $e) {
+                        // Ignore if index exists or column doesn't exist
+                    }
                 }
-                if (Schema::hasColumn('students', 'pid')) {
-                    $table->index('pid');
-                }
-            });
-        }
-
-        // 4. ตาราง Receipt_School
-        if (Schema::hasTable('receipt_school')) {
-            Schema::table('receipt_school', function (Blueprint $table) {
-                if (Schema::hasColumn('receipt_school', 'pid')) {
-                    $table->index('pid');
-                }
-                if (Schema::hasColumn('receipt_school', 'status')) {
-                    $table->index('status');
-                }
-                if (Schema::hasColumn('receipt_school', 'receipt_date')) {
-                    $table->index('receipt_date');
-                }
-            });
+            }
         }
     }
 
