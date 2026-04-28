@@ -359,9 +359,11 @@ class PerformanceController extends Controller
 
         $groupMap = BranchGroup::whereIn('code', $allowedGroups)->pluck('name', 'code')->toArray();
 
+        $isEvaluation = $request->boolean('evaluation');
+
         $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups, $selectedBranches);
 
-        return view('finance.performance.print-expense', compact('data', 'year', 'month', 'selectedGroups', 'selectedBranches', 'groupMap'));
+        return view('finance.performance.print-expense', compact('data', 'year', 'month', 'selectedGroups', 'selectedBranches', 'groupMap', 'isEvaluation'));
     }
 
     /**

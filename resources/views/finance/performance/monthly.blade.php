@@ -330,10 +330,9 @@
                             <i class="header-icon pe-7s-cash icon-gradient bg-mixed-hopes"></i>
                             รายละเอียดรายจ่าย (Expense Details)
                         </div>
-                        <a href="{{ route('performance.monthly.print-expense', array_merge(request()->query(), ['year' => $year, 'month' => $month])) }}"
-                            target="_blank" class="btn btn-sm btn-outline-danger">
+                        <button type="button" onclick="printExpenseSelection()" class="btn btn-sm btn-outline-danger">
                             <i class="fa fa-print"></i> พิมพ์รายจ่าย
-                        </a>
+                        </button>
                     </div>
                     <div class="card-body">
                         <ul class="nav nav-tabs">
@@ -424,4 +423,45 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        function printExpenseSelection() {
+            swal({
+                title: "เลือกรูปแบบการพิมพ์",
+                text: "คุณต้องการพิมพ์รายงานรายจ่ายแบบใด?",
+                icon: "info",
+                buttons: {
+                    cancel: {
+                        text: "ยกเลิก",
+                        value: null,
+                        visible: true,
+                        className: "btn btn-secondary",
+                        closeModal: true,
+                    },
+                    normal: {
+                        text: "แบบปกติ",
+                        value: "normal",
+                        visible: true,
+                        className: "btn btn-danger",
+                        closeModal: true
+                    },
+                    evaluation: {
+                        text: "แบบประเมิน",
+                        value: "evaluation",
+                        visible: true,
+                        className: "btn btn-info",
+                        closeModal: true
+                    }
+                }
+            }).then((value) => {
+                if (value === "normal") {
+                    window.open("{{ route('performance.monthly.print-expense', array_merge(request()->query(), ['year' => $year, 'month' => $month])) }}", "_blank");
+                } else if (value === "evaluation") {
+                    window.open("{{ route('performance.monthly.print-expense', array_merge(request()->query(), ['year' => $year, 'month' => $month, 'evaluation' => 1])) }}", "_blank");
+                }
+            });
+        }
+    </script>
 @endsection
