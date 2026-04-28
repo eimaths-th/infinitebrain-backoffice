@@ -289,6 +289,33 @@
         </div>
     @endif
 
+    <!-- ส่วนที่ 3: รายการหัก (Deductions) -->
+    @if ($data['pv_deductions'] > 0)
+        <div class="no-break">
+            <div class="section-title">3. รายการหักประจำเดือน (Deductions)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 70%;">ประเภทรายการหัก</th>
+                        <th style="width: 30%;">จำนวนเงิน</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ยอดรายการหัก และภาษีหัก ณ ที่จ่าย จากใบสำคัญจ่ายประจำเดือน</td>
+                        <td class="text-right">{{ number_format($data['pv_deductions'], 2) }}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="summary-row">
+                        <td class="text-right">รวมรายการหักประจำเดือน</td>
+                        <td class="text-right">{{ number_format($data['pv_deductions'], 2) }} บาท</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    @endif
+
     <!-- สรุปรวมรายจ่ายทั้งหมด -->
     <table>
         <tr class="summary-row" style="border: 2px solid #e74c3c;">
