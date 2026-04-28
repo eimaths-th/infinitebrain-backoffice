@@ -164,7 +164,7 @@
 
     @forelse($groupedPV as $category => $vouchers)
         @php
-            $categoryName = \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ';
+            $categoryName = \App\Models\PaymentVoucher::getAllCategoryLabels()[$category] ?? 'อื่นๆ';
             // คำนวณยอดรวมของหมวดหมู่ก่อนเพื่อแสดงบนแถบ title
             $category_total = $vouchers->sum(function ($voucher) {
                 return $voucher->expenseItems->sum('amount');

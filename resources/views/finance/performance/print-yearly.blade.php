@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>รายงานผลประกอบการ ประจำปี {{ $year + 543 }}</title>
+    <title>{{ isset($isEvaluation) && $isEvaluation ? 'ใบประเมินรายปี' : 'รายงานผลประกอบการ ประจำปี' }} {{ $year + 543 }}</title>
     <style>
         @page {
             size: A4 portrait;
@@ -46,7 +46,7 @@
         .section-header td {
             text-align: center;
             font-weight: bold;
-            border-top: 2px solid #5B9541;
+            border-top: 2px solid #96c93d;
             padding-top: 5px;
             padding-bottom: 2px;
         }
@@ -57,8 +57,8 @@
 
         .summary-row td {
             font-weight: bold;
-            border-top: 2px solid #5B9541;
-            border-bottom: 2px solid #5B9541;
+            border-top: 2px solid #96c93d;
+            border-bottom: 2px solid #96c93d;
             padding-top: 5px;
             padding-bottom: 5px;
         }
@@ -71,7 +71,7 @@
         }
 
         .profit-loss-table th {
-            border-top: 2px solid #5B9541;
+            border-top: 2px solid #96c93d;
             border-bottom: 1px solid #000;
             padding-top: 5px;
         }
@@ -112,7 +112,7 @@
                 $branchTitles = \App\Models\Branch::whereIn('code', $selectedBranches)->pluck('name')->toArray();
             }
         @endphp
-        รายงานผลประกอบการรายปี {{ $displayTitle }}<br>
+        {{ isset($isEvaluation) && $isEvaluation ? 'ใบประเมินรายปี' : 'รายงานผลประกอบการรายปี' }} {{ $displayTitle }}<br>
         @if(!empty($branchTitles))
             <small style="font-size: 10pt;">สาขา: {{ implode(', ', $branchTitles) }}</small><br>
         @endif
@@ -195,7 +195,7 @@
                 $categoryTotal = $vouchers->sum('net_amount');
             @endphp
             <tr>
-                <td colspan="2">{{ \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ' }}</td>
+                <td colspan="2">{{ \App\Models\PaymentVoucher::getAllCategoryLabels()[$category] ?? 'อื่นๆ' }}</td>
                 <td class="text-right">{{ number_format($categoryTotal, 2) }}</td>
                 <td></td>
             </tr>

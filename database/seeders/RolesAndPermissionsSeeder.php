@@ -27,7 +27,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'parents' => ['view', 'create', 'edit', 'delete', 'export'],
             'receipts' => ['view', 'create', 'edit', 'delete', 'export'],
             'receipt-school' => ['view', 'create', 'edit', 'delete', 'export'],
-            'payment-voucher' => ['view', 'create', 'edit', 'delete', 'approve', 'review', 'export', 'dashboard', 'test'],
+            'payment-voucher' => ['view', 'create', 'edit', 'delete', 'approve', 'review', 'export', 'dashboard', 'test', 'evaluation.create', 'evaluation.view'],
             'courses' => ['view', 'create', 'edit', 'delete'],
             'subjects' => ['view', 'create', 'edit', 'delete'],
             'form-manage' => ['view', 'create', 'edit', 'delete'],
@@ -39,7 +39,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'general' => ['view', 'admin.view'],
             'system' => ['view'],
             'recruitment' => ['view', 'upload', 'review', 'verify', 'view_all'],
-            'receipt-voucher' => ['view', 'create', 'edit', 'delete', 'verify', 'complete', 'export'],
+            'receipt-voucher' => ['view', 'create', 'edit', 'delete', 'verify', 'complete', 'export', 'evaluation.create', 'evaluation.view'],
+            'payment-voucher-category' => ['view', 'create', 'edit', 'delete'],
             'teacher-revenue' => ['view'],
         ];
 
@@ -85,6 +86,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'payment-voucher.create',
             'payment-voucher.edit',
             'payment-voucher.export',
+            'payment-voucher.evaluation.create',
+            'payment-voucher.evaluation.view',
             'students.view',
             'parents.view',
             'reports.view',
@@ -93,6 +96,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'receipt-voucher.create',
             'receipt-voucher.edit',
             'receipt-voucher.export',
+            'receipt-voucher.evaluation.create',
+            'receipt-voucher.evaluation.view',
+            'payment-voucher-category.view',
             'teacher-revenue.view',
         ];
         $finance = Role::firstOrCreate(['name' => 'finance', 'guard_name' => 'web']);

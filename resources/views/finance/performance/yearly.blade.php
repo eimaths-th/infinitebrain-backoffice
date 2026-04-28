@@ -82,6 +82,12 @@
                         target="_blank" class="btn btn-info">
                         <i class="fa fa-print"></i> พิมพ์รายงานปี
                     </a>
+                    @can('receipt-voucher.evaluation.view')
+                    <a href="{{ route('performance.yearly.print-evaluation', array_merge(request()->query(), ['year' => $year])) }}"
+                        target="_blank" class="btn btn-success">
+                        <i class="fa fa-clipboard"></i> พิมพ์ใบประเมินรายปี
+                    </a>
+                    @endcan
                     <a href="{{ route('performance.index', array_merge(request()->query(), ['year' => $year])) }}"
                         class="btn btn-secondary">
                         <i class="fa fa-arrow-left"></i> กลับไปหน้าภาพรวม
@@ -466,7 +472,7 @@
                                                             </a>
                                                         </td>
                                                         <td>{{ $voucher->branch_code }}</td>
-                                                        <td>{{ \App\Models\PaymentVoucher::$categoryLabels[$voucher->category] ?? 'อื่นๆ' }}
+                                                        <td>{{ \App\Models\PaymentVoucher::getAllCategoryLabels()[$voucher->category] ?? 'อื่นๆ' }}
                                                         </td>
                                                         <td>
                                                             <div class="font-weight-bold">{{ $item->description }}</div>
