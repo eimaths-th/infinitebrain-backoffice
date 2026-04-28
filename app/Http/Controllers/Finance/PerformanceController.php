@@ -529,7 +529,9 @@ class PerformanceController extends Controller
                     ->with(['payee', 'receiptItems'])
                     ->get(),
 
-                'pv_items' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
+                'pv_items' => PaymentVoucher::when(!$isEvaluationOnly, function ($query) {
+                        return $query->where('status', PaymentVoucher::STATUS_COMPLETED);
+                    })
                     ->when(!empty($selectedBranches), function ($query) use ($selectedBranches) {
                         return $query->whereIn('branch_code', $selectedBranches);
                     })
@@ -544,7 +546,9 @@ class PerformanceController extends Controller
                     ->with(['payee', 'expenseItems'])
                     ->get(),
 
-                'pv_groups' => PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
+                'pv_groups' => PaymentVoucher::when(!$isEvaluationOnly, function ($query) {
+                        return $query->where('status', PaymentVoucher::STATUS_COMPLETED);
+                    })
                     ->when(!empty($selectedBranches), function ($query) use ($selectedBranches) {
                         return $query->whereIn('branch_code', $selectedBranches);
                     })
