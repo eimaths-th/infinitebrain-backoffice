@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>รายงานรายละเอียดรายจ่าย {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }} ปี {{ $year + 543 }}</title>
+    <title>รายงานรายละเอียดรายจ่าย{{ isset($isEvaluation) && $isEvaluation ? ' (แบบประเมิน)' : '' }} {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }} ปี {{ $year + 543 }}</title>
     <style>
         /* การตั้งค่าหน้ากระดาษ A4 */
         @page {
@@ -101,9 +101,9 @@
             font-weight: bold;
             margin-top: 10px;
             margin-bottom: 5px;
-            background-color: #fde8e8;
+            background-color: {{ isset($isEvaluation) && $isEvaluation ? '#e8f4fd' : '#fde8e8' }};
             padding: 5px 10px;
-            border-left: 4px solid #e74c3c;
+            border-left: 4px solid {{ isset($isEvaluation) && $isEvaluation ? '#3498db' : '#e74c3c' }};
         }
 
         /* ป้องกันการตัดหน้าในจุดที่ไม่เหมาะสม */
@@ -148,7 +148,7 @@
                 $branchTitles = \App\Models\Branch::whereIn('code', $selectedBranches)->pluck('name')->toArray();
             }
         @endphp
-        รายงานรายละเอียดรายจ่าย {{ $displayTitle }}<br>
+        รายงาน{{ isset($isEvaluation) && $isEvaluation ? 'ประเมิน' : 'รายละเอียด' }}รายจ่าย {{ $displayTitle }}<br>
         @if(!empty($branchTitles))
             <small style="font-size: 10pt;">สาขา: {{ implode(', ', $branchTitles) }}</small><br>
         @endif
@@ -232,6 +232,7 @@
     @endif
 
     <!-- ส่วนที่ 2: Payroll (เงินเดือน) - แสดงเฉพาะสาขา EL/IF ที่มี Payroll -->
+    @php $payroll_grand_total = 0; @endphp
     @if ($data['details']['payroll_items']->count() > 0)
         <div class="no-break">
             <div class="section-title">2. Payroll (เงินเดือนพนักงาน)</div>
@@ -240,7 +241,6 @@
                 $groupedPayroll = collect($data['details']['payroll_items'])->groupBy(function ($item) {
                     return $item->user->department ?? 'ไม่ระบุแผนก';
                 });
-                $payroll_grand_total = 0;
             @endphp
 
             @foreach ($groupedPayroll as $department => $items)
