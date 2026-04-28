@@ -166,6 +166,7 @@ class PerformanceController extends Controller
             'pv_expense' => 0,
             'pv_deductions' => 0,
             'payroll_expense' => 0,
+            'payroll_deductions' => 0,
             'total_revenue' => 0,
             'total_expense' => 0,
             'profit' => 0,
@@ -190,6 +191,7 @@ class PerformanceController extends Controller
             $yearlyData['pv_expense'] += $data['pv_expense'];
             $yearlyData['pv_deductions'] += $data['pv_deductions'];
             $yearlyData['payroll_expense'] += $data['payroll_expense'];
+            $yearlyData['payroll_deductions'] += $data['payroll_deductions'];
             $yearlyData['total_revenue'] += $data['total_revenue'];
             $yearlyData['total_expense'] += $data['total_expense'];
             $yearlyData['profit'] += $data['profit'];
@@ -481,16 +483,19 @@ class PerformanceController extends Controller
 
         // 4. Expense: Payroll (ดึงตามแผนกที่กำหนดของแต่ละสาขา)
         $payrollExpense = 0;
+        $payrollDeductions = 0;
         if ($showPayroll) {
-            $payrollExpense = Payroll::where('status', Payroll::STATUS_PAID)
+            $payrollQuery = Payroll::where('status', Payroll::STATUS_PAID)
                 ->whereHas('user', function ($query) use ($payrollDepartments) {
                     $query->whereIn('department', $payrollDepartments);
                 })
                 ->whereHas('payrollPeriod', function ($query) use ($year, $month) {
                     $thaiYear = $year + 543;
                     $query->where('year', $thaiYear)->where('month', $month);
-                })
-                ->sum('net_pay');
+                });
+
+            $payrollExpense = $payrollQuery->sum('net_pay');
+            $payrollDeductions = $payrollQuery->sum('total_deduction');
         }
 
         $totalRevenue = $schoolRevenue + $apiSchoolRevenue + $rvRevenue;
@@ -505,6 +510,7 @@ class PerformanceController extends Controller
             'pv_expense' => $pvExpense,
             'pv_deductions' => $pvDeductions,
             'payroll_expense' => $payrollExpense,
+            'payroll_deductions' => $payrollDeductions,
             'total_revenue' => $totalRevenue,
             'total_expense' => $totalExpense,
             'profit' => $profit,
