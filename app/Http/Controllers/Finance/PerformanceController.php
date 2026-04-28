@@ -346,6 +346,7 @@ class PerformanceController extends Controller
     public function printExpense(Request $request, $year, $month)
     {
         /** @var \App\Models\User $user */
+
         $user = Auth::user();
         $allowedGroups = BranchGroup::pluck('code')->toArray();
         if ($user->hasRole('external-branch')) {
@@ -361,7 +362,7 @@ class PerformanceController extends Controller
 
         $isEvaluation = $request->boolean('evaluation');
 
-        $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups, $selectedBranches,$isEvaluation);
+        $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups, $selectedBranches ,$isEvaluation);
 
         return view('finance.performance.print-expense', compact('data', 'year', 'month', 'selectedGroups', 'selectedBranches', 'groupMap', 'isEvaluation'));
     }
