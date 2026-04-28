@@ -285,6 +285,16 @@
                 <button onclick="window.print()" class="btn btn-info">
                     <i class="fa fa-print"></i> พิมพ์ (หน้าเว็บ)
                 </button>
+                @can('payment-voucher.evaluation.create')
+                @if (!$voucher->is_evaluation)
+                <form action="{{ route('payment-voucher.evaluate', $voucher->id) }}" method="POST" class="d-inline" onsubmit="return confirm('ยืนยันการเพิ่มรายการนี้เข้าใบประเมิน?')">
+                    @csrf
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa fa-clipboard-check"></i> เข้าใบประเมิน
+                    </button>
+                </form>
+                @endif
+                @endcan
                 @if ($voucher->canEdit())
                 <a href="{{ route('payment-voucher.edit', $voucher->id) }}" class="btn btn-warning">
                     <i class="fa fa-edit"></i> แก้ไข
@@ -330,6 +340,13 @@
                     <div>วันที่: {{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}</div>
                 </div>
                 <div class="col-md-6 text-md-end">
+                    @can('payment-voucher.evaluation.view')
+                    @if ($voucher->is_evaluation)
+                    <span class="status-badge bg-success text-white me-2" title="เข้าสู่ระบบใบประเมิน">
+                        <i class="fa fa-clipboard-check"></i> เข้าใบประเมิน
+                    </span>
+                    @endif
+                    @endcan
                     @if ($voucher->is_salary)
                     <span class="status-badge bg-info text-white me-2">
                         <i class="fa fa-money"></i> จ่ายเงินเดือน
@@ -721,6 +738,19 @@
                         </div>
                     </div>
                     @endif
+                    @can('payment-voucher.evaluation.create')
+                    <div class="col-md-6 mb-3">
+                        <form action="{{ route('payment-voucher.toggle-evaluation', $voucher->id) }}" method="POST" id="form-toggle-evaluation">
+                            @csrf
+                            <div class="form-check form-switch pt-2 mb-2">
+                                <input class="form-check-input" type="checkbox" name="is_evaluation" id="isEvaluation" value="1" {{ $voucher->is_evaluation ? 'checked' : '' }} onchange="document.getElementById('form-toggle-evaluation').submit()">
+                                <label class="form-check-label fw-bold text-success" for="isEvaluation">
+                                    <i class="fa fa-clipboard"></i> เข้าใบประเมิน (Evaluation)
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    @endcan
                 </div>
             </div>
         </div>

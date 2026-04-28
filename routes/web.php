@@ -154,6 +154,9 @@ Route::middleware(['auth', 'can:performance.view'])->prefix('performance')->name
     Route::get('/monthly/{year}/{month}/print', [\App\Http\Controllers\Finance\PerformanceController::class, 'printMonthly'])->name('monthly.print');
     Route::get('/monthly/{year}/{month}/print-revenue', [\App\Http\Controllers\Finance\PerformanceController::class, 'printRevenue'])->name('monthly.print-revenue');
     Route::get('/monthly/{year}/{month}/print-expense', [\App\Http\Controllers\Finance\PerformanceController::class, 'printExpense'])->name('monthly.print-expense');
+    // ใบประเมิน (Evaluation Sheet)
+    Route::get('/monthly/{year}/{month}/print-evaluation', [\App\Http\Controllers\Finance\PerformanceController::class, 'printEvaluation'])->name('monthly.print-evaluation');
+    Route::get('/yearly/{year}/print-evaluation', [\App\Http\Controllers\Finance\PerformanceController::class, 'printYearlyEvaluation'])->name('yearly.print-evaluation');
 });
 
 Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')->group(function () {
@@ -175,7 +178,9 @@ Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')
     Route::post('/reject/{id}', [PaymentVoucherController::class, 'reject'])->name('reject');
     Route::post('/reject-to-draft/{id}', [PaymentVoucherController::class, 'rejectToDraft'])->name('reject-to-draft');
     Route::post('/complete/{id}', [PaymentVoucherController::class, 'complete'])->name('complete');
+    Route::post('/toggle-evaluation/{id}', [PaymentVoucherController::class, 'toggleEvaluation'])->name('toggle-evaluation');
     Route::post('/undo-complete/{id}', [PaymentVoucherController::class, 'undoComplete'])->name('undo-complete');
+    Route::post('/evaluate/{id}', [PaymentVoucherController::class, 'evaluate'])->name('evaluate');
     Route::post('/bulk-action', [PaymentVoucherController::class, 'bulkAction'])->name('bulk-action');
 
     // Lists
@@ -200,6 +205,16 @@ Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')
     Route::post('/import', [PaymentVoucherController::class, 'importExcel'])->name('import.process');
     Route::post('/import/store', [PaymentVoucherController::class, 'storeImport'])->name('import.store');
     Route::get('/import/template', [PaymentVoucherController::class, 'downloadTemplate'])->name('import.template');
+});
+
+// Payment Voucher Category Routes
+Route::middleware(['auth'])->prefix('payment-voucher-category')->name('payment-voucher-category.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\PaymentVoucherCategoryController::class, 'index'])->name('index');
+    Route::get('/create', [\App\Http\Controllers\PaymentVoucherCategoryController::class, 'create'])->name('create');
+    Route::post('/store', [\App\Http\Controllers\PaymentVoucherCategoryController::class, 'store'])->name('store');
+    Route::get('/edit/{id}', [\App\Http\Controllers\PaymentVoucherCategoryController::class, 'edit'])->name('edit');
+    Route::put('/update/{id}', [\App\Http\Controllers\PaymentVoucherCategoryController::class, 'update'])->name('update');
+    Route::delete('/destroy/{id}', [\App\Http\Controllers\PaymentVoucherCategoryController::class, 'destroy'])->name('destroy');
 });
 
 // Receipt Voucher Routes (ใบสำคัญรับ)

@@ -137,7 +137,7 @@ class PerformanceController extends Controller
     /**
      * Helper to get yearly aggregated data
      */
-    private function getYearlyData(Request $request, $year)
+    private function getYearlyData(Request $request, $year, $isEvaluationOnly = false)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -175,7 +175,7 @@ class PerformanceController extends Controller
         ];
 
         for ($m = 1; $m <= 12; $m++) {
-            $data = $this->calculateMonthlyData($year, $m, true, $selectedGroups, $selectedBranches);
+            $data = $this->calculateMonthlyData($year, $m, true, $selectedGroups, $selectedBranches, $isEvaluationOnly);
             
             $yearlyData['school_revenue'] += $data['school_revenue'];
             $yearlyData['local_school_revenue'] += $data['local_school_revenue'];
@@ -353,7 +353,7 @@ class PerformanceController extends Controller
     /**
      * Calculate all financial data for a specific month.
      */
-    private function calculateMonthlyData($year, $month, $getDetails = false, $selectedGroups = [], $selectedBranches = [])
+    private function calculateMonthlyData($year, $month, $getDetails = false, $selectedGroups = [], $selectedBranches = [], $isEvaluationOnly = false)
     {
         $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
         $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
@@ -399,10 +399,13 @@ class PerformanceController extends Controller
         }
         $rvRevenue = $rvRevenueQuery->sum('net_amount');
 
-        // 3. Expense: Payment Vouchers (Completed)
         $pvExpenseQuery = PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
             ->where('is_salary', false)
             ->whereBetween('voucher_date', [$startDate, $endDate]);
+
+        if ($isEvaluationOnly) {
+            $pvExpenseQuery->where('is_evaluation', true);
+        }
 
         if (!empty($selectedBranches)) {
             $pvExpenseQuery->whereIn('branch_code', $selectedBranches);
@@ -532,6 +535,9 @@ class PerformanceController extends Controller
                     ->when(empty($selectedBranches) && $hasSelectedGroups, function ($query) use ($selectedGroups) {
                         return $query->whereIn('group_branch_code', $selectedGroups);
                     })
+                    ->when($isEvaluationOnly, function ($query) {
+                        return $query->where('is_evaluation', true);
+                    })
                     ->where('is_salary', false)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
                     ->with(['payee', 'expenseItems'])
@@ -543,6 +549,9 @@ class PerformanceController extends Controller
                     })
                     ->when(empty($selectedBranches) && $hasSelectedGroups, function ($query) use ($selectedGroups) {
                         return $query->whereIn('group_branch_code', $selectedGroups);
+                    })
+                    ->when($isEvaluationOnly, function ($query) {
+                        return $query->where('is_evaluation', true);
                     })
                     ->where('is_salary', false)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
@@ -686,5 +695,48 @@ class PerformanceController extends Controller
 
         self::$eimathsCache[$cacheKey] = $data;
         return $data;
+    }
+
+    /**
+     * พิมพ์ใบประเมิน (Evaluation Sheet) รายเดือน
+     * ดึงเฉพาะ PaymentVoucher ที่ is_evaluation = true และ status = completed
+     */
+    public function printEvaluation(Request $request, $year, $month)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $allowedGroups = BranchGroup::pluck('code')->toArray();
+        if ($user->hasRole('external-branch')) {
+            $allowedGroups = array_intersect($allowedGroups, $user->branches ?? []);
+        }
+
+        $selectedGroups = $request->input('groups', [$allowedGroups[0] ?? 'EL']);
+        $selectedGroups = array_intersect($selectedGroups, $allowedGroups);
+        $selectedBranches = $request->input('branches', []);
+        $groupMap = BranchGroup::whereIn('code', $allowedGroups)->pluck('name', 'code')->toArray();
+
+        // ดึง branch codes ที่อยู่ในกลุ่มที่เลือก
+        $branchCodes = !empty($selectedBranches)
+            ? $selectedBranches
+            : PaymentVoucher::resolveBranchCodes($selectedGroups);
+
+        $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups, $selectedBranches, true);
+        $isEvaluation = true;
+
+        return view('finance.performance.print', compact(
+            'data', 'year', 'month', 'selectedGroups', 'selectedBranches', 'groupMap', 'isEvaluation'
+        ));
+    }
+
+    /**
+     * พิมพ์ใบประเมิน (Evaluation Sheet) รายปี
+     * ดึงเฉพาะ PaymentVoucher ที่ is_evaluation = true และ status = completed ทั้งปี
+     */
+    public function printYearlyEvaluation(Request $request, $year)
+    {
+        $viewData = $this->getYearlyData($request, $year, true);
+        $viewData['isEvaluation'] = true;
+
+        return view('finance.performance.print-yearly', $viewData);
     }
 }

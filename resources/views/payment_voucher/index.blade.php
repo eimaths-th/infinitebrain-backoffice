@@ -154,7 +154,7 @@
                         <label class="form-label">หมวดหมู่</label>
                         <select name="category" class="form-select">
                             <option value="">-- ทั้งหมด --</option>
-                            @foreach (\App\Models\PaymentVoucher::$categoryLabels as $cat_value => $cat_text)
+                            @foreach (\App\Models\PaymentVoucher::getAllCategoryLabels() as $cat_value => $cat_text)
                             <option value="{{ $cat_value }}" {{ request('category') == $cat_value ? 'selected' : '' }}>
                                 {{ $cat_text }}
                             </option>
@@ -190,6 +190,11 @@
                     @csrf
                     <input type="hidden" name="action" id="bulk_action_type" value="">
                     <div id="bulk_voucher_ids"></div>
+                    @can('payment-voucher.evaluation.create')
+                    <button type="button" class="btn btn-success me-2 d-none" id="btn-bulk-evaluate" onclick="openBulkConfirmModal('evaluate', 'เข้าใบประเมินหลายรายการ')">
+                        <i class="fa fa-clipboard-check"></i> เข้าใบประเมินหลายรายการ
+                    </button>
+                    @endcan
                     <button type="button" class="btn btn-info me-2 d-none" id="btn-bulk-review" onclick="openBulkConfirmModal('review', 'ตรวจสอบหลายรายการ')">
                         <i class="fa fa-search"></i> ตรวจสอบหลายรายการ
                     </button>
@@ -268,6 +273,7 @@
                             <th width="16%">จ่ายให้</th>
                             <th width="10%" class="text-end text-nowrap">จำนวนเงิน</th>
                             <th width="10%" class="text-nowrap">สถานะ</th>
+                            <th width="8%" class="text-nowrap text-center">เข้าประเมิน</th>
                             <th width="12%">ผู้สร้าง</th>
                             <th width="12%" class="text-nowrap">การดำเนินการ</th>
                         </tr>
@@ -321,6 +327,13 @@
                                 <span class="status-badge status-{{ $voucher->status }}">
                                     {{ $voucher->status_label }}
                                 </span>
+                            </td>
+                            <td class="text-center align-middle">
+                                @if ($voucher->is_evaluation)
+                                <span class="badge bg-success" title="เข้าใบประเมินแล้ว"><i class="fa fa-check"></i></span>
+                                @else
+                                <span class="text-muted">-</span>
+                                @endif
                             </td>
                             <td>{{ $voucher->created_by_name }}</td>
                             <td class="text-nowrap">
@@ -440,7 +453,7 @@
                         <label class="form-label">หมวดหมู่</label>
                         <select name="category" id="modalCategorySelect" class="form-select">
                             <option value="">-- ไม่ระบุ --</option>
-                            @foreach (\App\Models\PaymentVoucher::$categoryLabels as $value => $label)
+                            @foreach (\App\Models\PaymentVoucher::getAllCategoryLabels() as $value => $label)
                             <option value="{{ $value }}">{{ $label }}</option>
                             @endforeach
                         </select>
@@ -517,9 +530,11 @@
         $('#btn-bulk-review').addClass('d-none');
         $('#btn-bulk-approve').addClass('d-none');
         $('#btn-bulk-complete').addClass('d-none');
+        $('#btn-bulk-evaluate').addClass('d-none');
 
         if (checkedItems.length > 0) {
             $('#bulk-action-panel').removeClass('d-none');
+            $('#btn-bulk-evaluate').removeClass('d-none');
 
             // ถ้ารายการที่เลือกมีสถานะเดียวกันทั้งหมด
             if (statuses.size === 1) {
@@ -549,6 +564,9 @@
             headerClass = 'bg-info';
             btnClass = 'btn-info text-white';
         } else if (action === 'approve') {
+            headerClass = 'bg-success';
+            btnClass = 'btn-success';
+        } else if (action === 'evaluate') {
             headerClass = 'bg-success';
             btnClass = 'btn-success';
         }

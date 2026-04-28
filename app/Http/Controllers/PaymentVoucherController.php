@@ -265,6 +265,7 @@ class PaymentVoucherController extends Controller
                 'net_amount' => $netAmount,
                 'total_amount' => $totalAmount,
                 'is_salary' => $request->boolean('is_salary'),
+                'is_evaluation' => $request->boolean('is_evaluation'),
                 'category' => $request->boolean('is_salary') ? null : $request->category,
             ]);
 
@@ -594,6 +595,7 @@ class PaymentVoucherController extends Controller
                 'net_amount' => $netAmount,
                 'total_amount' => $totalAmount,
                 'is_salary' => $request->boolean('is_salary'),
+                'is_evaluation' => $request->boolean('is_evaluation'),
                 'category' => $request->boolean('is_salary') ? null : $request->category,
             ]);
 
@@ -864,6 +866,66 @@ class PaymentVoucherController extends Controller
     }
 
     /**
+     * เพิ่มเข้าใบประเมิน (ทีละรายการ)
+     */
+    public function evaluate(Request $request, $id)
+    {
+        $this->authorize('payment-voucher.evaluation.create');
+        
+        $voucher = PaymentVoucher::findOrFail($id);
+
+        if ($voucher->is_evaluation) {
+            return back()->with('error', 'รายการนี้อยู่ในใบประเมินแล้ว');
+        }
+
+        $voucher->update([
+            'is_evaluation' => true
+        ]);
+
+        PaymentVoucherLog::create([
+            'payment_voucher_id' => $voucher->id,
+            'action' => 'update',
+            'from_status' => $voucher->status,
+            'to_status' => $voucher->status,
+            'user_id' => Auth::id(),
+            'user_name' => Auth::user()->name ?? 'System',
+            'remark' => 'เพิ่มเข้าใบประเมิน',
+        ]);
+
+        return back()->with('success', 'เพิ่มเข้าใบประเมินสำเร็จ');
+    }
+
+    /**
+     * เปิด/ปิด การเข้าใบประเมิน (Toggle)
+     */
+    public function toggleEvaluation(Request $request, $id)
+    {
+        $this->authorize('payment-voucher.evaluation.create');
+        
+        $voucher = PaymentVoucher::findOrFail($id);
+        
+        // รับค่า 1 (true) หรือ null (false) จาก switch
+        $is_evaluation = $request->has('is_evaluation') ? true : false;
+
+        $voucher->update([
+            'is_evaluation' => $is_evaluation
+        ]);
+
+        PaymentVoucherLog::create([
+            'payment_voucher_id' => $voucher->id,
+            'action' => 'update',
+            'from_status' => $voucher->status,
+            'to_status' => $voucher->status,
+            'user_id' => Auth::id(),
+            'user_name' => Auth::user()->name ?? 'System',
+            'remark' => $is_evaluation ? 'เพิ่มเข้าใบประเมิน (Toggle)' : 'นำออกจากใบประเมิน (Toggle)',
+        ]);
+
+        $message = $is_evaluation ? 'เข้าใบประเมินเรียบร้อยแล้ว' : 'นำออกจากใบประเมินแล้ว';
+        return back()->with('success', $message);
+    }
+
+    /**
      * เสร็จสิ้นใบสำคัญจ่าย
      */
     public function complete(Request $request, $id)
@@ -902,7 +964,7 @@ class PaymentVoucherController extends Controller
     public function bulkAction(Request $request)
     {
         $request->validate([
-            'action' => 'required|string|in:review,approve,complete',
+            'action' => 'required|string|in:review,approve,complete,evaluate',
             'voucher_ids' => 'required|array|min:1',
             'voucher_ids.*' => 'integer|exists:payment_vouchers,id',
             'remark' => 'nullable|string|max:500',
@@ -1015,6 +1077,33 @@ class PaymentVoucherController extends Controller
                         'user_id' => Auth::id(),
                         'user_name' => Auth::user()->name ?? 'System',
                         'remark' => 'บันทึกการจ่ายเงิน: ' . $payerName,
+                    ]);
+                    
+                    $successCount++;
+                }
+                elseif ($action === 'evaluate') {
+                    if (!Auth::user()->can('payment-voucher.evaluation.create')) {
+                        $errorCount++;
+                        continue;
+                    }
+
+                    if ($voucher->is_evaluation) {
+                        $successCount++;
+                        continue;
+                    }
+
+                    $voucher->update([
+                        'is_evaluation' => true
+                    ]);
+
+                    PaymentVoucherLog::create([
+                        'payment_voucher_id' => $voucher->id,
+                        'action' => 'update',
+                        'from_status' => $oldStatus,
+                        'to_status' => $oldStatus,
+                        'user_id' => Auth::id(),
+                        'user_name' => Auth::user()->name ?? 'System',
+                        'remark' => 'เพิ่มเข้าใบประเมิน (Bulk)',
                     ]);
                     
                     $successCount++;

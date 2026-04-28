@@ -358,6 +358,14 @@
                                             สร้างใบสำคัญจ่าย
                                         </a>
                                     </li>
+                                    @can('payment-voucher-category.view')
+                                    <li>
+                                        <a href="{{ route('payment-voucher-category.index') }}">
+                                            <i class="metismenu-icon"></i>
+                                            จัดการหมวดหมู่ใบสำคัญจ่าย
+                                        </a>
+                                    </li>
+                                    @endcan
                                     @can('payment-voucher.approve')
                                         <li>
                                             <a href="{{ route('payment-voucher.pending') }}">

@@ -171,11 +171,20 @@
                                         <i class="fa fa-money"></i> ใบจ่ายเงินเดือน (Salary Payment)
                                     </label>
                                 </div>
+                                {{-- Checkbox เข้าใบประเมิน (แสดงเฉพาะผู้มีสิทธิ์) --}}
+                                @can('receipt-voucher.evaluation.create')
+                                <div class="form-check form-switch pt-2 mb-2">
+                                    <input class="form-check-input" type="checkbox" name="is_evaluation" id="isEvaluation" value="1" {{ old('is_evaluation') ? 'checked' : '' }}>
+                                    <label class="form-check-label fw-bold text-success" for="isEvaluation">
+                                        <i class="fa fa-clipboard"></i> เข้าใบประเมิน (Evaluation)
+                                    </label>
+                                </div>
+                                @endcan
                                 <div id="categoryWrapper">
                                     <label class="form-label">หมวดหมู่ <span class="required-mark">*</span></label>
                                     <select name="category" id="category" class="form-select @error('category') is-invalid @enderror" {{ old('is_salary') ? 'disabled' : 'required' }}>
                                         <option value="">-- เลือกหมวดหมู่ --</option>
-                                        @foreach (\App\Models\PaymentVoucher::$categoryLabels as $key => $label)
+                                        @foreach (\App\Models\PaymentVoucher::getAllCategoryLabels() as $key => $label)
                                             <option value="{{ $key }}" {{ old('category') == $key ? 'selected' : '' }}>{{ $label }}</option>
                                         @endforeach
                                     </select>

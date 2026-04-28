@@ -44,6 +44,7 @@ class PaymentVoucher extends Model
         'paid_date',
         'payment_cycle',
         'is_salary',
+        'is_evaluation',
         'category',
     ];
 
@@ -72,9 +73,23 @@ class PaymentVoucher extends Model
         self::CAT_OTHER => 'อื่นๆ',
     ];
 
+    public static function getAllCategoryLabels()
+    {
+        try {
+            $dbLabels = \App\Models\PaymentVoucherCategory::getLabelMap();
+            // Merge DB labels with static fallback
+            // We give priority to DB if keys match, though they should normally be seeded
+            return array_merge(self::$categoryLabels, $dbLabels);
+        } catch (\Exception $e) {
+            // In case table does not exist yet (e.g. before migration runs)
+            return self::$categoryLabels;
+        }
+    }
+
     public function getCategoryLabelAttribute()
     {
-        return self::$categoryLabels[$this->category] ?? $this->category;
+        $allLabels = self::getAllCategoryLabels();
+        return $allLabels[$this->category] ?? $this->category;
     }
 
 
@@ -86,6 +101,7 @@ class PaymentVoucher extends Model
         'paid_date' => 'date',
         'total_amount' => 'decimal:2',
         'is_salary' => 'boolean',
+        'is_evaluation' => 'boolean',
     ];
 
     // Status Constants

@@ -43,7 +43,7 @@
         }
 
         th {
-            background-color: #5B9541;
+            background-color: #96c93d;
             color: #fff;
             font-weight: bold;
             text-align: center;
@@ -63,7 +63,7 @@
         .summary-row {
             font-weight: bold;
             background-color: #e8f5e3 !important;
-            border-top: 2px solid #5B9541;
+            border-top: 2px solid #96c93d;
         }
 
         /* หัวข้อกลุ่มวิชา - ป้องกันไม่ให้หัวข้อถูกแยกจากตารางข้อมูล */
@@ -74,7 +74,7 @@
             margin-bottom: 3px;
             padding: 3px 8px;
             background-color: #f0f0f0;
-            border-left: 4px solid #5B9541;
+            border-left: 4px solid #96c93d;
             break-after: avoid; /* ห้ามขึ้นหน้าใหม่หลังหัวข้อ */
             page-break-after: avoid; /* รองรับ browser เก่า */
         }
@@ -87,7 +87,7 @@
             margin-bottom: 5px;
             padding: 4px 8px;
             background-color: #e8f5e3;
-            border-left: 4px solid #5B9541;
+            border-left: 4px solid #96c93d;
         }
 
         /* ตัวอักษรเล็ก */

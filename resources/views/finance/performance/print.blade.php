@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>รายงานผลประกอบการ ประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }} ปี {{ $year + 543 }}
+    <title>{{ isset($isEvaluation) && $isEvaluation ? 'ใบประเมิน' : 'รายงานผลประกอบการ' }} ประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }} ปี {{ $year + 543 }}
     </title>
     <style>
         @page {
@@ -60,7 +60,7 @@
         .section-header td {
             text-align: center;
             font-weight: bold;
-            border-top: 2px solid #5B9541;
+            border-top: 2px solid #96c93d;
             /* Green line */
             padding-top: 5px;
             /* ลดจาก 8px */
@@ -74,8 +74,8 @@
 
         .summary-row td {
             font-weight: bold;
-            border-top: 2px solid #5B9541;
-            border-bottom: 2px solid #5B9541;
+            border-top: 2px solid #96c93d;
+            border-bottom: 2px solid #96c93d;
             padding-top: 5px;
             padding-bottom: 5px;
         }
@@ -90,8 +90,7 @@
         }
 
         .profit-loss-table th {
-            border-top: 2px solid #5B9541;
-            border-bottom: 1px solid #000;
+            border-top: 2px solid #96c93d;
             padding-top: 5px;
         }
 
@@ -132,7 +131,7 @@
                 $branchTitles = \App\Models\Branch::whereIn('code', $selectedBranches)->pluck('name')->toArray();
             }
         @endphp
-        รายงานผลประกอบการ {{ $displayTitle }} ปี {{ $year + 543 }}<br>
+        {{ isset($isEvaluation) && $isEvaluation ? 'ใบประเมิน' : 'รายงานผลประกอบการ' }} {{ $displayTitle }} ปี {{ $year + 543 }}<br>
         @if(!empty($branchTitles))
             <small style="font-size: 10pt;">สาขา: {{ implode(', ', $branchTitles) }}</small><br>
         @endif
@@ -215,7 +214,7 @@
                 $categoryTotal = $vouchers->sum('net_amount');
             @endphp
             <tr>
-                <td colspan="2">{{ \App\Models\PaymentVoucher::$categoryLabels[$category] ?? 'อื่นๆ' }}</td>
+                <td colspan="2">{{ \App\Models\PaymentVoucher::getAllCategoryLabels()[$category] ?? 'อื่นๆ' }}</td>
                 <td class="text-right">{{ number_format($categoryTotal, 2) }}</td>
                 <td></td>
             </tr>
@@ -240,11 +239,11 @@
             <th style="width: 33%;">กำไร/ขาดทุน</th>
         </tr>
         <tr class="font-bold">
-            <td style="border-bottom: 2px solid #5B9541; padding-bottom: 5px;">
+            <td style="border-bottom: 2px solid #96c93d; padding-bottom: 5px;">
                 {{ number_format($data['total_revenue'], 2) }}</td>
-            <td style="border-bottom: 2px solid #5B9541; padding-bottom: 5px;">
+            <td style="border-bottom: 2px solid #96c93d; padding-bottom: 5px;">
                 {{ number_format($data['total_expense'], 2) }}</td>
-            <td style="border-bottom: 2px solid #5B9541; padding-bottom: 5px;">{{ number_format($data['profit'], 2) }}
+            <td style="border-bottom: 2px solid #96c93d; padding-bottom: 5px;">{{ number_format($data['profit'], 2) }}
             </td>
         </tr>
     </table>

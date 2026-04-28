@@ -40,7 +40,7 @@
         }
 
         th {
-            background-color: #5B9541;
+            background-color: #96c93d;
             color: #fff;
             font-weight: bold;
             text-align: center;
@@ -58,7 +58,7 @@
         .summary-row {
             font-weight: bold;
             background-color: #e8f5e3 !important;
-            border-top: 2px solid #5B9541;
+            border-top: 2px solid #96c93d;
         }
 
         .section-title {
@@ -68,7 +68,7 @@
             margin-bottom: 5px;
             padding: 4px 8px;
             background-color: #e8f5e3;
-            border-left: 4px solid #5B9541;
+            border-left: 4px solid #96c93d;
         }
 
         .no-break {
