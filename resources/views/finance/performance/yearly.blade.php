@@ -294,11 +294,11 @@
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-left">
                                             <div class="widget-heading">รายการหักประจำปี</div>
-                                            <div class="widget-subheading">หัก ณ ที่จ่าย และรายการหักอื่นๆ สะสมทั้งปี</div>
+                                            <div class="widget-subheading">รายการหักสะสมจากใบสำคัญจ่าย และ Payroll</div>
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="font-size-xlg text-info">
-                                                {{ number_format($data['pv_deductions'], 2) }}</div>
+                                                {{ number_format($data['pv_deductions'] + $data['payroll_deductions'], 2) }}</div>
                                         </div>
                                     </div>
                                 </div>

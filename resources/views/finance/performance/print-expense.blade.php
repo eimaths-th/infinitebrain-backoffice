@@ -301,15 +301,23 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @if ($data['pv_deductions'] > 0)
                     <tr>
-                        <td>ยอดรายการหัก และภาษีหัก ณ ที่จ่าย จากใบสำคัญจ่ายประจำเดือน</td>
+                        <td>รายการหัก และภาษีหัก ณ ที่จ่าย จากใบสำคัญจ่าย</td>
                         <td class="text-right">{{ number_format($data['pv_deductions'], 2) }}</td>
                     </tr>
+                    @endif
+                    @if ($data['payroll_deductions'] > 0)
+                    <tr>
+                        <td>รายการหักจากเงินเดือน (ประกันสังคม, ภาษี, และอื่นๆ)</td>
+                        <td class="text-right">{{ number_format($data['payroll_deductions'], 2) }}</td>
+                    </tr>
+                    @endif
                 </tbody>
                 <tfoot>
                     <tr class="summary-row">
                         <td class="text-right">รวมรายการหักประจำเดือน</td>
-                        <td class="text-right">{{ number_format($data['pv_deductions'], 2) }} บาท</td>
+                        <td class="text-right">{{ number_format($data['pv_deductions'] + $data['payroll_deductions'], 2) }} บาท</td>
                     </tr>
                 </tfoot>
             </table>

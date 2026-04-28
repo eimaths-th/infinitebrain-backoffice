@@ -180,11 +180,11 @@
                                     <div class="widget-content-wrapper">
                                         <div class="widget-content-left">
                                             <div class="widget-heading">รายการหักประจำเดือน</div>
-                                            <div class="widget-subheading">หัก ณ ที่จ่าย และรายการหักอื่นๆ จากใบสำคัญจ่าย</div>
+                                            <div class="widget-subheading">รายการหักจากใบสำคัญจ่าย และ Payroll (ประกันสังคม/ภาษี)</div>
                                         </div>
                                         <div class="widget-content-right">
                                             <div class="font-size-xlg text-info">
-                                                {{ number_format($data['pv_deductions'], 2) }}</div>
+                                                {{ number_format($data['pv_deductions'] + $data['payroll_deductions'], 2) }}</div>
                                         </div>
                                     </div>
                                 </div>

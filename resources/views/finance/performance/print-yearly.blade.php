@@ -207,8 +207,8 @@
             <td style="font-weight: normal; text-align: left; padding-left: 10px;">บาท</td>
         </tr>
         <tr>
-            <td colspan="2">รายการหักประจำปี (หัก ณ ที่จ่าย และอื่นๆ)</td>
-            <td class="text-right">{{ number_format($data['pv_deductions'], 2) }}</td>
+            <td colspan="2">รายการหักประจำปี (ใบสำคัญจ่าย + Payroll)</td>
+            <td class="text-right">{{ number_format($data['pv_deductions'] + $data['payroll_deductions'], 2) }}</td>
             <td style="font-weight: normal; text-align: left; padding-left: 10px;">บาท</td>
         </tr>
 
