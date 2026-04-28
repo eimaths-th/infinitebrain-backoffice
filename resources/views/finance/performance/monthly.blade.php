@@ -457,9 +457,9 @@
                 }
             }).then((value) => {
                 if (value === "normal") {
-                    window.open("{{ route('performance.monthly.print-expense', array_merge(request()->query(), ['year' => $year, 'month' => $month])) }}", "_blank");
+                    window.open("{!! route('performance.monthly.print-expense', array_merge(request()->query(), ['year' => $year, 'month' => $month])) !!}", "_blank");
                 } else if (value === "evaluation") {
-                    window.open("{{ route('performance.monthly.print-expense', array_merge(request()->query(), ['year' => $year, 'month' => $month, 'evaluation' => 1])) }}", "_blank");
+                    window.open("{!! route('performance.monthly.print-expense', array_merge(request()->query(), ['year' => $year, 'month' => $month, 'evaluation' => 1])) !!}", "_blank");
                 }
             });
         }
