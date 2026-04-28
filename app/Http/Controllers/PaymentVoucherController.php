@@ -904,8 +904,8 @@ class PaymentVoucherController extends Controller
         
         $voucher = PaymentVoucher::findOrFail($id);
         
-        // รับค่า 1 (true) หรือ null (false) จาก switch
-        $is_evaluation = $request->has('is_evaluation') ? true : false;
+        // รับค่า boolean จาก switch
+        $is_evaluation = $request->boolean('is_evaluation');
 
         $voucher->update([
             'is_evaluation' => $is_evaluation

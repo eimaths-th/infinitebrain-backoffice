@@ -172,7 +172,7 @@
                                     </label>
                                 </div>
                                 {{-- Checkbox เข้าใบประเมิน (แสดงเฉพาะผู้มีสิทธิ์) --}}
-                                @can('receipt-voucher.evaluation.create')
+                                @can('payment-voucher.evaluation.create')
                                 <div class="form-check form-switch pt-2 mb-2">
                                     <input class="form-check-input" type="checkbox" name="is_evaluation" id="isEvaluation" value="1" {{ old('is_evaluation') ? 'checked' : '' }}>
                                     <label class="form-check-label fw-bold text-success" for="isEvaluation">
