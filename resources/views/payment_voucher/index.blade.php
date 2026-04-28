@@ -329,11 +329,20 @@
                                 </span>
                             </td>
                             <td class="text-center align-middle">
-                                @if ($voucher->is_evaluation)
-                                <span class="badge bg-success" title="เข้าใบประเมินแล้ว"><i class="fa fa-check"></i></span>
+                                @can('payment-voucher.evaluation.create')
+                                <form action="{{ route('payment-voucher.toggle-evaluation', $voucher->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <div class="form-check form-switch d-flex justify-content-center m-0 p-0">
+                                        <input class="form-check-input" type="checkbox" style="margin-left: 0; cursor: pointer;" name="is_evaluation" value="1" {{ $voucher->is_evaluation ? 'checked' : '' }} onchange="this.form.submit()">
+                                    </div>
+                                </form>
                                 @else
-                                <span class="text-muted">-</span>
-                                @endif
+                                    @if ($voucher->is_evaluation)
+                                    <span class="badge bg-success" title="เข้าใบประเมินแล้ว"><i class="fa fa-check"></i></span>
+                                    @else
+                                    <span class="text-muted">-</span>
+                                    @endif
+                                @endcan
                             </td>
                             <td>{{ $voucher->created_by_name }}</td>
                             <td class="text-nowrap">
