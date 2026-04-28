@@ -740,15 +740,12 @@
                     @endif
                     @can('payment-voucher.evaluation.create')
                     <div class="col-md-6 mb-3">
-                        <form action="{{ route('payment-voucher.toggle-evaluation', $voucher->id) }}" method="POST" id="form-toggle-evaluation">
-                            @csrf
-                            <div class="form-check form-switch pt-2 mb-2">
-                                <input class="form-check-input" type="checkbox" name="is_evaluation" id="isEvaluation" value="1" {{ $voucher->is_evaluation ? 'checked' : '' }} onchange="document.getElementById('form-toggle-evaluation').submit()">
-                                <label class="form-check-label fw-bold text-success" for="isEvaluation">
-                                    <i class="fa fa-clipboard"></i> เข้าใบประเมิน (Evaluation)
-                                </label>
-                            </div>
-                        </form>
+                        <div class="form-check form-switch pt-2 mb-2">
+                            <input class="form-check-input toggle-evaluation-switch" type="checkbox" name="is_evaluation" id="isEvaluation" value="1" {{ $voucher->is_evaluation ? 'checked' : '' }} data-id="{{ $voucher->id }}" style="cursor: pointer;">
+                            <label class="form-check-label fw-bold text-success" for="isEvaluation">
+                                <i class="fa fa-clipboard"></i> เข้าใบประเมิน (Evaluation)
+                            </label>
+                        </div>
                     </div>
                     @endcan
                 </div>
@@ -851,6 +848,34 @@
         setTimeout(function() {
             $('.alert').fadeOut('slow');
         }, 5000);
+
+        // AJAX Toggle Evaluation
+        $('.toggle-evaluation-switch').on('change', function() {
+            let checkbox = $(this);
+            let id = checkbox.data('id');
+            let is_evaluation = checkbox.is(':checked') ? 1 : 0;
+            
+            $.ajax({
+                url: `/payment-voucher/toggle-evaluation/${id}`,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    is_evaluation: is_evaluation
+                },
+                success: function(response) {
+                    if(response.success) {
+                        toastr.success(response.message);
+                    } else {
+                        toastr.error('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+                        checkbox.prop('checked', !is_evaluation); // revert
+                    }
+                },
+                error: function() {
+                    toastr.error('เกิดข้อผิดพลาดในการเชื่อมต่อ หรือไม่มีสิทธิ์ทำรายการ');
+                    checkbox.prop('checked', !is_evaluation); // revert
+                }
+            });
+        });
     });
 
     // Lightbox functionality
