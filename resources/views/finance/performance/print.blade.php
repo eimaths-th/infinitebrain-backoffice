@@ -225,6 +225,11 @@
             <td class="text-right">{{ number_format($data['total_expense'], 2) }}</td>
             <td style="font-weight: normal; text-align: left; padding-left: 10px;">บาท</td>
         </tr>
+        <tr>
+            <td colspan="2">รายการหักประจำเดือน (หัก ณ ที่จ่าย และอื่นๆ)</td>
+            <td class="text-right">{{ number_format($data['pv_deductions'], 2) }}</td>
+            <td style="font-weight: normal; text-align: left; padding-left: 10px;">บาท</td>
+        </tr>
 
         <!-- ผลประกอบการ -->
         <tr class="section-header">

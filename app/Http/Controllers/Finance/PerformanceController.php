@@ -164,6 +164,7 @@ class PerformanceController extends Controller
             'api_school_revenue' => 0,
             'rv_revenue' => 0,
             'pv_expense' => 0,
+            'pv_deductions' => 0,
             'payroll_expense' => 0,
             'total_revenue' => 0,
             'total_expense' => 0,
@@ -187,6 +188,7 @@ class PerformanceController extends Controller
             $yearlyData['api_school_revenue'] += $data['api_school_revenue'];
             $yearlyData['rv_revenue'] += $data['rv_revenue'];
             $yearlyData['pv_expense'] += $data['pv_expense'];
+            $yearlyData['pv_deductions'] += $data['pv_deductions'];
             $yearlyData['payroll_expense'] += $data['payroll_expense'];
             $yearlyData['total_revenue'] += $data['total_revenue'];
             $yearlyData['total_expense'] += $data['total_expense'];
@@ -424,6 +426,7 @@ class PerformanceController extends Controller
             $pvExpenseQuery->whereIn('group_branch_code', $selectedGroups);
         }
         $pvExpense = $pvExpenseQuery->sum('net_amount');
+        $pvDeductions = $pvExpenseQuery->sum(DB::raw('total_deduction_amount + withholding_tax_amount'));
 
         // 3.1. Revenue from Eimaths API (Math Course Fees)
         $apiSchoolRevenue = 0;
@@ -500,6 +503,7 @@ class PerformanceController extends Controller
             'api_school_revenue' => $apiSchoolRevenue,
             'rv_revenue' => $rvRevenue,
             'pv_expense' => $pvExpense,
+            'pv_deductions' => $pvDeductions,
             'payroll_expense' => $payrollExpense,
             'total_revenue' => $totalRevenue,
             'total_expense' => $totalExpense,

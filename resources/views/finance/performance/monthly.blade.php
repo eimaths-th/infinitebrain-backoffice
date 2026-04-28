@@ -175,6 +175,19 @@
                                         </div>
                                     </div>
                                 </div>
+                            <li class="list-group-item">
+                                <div class="widget-content p-0">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">รายการหักประจำเดือน</div>
+                                            <div class="widget-subheading">หัก ณ ที่จ่าย และรายการหักอื่นๆ จากใบสำคัญจ่าย</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="font-size-xlg text-info">
+                                                {{ number_format($data['pv_deductions'], 2) }}</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
                         </ul>
                     </div>

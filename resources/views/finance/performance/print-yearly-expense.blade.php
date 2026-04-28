@@ -195,6 +195,31 @@
         </tbody>
     </table>
 
+    <!-- 3. Yearly Deductions -->
+    @if ($data['pv_deductions'] > 0)
+        <div class="section-title">3. รายการหักประจำปี (Yearly Deductions)</div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 70%;">ประเภทรายการหัก</th>
+                    <th style="width: 30%;">จำนวนเงิน</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ยอดรายการหัก และภาษีหัก ณ ที่จ่าย สะสมทั้งปี</td>
+                    <td class="text-right">{{ number_format($data['pv_deductions'], 2) }}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="summary-row">
+                    <td class="text-right">รวมรายการหักประจำปี</td>
+                    <td class="text-right">{{ number_format($data['pv_deductions'], 2) }} บาท</td>
+                </tr>
+            </tfoot>
+        </table>
+    @endif
+
     <!-- Grand Total -->
     <table>
         <tr class="summary-row" style="border: 2px solid #5B9541; font-size: 12pt;">
