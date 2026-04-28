@@ -922,6 +922,15 @@ class PaymentVoucherController extends Controller
         ]);
 
         $message = $is_evaluation ? 'เข้าใบประเมินเรียบร้อยแล้ว' : 'นำออกจากใบประเมินแล้ว';
+        
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'is_evaluation' => $is_evaluation
+            ]);
+        }
+
         return back()->with('success', $message);
     }
 
