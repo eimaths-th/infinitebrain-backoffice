@@ -34,17 +34,27 @@ return new class extends Migration
         // 3. ตาราง Students
         if (Schema::hasTable('students')) {
             Schema::table('students', function (Blueprint $table) {
-                $table->index('status');
-                $table->index('pid');
+                if (Schema::hasColumn('students', 'status')) {
+                    $table->index('status');
+                }
+                if (Schema::hasColumn('students', 'pid')) {
+                    $table->index('pid');
+                }
             });
         }
 
         // 4. ตาราง Receipt_School
         if (Schema::hasTable('receipt_school')) {
             Schema::table('receipt_school', function (Blueprint $table) {
-                $table->index('pid');
-                $table->index('status');
-                $table->index('receipt_date');
+                if (Schema::hasColumn('receipt_school', 'pid')) {
+                    $table->index('pid');
+                }
+                if (Schema::hasColumn('receipt_school', 'status')) {
+                    $table->index('status');
+                }
+                if (Schema::hasColumn('receipt_school', 'receipt_date')) {
+                    $table->index('receipt_date');
+                }
             });
         }
     }
