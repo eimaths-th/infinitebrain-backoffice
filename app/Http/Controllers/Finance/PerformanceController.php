@@ -3,20 +3,19 @@
 namespace App\Http\Controllers\Finance;
 
 use App\Http\Controllers\Controller;
-use App\Models\PaymentVoucher;
-use App\Models\Receipt_School;
-use App\Models\ReceiptVoucher;
-use App\Models\Payroll;
-use App\Models\SchoolPrice;
-use App\Models\BranchGroup;
 use App\Models\Branch;
+use App\Models\BranchGroup;
+use App\Models\PaymentVoucher;
+use App\Models\Payroll;
+use App\Models\ReceiptVoucher;
+use App\Models\SchoolPrice;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
-use Carbon\Carbon;
 
 class PerformanceController extends Controller
 {
@@ -46,14 +45,14 @@ class PerformanceController extends Controller
         // Ensure selectedGroups only contains valid codes
         $selectedGroups = array_intersect($selectedGroups, $allowedGroups);
 
-        if (empty($selectedGroups) && !empty($allowedGroups)) {
+        if (empty($selectedGroups) && ! empty($allowedGroups)) {
             $selectedGroups = $allowedGroups;
         }
 
         // selectedBranches logic
         $selectedBranches = $request->input('branches', []);
         // Limit branches to only those belonging to selectedGroups
-        $validBranches = Branch::whereHas('group', function($q) use ($selectedGroups) {
+        $validBranches = Branch::whereHas('group', function ($q) use ($selectedGroups) {
             $q->whereIn('code', $selectedGroups);
         })->pluck('code')->toArray();
 
@@ -67,10 +66,11 @@ class PerformanceController extends Controller
         }
 
         // Fetch groups with branches for the UI
-        $groupsWithBranches = BranchGroup::with(['branches' => function($q) {
-            $q->active();
-        }])->whereIn('code', $allowedGroups)->get();
-
+        $groupsWithBranches = BranchGroup::with([
+            'branches' => function ($q) {
+                $q->active();
+            },
+        ])->whereIn('code', $allowedGroups)->get();
 
         return view('finance.performance.index', compact('monthlyPerformance', 'year', 'selectedGroups', 'selectedBranches', 'groupMap', 'groupsWithBranches'));
     }
@@ -95,6 +95,7 @@ class PerformanceController extends Controller
         $groupMap = BranchGroup::whereIn('code', $allowedGroups)->pluck('name', 'code')->toArray();
 
         $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups, $selectedBranches);
+
         return view('finance.performance.monthly', compact('data', 'year', 'month', 'selectedGroups', 'selectedBranches', 'groupMap'));
     }
 
@@ -104,6 +105,7 @@ class PerformanceController extends Controller
     public function yearly(Request $request, $year)
     {
         $viewData = $this->getYearlyData($request, $year);
+
         return view('finance.performance.yearly', $viewData);
     }
 
@@ -113,6 +115,7 @@ class PerformanceController extends Controller
     public function printYearly(Request $request, $year)
     {
         $viewData = $this->getYearlyData($request, $year);
+
         return view('finance.performance.print-yearly', $viewData);
     }
 
@@ -122,6 +125,7 @@ class PerformanceController extends Controller
     public function printYearlyRevenue(Request $request, $year)
     {
         $viewData = $this->getYearlyData($request, $year);
+
         return view('finance.performance.print-yearly-revenue', $viewData);
     }
 
@@ -131,6 +135,7 @@ class PerformanceController extends Controller
     public function printYearlyExpense(Request $request, $year)
     {
         $viewData = $this->getYearlyData($request, $year);
+
         return view('finance.performance.print-yearly-expense', $viewData);
     }
 
@@ -171,12 +176,12 @@ class PerformanceController extends Controller
                 'payroll_items' => collect(),
                 'payroll_groups' => collect(),
                 'api_revenue_list' => [],
-            ]
+            ],
         ];
 
         for ($m = 1; $m <= 12; $m++) {
             $data = $this->calculateMonthlyData($year, $m, true, $selectedGroups, $selectedBranches, $isEvaluationOnly);
-            
+
             $yearlyData['school_revenue'] += $data['school_revenue'];
             $yearlyData['local_school_revenue'] += $data['local_school_revenue'];
             $yearlyData['api_school_revenue'] += $data['api_school_revenue'];
@@ -198,8 +203,8 @@ class PerformanceController extends Controller
         }
 
         // Post-process merged details (grouping them again)
-        $yearlyData['details']['school_groups'] = $yearlyData['details']['school_groups']->groupBy('group')->map(function($items, $group) {
-            return (object)[
+        $yearlyData['details']['school_groups'] = $yearlyData['details']['school_groups']->groupBy('group')->map(function ($items, $group) {
+            return (object) [
                 'group' => $group,
                 'title' => $items->first()->title,
                 'total_amount' => $items->sum('total_amount'),
@@ -208,15 +213,15 @@ class PerformanceController extends Controller
             ];
         })->sortByDesc('total_amount')->values();
 
-        $yearlyData['details']['pv_groups'] = $yearlyData['details']['pv_groups']->groupBy('pay_to')->map(function($items, $payee) {
-            return (object)[
+        $yearlyData['details']['pv_groups'] = $yearlyData['details']['pv_groups']->groupBy('pay_to')->map(function ($items, $payee) {
+            return (object) [
                 'pay_to' => $payee,
                 'total_amount' => $items->sum('total_amount'),
             ];
         })->sortByDesc('total_amount')->values();
 
-        $yearlyData['details']['payroll_groups'] = $yearlyData['details']['payroll_groups']->groupBy('department')->map(function($items, $dept) {
-            return (object)[
+        $yearlyData['details']['payroll_groups'] = $yearlyData['details']['payroll_groups']->groupBy('department')->map(function ($items, $dept) {
+            return (object) [
                 'department' => $dept,
                 'total_amount' => $items->sum('total_amount'),
                 'employee_count' => $items->max('employee_count'),
@@ -226,12 +231,12 @@ class PerformanceController extends Controller
         // Group API list by branch
         $apiMap = [];
         foreach ($yearlyData['details']['api_revenue_list'] as $item) {
-            if (!isset($apiMap[$item->branch_code])) {
-                $apiMap[$item->branch_code] = (object)[
+            if (! isset($apiMap[$item->branch_code])) {
+                $apiMap[$item->branch_code] = (object) [
                     'branch_code' => $item->branch_code,
                     'branch_name' => $item->branch_name,
                     'revenue' => 0,
-                    'source' => $item->source
+                    'source' => $item->source,
                 ];
             }
             $apiMap[$item->branch_code]->revenue += $item->revenue;
@@ -239,10 +244,12 @@ class PerformanceController extends Controller
         $yearlyData['details']['api_revenue_list'] = array_values($apiMap);
 
         // Fetch groups with branches for the UI filters
-        $groupsWithBranches = BranchGroup::with(['branches' => function($q) {
-            $q->active();
-        }])->whereIn('code', $allowedGroups)->get();
-        
+        $groupsWithBranches = BranchGroup::with([
+            'branches' => function ($q) {
+                $q->active();
+            },
+        ])->whereIn('code', $allowedGroups)->get();
+
         return [
             'data' => $yearlyData,
             'year' => $year,
@@ -250,7 +257,7 @@ class PerformanceController extends Controller
             'selectedBranches' => $selectedBranches,
             'groupMap' => $groupMap,
             'groupsWithBranches' => $groupsWithBranches,
-            'allowedGroups' => $allowedGroups
+            'allowedGroups' => $allowedGroups,
         ];
     }
 
@@ -274,6 +281,7 @@ class PerformanceController extends Controller
         $groupMap = BranchGroup::whereIn('code', $allowedGroups)->pluck('name', 'code')->toArray();
 
         $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups, $selectedBranches);
+
         return view('finance.performance.print', compact('data', 'year', 'month', 'selectedGroups', 'selectedBranches', 'groupMap'));
     }
 
@@ -303,14 +311,15 @@ class PerformanceController extends Controller
         $school_receipts_detail = collect();
         if (in_array('EL', $selectedGroups)) {
             $school_receipts_detail = SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
-                    $query->whereYear('submission_date', $year)
-                        ->whereMonth('submission_date', $month);
-                })
+                $query->whereYear('submission_date', $year)
+                    ->whereMonth('submission_date', $month);
+            })
                 ->with(['rec_school', 'school_sub', 'std'])
                 ->get()
                 ->groupBy('group')
                 ->map(function ($items, $group) {
                     $model = new SchoolPrice();
+
                     return (object) [
                         'group_code' => $group,
                         'group_name' => $model->getGroupName($group),
@@ -347,6 +356,7 @@ class PerformanceController extends Controller
         $groupMap = BranchGroup::whereIn('code', $allowedGroups)->pluck('name', 'code')->toArray();
 
         $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups, $selectedBranches);
+
         return view('finance.performance.print-expense', compact('data', 'year', 'month', 'selectedGroups', 'selectedBranches', 'groupMap'));
     }
 
@@ -359,7 +369,7 @@ class PerformanceController extends Controller
         $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
 
         // Resolve selected groups (Now using group_branch_code directly)
-        $hasSelectedGroups = !empty($selectedGroups);
+        $hasSelectedGroups = ! empty($selectedGroups);
 
         // กำหนดเงื่อนไขตามสาขาที่เลือก
         // School Receipts แสดงเฉพาะสาขา EL เท่านั้น
@@ -376,15 +386,15 @@ class PerformanceController extends Controller
         }
         // META และ EiMaths ไม่เพิ่มแผนกใดๆ (ไม่มี Payroll)
         $payrollDepartments = array_unique($payrollDepartments);
-        $showPayroll = !empty($payrollDepartments);
+        $showPayroll = ! empty($payrollDepartments);
 
         // 1. Revenue: School Receipts (เฉพาะสาขา EL เท่านั้น)
         $schoolRevenue = 0;
         if ($showSchoolRevenue) {
             $schoolRevenue = SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
-                    $query->whereYear('submission_date', $year)
-                        ->whereMonth('submission_date', $month);
-                })
+                $query->whereYear('submission_date', $year)
+                    ->whereMonth('submission_date', $month);
+            })
                 ->sum('total');
         }
 
@@ -392,7 +402,7 @@ class PerformanceController extends Controller
         $rvRevenueQuery = ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
             ->whereBetween('voucher_date', [$startDate, $endDate]);
 
-        if (!empty($selectedBranches)) {
+        if (! empty($selectedBranches)) {
             $rvRevenueQuery->whereIn('branch_code', $selectedBranches);
         } elseif ($hasSelectedGroups) {
             $rvRevenueQuery->whereIn('group_branch_code', $selectedGroups);
@@ -404,11 +414,11 @@ class PerformanceController extends Controller
 
         if ($isEvaluationOnly) {
             $pvExpenseQuery->where('is_evaluation', true);
-        }else {
+        } else {
             $pvExpenseQuery->where('status', PaymentVoucher::STATUS_COMPLETED);
         }
 
-        if (!empty($selectedBranches)) {
+        if (! empty($selectedBranches)) {
             $pvExpenseQuery->whereIn('branch_code', $selectedBranches);
         } elseif ($hasSelectedGroups) {
             $pvExpenseQuery->whereIn('group_branch_code', $selectedGroups);
@@ -421,9 +431,12 @@ class PerformanceController extends Controller
 
         // Skip API call if eimaths is not involved in current selection
         $isEiSelected = false;
-        if (!empty($selectedBranches)) {
+        if (! empty($selectedBranches)) {
             foreach ($selectedBranches as $bCode) {
-                if (str_starts_with($bCode, 'Ei')) { $isEiSelected = true; break; }
+                if (str_starts_with($bCode, 'Ei')) {
+                    $isEiSelected = true;
+                    break;
+                }
             }
         } elseif (in_array('EiMaths', $selectedGroups)) {
             $isEiSelected = true;
@@ -431,32 +444,32 @@ class PerformanceController extends Controller
 
         if ($isEiSelected) {
             $apiRevenueData = $this->fetchEimathsRevenue($year, $month);
-            if (!empty($selectedBranches)) {
+            if (! empty($selectedBranches)) {
                 // กรองเอาเฉพาะข้อมูลสาขาที่เลือก และมีอยู่ใน API
                 foreach ($selectedBranches as $bCode) {
                     // ตรวจสอบทั้งแบบมี prefix และไม่มี prefix
                     if (isset($apiRevenueData[$bCode])) {
-                        $apiSchoolRevenue += (float)$apiRevenueData[$bCode];
+                        $apiSchoolRevenue += (float) $apiRevenueData[$bCode];
                     } else {
                         $strippedCode = str_starts_with($bCode, 'Ei') ? substr($bCode, 2) : $bCode;
                         if (isset($apiRevenueData[$strippedCode])) {
-                            $apiSchoolRevenue += (float)$apiRevenueData[$strippedCode];
+                            $apiSchoolRevenue += (float) $apiRevenueData[$strippedCode];
                         }
                     }
                 }
             } elseif ($hasSelectedGroups) {
                 // ถ้าเลือกเป็นกลุ่ม ให้ดูว่าสาขาในกลุ่มนั้นมีอะไรบ้างที่อยู่ใน API
-                $branchesInGroups = Branch::whereHas('group', function($q) use ($selectedGroups) {
+                $branchesInGroups = Branch::whereHas('group', function ($q) use ($selectedGroups) {
                     $q->whereIn('code', $selectedGroups);
                 })->pluck('code')->toArray();
 
                 foreach ($branchesInGroups as $bCode) {
                     if (isset($apiRevenueData[$bCode])) {
-                        $apiSchoolRevenue += (float)$apiRevenueData[$bCode];
+                        $apiSchoolRevenue += (float) $apiRevenueData[$bCode];
                     } else {
                         $strippedCode = str_starts_with($bCode, 'Ei') ? substr($bCode, 2) : $bCode;
                         if (isset($apiRevenueData[$strippedCode])) {
-                            $apiSchoolRevenue += (float)$apiRevenueData[$strippedCode];
+                            $apiSchoolRevenue += (float) $apiRevenueData[$strippedCode];
                         }
                     }
                 }
@@ -499,15 +512,16 @@ class PerformanceController extends Controller
                 // School Receipts (เฉพาะสาขา EL)
                 'school_groups' => $showSchoolRevenue
                     ? SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
-                            $query->whereYear('submission_date', $year)
-                                ->whereMonth('submission_date', $month);
-                        })
+                        $query->whereYear('submission_date', $year)
+                            ->whereMonth('submission_date', $month);
+                    })
                         ->with(['school_sub'])
                         ->get()
                         ->groupBy('group')
                         ->map(function ($items, $group) {
                             $model = new SchoolPrice();
                             $groupName = $model->getGroupName($group);
+
                             return (object) [
                                 'group' => $groupName,
                                 'title' => $groupName,
@@ -520,7 +534,7 @@ class PerformanceController extends Controller
 
                 'rv_items' => ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
                     ->whereBetween('voucher_date', [$startDate, $endDate])
-                    ->when(!empty($selectedBranches), function ($query) use ($selectedBranches) {
+                    ->when(! empty($selectedBranches), function ($query) use ($selectedBranches) {
                         return $query->whereIn('branch_code', $selectedBranches);
                     })
                     ->when(empty($selectedBranches) && $hasSelectedGroups, function ($query) use ($selectedGroups) {
@@ -529,10 +543,10 @@ class PerformanceController extends Controller
                     ->with(['payee', 'receiptItems'])
                     ->get(),
 
-                'pv_items' => PaymentVoucher::when(!$isEvaluationOnly, function ($query) {
-                        return $query->where('status', PaymentVoucher::STATUS_COMPLETED);
-                    })
-                    ->when(!empty($selectedBranches), function ($query) use ($selectedBranches) {
+                'pv_items' => PaymentVoucher::when(! $isEvaluationOnly, function ($query) {
+                    return $query->where('status', PaymentVoucher::STATUS_COMPLETED);
+                })
+                    ->when(! empty($selectedBranches), function ($query) use ($selectedBranches) {
                         return $query->whereIn('branch_code', $selectedBranches);
                     })
                     ->when(empty($selectedBranches) && $hasSelectedGroups, function ($query) use ($selectedGroups) {
@@ -546,10 +560,10 @@ class PerformanceController extends Controller
                     ->with(['payee', 'expenseItems'])
                     ->get(),
 
-                'pv_groups' => PaymentVoucher::when(!$isEvaluationOnly, function ($query) {
-                        return $query->where('status', PaymentVoucher::STATUS_COMPLETED);
-                    })
-                    ->when(!empty($selectedBranches), function ($query) use ($selectedBranches) {
+                'pv_groups' => PaymentVoucher::when(! $isEvaluationOnly, function ($query) {
+                    return $query->where('status', PaymentVoucher::STATUS_COMPLETED);
+                })
+                    ->when(! empty($selectedBranches), function ($query) use ($selectedBranches) {
                         return $query->whereIn('branch_code', $selectedBranches);
                     })
                     ->when(empty($selectedBranches) && $hasSelectedGroups, function ($query) use ($selectedGroups) {
@@ -615,14 +629,16 @@ class PerformanceController extends Controller
             $summary['details']['api_revenue_list'] = [];
             if ($apiSchoolRevenue > 0) {
                 foreach ($apiRevenueData as $code => $rev) {
-                    $rev = (float)$rev;
-                    if ($rev <= 0) continue;
+                    $rev = (float) $rev;
+                    if ($rev <= 0) {
+                        continue;
+                    }
 
                     // ตรวจสอบว่าสาขานี้อยู่ในเงื่อนไขการกรองหรือไม่ (รองรับทั้งแบบมี Ei prefix และไม่มี)
                     $isIncluded = false;
-                    $localCodes = [$code, "Ei" . $code]; // สร้างความเป็นไปได้ของโค้ดในระบบเรา
+                    $localCodes = [$code, 'Ei'.$code]; // สร้างความเป็นไปได้ของโค้ดในระบบเรา
 
-                    if (!empty($selectedBranches)) {
+                    if (! empty($selectedBranches)) {
                         foreach ($localCodes as $lc) {
                             if (in_array($lc, $selectedBranches)) {
                                 $isIncluded = true;
@@ -630,7 +646,7 @@ class PerformanceController extends Controller
                             }
                         }
                     } elseif ($hasSelectedGroups) {
-                        $branchesInGroups = Branch::whereHas('group', function($q) use ($selectedGroups) {
+                        $branchesInGroups = Branch::whereHas('group', function ($q) use ($selectedGroups) {
                             $q->whereIn('code', $selectedGroups);
                         })->pluck('code')->toArray();
 
@@ -648,20 +664,22 @@ class PerformanceController extends Controller
                         $branchName = $branch ? $branch->name : $code;
                         $branchCode = $branch ? $branch->code : $code;
 
-                        $summary['details']['api_revenue_list'][] = (object)[
+                        $summary['details']['api_revenue_list'][] = (object) [
                             'branch_code' => $branchCode,
                             'branch_name' => $branchName,
                             'revenue' => $rev,
-                            'source' => 'Eimaths API (Math Course)'
+                            'source' => 'Eimaths API (Math Course)',
                         ];
                     }
                 }
             }
         }
+
         return $summary;
     }
 
     private static $eimathsCache = [];
+
     private function fetchEimathsRevenue($year, $month)
     {
         $cacheKey = "eimaths_revenue_{$year}_{$month}";
@@ -669,14 +687,14 @@ class PerformanceController extends Controller
             return self::$eimathsCache[$cacheKey];
         }
 
-        $isCurrentMonth = ($year == date('Y') && (int)$month == (int)date('n'));
+        $isCurrentMonth = ($year == date('Y') && (int) $month == (int) date('n'));
         $ttl = $isCurrentMonth ? now()->addHour() : now()->addHours(24);
 
         $data = Cache::remember($cacheKey, $ttl, function () use ($year, $month, $cacheKey) {
             try {
                 $response = Http::timeout(5)->get('https://app.eimaths-th.com/api/revenue-summary-by-branch-monthly', [
                     'year' => $year,
-                    'month' => $month
+                    'month' => $month,
                 ]);
 
                 if ($response->successful()) {
@@ -686,19 +704,21 @@ class PerformanceController extends Controller
                         foreach ($resData['data']['branches'] as $branch) {
                             $revenueMap[$branch['branch_code']] = $branch['total_revenue'];
                         }
+
                         return $revenueMap;
                     }
                 }
-                
-                Log::warning("Eimaths API failed for {$cacheKey}: " . $response->body());
+
+                Log::warning("Eimaths API failed for {$cacheKey}: ".$response->body());
             } catch (\Exception $e) {
-                Log::error("Eimaths API Exception for {$cacheKey}: " . $e->getMessage());
+                Log::error("Eimaths API Exception for {$cacheKey}: ".$e->getMessage());
             }
 
             return [];
         });
 
         self::$eimathsCache[$cacheKey] = $data;
+
         return $data;
     }
 
@@ -721,7 +741,7 @@ class PerformanceController extends Controller
         $groupMap = BranchGroup::whereIn('code', $allowedGroups)->pluck('name', 'code')->toArray();
 
         // ดึง branch codes ที่อยู่ในกลุ่มที่เลือก
-        $branchCodes = !empty($selectedBranches)
+        $branchCodes = ! empty($selectedBranches)
             ? $selectedBranches
             : PaymentVoucher::resolveBranchCodes($selectedGroups);
 
@@ -729,7 +749,13 @@ class PerformanceController extends Controller
         $isEvaluation = true;
 
         return view('finance.performance.print', compact(
-            'data', 'year', 'month', 'selectedGroups', 'selectedBranches', 'groupMap', 'isEvaluation'
+            'data',
+            'year',
+            'month',
+            'selectedGroups',
+            'selectedBranches',
+            'groupMap',
+            'isEvaluation'
         ));
     }
 
