@@ -399,12 +399,13 @@ class PerformanceController extends Controller
         }
         $rvRevenue = $rvRevenueQuery->sum('net_amount');
 
-        $pvExpenseQuery = PaymentVoucher::where('status', PaymentVoucher::STATUS_COMPLETED)
-            ->where('is_salary', false)
+        $pvExpenseQuery = PaymentVoucher::where('is_salary', false)
             ->whereBetween('voucher_date', [$startDate, $endDate]);
 
         if ($isEvaluationOnly) {
             $pvExpenseQuery->where('is_evaluation', true);
+        }else {
+            $pvExpenseQuery->where('status', PaymentVoucher::STATUS_COMPLETED);
         }
 
         if (!empty($selectedBranches)) {
