@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Exports\EvaluationExport;
+use App\Exports\ExpenseDetailExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PerformanceController extends Controller
@@ -823,5 +824,44 @@ class PerformanceController extends Controller
         $filename = 'yearly_evaluation_sheet_' . $year . '.xlsx';
         
         return Excel::download(new EvaluationExport($data, $year, null, true), $filename);
+    }
+
+    /**
+     * Export รายละเอียดรายจ่าย (Expense Detail) เป็น Excel
+     */
+    public function exportExpense(Request $request, $year, $month)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $allowedGroups = BranchGroup::pluck('code')->toArray();
+        if ($user->hasRole('external-branch')) {
+            $allowedGroups = array_intersect($allowedGroups, $user->branches ?? []);
+        }
+
+        $selectedGroups = $request->input('groups', [$allowedGroups[0] ?? 'EL']);
+        $selectedGroups = array_intersect($selectedGroups, $allowedGroups);
+        $selectedBranches = $request->input('branches', []);
+
+        $isEvaluation = $request->boolean('evaluation');
+
+        $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups, $selectedBranches, $isEvaluation);
+        
+        $filename = 'expense_detail_' . ($isEvaluation ? 'evaluation_' : '') . $year . '_' . $month . '.xlsx';
+        
+        return Excel::download(new ExpenseDetailExport($data, $year, $month, $isEvaluation), $filename);
+    }
+
+    /**
+     * Export รายละเอียดรายจ่ายรายปี (Yearly Expense Detail) เป็น Excel
+     */
+    public function exportYearlyExpense(Request $request, $year)
+    {
+        $isEvaluation = $request->boolean('evaluation');
+        $viewData = $this->getYearlyData($request, $year, $isEvaluation);
+        $data = $viewData['data'];
+        
+        $filename = 'yearly_expense_detail_' . ($isEvaluation ? 'evaluation_' : '') . $year . '.xlsx';
+        
+        return Excel::download(new ExpenseDetailExport($data, $year, null, $isEvaluation), $filename);
     }
 }

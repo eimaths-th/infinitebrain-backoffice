@@ -451,10 +451,12 @@
                             รายละเอียดรายจ่ายทั้งปี (Yearly Expense Details)
                         </div>
                         <div class="btn-actions-pane-right">
-                            <a href="{{ route('performance.yearly.print-expense', array_merge(request()->query(), ['year' => $year])) }}"
-                                target="_blank" class="btn btn-outline-danger btn-sm">
+                            <button type="button" onclick="printYearlyExpenseSelection()" class="btn btn-outline-danger btn-sm">
                                 <i class="fa fa-print"></i> พิมพ์รายละเอียดรายจ่าย
-                            </a>
+                            </button>
+                            <button type="button" onclick="exportYearlyExpenseSelection()" class="btn btn-outline-success btn-sm ms-2">
+                                <i class="fa fa-file-excel"></i> Export Excel
+                            </button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -590,6 +592,80 @@
                 $branches.prop('checked', false);
             }
         });
+
+        function printYearlyExpenseSelection() {
+            swal({
+                title: "เลือกรูปแบบการพิมพ์",
+                text: "คุณต้องการพิมพ์รายงานรายจ่ายรายปีแบบใด?",
+                icon: "info",
+                buttons: {
+                    cancel: {
+                        text: "ยกเลิก",
+                        value: null,
+                        visible: true,
+                        className: "btn btn-secondary",
+                        closeModal: true,
+                    },
+                    normal: {
+                        text: "แบบปกติ",
+                        value: "normal",
+                        visible: true,
+                        className: "btn btn-danger",
+                        closeModal: true
+                    },
+                    evaluation: {
+                        text: "แบบประเมิน",
+                        value: "evaluation",
+                        visible: true,
+                        className: "btn btn-info",
+                        closeModal: true
+                    }
+                }
+            }).then((value) => {
+                if (value === "normal") {
+                    window.open("{!! route('performance.yearly.print-expense', array_merge(request()->query(), ['year' => $year])) !!}", "_blank");
+                } else if (value === "evaluation") {
+                    window.open("{!! route('performance.yearly.print-expense', array_merge(request()->query(), ['year' => $year, 'evaluation' => 1])) !!}", "_blank");
+                }
+            });
+        }
+
+        function exportYearlyExpenseSelection() {
+            swal({
+                title: "เลือกรูปแบบการ Export",
+                text: "คุณต้องการ Export รายงานรายจ่ายรายปีเป็น Excel แบบใด?",
+                icon: "info",
+                buttons: {
+                    cancel: {
+                        text: "ยกเลิก",
+                        value: null,
+                        visible: true,
+                        className: "btn btn-secondary",
+                        closeModal: true,
+                    },
+                    normal: {
+                        text: "แบบปกติ",
+                        value: "normal",
+                        visible: true,
+                        className: "btn btn-success",
+                        closeModal: true
+                    },
+                    evaluation: {
+                        text: "แบบประเมิน",
+                        value: "evaluation",
+                        visible: true,
+                        className: "btn btn-info",
+                        closeModal: true
+                    }
+                }
+            }).then((value) => {
+                if (value === "normal") {
+                    window.location.href = "{!! route('performance.yearly.export-expense', array_merge(request()->query(), ['year' => $year])) !!}";
+                } else if (value === "evaluation") {
+                    window.location.href = "{!! route('performance.yearly.export-expense', array_merge(request()->query(), ['year' => $year, 'evaluation' => 1])) !!}";
+                }
+            });
+        }
     });
 </script>
 @endsection

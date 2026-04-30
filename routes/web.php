@@ -150,10 +150,12 @@ Route::middleware(['auth', 'can:performance.view'])->prefix('performance')->name
     Route::get('/yearly/{year}/print', [\App\Http\Controllers\Finance\PerformanceController::class, 'printYearly'])->name('yearly.print');
     Route::get('/yearly/{year}/print-revenue', [\App\Http\Controllers\Finance\PerformanceController::class, 'printYearlyRevenue'])->name('yearly.print-revenue');
     Route::get('/yearly/{year}/print-expense', [\App\Http\Controllers\Finance\PerformanceController::class, 'printYearlyExpense'])->name('yearly.print-expense');
+    Route::get('/yearly/{year}/export-expense', [\App\Http\Controllers\Finance\PerformanceController::class, 'exportYearlyExpense'])->name('yearly.export-expense');
     Route::get('/monthly/{year}/{month}', [\App\Http\Controllers\Finance\PerformanceController::class, 'monthly'])->name('monthly');
     Route::get('/monthly/{year}/{month}/print', [\App\Http\Controllers\Finance\PerformanceController::class, 'printMonthly'])->name('monthly.print');
     Route::get('/monthly/{year}/{month}/print-revenue', [\App\Http\Controllers\Finance\PerformanceController::class, 'printRevenue'])->name('monthly.print-revenue');
     Route::get('/monthly/{year}/{month}/print-expense', [\App\Http\Controllers\Finance\PerformanceController::class, 'printExpense'])->name('monthly.print-expense');
+    Route::get('/monthly/{year}/{month}/export-expense', [\App\Http\Controllers\Finance\PerformanceController::class, 'exportExpense'])->name('monthly.export-expense');
     // ใบประเมิน (Evaluation Sheet)
     Route::get('/monthly/{year}/{month}/print-evaluation', [\App\Http\Controllers\Finance\PerformanceController::class, 'printEvaluation'])->name('monthly.print-evaluation');
     Route::get('/monthly/{year}/{month}/export-evaluation', [\App\Http\Controllers\Finance\PerformanceController::class, 'exportEvaluation'])->name('monthly.export-evaluation');

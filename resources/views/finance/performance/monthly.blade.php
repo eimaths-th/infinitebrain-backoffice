@@ -337,6 +337,9 @@
                         <button type="button" onclick="printExpenseSelection()" class="btn btn-sm btn-outline-danger">
                             <i class="fa fa-print"></i> พิมพ์รายจ่าย
                         </button>
+                        <button type="button" onclick="exportExpenseSelection()" class="btn btn-sm btn-outline-success ms-2">
+                            <i class="fa fa-file-excel"></i> Export Excel
+                        </button>
                     </div>
                     <div class="card-body">
                         <ul class="nav nav-tabs">
@@ -464,6 +467,43 @@
                     window.open("{!! route('performance.monthly.print-expense', array_merge(request()->query(), ['year' => $year, 'month' => $month])) !!}", "_blank");
                 } else if (value === "evaluation") {
                     window.open("{!! route('performance.monthly.print-expense', array_merge(request()->query(), ['year' => $year, 'month' => $month, 'evaluation' => 1])) !!}", "_blank");
+                }
+            });
+        }
+
+        function exportExpenseSelection() {
+            swal({
+                title: "เลือกรูปแบบการ Export",
+                text: "คุณต้องการ Export รายงานรายจ่ายเป็น Excel แบบใด?",
+                icon: "info",
+                buttons: {
+                    cancel: {
+                        text: "ยกเลิก",
+                        value: null,
+                        visible: true,
+                        className: "btn btn-secondary",
+                        closeModal: true,
+                    },
+                    normal: {
+                        text: "แบบปกติ",
+                        value: "normal",
+                        visible: true,
+                        className: "btn btn-success",
+                        closeModal: true
+                    },
+                    evaluation: {
+                        text: "แบบประเมิน",
+                        value: "evaluation",
+                        visible: true,
+                        className: "btn btn-info",
+                        closeModal: true
+                    }
+                }
+            }).then((value) => {
+                if (value === "normal") {
+                    window.location.href = "{!! route('performance.monthly.export-expense', array_merge(request()->query(), ['year' => $year, 'month' => $month])) !!}";
+                } else if (value === "evaluation") {
+                    window.location.href = "{!! route('performance.monthly.export-expense', array_merge(request()->query(), ['year' => $year, 'month' => $month, 'evaluation' => 1])) !!}";
                 }
             });
         }
