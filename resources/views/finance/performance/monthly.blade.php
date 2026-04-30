@@ -334,12 +334,14 @@
                             <i class="header-icon pe-7s-cash icon-gradient bg-mixed-hopes"></i>
                             รายละเอียดรายจ่าย (Expense Details)
                         </div>
-                        <button type="button" onclick="printExpenseSelection()" class="btn btn-sm btn-outline-danger">
-                            <i class="fa fa-print"></i> พิมพ์รายจ่าย
-                        </button>
-                        <button type="button" onclick="exportExpenseSelection()" class="btn btn-sm btn-outline-success ms-2">
-                            <i class="fa fa-file-excel"></i> Export Excel
-                        </button>
+                        <div class="btn-actions-pane-right">
+                            <button type="button" onclick="printExpenseSelection()" class="btn btn-sm btn-outline-danger">
+                                <i class="fa fa-print"></i> พิมพ์รายจ่าย
+                            </button>
+                            <button type="button" onclick="exportExpenseSelection()" class="btn btn-sm btn-outline-success ms-2">
+                                <i class="fa fa-file-excel"></i> Export Excel
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <ul class="nav nav-tabs">
