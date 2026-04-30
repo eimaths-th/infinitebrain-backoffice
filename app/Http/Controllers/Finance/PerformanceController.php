@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Exports\EvaluationExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PerformanceController extends Controller
 {
@@ -395,9 +397,9 @@ class PerformanceController extends Controller
         $payrollDepartments = array_unique($payrollDepartments);
         $showPayroll = ! empty($payrollDepartments);
 
-        // 1. Revenue: School Receipts (เฉพาะสาขา EL เท่านั้น)
+        // 1. Revenue: School Receipts (เฉพาะสาขา EL เท่านั้น และไม่อยู่ในโหมดใบประเมิน)
         $schoolRevenue = 0;
-        if ($showSchoolRevenue) {
+        if ($showSchoolRevenue && ! $isEvaluationOnly) {
             $schoolRevenue = SchoolPrice::whereHas('rec_school', function ($query) use ($year, $month) {
                 $query->whereYear('submission_date', $year)
                     ->whereMonth('submission_date', $month);
@@ -405,16 +407,19 @@ class PerformanceController extends Controller
                 ->sum('total');
         }
 
-        // 2. Revenue: Receipt Vouchers (Completed)
-        $rvRevenueQuery = ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
-            ->whereBetween('voucher_date', [$startDate, $endDate]);
+        // 2. Revenue: Receipt Vouchers (Completed - ไม่อยู่ในโหมดใบประเมิน)
+        $rvRevenue = 0;
+        if (! $isEvaluationOnly) {
+            $rvRevenueQuery = ReceiptVoucher::where('status', ReceiptVoucher::STATUS_COMPLETED)
+                ->whereBetween('voucher_date', [$startDate, $endDate]);
 
-        if (! empty($selectedBranches)) {
-            $rvRevenueQuery->whereIn('branch_code', $selectedBranches);
-        } elseif ($hasSelectedGroups) {
-            $rvRevenueQuery->whereIn('group_branch_code', $selectedGroups);
+            if (! empty($selectedBranches)) {
+                $rvRevenueQuery->whereIn('branch_code', $selectedBranches);
+            } elseif ($hasSelectedGroups) {
+                $rvRevenueQuery->whereIn('group_branch_code', $selectedGroups);
+            }
+            $rvRevenue = $rvRevenueQuery->sum('net_amount');
         }
-        $rvRevenue = $rvRevenueQuery->sum('net_amount');
 
         $pvExpenseQuery = PaymentVoucher::where('is_salary', false)
             ->whereBetween('voucher_date', [$startDate, $endDate]);
@@ -450,7 +455,7 @@ class PerformanceController extends Controller
             $isEiSelected = true;
         }
 
-        if ($isEiSelected) {
+        if ($isEiSelected && ! $isEvaluationOnly) {
             $apiRevenueData = $this->fetchEimathsRevenue($year, $month);
             if (! empty($selectedBranches)) {
                 // กรองเอาเฉพาะข้อมูลสาขาที่เลือก และมีอยู่ใน API
@@ -484,10 +489,10 @@ class PerformanceController extends Controller
             }
         }
 
-        // 4. Expense: Payroll (ดึงตามแผนกที่กำหนดของแต่ละสาขา)
+        // 4. Expense: Payroll (ดึงตามแผนกที่กำหนดของแต่ละสาขา - ไม่อยู่ในโหมดใบประเมิน)
         $payrollExpense = 0;
         $payrollDeductions = 0;
-        if ($showPayroll) {
+        if ($showPayroll && ! $isEvaluationOnly) {
             $payrollQuery = Payroll::where('status', Payroll::STATUS_PAID)
                 ->whereHas('user', function ($query) use ($payrollDepartments) {
                     $query->whereIn('department', $payrollDepartments);
@@ -782,5 +787,41 @@ class PerformanceController extends Controller
         $viewData['isEvaluation'] = true;
 
         return view('finance.performance.print-yearly', $viewData);
+    }
+
+    /**
+     * Export ใบประเมิน (Evaluation Sheet) รายเดือน เป็น Excel
+     */
+    public function exportEvaluation(Request $request, $year, $month)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $allowedGroups = BranchGroup::pluck('code')->toArray();
+        if ($user->hasRole('external-branch')) {
+            $allowedGroups = array_intersect($allowedGroups, $user->branches ?? []);
+        }
+
+        $selectedGroups = $request->input('groups', [$allowedGroups[0] ?? 'EL']);
+        $selectedGroups = array_intersect($selectedGroups, $allowedGroups);
+        $selectedBranches = $request->input('branches', []);
+
+        $data = $this->calculateMonthlyData($year, $month, true, $selectedGroups, $selectedBranches, true);
+        
+        $filename = 'evaluation_sheet_' . $year . '_' . $month . '.xlsx';
+        
+        return Excel::download(new EvaluationExport($data, $year, $month, false), $filename);
+    }
+
+    /**
+     * Export ใบประเมิน (Evaluation Sheet) รายปี เป็น Excel
+     */
+    public function exportYearlyEvaluation(Request $request, $year)
+    {
+        $viewData = $this->getYearlyData($request, $year, true);
+        $data = $viewData['data'];
+        
+        $filename = 'yearly_evaluation_sheet_' . $year . '.xlsx';
+        
+        return Excel::download(new EvaluationExport($data, $year, null, true), $filename);
     }
 }

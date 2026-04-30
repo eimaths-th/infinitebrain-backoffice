@@ -231,66 +231,69 @@
         </table>
     @endif
 
-    <!-- ส่วนที่ 2: Payroll (เงินเดือน) - แสดงเฉพาะสาขา EL/IF ที่มี Payroll -->
+    <!-- ส่วนที่ 2: Payroll (เงินเดือน) - แสดงเฉพาะสาขา EL/IF ที่มี Payroll และไม่อยู่ในโหมดใบประเมิน -->
     @php $payroll_grand_total = 0; @endphp
-    @if ($data['details']['payroll_items']->count() > 0)
-        <div class="no-break">
-            <div class="section-title">2. Payroll (เงินเดือนพนักงาน)</div>
-            @php
-                // จัดกลุ่มตามแผนก
-                $groupedPayroll = collect($data['details']['payroll_items'])->groupBy(function ($item) {
-                    return $item->user->department ?? 'ไม่ระบุแผนก';
-                });
-            @endphp
-
-            @foreach ($groupedPayroll as $department => $items)
+    @if (empty($isEvaluation))
+        @if ($data['details']['payroll_items']->count() > 0)
+            <div class="no-break">
+                <div class="section-title">2. Payroll (เงินเดือนพนักงาน)</div>
                 @php
-                    $dept_total = $items->sum('net_pay');
-                    $idx = 1;
+                    // จัดกลุ่มตามแผนก
+                    $groupedPayroll = collect($data['details']['payroll_items'])->groupBy(function ($item) {
+                        return $item->user->department ?? 'ไม่ระบุแผนก';
+                    });
                 @endphp
 
-                <div class="no-break">
-                    <div class="group-title">
-                        แผนก: {{ $department }}
-                        <span style="float: right;">รวม: {{ number_format($dept_total, 2) }} บาท</span>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 5%;">#</th>
-                                <th style="width: 45%;">ชื่อ-นามสกุล</th>
-                                <th style="width: 20%;">งวด (Period)</th>
-                                <th style="width: 30%;">ยอดสุทธิ (Net Pay)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($items as $item)
+                @foreach ($groupedPayroll as $department => $items)
+                    @php
+                        $dept_total = $items->sum('net_pay');
+                        $idx = 1;
+                    @endphp
+
+                    <div class="no-break">
+                        <div class="group-title">
+                            แผนก: {{ $department }}
+                            <span style="float: right;">รวม: {{ number_format($dept_total, 2) }} บาท</span>
+                        </div>
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td class="text-center">{{ $idx++ }}</td>
-                                    <td>{{ $item->user->name ?? $item->user_id }}</td>
-                                    <td class="text-center">
-                                        {{ $item->payrollPeriod->month }}/{{ $item->payrollPeriod->year }}</td>
-                                    <td class="text-right">{{ number_format($item->net_pay, 2) }}</td>
+                                    <th style="width: 5%;">#</th>
+                                    <th style="width: 45%;">ชื่อ-นามสกุล</th>
+                                    <th style="width: 20%;">งวด (Period)</th>
+                                    <th style="width: 30%;">ยอดสุทธิ (Net Pay)</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr class="summary-row">
-                                <td colspan="3" class="text-right">รวมแผนก {{ $department }}</td>
-                                <td class="text-right">{{ number_format($dept_total, 2) }}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                @php $payroll_grand_total += $dept_total; @endphp
-            @endforeach
-
-
-        </div>
+                            </thead>
+                            <tbody>
+                                @foreach ($items as $item)
+                                    <tr>
+                                        <td class="text-center">{{ $idx++ }}</td>
+                                        <td>{{ $item->user->name ?? $item->user_id }}</td>
+                                        <td class="text-center">
+                                            {{ $item->payrollPeriod->month }}/{{ $item->payrollPeriod->year }}</td>
+                                        <td class="text-right">{{ number_format($item->net_pay, 2) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr class="summary-row">
+                                    <td colspan="3" class="text-right">รวมแผนก {{ $department }}</td>
+                                    <td class="text-right">{{ number_format($dept_total, 2) }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    @php $payroll_grand_total += $dept_total; @endphp
+                @endforeach
+            </div>
+        @endif
     @endif
 
     <!-- ส่วนที่ 3: รายการหัก (Deductions) -->
-    @if ($data['pv_deductions'] > 0)
+    @php
+        $actual_deductions = $data['pv_deductions'] + (empty($isEvaluation) ? $data['payroll_deductions'] : 0);
+    @endphp
+    @if ($actual_deductions > 0)
         <div class="no-break">
             <div class="section-title">3. รายการหักประจำเดือน (Deductions)</div>
             <table>
@@ -307,7 +310,7 @@
                         <td class="text-right">{{ number_format($data['pv_deductions'], 2) }}</td>
                     </tr>
                     @endif
-                    @if ($data['payroll_deductions'] > 0)
+                    @if (empty($isEvaluation) && $data['payroll_deductions'] > 0)
                     <tr>
                         <td>รายการหักจากเงินเดือน (ประกันสังคม, ภาษี, และอื่นๆ)</td>
                         <td class="text-right">{{ number_format($data['payroll_deductions'], 2) }}</td>
@@ -317,7 +320,7 @@
                 <tfoot>
                     <tr class="summary-row">
                         <td class="text-right">รวมรายการหักประจำเดือน</td>
-                        <td class="text-right">{{ number_format($data['pv_deductions'] + $data['payroll_deductions'], 2) }} บาท</td>
+                        <td class="text-right">{{ number_format($actual_deductions, 2) }} บาท</td>
                     </tr>
                 </tfoot>
             </table>
@@ -326,14 +329,16 @@
 
     <!-- สรุปรวมรายจ่ายทั้งหมด -->
     <table>
+        @if (empty($isEvaluation))
         <tr class="summary-row" style="border: 2px solid #e74c3c;">
             <td style="width: 70%;" class="text-right font-bold"> ยอดรวม Payroll ทั้งหมด </td>
             <td style="width: 30%;" class="text-right font-bold">{{ number_format($payroll_grand_total, 2) }}
                 บาท</td>
         </tr>
+        @endif
         <tr class="summary-row" style="border: 2px solid #e74c3c;">
-            <td style="width: 70%;" class="text-right font-bold">รวมรายจ่ายทั้งหมด (Total Expense)</td>
-            <td style="width: 30%;" class="text-right font-bold">{{ number_format($data['total_expense'], 2) }} บาท
+            <td style="width: 70%;" class="text-right font-bold">รวมรายจ่ายทั้งหมด {{ isset($isEvaluation) && $isEvaluation ? '(ประเมิน)' : '' }}</td>
+            <td style="width: 30%;" class="text-right font-bold">{{ number_format($pv_grand_total + $payroll_grand_total, 2) }} บาท
             </td>
         </tr>
     </table>

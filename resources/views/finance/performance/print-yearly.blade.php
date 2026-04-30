@@ -179,17 +179,19 @@
             <th class="text-right" colspan="2">จำนวนเงิน</th>
         </tr>
 
-        @if (count($data['details']['payroll_groups']) > 0)
-            <tr>
-                <td class="font-bold" colspan="4">เงินเดือนพนักงาน</td>
-            </tr>
-            @foreach ($data['details']['payroll_groups'] as $item)
+        @if (empty($isEvaluation))
+            @if (count($data['details']['payroll_groups']) > 0)
                 <tr>
-                    <td class="sub-item" colspan="2">พนักงาน {{ $item->department }}</td>
-                    <td class="text-right">{{ number_format($item->total_amount, 2) }}</td>
-                    <td></td>
+                    <td class="font-bold" colspan="4">เงินเดือนพนักงาน</td>
                 </tr>
-            @endforeach
+                @foreach ($data['details']['payroll_groups'] as $item)
+                    <tr>
+                        <td class="sub-item" colspan="2">พนักงาน {{ $item->department }}</td>
+                        <td class="text-right">{{ number_format($item->total_amount, 2) }}</td>
+                        <td></td>
+                    </tr>
+                @endforeach
+            @endif
         @endif
 
         @foreach ($data['details']['pv_items']->groupBy('category') as $category => $vouchers)

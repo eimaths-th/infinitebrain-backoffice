@@ -87,6 +87,10 @@
                         target="_blank" class="btn btn-success">
                         <i class="fa fa-clipboard"></i> พิมพ์ใบประเมินรายปี
                     </a>
+                    <a href="{{ route('performance.yearly.export-evaluation', array_merge(request()->query(), ['year' => $year])) }}"
+                        class="btn btn-outline-success">
+                        <i class="fa fa-file-excel"></i> Export Excel
+                    </a>
                     @endcan
                     <a href="{{ route('performance.index', array_merge(request()->query(), ['year' => $year])) }}"
                         class="btn btn-secondary">

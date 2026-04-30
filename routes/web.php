@@ -156,7 +156,9 @@ Route::middleware(['auth', 'can:performance.view'])->prefix('performance')->name
     Route::get('/monthly/{year}/{month}/print-expense', [\App\Http\Controllers\Finance\PerformanceController::class, 'printExpense'])->name('monthly.print-expense');
     // ใบประเมิน (Evaluation Sheet)
     Route::get('/monthly/{year}/{month}/print-evaluation', [\App\Http\Controllers\Finance\PerformanceController::class, 'printEvaluation'])->name('monthly.print-evaluation');
+    Route::get('/monthly/{year}/{month}/export-evaluation', [\App\Http\Controllers\Finance\PerformanceController::class, 'exportEvaluation'])->name('monthly.export-evaluation');
     Route::get('/yearly/{year}/print-evaluation', [\App\Http\Controllers\Finance\PerformanceController::class, 'printYearlyEvaluation'])->name('yearly.print-evaluation');
+    Route::get('/yearly/{year}/export-evaluation', [\App\Http\Controllers\Finance\PerformanceController::class, 'exportYearlyEvaluation'])->name('yearly.export-evaluation');
 });
 
 Route::middleware(['auth'])->prefix('payment-voucher')->name('payment-voucher.')->group(function () {
