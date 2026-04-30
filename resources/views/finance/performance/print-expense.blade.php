@@ -96,8 +96,17 @@
         }
 
         .section-title.deduction {
-            background-color: #e8f4fd;
-            border-left: 4px solid #3498db;
+            background-color: #fff3e0;
+            border-left: 4px solid #f39c12;
+        }
+
+        table.table-warning th {
+            background-color: #f39c12 !important;
+        }
+
+        table.table-warning .summary-row {
+            background-color: #fff3e0 !important;
+            border-top: 2px solid #f39c12;
         }
 
         /* หัวข้อกลุ่มวิชา / หมวดหมู่คล้าย print-revenue */
@@ -301,7 +310,7 @@
     @if ($actual_deductions > 0)
         <div class="no-break">
             <div class="section-title deduction">3. รายการหักประจำเดือน (Deductions)</div>
-            <table>
+            <table class="table-warning">
                 <thead>
                     <tr>
                         <th style="width: 70%;">ประเภทรายการหัก</th>

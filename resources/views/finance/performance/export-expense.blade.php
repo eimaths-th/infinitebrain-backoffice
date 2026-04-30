@@ -78,7 +78,11 @@
             <td colspan="5"></td>
         </tr>
         <tr>
-            <th colspan="5" style="font-weight: bold; background-color: #d1ecf1;">3. สรุปรายการหักประจำเดือน (Deductions)</th>
+            <th colspan="5" style="font-weight: bold; background-color: #ffeeba; color: #856404;">3. สรุปรายการหักประจำเดือน (Deductions)</th>
+        </tr>
+        <tr>
+            <th colspan="4" style="font-weight: bold; background-color: #f39c12; color: white; text-align: center;">ประเภทรายการหัก</th>
+            <th style="font-weight: bold; background-color: #f39c12; color: white; text-align: center;">จำนวนเงิน</th>
         </tr>
         <tr>
             <td colspan="4">รายการหักจากใบสำคัญจ่าย</td>
