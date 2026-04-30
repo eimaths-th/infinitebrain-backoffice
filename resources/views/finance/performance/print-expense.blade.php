@@ -169,8 +169,9 @@
         ประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }} ปี {{ $year + 543 }}
     </div>
 
+    @php $section_no = 1; @endphp
     <!-- ส่วนที่ 1: Payment Vouchers (ใบสำคัญจ่าย) -->
-    <div class="section-title">1. Payment Vouchers (ใบสำคัญจ่าย)</div>
+    <div class="section-title">{{ $section_no++ }}. Payment Vouchers (ใบสำคัญจ่าย)</div>
     @php
         $groupedPV = collect($data['details']['pv_items'])->groupBy('category');
         $pv_grand_total = 0;
@@ -250,7 +251,7 @@
     @if (empty($isEvaluation))
         @if ($data['details']['payroll_items']->count() > 0)
             <div class="no-break">
-                <div class="section-title">2. Payroll (เงินเดือนพนักงาน)</div>
+                <div class="section-title">{{ $section_no++ }}. Payroll (เงินเดือนพนักงาน)</div>
                 @php
                     // จัดกลุ่มตามแผนก
                     $groupedPayroll = collect($data['details']['payroll_items'])->groupBy(function ($item) {
@@ -309,7 +310,7 @@
     @endphp
     @if ($actual_deductions > 0)
         <div class="no-break">
-            <div class="section-title deduction">3. รายการหักประจำเดือน (Deductions)</div>
+            <div class="section-title deduction">{{ $section_no++ }}. รายการหักประจำเดือน (Deductions)</div>
             <table class="table-warning">
                 <thead>
                     <tr>

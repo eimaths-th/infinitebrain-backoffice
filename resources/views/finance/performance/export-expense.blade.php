@@ -10,8 +10,9 @@
                 ประจำเดือน {{ \App\Models\PayrollPeriod::$thaiMonths[$month] }} ปี {{ $year + 543 }}
             </th>
         </tr>
+        @php $section_no = 1; @endphp
         <tr>
-            <th colspan="5" style="font-weight: bold; background-color: #f2f2f2;">1. Payment Vouchers (ใบสำคัญจ่าย)</th>
+            <th colspan="5" style="font-weight: bold; background-color: #f2f2f2;">{{ $section_no++ }}. Payment Vouchers (ใบสำคัญจ่าย)</th>
         </tr>
         <tr>
             <th style="font-weight: bold; text-align: center;">วันที่</th>
@@ -50,7 +51,7 @@
                 <td colspan="5"></td>
             </tr>
             <tr>
-                <th colspan="5" style="font-weight: bold; background-color: #f2f2f2;">2. Payroll (เงินเดือนพนักงาน)</th>
+                <th colspan="5" style="font-weight: bold; background-color: #f2f2f2;">{{ $section_no++ }}. Payroll (เงินเดือนพนักงาน)</th>
             </tr>
             <tr>
                 <th colspan="2" style="font-weight: bold; text-align: center;">แผนก</th>
@@ -78,7 +79,7 @@
             <td colspan="5"></td>
         </tr>
         <tr>
-            <th colspan="5" style="font-weight: bold; background-color: #ffeeba; color: #856404;">3. สรุปรายการหักประจำเดือน (Deductions)</th>
+            <th colspan="5" style="font-weight: bold; background-color: #ffeeba; color: #856404;">{{ $section_no++ }}. สรุปรายการหักประจำเดือน (Deductions)</th>
         </tr>
         <tr>
             <th colspan="4" style="font-weight: bold; background-color: #f39c12; color: white; text-align: center;">ประเภทรายการหัก</th>
