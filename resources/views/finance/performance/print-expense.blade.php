@@ -95,6 +95,11 @@
             border-left: 4px solid #e74c3c;
         }
 
+        .section-title.deduction {
+            background-color: #e8f4fd;
+            border-left: 4px solid #3498db;
+        }
+
         /* หัวข้อกลุ่มวิชา / หมวดหมู่คล้าย print-revenue */
         .group-title {
             font-size: 11pt;
@@ -295,7 +300,7 @@
     @endphp
     @if ($actual_deductions > 0)
         <div class="no-break">
-            <div class="section-title">3. รายการหักประจำเดือน (Deductions)</div>
+            <div class="section-title deduction">3. รายการหักประจำเดือน (Deductions)</div>
             <table>
                 <thead>
                     <tr>
