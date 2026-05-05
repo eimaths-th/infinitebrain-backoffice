@@ -745,6 +745,15 @@
                                             </div>
 
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="AddIsVat">ภาษีมูลค่าเพิ่ม (VAT 7%):</label>
+                                                <div class="form-check" style="padding-top: 5px;">
+                                                    <input type="checkbox" class="form-check-input" id="AddIsVat" name="is_vat" value="1" checked>
+                                                    <label class="form-check-label" for="AddIsVat">คิดภาษี (Default)</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="form-row">
@@ -1422,7 +1431,15 @@
                                             </div>
 
                                         </div>
-
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="EditIsVat">ภาษีมูลค่าเพิ่ม (VAT 7%):</label>
+                                                <div class="form-check" style="padding-top: 5px;">
+                                                    <input type="checkbox" class="form-check-input" id="EditIsVat" name="is_vat" value="1">
+                                                    <label class="form-check-label" for="EditIsVat">คิดภาษี</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="form-row">
@@ -2312,6 +2329,14 @@
                         $('#EditParentID').val(res.data2.id);
                         $('#EditStudent').html(res.student)
                         $('.imgs').html(res.imgs);
+                        
+                        // Set is_vat checkbox
+                        if (res.data.is_vat == 1) {
+                            $('#EditIsVat').prop('checked', true);
+                        } else {
+                            $('#EditIsVat').prop('checked', false);
+                        }
+
                         $('#myTbl3 tbody').html(res.data_html);
                         //append
                         //$('#EditFile').val(res.data.file_att);
@@ -2985,6 +3010,7 @@
                         mobile: $('#AddMobile').val(),
                         source: $('#AddSource').val(),
                         remark: $('#AddRemark').val(),
+                        is_vat: $('#AddIsVat').is(':checked') ? 1 : 0,
                         receipt: arr,
                         // subject:$('#subject_id').val(),
                         // level:$('#level_id').val(),
@@ -3178,6 +3204,7 @@
                         mobile: $('#EditMobile').val(),
                         source: $('#EditSource').val(),
                         remark: $('#EditRemark').val(),
+                        is_vat: $('#EditIsVat').is(':checked') ? 1 : 0,
                         // package: $('#EditPackage').val(),
                         // file_att: $('#EditFile').val(),
                         student_id: student_id,
