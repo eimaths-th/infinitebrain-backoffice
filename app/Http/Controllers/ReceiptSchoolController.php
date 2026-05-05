@@ -1384,7 +1384,7 @@ class ReceiptSchoolController extends Controller
         } elseif ($data->type == 9 || $group_rec) {
             # code...
 
-            if ($payment_type == 1 && $fixDate < $dataDate) {
+            if ($data->is_vat == 0) {
                 # code...
                 $mes = "ใบเสร็จรับเงิน";
                 $mes2 = "ใบเสร็จรับเงิน";
@@ -1747,6 +1747,7 @@ class ReceiptSchoolController extends Controller
             // 'sid' => $request->get('student'),
             'receipt_number' => $rnumber,
             'file_att' => $filebs,
+            'is_vat' => $request->get('is_vat', 1),
             'approv_id' => auth()->user()->id,
             'approv_name' => auth()->user()->name,
 
@@ -2002,7 +2003,12 @@ class ReceiptSchoolController extends Controller
 
         $Receipt_School =  Receipt_School::find($id);
         $Receipt_School_old = $Receipt_School->toArray();
-        $Receipt_School->update($request->all());
+        
+        $update_data = $request->all();
+        // Ensure is_vat is captured as 0 or 1
+        $update_data['is_vat'] = $request->get('is_vat', 1);
+        
+        $Receipt_School->update($update_data);
         $Receipt_School_arry = $Receipt_School->toArray();
 
         $rdata = array();

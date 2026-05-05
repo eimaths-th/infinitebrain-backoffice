@@ -29,6 +29,7 @@ class Receipt_School extends Model
         'remark',
         'approv_id',
         'approv_name',
+        'is_vat',
     ];
 
     public function parentRegister()
