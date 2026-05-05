@@ -1381,9 +1381,7 @@ class ReceiptSchoolController extends Controller
         if ($data->type == 2) {
             $mes = "ใบลดหนี้";
             $text = "Credit Note";
-        } elseif ($data->type == 9 || $group_rec) {
-            # code...
-
+        } else {
             if ($data->is_vat == 0) {
                 # code...
                 $mes = "ใบเสร็จรับเงิน";
@@ -1394,24 +1392,17 @@ class ReceiptSchoolController extends Controller
                 $vat_val = number_format(0, 2);
                 $booksum = $booksum + $pricesub;
             } else {
-                # code...
-                $mes = "ใบกำกับภาษี/ใบแจ้งหนี้";
-                $mes2 = "ใบเสร็จรับเงิน";
-                $text = "Tax Invoice/Invoice";
-                $text2 = "Invoice";
-            }
-        } else {
-            if ($payment_type == 1 && $fixDate < $dataDate) {
-                # code...
-                $mes = "ใบเสร็จรับเงิน";
-                $text = "Receipt";
-                $vat_price_val = number_format(0, 2);
-                $vat_val = number_format(0, 2);
-                $booksum = $booksum + $pricesub;
-            } else {
-                # code...
-                $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
-                $text = "Tax Invoice/Receipt";
+                if ($data->type == 9 || $group_rec) {
+                    # code...
+                    $mes = "ใบกำกับภาษี/ใบแจ้งหนี้";
+                    $mes2 = "ใบเสร็จรับเงิน";
+                    $text = "Tax Invoice/Invoice";
+                    $text2 = "Invoice";
+                } else {
+                    # code...
+                    $mes = "ใบกำกับภาษี/ใบเสร็จรับเงิน";
+                    $text = "Tax Invoice/Receipt";
+                }
             }
         }
 
