@@ -3,8 +3,70 @@
     use App\Models\SubjectPrice;
     use App\Models\Godeye;
     use App\Models\FormManage;
+    use App\Models\PaymentVoucher;
+    use App\Models\ReceiptVoucher;
+    use App\Models\LeaveRequest;
+
     $formManages = FormManage::all();
+
+    // คำนวณจำนวนแจ้งเตือนสำหรับใบสำคัญจ่าย (Payment Voucher)
+    $pending_pv_count = 0;
+    if (Auth::user()->can('payment-voucher.view')) {
+        // รอตรวจสอบ
+        if (Auth::user()->can('payment-voucher.review')) {
+            $pending_pv_count += PaymentVoucher::where('status', PaymentVoucher::STATUS_PENDING)->count();
+        }
+        // รออนุมัติ
+        if (Auth::user()->can('payment-voucher.approve')) {
+            $pending_pv_count += PaymentVoucher::where('status', PaymentVoucher::STATUS_REVIEWED)->count();
+        }
+        // รอจ่ายเงิน (เพิ่มตามความต้องการผู้ใช้)
+        $pending_pv_count += PaymentVoucher::where('status', PaymentVoucher::STATUS_APPROVED)->count();
+    }
+
+    // คำนวณจำนวนแจ้งเตือนสำหรับใบสำคัญรับ (Receipt Voucher)
+    $pending_rv_count = 0;
+    if (Auth::user()->can('receipt-voucher.view')) {
+        if (Auth::user()->can('receipt-voucher.verify')) {
+            $pending_rv_count += ReceiptVoucher::where('status', ReceiptVoucher::STATUS_PENDING)->count();
+        }
+        if (Auth::user()->can('receipt-voucher.complete')) {
+            $pending_rv_count += ReceiptVoucher::where('status', ReceiptVoucher::STATUS_VERIFIED)->count();
+        }
+    }
+
+    // คำนวณจำนวนแจ้งเตือนสำหรับใบลา (Leave Request)
+    $pending_leave_count = 0;
+    if (Auth::user()->can('system.view') || Auth::user()->hasRole(['super-admin', 'admin'])) {
+        $pending_leave_count = LeaveRequest::where('status', 'pending')->count();
+    }
+    // ยอดรวม Finance
+    $finance_total_count = $pending_pv_count + $pending_rv_count;
 @endphp
+
+<style>
+    .premium-badge {
+        background: linear-gradient(135deg, #ff0844 0%, #ff0844 100%);
+        color: white !important;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        margin-left: auto;
+        margin-right: 8px;
+        display: inline-block;
+        line-height: 1.4;
+        min-width: 18px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .mm-active > a > .premium-badge {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        transform: scale(1.05);
+    }
+</style>
 <div class="app-sidebar sidebar-shadow">
     <div class="app-header__logo">
         <div class="logo-src"></div>
@@ -303,6 +365,17 @@
                         <a href="{{ route('leave-requests.index') }}">
                             <i class="metismenu-icon pe-7s-note2"></i>
                             เขียนใบลา
+                            @if(Auth::user()->can('leave-requests.view') || !Auth::user()->hasRole(['super-admin', 'admin']))
+                                @php 
+                                    $user_pending_leave = \App\Models\LeaveRequest::where('user_id', Auth::id())->where('status', 'pending')->count();
+                                @endphp
+                                @if($user_pending_leave > 0)
+                                    <span class="premium-badge">{{ $user_pending_leave }}</span>
+                                @endif
+                                @if($pending_leave_count > 0)
+                                    <span class="premium-badge">{{ $pending_leave_count }}</span>
+                                @endif
+                            @endif
                         </a>
                     </li>
                 @endcan
@@ -313,6 +386,9 @@
                         <a href="#">
                             <i class="metismenu-icon  pe-7s-wallet"></i>
                             Finance
+                            @if($finance_total_count > 0)
+                                <span class="premium-badge">{{ $finance_total_count }}</span>
+                            @endif
                             <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                         </a>
 
@@ -343,6 +419,9 @@
                                 <a href="#">
                                     <i class="metismenu-icon pe-7s-wallet"></i>
                                     ใบสำคัญจ่าย
+                                    @if($pending_pv_count > 0)
+                                        <span class="premium-badge">{{ $pending_pv_count }}</span>
+                                    @endif
                                     <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                                 </a>
                                 <ul>
@@ -366,14 +445,39 @@
                                         </a>
                                     </li>
                                     @endcan
+
+                                    <li class="mm-divider" style="height: 1px; background: rgba(0,0,0,0.05); margin: 5px 20px;"></li>
+
+                                    @can('payment-voucher.review')
+                                        <li>
+                                            <a href="{{ route('payment-voucher.approved') }}">
+                                                <i class="metismenu-icon"></i>
+                                                รอตรวจสอบ
+                                                @php $c = PaymentVoucher::where('status', PaymentVoucher::STATUS_PENDING)->count(); @endphp
+                                                @if($c > 0) <span class="premium-badge">{{ $c }}</span> @endif
+                                            </a>
+                                        </li>
+                                    @endcan
+
                                     @can('payment-voucher.approve')
                                         <li>
                                             <a href="{{ route('payment-voucher.pending') }}">
                                                 <i class="metismenu-icon"></i>
                                                 รออนุมัติ
+                                                @php $c = PaymentVoucher::where('status', PaymentVoucher::STATUS_REVIEWED)->count(); @endphp
+                                                @if($c > 0) <span class="premium-badge" style="background: #f7b924; color: #000 !important; font-size: 9px;">{{ $c }}</span> @endif
                                             </a>
                                         </li>
                                     @endcan
+
+                                    <li>
+                                        <a href="{{ route('payment-voucher.index', ['status' => 'approved']) }}">
+                                            <i class="metismenu-icon"></i>
+                                            รอจ่ายเงิน
+                                            @php $c = PaymentVoucher::where('status', PaymentVoucher::STATUS_APPROVED)->count(); @endphp
+                                            @if($c > 0) <span class="premium-badge">{{ $c }}</span> @endif
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                             @can('receipt-voucher.view')
@@ -381,6 +485,9 @@
                                     <a href="#">
                                         <i class="metismenu-icon pe-7s-note2"></i>
                                         ใบสำคัญรับ
+                                        @if($pending_rv_count > 0)
+                                            <span class="premium-badge">{{ $pending_rv_count }}</span>
+                                        @endif
                                         <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
                                     </a>
                                     <ul>
@@ -571,6 +678,9 @@
                                     <a href="{{ route('leave-requests.index') }}">
                                         <i class="metismenu-icon"></i>
                                         ตรวจสอบใบลา
+                                        @if($pending_leave_count > 0)
+                                            <span class="premium-badge">{{ $pending_leave_count }}</span>
+                                        @endif
                                     </a>
                                 </li>
                             </ul>
