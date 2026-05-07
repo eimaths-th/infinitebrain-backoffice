@@ -54,6 +54,10 @@ class PaymentVoucherController extends Controller
             $query->whereDate('voucher_date', '<=', $request->to_date);
         }
 
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
         // Search
         if ($request->filled('search')) {
             $search = $request->search;
