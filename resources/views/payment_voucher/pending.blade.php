@@ -14,6 +14,18 @@
             color: #212529;
         }
 
+        .text-meta {
+            color: #ffc107;
+        }
+
+        .text-eimaths {
+            color: #ff9822;
+        }
+
+        .text-infinitebrain {
+            color: #28a745;
+        }
+
         .btn-action {
             padding: 3px 8px;
             font-size: 12px;
@@ -144,6 +156,15 @@
                         </thead>
                         <tbody>
                             @forelse($vouchers as $index => $voucher)
+                                @php
+                                    $voucher_color_class = 'text-infinitebrain';
+
+                                    if ($voucher->group_branch_code == 'META') {
+                                        $voucher_color_class = 'text-meta';
+                                    } elseif ($voucher->group_branch_code == 'EiMaths') {
+                                        $voucher_color_class = 'text-eimaths';
+                                    }
+                                @endphp
                                 <tr>
                                     <td>
                                         <input type="checkbox" class="form-check-input voucher-checkbox" 
@@ -156,7 +177,7 @@
                                     <td>{{ $vouchers->firstItem() + $index }}</td>
                                     <td>
                                         <a href="{{ route('payment-voucher.show', $voucher->id) }}"
-                                            class="fw-bold text-primary">
+                                            class="fw-bold {{ $voucher_color_class }}">
                                             {{ $voucher->voucher_no }}
                                         </a>
                                     </td>
