@@ -14,7 +14,9 @@
     if (Auth::user()->can('payment-voucher.view')) {
         // รอตรวจสอบ
         if (Auth::user()->can('payment-voucher.review')) {
-            $pending_pv_count += PaymentVoucher::where('status', PaymentVoucher::STATUS_PENDING)->count();
+            $pending_pv_count += PaymentVoucher::where('status', PaymentVoucher::STATUS_PENDING)
+                ->where('voucher_no', 'not like', 'MT%')
+                ->count();
         }
         // รออนุมัติ
         if (Auth::user()->can('payment-voucher.approve')) {
@@ -453,7 +455,7 @@
                                             <a href="{{ route('payment-voucher.approved') }}">
                                                 <i class="metismenu-icon"></i>
                                                 รอตรวจสอบ
-                                                @php $c = PaymentVoucher::where('status', PaymentVoucher::STATUS_PENDING)->count(); @endphp
+                                                @php $c = PaymentVoucher::where('status', PaymentVoucher::STATUS_PENDING)->where('voucher_no', 'not like', 'MT%')->count(); @endphp
                                                 @if($c > 0) <span class="premium-badge">{{ $c }}</span> @endif
                                             </a>
                                         </li>
