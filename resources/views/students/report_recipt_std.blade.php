@@ -427,6 +427,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-4">
+                            <div class="row">
+                                <label for="promotion_id" class="col-lg-3">Promotion : </label>
+                                <div class="col-lg-8">
+                                    <select name="promotion_id" id="promotion_id" class="form-select">
+                                        <option value="">ทั้งหมด</option>
+                                        @foreach ($promotions as $promotion)
+                                            <option value="{{ $promotion->id }}"
+                                                {{ isset($promotion_id) && (int) $promotion_id === (int) $promotion->id ? 'selected' : '' }}>
+                                                {{ $promotion->name }}{{ (int) $promotion->is_active === 1 ? '' : ' (Inactive)' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-lg-2">
                             <button class="btn btn-primary" type="submit">ค้นหา</button>
                         </div>
@@ -475,6 +491,7 @@
 
                                         <th>Period</th>
                                         <th>Reciept Number</th>
+                                        <th>Promotion</th>
 
                                         <th>Group</th>
                                         <th>Stutus</th>
@@ -526,6 +543,7 @@
                                                 <td>{{ $data->period }}</td>
 
                                                 <td>{{ $data->rec_school->receipt_number }}</td>
+                                                <td>{{ $data->rec_school->promotion->name ?? '-' }}</td>
 
                                                 <td>{{ $data->group }}</td>
 
@@ -574,7 +592,7 @@
                                         <td class="text-center" hidden></td> <!-- Merged cell -->
                                         <td class="text-center" hidden></td> <!-- Merged cell -->
                                         <td class="text-center" hidden></td> <!-- Merged cell -->
-                                        <td class="text-center" colspan="8">Sum Total</td> <!-- Merged cell -->
+                                        <td class="text-center" colspan="9">Sum Total</td> <!-- Merged cell -->
                                         <td class="text-end">{{ number_format($sum) }} บาท</td>
                                         <td></td>
                                     </tr>
@@ -587,6 +605,12 @@
                         <div id="section-timeline">
 
                             <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนปี {{ $year }}</h3>
+                            @if (!empty($promotion_id))
+                                <p class="text-muted mb-3">
+                                    Promotion:
+                                    {{ $promotions->firstWhere('id', (int) $promotion_id)->name ?? '-' }}
+                                </p>
+                            @endif
 
                             <!-- Legend -->
                             <div class="timeline-legend">
@@ -711,6 +735,7 @@
                                                         'group' => $groupMark,
                                                         'groupFull' => $group,
                                                         'period' => $data1->period,
+                                                        'promotionName' => $data1->rec_school->promotion->name ?? '-',
                                                     ];
                                                 }
                                             }
@@ -759,7 +784,7 @@
                                                             @endphp
                                                             <div class="timeline-bar {{ $groupClass }}"
                                                                 style="left: {{ $left }}%; width: {{ $width }}%;"
-                                                                title="{{ $bar['groupFull'] }}: {{ $bar['period'] }}">
+                                                                title="{{ $bar['groupFull'] }}: {{ $bar['period'] }} | Promotion: {{ $bar['promotionName'] }}">
                                                                 {{ $bar['group'] }}
                                                             </div>
                                                         @endforeach

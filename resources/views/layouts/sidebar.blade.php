@@ -224,6 +224,12 @@
                                     รายชื่อนักเรียนในรายวิชา
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('promotions') }}">
+                                    <i class="metismenu-icon"></i>
+                                    Promotion
+                                </a>
+                            </li>
 
 
                         </ul>
