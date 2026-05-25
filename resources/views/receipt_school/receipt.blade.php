@@ -449,6 +449,7 @@
                                 <th width="10px"><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>Type</th>
                                 <th>Promotion</th>
+                                <th>Promotion Name</th>
                                 <th>Submission Date</th>
                                 <th>Voucher Number</th>
                                 <th>Parent Name</th>
@@ -752,6 +753,18 @@
                                                     <input type="checkbox" class="form-check-input" id="AddIsVat" name="is_vat" value="1" checked>
                                                     <label class="form-check-label" for="AddIsVat">คิดภาษี (Default)</label>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="AddPromotion">Promotion:</label>
+                                                <select style="width: 100%;" class="form-control" id="AddPromotion"
+                                                    name="promotion_id">
+                                                    <option value="">-- Select Promotion (optional) --</option>
+                                                    @foreach ($promotions as $promotion)
+                                                        <option value="{{ $promotion->id }}">{{ $promotion->name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -1440,6 +1453,15 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label for="EditPromotion">Promotion:</label>
+                                                <select style="width: 100%;" class="form-control" id="EditPromotion"
+                                                    name="promotion_id">
+                                                    <option value="">-- Select Promotion (optional) --</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="form-row">
@@ -2115,6 +2137,10 @@
                         name: 'type2'
                     },
                     {
+                        data: 'promotion_name',
+                        name: 'promotion_name'
+                    },
+                    {
                         data: 'submission_date',
                         name: 'submission_date'
                     },
@@ -2316,6 +2342,7 @@
                         $('#customer_code').val(res.data2.code);
                         $('#EditSubmissiondate').val(res.data.submission_date);
                         $('#EditPayment').html(res.payment)
+                        $('#EditPromotion').html(res.promotion_options);
                         $('#EditSource').val(res.data.source);
                         $('#EditRemark').val(res.data.remark);
                         //$('#EditPackage').val(res.data.package);
@@ -3010,6 +3037,7 @@
                         mobile: $('#AddMobile').val(),
                         source: $('#AddSource').val(),
                         remark: $('#AddRemark').val(),
+                        promotion_id: $('#AddPromotion').val(),
                         is_vat: $('#AddIsVat').is(':checked') ? 1 : 0,
                         receipt: arr,
                         // subject:$('#subject_id').val(),
@@ -3204,6 +3232,7 @@
                         mobile: $('#EditMobile').val(),
                         source: $('#EditSource').val(),
                         remark: $('#EditRemark').val(),
+                        promotion_id: $('#EditPromotion').val(),
                         is_vat: $('#EditIsVat').is(':checked') ? 1 : 0,
                         // package: $('#EditPackage').val(),
                         // file_att: $('#EditFile').val(),

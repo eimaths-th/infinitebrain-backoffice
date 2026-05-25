@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\CheckRecieptSchool;
 use App\Models\FutureStd;
 use App\Models\PaperReport;
+use App\Models\Promotion;
 use App\Models\Receipt_School;
 use App\Models\SchoolPrice;
 use App\Models\Statuslog;
@@ -352,11 +353,11 @@ class StdlogController extends Controller
     }
 
 
-    private function getMatchingSchoolPrices2($month, $year)
+    private function getMatchingSchoolPrices2($month, $year, $promotion_id = null)
     {
         $matchingSchoolPrices = [];
         $schoolPrice_id = [];
-        $test_scp = SchoolPrice::all();
+        $test_scp = SchoolPrice::with('rec_school')->get();
 
 
         foreach ($test_scp as $schoolPrice) {
@@ -371,7 +372,11 @@ class StdlogController extends Controller
                     // dd($year,$currentMonth,$submissionDate);
                 }
                 // if ($submissionDate == $currentMonth) {
-                if ($submissionDate == $currentMonth && $schoolPrice->course_type == 1) {
+                if (
+                    $submissionDate == $currentMonth &&
+                    $schoolPrice->course_type == 1 &&
+                    (empty($promotion_id) || (int) $schoolPrice->rec_school->promotion_id === (int) $promotion_id)
+                ) {
                     $matchingSchoolPrices[] = [
                         'id' => $schoolPrice->id,
                         'course_type' => $schoolPrice->course_type,
@@ -387,6 +392,7 @@ class StdlogController extends Controller
             # code...
             $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
                 ->whereHas('std')
+                ->with(['std', 'rec_school.promotion'])
                 ->orderBy('rid', 'desc')
                 ->get()
                 ->groupBy('student_id', 'group');
@@ -394,6 +400,7 @@ class StdlogController extends Controller
             # code...
             $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
                 ->whereHas('std')
+                ->with(['std', 'rec_school.promotion'])
                 ->orderBy('student_id')
                 ->orderBy('rid', 'asc')
                 ->get()
@@ -509,9 +516,11 @@ class StdlogController extends Controller
         $months = date('F');
         $year = date('Y');
 
-        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
+        $promotion_id = null;
+        $promotions = Promotion::orderBy('name', 'asc')->get();
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year, $promotion_id);
         // ใช้ getMatchingSchoolPrices3 เพื่อรองรับข้อมูลข้ามปี
-        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($year, $year);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($year, $year, $promotion_id);
 
         $totalForAllMonths = $this->queryGrafgh1($stdlog);
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
@@ -532,6 +541,8 @@ class StdlogController extends Controller
             'paper' => $paper,
             'year' => $year,
             'month' => $months,
+            'promotions' => $promotions,
+            'promotion_id' => $promotion_id,
         ]);
     }
 
@@ -579,6 +590,7 @@ class StdlogController extends Controller
         $request->validate([
             // 'month' => 'required',
             'year' => 'required',
+            'promotion_id' => 'nullable|exists:promotions,id',
         ], [
             // 'month.required' => 'Pls. Select year !!',
             'year.required' => 'Pls. Select year !!'
@@ -590,9 +602,11 @@ class StdlogController extends Controller
         $months = date('F');
         $year = date('Y');
         $periodYear = $request->year;
+        $promotion_id = $request->get('promotion_id');
+        $promotions = Promotion::orderBy('name', 'asc')->get();
 
-        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
-        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($periodYear, $periodYear);
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year, $promotion_id);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($periodYear, $periodYear, $promotion_id);
 
         $totalForAllMonths = $this->queryGrafgh1($stdlog);
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
@@ -613,14 +627,16 @@ class StdlogController extends Controller
             'paper' => $paper,
             'year' => $periodYear,
             'month' => $months,
+            'promotions' => $promotions,
+            'promotion_id' => $promotion_id,
         ]);
     }
 
-    private function getMatchingSchoolPrices3($periodYear, $year)
+    private function getMatchingSchoolPrices3($periodYear, $year, $promotion_id = null)
     {
         $matchingSchoolPrices = [];
         $schoolPrice_id = [];
-        $test_scp = SchoolPrice::all();
+        $test_scp = SchoolPrice::with('rec_school')->get();
 
         // แปลงเป็น integer
         $periodYearInt = (int) $periodYear;
@@ -661,7 +677,11 @@ class StdlogController extends Controller
                     }
                 }
 
-                if ($periodContainsYear && $schoolPrice->course_type == 1) {
+                if (
+                    $periodContainsYear &&
+                    $schoolPrice->course_type == 1 &&
+                    (empty($promotion_id) || (int) $schoolPrice->rec_school->promotion_id === (int) $promotion_id)
+                ) {
                     $matchingSchoolPrices[] = [
                         'id' => $schoolPrice->id,
                         'course_type' => $schoolPrice->course_type,
@@ -678,7 +698,7 @@ class StdlogController extends Controller
 
         $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
             ->whereHas('std')
-            ->with('std')
+            ->with(['std', 'rec_school.promotion'])
             ->orderBy('student_id')
             ->orderBy('rid', 'asc')
             ->get()
