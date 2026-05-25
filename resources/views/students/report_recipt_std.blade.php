@@ -241,6 +241,53 @@
         .print-hidden {
             display: none !important;
         }
+
+        .promotion-summary-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .promotion-summary-metric {
+            min-width: 130px;
+            padding: 10px 12px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            background: #fbfcfd;
+        }
+
+        .promotion-summary-metric strong {
+            display: block;
+            font-size: 18px;
+            line-height: 1.1;
+        }
+
+        .promotion-summary-metric span {
+            display: block;
+            margin-top: 2px;
+            color: #6c757d;
+            font-size: 12px;
+        }
+
+        .promotion-summary-table th {
+            white-space: nowrap;
+        }
+
+        .promotion-summary-table td {
+            vertical-align: middle;
+        }
+
+        .promotion-name-cell {
+            min-width: 210px;
+            font-weight: 600;
+            background: #f8f9fa;
+        }
+
+        .promotion-count-cell {
+            width: 90px;
+            text-align: center;
+        }
     </style>
 @endsection
 
@@ -443,12 +490,110 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-3">
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" value="1" id="promotion_only"
+                                    name="promotion_only"
+                                    {{ !empty($promotion_only) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="promotion_only">
+                                    เฉพาะรายการที่มี Promotion
+                                </label>
+                            </div>
+                        </div>
                         <div class="col-lg-2">
                             <button class="btn btn-primary" type="submit">ค้นหา</button>
                         </div>
 
                     </div>
                 </form>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="card-header-title">
+                            <i class="header-icon pe-7s-ticket icon-gradient bg-tempting-azure"></i>
+                            นักเรียนใน Promotion
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (empty($promotion_summary))
+                            <div class="text-muted">ยังไม่มีรายการนักเรียนที่ผูกกับ Promotion ในเงื่อนไขนี้</div>
+                        @else
+                            @php
+                                $promotion_total = count($promotion_summary);
+                                $student_total = 0;
+                                $receipt_total = 0;
+
+                                foreach ($promotion_summary as $promotion_data) {
+                                    $student_total += count($promotion_data['students']);
+                                    $receipt_total += count($promotion_data['receipt_ids']);
+                                }
+                            @endphp
+
+                            <div class="promotion-summary-metrics">
+                                <div class="promotion-summary-metric">
+                                    <strong>{{ $promotion_total }}</strong>
+                                    <span>Promotions</span>
+                                </div>
+                                <div class="promotion-summary-metric">
+                                    <strong>{{ $student_total }}</strong>
+                                    <span>Students</span>
+                                </div>
+                                <div class="promotion-summary-metric">
+                                    <strong>{{ $receipt_total }}</strong>
+                                    <span>Receipts</span>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered table-hover promotion-summary-table mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Promotion</th>
+                                            <th>Status</th>
+                                            <th class="text-center">Students</th>
+                                            <th class="text-center">Receipts</th>
+                                            <th width="90px">Code</th>
+                                            <th>Nickname</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($promotion_summary as $promotion_data)
+                                            @php
+                                                $students = collect($promotion_data['students'])->sortBy('code');
+                                                $student_count = $students->count();
+                                                $receipt_count = count($promotion_data['receipt_ids']);
+                                            @endphp
+
+                                            @foreach ($students as $student_data)
+                                                <tr>
+                                                    @if ($loop->first)
+                                                        <td rowspan="{{ $student_count }}" class="promotion-name-cell">
+                                                            {{ $promotion_data['name'] }}
+                                                        </td>
+                                                        <td rowspan="{{ $student_count }}">
+                                                            <span
+                                                                class="badge {{ (int) $promotion_data['is_active'] === 1 ? 'bg-success' : 'bg-secondary' }}">
+                                                                {{ (int) $promotion_data['is_active'] === 1 ? 'Active' : 'Inactive' }}
+                                                            </span>
+                                                        </td>
+                                                        <td rowspan="{{ $student_count }}" class="promotion-count-cell">
+                                                            {{ $student_count }}
+                                                        </td>
+                                                        <td rowspan="{{ $student_count }}" class="promotion-count-cell">
+                                                            {{ $receipt_count }}
+                                                        </td>
+                                                    @endif
+                                                    <td>{{ $student_data['code'] }}</td>
+                                                    <td>{{ $student_data['nick_name'] }}</td>
+                                                </tr>
+                                            @endforeach
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+                    </div>
+                </div>
 
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
