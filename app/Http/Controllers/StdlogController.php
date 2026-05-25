@@ -353,7 +353,58 @@ class StdlogController extends Controller
     }
 
 
-    private function getMatchingSchoolPrices2($month, $year, $promotion_id = null)
+    private function MatchesPromotionFilter($school_price, $promotion_id = null, $promotion_only = false)
+    {
+        $receipt_promotion_id = $school_price->rec_school->promotion_id ?? null;
+
+        if (!empty($promotion_id)) {
+            return (int) $receipt_promotion_id === (int) $promotion_id;
+        }
+
+        if ($promotion_only) {
+            return !empty($receipt_promotion_id);
+        }
+
+        return true;
+    }
+
+    private function BuildPromotionStudentSummary($report_year_school_price)
+    {
+        $promotion_summary = [];
+
+        foreach ($report_year_school_price as $student_id => $grouped_data) {
+            foreach ($grouped_data as $school_price) {
+                $promotion = $school_price->rec_school->promotion ?? null;
+
+                if (!$promotion) {
+                    continue;
+                }
+
+                if (!isset($promotion_summary[$promotion->id])) {
+                    $promotion_summary[$promotion->id] = [
+                        'name' => $promotion->name,
+                        'is_active' => $promotion->is_active,
+                        'students' => [],
+                        'receipt_ids' => [],
+                    ];
+                }
+
+                $promotion_summary[$promotion->id]['students'][$student_id] = [
+                    'code' => $school_price->std->code ?? '-',
+                    'nick_name' => $school_price->std->nick_name ?? '-',
+                ];
+                $promotion_summary[$promotion->id]['receipt_ids'][$school_price->rid] = $school_price->rid;
+            }
+        }
+
+        uasort($promotion_summary, function ($first_promotion, $second_promotion) {
+            return strcmp($first_promotion['name'], $second_promotion['name']);
+        });
+
+        return $promotion_summary;
+    }
+
+    private function getMatchingSchoolPrices2($month, $year, $promotion_id = null, $promotion_only = false)
     {
         $matchingSchoolPrices = [];
         $schoolPrice_id = [];
@@ -375,7 +426,7 @@ class StdlogController extends Controller
                 if (
                     $submissionDate == $currentMonth &&
                     $schoolPrice->course_type == 1 &&
-                    (empty($promotion_id) || (int) $schoolPrice->rec_school->promotion_id === (int) $promotion_id)
+                    $this->MatchesPromotionFilter($schoolPrice, $promotion_id, $promotion_only)
                 ) {
                     $matchingSchoolPrices[] = [
                         'id' => $schoolPrice->id,
@@ -517,10 +568,12 @@ class StdlogController extends Controller
         $year = date('Y');
 
         $promotion_id = null;
+        $promotion_only = false;
         $promotions = Promotion::orderBy('name', 'asc')->get();
-        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year, $promotion_id);
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year, $promotion_id, $promotion_only);
         // ใช้ getMatchingSchoolPrices3 เพื่อรองรับข้อมูลข้ามปี
-        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($year, $year, $promotion_id);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($year, $year, $promotion_id, $promotion_only);
+        $promotion_summary = $this->BuildPromotionStudentSummary($reportYear_schoolPrice);
 
         $totalForAllMonths = $this->queryGrafgh1($stdlog);
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
@@ -543,6 +596,8 @@ class StdlogController extends Controller
             'month' => $months,
             'promotions' => $promotions,
             'promotion_id' => $promotion_id,
+            'promotion_only' => $promotion_only,
+            'promotion_summary' => $promotion_summary,
         ]);
     }
 
@@ -591,6 +646,7 @@ class StdlogController extends Controller
             // 'month' => 'required',
             'year' => 'required',
             'promotion_id' => 'nullable|exists:promotions,id',
+            'promotion_only' => 'nullable|in:1',
         ], [
             // 'month.required' => 'Pls. Select year !!',
             'year.required' => 'Pls. Select year !!'
@@ -603,10 +659,12 @@ class StdlogController extends Controller
         $year = date('Y');
         $periodYear = $request->year;
         $promotion_id = $request->get('promotion_id');
+        $promotion_only = $request->get('promotion_only') === '1';
         $promotions = Promotion::orderBy('name', 'asc')->get();
 
-        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year, $promotion_id);
-        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($periodYear, $periodYear, $promotion_id);
+        $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year, $promotion_id, $promotion_only);
+        $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($periodYear, $periodYear, $promotion_id, $promotion_only);
+        $promotion_summary = $this->BuildPromotionStudentSummary($reportYear_schoolPrice);
 
         $totalForAllMonths = $this->queryGrafgh1($stdlog);
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
@@ -629,10 +687,12 @@ class StdlogController extends Controller
             'month' => $months,
             'promotions' => $promotions,
             'promotion_id' => $promotion_id,
+            'promotion_only' => $promotion_only,
+            'promotion_summary' => $promotion_summary,
         ]);
     }
 
-    private function getMatchingSchoolPrices3($periodYear, $year, $promotion_id = null)
+    private function getMatchingSchoolPrices3($periodYear, $year, $promotion_id = null, $promotion_only = false)
     {
         $matchingSchoolPrices = [];
         $schoolPrice_id = [];
@@ -680,7 +740,7 @@ class StdlogController extends Controller
                 if (
                     $periodContainsYear &&
                     $schoolPrice->course_type == 1 &&
-                    (empty($promotion_id) || (int) $schoolPrice->rec_school->promotion_id === (int) $promotion_id)
+                    $this->MatchesPromotionFilter($schoolPrice, $promotion_id, $promotion_only)
                 ) {
                     $matchingSchoolPrices[] = [
                         'id' => $schoolPrice->id,
