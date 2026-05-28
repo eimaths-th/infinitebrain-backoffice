@@ -2235,9 +2235,6 @@
                 $('.alert-success').html('');
                 $('.alert-success').hide();
                 $('#CreateModal').modal('show');
-
-                //resize size bar
-                $('.app-container').addClass('closed-sidebar-mobile closed-sidebar');
             });
 
             $(document).on('click', '#SubmitPrintDayForm', function(e) {
