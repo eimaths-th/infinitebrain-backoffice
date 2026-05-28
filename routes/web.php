@@ -93,7 +93,7 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
     Route::get('/testing-form-manage', [FormManageController::class, 'testing_form_manage'])->name('testing-form-manage');
 });
 
-Route::group(['middleware' => ['auth', 'checkUserId']], function () {
+Route::group(['middleware' => ['auth', 'permission:manager.view']], function () {
     Route::resource('studentBonus', BonusStudentController::class);
     Route::get('/studentBonus/schpid/{id}', [BonusStudentController::class, 'schpid'])->name('bonusRec');
 

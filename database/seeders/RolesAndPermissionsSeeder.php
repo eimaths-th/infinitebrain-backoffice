@@ -44,6 +44,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'teacher-revenue' => ['view'],
         ];
 
+        $restrictedPermissions = [
+            'manager.view',
+        ];
+
         // Create permissions
         $allPermissions = [];
         foreach ($modules as $module => $actions) {
@@ -52,6 +56,11 @@ class RolesAndPermissionsSeeder extends Seeder
                 $allPermissions[] = $permissionName;
                 Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => 'web']);
             }
+        }
+
+        foreach ($restrictedPermissions as $permissionName) {
+            $allPermissions[] = $permissionName;
+            Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => 'web']);
         }
 
         $this->command->info('Created ' . count($allPermissions) . ' permissions');
@@ -64,7 +73,9 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // 2. Admin - has most permissions except role/permission management
         $adminPermissions = array_filter($allPermissions, function ($p) {
-            return !str_starts_with($p, 'roles.') && !str_starts_with($p, 'permissions.');
+            return !str_starts_with($p, 'roles.')
+                && !str_starts_with($p, 'permissions.')
+                && !str_starts_with($p, 'manager.');
         });
         $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
         $admin->givePermissionTo($adminPermissions);

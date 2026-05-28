@@ -758,12 +758,7 @@
                             </ul>
                         </li>
                     @endcan
-                    @php
-                        $user_id = Auth::user()->id;
-
-                        $godEye = Godeye::where('user_id', $user_id)->get();
-                    @endphp
-                    @if (Auth::user()->hasRole('super-admin') || $godEye->count() > 0)
+                    @if (Auth::user()->hasRole('super-admin') || Auth::user()->can('manager.view'))
                         <li>
                             <a href="#">
                                 <i class="metismenu-icon pe-7s-users"></i>
@@ -774,11 +769,6 @@
                             <ul>
 
                                 <!-- แก้ เช็คชื่อ พี่หนึ่ง && me -->
-                                @php
-                                    $user_id = Auth::user()->id;
-
-                                    $godEye = Godeye::where('user_id', $user_id)->get();
-                                @endphp
                                 <li>
                                     <a href="{{ route('students.expire') }}">
                                         <i class="metismenu-icon"></i>
@@ -816,14 +806,12 @@
                                         Bonus Student
                                     </a>
                                 </li>
-                                {{-- @if (Auth::user()->id == 16) --}}
                                 <li>
                                     <a href="{{ route('reportRecieptStd') }}">
                                         <i class="metismenu-icon"></i>
                                         Report Student Recieept
                                     </a>
                                 </li>
-                                {{-- @endif --}}
                             </ul>
                         </li>
                     @endif
