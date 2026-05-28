@@ -1633,7 +1633,7 @@ class ReceiptSchoolController extends Controller
                 'submission_date' => 'required|string',
                 'payment_type' => 'required|string',
                 'promotion_id' => [
-                    'nullable',
+                    'required',
                     Rule::exists('promotions', 'id')->where(function ($query) {
                         return $query->where('is_active', 1);
                     }),
@@ -1671,6 +1671,8 @@ class ReceiptSchoolController extends Controller
                 'student.required' => 'กรุณาเลือกชื่อนักเรียน',
                 'img.required' => 'กรุณาแนบรูปภาพหลักฐานการชำระเงิน',
                 'receipt.required' => 'กรุณาระบุรายการในใบเสร็จ',
+                'promotion_id.required' => 'กรุณาเลือก Promotion',
+                'promotion_id.exists' => 'Promotion ที่เลือกไม่ได้เปิดใช้งานหรือไม่มีอยู่ในระบบ',
                 'receipt.*.subject.required' => 'The Subject field is required.  !',
                 'receipt.*.level.required' => 'The Start Level field is required.  !',
                 'receipt.*.week.required' => 'The Week field is required.  !',

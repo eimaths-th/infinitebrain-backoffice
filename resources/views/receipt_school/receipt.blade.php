@@ -759,8 +759,8 @@
                                             <div class="position-relative form-group">
                                                 <label for="AddPromotion">Promotion:</label>
                                                 <select style="width: 100%;" class="form-control" id="AddPromotion"
-                                                    name="promotion_id">
-                                                    <option value="">-- Select Promotion (optional) --</option>
+                                                    name="promotion_id" required>
+                                                    <option value="">-- Select Promotion --</option>
                                                     @foreach ($promotions as $promotion)
                                                         <option value="{{ $promotion->id }}">{{ $promotion->name }}</option>
                                                     @endforeach
@@ -3011,6 +3011,12 @@
                     .map(function() {
                         return $(this).val();
                     }).get();
+                if (!$('#AddPromotion').val()) {
+                    $('.alert-danger').show();
+                    $('.alert-danger').append('<strong><li>กรุณาเลือก Promotion</li></strong>');
+                    $('#AddPromotion').focus();
+                    return;
+                }
                 // console.log(values);
                 $.ajax({
                     url: "receipt_school/store",
