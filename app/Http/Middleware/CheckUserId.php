@@ -8,11 +8,20 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckUserId
 {
+    private const MANAGER_PERMISSION = 'manager.view';
+
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->id == 4 || Auth::user()->id == 16) {
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if ($user->hasRole('super-admin') || $user->can(self::MANAGER_PERMISSION)) {
             return $next($request);
         }
-        return redirect('/home');
+
+        abort(403, 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้');
     }
 }
