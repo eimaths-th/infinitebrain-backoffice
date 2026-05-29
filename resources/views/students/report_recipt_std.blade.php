@@ -798,6 +798,7 @@
                             @php
                                 // สร้างข้อมูลสรุปจำนวนนักเรียนแต่ละวิชาในแต่ละเดือน
                                 $subjectMonthly = [];
+                                $subject_yearly_unique = [];
                                 $allGroups = [];
                                 $yearInt = (int) $year;
 
@@ -823,6 +824,9 @@
                                         $group = $data1->group;
                                         if (!in_array($group, $allGroups)) {
                                             $allGroups[] = $group;
+                                        }
+                                        if ($data1->std && !isset($subject_yearly_unique[$group][$studentId])) {
+                                            $subject_yearly_unique[$group][$studentId] = true;
                                         }
 
                                         // นับนักเรียนในแต่ละเดือนของปีที่เลือก (รองรับข้ามปี)
@@ -871,12 +875,14 @@
                                                     <th class="text-center">
                                                         {{ str_pad($m, 2, '0', STR_PAD_LEFT) }}/{{ $year }}</th>
                                                 @endfor
-                                                <th class="text-center bg-warning text-dark">รวม</th>
+                                                <th class="text-center bg-warning text-dark">รวมรายเดือนสะสม</th>
+                                                <th class="text-center bg-success text-white">นักเรียนไม่ซ้ำทั้งปี</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @php
                                                 $monthTotals = array_fill(1, 12, 0);
+                                                $yearly_unique_total = 0;
                                             @endphp
                                             @foreach ($allGroups as $group)
                                                 @php
@@ -904,6 +910,10 @@
                                                         ? 'group-' . $groupMark
                                                         : 'group-default';
                                                     $rowTotal = 0;
+                                                    $yearly_unique_count = isset($subject_yearly_unique[$group])
+                                                        ? count($subject_yearly_unique[$group])
+                                                        : 0;
+                                                    $yearly_unique_total += $yearly_unique_count;
                                                 @endphp
                                                 <tr>
                                                     <td>
@@ -924,6 +934,9 @@
                                                         </td>
                                                     @endfor
                                                     <td class="text-center bg-light fw-bold">{{ $rowTotal }}</td>
+                                                    <td class="text-center bg-success text-white fw-bold">
+                                                        {{ $yearly_unique_count }}
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -937,14 +950,18 @@
                                                 @endfor
                                                 <th class="text-center bg-warning text-dark">{{ array_sum($monthTotals) }}
                                                 </th>
+                                                <th class="text-center bg-success text-white">{{ $yearly_unique_total }}
+                                                </th>
                                             </tr>
                                         </tfoot>
                                     </table>
                                 </div>
                                 <div class="alert alert-info mt-3">
                                     <i class="fa fa-info-circle"></i> <strong>หมายเหตุ:</strong>
-                                    ตัวเลขแสดงจำนวนนักเรียนที่มี
-                                    period ครอบคลุมเดือนนั้นๆ ในปี {{ $year }}
+                                    ตัวเลขรายเดือนแสดงจำนวนนักเรียนที่มี
+                                    period ครอบคลุมเดือนนั้นๆ ในปี {{ $year }} ส่วน "รวมรายเดือนสะสม"
+                                    คือผลรวมของแต่ละเดือน และ "นักเรียนไม่ซ้ำทั้งปี" คือจำนวนนักเรียนไม่ซ้ำต่อวิชา
+                                    ซึ่งตรงกับการ์ดข้อมูลประชากรรายปี
                                 </div>
 
                                 {{-- ===== DEMOGRAPHICS SECTION ===== --}}
@@ -1353,6 +1370,13 @@
                                                     $promotionStudentCount = collect($students)->filter(function ($student) {
                                                         return count($student['promotions'] ?? []) > 0;
                                                     })->count();
+                                                    $promotion_name_counts = collect($students)
+                                                        ->flatMap(function ($student) {
+                                                            return array_unique(array_values($student['promotions'] ?? []));
+                                                        })
+                                                        ->filter()
+                                                        ->countBy()
+                                                        ->sortKeys();
                                                     $promotion_filter_options = collect($students)
                                                         ->flatMap(function ($student) {
                                                             return array_values($student['promotions'] ?? []);
@@ -1500,6 +1524,17 @@
                                                                         ไม่มี Promotion
                                                                         {{ $total - $promotionStudentCount }} คน
                                                                     </div>
+                                                                    @if ($promotion_name_counts->isNotEmpty())
+                                                                        <div class="d-flex flex-wrap gap-1 mb-2">
+                                                                            @foreach ($promotion_name_counts as $promotion_name => $promotion_count)
+                                                                                <span class="demo-pill"
+                                                                                    style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
+                                                                                    {{ $promotion_name }}
+                                                                                    <strong>{{ $promotion_count }}</strong>
+                                                                                </span>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    @endif
                                                                     <div class="row g-2 mb-2">
                                                                         <div class="col-md-6">
                                                                             <select class="form-select demo-filter-select"
@@ -1646,6 +1681,13 @@
                                                         $promotionStudentCount = collect($students)->filter(function ($student) {
                                                             return count($student['promotions'] ?? []) > 0;
                                                         })->count();
+                                                        $promotion_name_counts = collect($students)
+                                                            ->flatMap(function ($student) {
+                                                                return array_unique(array_values($student['promotions'] ?? []));
+                                                            })
+                                                            ->filter()
+                                                            ->countBy()
+                                                            ->sortKeys();
                                                         $promotion_filter_options = collect($students)
                                                             ->flatMap(function ($student) {
                                                                 return array_values($student['promotions'] ?? []);
@@ -1793,6 +1835,17 @@
                                                                             ไม่มี Promotion
                                                                             {{ $total - $promotionStudentCount }} คน
                                                                         </div>
+                                                                        @if ($promotion_name_counts->isNotEmpty())
+                                                                            <div class="d-flex flex-wrap gap-1 mb-2">
+                                                                                @foreach ($promotion_name_counts as $promotion_name => $promotion_count)
+                                                                                    <span class="demo-pill"
+                                                                                        style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
+                                                                                        {{ $promotion_name }}
+                                                                                        <strong>{{ $promotion_count }}</strong>
+                                                                                    </span>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        @endif
                                                                         <div class="row g-2 mb-2">
                                                                             <div class="col-md-6">
                                                                                 <select class="form-select demo-filter-select"
