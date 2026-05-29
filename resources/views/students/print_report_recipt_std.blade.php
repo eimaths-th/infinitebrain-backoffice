@@ -679,12 +679,16 @@
 
             @php
                 $summaryData = [];
+                $subject_yearly_unique = [];
                 $allGroups = [];
                 foreach ($reportYear_schoolPrice as $studentId => $groupedData) {
                     foreach ($groupedData as $data1) {
                         $group = $data1->group;
                         if (!in_array($group, $allGroups)) {
                             $allGroups[] = $group;
+                        }
+                        if ($data1->std && !isset($subject_yearly_unique[$group][$studentId])) {
+                            $subject_yearly_unique[$group][$studentId] = true;
                         }
 
                         $period = $data1->period;
@@ -724,13 +728,23 @@
                         @for ($m = 1; $m <= 12; $m++)
                             <th>{{ str_pad($m, 2, '0', STR_PAD_LEFT) }}/{{ $year }}</th>
                         @endfor
-                        <th style="background: #FF9800;">รวม</th>
+                        <th style="background: #FF9800;">รวมรายเดือนสะสม</th>
+                        <th style="background: #4CAF50;">นักเรียนไม่ซ้ำทั้งปี</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php $monthTotals = array_fill(1, 12, 0); @endphp
+                    @php
+                        $monthTotals = array_fill(1, 12, 0);
+                        $yearly_unique_total = 0;
+                    @endphp
                     @foreach ($allGroups as $group)
-                        @php $rowTotal = 0; @endphp
+                        @php
+                            $rowTotal = 0;
+                            $yearly_unique_count = isset($subject_yearly_unique[$group])
+                                ? count($subject_yearly_unique[$group])
+                                : 0;
+                            $yearly_unique_total += $yearly_unique_count;
+                        @endphp
                         <tr>
                             <td class="text-center" style="font-weight:700; text-align:center;">{{ $group }}
                             </td>
@@ -747,6 +761,8 @@
                             @endfor
                             <td style="text-align:center; font-weight:700; background:#fff8e1;">{{ $rowTotal }}
                             </td>
+                            <td style="text-align:center; font-weight:700; background:#e8f5e9;">
+                                {{ $yearly_unique_count }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -759,9 +775,15 @@
                         @endfor
                         <td style="text-align:center; font-weight:700; background:#FF9800; color:#fff;">
                             {{ array_sum($monthTotals) }}</td>
+                        <td style="text-align:center; font-weight:700; background:#4CAF50; color:#fff;">
+                            {{ $yearly_unique_total }}</td>
                     </tr>
                 </tfoot>
             </table>
+            <div style="margin-top: 10px; font-size: 10px; color: #555;">
+                หมายเหตุ: รวมรายเดือนสะสมคือผลรวมของแต่ละเดือน ส่วนนักเรียนไม่ซ้ำทั้งปีนับไม่ซ้ำต่อวิชา
+                และใช้เทียบกับการ์ดข้อมูลประชากรรายปี
+            </div>
         </div>
     @endif
 
