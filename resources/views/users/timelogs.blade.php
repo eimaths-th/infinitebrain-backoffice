@@ -231,7 +231,7 @@
                                     </td>
                                     <td> {{ $rec_time->new_explain }}</td>
 
-                                    <td> {{ $rec_time->approv->name }} </td>
+                                    <td> {{ $rec_time->approv->name ?? '-' }} </td>
                                     <td> {{ $rec_time->updated_at }} </td>
 
                                 </tr>

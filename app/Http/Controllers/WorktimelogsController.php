@@ -15,7 +15,9 @@ class WorktimelogsController extends Controller
     public function index()
     {
         //
-        $timelogs = WorktimeLogs::orderBy('id','desc')->get();
+        $timelogs = WorktimeLogs::with(['user', 'approv'])
+            ->orderBy('id', 'desc')
+            ->get();
         return view('users.timelogs',[
             'timelogs' => $timelogs
         ]);
