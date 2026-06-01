@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property integer $id
@@ -90,12 +91,13 @@ class WorktimeLogs extends Model
             // return 'เข้า : ' . $this->stime . ' ออก : ' . $this->etime;
         }
     }
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    public function approv()
+
+    public function approv(): BelongsTo
     {
-        return $this->hasOne(User::class, 'id', 'approv_id');
+        return $this->belongsTo(User::class, 'approv_id', 'id');
     }
 }
