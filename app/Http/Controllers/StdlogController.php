@@ -356,7 +356,7 @@ class StdlogController extends Controller
     {
         $matchingSchoolPrices = [];
         $schoolPrice_id = [];
-        $test_scp = SchoolPrice::all();
+        $test_scp = SchoolPrice::with('rec_school')->get();
 
 
         foreach ($test_scp as $schoolPrice) {
@@ -371,7 +371,10 @@ class StdlogController extends Controller
                     // dd($year,$currentMonth,$submissionDate);
                 }
                 // if ($submissionDate == $currentMonth) {
-                if ($submissionDate == $currentMonth && $schoolPrice->course_type == 1) {
+                if (
+                    $submissionDate == $currentMonth &&
+                    $schoolPrice->course_type == 1
+                ) {
                     $matchingSchoolPrices[] = [
                         'id' => $schoolPrice->id,
                         'course_type' => $schoolPrice->course_type,
@@ -387,6 +390,7 @@ class StdlogController extends Controller
             # code...
             $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
                 ->whereHas('std')
+                ->with(['std', 'rec_school.promotion'])
                 ->orderBy('rid', 'desc')
                 ->get()
                 ->groupBy('student_id', 'group');
@@ -394,6 +398,7 @@ class StdlogController extends Controller
             # code...
             $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
                 ->whereHas('std')
+                ->with(['std', 'rec_school.promotion'])
                 ->orderBy('student_id')
                 ->orderBy('rid', 'asc')
                 ->get()
@@ -590,7 +595,6 @@ class StdlogController extends Controller
         $months = date('F');
         $year = date('Y');
         $periodYear = $request->year;
-
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
         $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($periodYear, $periodYear);
 
@@ -620,7 +624,7 @@ class StdlogController extends Controller
     {
         $matchingSchoolPrices = [];
         $schoolPrice_id = [];
-        $test_scp = SchoolPrice::all();
+        $test_scp = SchoolPrice::with('rec_school')->get();
 
         // แปลงเป็น integer
         $periodYearInt = (int) $periodYear;
@@ -661,7 +665,10 @@ class StdlogController extends Controller
                     }
                 }
 
-                if ($periodContainsYear && $schoolPrice->course_type == 1) {
+                if (
+                    $periodContainsYear &&
+                    $schoolPrice->course_type == 1
+                ) {
                     $matchingSchoolPrices[] = [
                         'id' => $schoolPrice->id,
                         'course_type' => $schoolPrice->course_type,
@@ -678,7 +685,7 @@ class StdlogController extends Controller
 
         $reportMonth_schoolPrice = SchoolPrice::whereIn('id', $schoolPrice_id)
             ->whereHas('std')
-            ->with('std')
+            ->with(['std', 'rec_school.promotion'])
             ->orderBy('student_id')
             ->orderBy('rid', 'asc')
             ->get()

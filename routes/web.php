@@ -50,6 +50,7 @@ use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\FinanceDashboardController;
 use App\Http\Controllers\RecruitmentController;
 use App\Http\Controllers\ReceiptVoucherController;
+use App\Http\Controllers\PromotionController;
 // use App\Http\Controllers\RouteToggleController;
 
 Route::middleware(['auth'])->prefix('recruitment')->name('recruitment.')->group(function () {
@@ -92,7 +93,7 @@ Route::group(['middleware' => 'check.opening.date.time'], function () {
     Route::get('/testing-form-manage', [FormManageController::class, 'testing_form_manage'])->name('testing-form-manage');
 });
 
-Route::group(['middleware' => ['auth', 'checkUserId']], function () {
+Route::group(['middleware' => ['auth', 'permission:manager.view']], function () {
     Route::resource('studentBonus', BonusStudentController::class);
     Route::get('/studentBonus/schpid/{id}', [BonusStudentController::class, 'schpid'])->name('bonusRec');
 
@@ -446,6 +447,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/subjects/destroy/{id}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
     Route::get('/subjects/viewstudent/', [SubjectController::class, 'overview'])->name('subjects.overview');
     Route::get('/subjects/viewstudent/searchsubSTD', [SubjectController::class, 'searchsubSTD'])->name('searchsubSTD');
+
+    //promotion
+    Route::get('/promotions', [PromotionController::class, 'Index'])->name('promotions');
+    Route::post('/promotions/store', [PromotionController::class, 'Store'])->name('promotions.store');
+    Route::get('/promotions/edit/{id}', [PromotionController::class, 'Edit'])->name('promotions.edit');
+    Route::put('/promotions/save/{id}', [PromotionController::class, 'Update'])->name('promotions.save');
+    Route::put('/promotions/toggle-status/{id}', [PromotionController::class, 'ToggleStatus'])->name('promotions.toggle-status');
 
     //subject price
 
