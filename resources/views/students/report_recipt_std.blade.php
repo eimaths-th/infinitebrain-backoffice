@@ -241,6 +241,7 @@
         .print-hidden {
             display: none !important;
         }
+
     </style>
 @endsection
 
@@ -475,7 +476,6 @@
 
                                         <th>Period</th>
                                         <th>Reciept Number</th>
-
                                         <th>Group</th>
                                         <th>Stutus</th>
                                         <th>Tpye</th>
@@ -526,7 +526,6 @@
                                                 <td>{{ $data->period }}</td>
 
                                                 <td>{{ $data->rec_school->receipt_number }}</td>
-
                                                 <td>{{ $data->group }}</td>
 
 
@@ -574,7 +573,7 @@
                                         <td class="text-center" hidden></td> <!-- Merged cell -->
                                         <td class="text-center" hidden></td> <!-- Merged cell -->
                                         <td class="text-center" hidden></td> <!-- Merged cell -->
-                                        <td class="text-center" colspan="8">Sum Total</td> <!-- Merged cell -->
+                                        <td class="text-center" colspan="9">Sum Total</td> <!-- Merged cell -->
                                         <td class="text-end">{{ number_format($sum) }} บาท</td>
                                         <td></td>
                                     </tr>
@@ -587,7 +586,6 @@
                         <div id="section-timeline">
 
                             <h3 class="mt-10px"><i class="fa fa-cog"></i> ตารางค่าสมัครเรียนปี {{ $year }}</h3>
-
                             <!-- Legend -->
                             <div class="timeline-legend">
                                 <span class="fw-bold me-3">กลุ่มวิชา:</span>
@@ -800,6 +798,7 @@
                             @php
                                 // สร้างข้อมูลสรุปจำนวนนักเรียนแต่ละวิชาในแต่ละเดือน
                                 $subjectMonthly = [];
+                                $subject_yearly_unique = [];
                                 $allGroups = [];
                                 $yearInt = (int) $year;
 
@@ -825,6 +824,9 @@
                                         $group = $data1->group;
                                         if (!in_array($group, $allGroups)) {
                                             $allGroups[] = $group;
+                                        }
+                                        if ($data1->std && !isset($subject_yearly_unique[$group][$studentId])) {
+                                            $subject_yearly_unique[$group][$studentId] = true;
                                         }
 
                                         // นับนักเรียนในแต่ละเดือนของปีที่เลือก (รองรับข้ามปี)
@@ -873,12 +875,14 @@
                                                     <th class="text-center">
                                                         {{ str_pad($m, 2, '0', STR_PAD_LEFT) }}/{{ $year }}</th>
                                                 @endfor
-                                                <th class="text-center bg-warning text-dark">รวม</th>
+                                                <th class="text-center bg-warning text-dark">รวมรายเดือนสะสม</th>
+                                                <th class="text-center bg-success text-white">นักเรียนไม่ซ้ำทั้งปี</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @php
                                                 $monthTotals = array_fill(1, 12, 0);
+                                                $yearly_unique_total = 0;
                                             @endphp
                                             @foreach ($allGroups as $group)
                                                 @php
@@ -906,6 +910,10 @@
                                                         ? 'group-' . $groupMark
                                                         : 'group-default';
                                                     $rowTotal = 0;
+                                                    $yearly_unique_count = isset($subject_yearly_unique[$group])
+                                                        ? count($subject_yearly_unique[$group])
+                                                        : 0;
+                                                    $yearly_unique_total += $yearly_unique_count;
                                                 @endphp
                                                 <tr>
                                                     <td>
@@ -926,6 +934,9 @@
                                                         </td>
                                                     @endfor
                                                     <td class="text-center bg-light fw-bold">{{ $rowTotal }}</td>
+                                                    <td class="text-center bg-success text-white fw-bold">
+                                                        {{ $yearly_unique_count }}
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -939,14 +950,18 @@
                                                 @endfor
                                                 <th class="text-center bg-warning text-dark">{{ array_sum($monthTotals) }}
                                                 </th>
+                                                <th class="text-center bg-success text-white">{{ $yearly_unique_total }}
+                                                </th>
                                             </tr>
                                         </tfoot>
                                     </table>
                                 </div>
                                 <div class="alert alert-info mt-3">
                                     <i class="fa fa-info-circle"></i> <strong>หมายเหตุ:</strong>
-                                    ตัวเลขแสดงจำนวนนักเรียนที่มี
-                                    period ครอบคลุมเดือนนั้นๆ ในปี {{ $year }}
+                                    ตัวเลขรายเดือนแสดงจำนวนนักเรียนที่มี
+                                    period ครอบคลุมเดือนนั้นๆ ในปี {{ $year }} ส่วน "รวมรายเดือนสะสม"
+                                    คือผลรวมของแต่ละเดือน และ "นักเรียนไม่ซ้ำทั้งปี" คือจำนวนนักเรียนไม่ซ้ำต่อวิชา
+                                    ซึ่งตรงกับการ์ดข้อมูลประชากรรายปี
                                 </div>
 
                                 {{-- ===== DEMOGRAPHICS SECTION ===== --}}
@@ -968,6 +983,8 @@
                                             if (!$std) {
                                                 continue;
                                             }
+                                            $promotion_name = $data1->rec_school->promotion->name ?? null;
+                                            $source_name = $data1->rec_school->source ?? null;
 
                                             $age = null;
                                             if ($std->birth_date) {
@@ -980,10 +997,20 @@
                                             // Yearly - unique per student-group
                                             if (!isset($yearlyDemoData[$group][$studentId])) {
                                                 $yearlyDemoData[$group][$studentId] = [
+                                                    'code' => $std->code ?? '-',
+                                                    'nick_name' => $std->nick_name ?? '-',
                                                     'age' => $age,
                                                     'sex' => $std->sex ?? null,
                                                     'grade' => $std->grade ?? null,
+                                                    'promotions' => [],
+                                                    'sources' => [],
                                                 ];
+                                            }
+                                            if (!empty($promotion_name)) {
+                                                $yearlyDemoData[$group][$studentId]['promotions'][$promotion_name] = $promotion_name;
+                                            }
+                                            if (!empty($source_name)) {
+                                                $yearlyDemoData[$group][$studentId]['sources'][$source_name] = $source_name;
                                             }
 
                                             // Monthly - period based
@@ -1011,10 +1038,20 @@
                                                 if ($checkDate->between($startDate, $endDate)) {
                                                     if (!isset($monthlyDemoData[$m][$group][$studentId])) {
                                                         $monthlyDemoData[$m][$group][$studentId] = [
+                                                            'code' => $std->code ?? '-',
+                                                            'nick_name' => $std->nick_name ?? '-',
                                                             'age' => $age,
                                                             'sex' => $std->sex ?? null,
                                                             'grade' => $std->grade ?? null,
+                                                            'promotions' => [],
+                                                            'sources' => [],
                                                         ];
+                                                    }
+                                                    if (!empty($promotion_name)) {
+                                                        $monthlyDemoData[$m][$group][$studentId]['promotions'][$promotion_name] = $promotion_name;
+                                                    }
+                                                    if (!empty($source_name)) {
+                                                        $monthlyDemoData[$m][$group][$studentId]['sources'][$source_name] = $source_name;
                                                     }
                                                 }
                                             }
@@ -1145,6 +1182,13 @@
                                             padding: 10px 14px;
                                             background: #f8f9fa;
                                             border-radius: 10px;
+                                            border: 1px solid transparent;
+                                            cursor: pointer;
+                                        }
+
+                                        .demo-stat-box.active {
+                                            border-color: #3b82f6;
+                                            background: #eef6ff;
                                         }
 
                                         .demo-stat-num {
@@ -1157,6 +1201,109 @@
                                             font-size: 11px;
                                             color: #6c757d;
                                             margin-top: 2px;
+                                        }
+
+                                        .demo-promotion-filter {
+                                            display: inline-flex;
+                                            gap: 4px;
+                                            padding: 4px;
+                                            background: #f3f5f7;
+                                            border-radius: 8px;
+                                        }
+
+                                        .demo-promotion-filter button {
+                                            border: 0;
+                                            border-radius: 6px;
+                                            background: transparent;
+                                            color: #495057;
+                                            font-size: 12px;
+                                            font-weight: 700;
+                                            padding: 5px 9px;
+                                        }
+
+                                        .demo-promotion-filter button.active {
+                                            background: #fff;
+                                            color: #1f2937;
+                                            box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+                                        }
+
+                                        .demo-student-list {
+                                            max-height: 240px;
+                                            overflow-y: auto;
+                                            border: 1px solid #e9ecef;
+                                            border-radius: 8px;
+                                        }
+
+                                        .demo-student-row {
+                                            display: grid;
+                                            grid-template-columns: minmax(92px, 120px) 1fr;
+                                            gap: 10px;
+                                            padding: 9px 10px;
+                                            border-bottom: 1px solid #eef1f4;
+                                        }
+
+                                        .demo-student-row:last-child {
+                                            border-bottom: 0;
+                                        }
+
+                                        .demo-student-code {
+                                            font-weight: 800;
+                                            color: #212529;
+                                        }
+
+                                        .demo-student-name {
+                                            color: #495057;
+                                            font-size: 12px;
+                                        }
+
+                                        .demo-student-meta {
+                                            display: flex;
+                                            flex-direction: column;
+                                            gap: 4px;
+                                            min-width: 0;
+                                        }
+
+                                        .demo-meta-line {
+                                            color: #495057;
+                                            font-size: 12px;
+                                            overflow-wrap: anywhere;
+                                        }
+
+                                        .demo-meta-label {
+                                            color: #6c757d;
+                                            font-weight: 700;
+                                        }
+
+                                        .demo-empty-filter {
+                                            display: none;
+                                            padding: 14px;
+                                            color: #6c757d;
+                                            text-align: center;
+                                            border: 1px dashed #dee2e6;
+                                            border-radius: 8px;
+                                        }
+
+                                        .demo-filter-select {
+                                            font-size: 12px;
+                                            min-height: 32px;
+                                        }
+
+                                        .demo-detail-panel {
+                                            display: none;
+                                        }
+
+                                        .demo-summary-panel {
+                                            display: block;
+                                        }
+
+                                        .demo-result-summary {
+                                            padding: 8px 10px;
+                                            background: #f8fafc;
+                                            border: 1px solid #e5e7eb;
+                                            border-radius: 8px;
+                                            color: #374151;
+                                            font-size: 12px;
+                                            font-weight: 700;
                                         }
                                     </style>
 
@@ -1220,6 +1367,32 @@
                                                         }
                                                         arsort($grades);
                                                     }
+                                                    $promotionStudentCount = collect($students)->filter(function ($student) {
+                                                        return count($student['promotions'] ?? []) > 0;
+                                                    })->count();
+                                                    $promotion_name_counts = collect($students)
+                                                        ->flatMap(function ($student) {
+                                                            return array_unique(array_values($student['promotions'] ?? []));
+                                                        })
+                                                        ->filter()
+                                                        ->countBy()
+                                                        ->sortKeys();
+                                                    $promotion_filter_options = collect($students)
+                                                        ->flatMap(function ($student) {
+                                                            return array_values($student['promotions'] ?? []);
+                                                        })
+                                                        ->filter()
+                                                        ->unique()
+                                                        ->sort()
+                                                        ->values();
+                                                    $source_filter_options = collect($students)
+                                                        ->flatMap(function ($student) {
+                                                            return array_values($student['sources'] ?? []);
+                                                        })
+                                                        ->filter()
+                                                        ->unique()
+                                                        ->sort()
+                                                        ->values();
                                                     $maxAge = max(array_values($ageRanges)) ?: 1;
                                                 @endphp
                                                 <div class="col-lg-6 col-md-6">
@@ -1238,7 +1411,7 @@
                                                         <div class="demo-card-body">
                                                             <div class="row text-center mb-3 g-2">
                                                                 <div class="col-4">
-                                                                    <div class="demo-stat-box">
+                                                                    <div class="demo-stat-box" data-demo-sex-toggle="all">
                                                                         <div class="demo-stat-num"
                                                                             style="color: {{ $color }};">
                                                                             {{ $total }}</div>
@@ -1246,14 +1419,14 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
-                                                                    <div class="demo-stat-box">
+                                                                    <div class="demo-stat-box" data-demo-sex-toggle="male">
                                                                         <div class="demo-stat-num text-primary">
                                                                             {{ $maleCount }}</div>
                                                                         <div class="demo-stat-label">ชาย</div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
-                                                                    <div class="demo-stat-box">
+                                                                    <div class="demo-stat-box" data-demo-sex-toggle="female">
                                                                         <div class="demo-stat-num text-danger">
                                                                             {{ $femaleCount }}</div>
                                                                         <div class="demo-stat-label">หญิง</div>
@@ -1270,61 +1443,170 @@
                                                                         ($femaleCount / ($total ?: 1)) * 100,
                                                                     );
                                                                 @endphp
-                                                                <p class="demo-section-title">สัดส่วนเพศ</p>
-                                                                <div class="demo-bar-wrap">
-                                                                    <div class="demo-bar-label">
-                                                                        <span>ชาย</span>
-                                                                        <span>{{ $maleCount }} คน
-                                                                            ({{ $malePct }}%)</span>
-                                                                    </div>
-                                                                    <div class="demo-bar-bg">
-                                                                        <div class="demo-bar-fill"
-                                                                            style="width: {{ $malePct }}%; background: #2196F3;">
+                                                                <div class="demo-summary-panel">
+                                                                    <p class="demo-section-title">สัดส่วนเพศ</p>
+                                                                    <div class="demo-bar-wrap">
+                                                                        <div class="demo-bar-label">
+                                                                            <span>ชาย</span>
+                                                                            <span>{{ $maleCount }} คน
+                                                                                ({{ $malePct }}%)</span>
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="demo-bar-wrap mb-3">
-                                                                    <div class="demo-bar-label">
-                                                                        <span>หญิง</span>
-                                                                        <span>{{ $femaleCount }} คน
-                                                                            ({{ $femalePct }}%)</span>
-                                                                    </div>
-                                                                    <div class="demo-bar-bg">
-                                                                        <div class="demo-bar-fill"
-                                                                            style="width: {{ $femalePct }}%; background: #E91E63;">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <p class="demo-section-title">ช่วงอายุ</p>
-                                                                @foreach ($ageRanges as $label => $count)
-                                                                    @if ($count > 0)
-                                                                        <div class="demo-bar-wrap">
-                                                                            <div class="demo-bar-label">
-                                                                                <span>{{ $label }}</span>
-                                                                                <span>{{ $count }} คน</span>
+                                                                        <div class="demo-bar-bg">
+                                                                            <div class="demo-bar-fill"
+                                                                                style="width: {{ $malePct }}%; background: #2196F3;">
                                                                             </div>
-                                                                            <div class="demo-bar-bg">
-                                                                                <div class="demo-bar-fill"
-                                                                                    style="width: {{ round(($count / $maxAge) * 100) }}%; background: {{ $color }};">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="demo-bar-wrap mb-3">
+                                                                        <div class="demo-bar-label">
+                                                                            <span>หญิง</span>
+                                                                            <span>{{ $femaleCount }} คน
+                                                                                ({{ $femalePct }}%)</span>
+                                                                        </div>
+                                                                        <div class="demo-bar-bg">
+                                                                            <div class="demo-bar-fill"
+                                                                                style="width: {{ $femalePct }}%; background: #E91E63;">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <p class="demo-section-title">ช่วงอายุ</p>
+                                                                    @foreach ($ageRanges as $label => $count)
+                                                                        @if ($count > 0)
+                                                                            <div class="demo-bar-wrap">
+                                                                                <div class="demo-bar-label">
+                                                                                    <span>{{ $label }}</span>
+                                                                                    <span>{{ $count }} คน</span>
+                                                                                </div>
+                                                                                <div class="demo-bar-bg">
+                                                                                    <div class="demo-bar-fill"
+                                                                                        style="width: {{ round(($count / $maxAge) * 100) }}%; background: {{ $color }};">
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
+                                                                        @endif
+                                                                    @endforeach
+
+                                                                    @if ($showGrade && count($grades) > 0)
+                                                                        <p class="demo-section-title mt-3">ระดับชั้น</p>
+                                                                        <div class="d-flex flex-wrap gap-1">
+                                                                            @foreach ($grades as $grade => $count)
+                                                                                <span class="demo-pill"
+                                                                                    style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
+                                                                                    {{ $grade }}
+                                                                                    <strong>{{ $count }}</strong>
+                                                                                </span>
+                                                                            @endforeach
                                                                         </div>
                                                                     @endif
-                                                                @endforeach
+                                                                </div>
 
-                                                                @if ($showGrade && count($grades) > 0)
-                                                                    <p class="demo-section-title mt-3">ระดับชั้น</p>
-                                                                    <div class="d-flex flex-wrap gap-1">
-                                                                        @foreach ($grades as $grade => $count)
-                                                                            <span class="demo-pill"
-                                                                                style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
-                                                                                {{ $grade }}
-                                                                                <strong>{{ $count }}</strong>
-                                                                            </span>
+                                                                <div class="mt-3 demo-detail-panel">
+                                                                    <div
+                                                                        class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+                                                                        <p class="demo-section-title mb-0">
+                                                                            Promotion / Source
+                                                                        </p>
+                                                                        <div class="demo-promotion-filter" role="group"
+                                                                            aria-label="Promotion filter">
+                                                                            <button type="button" class="active"
+                                                                                data-demo-filter="all">ทั้งหมด</button>
+                                                                            <button type="button"
+                                                                                data-demo-filter="with-promotion">มี
+                                                                                Promotion</button>
+                                                                            <button type="button"
+                                                                                data-demo-filter="without-promotion">ไม่มี
+                                                                                Promotion</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="small text-muted mb-2">
+                                                                        มี Promotion {{ $promotionStudentCount }} คน /
+                                                                        ไม่มี Promotion
+                                                                        {{ $total - $promotionStudentCount }} คน
+                                                                    </div>
+                                                                    @if ($promotion_name_counts->isNotEmpty())
+                                                                        <div class="d-flex flex-wrap gap-1 mb-2">
+                                                                            @foreach ($promotion_name_counts as $promotion_name => $promotion_count)
+                                                                                <span class="demo-pill"
+                                                                                    style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
+                                                                                    {{ $promotion_name }}
+                                                                                    <strong>{{ $promotion_count }}</strong>
+                                                                                </span>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    @endif
+                                                                    <div class="row g-2 mb-2">
+                                                                        <div class="col-md-6">
+                                                                            <select class="form-select demo-filter-select"
+                                                                                data-demo-promotion-select>
+                                                                                <option value="">Promotion ทั้งหมด</option>
+                                                                                @foreach ($promotion_filter_options as $promotion_filter_name)
+                                                                                    <option
+                                                                                        value="{{ $promotion_filter_name }}">
+                                                                                        {{ $promotion_filter_name }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <select class="form-select demo-filter-select"
+                                                                                data-demo-source-select>
+                                                                                <option value="">Source ทั้งหมด</option>
+                                                                                @foreach ($source_filter_options as $source_filter_name)
+                                                                                    <option value="{{ $source_filter_name }}">
+                                                                                        {{ $source_filter_name }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="demo-result-summary mb-2"
+                                                                        data-demo-result-summary>
+                                                                        แสดงผล: 0 คน | ชาย 0 | หญิง 0
+                                                                    </div>
+                                                                    <div class="demo-student-list">
+                                                                        @foreach (collect($students)->sortBy('code') as $student)
+                                                                            @php
+                                                                                $promotion_names = array_values($student['promotions'] ?? []);
+                                                                                $source_names = array_values($student['sources'] ?? []);
+                                                                                $has_promotion = count($promotion_names) > 0;
+                                                                                $student_sex = strtolower($student['sex'] ?? '');
+                                                                                if ($student_sex === 'ชาย') {
+                                                                                    $student_sex = 'male';
+                                                                                } elseif ($student_sex === 'หญิง') {
+                                                                                    $student_sex = 'female';
+                                                                                }
+                                                                            @endphp
+                                                                            <div class="demo-student-row"
+                                                                                data-demo-sex="{{ in_array($student_sex, ['male', 'female']) ? $student_sex : 'unknown' }}"
+                                                                                data-demo-promotion="{{ $has_promotion ? 'with-promotion' : 'without-promotion' }}"
+                                                                                data-demo-promotions='@json($promotion_names)'
+                                                                                data-demo-sources='@json($source_names)'>
+                                                                                <div>
+                                                                                    <div class="demo-student-code">
+                                                                                        {{ $student['code'] }}</div>
+                                                                                    <div class="demo-student-name">
+                                                                                        {{ $student['nick_name'] }}</div>
+                                                                                </div>
+                                                                                <div class="demo-student-meta">
+                                                                                    <div class="demo-meta-line">
+                                                                                        <span
+                                                                                            class="demo-meta-label">Promotion:</span>
+                                                                                        {{ $has_promotion ? implode(', ', $promotion_names) : '-' }}
+                                                                                    </div>
+                                                                                    <div class="demo-meta-line">
+                                                                                        <span
+                                                                                            class="demo-meta-label">Source:</span>
+                                                                                        {{ count($source_names) > 0 ? implode(', ', $source_names) : '-' }}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
                                                                         @endforeach
                                                                     </div>
-                                                                @endif
+                                                                    <div class="demo-empty-filter">
+                                                                        ไม่มีนักเรียนตามเงื่อนไขนี้
+                                                                    </div>
+                                                                </div>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -1396,6 +1678,32 @@
                                                             }
                                                             arsort($grades);
                                                         }
+                                                        $promotionStudentCount = collect($students)->filter(function ($student) {
+                                                            return count($student['promotions'] ?? []) > 0;
+                                                        })->count();
+                                                        $promotion_name_counts = collect($students)
+                                                            ->flatMap(function ($student) {
+                                                                return array_unique(array_values($student['promotions'] ?? []));
+                                                            })
+                                                            ->filter()
+                                                            ->countBy()
+                                                            ->sortKeys();
+                                                        $promotion_filter_options = collect($students)
+                                                            ->flatMap(function ($student) {
+                                                                return array_values($student['promotions'] ?? []);
+                                                            })
+                                                            ->filter()
+                                                            ->unique()
+                                                            ->sort()
+                                                            ->values();
+                                                        $source_filter_options = collect($students)
+                                                            ->flatMap(function ($student) {
+                                                                return array_values($student['sources'] ?? []);
+                                                            })
+                                                            ->filter()
+                                                            ->unique()
+                                                            ->sort()
+                                                            ->values();
                                                         $maxAge = max(array_values($ageRanges)) ?: 1;
                                                     @endphp
                                                     <div class="col-lg-4 col-md-6">
@@ -1414,7 +1722,7 @@
                                                             <div class="demo-card-body">
                                                                 <div class="row text-center mb-3 g-2">
                                                                     <div class="col-4">
-                                                                        <div class="demo-stat-box">
+                                                                        <div class="demo-stat-box" data-demo-sex-toggle="all">
                                                                             <div class="demo-stat-num"
                                                                                 style="color: {{ $color }};">
                                                                                 {{ $total }}</div>
@@ -1422,14 +1730,14 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-4">
-                                                                        <div class="demo-stat-box">
+                                                                        <div class="demo-stat-box" data-demo-sex-toggle="male">
                                                                             <div class="demo-stat-num text-primary">
                                                                                 {{ $maleCount }}</div>
                                                                             <div class="demo-stat-label">ชาย</div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-4">
-                                                                        <div class="demo-stat-box">
+                                                                        <div class="demo-stat-box" data-demo-sex-toggle="female">
                                                                             <div class="demo-stat-num text-danger">
                                                                                 {{ $femaleCount }}</div>
                                                                             <div class="demo-stat-label">หญิง</div>
@@ -1443,64 +1751,175 @@
                                                                             ($maleCount / ($total ?: 1)) * 100,
                                                                         );
                                                                         $femalePct = round(
-                                                                            ($femaleCount / ($total ?: 1)) * 100,
-                                                                        );
-                                                                    @endphp
-                                                                    <p class="demo-section-title">สัดส่วนเพศ</p>
-                                                                    <div class="demo-bar-wrap">
-                                                                        <div class="demo-bar-label">
-                                                                            <span>ชาย</span>
-                                                                            <span>{{ $maleCount }} คน
-                                                                                ({{ $malePct }}%)</span>
-                                                                        </div>
-                                                                        <div class="demo-bar-bg">
-                                                                            <div class="demo-bar-fill"
-                                                                                style="width: {{ $malePct }}%; background: #2196F3;">
+                                                                        ($femaleCount / ($total ?: 1)) * 100,
+                                                                    );
+                                                                @endphp
+                                                                    <div class="demo-summary-panel">
+                                                                        <p class="demo-section-title">สัดส่วนเพศ</p>
+                                                                        <div class="demo-bar-wrap">
+                                                                            <div class="demo-bar-label">
+                                                                                <span>ชาย</span>
+                                                                                <span>{{ $maleCount }} คน
+                                                                                    ({{ $malePct }}%)</span>
                                                                             </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="demo-bar-wrap mb-3">
-                                                                        <div class="demo-bar-label">
-                                                                            <span>หญิง</span>
-                                                                            <span>{{ $femaleCount }} คน
-                                                                                ({{ $femalePct }}%)</span>
-                                                                        </div>
-                                                                        <div class="demo-bar-bg">
-                                                                            <div class="demo-bar-fill"
-                                                                                style="width: {{ $femalePct }}%; background: #E91E63;">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <p class="demo-section-title">ช่วงอายุ</p>
-                                                                    @foreach ($ageRanges as $label => $count)
-                                                                        @if ($count > 0)
-                                                                            <div class="demo-bar-wrap">
-                                                                                <div class="demo-bar-label">
-                                                                                    <span>{{ $label }}</span>
-                                                                                    <span>{{ $count }} คน</span>
+                                                                            <div class="demo-bar-bg">
+                                                                                <div class="demo-bar-fill"
+                                                                                    style="width: {{ $malePct }}%; background: #2196F3;">
                                                                                 </div>
-                                                                                <div class="demo-bar-bg">
-                                                                                    <div class="demo-bar-fill"
-                                                                                        style="width: {{ round(($count / $maxAge) * 100) }}%; background: {{ $color }};">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="demo-bar-wrap mb-3">
+                                                                            <div class="demo-bar-label">
+                                                                                <span>หญิง</span>
+                                                                                <span>{{ $femaleCount }} คน
+                                                                                    ({{ $femalePct }}%)</span>
+                                                                            </div>
+                                                                            <div class="demo-bar-bg">
+                                                                                <div class="demo-bar-fill"
+                                                                                    style="width: {{ $femalePct }}%; background: #E91E63;">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <p class="demo-section-title">ช่วงอายุ</p>
+                                                                        @foreach ($ageRanges as $label => $count)
+                                                                            @if ($count > 0)
+                                                                                <div class="demo-bar-wrap">
+                                                                                    <div class="demo-bar-label">
+                                                                                        <span>{{ $label }}</span>
+                                                                                        <span>{{ $count }} คน</span>
+                                                                                    </div>
+                                                                                    <div class="demo-bar-bg">
+                                                                                        <div class="demo-bar-fill"
+                                                                                            style="width: {{ round(($count / $maxAge) * 100) }}%; background: {{ $color }};">
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
+                                                                            @endif
+                                                                        @endforeach
+
+                                                                        @if ($showGrade && count($grades) > 0)
+                                                                            <p class="demo-section-title mt-3">ระดับชั้น</p>
+                                                                            <div class="d-flex flex-wrap gap-1">
+                                                                                @foreach ($grades as $grade => $count)
+                                                                                    <span class="demo-pill"
+                                                                                        style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
+                                                                                        {{ $grade }}
+                                                                                        <strong>{{ $count }}</strong>
+                                                                                    </span>
+                                                                                @endforeach
                                                                             </div>
                                                                         @endif
-                                                                    @endforeach
+                                                                    </div>
 
-                                                                    @if ($showGrade && count($grades) > 0)
-                                                                        <p class="demo-section-title mt-3">ระดับชั้น</p>
-                                                                        <div class="d-flex flex-wrap gap-1">
-                                                                            @foreach ($grades as $grade => $count)
-                                                                                <span class="demo-pill"
-                                                                                    style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
-                                                                                    {{ $grade }}
-                                                                                    <strong>{{ $count }}</strong>
-                                                                                </span>
+                                                                    <div class="mt-3 demo-detail-panel">
+                                                                        <div
+                                                                            class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+                                                                            <p class="demo-section-title mb-0">
+                                                                                Promotion / Source
+                                                                            </p>
+                                                                            <div class="demo-promotion-filter" role="group"
+                                                                                aria-label="Promotion filter">
+                                                                                <button type="button" class="active"
+                                                                                    data-demo-filter="all">ทั้งหมด</button>
+                                                                                <button type="button"
+                                                                                    data-demo-filter="with-promotion">มี
+                                                                                    Promotion</button>
+                                                                                <button type="button"
+                                                                                    data-demo-filter="without-promotion">ไม่มี
+                                                                                    Promotion</button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="small text-muted mb-2">
+                                                                            มี Promotion {{ $promotionStudentCount }} คน /
+                                                                            ไม่มี Promotion
+                                                                            {{ $total - $promotionStudentCount }} คน
+                                                                        </div>
+                                                                        @if ($promotion_name_counts->isNotEmpty())
+                                                                            <div class="d-flex flex-wrap gap-1 mb-2">
+                                                                                @foreach ($promotion_name_counts as $promotion_name => $promotion_count)
+                                                                                    <span class="demo-pill"
+                                                                                        style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
+                                                                                        {{ $promotion_name }}
+                                                                                        <strong>{{ $promotion_count }}</strong>
+                                                                                    </span>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        @endif
+                                                                        <div class="row g-2 mb-2">
+                                                                            <div class="col-md-6">
+                                                                                <select class="form-select demo-filter-select"
+                                                                                    data-demo-promotion-select>
+                                                                                    <option value="">Promotion ทั้งหมด
+                                                                                    </option>
+                                                                                    @foreach ($promotion_filter_options as $promotion_filter_name)
+                                                                                        <option
+                                                                                            value="{{ $promotion_filter_name }}">
+                                                                                            {{ $promotion_filter_name }}
+                                                                                        </option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <select class="form-select demo-filter-select"
+                                                                                    data-demo-source-select>
+                                                                                    <option value="">Source ทั้งหมด</option>
+                                                                                    @foreach ($source_filter_options as $source_filter_name)
+                                                                                        <option
+                                                                                            value="{{ $source_filter_name }}">
+                                                                                            {{ $source_filter_name }}
+                                                                                        </option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="demo-result-summary mb-2"
+                                                                            data-demo-result-summary>
+                                                                            แสดงผล: 0 คน | ชาย 0 | หญิง 0
+                                                                        </div>
+                                                                        <div class="demo-student-list">
+                                                                            @foreach (collect($students)->sortBy('code') as $student)
+                                                                                @php
+                                                                                    $promotion_names = array_values($student['promotions'] ?? []);
+                                                                                    $source_names = array_values($student['sources'] ?? []);
+                                                                                    $has_promotion = count($promotion_names) > 0;
+                                                                                    $student_sex = strtolower($student['sex'] ?? '');
+                                                                                    if ($student_sex === 'ชาย') {
+                                                                                        $student_sex = 'male';
+                                                                                    } elseif ($student_sex === 'หญิง') {
+                                                                                        $student_sex = 'female';
+                                                                                    }
+                                                                                @endphp
+                                                                                <div class="demo-student-row"
+                                                                                    data-demo-sex="{{ in_array($student_sex, ['male', 'female']) ? $student_sex : 'unknown' }}"
+                                                                                    data-demo-promotion="{{ $has_promotion ? 'with-promotion' : 'without-promotion' }}"
+                                                                                    data-demo-promotions='@json($promotion_names)'
+                                                                                    data-demo-sources='@json($source_names)'>
+                                                                                    <div>
+                                                                                        <div class="demo-student-code">
+                                                                                            {{ $student['code'] }}</div>
+                                                                                        <div class="demo-student-name">
+                                                                                            {{ $student['nick_name'] }}</div>
+                                                                                    </div>
+                                                                                    <div class="demo-student-meta">
+                                                                                        <div class="demo-meta-line">
+                                                                                            <span
+                                                                                                class="demo-meta-label">Promotion:</span>
+                                                                                            {{ $has_promotion ? implode(', ', $promotion_names) : '-' }}
+                                                                                        </div>
+                                                                                        <div class="demo-meta-line">
+                                                                                            <span
+                                                                                                class="demo-meta-label">Source:</span>
+                                                                                            {{ count($source_names) > 0 ? implode(', ', $source_names) : '-' }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
                                                                             @endforeach
                                                                         </div>
-                                                                    @endif
+                                                                        <div class="demo-empty-filter">
+                                                                            ไม่มีนักเรียนตามเงื่อนไขนี้
+                                                                        </div>
+                                                                    </div>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -1670,6 +2089,100 @@
                     $('.demo-month-content').hide();
                     $('#demo-month-block-' + month).fadeIn(300).css('display', 'flex');
                 }
+
+                function ReadDemoFilterValues(row, attribute_name) {
+                    try {
+                        return JSON.parse(row.attr(attribute_name) || '[]');
+                    } catch (error) {
+                        return [];
+                    }
+                }
+
+                function ApplyDemoCardFilters(card) {
+                    const selected_sex = card.attr('data-demo-selected-sex') || '';
+                    const selected_filter = card.find('.demo-promotion-filter [data-demo-filter].active').data(
+                        'demo-filter') || 'all';
+                    const selected_promotion = card.find('[data-demo-promotion-select]').val() || '';
+                    const selected_source = card.find('[data-demo-source-select]').val() || '';
+                    const rows = card.find('.demo-student-row');
+                    let visible_count = 0;
+                    let visible_male_count = 0;
+                    let visible_female_count = 0;
+                    let visible_unknown_count = 0;
+
+                    rows.each(function() {
+                        const row = $(this);
+                        const student_sex = row.data('demo-sex');
+                        const promotion_status = row.data('demo-promotion');
+                        const promotion_names = ReadDemoFilterValues(row, 'data-demo-promotions');
+                        const source_names = ReadDemoFilterValues(row, 'data-demo-sources');
+                        const matches_sex = selected_sex === '' || selected_sex === 'all' || student_sex === selected_sex;
+                        const matches_toggle = selected_filter === 'all' || promotion_status === selected_filter;
+                        const matches_promotion = selected_promotion === '' || promotion_names.includes(
+                            selected_promotion);
+                        const matches_source = selected_source === '' || source_names.includes(selected_source);
+                        const should_show = matches_sex && matches_toggle && matches_promotion && matches_source;
+
+                        row.toggle(should_show);
+                        if (should_show) {
+                            visible_count++;
+                            if (student_sex === 'male') {
+                                visible_male_count++;
+                            } else if (student_sex === 'female') {
+                                visible_female_count++;
+                            } else {
+                                visible_unknown_count++;
+                            }
+                        }
+                    });
+
+                    let summary_text = 'แสดงผล: ' + visible_count + ' คน | ชาย ' + visible_male_count + ' | หญิง ' +
+                        visible_female_count;
+                    if (visible_unknown_count > 0) {
+                        summary_text += ' | ไม่ระบุ ' + visible_unknown_count;
+                    }
+
+                    card.find('[data-demo-result-summary]').text(summary_text);
+                    card.find('.demo-empty-filter').toggle(visible_count === 0);
+                }
+
+                $(document).on('click', '[data-demo-sex-toggle]', function() {
+                    const selected_sex = $(this).data('demo-sex-toggle');
+                    const card = $(this).closest('.demo-card');
+                    const panel = card.find('.demo-detail-panel');
+                    const summary_panel = card.find('.demo-summary-panel');
+                    const is_active = $(this).hasClass('active');
+
+                    card.find('[data-demo-sex-toggle]').removeClass('active');
+
+                    if (is_active) {
+                        card.removeAttr('data-demo-selected-sex');
+                        panel.slideUp(180, function() {
+                            summary_panel.slideDown(180);
+                        });
+                        return;
+                    }
+
+                    $(this).addClass('active');
+                    card.attr('data-demo-selected-sex', selected_sex);
+                    summary_panel.slideUp(180, function() {
+                        panel.slideDown(180);
+                    });
+                    ApplyDemoCardFilters(card);
+                });
+
+                $(document).on('click', '[data-demo-filter]', function() {
+                    const card = $(this).closest('.demo-card');
+
+                    $(this).closest('.demo-promotion-filter').find('[data-demo-filter]').removeClass('active');
+                    $(this).addClass('active');
+
+                    ApplyDemoCardFilters(card);
+                });
+
+                $(document).on('change', '[data-demo-promotion-select], [data-demo-source-select]', function() {
+                    ApplyDemoCardFilters($(this).closest('.demo-card'));
+                });
             </script>
             <script>
                 var groupLabels = [

@@ -269,9 +269,9 @@
         <!-- Content -->
         <div class="content-row" style="margin-top: 10px;">
             @php
-                $incomeCount = $payroll->incomeItems->count();
-                $deductionCount = $payroll->deductionItems->count();
-                $maxRows = 1 + max($incomeCount, $deductionCount);
+                $income_count = $payroll->incomeItems->count();
+                $deduction_count = $payroll->deductionItems->count();
+                $payslip_row_count = 1 + max($income_count, $deduction_count, $max_income_item_count);
             @endphp
             <!-- Income -->
             <div class="content-col income-section">
@@ -286,7 +286,7 @@
                             <td>{{ number_format($item->quantity * $item->amount, 2) }}</td>
                         </tr>
                     @endforeach
-                    @for ($i = $incomeCount; $i < $maxRows; $i++)
+                    @for ($i = $income_count; $i < $payslip_row_count; $i++)
                         <tr>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -309,7 +309,7 @@
                             <td>{{ number_format($item->amount, 2) }}</td>
                         </tr>
                     @endforeach
-                    @for ($i = $deductionCount; $i < $maxRows; $i++)
+                    @for ($i = $deduction_count; $i < $payslip_row_count; $i++)
                         <tr>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>

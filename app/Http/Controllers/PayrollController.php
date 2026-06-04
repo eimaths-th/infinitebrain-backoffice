@@ -536,8 +536,12 @@ class PayrollController extends Controller
         $payroll = Payroll::with(['incomeItems', 'deductionItems', 'user'])
             ->where('payroll_period_id', $period_id)
             ->findOrFail($payroll_id);
+        $max_income_item_count = Payroll::where('payroll_period_id', $period_id)
+            ->withCount('incomeItems')
+            ->orderByDesc('income_items_count')
+            ->value('income_items_count') ?? 0;
 
-        return view('payroll.payslip', compact('period', 'payroll'));
+        return view('payroll.payslip', compact('period', 'payroll', 'max_income_item_count'));
     }
 
     /**

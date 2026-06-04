@@ -27,6 +27,7 @@ class Receipt_School extends Model
         'pid',
         'source',
         'remark',
+        'promotion_id',
         'approv_id',
         'approv_name',
         'is_vat',
@@ -42,5 +43,9 @@ class Receipt_School extends Model
         return $this->hasOne(SchoolPrice::class, 'rid', 'id');
     }
 
+    public function promotion()
+    {
+        return $this->belongsTo(Promotion::class, 'promotion_id', 'id');
+    }
 
 }

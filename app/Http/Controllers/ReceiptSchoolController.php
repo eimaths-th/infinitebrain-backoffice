@@ -22,11 +22,13 @@ use App\Models\Level;
 use App\Models\SchoolPrice;
 use App\Models\SubjectPrice;
 use App\Models\ParentRegister;
+use App\Models\Promotion;
 use App\Models\Receipt_School_RunningNumber;
 use App\Models\Statuslog;
 use Carbon\Carbon;
 use App\Services\StatusService;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
 
 class ReceiptSchoolController extends Controller
 {
@@ -631,9 +633,11 @@ class ReceiptSchoolController extends Controller
                 "receipt_school.mobile as mobile",
                 "receipt_school.receipt_number as receipt_number",
                 "receipt_school.pid as pid",
+                "promotions.name as promotion_name",
             )
                 //->join("students", "students.id", "=", "receipts.student_id")
-                ->join("parent", "parent.id", "=", "receipt_school.name_parent");
+                ->join("parent", "parent.id", "=", "receipt_school.name_parent")
+                ->leftJoin("promotions", "promotions.id", "=", "receipt_school.promotion_id");
             //->join("levels", "levels.id", "=", "receipts.level_id")
 
             if ($request->has('type_filter') && $request->type_filter != "") {
@@ -674,6 +678,9 @@ class ReceiptSchoolController extends Controller
                 ->editColumn('type2', function (Receipt_School $receipt) {
                     return ($receipt->type == 9) ? "yes" : "no";
                 })
+                ->editColumn('promotion_name', function ($row) {
+                    return $row->promotion_name ?: '-';
+                })
                 ->editColumn('checkbox', function ($row) {
                     return '<input type="checkbox" id="' . $row->id . '" class="flat" name="table_records[]" value="' . $row->id . '" >';
                 })
@@ -690,9 +697,11 @@ class ReceiptSchoolController extends Controller
         $student = Student::orderBy("first_name", "asc")->get();
         $subject = Subject::orderBy("id", "asc")->get();
         $parent = ParentRegister::orderBy("id", "asc")->get();
+        $promotions = Promotion::where('is_active', 1)->orderBy('name', 'asc')->get();
 
         return view('receipt_school.receipt')->with(['data2' => $student])->with(['data3' => $subject])->with(['data4' => $parent])
-            ->with(['datap' => self::datap]);
+            ->with(['datap' => self::datap])
+            ->with(['promotions' => $promotions]);
     }
 
     public function edit($id, $type)
@@ -736,6 +745,18 @@ class ReceiptSchoolController extends Controller
             }
 
             $payment .= '<option value="' . $pay['id'] . '" ' . $selected_pay . '> ' . $pay['name'] . ' </option>';
+        }
+
+        $promotion_options = '<option value="">-- Select Promotion (optional) --</option>';
+        $promotion_list = Promotion::where('is_active', 1)
+            ->orWhere('id', $data->promotion_id)
+            ->orderBy('name', 'asc')
+            ->get();
+
+        foreach ($promotion_list as $promotion) {
+            $selected_promotion = ((int) $promotion->id === (int) $data->promotion_id) ? 'selected' : '';
+            $inactive_label = ((int) $promotion->is_active === 1) ? '' : ' (Inactive)';
+            $promotion_options .= '<option value="' . $promotion->id . '" ' . $selected_promotion . '>' . $promotion->name . $inactive_label . '</option>';
         }
 
 
@@ -1091,6 +1112,7 @@ class ReceiptSchoolController extends Controller
             'data_html' => $data_html,
             'imgs' => $html,
             'payment' => $payment,
+            'promotion_options' => $promotion_options,
             'select_list_parent' => $select_list_parent
         ]);
     }
@@ -1610,6 +1632,12 @@ class ReceiptSchoolController extends Controller
                 // 'type' => 'required|string',
                 'submission_date' => 'required|string',
                 'payment_type' => 'required|string',
+                'promotion_id' => [
+                    'required',
+                    Rule::exists('promotions', 'id')->where(function ($query) {
+                        return $query->where('is_active', 1);
+                    }),
+                ],
                 //'city' => 'required|string',
                 //'province' => 'required|string',
 
@@ -1643,6 +1671,8 @@ class ReceiptSchoolController extends Controller
                 'student.required' => 'กรุณาเลือกชื่อนักเรียน',
                 'img.required' => 'กรุณาแนบรูปภาพหลักฐานการชำระเงิน',
                 'receipt.required' => 'กรุณาระบุรายการในใบเสร็จ',
+                'promotion_id.required' => 'กรุณาเลือก Promotion',
+                'promotion_id.exists' => 'Promotion ที่เลือกไม่ได้เปิดใช้งานหรือไม่มีอยู่ในระบบ',
                 'receipt.*.subject.required' => 'The Subject field is required.  !',
                 'receipt.*.level.required' => 'The Start Level field is required.  !',
                 'receipt.*.week.required' => 'The Week field is required.  !',
@@ -1735,6 +1765,7 @@ class ReceiptSchoolController extends Controller
             'type' => $typeRec,
             'source' => $request->get('source'),
             'remark' => $request->get('remark'),
+            'promotion_id' => $request->get('promotion_id'),
             // 'sid' => $request->get('student'),
             'receipt_number' => $rnumber,
             'file_att' => $filebs,
@@ -1882,11 +1913,14 @@ class ReceiptSchoolController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request);
+        $Receipt_School =  Receipt_School::find($id);
+
         $validator =  Validator::make(
             $request->all(),
             [
                 'submission_date' => 'required|string',
                 'payment_type' => 'required|string',
+                'promotion_id' => 'nullable|exists:promotions,id',
                 'student_id' => 'required|array', // Validate that it's an array
                 'student_id.*' => 'required', // Validate each element in the array
 
@@ -1911,6 +1945,14 @@ class ReceiptSchoolController extends Controller
         );
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        $promotion_id = $request->get('promotion_id');
+        if (!empty($promotion_id) && (int) $promotion_id !== (int) $Receipt_School->promotion_id) {
+            $active_promotion = Promotion::where('id', $promotion_id)->where('is_active', 1)->exists();
+            if (!$active_promotion) {
+                return response()->json(['errors' => ['Promotion ที่เลือกไม่ได้เปิดใช้งาน']]);
+            }
         }
         $img = $request->get('img');
         $stu = "";
@@ -1992,7 +2034,6 @@ class ReceiptSchoolController extends Controller
         // media_price
         $request->request->add(['pid' => $stud]);
 
-        $Receipt_School =  Receipt_School::find($id);
         $Receipt_School_old = $Receipt_School->toArray();
         
         $update_data = $request->all();
