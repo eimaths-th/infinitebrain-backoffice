@@ -582,15 +582,19 @@ class ReceiptSchoolController extends Controller
 
         $subjects = $request->get('rrsub', []);
         $course_types = $request->get('rrcourse', []);
+        $weeks = $request->get('rrweek', []);
+        $quantities = $request->get('rrqty', []);
         $totals = $request->get('rrtotal', []);
         $discounts = $request->get('rrdiscount', []);
         $student_ids = $request->get('student_id', []);
 
         return collect($subjects)
-            ->map(function ($subject_id, $index) use ($course_types, $totals, $discounts, $student_ids) {
+            ->map(function ($subject_id, $index) use ($course_types, $weeks, $quantities, $totals, $discounts, $student_ids) {
                 return $this->NormalizePromotionReceiptItem([
                     'subject' => $subject_id,
                     'course_type' => $course_types[$index] ?? null,
+                    'week' => $weeks[$index] ?? null,
+                    'qty' => $quantities[$index] ?? null,
                     'pp' => $totals[$index] ?? 0,
                     'discount' => $discounts[$index] ?? 0,
                     'std_id' => $student_ids[$index] ?? null,
@@ -606,10 +610,34 @@ class ReceiptSchoolController extends Controller
             'subject_id' => $receipt_item['subject_id'] ?? $receipt_item['subject'] ?? null,
             'subject_group' => $receipt_item['subject_group'] ?? $receipt_item['group'] ?? null,
             'course_type' => $receipt_item['course_type'] ?? 1,
-            'month_count' => $receipt_item['month_count'] ?? $receipt_item['qty'] ?? null,
+            'month_count' => $this->ResolvePromotionMonthCount($receipt_item),
             'net_amount' => (float) ($receipt_item['net_amount'] ?? $receipt_item['pp'] ?? $receipt_item['total'] ?? 0),
             'discount_amount' => (float) ($receipt_item['discount_amount'] ?? $receipt_item['discount'] ?? 0),
         ];
+    }
+
+    /**
+     * Resolve the month count used for promotion eligibility.
+     *
+     * Duration is week x qty, where the "week" select uses 4 to mean a full month
+     * (4 weeks = 1 month). So month_count = (week x qty) / 4 and decimals are kept
+     * (e.g. 2 weeks = 0.5 month). An explicit month_count from the preview payload
+     * takes precedence.
+     */
+    private function ResolvePromotionMonthCount(array $receipt_item)
+    {
+        if (isset($receipt_item['month_count']) && $receipt_item['month_count'] !== '' && $receipt_item['month_count'] !== null) {
+            return (float) $receipt_item['month_count'];
+        }
+
+        $week = isset($receipt_item['week']) ? (float) $receipt_item['week'] : 0;
+        $quantity = isset($receipt_item['qty']) ? (float) $receipt_item['qty'] : 0;
+
+        if ($week <= 0 || $quantity <= 0) {
+            return null;
+        }
+
+        return ($week * $quantity) / 4;
     }
 
     private function ResolveSelectedCalculatedPromotion(Request $request, array $receipt_context)

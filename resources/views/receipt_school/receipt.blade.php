@@ -176,10 +176,6 @@
             margin-top: 8px;
         }
 
-        .apply-calculated-promotion{
-            margin-top: 8px;
-        }
-
         .dropzonex,
         .dropzonex * {
             box-sizing: border-box;
@@ -2383,14 +2379,11 @@
                     html += '</label>';
                 });
                 html += '</div>';
-                html += '<button type="button" class="btn btn-sm btn-primary apply-calculated-promotion" data-mode="' + mode + '">Apply Campaign</button>';
                 html += '<button type="button" class="btn btn-sm btn-link campaign-clear-action clear-calculated-promotion" data-mode="' + mode + '">ล้าง Campaign ที่เลือก</button>';
-                html += '<div class="calculated-promotion-summary mt-2" id="' + mode + '_calculated_promotion_summary"></div>';
 
                 resultTarget.html(html);
 
                 SyncCalculatedPromotionHidden(mode);
-                RefreshAppliedPromotionSummary(mode);
             }
 
             // Enforce: campaigns sharing a reward category (เช่น ส่วนลดเงินสด) cannot be selected together.
@@ -2439,132 +2432,6 @@
                 }
 
                 return window.CalculatedPromotionOptions[mode][selectedIds[0]] || null;
-            }
-
-            function HasCashReward(promotion) {
-                return (promotion.reward_categories || []).indexOf('CASH') !== -1;
-            }
-
-            // All course lines (course_type = 1) that a cash discount may be applied to.
-            function GetPromotionCourseRows(mode) {
-                var rows = mode === 'create' ? $('.firstTr').slice(1) : $('.firstTr3');
-
-                return rows.filter(function() {
-                    var courseType = mode === 'create'
-                        ? $(this).find('#course_type').val()
-                        : $(this).find("select[name='course_type[]']").val();
-
-                    return (parseInt(courseType, 10) || 1) === 1;
-                });
-            }
-
-            function GetPromotionRowDiscountField(mode, row) {
-                return mode === 'create'
-                    ? row.find('#discount')
-                    : row.find("input[name='rrdiscount[]']");
-            }
-
-            function CalculatePromotionActual(mode) {
-                var rows = mode === 'create' ? $('.firstTr').slice(1) : $('.firstTr3');
-                var actualDiscount = 0;
-                var actualNet = 0;
-
-                rows.each(function() {
-                    var row = $(this);
-                    actualDiscount += parseFloat(mode === 'create'
-                        ? row.find('#discount').val()
-                        : row.find("input[name='rrdiscount[]']").val()) || 0;
-                    actualNet += parseFloat(mode === 'create'
-                        ? row.find('#pp').val()
-                        : row.find("input[name='rrtotal[]']").val()) || 0;
-                });
-
-                return {
-                    actual_discount_amount: actualDiscount,
-                    actual_net_amount: actualNet
-                };
-            }
-
-            function BuildPromotionSummaryHtml(mode, promotion, note) {
-                var actual = CalculatePromotionActual(mode);
-                var expectedDiscount = parseFloat(promotion.discount_amount) || 0;
-                var expectedNet = Math.max(0, actual.actual_net_amount + actual.actual_discount_amount - expectedDiscount);
-                var isMatched = Math.abs(expectedDiscount - actual.actual_discount_amount) < 0.01;
-                var statusClass = isMatched ? 'text-success' : 'text-warning';
-                var statusText = isMatched ? 'ยอดตรงกับ Campaign' : 'ยอดไม่ตรงกับ Campaign';
-                var rewardText = promotion.reward_summary || (expectedDiscount > 0 ? 'ลด ' + FormatPromotionAmount(expectedDiscount) + ' บาท' : 'รับสิทธิ์โปรโมชั่น');
-
-                var html = '<div class="promotion-state-message">';
-                html += '<div><strong>' + EscapeHtml(promotion.name) + '</strong></div>';
-                html += '<div>สิทธิ์: ' + EscapeHtml(rewardText) + '</div>';
-                html += '<div>ส่วนลดที่ Campaign คาดหวัง: ' + FormatPromotionAmount(expectedDiscount) + ' บาท</div>';
-                html += '<div>ส่วนลดที่ Staff key จริง: ' + FormatPromotionAmount(actual.actual_discount_amount) + ' บาท</div>';
-                html += '<div>ยอดสุทธิที่ควรเป็น: ' + FormatPromotionAmount(expectedNet) + ' บาท</div>';
-                html += '<div>ยอดสุทธิที่ Staff key จริง: ' + FormatPromotionAmount(actual.actual_net_amount) + ' บาท</div>';
-                html += '<div class="' + statusClass + '"><strong>' + statusText + '</strong></div>';
-
-                if (note) {
-                    html += '<div class="text-warning">' + EscapeHtml(note) + '</div>';
-                }
-
-                if (!isMatched) {
-                    html += '<div class="text-warning">ระบบจะเตือนและบันทึกต่อได้ แต่จะเก็บสถานะไว้ตรวจสอบย้อนหลัง</div>';
-                }
-
-                html += '</div>';
-
-                return html;
-            }
-
-            function RefreshAppliedPromotionSummary(mode) {
-                var summaryTarget = $('#' + mode + '_calculated_promotion_summary');
-                if (summaryTarget.length === 0) {
-                    return;
-                }
-
-                var promotion = GetSelectedCalculatedPromotion(mode);
-                if (!promotion) {
-                    summaryTarget.html('');
-                    return;
-                }
-
-                summaryTarget.html(BuildPromotionSummaryHtml(mode, promotion));
-            }
-
-            function ApplyCalculatedPromotion(mode) {
-                var promotion = GetSelectedCalculatedPromotion(mode);
-                if (!promotion) {
-                    alert('กรุณาเลือก Campaign ก่อน Apply');
-                    return;
-                }
-
-                var note = '';
-                if (HasCashReward(promotion)) {
-                    var courseRows = GetPromotionCourseRows(mode);
-
-                    if (courseRows.length === 0) {
-                        note = 'ไม่พบรายการคอร์สที่เหมาะสำหรับเติมส่วนลดอัตโนมัติ กรุณา key ส่วนลดเอง';
-                    } else {
-                        // Consolidate the campaign discount onto the first course line and clear the
-                        // remaining course lines, so the total discount equals the expected amount.
-                        var expectedDiscount = parseFloat(promotion.discount_amount) || 0;
-                        courseRows.each(function(index) {
-                            var discountField = GetPromotionRowDiscountField(mode, $(this));
-                            discountField.val(index === 0 ? expectedDiscount : 0).trigger('change');
-                        });
-
-                        if (mode === 'edit') {
-                            $('#EditCalculatedPromotionTouched').val('1');
-                        }
-                    }
-                } else {
-                    note = 'Campaign นี้เป็นสิทธิ์ค่าลงทะเบียน/ของแถม ระบบจะแสดงใน Summary และเก็บ Snapshot โดยไม่แก้ช่อง Discount อัตโนมัติ';
-                }
-
-                window.AppliedCalculatedPromotionIds[mode] = promotion.promotion_campaign_id;
-                setTimeout(function() {
-                    $('#' + mode + '_calculated_promotion_summary').html(BuildPromotionSummaryHtml(mode, promotion, note));
-                }, 500);
             }
 
             function GetSelectedCalculatedPromotionIds(mode) {
@@ -2694,15 +2561,10 @@
                 window.ScheduleCalculatedPromotionPreview('edit', true);
             });
 
-            $(document).on('change keyup', "#CreateModal input[name='discount'], #CreateModal input[name='pp'], #EditModal input[name='rrdiscount[]'], #EditModal input[name='rrtotal[]']", function() {
-                RefreshAppliedPromotionSummary($(this).closest('#EditModal').length ? 'edit' : 'create');
-            });
-
             $(document).on('change', "input[name='create_calculated_promotion']", function() {
                 EnforceCampaignCategoryConstraint('create', $(this));
                 $("input[name='create_calculated_promotion']").closest('.campaign-option-card').removeClass('is-selected');
                 SyncCalculatedPromotionHidden('create');
-                RefreshAppliedPromotionSummary('create');
             });
 
             $(document).on('change', "input[name='edit_calculated_promotion']", function() {
@@ -2710,11 +2572,6 @@
                 EnforceCampaignCategoryConstraint('edit', $(this));
                 $("input[name='edit_calculated_promotion']").closest('.campaign-option-card').removeClass('is-selected');
                 SyncCalculatedPromotionHidden('edit');
-                RefreshAppliedPromotionSummary('edit');
-            });
-
-            $(document).on('click', '.apply-calculated-promotion', function() {
-                ApplyCalculatedPromotion($(this).data('mode'));
             });
 
             $(document).on('click', '.clear-calculated-promotion', function() {
@@ -2725,14 +2582,12 @@
                     $("input[name='create_calculated_promotion']").closest('.campaign-option-card').removeClass('is-selected');
                     SyncCalculatedPromotionHidden('create');
                     window.AppliedCalculatedPromotionIds.create = null;
-                    RefreshAppliedPromotionSummary('create');
                 } else {
                     $('#EditCalculatedPromotionTouched').val('1');
                     $("input[name='edit_calculated_promotion']").prop('checked', false);
                     $("input[name='edit_calculated_promotion']").closest('.campaign-option-card').removeClass('is-selected');
                     SyncCalculatedPromotionHidden('edit');
                     window.AppliedCalculatedPromotionIds.edit = null;
-                    RefreshAppliedPromotionSummary('edit');
                 }
             });
 
