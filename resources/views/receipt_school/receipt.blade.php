@@ -52,7 +52,133 @@
             min-height: 0px !important;
         }
 
+        .promotion-workflow-panel {
+            border: 1px solid #d8e2ef;
+            border-radius: 8px;
+            background: #f8fbff;
+            padding: 14px;
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
 
+        .promotion-workflow-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .promotion-workflow-title {
+            font-weight: 700;
+            color: #23364d;
+            margin-bottom: 2px;
+        }
+
+        .promotion-workflow-subtitle {
+            color: #66758a;
+            font-size: 12px;
+        }
+
+        .promotion-status-pill {
+            border: 1px solid #c9d8ea;
+            border-radius: 999px;
+            color: #40556f;
+            background: #ffffff;
+            font-size: 12px;
+            padding: 4px 10px;
+            white-space: nowrap;
+        }
+
+        .promotion-context-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #d8e2ef;
+            border-radius: 6px;
+            background: #ffffff;
+            padding: 8px 10px;
+            margin-bottom: 10px;
+        }
+
+        .promotion-state-message {
+            border: 1px dashed #c9d8ea;
+            border-radius: 6px;
+            background: #ffffff;
+            color: #66758a;
+            padding: 12px;
+        }
+
+        .promotion-state-message.is-loading {
+            border-style: solid;
+            color: #1f6fb2;
+            background: #eef7ff;
+        }
+
+        .promotion-state-message.is-error {
+            border-style: solid;
+            color: #a52834;
+            background: #fff3f4;
+        }
+
+        .campaign-option-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 10px;
+        }
+
+        .campaign-option-card {
+            cursor: pointer;
+            display: block;
+            border: 1px solid #d8e2ef;
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 12px;
+            min-height: 92px;
+        }
+
+        .campaign-option-card.is-selected {
+            border-color: #2d7dd2;
+            background: #f1f8ff;
+        }
+
+        .campaign-option-main {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .campaign-option-name {
+            color: #23364d;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-left: 6px;
+        }
+
+        .campaign-option-type {
+            display: inline-block;
+            margin-top: 6px;
+            border-radius: 999px;
+            background: #eef2f7;
+            color: #52657d;
+            font-size: 11px;
+            padding: 3px 8px;
+        }
+
+        .campaign-option-discount {
+            color: #0f7a43;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .campaign-clear-action {
+            margin-top: 8px;
+        }
+
+        .apply-calculated-promotion{
+            margin-top: 8px;
+        }
 
         .dropzonex,
         .dropzonex * {
@@ -901,6 +1027,24 @@
                                 </div>
                                 <div class="tab-pane" id="tab-eg10-1" role="tabpanel">
 
+                                    <div class="promotion-workflow-panel">
+                                        <div class="promotion-workflow-header">
+                                            <div>
+                                                <div class="promotion-workflow-title">Campaign ส่วนลด</div>
+                                                <div class="promotion-workflow-subtitle">Campaign ที่ตรงกับ Promotion และรายการเรียน (เลือกได้ 1 Campaign ต่อใบเสร็จ)</div>
+                                            </div>
+                                            <span class="promotion-status-pill">คำนวณอัตโนมัติ</span>
+                                        </div>
+                                        <input type="hidden" id="CreateCalculatedPromotionCampaignId" value="">
+                                        <label class="promotion-context-toggle" for="CreateIsNewStudentPromotionContext">
+                                            <input type="checkbox" id="CreateIsNewStudentPromotionContext" value="1">
+                                            <span>นักเรียนใหม่</span>
+                                        </label>
+                                        <div id="CreateCalculatedPromotionResult" class="small text-muted">
+                                            <div class="promotion-state-message">เลือก Promotion เพื่อดู Campaign ที่ใช้ได้</div>
+                                        </div>
+                                    </div>
+
                                     <table id="myTbl"
                                         class="table table-striped table-bordered responsive-utilities jambo_table "
                                         width="90%" align="center">
@@ -1458,7 +1602,7 @@
                                                 <label for="EditPromotion">Promotion:</label>
                                                 <select style="width: 100%;" class="form-control" id="EditPromotion"
                                                     name="promotion_id">
-                                                    <option value="">-- Select Promotion (optional) --</option>
+                                                    <option value="">-- Select Promotion --</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -1614,6 +1758,25 @@
 
                                 </div>
                                 <div class="tab-pane" id="tab-eg20-1" role="tabpanel">
+
+                                    <div class="promotion-workflow-panel">
+                                        <div class="promotion-workflow-header">
+                                            <div>
+                                                <div class="promotion-workflow-title">Campaign ส่วนลด</div>
+                                                <div class="promotion-workflow-subtitle">Campaign ที่ตรงกับ Promotion และรายการเรียน (เลือกได้ 1 Campaign ต่อใบเสร็จ)</div>
+                                            </div>
+                                            <span class="promotion-status-pill">คำนวณอัตโนมัติ</span>
+                                        </div>
+                                        <input type="hidden" id="EditCalculatedPromotionCampaignId" value="">
+                                        <input type="hidden" id="EditCalculatedPromotionTouched" value="0">
+                                        <label class="promotion-context-toggle" for="EditIsNewStudentPromotionContext">
+                                            <input type="checkbox" id="EditIsNewStudentPromotionContext" value="1">
+                                            <span>นักเรียนใหม่</span>
+                                        </label>
+                                        <div id="EditCalculatedPromotionResult" class="small text-muted">
+                                            <div class="promotion-state-message">Campaign เดิมจะถูกเก็บไว้จนกว่าจะเลือกใหม่</div>
+                                        </div>
+                                    </div>
 
                                     <table id="myTbl3"
                                         class="table table-striped table-bordered responsive-utilities jambo_table "
@@ -2100,6 +2263,479 @@
                 }
             });
 
+            function FormatPromotionAmount(amount) {
+                var numericAmount = parseFloat(amount || 0);
+                return numericAmount.toLocaleString('th-TH', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            }
+
+            function EscapeHtml(text) {
+                return $('<div>').text(text || '').html();
+            }
+
+            function BuildCreateReceiptItems() {
+                var receiptItems = [];
+
+                $('.firstTr').each(function(i, obj) {
+                    if (i > 0) {
+                        receiptItems.push({
+                            student_id: $(obj).find('#std_id').val(),
+                            subject_id: $(obj).find('#subject_id').val(),
+                            course_type: $(obj).find('#course_type').val(),
+                            month_count: $(obj).find('#qty').val(),
+                            net_amount: $(obj).find('#pp').val(),
+                            discount_amount: $(obj).find('#discount').val()
+                        });
+                    }
+                });
+
+                return receiptItems;
+            }
+
+            function BuildEditReceiptItems() {
+                var receiptItems = [];
+
+                $('.firstTr3').each(function(i, obj) {
+                    receiptItems.push({
+                        student_id: $(obj).find("select[name='student_id[]']").val(),
+                        subject_id: $(obj).find("select[name='rrsub[]']").val(),
+                        course_type: $(obj).find("select[name='course_type[]']").val(),
+                        month_count: $(obj).find("select[name='rrqty[]']").val(),
+                        net_amount: $(obj).find("input[name='rrtotal[]']").val(),
+                        discount_amount: $(obj).find("input[name='rrdiscount[]']").val()
+                    });
+                });
+
+                return receiptItems;
+            }
+
+            function BuildPromotionPreviewPayload(mode) {
+                var isCreate = mode === 'create';
+                var receiptItems = isCreate ? BuildCreateReceiptItems() : BuildEditReceiptItems();
+                var source = isCreate ? $('#AddSource').val() : $('#EditSource').val();
+                var promotionId = isCreate ? $('#AddPromotion').val() : $('#EditPromotion').val();
+
+                return {
+                    promotion_id: promotionId,
+                    receipt_items: receiptItems,
+                    submission_date: isCreate ? $('#AddSubmissiondate').val() : $('#EditSubmissiondate').val(),
+                    entrance_fee_amount: SumEntranceFeeAmount(mode),
+                    has_referral: source === 'คนรู้จักแนะนำ' ? 1 : 0,
+                    is_new_student: isCreate
+                        ? ($('#CreateIsNewStudentPromotionContext').is(':checked') ? 1 : 0)
+                        : ($('#EditIsNewStudentPromotionContext').is(':checked') ? 1 : 0)
+                };
+            }
+
+            function SumEntranceFeeAmount(mode) {
+                var selector = mode === 'create'
+                    ? "input[name='entrance_fee[]']:checked"
+                    : "input[name='entrance_fee']:checked";
+
+                var total = 0;
+                $(selector).each(function() {
+                    total += parseFloat($(this).val()) || 0;
+                });
+
+                return total;
+            }
+
+            window.CalculatedPromotionOptions = {
+                create: {},
+                edit: {}
+            };
+            window.AppliedCalculatedPromotionIds = {
+                create: null,
+                edit: null
+            };
+
+            function RenderCalculatedPromotionOptions(mode, promotions) {
+                var resultTarget = mode === 'create' ? $('#CreateCalculatedPromotionResult') : $('#EditCalculatedPromotionResult');
+                var preSelectedIds = (mode === 'edit') ? (window.EditCurrentCampaignIds || []) : [];
+                window.CalculatedPromotionOptions[mode] = {};
+
+                if (!promotions || promotions.length === 0) {
+                    resultTarget.html('<div class="promotion-state-message">ยังไม่มี Campaign ที่เข้าเงื่อนไขจากรายการเรียนตอนนี้</div>');
+                    SyncCalculatedPromotionHidden(mode);
+                    return;
+                }
+
+                var html = '<div class="campaign-option-list">';
+                $.each(promotions, function(index, promotion) {
+                    window.CalculatedPromotionOptions[mode][promotion.promotion_campaign_id] = promotion;
+                    var inputId = mode + '_calculated_promotion_' + promotion.promotion_campaign_id;
+                    var isPreSelected = preSelectedIds.indexOf(parseInt(promotion.promotion_campaign_id)) !== -1;
+                    var categories = (promotion.reward_categories || []).join(',');
+                    html += '<label class="campaign-option-card' + (isPreSelected ? ' is-selected' : '') + '" for="' + inputId + '">';
+                    html += '<div class="campaign-option-main">';
+                    html += '<div>';
+                    html += '<input class="mr-2 calculated-promotion-option" type="radio" name="' + mode + '_calculated_promotion" id="' + inputId + '" value="' + promotion.promotion_campaign_id + '" data-categories="' + EscapeHtml(categories) + '"' + (isPreSelected ? ' checked' : '') + '>';
+                    html += '<span class="campaign-option-name">' + EscapeHtml(promotion.name) + '</span>';
+                    html += '<div><span class="campaign-option-type">' + EscapeHtml(BuildCampaignTypeLabel(promotion.promotion_type)) + '</span></div>';
+                    html += '</div>';
+                    var rewardText = promotion.reward_summary
+                        ? promotion.reward_summary
+                        : (promotion.discount_amount > 0 ? 'ลด ' + FormatPromotionAmount(promotion.discount_amount) + ' บาท' : 'รับสิทธิ์โปรโมชั่น');
+                    html += '<div class="campaign-option-discount">' + EscapeHtml(rewardText) + '</div>';
+                    html += '</div>';
+                    html += '</label>';
+                });
+                html += '</div>';
+                html += '<button type="button" class="btn btn-sm btn-primary apply-calculated-promotion" data-mode="' + mode + '">Apply Campaign</button>';
+                html += '<button type="button" class="btn btn-sm btn-link campaign-clear-action clear-calculated-promotion" data-mode="' + mode + '">ล้าง Campaign ที่เลือก</button>';
+                html += '<div class="calculated-promotion-summary mt-2" id="' + mode + '_calculated_promotion_summary"></div>';
+
+                resultTarget.html(html);
+
+                SyncCalculatedPromotionHidden(mode);
+                RefreshAppliedPromotionSummary(mode);
+            }
+
+            // Enforce: campaigns sharing a reward category (เช่น ส่วนลดเงินสด) cannot be selected together.
+            function EnforceCampaignCategoryConstraint(mode, changedInput) {
+                if (!changedInput.is(':checked')) {
+                    return;
+                }
+
+                var changedCategories = (changedInput.data('categories') || '').toString().split(',').filter(Boolean);
+                if (changedCategories.length === 0) {
+                    return;
+                }
+
+                $("input[name='" + mode + "_calculated_promotion']:checked").each(function() {
+                    if (this === changedInput[0]) {
+                        return;
+                    }
+
+                    var otherCategories = ($(this).data('categories') || '').toString().split(',').filter(Boolean);
+                    var hasOverlap = otherCategories.some(function(category) {
+                        return changedCategories.indexOf(category) !== -1;
+                    });
+
+                    if (hasOverlap) {
+                        $(this).prop('checked', false);
+                        $(this).closest('.campaign-option-card').removeClass('is-selected');
+                    }
+                });
+            }
+
+            // Mirror checked campaign ids into the hidden field as a comma-separated list.
+            function SyncCalculatedPromotionHidden(mode) {
+                var hiddenTarget = mode === 'create' ? $('#CreateCalculatedPromotionCampaignId') : $('#EditCalculatedPromotionCampaignId');
+                var ids = [];
+                $("input[name='" + mode + "_calculated_promotion']:checked").each(function() {
+                    ids.push($(this).val());
+                    $(this).closest('.campaign-option-card').addClass('is-selected');
+                });
+                hiddenTarget.val(ids.join(','));
+            }
+
+            function GetSelectedCalculatedPromotion(mode) {
+                var selectedIds = GetSelectedCalculatedPromotionIds(mode);
+                if (selectedIds.length === 0) {
+                    return null;
+                }
+
+                return window.CalculatedPromotionOptions[mode][selectedIds[0]] || null;
+            }
+
+            function HasCashReward(promotion) {
+                return (promotion.reward_categories || []).indexOf('CASH') !== -1;
+            }
+
+            // All course lines (course_type = 1) that a cash discount may be applied to.
+            function GetPromotionCourseRows(mode) {
+                var rows = mode === 'create' ? $('.firstTr').slice(1) : $('.firstTr3');
+
+                return rows.filter(function() {
+                    var courseType = mode === 'create'
+                        ? $(this).find('#course_type').val()
+                        : $(this).find("select[name='course_type[]']").val();
+
+                    return (parseInt(courseType, 10) || 1) === 1;
+                });
+            }
+
+            function GetPromotionRowDiscountField(mode, row) {
+                return mode === 'create'
+                    ? row.find('#discount')
+                    : row.find("input[name='rrdiscount[]']");
+            }
+
+            function CalculatePromotionActual(mode) {
+                var rows = mode === 'create' ? $('.firstTr').slice(1) : $('.firstTr3');
+                var actualDiscount = 0;
+                var actualNet = 0;
+
+                rows.each(function() {
+                    var row = $(this);
+                    actualDiscount += parseFloat(mode === 'create'
+                        ? row.find('#discount').val()
+                        : row.find("input[name='rrdiscount[]']").val()) || 0;
+                    actualNet += parseFloat(mode === 'create'
+                        ? row.find('#pp').val()
+                        : row.find("input[name='rrtotal[]']").val()) || 0;
+                });
+
+                return {
+                    actual_discount_amount: actualDiscount,
+                    actual_net_amount: actualNet
+                };
+            }
+
+            function BuildPromotionSummaryHtml(mode, promotion, note) {
+                var actual = CalculatePromotionActual(mode);
+                var expectedDiscount = parseFloat(promotion.discount_amount) || 0;
+                var expectedNet = Math.max(0, actual.actual_net_amount + actual.actual_discount_amount - expectedDiscount);
+                var isMatched = Math.abs(expectedDiscount - actual.actual_discount_amount) < 0.01;
+                var statusClass = isMatched ? 'text-success' : 'text-warning';
+                var statusText = isMatched ? 'ยอดตรงกับ Campaign' : 'ยอดไม่ตรงกับ Campaign';
+                var rewardText = promotion.reward_summary || (expectedDiscount > 0 ? 'ลด ' + FormatPromotionAmount(expectedDiscount) + ' บาท' : 'รับสิทธิ์โปรโมชั่น');
+
+                var html = '<div class="promotion-state-message">';
+                html += '<div><strong>' + EscapeHtml(promotion.name) + '</strong></div>';
+                html += '<div>สิทธิ์: ' + EscapeHtml(rewardText) + '</div>';
+                html += '<div>ส่วนลดที่ Campaign คาดหวัง: ' + FormatPromotionAmount(expectedDiscount) + ' บาท</div>';
+                html += '<div>ส่วนลดที่ Staff key จริง: ' + FormatPromotionAmount(actual.actual_discount_amount) + ' บาท</div>';
+                html += '<div>ยอดสุทธิที่ควรเป็น: ' + FormatPromotionAmount(expectedNet) + ' บาท</div>';
+                html += '<div>ยอดสุทธิที่ Staff key จริง: ' + FormatPromotionAmount(actual.actual_net_amount) + ' บาท</div>';
+                html += '<div class="' + statusClass + '"><strong>' + statusText + '</strong></div>';
+
+                if (note) {
+                    html += '<div class="text-warning">' + EscapeHtml(note) + '</div>';
+                }
+
+                if (!isMatched) {
+                    html += '<div class="text-warning">ระบบจะเตือนและบันทึกต่อได้ แต่จะเก็บสถานะไว้ตรวจสอบย้อนหลัง</div>';
+                }
+
+                html += '</div>';
+
+                return html;
+            }
+
+            function RefreshAppliedPromotionSummary(mode) {
+                var summaryTarget = $('#' + mode + '_calculated_promotion_summary');
+                if (summaryTarget.length === 0) {
+                    return;
+                }
+
+                var promotion = GetSelectedCalculatedPromotion(mode);
+                if (!promotion) {
+                    summaryTarget.html('');
+                    return;
+                }
+
+                summaryTarget.html(BuildPromotionSummaryHtml(mode, promotion));
+            }
+
+            function ApplyCalculatedPromotion(mode) {
+                var promotion = GetSelectedCalculatedPromotion(mode);
+                if (!promotion) {
+                    alert('กรุณาเลือก Campaign ก่อน Apply');
+                    return;
+                }
+
+                var note = '';
+                if (HasCashReward(promotion)) {
+                    var courseRows = GetPromotionCourseRows(mode);
+
+                    if (courseRows.length === 0) {
+                        note = 'ไม่พบรายการคอร์สที่เหมาะสำหรับเติมส่วนลดอัตโนมัติ กรุณา key ส่วนลดเอง';
+                    } else {
+                        // Consolidate the campaign discount onto the first course line and clear the
+                        // remaining course lines, so the total discount equals the expected amount.
+                        var expectedDiscount = parseFloat(promotion.discount_amount) || 0;
+                        courseRows.each(function(index) {
+                            var discountField = GetPromotionRowDiscountField(mode, $(this));
+                            discountField.val(index === 0 ? expectedDiscount : 0).trigger('change');
+                        });
+
+                        if (mode === 'edit') {
+                            $('#EditCalculatedPromotionTouched').val('1');
+                        }
+                    }
+                } else {
+                    note = 'Campaign นี้เป็นสิทธิ์ค่าลงทะเบียน/ของแถม ระบบจะแสดงใน Summary และเก็บ Snapshot โดยไม่แก้ช่อง Discount อัตโนมัติ';
+                }
+
+                window.AppliedCalculatedPromotionIds[mode] = promotion.promotion_campaign_id;
+                setTimeout(function() {
+                    $('#' + mode + '_calculated_promotion_summary').html(BuildPromotionSummaryHtml(mode, promotion, note));
+                }, 500);
+            }
+
+            function GetSelectedCalculatedPromotionIds(mode) {
+                var hiddenTarget = mode === 'create' ? $('#CreateCalculatedPromotionCampaignId') : $('#EditCalculatedPromotionCampaignId');
+                var value = (hiddenTarget.val() || '').toString();
+                return value === '' ? [] : value.split(',');
+            }
+
+            function BuildCampaignTypeLabel(promotionType) {
+                if (promotionType === 'TWO_SUBJECTS') {
+                    return 'Math + English';
+                }
+
+                if (promotionType === 'REFERRAL') {
+                    return 'เพื่อนแนะนำเพื่อน';
+                }
+
+                if (promotionType === 'NEW_STUDENT_MULTI_COURSE') {
+                    return 'นักเรียนใหม่';
+                }
+
+                if (promotionType === 'NEW_STUDENT_FREE_ENTRANCE_GIFT'
+                    || promotionType === 'NEW_STUDENT_FREE_ENTRANCE'
+                    || promotionType === 'NEW_STUDENT_GIFT') {
+                    return 'นักเรียนใหม่';
+                }
+
+                return 'Custom';
+            }
+
+            function ResetCalculatedPromotionPanel(mode) {
+                if (mode === 'create') {
+                    $('#CreateCalculatedPromotionCampaignId').val('');
+                    window.AppliedCalculatedPromotionIds.create = null;
+                    $('#CreateIsNewStudentPromotionContext').prop('checked', false);
+                    $('#CreateCalculatedPromotionResult').html('<div class="promotion-state-message">เลือก Promotion เพื่อดู Campaign ที่ใช้ได้</div>');
+                    $("input[name='create_calculated_promotion']").prop('checked', false);
+                    return;
+                }
+
+                $('#EditCalculatedPromotionCampaignId').val('');
+                window.AppliedCalculatedPromotionIds.edit = null;
+                $('#EditCalculatedPromotionTouched').val('0');
+                $('#EditIsNewStudentPromotionContext').prop('checked', false);
+                $('#EditCalculatedPromotionResult').html('<div class="promotion-state-message">Campaign เดิมจะถูกเก็บไว้จนกว่าจะเลือกใหม่</div>');
+                $("input[name='edit_calculated_promotion']").prop('checked', false);
+                window.EditCurrentCampaignIds = [];
+                window.EditCurrentCampaignId = null;
+            }
+
+            $('#CreateModal').on('hidden.bs.modal', function() {
+                ResetCalculatedPromotionPanel('create');
+            });
+
+            $('#EditModal').on('show.bs.modal', function() {
+                ResetCalculatedPromotionPanel('edit');
+            });
+
+            var calculatedPromotionPreviewTimers = {
+                create: null,
+                edit: null
+            };
+
+            function PreviewCalculatedPromotions(mode, markTouched) {
+                var isCreate = mode === 'create';
+                var resultTarget = isCreate ? $('#CreateCalculatedPromotionResult') : $('#EditCalculatedPromotionResult');
+                var selectedPromotionId = isCreate ? $('#AddPromotion').val() : $('#EditPromotion').val();
+
+                if (!selectedPromotionId) {
+                    if (isCreate) {
+                        $('#CreateCalculatedPromotionCampaignId').val('');
+                        $("input[name='create_calculated_promotion']").prop('checked', false);
+                    } else {
+                        $('#EditCalculatedPromotionCampaignId').val('');
+                        $("input[name='edit_calculated_promotion']").prop('checked', false);
+                    }
+                    resultTarget.html('<div class="promotion-state-message">เลือก Promotion เพื่อดู Campaign ที่ใช้ได้</div>');
+                    return;
+                }
+
+                if (!isCreate && markTouched) {
+                    $('#EditCalculatedPromotionTouched').val('1');
+                }
+
+                resultTarget.html('<div class="promotion-state-message is-loading">กำลังคำนวณ Campaign ที่เข้าเงื่อนไข...</div>');
+
+                $.ajax({
+                    url: "{{ route('receipt_school.promotions.preview') }}",
+                    method: 'POST',
+                    data: BuildPromotionPreviewPayload(mode),
+                    success: function(result) {
+                        if (result.errors) {
+                            resultTarget.html('<div class="promotion-state-message is-error">' + $.map(result.errors, EscapeHtml).join('<br>') + '</div>');
+                            return;
+                        }
+
+                        RenderCalculatedPromotionOptions(mode, result.eligible_promotions);
+                    },
+                    error: function() {
+                        resultTarget.html('<div class="promotion-state-message is-error">คำนวณ Campaign ไม่สำเร็จ กรุณาตรวจข้อมูลแล้วลองอีกครั้ง</div>');
+                    }
+                });
+            }
+
+            function ScheduleCalculatedPromotionPreview(mode, markTouched) {
+                clearTimeout(calculatedPromotionPreviewTimers[mode]);
+                calculatedPromotionPreviewTimers[mode] = setTimeout(function() {
+                    PreviewCalculatedPromotions(mode, markTouched);
+                }, 350);
+            }
+
+            window.ScheduleCalculatedPromotionPreview = ScheduleCalculatedPromotionPreview;
+
+            $(document).on('change', '#AddPromotion, #AddSource, #CreateIsNewStudentPromotionContext, #AddSubmissiondate', function() {
+                window.ScheduleCalculatedPromotionPreview('create', false);
+            });
+
+            $(document).on('change', '#EditPromotion, #EditSource, #EditIsNewStudentPromotionContext, #EditSubmissiondate', function() {
+                window.ScheduleCalculatedPromotionPreview('edit', true);
+            });
+
+            $(document).on('change keyup', "#CreateModal select[name='subject_id'], #CreateModal select[name='qty'], #CreateModal select[name='course_type']", function() {
+                window.ScheduleCalculatedPromotionPreview('create', false);
+            });
+
+            $(document).on('change keyup', "#EditModal select[name='rrsub[]'], #EditModal select[name='rrqty[]'], #EditModal select[name='course_type[]'], #EditModal input[name='rrtotal[]']", function() {
+                window.ScheduleCalculatedPromotionPreview('edit', true);
+            });
+
+            $(document).on('change keyup', "#CreateModal input[name='discount'], #CreateModal input[name='pp'], #EditModal input[name='rrdiscount[]'], #EditModal input[name='rrtotal[]']", function() {
+                RefreshAppliedPromotionSummary($(this).closest('#EditModal').length ? 'edit' : 'create');
+            });
+
+            $(document).on('change', "input[name='create_calculated_promotion']", function() {
+                EnforceCampaignCategoryConstraint('create', $(this));
+                $("input[name='create_calculated_promotion']").closest('.campaign-option-card').removeClass('is-selected');
+                SyncCalculatedPromotionHidden('create');
+                RefreshAppliedPromotionSummary('create');
+            });
+
+            $(document).on('change', "input[name='edit_calculated_promotion']", function() {
+                $('#EditCalculatedPromotionTouched').val('1');
+                EnforceCampaignCategoryConstraint('edit', $(this));
+                $("input[name='edit_calculated_promotion']").closest('.campaign-option-card').removeClass('is-selected');
+                SyncCalculatedPromotionHidden('edit');
+                RefreshAppliedPromotionSummary('edit');
+            });
+
+            $(document).on('click', '.apply-calculated-promotion', function() {
+                ApplyCalculatedPromotion($(this).data('mode'));
+            });
+
+            $(document).on('click', '.clear-calculated-promotion', function() {
+                var mode = $(this).data('mode');
+
+                if (mode === 'create') {
+                    $("input[name='create_calculated_promotion']").prop('checked', false);
+                    $("input[name='create_calculated_promotion']").closest('.campaign-option-card').removeClass('is-selected');
+                    SyncCalculatedPromotionHidden('create');
+                    window.AppliedCalculatedPromotionIds.create = null;
+                    RefreshAppliedPromotionSummary('create');
+                } else {
+                    $('#EditCalculatedPromotionTouched').val('1');
+                    $("input[name='edit_calculated_promotion']").prop('checked', false);
+                    $("input[name='edit_calculated_promotion']").closest('.campaign-option-card').removeClass('is-selected');
+                    SyncCalculatedPromotionHidden('edit');
+                    window.AppliedCalculatedPromotionIds.edit = null;
+                    RefreshAppliedPromotionSummary('edit');
+                }
+            });
+
             var table = $('#Listview').DataTable({
 
                 ajax: {
@@ -2319,8 +2955,6 @@
                 // //resize size bar
                 // parent.find('#rrmedia_price').hide();
                 //     parent.find('#rrmedia_name').hide();
-                $('.app-container').addClass('closed-sidebar-mobile closed-sidebar');
-
                 $('.alert-danger').html('');
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
@@ -2365,6 +2999,14 @@
                         //append
                         //$('#EditFile').val(res.data.file_att);
                         $('#EditModal').modal('show');
+                        window.EditCurrentCampaignIds = (res.current_campaign_ids || []).map(function(id) {
+                            return parseInt(id);
+                        });
+                        window.EditCurrentCampaignId = window.EditCurrentCampaignIds.length ? window.EditCurrentCampaignIds[0] : null;
+                        if (window.EditCurrentCampaignIds.length > 1) {
+                            $('#EditCalculatedPromotionTouched').val('1');
+                        }
+                        PreviewCalculatedPromotions('edit', false);
                         // let id
                         // id = $(this).data('id');
 
@@ -3041,6 +3683,7 @@
                         source: $('#AddSource').val(),
                         remark: $('#AddRemark').val(),
                         promotion_id: $('#AddPromotion').val(),
+                        calculated_promotion_campaign_ids: GetSelectedCalculatedPromotionIds('create'),
                         is_vat: $('#AddIsVat').is(':checked') ? 1 : 0,
                         receipt: arr,
                         // subject:$('#subject_id').val(),
@@ -3075,6 +3718,13 @@
                             toastr.success(result.success, {
                                 timeOut: 5000
                             });
+                            if (result.warnings) {
+                                $.each(result.warnings, function(key, value) {
+                                    toastr.warning(value, {
+                                        timeOut: 8000
+                                    });
+                                });
+                            }
                             $('#CreateModal').modal('hide');
                             $('#Listview').DataTable().ajax.reload();
                             $('.form').trigger('reset');
@@ -3125,19 +3775,13 @@
 
                 // Initializing array values
                 $("input[name='entrance_fee[]']").each(function() {
-
-                    // entrance_fee.push(this.value);
-
-
-                    if (entrace_edit_0 == 0) {
-                        entrance_fee.push(0);
-                    }
-                    if ($('#entrance_fee_val_1').is(':checked')) {
-                        entrance_fee.push(this.value);
-                    } else {
-                        entrance_fee.push(0);
+                    var feeInput = $(this);
+                    if (feeInput.attr('type') === 'hidden') {
+                        entrance_fee.push(feeInput.val() || 0);
+                        return;
                     }
 
+                    entrance_fee.push(feeInput.is(':checked') ? feeInput.val() : 0);
                 });
                 $("input[name='rrid[]']").each(function() {
                     rrid.push(this.value);
@@ -3167,7 +3811,6 @@
                 $("select[name='rrqty[]']").each(function() {
                     rrqty.push(this.value);
                 });
-
                 $("input[name='rrbook[]']").each(function() {
                     rrbook.push(this.value);
                 });
@@ -3213,50 +3856,52 @@
                 //รอแก้
                 // console.log(id);
 
+                var updatePayload = {
+                    img: values,
+
+                    id_parent: $('#id_parent').val(),
+                    submission_date: $('#EditSubmissiondate').val(),
+                    payment_type: $('#EditPayment').val(),
+                    name_parent: $('#EditParent').val()[0],
+                    student: $('#EditStudent').val(),
+                    description: $('#EditDes').val(),
+                    street_address: $('#EditAddress').val(),
+                    postcode: $('#EditPostcode').val(),
+                    name_parent2: $('#EditParent').val()[0],
+                    mobile: $('#EditMobile').val(),
+                    source: $('#EditSource').val(),
+                    remark: $('#EditRemark').val(),
+                    promotion_id: $('#EditPromotion').val(),
+                    is_vat: $('#EditIsVat').is(':checked') ? 1 : 0,
+                    student_id: student_id,
+                    rrid: rrid,
+                    rrsub: rrsub,
+                    rrcourse: rrcourse,
+                    rrlevel: rrlevel,
+                    rrweek: rrweek,
+                    rrqty: rrqty,
+                    rrbook: rrbook,
+                    rrbookprice: rrbookprice,
+                    rrtype: rrtype,
+                    rrdiscount: rrdiscount,
+                    rrprice: rrprice,
+                    rrtotal: rrtotal,
+                    rrperiod: rrperiod,
+                    media_price: media_price,
+                    media_name: media_name,
+                    entrance_fee: entrance_fee,
+                };
+
+                if ($('#EditCalculatedPromotionTouched').val() === '1') {
+                    updatePayload.calculated_promotion_touched = 1;
+                    updatePayload.calculated_promotion_campaign_ids = GetSelectedCalculatedPromotionIds('edit');
+                }
+
                 $.ajax({
                     url: "receipt_school/save/" + id,
                     method: 'PUT',
                     // async : false,
-                    data: {
-                        img: values,
-
-                        id_parent: $('#id_parent').val(),
-                        submission_date: $('#EditSubmissiondate').val(),
-                        payment_type: $('#EditPayment').val(),
-                        name_parent: $('#EditParent').val()[0],
-                        student: $('#EditStudent').val(),
-                        description: $('#EditDes').val(),
-                        street_address: $('#EditAddress').val(),
-                        //street_address2: $('#EditAddress2').val(),
-                        //city: $('#EditCity').val(),
-                        //province: $('#EditProvince').val(),
-                        postcode: $('#EditPostcode').val(),
-                        name_parent2: $('#EditParent').val()[0],
-                        mobile: $('#EditMobile').val(),
-                        source: $('#EditSource').val(),
-                        remark: $('#EditRemark').val(),
-                        promotion_id: $('#EditPromotion').val(),
-                        is_vat: $('#EditIsVat').is(':checked') ? 1 : 0,
-                        // package: $('#EditPackage').val(),
-                        // file_att: $('#EditFile').val(),
-                        student_id: student_id,
-                        rrid: rrid,
-                        rrsub: rrsub,
-                        rrcourse: rrcourse,
-                        rrlevel: rrlevel,
-                        rrweek: rrweek,
-                        rrqty: rrqty,
-                        rrbook: rrbook,
-                        rrbookprice: rrbookprice,
-                        rrtype: rrtype,
-                        rrdiscount: rrdiscount,
-                        rrprice: rrprice,
-                        rrtotal: rrtotal,
-                        rrperiod: rrperiod,
-                        media_price: media_price,
-                        media_name: media_name,
-                        entrance_fee: entrance_fee,
-                    },
+                    data: updatePayload,
 
                     success: function(result) {
                         console.log(result);
@@ -3275,6 +3920,13 @@
                             toastr.success(result.success, {
                                 timeOut: 5000
                             });
+                            if (result.warnings) {
+                                $.each(result.warnings, function(key, value) {
+                                    toastr.warning(value, {
+                                        timeOut: 8000
+                                    });
+                                });
+                            }
                             $('#EditModal').modal('hide');
                             $('#Listview').DataTable().ajax.reload();
                             //setTimeout(function() {
@@ -3460,11 +4112,13 @@
                         format: 'YYYY-MM'
                     }
                 });
+                window.ScheduleCalculatedPromotionPreview('create', false);
             });
             $("#removeRow").click(function() {
                 // // ส่วนสำหรับการลบ
                 if ($("#myTbl tr").length > 3) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
                     $("#myTbl tr:last").remove(); // ลบรายการสุดท้าย
+                    window.ScheduleCalculatedPromotionPreview('create', false);
                 } else {
                     // เหลือ 1 รายการลบไม่ได้
                     if ($("#myTbl tr").length > 1) {
@@ -3481,6 +4135,7 @@
                     //$("#myTbl tr:last").remove(); // ลบรายการสุดท้าย
 
                     $(this).closest("tr").remove();
+                    window.ScheduleCalculatedPromotionPreview('create', false);
                 } else {
                     // เหลือ 1 รายการลบไม่ได้
                     if ($("#myTbl tr").length > 1) {
@@ -3502,11 +4157,13 @@
                     .find("input").attr("value", "").end()
                     .find("select").attr("value", "").end()
                     .appendTo($("#myTbl3"));
+                window.ScheduleCalculatedPromotionPreview('edit', true);
             });
             $("#removeRow2").click(function() {
                 // // ส่วนสำหรับการลบ
                 if ($("#myTbl3 tr").length > 2) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
                     $("#myTbl3 tr:last").remove(); // ลบรายการสุดท้าย
+                    window.ScheduleCalculatedPromotionPreview('edit', true);
                 } else {
                     // เหลือ 1 รายการลบไม่ได้
                     if ($("#myTbl3 tr").length > 1) {
@@ -3522,6 +4179,7 @@
                 if ($("#myTbl3 tr").length > 2) { // จะลบรายการได้ อย่างน้อย ต้องมี 1 รายการ
                     //$("#myTbl tr:last").remove(); // ลบรายการสุดท้าย
                     $(this).closest("tr").remove();
+                    window.ScheduleCalculatedPromotionPreview('edit', true);
                 } else {
                     // เหลือ 1 รายการลบไม่ได้
                     if ($("#myTbl3 tr").length > 1) {

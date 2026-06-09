@@ -23,9 +23,12 @@ use App\Models\SchoolPrice;
 use App\Models\SubjectPrice;
 use App\Models\ParentRegister;
 use App\Models\Promotion;
+use App\Models\PromotionCampaign;
 use App\Models\Receipt_School_RunningNumber;
 use App\Models\Statuslog;
 use Carbon\Carbon;
+use App\Services\PromotionEligibilityService;
+use App\Services\ReceiptPromotionUsageService;
 use App\Services\StatusService;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
@@ -460,10 +463,258 @@ class ReceiptSchoolController extends Controller
     }
 
     protected $statusService;
-    public function __construct(StatusService $statusService)
+    protected $promotionEligibilityService;
+    protected $receiptPromotionUsageService;
+
+    public function __construct(
+        StatusService $statusService,
+        PromotionEligibilityService $promotionEligibilityService,
+        ReceiptPromotionUsageService $receiptPromotionUsageService
+    )
     {
         // parent::__construct();
         $this->statusService = $statusService;
+        $this->promotionEligibilityService = $promotionEligibilityService;
+        $this->receiptPromotionUsageService = $receiptPromotionUsageService;
+    }
+
+    public function PreviewCalculatedPromotions(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'receipt_items' => 'nullable|array',
+            'receipt' => 'nullable|array',
+            'promotion_id' => 'nullable|integer|exists:promotions,id',
+            'branch_id' => 'nullable|integer',
+            'subtotal_amount' => 'nullable|numeric|min:0',
+            'entrance_fee_amount' => 'nullable|numeric|min:0',
+            'has_referral' => 'nullable|boolean',
+            'is_new_student' => 'nullable|boolean',
+            'evaluation_date' => 'nullable|date',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        $receipt_context = $this->BuildPromotionReceiptContext($request);
+        $eligible_promotions = $this->promotionEligibilityService
+            ->getEligiblePromotions($receipt_context);
+
+        return response()->json([
+            'eligible_promotions' => $eligible_promotions,
+        ]);
+    }
+
+    private function BuildPromotionReceiptContext(Request $request)
+    {
+        $receipt_items = $this->NormalizePromotionReceiptItems($request);
+        $subject_ids = collect($receipt_items)
+            ->pluck('subject_id')
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        if (!empty($subject_ids)) {
+            $subjects = Subject::whereIn('id', $subject_ids)->get()->keyBy('id');
+            $receipt_items = collect($receipt_items)
+                ->map(function ($receipt_item) use ($subjects) {
+                    if (empty($receipt_item['subject_group']) && isset($subjects[$receipt_item['subject_id']])) {
+                        $receipt_item['subject_group'] = $subjects[$receipt_item['subject_id']]->group;
+                    }
+
+                    return $receipt_item;
+                })
+                ->all();
+        }
+
+        $subtotal_amount = $request->filled('subtotal_amount')
+            ? (float) $request->get('subtotal_amount')
+            : collect($receipt_items)->sum('net_amount');
+
+        return [
+            'promotion_id' => $request->get('promotion_id'),
+            'branch_id' => $request->get('branch_id'),
+            'subtotal_amount' => $subtotal_amount,
+            'entrance_fee_amount' => $this->ResolvePromotionEntranceFeeAmount($request),
+            'has_referral' => filter_var($request->get('has_referral', false), FILTER_VALIDATE_BOOLEAN),
+            'is_new_student' => filter_var($request->get('is_new_student', false), FILTER_VALIDATE_BOOLEAN),
+            'evaluation_date' => $request->get('evaluation_date') ?: $request->get('submission_date'),
+            'receipt_items' => $receipt_items,
+        ];
+    }
+
+    private function ResolvePromotionEntranceFeeAmount(Request $request)
+    {
+        if ($request->filled('entrance_fee_amount')) {
+            return (float) $request->get('entrance_fee_amount');
+        }
+
+        $entrance_fee = $request->get('entrance_fee', []);
+
+        if (is_array($entrance_fee)) {
+            return collect($entrance_fee)
+                ->sum(function ($value) {
+                    return (float) $value;
+                });
+        }
+
+        return (float) $entrance_fee;
+    }
+
+    private function NormalizePromotionReceiptItems(Request $request)
+    {
+        if ($request->has('receipt_items')) {
+            return collect($request->get('receipt_items', []))
+                ->map(function ($receipt_item) {
+                    return $this->NormalizePromotionReceiptItem($receipt_item);
+                })
+                ->all();
+        }
+
+        if ($request->has('receipt')) {
+            return collect($request->get('receipt', []))
+                ->map(function ($receipt_item) {
+                    return $this->NormalizePromotionReceiptItem($receipt_item);
+                })
+                ->all();
+        }
+
+        $subjects = $request->get('rrsub', []);
+        $course_types = $request->get('rrcourse', []);
+        $totals = $request->get('rrtotal', []);
+        $discounts = $request->get('rrdiscount', []);
+        $student_ids = $request->get('student_id', []);
+
+        return collect($subjects)
+            ->map(function ($subject_id, $index) use ($course_types, $totals, $discounts, $student_ids) {
+                return $this->NormalizePromotionReceiptItem([
+                    'subject' => $subject_id,
+                    'course_type' => $course_types[$index] ?? null,
+                    'pp' => $totals[$index] ?? 0,
+                    'discount' => $discounts[$index] ?? 0,
+                    'std_id' => $student_ids[$index] ?? null,
+                ]);
+            })
+            ->all();
+    }
+
+    private function NormalizePromotionReceiptItem(array $receipt_item)
+    {
+        return [
+            'student_id' => $receipt_item['student_id'] ?? $receipt_item['std_id'] ?? null,
+            'subject_id' => $receipt_item['subject_id'] ?? $receipt_item['subject'] ?? null,
+            'subject_group' => $receipt_item['subject_group'] ?? $receipt_item['group'] ?? null,
+            'course_type' => $receipt_item['course_type'] ?? 1,
+            'month_count' => $receipt_item['month_count'] ?? $receipt_item['qty'] ?? null,
+            'net_amount' => (float) ($receipt_item['net_amount'] ?? $receipt_item['pp'] ?? $receipt_item['total'] ?? 0),
+            'discount_amount' => (float) ($receipt_item['discount_amount'] ?? $receipt_item['discount'] ?? 0),
+        ];
+    }
+
+    private function ResolveSelectedCalculatedPromotion(Request $request, array $receipt_context)
+    {
+        if (!$request->filled('calculated_promotion_campaign_id')) {
+            return null;
+        }
+
+        $campaign = PromotionCampaign::with(['rules', 'rewards', 'branchEligibilities'])
+            ->find($request->get('calculated_promotion_campaign_id'));
+
+        if (!$campaign) {
+            return [
+                'errors' => ['Calculated promotion ที่เลือกไม่มีอยู่ในระบบ'],
+            ];
+        }
+
+        $eligible_promotions = $this->promotionEligibilityService
+            ->getEligiblePromotions($receipt_context, collect([$campaign]));
+
+        if ($eligible_promotions->isEmpty()) {
+            return [
+                'errors' => ['Calculated promotion ที่เลือกไม่เข้าเงื่อนไขของใบเสร็จนี้'],
+            ];
+        }
+
+        return [
+            'campaign' => $campaign,
+            'eligible_promotion' => $eligible_promotions->first(),
+        ];
+    }
+
+    /**
+     * Resolve and validate multiple selected calculated promotions.
+     *
+     * Multiple campaigns may be combined, but no two selected campaigns may
+     * share a reward category (e.g. two cash discounts cannot stack).
+     */
+    private function ResolveSelectedCalculatedPromotions(Request $request, array $receipt_context)
+    {
+        $campaign_ids = $request->get('calculated_promotion_campaign_ids', []);
+
+        if (!is_array($campaign_ids)) {
+            $campaign_ids = [$campaign_ids];
+        }
+
+        if (empty($campaign_ids) && $request->filled('calculated_promotion_campaign_id')) {
+            $campaign_ids = [$request->get('calculated_promotion_campaign_id')];
+        }
+
+        $campaign_ids = collect($campaign_ids)
+            ->filter()
+            ->map(function ($value) {
+                return (int) $value;
+            })
+            ->unique()
+            ->values()
+            ->all();
+
+        if (empty($campaign_ids)) {
+            return ['selected' => []];
+        }
+
+        if (count($campaign_ids) > 1) {
+            return ['errors' => ['เลือกได้เพียง 1 Campaign ต่อใบเสร็จ']];
+        }
+
+        $campaigns = PromotionCampaign::with(['rules', 'rewards', 'branchEligibilities'])
+            ->whereIn('id', $campaign_ids)
+            ->get()
+            ->keyBy('id');
+
+        $selected = [];
+        $used_categories = [];
+
+        foreach ($campaign_ids as $campaign_id) {
+            $campaign = $campaigns->get($campaign_id);
+
+            if (!$campaign) {
+                return ['errors' => ['Campaign ที่เลือกไม่มีอยู่ในระบบ']];
+            }
+
+            $eligible_promotion = $this->promotionEligibilityService
+                ->getEligiblePromotions($receipt_context, collect([$campaign]))
+                ->first();
+
+            if (!$eligible_promotion) {
+                return ['errors' => ['Campaign "' . $campaign->name . '" ไม่เข้าเงื่อนไขของใบเสร็จนี้']];
+            }
+
+            foreach ($eligible_promotion['reward_categories'] ?? [] as $reward_category) {
+                if (in_array($reward_category, $used_categories, true)) {
+                    return ['errors' => ['ไม่สามารถเลือก Campaign ที่ให้รางวัลชนิดเดียวกันซ้ำกันได้ (เช่น ส่วนลดเงินสด 2 รายการ)']];
+                }
+
+                $used_categories[] = $reward_category;
+            }
+
+            $selected[] = [
+                'campaign' => $campaign,
+                'eligible_promotion' => $eligible_promotion,
+            ];
+        }
+
+        return ['selected' => $selected];
     }
 
     /**
@@ -758,7 +1009,6 @@ class ReceiptSchoolController extends Controller
             $inactive_label = ((int) $promotion->is_active === 1) ? '' : ' (Inactive)';
             $promotion_options .= '<option value="' . $promotion->id . '" ' . $selected_promotion . '>' . $promotion->name . $inactive_label . '</option>';
         }
-
 
         $receipts_detail = SchoolPrice::where('rid', $id)
             ->orderBy("id", "asc")
@@ -1105,6 +1355,14 @@ class ReceiptSchoolController extends Controller
             }
         }
 
+        $current_campaign_ids = \App\Models\ReceiptPromotionUsage::where('receipt_school_id', $id)
+            ->pluck('promotion_campaign_id')
+            ->map(function ($campaign_id) {
+                return (int) $campaign_id;
+            })
+            ->values()
+            ->all();
+
         return response()->json([
             'data' =>  $data,
             'data2' => $data2,
@@ -1113,7 +1371,9 @@ class ReceiptSchoolController extends Controller
             'imgs' => $html,
             'payment' => $payment,
             'promotion_options' => $promotion_options,
-            'select_list_parent' => $select_list_parent
+            'select_list_parent' => $select_list_parent,
+            'current_campaign_id' => $current_campaign_ids[0] ?? null,
+            'current_campaign_ids' => $current_campaign_ids,
         ]);
     }
 
@@ -1428,12 +1688,19 @@ class ReceiptSchoolController extends Controller
             }
         }
 
-        // if ($payment_type == 1) {
-        //     # code...
-        //     $vat_price_val = number_format(0, 2);
-        //     $vat_val = number_format(0, 2);
-        //     $booksum = $booksum + $pricesub;
-        // }
+        // Apply campaign discount from ReceiptPromotionUsage
+        $receipt_promotion_usages = \App\Models\ReceiptPromotionUsage::where('receipt_school_id', $id)->get();
+        $campaign_discount = (float) $receipt_promotion_usages->sum('discount_amount_snapshot');
+        $campaign_discount_name = $receipt_promotion_usages->isNotEmpty()
+            ? $receipt_promotion_usages->pluck('promotion_name_snapshot')->filter()->implode(', ')
+            : null;
+        if ($campaign_discount > 0) {
+            $all_price -= $campaign_discount;
+            $price_text = $this->baht_text($all_price);
+            $price_texten = $this->convertNumber($all_price);
+            $price_val = number_format($all_price, 2);
+        }
+
         // dd($data,$receipt_detail_arr);
 
         return view($viewr)->with(['id' => $id])
@@ -1460,7 +1727,9 @@ class ReceiptSchoolController extends Controller
             ->with(['course_type' => $data->course_type])
             ->with(['typeRec' => $typeRec])
             ->with(['group_rec' => $group_rec])
-            ->with(['file_att' => $file_att]);
+            ->with(['file_att' => $file_att])
+            ->with(['campaign_discount' => $campaign_discount])
+            ->with(['campaign_discount_name' => $campaign_discount_name]);
     }
 
     public function find($parent)
@@ -1703,6 +1972,12 @@ class ReceiptSchoolController extends Controller
 
         $typeRec = (bool)$hasPromotion ? 9 : 0;
 
+        $receipt_context = $this->BuildPromotionReceiptContext($request);
+        $selected_calculated_promotions = $this->ResolveSelectedCalculatedPromotions($request, $receipt_context);
+        if (isset($selected_calculated_promotions['errors'])) {
+            return response()->json(['errors' => $selected_calculated_promotions['errors']]);
+        }
+
         // ตรวจสอบ period overlap ก่อนบันทึกข้อมูล (ก่อน file handling)
         $period_errors = [];
         foreach ($request->get('receipt') as $index => $value) {
@@ -1860,12 +2135,38 @@ class ReceiptSchoolController extends Controller
             $updateStatus = $this->statusService->updateStatus($students);
         }
 
+        $promotion_usages = [];
+        if (!empty($selected_calculated_promotions['selected'])) {
+            $promotion_usages = $this->receiptPromotionUsageService->replaceUsages(
+                $rid,
+                $selected_calculated_promotions['selected'],
+                auth()->user()->id,
+                $receipt_context
+            );
+        }
+
+        $promotion_warnings = collect($promotion_usages)
+            ->pluck('mismatch_reason')
+            ->filter()
+            ->values()
+            ->all();
+
         //merge $dataArray and $dataArray2 ;
-        $dataMerge = array_merge($dataArray, ['receipts' => $dataArray2]);
+        $dataMerge = array_merge($dataArray, [
+            'receipts' => $dataArray2,
+            'calculated_promotion_usages' => collect($promotion_usages)->map(function ($usage) {
+                return $usage->toArray();
+            })->all(),
+        ]);
 
         LogActivity::modelEvent($data, 'receipt created', null, $dataMerge);
 
-        return response()->json(['success' => 'Receive Add successfully']);
+        $response = ['success' => 'Receive Add successfully'];
+        if (!empty($promotion_warnings)) {
+            $response['warnings'] = $promotion_warnings;
+        }
+
+        return response()->json($response);
     }
 
     public function deleteImg($id, $id2)
@@ -1999,17 +2300,19 @@ class ReceiptSchoolController extends Controller
             return response()->json(['errors' => ["ไม่สามารถทำรายการโปรโมชั่นร่วมกับรายการปกติได้"]]);
         }
 
+        $receipt_context = $this->BuildPromotionReceiptContext($request);
+        $selected_calculated_promotions = $this->ResolveSelectedCalculatedPromotions($request, $receipt_context);
+        if (isset($selected_calculated_promotions['errors'])) {
+            return response()->json(['errors' => $selected_calculated_promotions['errors']]);
+        }
+
 
         $dataimg = Receipt_School::find($id_parent);
         if ($dataimg->file_att != Null && $dataimg->file_att != "") {
             $stu = $dataimg->file_att . "|" . $stu;
-
             $stu = rtrim($stu, "|");
-            Receipt_School::find($id_parent)->update(['file_att' => $stu, 'type' => $typeRec]);
-        } else {
-            Receipt_School::find($id_parent)->update(['file_att' => $stu, 'type' => $typeRec]);
-            return response()->json(['success' => 'Receipt updated successfully']);
         }
+        Receipt_School::find($id_parent)->update(['file_att' => $stu, 'type' => $typeRec]);
         //
         $rrid  = $request->get('rrid');
         $std_id  = $request->get('student_id');
@@ -2153,12 +2456,43 @@ class ReceiptSchoolController extends Controller
 
             $updateStatus = $this->statusService->updateStatus($students);
         }
+
+        $promotion_usages = [];
+        if ($request->has('calculated_promotion_touched') || $request->has('calculated_promotion_campaign_ids') || $request->has('calculated_promotion_campaign_id')) {
+            if (!empty($selected_calculated_promotions['selected'])) {
+                $promotion_usages = $this->receiptPromotionUsageService->replaceUsages(
+                    $id,
+                    $selected_calculated_promotions['selected'],
+                    auth()->user()->id,
+                    $receipt_context
+                );
+            } else {
+                $this->receiptPromotionUsageService->clearUsage($id);
+            }
+        }
+
+        $promotion_warnings = collect($promotion_usages)
+            ->pluck('mismatch_reason')
+            ->filter()
+            ->values()
+            ->all();
+
         $dataMergeOld = array_merge($Receipt_School_old, ['receipts' => $SchoolPrice_old]);
         // dd($dataMergeOld);
-        $dataMergeNew = array_merge($Receipt_School_arry, ['receipts' => $SchoolPrice_new]);
+        $dataMergeNew = array_merge($Receipt_School_arry, [
+            'receipts' => $SchoolPrice_new,
+            'calculated_promotion_usages' => collect($promotion_usages)->map(function ($usage) {
+                return $usage->toArray();
+            })->all(),
+        ]);
         LogActivity::modelEvent($Receipt_School, 'receipt updated', $dataMergeOld, $dataMergeNew);
 
-        return response()->json(['success' => 'receipt updated successfully']);
+        $response = ['success' => 'receipt updated successfully'];
+        if (!empty($promotion_warnings)) {
+            $response['warnings'] = $promotion_warnings;
+        }
+
+        return response()->json($response);
     }
 
     public function destroy($id)

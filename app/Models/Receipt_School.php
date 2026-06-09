@@ -48,4 +48,9 @@ class Receipt_School extends Model
         return $this->belongsTo(Promotion::class, 'promotion_id', 'id');
     }
 
+    public function promotionUsage()
+    {
+        return $this->hasOne(ReceiptPromotionUsage::class, 'receipt_school_id', 'id');
+    }
+
 }
