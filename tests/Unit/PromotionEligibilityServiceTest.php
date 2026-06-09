@@ -367,6 +367,75 @@ class PromotionEligibilityServiceTest extends TestCase
         $this->assertSame(['CASH'], $result->first()['reward_categories']);
     }
 
+    public function testPackageTierDiscountIsDistinguishedByLinkedPromotion()
+    {
+        $service = new PromotionEligibilityService(new PromotionRewardCalculator());
+
+        $mathTier = $this->makeCampaign([
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_EXACT_MONTHS,
+                'rule_config_json' => ['months' => [4]],
+            ]),
+        ], [
+            new PromotionReward([
+                'reward_type' => PromotionReward::TYPE_FIXED_DISCOUNT,
+                'discount_amount' => 350,
+            ]),
+        ], 1);
+
+        $playTier = $this->makeCampaign([
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_EXACT_MONTHS,
+                'rule_config_json' => ['months' => [4]],
+            ]),
+        ], [
+            new PromotionReward([
+                'reward_type' => PromotionReward::TYPE_FIXED_DISCOUNT,
+                'discount_amount' => 300,
+            ]),
+        ], 2);
+
+        $campaigns = collect([$mathTier, $playTier]);
+        $items = ['receipt_items' => [['subject_group' => 'M', 'month_count' => 4]]];
+
+        $math = $service->getEligiblePromotions(['promotion_id' => 1] + $items, $campaigns);
+        $this->assertCount(1, $math);
+        $this->assertSame(350.0, $math->first()['discount_amount']);
+
+        $play = $service->getEligiblePromotions(['promotion_id' => 2] + $items, $campaigns);
+        $this->assertCount(1, $play);
+        $this->assertSame(300.0, $play->first()['discount_amount']);
+    }
+
+    public function testExactMonthTiersDoNotStackForSamePackage()
+    {
+        $service = new PromotionEligibilityService(new PromotionRewardCalculator());
+
+        $tiers = collect([2 => 150, 4 => 350, 6 => 600])
+            ->map(function ($discount, $months) {
+                return $this->makeCampaign([
+                    new PromotionRule([
+                        'rule_type' => PromotionRule::TYPE_EXACT_MONTHS,
+                        'rule_config_json' => ['months' => [$months]],
+                    ]),
+                ], [
+                    new PromotionReward([
+                        'reward_type' => PromotionReward::TYPE_FIXED_DISCOUNT,
+                        'discount_amount' => $discount,
+                    ]),
+                ], 1);
+            })
+            ->values();
+
+        $result = $service->getEligiblePromotions([
+            'promotion_id' => 1,
+            'receipt_items' => [['subject_group' => 'M', 'month_count' => 6]],
+        ], $tiers);
+
+        $this->assertCount(1, $result);
+        $this->assertSame(600.0, $result->first()['discount_amount']);
+    }
+
     private function makeCampaign(array $rules, array $rewards, $promotion_id = null)
     {
         $campaign = new PromotionCampaign([

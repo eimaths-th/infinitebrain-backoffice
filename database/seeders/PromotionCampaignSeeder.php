@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Promotion;
 use App\Models\PromotionCampaign;
 use App\Models\PromotionReward;
 use App\Models\PromotionRule;
@@ -188,6 +189,68 @@ class PromotionCampaignSeeder extends Seeder
             }
         }
 
+        $this->seedPackageMonthlyDiscountTiers();
+
         $this->command->info('Promotion campaigns seeded successfully.');
+    }
+
+    /**
+     * Seed per-package monthly prepay discount tiers.
+     *
+     * The two packages share subject groups (Play Math is group M, English Sparks
+     * is group E), so the package is distinguished by promotion_id, not subject
+     * group. Each tier uses EXACT_MONTHS so a given month count maps to exactly
+     * one tier (no stacking of lower tiers).
+     */
+    private function seedPackageMonthlyDiscountTiers()
+    {
+        $package_tiers = [
+            'Promotion Package for Math/English' => [
+                ['months' => 2, 'discount' => 150],
+                ['months' => 4, 'discount' => 350],
+                ['months' => 6, 'discount' => 600],
+                ['months' => 12, 'discount' => 2000],
+            ],
+            'Promotion Package for Play Math' => [
+                ['months' => 2, 'discount' => 100],
+                ['months' => 4, 'discount' => 300],
+                ['months' => 6, 'discount' => 600],
+            ],
+        ];
+
+        foreach ($package_tiers as $promotion_name => $tiers) {
+            $promotion = Promotion::where('name', $promotion_name)->first();
+
+            if (!$promotion) {
+                $this->command->warn("Skipped tiers: promotion '{$promotion_name}' not found.");
+                continue;
+            }
+
+            foreach ($tiers as $tier) {
+                $name = $promotion_name . ' - ' . $tier['months'] . ' เดือน ส่วนลด ' . $tier['discount'];
+
+                $campaign = PromotionCampaign::updateOrCreate(
+                    ['name' => $name],
+                    [
+                        'promotion_id' => $promotion->id,
+                        'promotion_type' => PromotionCampaign::TYPE_CUSTOM,
+                        'is_active' => true,
+                        'priority' => 50,
+                    ]
+                );
+
+                $campaign->rules()->delete();
+                $campaign->rules()->create([
+                    'rule_type' => PromotionRule::TYPE_EXACT_MONTHS,
+                    'rule_config_json' => ['months' => [$tier['months']]],
+                ]);
+
+                $campaign->rewards()->delete();
+                $campaign->rewards()->create([
+                    'reward_type' => PromotionReward::TYPE_FIXED_DISCOUNT,
+                    'discount_amount' => $tier['discount'],
+                ]);
+            }
+        }
     }
 }
