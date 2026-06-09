@@ -224,17 +224,21 @@
                                     รายชื่อนักเรียนในรายวิชา
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ route('promotions') }}">
-                                    <i class="metismenu-icon"></i>
-                                    Promotion
-                                </a>
-                            </li>
-
-
                         </ul>
 
 
+                    </li>
+                    <li>
+                        <a href="{{ route('promotions') }}">
+                            <i class="metismenu-icon pe-7s-ticket"></i>
+                            Promotion
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('campaigns') }}">
+                            <i class="metismenu-icon pe-7s-gift"></i>
+                            Campaigns
+                        </a>
                     </li>
                     <li>
                         <a href="#">

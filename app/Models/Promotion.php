@@ -18,4 +18,9 @@ class Promotion extends Model
     {
         return $this->hasMany(Receipt_School::class, 'promotion_id', 'id');
     }
+
+    public function campaigns()
+    {
+        return $this->hasMany(PromotionCampaign::class);
+    }
 }

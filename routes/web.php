@@ -454,6 +454,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/promotions/edit/{id}', [PromotionController::class, 'Edit'])->name('promotions.edit');
     Route::put('/promotions/save/{id}', [PromotionController::class, 'Update'])->name('promotions.save');
     Route::put('/promotions/toggle-status/{id}', [PromotionController::class, 'ToggleStatus'])->name('promotions.toggle-status');
+    Route::get('/campaigns', [PromotionController::class, 'CampaignsPage'])->name('campaigns');
+    Route::get('/promotions/campaigns/list', [PromotionController::class, 'CampaignsIndex'])->name('promotions.campaigns');
+    Route::post('/promotions/campaigns/store', [PromotionController::class, 'CampaignStore'])->name('promotions.campaigns.store');
+    Route::get('/promotions/campaigns/edit/{id}', [PromotionController::class, 'CampaignEdit'])->name('promotions.campaigns.edit');
+    Route::put('/promotions/campaigns/save/{id}', [PromotionController::class, 'CampaignUpdate'])->name('promotions.campaigns.save');
+    Route::put('/promotions/campaigns/toggle-status/{id}', [PromotionController::class, 'CampaignToggleStatus'])->name('promotions.campaigns.toggle-status');
 
     //subject price
 
@@ -559,6 +565,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(array('GET', 'POST'), '/receipt_school', [ReceiptSchoolController::class, 'index'])->name('receipt_school');
     Route::get('/receipt_school/source_report', [ReceiptSchoolController::class, 'sourceReport'])->name('receipt_school.sourceReport');
     Route::get('/receipt_school/source_report_print', [ReceiptSchoolController::class, 'printSourceReport'])->name('receipt_school.sourceReportPrint');
+    Route::post('/receipt_school/promotions/preview', [ReceiptSchoolController::class, 'PreviewCalculatedPromotions'])->name('receipt_school.promotions.preview');
     Route::get('/receipt_school/{sub_id}', [ReceiptSchoolController::class, 'search'])->name('receipt_school.search');
     Route::get('/receipt_school/{sub_id}/{level_id}/{week}/{price}/{qty}/{discount}/{book_price}/{type}/{course_type}/{entrance_fee}', [ReceiptSchoolController::class, 'searchs'])->name('receipt_school.searchs');
     Route::get('/receipt_school/{sub_id}/{level_id}/{book}/{week}/{course_type}/', [ReceiptSchoolController::class, 'sumbook'])->name('receipt_school.sumbook');

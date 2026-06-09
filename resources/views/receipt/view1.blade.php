@@ -722,6 +722,13 @@
                                             <td width="40%" class="grey">ส่วนลด/Discout</td>
                                             <td width="20%"><b>{{ number_format($discount, 2) }}</b></td>
                                         </tr>
+                                        @if(isset($campaign_discount) && $campaign_discount > 0)
+                                        <tr>
+                                            <td width="40%"></td>
+                                            <td width="40%" class="grey">ส่วนลด Campaign<br><small style="font-weight:normal;">{{ $campaign_discount_name }}</small></td>
+                                            <td width="20%"><b>{{ number_format($campaign_discount, 2) }}</b></td>
+                                        </tr>
+                                        @endif
                                         <tr>
                                             <td width="40%"></td>
                                             <!-- <td width="20%"></td> -->
@@ -1063,6 +1070,13 @@
                                             <td width="40%" class="grey">ส่วนลด/Discout</td>
                                             <td width="20%"><b>{{ number_format($discount, 2) }}</b></td>
                                         </tr>
+                                        @if(isset($campaign_discount) && $campaign_discount > 0)
+                                        <tr>
+                                            <td width="40%"></td>
+                                            <td width="40%" class="grey">ส่วนลด Campaign<br><small style="font-weight:normal;">{{ $campaign_discount_name }}</small></td>
+                                            <td width="20%"><b>{{ number_format($campaign_discount, 2) }}</b></td>
+                                        </tr>
+                                        @endif
                                         <tr>
                                             <td width="40%"></td>
                                             <!-- <td width="20%"></td> -->
