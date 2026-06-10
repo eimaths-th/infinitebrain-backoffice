@@ -19,6 +19,17 @@ class PromotionReward extends Model
     const CATEGORY_ENTRANCE = 'ENTRANCE';
     const CATEGORY_GIFT = 'GIFT';
 
+    const CALCULATION_SCOPE_PER_MATCHING_COURSE = 'PER_MATCHING_COURSE';
+
+    const CONFIG_CALCULATION_SCOPE = 'calculation_scope';
+    const CONFIG_MATCHING_COURSE_TYPE = 'matching_course_type';
+    const CONFIG_MATCHING_MONTHS = 'matching_months';
+    const CONFIG_UNIT_DISCOUNT_AMOUNT = 'unit_discount_amount';
+    const CONFIG_MATCHING_COURSE_COUNT = 'matching_course_count';
+    const CONFIG_CALCULATION_DETAIL = 'calculation_detail';
+
+    const DEFAULT_MATCHING_COURSE_TYPE = 1;
+
     /**
      * Map a reward type to its reward category. Campaigns that share a reward
      * category cannot be combined on the same receipt (e.g. two cash discounts).

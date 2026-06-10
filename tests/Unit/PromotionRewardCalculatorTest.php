@@ -21,6 +21,34 @@ class PromotionRewardCalculatorTest extends TestCase
         $this->assertSame(200.0, $result['discount_amount']);
     }
 
+    public function testFixedDiscountRewardCanMultiplyByMatchingCourseCount()
+    {
+        $calculator = new PromotionRewardCalculator();
+        $promotion_reward = new PromotionReward([
+            'reward_type' => PromotionReward::TYPE_FIXED_DISCOUNT,
+            'discount_amount' => 600,
+            'reward_config_json' => [
+                PromotionReward::CONFIG_CALCULATION_SCOPE => PromotionReward::CALCULATION_SCOPE_PER_MATCHING_COURSE,
+                PromotionReward::CONFIG_MATCHING_COURSE_TYPE => 1,
+                PromotionReward::CONFIG_MATCHING_MONTHS => [6],
+                PromotionReward::CONFIG_UNIT_DISCOUNT_AMOUNT => 600,
+            ],
+        ]);
+
+        $result = $calculator->calculate([
+            'receipt_items' => [
+                ['course_type' => 1, 'month_count' => 6],
+                ['course_type' => 1, 'month_count' => 6],
+                ['course_type' => 1, 'month_count' => 4],
+                ['course_type' => 2, 'month_count' => 6],
+            ],
+        ], $promotion_reward);
+
+        $this->assertSame(1200.0, $result['discount_amount']);
+        $this->assertSame(2, $result[PromotionReward::CONFIG_CALCULATION_DETAIL][PromotionReward::CONFIG_MATCHING_COURSE_COUNT]);
+        $this->assertSame(600.0, $result[PromotionReward::CONFIG_CALCULATION_DETAIL][PromotionReward::CONFIG_UNIT_DISCOUNT_AMOUNT]);
+    }
+
     public function testPercentDiscountRewardUsesSubtotalAmount()
     {
         $calculator = new PromotionRewardCalculator();
