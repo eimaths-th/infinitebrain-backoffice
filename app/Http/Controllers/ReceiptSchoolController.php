@@ -45,6 +45,8 @@ class ReceiptSchoolController extends Controller
     const BAHT_TEXT_BAHT = 'บาท';
     const BAHT_TEXT_SATANG = 'สตางค์';
     const BAHT_TEXT_POINT = 'จุด';
+    const SOURCE_REFERRAL = 'คนรู้จักแนะนำ';
+    const NEW_STUDENT_ONE_MONTH_ENTRANCE_FEE_AMOUNT = 535;
     // const sfielda = array('2' => 'GMEC', '4' => 'IMOCSEA', '5' => 'INFINITE Spelling Bee', '6' => 'GELOSEA', '7' => 'LIMOC', '8' => 'STEM', '9' => 'OLPCS');
     // const sfieldas = array('2' => 'G', '4' => 'J', '5' => 'I', '6' => 'L', '7' => 'M', '8' => 'N', '9' => 'O');
     const thmonth = array(
@@ -489,6 +491,9 @@ class ReceiptSchoolController extends Controller
             'entrance_fee_amount' => 'nullable|numeric|min:0',
             'has_referral' => 'nullable|boolean',
             'is_new_student' => 'nullable|boolean',
+            'name_parent' => 'nullable|integer|exists:parent,id',
+            'referent_parent_id' => 'nullable|integer|exists:parent,id',
+            'receipt_school_id' => 'nullable|integer|exists:receipt_school,id',
             'evaluation_date' => 'nullable|date',
         ]);
 
@@ -496,16 +501,23 @@ class ReceiptSchoolController extends Controller
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
-        $receipt_context = $this->BuildPromotionReceiptContext($request);
+        $receipt_context = $this->BuildPromotionReceiptContext(
+            $request,
+            $request->get('receipt_school_id')
+        );
         $eligible_promotions = $this->promotionEligibilityService
             ->getEligiblePromotions($receipt_context);
 
         return response()->json([
             'eligible_promotions' => $eligible_promotions,
+            'promotion_context' => [
+                'has_referral' => $receipt_context['has_referral'],
+                'is_new_student' => $receipt_context['is_new_student'],
+            ],
         ]);
     }
 
-    private function BuildPromotionReceiptContext(Request $request)
+    private function BuildPromotionReceiptContext(Request $request, $current_receipt_school_id = null)
     {
         $receipt_items = $this->NormalizePromotionReceiptItems($request);
         $subject_ids = collect($receipt_items)
@@ -537,11 +549,53 @@ class ReceiptSchoolController extends Controller
             'branch_id' => $request->get('branch_id'),
             'subtotal_amount' => $subtotal_amount,
             'entrance_fee_amount' => $this->ResolvePromotionEntranceFeeAmount($request),
-            'has_referral' => filter_var($request->get('has_referral', false), FILTER_VALIDATE_BOOLEAN),
-            'is_new_student' => filter_var($request->get('is_new_student', false), FILTER_VALIDATE_BOOLEAN),
+            'has_referral' => $this->ResolvePromotionReferralStatus($request),
+            'is_new_student' => $this->ResolvePromotionNewStudentStatus($receipt_items, $current_receipt_school_id),
             'evaluation_date' => $request->get('evaluation_date') ?: $request->get('submission_date'),
             'receipt_items' => $receipt_items,
         ];
+    }
+
+    private function ResolvePromotionReferralStatus(Request $request)
+    {
+        $source = trim((string) $request->get('source', ''));
+        $referent_parent_id = $request->get('referent_parent_id');
+        $receipt_parent_id = $request->get('name_parent');
+
+        if ($source !== self::SOURCE_REFERRAL || empty($referent_parent_id)) {
+            return false;
+        }
+
+        if (!empty($receipt_parent_id) && (int) $referent_parent_id === (int) $receipt_parent_id) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function ResolvePromotionNewStudentStatus(array $receipt_items, $current_receipt_school_id = null)
+    {
+        $course_student_ids = collect($receipt_items)
+            ->filter(function ($receipt_item) {
+                return (string) ($receipt_item['course_type'] ?? '') === '1';
+            })
+            ->pluck('student_id')
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($course_student_ids->isEmpty()) {
+            return false;
+        }
+
+        $existing_course_query = SchoolPrice::whereIn('student_id', $course_student_ids)
+            ->where('course_type', 1);
+
+        if (!empty($current_receipt_school_id)) {
+            $existing_course_query->where('rid', '!=', $current_receipt_school_id);
+        }
+
+        return !$existing_course_query->exists();
     }
 
     private function ResolvePromotionEntranceFeeAmount(Request $request)
@@ -728,6 +782,11 @@ class ReceiptSchoolController extends Controller
                 return ['errors' => ['Campaign "' . $campaign->name . '" ไม่เข้าเงื่อนไขของใบเสร็จนี้']];
             }
 
+            $policy_errors = $this->ValidateSelectedCalculatedPromotionPolicy($campaign, $receipt_context);
+            if (!empty($policy_errors)) {
+                return ['errors' => $policy_errors];
+            }
+
             foreach ($eligible_promotion['reward_categories'] ?? [] as $reward_category) {
                 if (in_array($reward_category, $used_categories, true)) {
                     return ['errors' => ['ไม่สามารถเลือก Campaign ที่ให้รางวัลชนิดเดียวกันซ้ำกันได้ (เช่น ส่วนลดเงินสด 2 รายการ)']];
@@ -743,6 +802,62 @@ class ReceiptSchoolController extends Controller
         }
 
         return ['selected' => $selected];
+    }
+
+    private function ValidateSelectedCalculatedPromotionPolicy(PromotionCampaign $campaign, array $receipt_context)
+    {
+        if ($campaign->promotion_type !== PromotionCampaign::TYPE_NEW_STUDENT_GIFT) {
+            return [];
+        }
+
+        $entrance_fee_amount = (float) ($receipt_context['entrance_fee_amount'] ?? 0);
+
+        if ((int) round($entrance_fee_amount) === self::NEW_STUDENT_ONE_MONTH_ENTRANCE_FEE_AMOUNT) {
+            return [];
+        }
+
+        return [
+            'Campaign นักเรียนใหม่ 1 เดือนต้องมีค่าแรกเข้า ' .
+            number_format(self::NEW_STUDENT_ONE_MONTH_ENTRANCE_FEE_AMOUNT, 0) .
+            ' บาท',
+        ];
+    }
+
+    private function ValidateReferralParentSelection(Request $request)
+    {
+        $source = trim((string) $request->get('source', ''));
+        $referent_parent_id = $request->get('referent_parent_id');
+        $receipt_parent_id = $request->get('name_parent');
+
+        if ($source !== self::SOURCE_REFERRAL) {
+            return [];
+        }
+
+        if (empty($referent_parent_id)) {
+            return ['กรุณาเลือกผู้แนะนำเมื่อแหล่งที่มาเป็นคนรู้จักแนะนำ'];
+        }
+
+        if (!empty($receipt_parent_id) && (int) $referent_parent_id === (int) $receipt_parent_id) {
+            return ['ผู้แนะนำต้องไม่เป็นผู้ปกครองคนเดียวกับใบเสร็จนี้'];
+        }
+
+        $referent_parent_exists = ParentRegister::where('id', $referent_parent_id)->exists();
+        if (!$referent_parent_exists) {
+            return ['ผู้แนะนำที่เลือกไม่มีอยู่ในระบบ'];
+        }
+
+        return [];
+    }
+
+    private function ResolveReceiptReferentParentId(Request $request)
+    {
+        if (trim((string) $request->get('source', '')) !== self::SOURCE_REFERRAL) {
+            return null;
+        }
+
+        $referent_parent_id = $request->get('referent_parent_id');
+
+        return empty($referent_parent_id) ? null : (int) $referent_parent_id;
     }
 
     /**
@@ -977,7 +1092,6 @@ class ReceiptSchoolController extends Controller
         $subject = Subject::orderBy("id", "asc")->get();
         $parent = ParentRegister::orderBy("id", "asc")->get();
         $promotions = Promotion::where('is_active', 1)->orderBy('name', 'asc')->get();
-
         return view('receipt_school.receipt')->with(['data2' => $student])->with(['data3' => $subject])->with(['data4' => $parent])
             ->with(['datap' => self::datap])
             ->with(['promotions' => $promotions]);
@@ -1940,6 +2054,8 @@ class ReceiptSchoolController extends Controller
 
                 'name_parent' => 'required|string',
                 'mobile' => 'required|string',
+                'source' => 'nullable|string|max:255',
+                'referent_parent_id' => 'nullable|integer|exists:parent,id',
                 'student' => 'required|array',
                 'img' => 'required|array',
                 'receipt' => 'required|array',
@@ -1987,6 +2103,12 @@ class ReceiptSchoolController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
+
+        $referral_errors = $this->ValidateReferralParentSelection($request);
+        if (!empty($referral_errors)) {
+            return response()->json(['errors' => $referral_errors]);
+        }
+
         $groupsub = Subject::whereIn('id', $subjects)->get();
         $group = $groupsub->first()->group;
 
@@ -2067,6 +2189,7 @@ class ReceiptSchoolController extends Controller
             'name_parent' => $request->get('name_parent'),
             'type' => $typeRec,
             'source' => $request->get('source'),
+            'referent_parent_id' => $this->ResolveReceiptReferentParentId($request),
             'remark' => $request->get('remark'),
             'promotion_id' => $request->get('promotion_id'),
             // 'sid' => $request->get('student'),
@@ -2250,6 +2373,8 @@ class ReceiptSchoolController extends Controller
                 'submission_date' => 'required|string',
                 'payment_type' => 'required|string',
                 'promotion_id' => 'nullable|exists:promotions,id',
+                'source' => 'nullable|string|max:255',
+                'referent_parent_id' => 'nullable|integer|exists:parent,id',
                 'student_id' => 'required|array', // Validate that it's an array
                 'student_id.*' => 'required', // Validate each element in the array
 
@@ -2274,6 +2399,11 @@ class ReceiptSchoolController extends Controller
         );
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        $referral_errors = $this->ValidateReferralParentSelection($request);
+        if (!empty($referral_errors)) {
+            return response()->json(['errors' => $referral_errors]);
         }
 
         $promotion_id = $request->get('promotion_id');
@@ -2328,7 +2458,7 @@ class ReceiptSchoolController extends Controller
             return response()->json(['errors' => ["ไม่สามารถทำรายการโปรโมชั่นร่วมกับรายการปกติได้"]]);
         }
 
-        $receipt_context = $this->BuildPromotionReceiptContext($request);
+        $receipt_context = $this->BuildPromotionReceiptContext($request, $id);
         $selected_calculated_promotions = $this->ResolveSelectedCalculatedPromotions($request, $receipt_context);
         if (isset($selected_calculated_promotions['errors'])) {
             return response()->json(['errors' => $selected_calculated_promotions['errors']]);
@@ -2370,6 +2500,7 @@ class ReceiptSchoolController extends Controller
         $update_data = $request->all();
         // Ensure is_vat is captured as 0 or 1
         $update_data['is_vat'] = $request->get('is_vat', 1);
+        $update_data['referent_parent_id'] = $this->ResolveReceiptReferentParentId($request);
         
         $Receipt_School->update($update_data);
         $Receipt_School_arry = $Receipt_School->toArray();

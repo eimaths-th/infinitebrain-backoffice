@@ -138,12 +138,24 @@ class PromotionEligibilityService
             return $this->isMinimumCoursesEligible($promotion_rule, $receipt_context);
         }
 
+        if ($promotion_rule->rule_type === PromotionRule::TYPE_EXACT_COURSES) {
+            return $this->isExactCoursesEligible($promotion_rule, $receipt_context);
+        }
+
         if ($promotion_rule->rule_type === PromotionRule::TYPE_MIN_MONTHS) {
             return $this->isMinimumMonthsEligible($promotion_rule, $receipt_context);
         }
 
         if ($promotion_rule->rule_type === PromotionRule::TYPE_EXACT_MONTHS) {
             return $this->isExactMonthsEligible($promotion_rule, $receipt_context);
+        }
+
+        if ($promotion_rule->rule_type === PromotionRule::TYPE_SUBJECT_GROUP_MONTHS) {
+            return $this->hasRequiredSubjectGroupMonths($promotion_rule, $receipt_context);
+        }
+
+        if ($promotion_rule->rule_type === PromotionRule::TYPE_EXACT_SUBTOTAL) {
+            return $this->hasExactSubtotal($promotion_rule, $receipt_context);
         }
 
         return false;
@@ -210,6 +222,24 @@ class PromotionEligibilityService
         return $course_count >= $minimum_courses;
     }
 
+    private function isExactCoursesEligible(PromotionRule $promotion_rule, array $receipt_context)
+    {
+        $rule_config = $promotion_rule->rule_config_json ?? [];
+        $exact_courses = (int) ($rule_config['exact_courses'] ?? 0);
+
+        if ($exact_courses <= 0) {
+            return false;
+        }
+
+        $course_count = collect($receipt_context['receipt_items'] ?? [])
+            ->filter(function ($receipt_item) {
+                return (int) ($receipt_item['course_type'] ?? 1) === 1;
+            })
+            ->count();
+
+        return $course_count === $exact_courses;
+    }
+
     private function isMinimumMonthsEligible(PromotionRule $promotion_rule, array $receipt_context)
     {
         $rule_config = $promotion_rule->rule_config_json ?? [];
@@ -251,6 +281,77 @@ class PromotionEligibilityService
             ->contains(function ($receipt_item) use ($allowed_months) {
                 return in_array((int) ($receipt_item['month_count'] ?? 0), $allowed_months, true);
             });
+    }
+
+    private function hasRequiredSubjectGroupMonths(PromotionRule $promotion_rule, array $receipt_context)
+    {
+        $rule_config = $promotion_rule->rule_config_json ?? [];
+        $required_subject_groups = $rule_config['subject_groups'] ?? [];
+        $allowed_months = $rule_config['months'] ?? [];
+
+        if (empty($required_subject_groups) || empty($allowed_months)) {
+            return false;
+        }
+
+        $allowed_months = collect(is_array($allowed_months) ? $allowed_months : [$allowed_months])
+            ->map(function ($month) {
+                return (float) $month;
+            })
+            ->filter(function ($month) {
+                return $month > 0;
+            })
+            ->values()
+            ->all();
+
+        if (empty($allowed_months)) {
+            return false;
+        }
+
+        $course_type = $rule_config['course_type'] ?? 1;
+        $receipt_items = collect($receipt_context['receipt_items'] ?? [])
+            ->filter(function ($receipt_item) use ($course_type) {
+                return (int) ($receipt_item['course_type'] ?? 1) === (int) $course_type;
+            });
+
+        foreach ($required_subject_groups as $required_subject_group) {
+            $has_matching_item = $receipt_items->contains(function ($receipt_item) use ($required_subject_group, $allowed_months) {
+                $subject_group = $receipt_item['subject_group'] ?? $receipt_item['group'] ?? null;
+                $month_count = (float) ($receipt_item['month_count'] ?? 0);
+
+                if ($subject_group !== $required_subject_group) {
+                    return false;
+                }
+
+                foreach ($allowed_months as $allowed_month) {
+                    if (abs($month_count - $allowed_month) < 0.0001) {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+
+            if (!$has_matching_item) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function hasExactSubtotal(PromotionRule $promotion_rule, array $receipt_context)
+    {
+        $rule_config = $promotion_rule->rule_config_json ?? [];
+        $expected_amount = (float) ($rule_config['amount'] ?? 0);
+        $tolerance = (float) ($rule_config['tolerance'] ?? 0.01);
+
+        if ($expected_amount <= 0) {
+            return false;
+        }
+
+        $subtotal_amount = (float) ($receipt_context['subtotal_amount'] ?? 0);
+
+        return abs($subtotal_amount - $expected_amount) <= $tolerance;
     }
 
     private function buildEligiblePromotion(PromotionCampaign $campaign, array $receipt_context)
