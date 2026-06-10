@@ -343,6 +343,12 @@ class PromotionCampaignSeeder extends Seeder
             [
                 'reward_type' => PromotionReward::TYPE_FIXED_DISCOUNT,
                 'discount_amount' => $tier['discount'],
+                'reward_config_json' => [
+                    PromotionReward::CONFIG_CALCULATION_SCOPE => PromotionReward::CALCULATION_SCOPE_PER_MATCHING_COURSE,
+                    PromotionReward::CONFIG_MATCHING_COURSE_TYPE => PromotionReward::DEFAULT_MATCHING_COURSE_TYPE,
+                    PromotionReward::CONFIG_MATCHING_MONTHS => [(int) $tier['months']],
+                    PromotionReward::CONFIG_UNIT_DISCOUNT_AMOUNT => $tier['discount'],
+                ],
             ],
             [
                 'reward_type' => PromotionReward::TYPE_FREE_ENTRANCE_FEE,
