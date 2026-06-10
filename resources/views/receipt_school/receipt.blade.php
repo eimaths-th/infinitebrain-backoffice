@@ -892,7 +892,7 @@
                                     </div>
 
                                     <div class="form-row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="position-relative form-group">
                                                 <label for="Source">แหล่งที่มา (Source):</label>
                                                 <select class="form-control" id="AddSource" name="source">
@@ -906,7 +906,20 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4" id="AddReferentParentWrapper" style="display: none;">
+                                            <div class="position-relative form-group">
+                                                <label for="AddReferentParentId">ผู้แนะนำ:</label>
+                                                <select class="form-control" id="AddReferentParentId" name="referent_parent_id">
+                                                    <option value="">-- เลือกผู้แนะนำ --</option>
+                                                    @foreach ($data4 ?? [] as $referent_parent)
+                                                        <option value="{{ $referent_parent->id }}">
+                                                            {{ $referent_parent->code }} {{ $referent_parent->name_parent }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
                                             <div class="position-relative form-group">
                                                 <label for="Remark">หมายเหตุ (Remark):</label>
                                                 <textarea class="form-control" id="AddRemark" name="remark" rows="1" placeholder="ระบุรายละเอียดเพิ่มเติม"></textarea>
@@ -1033,7 +1046,7 @@
                                         </div>
                                         <input type="hidden" id="CreateCalculatedPromotionCampaignId" value="">
                                         <label class="promotion-context-toggle" for="CreateIsNewStudentPromotionContext">
-                                            <input type="checkbox" id="CreateIsNewStudentPromotionContext" value="1">
+                                            <input type="checkbox" id="CreateIsNewStudentPromotionContext" value="1" disabled>
                                             <span>นักเรียนใหม่</span>
                                         </label>
                                         <div id="CreateCalculatedPromotionResult" class="small text-muted">
@@ -1605,7 +1618,7 @@
                                     </div>
 
                                     <div class="form-row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="position-relative form-group">
                                                 <label for="Source">แหล่งที่มา (Source):</label>
                                                 <select class="form-control" id="EditSource" name="source">
@@ -1619,7 +1632,20 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4" id="EditReferentParentWrapper" style="display: none;">
+                                            <div class="position-relative form-group">
+                                                <label for="EditReferentParentId">ผู้แนะนำ:</label>
+                                                <select class="form-control" id="EditReferentParentId" name="referent_parent_id">
+                                                    <option value="">-- เลือกผู้แนะนำ --</option>
+                                                    @foreach ($data4 ?? [] as $referent_parent)
+                                                        <option value="{{ $referent_parent->id }}">
+                                                            {{ $referent_parent->code }} {{ $referent_parent->name_parent }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
                                             <div class="position-relative form-group">
                                                 <label for="Remark">หมายเหตุ (Remark):</label>
                                                 <textarea class="form-control" id="EditRemark" name="remark" rows="1" placeholder="ระบุรายละเอียดเพิ่มเติม"></textarea>
@@ -1766,7 +1792,7 @@
                                         <input type="hidden" id="EditCalculatedPromotionCampaignId" value="">
                                         <input type="hidden" id="EditCalculatedPromotionTouched" value="0">
                                         <label class="promotion-context-toggle" for="EditIsNewStudentPromotionContext">
-                                            <input type="checkbox" id="EditIsNewStudentPromotionContext" value="1">
+                                            <input type="checkbox" id="EditIsNewStudentPromotionContext" value="1" disabled>
                                             <span>นักเรียนใหม่</span>
                                         </label>
                                         <div id="EditCalculatedPromotionResult" class="small text-muted">
@@ -2311,24 +2337,25 @@
                 var isCreate = mode === 'create';
                 var receiptItems = isCreate ? BuildCreateReceiptItems() : BuildEditReceiptItems();
                 var source = isCreate ? $('#AddSource').val() : $('#EditSource').val();
+                var referentParentId = isCreate ? $('#AddReferentParentId').val() : $('#EditReferentParentId').val();
                 var promotionId = isCreate ? $('#AddPromotion').val() : $('#EditPromotion').val();
 
                 return {
                     promotion_id: promotionId,
+                    receipt_school_id: isCreate ? null : $('#id_parent').val(),
+                    name_parent: isCreate ? ($('#AddParent').val() ? $('#AddParent').val()[0] : null) : ($('#EditParent').val() ? $('#EditParent').val()[0] : null),
+                    source: source,
+                    referent_parent_id: referentParentId,
                     receipt_items: receiptItems,
                     submission_date: isCreate ? $('#AddSubmissiondate').val() : $('#EditSubmissiondate').val(),
-                    entrance_fee_amount: SumEntranceFeeAmount(mode),
-                    has_referral: source === 'คนรู้จักแนะนำ' ? 1 : 0,
-                    is_new_student: isCreate
-                        ? ($('#CreateIsNewStudentPromotionContext').is(':checked') ? 1 : 0)
-                        : ($('#EditIsNewStudentPromotionContext').is(':checked') ? 1 : 0)
+                    entrance_fee_amount: SumEntranceFeeAmount(mode)
                 };
             }
 
             function SumEntranceFeeAmount(mode) {
                 var selector = mode === 'create'
-                    ? "input[name='entrance_fee[]']:checked"
-                    : "input[name='entrance_fee']:checked";
+                    ? "#CreateModal input[name='entrance_fee']:checked"
+                    : "#EditModal input[name='entrance_fee[]']:checked";
 
                 var total = 0;
                 $(selector).each(function() {
@@ -2336,6 +2363,25 @@
                 });
 
                 return total;
+            }
+
+            function ApplyPromotionContextState(mode, context) {
+                var target = mode === 'create' ? $('#CreateIsNewStudentPromotionContext') : $('#EditIsNewStudentPromotionContext');
+                target.prop('checked', !!(context && context.is_new_student));
+            }
+
+            function SyncReferentParentVisibility(mode, shouldClear) {
+                var isCreate = mode === 'create';
+                var sourceTarget = isCreate ? $('#AddSource') : $('#EditSource');
+                var referentWrapper = isCreate ? $('#AddReferentParentWrapper') : $('#EditReferentParentWrapper');
+                var referentTarget = isCreate ? $('#AddReferentParentId') : $('#EditReferentParentId');
+                var shouldShow = sourceTarget.val() === 'คนรู้จักแนะนำ';
+
+                referentWrapper.toggle(shouldShow);
+
+                if (!shouldShow && shouldClear) {
+                    referentTarget.val('');
+                }
             }
 
             window.CalculatedPromotionOptions = {
@@ -2467,6 +2513,7 @@
                     $('#CreateCalculatedPromotionCampaignId').val('');
                     window.AppliedCalculatedPromotionIds.create = null;
                     $('#CreateIsNewStudentPromotionContext').prop('checked', false);
+                    SyncReferentParentVisibility('create', true);
                     $('#CreateCalculatedPromotionResult').html('<div class="promotion-state-message">เลือก Promotion เพื่อดู Campaign ที่ใช้ได้</div>');
                     $("input[name='create_calculated_promotion']").prop('checked', false);
                     return;
@@ -2476,6 +2523,7 @@
                 window.AppliedCalculatedPromotionIds.edit = null;
                 $('#EditCalculatedPromotionTouched').val('0');
                 $('#EditIsNewStudentPromotionContext').prop('checked', false);
+                SyncReferentParentVisibility('edit', false);
                 $('#EditCalculatedPromotionResult').html('<div class="promotion-state-message">Campaign เดิมจะถูกเก็บไว้จนกว่าจะเลือกใหม่</div>');
                 $("input[name='edit_calculated_promotion']").prop('checked', false);
                 window.EditCurrentCampaignIds = [];
@@ -2528,6 +2576,7 @@
                             return;
                         }
 
+                        ApplyPromotionContextState(mode, result.promotion_context || {});
                         RenderCalculatedPromotionOptions(mode, result.eligible_promotions);
                     },
                     error: function() {
@@ -2545,11 +2594,21 @@
 
             window.ScheduleCalculatedPromotionPreview = ScheduleCalculatedPromotionPreview;
 
-            $(document).on('change', '#AddPromotion, #AddSource, #CreateIsNewStudentPromotionContext, #AddSubmissiondate', function() {
+            $(document).on('change', '#AddPromotion, #AddReferentParentId, #CreateIsNewStudentPromotionContext, #AddSubmissiondate', function() {
                 window.ScheduleCalculatedPromotionPreview('create', false);
             });
 
-            $(document).on('change', '#EditPromotion, #EditSource, #EditIsNewStudentPromotionContext, #EditSubmissiondate', function() {
+            $(document).on('change', '#EditPromotion, #EditReferentParentId, #EditIsNewStudentPromotionContext, #EditSubmissiondate', function() {
+                window.ScheduleCalculatedPromotionPreview('edit', true);
+            });
+
+            $(document).on('change', '#AddSource', function() {
+                SyncReferentParentVisibility('create', true);
+                window.ScheduleCalculatedPromotionPreview('create', false);
+            });
+
+            $(document).on('change', '#EditSource', function() {
+                SyncReferentParentVisibility('edit', true);
                 window.ScheduleCalculatedPromotionPreview('edit', true);
             });
 
@@ -2830,6 +2889,8 @@
                         $('#EditPayment').html(res.payment)
                         $('#EditPromotion').html(res.promotion_options);
                         $('#EditSource').val(res.data.source);
+                        $('#EditReferentParentId').val(res.data.referent_parent_id);
+                        SyncReferentParentVisibility('edit', false);
                         $('#EditRemark').val(res.data.remark);
                         //$('#EditPackage').val(res.data.package);
                         $('#EditAddress').val(res.data.street_address);
@@ -3536,6 +3597,7 @@
                         name_parent: $('#AddParent').val()[0],
                         mobile: $('#AddMobile').val(),
                         source: $('#AddSource').val(),
+                        referent_parent_id: $('#AddReferentParentId').val(),
                         remark: $('#AddRemark').val(),
                         promotion_id: $('#AddPromotion').val(),
                         calculated_promotion_campaign_ids: GetSelectedCalculatedPromotionIds('create'),
@@ -3725,6 +3787,7 @@
                     name_parent2: $('#EditParent').val()[0],
                     mobile: $('#EditMobile').val(),
                     source: $('#EditSource').val(),
+                    referent_parent_id: $('#EditReferentParentId').val(),
                     remark: $('#EditRemark').val(),
                     promotion_id: $('#EditPromotion').val(),
                     is_vat: $('#EditIsVat').is(':checked') ? 1 : 0,

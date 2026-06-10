@@ -41,6 +41,87 @@ class PromotionEligibilityServiceTest extends TestCase
         $this->assertSame(200.0, $result->first()['discount_amount']);
     }
 
+    public function testTwoSubjectDiscountRequiresOneMonthEachAndExactSubtotal()
+    {
+        $service = new PromotionEligibilityService(new PromotionRewardCalculator());
+        $campaign = $this->makeCampaign([
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_SUBJECT_COMBINATION,
+                'rule_config_json' => [
+                    'subject_groups' => ['M', 'E'],
+                ],
+            ]),
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_SUBJECT_GROUP_MONTHS,
+                'rule_config_json' => [
+                    'subject_groups' => ['M', 'E'],
+                    'months' => [1],
+                    'course_type' => 1,
+                ],
+            ]),
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_EXACT_COURSES,
+                'rule_config_json' => [
+                    'exact_courses' => 2,
+                ],
+            ]),
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_EXACT_SUBTOTAL,
+                'rule_config_json' => [
+                    'amount' => 5800,
+                    'tolerance' => 0.01,
+                ],
+            ]),
+        ], [
+            new PromotionReward([
+                'reward_type' => PromotionReward::TYPE_FIXED_DISCOUNT,
+                'discount_amount' => 200,
+            ]),
+        ]);
+
+        $eligible = $service->getEligiblePromotions([
+            'subtotal_amount' => 5800,
+            'receipt_items' => [
+                ['subject_group' => 'M', 'course_type' => 1, 'month_count' => 1],
+                ['subject_group' => 'E', 'course_type' => 1, 'month_count' => 1],
+            ],
+        ], collect([$campaign]));
+
+        $this->assertCount(1, $eligible);
+        $this->assertSame(200.0, $eligible->first()['discount_amount']);
+
+        $wrongMonth = $service->getEligiblePromotions([
+            'subtotal_amount' => 11600,
+            'receipt_items' => [
+                ['subject_group' => 'M', 'course_type' => 1, 'month_count' => 2],
+                ['subject_group' => 'E', 'course_type' => 1, 'month_count' => 2],
+            ],
+        ], collect([$campaign]));
+
+        $this->assertCount(0, $wrongMonth);
+
+        $wrongSubtotal = $service->getEligiblePromotions([
+            'subtotal_amount' => 6335,
+            'receipt_items' => [
+                ['subject_group' => 'M', 'course_type' => 1, 'month_count' => 1],
+                ['subject_group' => 'E', 'course_type' => 1, 'month_count' => 1],
+            ],
+        ], collect([$campaign]));
+
+        $this->assertCount(0, $wrongSubtotal);
+
+        $extraCourse = $service->getEligiblePromotions([
+            'subtotal_amount' => 5800,
+            'receipt_items' => [
+                ['subject_group' => 'M', 'course_type' => 1, 'month_count' => 1],
+                ['subject_group' => 'E', 'course_type' => 1, 'month_count' => 1],
+                ['subject_group' => 'M', 'course_type' => 1, 'month_count' => 1],
+            ],
+        ], collect([$campaign]));
+
+        $this->assertCount(0, $extraCourse);
+    }
+
     public function testReferralPromotionIsNotEligibleWithoutReferralContext()
     {
         $service = new PromotionEligibilityService(new PromotionRewardCalculator());
@@ -373,6 +454,9 @@ class PromotionEligibilityServiceTest extends TestCase
 
         $mathTier = $this->makeCampaign([
             new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_NEW_STUDENT,
+            ]),
+            new PromotionRule([
                 'rule_type' => PromotionRule::TYPE_EXACT_MONTHS,
                 'rule_config_json' => ['months' => [4]],
             ]),
@@ -385,6 +469,9 @@ class PromotionEligibilityServiceTest extends TestCase
 
         $playTier = $this->makeCampaign([
             new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_NEW_STUDENT,
+            ]),
+            new PromotionRule([
                 'rule_type' => PromotionRule::TYPE_EXACT_MONTHS,
                 'rule_config_json' => ['months' => [4]],
             ]),
@@ -396,7 +483,10 @@ class PromotionEligibilityServiceTest extends TestCase
         ], 2);
 
         $campaigns = collect([$mathTier, $playTier]);
-        $items = ['receipt_items' => [['subject_group' => 'M', 'month_count' => 4]]];
+        $items = [
+            'is_new_student' => true,
+            'receipt_items' => [['subject_group' => 'M', 'month_count' => 4]],
+        ];
 
         $math = $service->getEligiblePromotions(['promotion_id' => 1] + $items, $campaigns);
         $this->assertCount(1, $math);
@@ -405,6 +495,73 @@ class PromotionEligibilityServiceTest extends TestCase
         $play = $service->getEligiblePromotions(['promotion_id' => 2] + $items, $campaigns);
         $this->assertCount(1, $play);
         $this->assertSame(300.0, $play->first()['discount_amount']);
+    }
+
+    public function testPackageTierDiscountRequiresNewStudentContext()
+    {
+        $service = new PromotionEligibilityService(new PromotionRewardCalculator());
+
+        $campaign = $this->makeCampaign([
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_NEW_STUDENT,
+            ]),
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_EXACT_MONTHS,
+                'rule_config_json' => ['months' => [4]],
+            ]),
+        ], [
+            new PromotionReward([
+                'reward_type' => PromotionReward::TYPE_FIXED_DISCOUNT,
+                'discount_amount' => 350,
+            ]),
+        ], 1);
+
+        $result = $service->getEligiblePromotions([
+            'promotion_id' => 1,
+            'is_new_student' => false,
+            'receipt_items' => [['subject_group' => 'M', 'month_count' => 4]],
+        ], collect([$campaign]));
+
+        $this->assertCount(0, $result);
+    }
+
+    public function testPackageTierCampaignCanCombineDiscountEntranceAndGiftRewards()
+    {
+        $service = new PromotionEligibilityService(new PromotionRewardCalculator());
+
+        $campaign = $this->makeCampaign([
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_NEW_STUDENT,
+            ]),
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_EXACT_MONTHS,
+                'rule_config_json' => ['months' => [4]],
+            ]),
+        ], [
+            new PromotionReward([
+                'reward_type' => PromotionReward::TYPE_FIXED_DISCOUNT,
+                'discount_amount' => 350,
+            ]),
+            new PromotionReward([
+                'reward_type' => PromotionReward::TYPE_FREE_ENTRANCE_FEE,
+            ]),
+            new PromotionReward([
+                'reward_type' => PromotionReward::TYPE_GIFT,
+                'reward_config_json' => ['gift_name' => 'กระเป๋านักเรียน 1 ใบ'],
+            ]),
+        ], 1);
+
+        $result = $service->getEligiblePromotions([
+            'promotion_id' => 1,
+            'is_new_student' => true,
+            'entrance_fee_amount' => 535,
+            'receipt_items' => [['subject_group' => 'M', 'month_count' => 4]],
+        ], collect([$campaign]));
+
+        $this->assertCount(1, $result);
+        $this->assertSame(885.0, $result->first()['discount_amount']);
+        $this->assertSame(['CASH', 'ENTRANCE', 'GIFT'], $result->first()['reward_categories']);
+        $this->assertSame('ลด 350.00 บาท + ฟรีค่าลงทะเบียน + กระเป๋านักเรียน 1 ใบ', $result->first()['reward_summary']);
     }
 
     public function testExactMonthTiersDoNotStackForSamePackage()
