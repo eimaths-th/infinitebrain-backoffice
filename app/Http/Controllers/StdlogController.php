@@ -517,6 +517,7 @@ class StdlogController extends Controller
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
         // ใช้ getMatchingSchoolPrices3 เพื่อรองรับข้อมูลข้ามปี
         $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($year, $year);
+        $student_subject_first_period_dates = $this->GetStudentSubjectFirstPeriodDates();
 
         $totalForAllMonths = $this->queryGrafgh1($stdlog);
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
@@ -537,6 +538,7 @@ class StdlogController extends Controller
             'paper' => $paper,
             'year' => $year,
             'month' => $months,
+            'student_subject_first_period_dates' => $student_subject_first_period_dates,
         ]);
     }
 
@@ -555,6 +557,7 @@ class StdlogController extends Controller
 
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
         $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($year, $year);
+        $student_subject_first_period_dates = $this->GetStudentSubjectFirstPeriodDates();
 
         $paper = PaperReport::whereMonth('submission_date', $month)
             ->whereYear('submission_date', $year)
@@ -575,6 +578,7 @@ class StdlogController extends Controller
             'month' => $months,
             'sections' => $sections,
             'orientation' => $orientation,
+            'student_subject_first_period_dates' => $student_subject_first_period_dates,
         ]);
     }
 
@@ -597,6 +601,7 @@ class StdlogController extends Controller
         $periodYear = $request->year;
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
         $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($periodYear, $periodYear);
+        $student_subject_first_period_dates = $this->GetStudentSubjectFirstPeriodDates();
 
         $totalForAllMonths = $this->queryGrafgh1($stdlog);
         $percentageChangeForAllMonths = $this->calculatePercentageChange($totalForAllMonths);
@@ -617,7 +622,72 @@ class StdlogController extends Controller
             'paper' => $paper,
             'year' => $periodYear,
             'month' => $months,
+            'student_subject_first_period_dates' => $student_subject_first_period_dates,
         ]);
+    }
+
+    private function GetStudentSubjectFirstPeriodDates()
+    {
+        $student_subject_first_period_dates = [];
+
+        SchoolPrice::where('course_type', 1)
+            ->whereNotNull('student_id')
+            ->whereNotNull('group')
+            ->whereNotNull('period')
+            ->select('student_id', 'group', 'period')
+            ->get()
+            ->each(function ($school_price) use (&$student_subject_first_period_dates) {
+                $first_period_start_date = $this->ParseSchoolPricePeriodStartDate($school_price->period);
+
+                if ($first_period_start_date === null) {
+                    return;
+                }
+
+                $student_subject_key = $school_price->student_id . '|' . $school_price->group;
+                $current_first_period_date = $student_subject_first_period_dates[$student_subject_key]['date'] ?? null;
+
+                if ($current_first_period_date === null || $first_period_start_date->lt($current_first_period_date)) {
+                    $student_subject_first_period_dates[$student_subject_key] = [
+                        'date' => $first_period_start_date,
+                        'year' => (int) $first_period_start_date->year,
+                        'month' => (int) $first_period_start_date->month,
+                    ];
+                }
+            });
+
+        return $student_subject_first_period_dates;
+    }
+
+    private function ParseSchoolPricePeriodStartDate($period)
+    {
+        $period = trim((string) $period);
+
+        if ($period === '') {
+            return null;
+        }
+
+        try {
+            $period_parts = explode(' - ', $period);
+
+            if (count($period_parts) >= 2) {
+                return Carbon::parse(trim($period_parts[0]))->startOfMonth();
+            }
+
+            $period_numbers = explode('-', str_replace(' - ', '-', $period));
+
+            if (count($period_numbers) >= 2) {
+                $start_year = (int) $period_numbers[0];
+                $start_month = (int) $period_numbers[1];
+
+                if ($start_year > 0 && $start_month >= 1 && $start_month <= 12) {
+                    return Carbon::create($start_year, $start_month, 1)->startOfMonth();
+                }
+            }
+
+            return Carbon::parse($period)->startOfMonth();
+        } catch (\Exception $exception) {
+            return null;
+        }
     }
 
     private function getMatchingSchoolPrices3($periodYear, $year)

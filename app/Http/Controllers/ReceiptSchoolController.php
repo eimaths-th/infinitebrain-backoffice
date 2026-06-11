@@ -575,20 +575,46 @@ class ReceiptSchoolController extends Controller
 
     private function ResolvePromotionNewStudentStatus(array $receipt_items, $current_receipt_school_id = null)
     {
-        $course_student_ids = collect($receipt_items)
+        $course_receipt_items = collect($receipt_items)
             ->filter(function ($receipt_item) {
                 return (string) ($receipt_item['course_type'] ?? '') === '1';
-            })
-            ->pluck('student_id')
-            ->filter()
-            ->unique()
-            ->values();
+            });
 
-        if ($course_student_ids->isEmpty()) {
+        if ($course_receipt_items->isEmpty()) {
             return false;
         }
 
-        $existing_course_query = SchoolPrice::whereIn('student_id', $course_student_ids)
+        if ($course_receipt_items->contains(function ($receipt_item) {
+            return empty($receipt_item['student_id']) || empty($receipt_item['subject_group']);
+        })) {
+            return false;
+        }
+
+        $student_subject_groups = $course_receipt_items
+            ->map(function ($receipt_item) {
+                return [
+                    'student_id' => $receipt_item['student_id'] ?? null,
+                    'subject_group' => $receipt_item['subject_group'] ?? null,
+                ];
+            })
+            ->unique(function ($receipt_item) {
+                return $receipt_item['student_id'] . '|' . $receipt_item['subject_group'];
+            })
+            ->values();
+
+        if ($student_subject_groups->isEmpty()) {
+            return false;
+        }
+
+        $existing_course_query = SchoolPrice::where(function ($query) use ($student_subject_groups) {
+            foreach ($student_subject_groups as $student_subject_group) {
+                $query->orWhere(function ($subject_query) use ($student_subject_group) {
+                    $subject_query
+                        ->where('student_id', $student_subject_group['student_id'])
+                        ->where('group', $student_subject_group['subject_group']);
+                });
+            }
+        })
             ->where('course_type', 1);
 
         if (!empty($current_receipt_school_id)) {

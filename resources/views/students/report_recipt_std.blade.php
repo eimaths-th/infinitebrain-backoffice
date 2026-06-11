@@ -970,6 +970,42 @@
                                     $demoGroups = ['M', 'E', 'C', 'CHN', 'S', 'Sci', 'T', 'J', 'K'];
                                     $monthlyDemoData = [];
                                     $yearlyDemoData = []; // Unique students per year per group
+                                    $student_subject_first_period_dates = $student_subject_first_period_dates ?? [];
+
+                                    $get_subject_enrollment_status = function ($student_id, $group, $target_year, $target_month = null) use ($student_subject_first_period_dates) {
+                                        $student_subject_key = $student_id . '|' . $group;
+                                        $first_period_info = $student_subject_first_period_dates[$student_subject_key] ?? null;
+
+                                        if ($first_period_info === null) {
+                                            return 'unknown';
+                                        }
+
+                                        $first_year = (int) ($first_period_info['year'] ?? 0);
+                                        $first_month = (int) ($first_period_info['month'] ?? 0);
+                                        $target_year = (int) $target_year;
+
+                                        if ($first_year <= 0 || $first_month <= 0) {
+                                            return 'unknown';
+                                        }
+
+                                        if ($target_month === null) {
+                                            if ($first_year === $target_year) {
+                                                return 'new';
+                                            }
+
+                                            return $first_year < $target_year ? 'old' : 'unknown';
+                                        }
+
+                                        $target_month = (int) $target_month;
+                                        $first_period_value = ($first_year * 100) + $first_month;
+                                        $target_period_value = ($target_year * 100) + $target_month;
+
+                                        if ($first_period_value === $target_period_value) {
+                                            return 'new';
+                                        }
+
+                                        return $first_period_value < $target_period_value ? 'old' : 'unknown';
+                                    };
 
                                     // Initialize for all 12 months
                                     for ($m = 1; $m <= 12; $m++) {
@@ -983,6 +1019,7 @@
                                             if (!$std) {
                                                 continue;
                                             }
+                                            $yearly_subject_enrollment_status = $get_subject_enrollment_status($studentId, $group, $year);
                                             $promotion_name = $data1->rec_school->promotion->name ?? null;
                                             $source_name = $data1->rec_school->source ?? null;
 
@@ -1002,6 +1039,7 @@
                                                     'age' => $age,
                                                     'sex' => $std->sex ?? null,
                                                     'grade' => $std->grade ?? null,
+                                                    'subject_enrollment_status' => $yearly_subject_enrollment_status,
                                                     'promotions' => [],
                                                     'sources' => [],
                                                 ];
@@ -1036,6 +1074,7 @@
                                                 $endDate = Carbon::create($endYear, $endMonth, 1)->endOfMonth();
 
                                                 if ($checkDate->between($startDate, $endDate)) {
+                                                    $monthly_subject_enrollment_status = $get_subject_enrollment_status($studentId, $group, $year, $m);
                                                     if (!isset($monthlyDemoData[$m][$group][$studentId])) {
                                                         $monthlyDemoData[$m][$group][$studentId] = [
                                                             'code' => $std->code ?? '-',
@@ -1043,6 +1082,7 @@
                                                             'age' => $age,
                                                             'sex' => $std->sex ?? null,
                                                             'grade' => $std->grade ?? null,
+                                                            'subject_enrollment_status' => $monthly_subject_enrollment_status,
                                                             'promotions' => [],
                                                             'sources' => [],
                                                         ];
@@ -1191,6 +1231,10 @@
                                             background: #eef6ff;
                                         }
 
+                                        .demo-stat-box-static {
+                                            cursor: default;
+                                        }
+
                                         .demo-stat-num {
                                             font-size: 26px;
                                             font-weight: 800;
@@ -1203,31 +1247,46 @@
                                             margin-top: 2px;
                                         }
 
+                                        .demo-enrollment-row {
+                                            margin-top: -4px;
+                                        }
+
+                                        .demo-enrollment-row .demo-stat-num {
+                                            font-size: 22px;
+                                        }
+
+                                        .demo-status-badge {
+                                            display: inline-flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            border-radius: 999px;
+                                            padding: 2px 8px;
+                                            font-size: 11px;
+                                            font-weight: 800;
+                                            line-height: 1.2;
+                                        }
+
+                                        .demo-status-badge-new {
+                                            background: #dcfce7;
+                                            color: #166534;
+                                        }
+
+                                        .demo-status-badge-old {
+                                            background: #e0f2fe;
+                                            color: #075985;
+                                        }
+
+                                        .demo-status-badge-unknown {
+                                            background: #f3f4f6;
+                                            color: #4b5563;
+                                        }
+
                                         .demo-promotion-filter {
                                             display: inline-flex;
                                             gap: 4px;
                                             padding: 4px;
                                             background: #f3f5f7;
                                             border-radius: 8px;
-                                        }
-
-                                        .demo-filter-toolbar {
-                                            display: flex;
-                                            flex-wrap: wrap;
-                                            gap: 8px;
-                                            justify-content: flex-end;
-                                        }
-
-                                        .demo-filter-group {
-                                            display: flex;
-                                            align-items: center;
-                                            gap: 6px;
-                                        }
-
-                                        .demo-filter-label {
-                                            color: #6c757d;
-                                            font-size: 11px;
-                                            font-weight: 700;
                                         }
 
                                         .demo-source-filter {
@@ -1336,6 +1395,95 @@
                                             font-size: 12px;
                                             font-weight: 700;
                                         }
+
+                                        .demo-channel-panel {
+                                            border-top: 1px solid #eef1f4;
+                                            padding-top: 12px;
+                                        }
+
+                                        .demo-channel-grid {
+                                            display: grid;
+                                            grid-template-columns: repeat(2, minmax(0, 1fr));
+                                            gap: 10px;
+                                            margin-bottom: 10px;
+                                        }
+
+                                        .demo-channel-section {
+                                            min-width: 0;
+                                            padding: 10px;
+                                            border: 1px solid #e8edf3;
+                                            border-radius: 8px;
+                                            background: #fbfcfe;
+                                        }
+
+                                        .demo-channel-section-source {
+                                            border-color: #cdeefa;
+                                            background: #f5fcff;
+                                        }
+
+                                        .demo-channel-head {
+                                            display: flex;
+                                            flex-wrap: wrap;
+                                            align-items: center;
+                                            justify-content: space-between;
+                                            gap: 8px;
+                                            margin-bottom: 8px;
+                                        }
+
+                                        .demo-channel-title {
+                                            color: #374151;
+                                            font-size: 12px;
+                                            font-weight: 800;
+                                            text-transform: uppercase;
+                                        }
+
+                                        .demo-channel-counts {
+                                            display: grid;
+                                            grid-template-columns: 1fr 1fr;
+                                            gap: 6px;
+                                            margin-bottom: 8px;
+                                        }
+
+                                        .demo-channel-count {
+                                            padding: 6px 8px;
+                                            border-radius: 7px;
+                                            background: #fff;
+                                            border: 1px solid #edf0f4;
+                                        }
+
+                                        .demo-channel-count strong {
+                                            display: block;
+                                            color: #111827;
+                                            font-size: 15px;
+                                            line-height: 1;
+                                        }
+
+                                        .demo-channel-count span {
+                                            color: #6b7280;
+                                            font-size: 10px;
+                                            font-weight: 700;
+                                        }
+
+                                        .demo-channel-chips {
+                                            display: flex;
+                                            flex-wrap: wrap;
+                                            gap: 4px;
+                                            max-height: 82px;
+                                            overflow-y: auto;
+                                            padding-right: 2px;
+                                        }
+
+                                        .demo-channel-empty {
+                                            color: #94a3b8;
+                                            font-size: 12px;
+                                            font-weight: 700;
+                                        }
+
+                                        @media (max-width: 767.98px) {
+                                            .demo-channel-grid {
+                                                grid-template-columns: 1fr;
+                                            }
+                                        }
                                     </style>
 
                                     {{-- ANNUAL SUMMARY BLOCK --}}
@@ -1405,6 +1553,9 @@
                                                     $source_student_count = collect($students)->filter(function ($student) {
                                                         return count($student['sources'] ?? []) > 0;
                                                     })->count();
+                                                    $new_student_count = collect($students)->where('subject_enrollment_status', 'new')->count();
+                                                    $old_student_count = collect($students)->where('subject_enrollment_status', 'old')->count();
+                                                    $unknown_student_count = collect($students)->where('subject_enrollment_status', 'unknown')->count();
                                                     $promotion_name_counts = collect($students)
                                                         ->flatMap(function ($student) {
                                                             return array_unique(array_values($student['promotions'] ?? []));
@@ -1472,6 +1623,29 @@
                                                                         <div class="demo-stat-num text-danger">
                                                                             {{ $femaleCount }}</div>
                                                                         <div class="demo-stat-label">หญิง</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row text-center mb-3 g-2 demo-enrollment-row">
+                                                                <div class="col-4">
+                                                                    <div class="demo-stat-box demo-stat-box-static">
+                                                                        <div class="demo-stat-num text-success">
+                                                                            {{ $new_student_count }}</div>
+                                                                        <div class="demo-stat-label">เด็กใหม่</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <div class="demo-stat-box demo-stat-box-static">
+                                                                        <div class="demo-stat-num text-info">
+                                                                            {{ $old_student_count }}</div>
+                                                                        <div class="demo-stat-label">เด็กเก่า</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <div class="demo-stat-box demo-stat-box-static">
+                                                                        <div class="demo-stat-num text-secondary">
+                                                                            {{ $unknown_student_count }}</div>
+                                                                        <div class="demo-stat-label">ไม่ทราบ</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1543,15 +1717,12 @@
                                                                     @endif
                                                                 </div>
 
-                                                                <div class="mt-3 demo-detail-panel">
-                                                                    <div
-                                                                        class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
-                                                                        <p class="demo-section-title mb-0">
-                                                                            Promotion / Source
-                                                                        </p>
-                                                                        <div class="demo-filter-toolbar">
-                                                                            <div class="demo-filter-group">
-                                                                                <span class="demo-filter-label">Promotion</span>
+                                                                <div class="mt-3 demo-detail-panel demo-channel-panel">
+                                                                    <p class="demo-section-title">Promotion / Source</p>
+                                                                    <div class="demo-channel-grid">
+                                                                        <div class="demo-channel-section">
+                                                                            <div class="demo-channel-head">
+                                                                                <span class="demo-channel-title">Promotion</span>
                                                                                 <div class="demo-promotion-filter" role="group"
                                                                                     aria-label="Promotion filter">
                                                                                     <button type="button" class="active"
@@ -1562,8 +1733,31 @@
                                                                                         data-demo-filter="without-promotion">ไม่มี</button>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="demo-filter-group">
-                                                                                <span class="demo-filter-label">Source</span>
+                                                                            <div class="demo-channel-counts">
+                                                                                <div class="demo-channel-count">
+                                                                                    <strong>{{ $promotionStudentCount }}</strong>
+                                                                                    <span>มี Promotion</span>
+                                                                                </div>
+                                                                                <div class="demo-channel-count">
+                                                                                    <strong>{{ $total - $promotionStudentCount }}</strong>
+                                                                                    <span>ไม่มี Promotion</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="demo-channel-chips">
+                                                                                @forelse ($promotion_name_counts as $promotion_name => $promotion_count)
+                                                                                    <span class="demo-pill"
+                                                                                        style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
+                                                                                        {{ $promotion_name }}
+                                                                                        <strong>{{ $promotion_count }}</strong>
+                                                                                    </span>
+                                                                                @empty
+                                                                                    <span class="demo-channel-empty">ไม่มี Promotion</span>
+                                                                                @endforelse
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="demo-channel-section demo-channel-section-source">
+                                                                            <div class="demo-channel-head">
+                                                                                <span class="demo-channel-title">Source</span>
                                                                                 <div class="demo-promotion-filter demo-source-filter"
                                                                                     role="group" aria-label="Source filter">
                                                                                     <button type="button" class="active"
@@ -1574,42 +1768,29 @@
                                                                                         data-demo-source-filter="without-source">ไม่มี</button>
                                                                                 </div>
                                                                             </div>
+                                                                            <div class="demo-channel-counts">
+                                                                                <div class="demo-channel-count">
+                                                                                    <strong>{{ $source_student_count }}</strong>
+                                                                                    <span>มี Source</span>
+                                                                                </div>
+                                                                                <div class="demo-channel-count">
+                                                                                    <strong>{{ $total - $source_student_count }}</strong>
+                                                                                    <span>ไม่มี Source</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="demo-channel-chips">
+                                                                                @forelse ($source_name_counts as $source_name => $source_count)
+                                                                                    <span class="demo-pill"
+                                                                                        style="border: 1.5px solid {{ $source_color }}; color: {{ $source_color }}; background: #ecfeff;">
+                                                                                        {{ $source_name }}
+                                                                                        <strong>{{ $source_count }}</strong>
+                                                                                    </span>
+                                                                                @empty
+                                                                                    <span class="demo-channel-empty">ไม่มี Source</span>
+                                                                                @endforelse
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="small text-muted mb-2">
-                                                                        <div>
-                                                                            มี Promotion {{ $promotionStudentCount }} คน /
-                                                                            ไม่มี Promotion
-                                                                            {{ $total - $promotionStudentCount }} คน
-                                                                        </div>
-                                                                        <div>
-                                                                            มี Source {{ $source_student_count }} คน /
-                                                                            ไม่มี Source
-                                                                            {{ $total - $source_student_count }} คน
-                                                                        </div>
-                                                                    </div>
-                                                                    @if ($promotion_name_counts->isNotEmpty())
-                                                                        <div class="d-flex flex-wrap gap-1 mb-2">
-                                                                            @foreach ($promotion_name_counts as $promotion_name => $promotion_count)
-                                                                                <span class="demo-pill"
-                                                                                    style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
-                                                                                    {{ $promotion_name }}
-                                                                                    <strong>{{ $promotion_count }}</strong>
-                                                                                </span>
-                                                                            @endforeach
-                                                                        </div>
-                                                                    @endif
-                                                                    @if ($source_name_counts->isNotEmpty())
-                                                                        <div class="d-flex flex-wrap gap-1 mb-2">
-                                                                            @foreach ($source_name_counts as $source_name => $source_count)
-                                                                                <span class="demo-pill"
-                                                                                    style="border: 1.5px solid {{ $source_color }}; color: {{ $source_color }}; background: #ecfeff;">
-                                                                                    {{ $source_name }}
-                                                                                    <strong>{{ $source_count }}</strong>
-                                                                                </span>
-                                                                            @endforeach
-                                                                        </div>
-                                                                    @endif
                                                                     <div class="row g-2 mb-2">
                                                                         <div class="col-md-6">
                                                                             <select class="form-select demo-filter-select"
@@ -1652,9 +1833,21 @@
                                                                                 } elseif ($student_sex === 'หญิง') {
                                                                                     $student_sex = 'female';
                                                                                 }
+                                                                                $subject_enrollment_status = $student['subject_enrollment_status'] ?? 'unknown';
+                                                                                $subject_enrollment_label = [
+                                                                                    'new' => 'ใหม่',
+                                                                                    'old' => 'เก่า',
+                                                                                    'unknown' => 'ไม่ทราบ',
+                                                                                ][$subject_enrollment_status] ?? 'ไม่ทราบ';
+                                                                                $subject_enrollment_badge_class = [
+                                                                                    'new' => 'demo-status-badge-new',
+                                                                                    'old' => 'demo-status-badge-old',
+                                                                                    'unknown' => 'demo-status-badge-unknown',
+                                                                                ][$subject_enrollment_status] ?? 'demo-status-badge-unknown';
                                                                             @endphp
                                                                             <div class="demo-student-row"
                                                                                 data-demo-sex="{{ in_array($student_sex, ['male', 'female']) ? $student_sex : 'unknown' }}"
+                                                                                data-demo-subject-enrollment="{{ $subject_enrollment_status }}"
                                                                                 data-demo-promotion="{{ $has_promotion ? 'with-promotion' : 'without-promotion' }}"
                                                                                 data-demo-source-status="{{ $has_source ? 'with-source' : 'without-source' }}"
                                                                                 data-demo-promotions='@json($promotion_names)'
@@ -1666,6 +1859,12 @@
                                                                                         {{ $student['nick_name'] }}</div>
                                                                                 </div>
                                                                                 <div class="demo-student-meta">
+                                                                                    <div class="demo-meta-line">
+                                                                                        <span
+                                                                                            class="demo-meta-label">สถานะรายวิชา:</span>
+                                                                                        <span
+                                                                                            class="demo-status-badge {{ $subject_enrollment_badge_class }}">{{ $subject_enrollment_label }}</span>
+                                                                                    </div>
                                                                                     <div class="demo-meta-line">
                                                                                         <span
                                                                                             class="demo-meta-label">Promotion:</span>
@@ -1762,6 +1961,9 @@
                                                         $source_student_count = collect($students)->filter(function ($student) {
                                                             return count($student['sources'] ?? []) > 0;
                                                         })->count();
+                                                        $new_student_count = collect($students)->where('subject_enrollment_status', 'new')->count();
+                                                        $old_student_count = collect($students)->where('subject_enrollment_status', 'old')->count();
+                                                        $unknown_student_count = collect($students)->where('subject_enrollment_status', 'unknown')->count();
                                                         $promotion_name_counts = collect($students)
                                                             ->flatMap(function ($student) {
                                                                 return array_unique(array_values($student['promotions'] ?? []));
@@ -1829,6 +2031,29 @@
                                                                             <div class="demo-stat-num text-danger">
                                                                                 {{ $femaleCount }}</div>
                                                                             <div class="demo-stat-label">หญิง</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row text-center mb-3 g-2 demo-enrollment-row">
+                                                                    <div class="col-4">
+                                                                        <div class="demo-stat-box demo-stat-box-static">
+                                                                            <div class="demo-stat-num text-success">
+                                                                                {{ $new_student_count }}</div>
+                                                                            <div class="demo-stat-label">เด็กใหม่</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <div class="demo-stat-box demo-stat-box-static">
+                                                                            <div class="demo-stat-num text-info">
+                                                                                {{ $old_student_count }}</div>
+                                                                            <div class="demo-stat-label">เด็กเก่า</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <div class="demo-stat-box demo-stat-box-static">
+                                                                            <div class="demo-stat-num text-secondary">
+                                                                                {{ $unknown_student_count }}</div>
+                                                                            <div class="demo-stat-label">ไม่ทราบ</div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1900,15 +2125,12 @@
                                                                         @endif
                                                                     </div>
 
-                                                                    <div class="mt-3 demo-detail-panel">
-                                                                        <div
-                                                                            class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
-                                                                            <p class="demo-section-title mb-0">
-                                                                                Promotion / Source
-                                                                            </p>
-                                                                            <div class="demo-filter-toolbar">
-                                                                                <div class="demo-filter-group">
-                                                                                    <span class="demo-filter-label">Promotion</span>
+                                                                    <div class="mt-3 demo-detail-panel demo-channel-panel">
+                                                                        <p class="demo-section-title">Promotion / Source</p>
+                                                                        <div class="demo-channel-grid">
+                                                                            <div class="demo-channel-section">
+                                                                                <div class="demo-channel-head">
+                                                                                    <span class="demo-channel-title">Promotion</span>
                                                                                     <div class="demo-promotion-filter" role="group"
                                                                                         aria-label="Promotion filter">
                                                                                         <button type="button" class="active"
@@ -1919,8 +2141,31 @@
                                                                                             data-demo-filter="without-promotion">ไม่มี</button>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="demo-filter-group">
-                                                                                    <span class="demo-filter-label">Source</span>
+                                                                                <div class="demo-channel-counts">
+                                                                                    <div class="demo-channel-count">
+                                                                                        <strong>{{ $promotionStudentCount }}</strong>
+                                                                                        <span>มี Promotion</span>
+                                                                                    </div>
+                                                                                    <div class="demo-channel-count">
+                                                                                        <strong>{{ $total - $promotionStudentCount }}</strong>
+                                                                                        <span>ไม่มี Promotion</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="demo-channel-chips">
+                                                                                    @forelse ($promotion_name_counts as $promotion_name => $promotion_count)
+                                                                                        <span class="demo-pill"
+                                                                                            style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
+                                                                                            {{ $promotion_name }}
+                                                                                            <strong>{{ $promotion_count }}</strong>
+                                                                                        </span>
+                                                                                    @empty
+                                                                                        <span class="demo-channel-empty">ไม่มี Promotion</span>
+                                                                                    @endforelse
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="demo-channel-section demo-channel-section-source">
+                                                                                <div class="demo-channel-head">
+                                                                                    <span class="demo-channel-title">Source</span>
                                                                                     <div class="demo-promotion-filter demo-source-filter"
                                                                                         role="group" aria-label="Source filter">
                                                                                         <button type="button" class="active"
@@ -1931,42 +2176,29 @@
                                                                                             data-demo-source-filter="without-source">ไม่มี</button>
                                                                                     </div>
                                                                                 </div>
+                                                                                <div class="demo-channel-counts">
+                                                                                    <div class="demo-channel-count">
+                                                                                        <strong>{{ $source_student_count }}</strong>
+                                                                                        <span>มี Source</span>
+                                                                                    </div>
+                                                                                    <div class="demo-channel-count">
+                                                                                        <strong>{{ $total - $source_student_count }}</strong>
+                                                                                        <span>ไม่มี Source</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="demo-channel-chips">
+                                                                                    @forelse ($source_name_counts as $source_name => $source_count)
+                                                                                        <span class="demo-pill"
+                                                                                            style="border: 1.5px solid {{ $source_color }}; color: {{ $source_color }}; background: #ecfeff;">
+                                                                                            {{ $source_name }}
+                                                                                            <strong>{{ $source_count }}</strong>
+                                                                                        </span>
+                                                                                    @empty
+                                                                                        <span class="demo-channel-empty">ไม่มี Source</span>
+                                                                                    @endforelse
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="small text-muted mb-2">
-                                                                            <div>
-                                                                                มี Promotion {{ $promotionStudentCount }} คน /
-                                                                                ไม่มี Promotion
-                                                                                {{ $total - $promotionStudentCount }} คน
-                                                                            </div>
-                                                                            <div>
-                                                                                มี Source {{ $source_student_count }} คน /
-                                                                                ไม่มี Source
-                                                                                {{ $total - $source_student_count }} คน
-                                                                            </div>
-                                                                        </div>
-                                                                        @if ($promotion_name_counts->isNotEmpty())
-                                                                            <div class="d-flex flex-wrap gap-1 mb-2">
-                                                                                @foreach ($promotion_name_counts as $promotion_name => $promotion_count)
-                                                                                    <span class="demo-pill"
-                                                                                        style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
-                                                                                        {{ $promotion_name }}
-                                                                                        <strong>{{ $promotion_count }}</strong>
-                                                                                    </span>
-                                                                                @endforeach
-                                                                            </div>
-                                                                        @endif
-                                                                        @if ($source_name_counts->isNotEmpty())
-                                                                            <div class="d-flex flex-wrap gap-1 mb-2">
-                                                                                @foreach ($source_name_counts as $source_name => $source_count)
-                                                                                    <span class="demo-pill"
-                                                                                        style="border: 1.5px solid {{ $source_color }}; color: {{ $source_color }}; background: #ecfeff;">
-                                                                                        {{ $source_name }}
-                                                                                        <strong>{{ $source_count }}</strong>
-                                                                                    </span>
-                                                                                @endforeach
-                                                                            </div>
-                                                                        @endif
                                                                         <div class="row g-2 mb-2">
                                                                             <div class="col-md-6">
                                                                                 <select class="form-select demo-filter-select"
@@ -2011,9 +2243,21 @@
                                                                                     } elseif ($student_sex === 'หญิง') {
                                                                                         $student_sex = 'female';
                                                                                     }
+                                                                                    $subject_enrollment_status = $student['subject_enrollment_status'] ?? 'unknown';
+                                                                                    $subject_enrollment_label = [
+                                                                                        'new' => 'ใหม่',
+                                                                                        'old' => 'เก่า',
+                                                                                        'unknown' => 'ไม่ทราบ',
+                                                                                    ][$subject_enrollment_status] ?? 'ไม่ทราบ';
+                                                                                    $subject_enrollment_badge_class = [
+                                                                                        'new' => 'demo-status-badge-new',
+                                                                                        'old' => 'demo-status-badge-old',
+                                                                                        'unknown' => 'demo-status-badge-unknown',
+                                                                                    ][$subject_enrollment_status] ?? 'demo-status-badge-unknown';
                                                                                 @endphp
                                                                                 <div class="demo-student-row"
                                                                                     data-demo-sex="{{ in_array($student_sex, ['male', 'female']) ? $student_sex : 'unknown' }}"
+                                                                                    data-demo-subject-enrollment="{{ $subject_enrollment_status }}"
                                                                                     data-demo-promotion="{{ $has_promotion ? 'with-promotion' : 'without-promotion' }}"
                                                                                     data-demo-source-status="{{ $has_source ? 'with-source' : 'without-source' }}"
                                                                                     data-demo-promotions='@json($promotion_names)'
@@ -2025,6 +2269,12 @@
                                                                                             {{ $student['nick_name'] }}</div>
                                                                                     </div>
                                                                                     <div class="demo-student-meta">
+                                                                                        <div class="demo-meta-line">
+                                                                                            <span
+                                                                                                class="demo-meta-label">สถานะรายวิชา:</span>
+                                                                                            <span
+                                                                                                class="demo-status-badge {{ $subject_enrollment_badge_class }}">{{ $subject_enrollment_label }}</span>
+                                                                                        </div>
                                                                                         <div class="demo-meta-line">
                                                                                             <span
                                                                                                 class="demo-meta-label">Promotion:</span>
@@ -2668,8 +2918,6 @@
                                                             $startMonth = Carbon::parse("{$periodss[0]}-{$periodss[1]}")->month;
                                                             $endMonth = Carbon::parse("{$periodss[2]}-{$periodss[3]}")->month;
                                                         }
-                                                        dd($startMonth);
-
                                                         $isInMonthRange = Carbon::now()->year >= $startYear && Carbon::now()->year <= $endYear && Carbon::now()->month >= $startMonth && Carbon::now()->month <= $endMonth;
 
                                                         if ($isInMonthRange) {

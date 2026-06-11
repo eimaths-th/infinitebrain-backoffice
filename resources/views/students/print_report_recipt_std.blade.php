@@ -811,6 +811,42 @@
                 $isAnnual = $demoMonthParam === 'all';
                 $demoMonth = $isAnnual ? null : (int) $demoMonthParam;
                 $demoData = [];
+                $student_subject_first_period_dates = $student_subject_first_period_dates ?? [];
+
+                $get_subject_enrollment_status = function ($student_id, $group, $target_year, $target_month = null) use ($student_subject_first_period_dates) {
+                    $student_subject_key = $student_id . '|' . $group;
+                    $first_period_info = $student_subject_first_period_dates[$student_subject_key] ?? null;
+
+                    if ($first_period_info === null) {
+                        return 'unknown';
+                    }
+
+                    $first_year = (int) ($first_period_info['year'] ?? 0);
+                    $first_month = (int) ($first_period_info['month'] ?? 0);
+                    $target_year = (int) $target_year;
+
+                    if ($first_year <= 0 || $first_month <= 0) {
+                        return 'unknown';
+                    }
+
+                    if ($target_month === null) {
+                        if ($first_year === $target_year) {
+                            return 'new';
+                        }
+
+                        return $first_year < $target_year ? 'old' : 'unknown';
+                    }
+
+                    $target_month = (int) $target_month;
+                    $first_period_value = ($first_year * 100) + $first_month;
+                    $target_period_value = ($target_year * 100) + $target_month;
+
+                    if ($first_period_value === $target_period_value) {
+                        return 'new';
+                    }
+
+                    return $first_period_value < $target_period_value ? 'old' : 'unknown';
+                };
 
                 foreach ($reportYear_schoolPrice as $studentId => $groupedData) {
                     foreach ($groupedData as $data1) {
@@ -861,6 +897,7 @@
                                     'age' => $age,
                                     'sex' => $std->sex ?? null,
                                     'grade' => $std->grade ?? null,
+                                    'subject_enrollment_status' => $get_subject_enrollment_status($studentId, $group, $year, $demoMonth),
                                 ];
                             }
                         }
@@ -911,6 +948,9 @@
                         $maleCount = collect($students)->where('sex', 'ชาย')->count();
                         $femaleCount = collect($students)->where('sex', 'หญิง')->count();
                         $noSex = $total - $maleCount - $femaleCount;
+                        $new_student_count = collect($students)->where('subject_enrollment_status', 'new')->count();
+                        $old_student_count = collect($students)->where('subject_enrollment_status', 'old')->count();
+                        $unknown_student_count = collect($students)->where('subject_enrollment_status', 'unknown')->count();
 
                         $ageRanges = ['< 7' => 0, '7-9' => 0, '10-12' => 0, '13-15' => 0, '> 15' => 0, 'ไม่ระบุ' => 0];
                         foreach ($students as $s) {
@@ -963,6 +1003,20 @@
                                 <div class="demo-stat">
                                     <div class="demo-stat-num" style="color: #E91E63;">{{ $femaleCount }}</div>
                                     <div class="demo-stat-label">หญิง</div>
+                                </div>
+                            </div>
+                            <div class="demo-stats">
+                                <div class="demo-stat">
+                                    <div class="demo-stat-num" style="color: #16A34A;">{{ $new_student_count }}</div>
+                                    <div class="demo-stat-label">เด็กใหม่</div>
+                                </div>
+                                <div class="demo-stat">
+                                    <div class="demo-stat-num" style="color: #0284C7;">{{ $old_student_count }}</div>
+                                    <div class="demo-stat-label">เด็กเก่า</div>
+                                </div>
+                                <div class="demo-stat">
+                                    <div class="demo-stat-num" style="color: #6B7280;">{{ $unknown_student_count }}</div>
+                                    <div class="demo-stat-label">ไม่ทราบ</div>
                                 </div>
                             </div>
 
