@@ -1167,6 +1167,33 @@
                                             gap: 10px;
                                         }
 
+                                        .demo-card-column.demo-card-expanded {
+                                            flex: 0 0 100%;
+                                            max-width: 100%;
+                                            width: 100%;
+                                        }
+
+                                        .demo-card-expand-btn {
+                                            width: 28px;
+                                            height: 28px;
+                                            display: inline-flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            border: 0;
+                                            border-radius: 50%;
+                                            background: rgba(255, 255, 255, .22);
+                                            color: #fff;
+                                            font-size: 12px;
+                                            line-height: 1;
+                                            padding: 0;
+                                        }
+
+                                        .demo-card-expand-btn:hover,
+                                        .demo-card-expand-btn:focus {
+                                            background: rgba(255, 255, 255, .34);
+                                            color: #fff;
+                                        }
+
                                         .demo-card-body {
                                             padding: 16px 20px;
                                             background: #fff;
@@ -1229,10 +1256,6 @@
                                         .demo-stat-box.active {
                                             border-color: #3b82f6;
                                             background: #eef6ff;
-                                        }
-
-                                        .demo-stat-box-static {
-                                            cursor: default;
                                         }
 
                                         .demo-stat-num {
@@ -1399,6 +1422,13 @@
                                         .demo-channel-panel {
                                             border-top: 1px solid #eef1f4;
                                             padding-top: 12px;
+                                        }
+
+                                        .demo-card[data-demo-selected-enrollment] .demo-channel-panel > .demo-section-title,
+                                        .demo-card[data-demo-selected-enrollment] .demo-channel-grid,
+                                        .demo-card[data-demo-selected-enrollment] .demo-channel-filter-row,
+                                        .demo-card[data-demo-selected-enrollment] .demo-channel-meta-line {
+                                            display: none !important;
                                         }
 
                                         .demo-channel-grid {
@@ -1588,7 +1618,7 @@
                                                         ->values();
                                                     $maxAge = max(array_values($ageRanges)) ?: 1;
                                                 @endphp
-                                                <div class="col-lg-6 col-md-6">
+                                                <div class="col-lg-6 col-md-6 demo-card-column">
                                                     <div class="demo-card">
                                                         <div class="demo-card-header"
                                                             style="background: {{ $color }};">
@@ -1600,6 +1630,11 @@
                                                             <span
                                                                 class="ms-auto badge bg-white text-dark">{{ $total }}
                                                                 คน</span>
+                                                            <button type="button" class="demo-card-expand-btn no-print"
+                                                                data-demo-card-expand aria-label="ขยายการ์ด"
+                                                                aria-pressed="false" title="ขยายการ์ด">
+                                                                <i class="fa fa-expand"></i>
+                                                            </button>
                                                         </div>
                                                         <div class="demo-card-body">
                                                             <div class="row text-center mb-3 g-2">
@@ -1628,21 +1663,21 @@
                                                             </div>
                                                             <div class="row text-center mb-3 g-2 demo-enrollment-row">
                                                                 <div class="col-4">
-                                                                    <div class="demo-stat-box demo-stat-box-static">
+                                                                    <div class="demo-stat-box" data-demo-enrollment-toggle="new">
                                                                         <div class="demo-stat-num text-success">
                                                                             {{ $new_student_count }}</div>
                                                                         <div class="demo-stat-label">เด็กใหม่</div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
-                                                                    <div class="demo-stat-box demo-stat-box-static">
+                                                                    <div class="demo-stat-box" data-demo-enrollment-toggle="old">
                                                                         <div class="demo-stat-num text-info">
                                                                             {{ $old_student_count }}</div>
                                                                         <div class="demo-stat-label">เด็กเก่า</div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4">
-                                                                    <div class="demo-stat-box demo-stat-box-static">
+                                                                    <div class="demo-stat-box" data-demo-enrollment-toggle="unknown">
                                                                         <div class="demo-stat-num text-secondary">
                                                                             {{ $unknown_student_count }}</div>
                                                                         <div class="demo-stat-label">ไม่ทราบ</div>
@@ -1791,7 +1826,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="row g-2 mb-2">
+                                                                    <div class="row g-2 mb-2 demo-channel-filter-row">
                                                                         <div class="col-md-6">
                                                                             <select class="form-select demo-filter-select"
                                                                                 data-demo-promotion-select>
@@ -1865,12 +1900,12 @@
                                                                                         <span
                                                                                             class="demo-status-badge {{ $subject_enrollment_badge_class }}">{{ $subject_enrollment_label }}</span>
                                                                                     </div>
-                                                                                    <div class="demo-meta-line">
+                                                                                    <div class="demo-meta-line demo-channel-meta-line">
                                                                                         <span
                                                                                             class="demo-meta-label">Promotion:</span>
                                                                                         {{ $has_promotion ? implode(', ', $promotion_names) : '-' }}
                                                                                     </div>
-                                                                                    <div class="demo-meta-line">
+                                                                                    <div class="demo-meta-line demo-channel-meta-line">
                                                                                         <span
                                                                                             class="demo-meta-label">Source:</span>
                                                                                         {{ count($source_names) > 0 ? implode(', ', $source_names) : '-' }}
@@ -1996,7 +2031,7 @@
                                                             ->values();
                                                         $maxAge = max(array_values($ageRanges)) ?: 1;
                                                     @endphp
-                                                    <div class="col-lg-4 col-md-6">
+                                                    <div class="col-lg-4 col-md-6 demo-card-column">
                                                         <div class="demo-card">
                                                             <div class="demo-card-header"
                                                                 style="background: {{ $color }};">
@@ -2008,6 +2043,11 @@
                                                                 <span
                                                                     class="ms-auto badge bg-white text-dark">{{ $total }}
                                                                     คน</span>
+                                                                <button type="button" class="demo-card-expand-btn no-print"
+                                                                    data-demo-card-expand aria-label="ขยายการ์ด"
+                                                                    aria-pressed="false" title="ขยายการ์ด">
+                                                                    <i class="fa fa-expand"></i>
+                                                                </button>
                                                             </div>
                                                             <div class="demo-card-body">
                                                                 <div class="row text-center mb-3 g-2">
@@ -2036,21 +2076,21 @@
                                                                 </div>
                                                                 <div class="row text-center mb-3 g-2 demo-enrollment-row">
                                                                     <div class="col-4">
-                                                                        <div class="demo-stat-box demo-stat-box-static">
+                                                                        <div class="demo-stat-box" data-demo-enrollment-toggle="new">
                                                                             <div class="demo-stat-num text-success">
                                                                                 {{ $new_student_count }}</div>
                                                                             <div class="demo-stat-label">เด็กใหม่</div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-4">
-                                                                        <div class="demo-stat-box demo-stat-box-static">
+                                                                        <div class="demo-stat-box" data-demo-enrollment-toggle="old">
                                                                             <div class="demo-stat-num text-info">
                                                                                 {{ $old_student_count }}</div>
                                                                             <div class="demo-stat-label">เด็กเก่า</div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-4">
-                                                                        <div class="demo-stat-box demo-stat-box-static">
+                                                                        <div class="demo-stat-box" data-demo-enrollment-toggle="unknown">
                                                                             <div class="demo-stat-num text-secondary">
                                                                                 {{ $unknown_student_count }}</div>
                                                                             <div class="demo-stat-label">ไม่ทราบ</div>
@@ -2199,7 +2239,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="row g-2 mb-2">
+                                                                        <div class="row g-2 mb-2 demo-channel-filter-row">
                                                                             <div class="col-md-6">
                                                                                 <select class="form-select demo-filter-select"
                                                                                     data-demo-promotion-select>
@@ -2275,12 +2315,12 @@
                                                                                             <span
                                                                                                 class="demo-status-badge {{ $subject_enrollment_badge_class }}">{{ $subject_enrollment_label }}</span>
                                                                                         </div>
-                                                                                        <div class="demo-meta-line">
+                                                                                        <div class="demo-meta-line demo-channel-meta-line">
                                                                                             <span
                                                                                                 class="demo-meta-label">Promotion:</span>
                                                                                             {{ $has_promotion ? implode(', ', $promotion_names) : '-' }}
                                                                                         </div>
-                                                                                        <div class="demo-meta-line">
+                                                                                        <div class="demo-meta-line demo-channel-meta-line">
                                                                                             <span
                                                                                                 class="demo-meta-label">Source:</span>
                                                                                             {{ count($source_names) > 0 ? implode(', ', $source_names) : '-' }}
@@ -2463,6 +2503,20 @@
                     $('#demo-month-block-' + month).fadeIn(300).css('display', 'flex');
                 }
 
+                $(document).on('click', '[data-demo-card-expand]', function() {
+                    const button = $(this);
+                    const card_column = button.closest('.demo-card-column');
+                    const icon = button.find('i');
+                    const is_expanded = card_column.toggleClass('demo-card-expanded').hasClass('demo-card-expanded');
+                    const button_label = is_expanded ? 'ย่อการ์ด' : 'ขยายการ์ด';
+
+                    button.attr('aria-label', button_label);
+                    button.attr('aria-pressed', is_expanded ? 'true' : 'false');
+                    button.attr('title', button_label);
+                    icon.toggleClass('fa-expand', !is_expanded);
+                    icon.toggleClass('fa-compress', is_expanded);
+                });
+
                 function ReadDemoFilterValues(row, attribute_name) {
                     try {
                         return JSON.parse(row.attr(attribute_name) || '[]');
@@ -2473,6 +2527,7 @@
 
                 function ApplyDemoCardFilters(card) {
                     const selected_sex = card.attr('data-demo-selected-sex') || '';
+                    const selected_enrollment = card.attr('data-demo-selected-enrollment') || '';
                     const selected_filter = card.find('.demo-promotion-filter [data-demo-filter].active').data(
                         'demo-filter') || 'all';
                     const selected_source_filter = card.find('.demo-source-filter [data-demo-source-filter].active').data(
@@ -2488,17 +2543,20 @@
                     rows.each(function() {
                         const row = $(this);
                         const student_sex = row.data('demo-sex');
+                        const student_enrollment = row.data('demo-subject-enrollment');
                         const promotion_status = row.data('demo-promotion');
                         const source_status = row.data('demo-source-status');
                         const promotion_names = ReadDemoFilterValues(row, 'data-demo-promotions');
                         const source_names = ReadDemoFilterValues(row, 'data-demo-sources');
                         const matches_sex = selected_sex === '' || selected_sex === 'all' || student_sex === selected_sex;
+                        const matches_enrollment = selected_enrollment === '' || student_enrollment ===
+                            selected_enrollment;
                         const matches_toggle = selected_filter === 'all' || promotion_status === selected_filter;
                         const matches_source_toggle = selected_source_filter === 'all' || source_status === selected_source_filter;
                         const matches_promotion = selected_promotion === '' || promotion_names.includes(
                             selected_promotion);
                         const matches_source = selected_source === '' || source_names.includes(selected_source);
-                        const should_show = matches_sex && matches_toggle && matches_source_toggle &&
+                        const should_show = matches_sex && matches_enrollment && matches_toggle && matches_source_toggle &&
                             matches_promotion && matches_source;
 
                         row.toggle(should_show);
@@ -2524,29 +2582,61 @@
                     card.find('.demo-empty-filter').toggle(visible_count === 0);
                 }
 
-                $(document).on('click', '[data-demo-sex-toggle]', function() {
-                    const selected_sex = $(this).data('demo-sex-toggle');
-                    const card = $(this).closest('.demo-card');
+                function ToggleDemoDetailPanel(card, should_show_panel) {
                     const panel = card.find('.demo-detail-panel');
                     const summary_panel = card.find('.demo-summary-panel');
-                    const is_active = $(this).hasClass('active');
 
-                    card.find('[data-demo-sex-toggle]').removeClass('active');
-
-                    if (is_active) {
-                        card.removeAttr('data-demo-selected-sex');
+                    if (!should_show_panel) {
                         panel.slideUp(180, function() {
                             summary_panel.slideDown(180);
                         });
                         return;
                     }
 
-                    $(this).addClass('active');
-                    card.attr('data-demo-selected-sex', selected_sex);
                     summary_panel.slideUp(180, function() {
                         panel.slideDown(180);
                     });
                     ApplyDemoCardFilters(card);
+                }
+
+                $(document).on('click', '[data-demo-sex-toggle]', function() {
+                    const selected_sex = $(this).data('demo-sex-toggle');
+                    const card = $(this).closest('.demo-card');
+                    const is_active = $(this).hasClass('active');
+
+                    card.find('[data-demo-sex-toggle]').removeClass('active');
+                    card.find('[data-demo-enrollment-toggle]').removeClass('active');
+                    card.removeAttr('data-demo-selected-enrollment');
+
+                    if (is_active) {
+                        card.removeAttr('data-demo-selected-sex');
+                        ToggleDemoDetailPanel(card, false);
+                        return;
+                    }
+
+                    $(this).addClass('active');
+                    card.attr('data-demo-selected-sex', selected_sex);
+                    ToggleDemoDetailPanel(card, true);
+                });
+
+                $(document).on('click', '[data-demo-enrollment-toggle]', function() {
+                    const selected_enrollment = $(this).data('demo-enrollment-toggle');
+                    const card = $(this).closest('.demo-card');
+                    const is_active = $(this).hasClass('active');
+
+                    card.find('[data-demo-enrollment-toggle]').removeClass('active');
+                    card.find('[data-demo-sex-toggle]').removeClass('active');
+                    card.removeAttr('data-demo-selected-sex');
+
+                    if (is_active) {
+                        card.removeAttr('data-demo-selected-enrollment');
+                        ToggleDemoDetailPanel(card, false);
+                        return;
+                    }
+
+                    $(this).addClass('active');
+                    card.attr('data-demo-selected-enrollment', selected_enrollment);
+                    ToggleDemoDetailPanel(card, true);
                 });
 
                 $(document).on('click', '[data-demo-filter]', function() {
