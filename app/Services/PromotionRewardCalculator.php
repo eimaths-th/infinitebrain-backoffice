@@ -39,6 +39,10 @@ class PromotionRewardCalculator
         }
 
         if ($promotion_reward->reward_type === PromotionReward::TYPE_FREE_ENTRANCE_FEE) {
+            if (!$this->QualifiesByMinMonths($receipt_context, $promotion_reward)) {
+                return $this->buildRewardResult($promotion_reward, 0, [], '');
+            }
+
             $entrance_fee_amount = $this->getAmount($receipt_context, 'entrance_fee_amount');
             $max_discount_amount = $this->getAmount($promotion_reward->getAttributes(), 'max_discount_amount');
 
@@ -50,6 +54,10 @@ class PromotionRewardCalculator
         }
 
         if ($promotion_reward->reward_type === PromotionReward::TYPE_GIFT) {
+            if (!$this->QualifiesByMinMonths($receipt_context, $promotion_reward)) {
+                return $this->buildRewardResult($promotion_reward, 0, [], '');
+            }
+
             return $this->buildRewardResult($promotion_reward, 0);
         }
 
@@ -77,8 +85,13 @@ class PromotionRewardCalculator
     private function CalculateFixedDiscountResult(array $receipt_context, PromotionReward $promotion_reward)
     {
         $reward_config = $promotion_reward->reward_config_json ?? [];
+        $calculation_scope = $reward_config[PromotionReward::CONFIG_CALCULATION_SCOPE] ?? null;
 
-        if (($reward_config[PromotionReward::CONFIG_CALCULATION_SCOPE] ?? null) === PromotionReward::CALCULATION_SCOPE_PER_MATCHING_COURSE) {
+        if ($calculation_scope === PromotionReward::CALCULATION_SCOPE_PER_COURSE_MONTH_TIER) {
+            return $this->CalculatePerCourseMonthTierDiscountResult($receipt_context, $reward_config);
+        }
+
+        if ($calculation_scope === PromotionReward::CALCULATION_SCOPE_PER_MATCHING_COURSE) {
             return $this->CalculatePerMatchingCourseDiscountResult($receipt_context, $promotion_reward, $reward_config);
         }
 
@@ -86,6 +99,81 @@ class PromotionRewardCalculator
             'discount_amount' => $this->getAmount($promotion_reward->getAttributes(), 'discount_amount'),
             PromotionReward::CONFIG_CALCULATION_DETAIL => [],
         ];
+    }
+
+    private function CalculatePerCourseMonthTierDiscountResult(array $receipt_context, array $reward_config)
+    {
+        $matching_course_type = (int) ($reward_config[PromotionReward::CONFIG_MATCHING_COURSE_TYPE] ?? PromotionReward::DEFAULT_MATCHING_COURSE_TYPE);
+        $month_discount_tiers = $this->NormalizeMonthDiscountTiers($reward_config[PromotionReward::CONFIG_MONTH_DISCOUNT_TIERS] ?? []);
+
+        $line_discounts = [];
+        $discount_amount = 0;
+
+        foreach ($receipt_context['receipt_items'] ?? [] as $receipt_item) {
+            if ((int) ($receipt_item['course_type'] ?? PromotionReward::DEFAULT_MATCHING_COURSE_TYPE) !== $matching_course_type) {
+                continue;
+            }
+
+            $month_count = $this->NormalizeMonthCount($receipt_item['month_count'] ?? null);
+
+            if ($month_count === null || !array_key_exists($month_count, $month_discount_tiers)) {
+                continue;
+            }
+
+            $line_discount = $month_discount_tiers[$month_count];
+
+            if ($line_discount <= 0) {
+                continue;
+            }
+
+            $discount_amount += $line_discount;
+            $line_discounts[] = [
+                'subject_id' => $receipt_item['subject_id'] ?? null,
+                'month_count' => $month_count,
+                'discount_amount' => round($line_discount, 2),
+            ];
+        }
+
+        return [
+            'discount_amount' => $discount_amount,
+            PromotionReward::CONFIG_CALCULATION_DETAIL => [
+                PromotionReward::CONFIG_CALCULATION_SCOPE => PromotionReward::CALCULATION_SCOPE_PER_COURSE_MONTH_TIER,
+                PromotionReward::CONFIG_MATCHING_COURSE_TYPE => $matching_course_type,
+                PromotionReward::CONFIG_MONTH_DISCOUNT_TIERS => $month_discount_tiers,
+                PromotionReward::CONFIG_LINE_DISCOUNTS => $line_discounts,
+            ],
+        ];
+    }
+
+    private function NormalizeMonthDiscountTiers($month_discount_tiers)
+    {
+        if (!is_array($month_discount_tiers)) {
+            return [];
+        }
+
+        $normalized = [];
+
+        foreach ($month_discount_tiers as $month => $discount) {
+            $month_count = (int) $month;
+            $discount_amount = (float) $discount;
+
+            if ($month_count <= 0 || $discount_amount <= 0) {
+                continue;
+            }
+
+            $normalized[$month_count] = $discount_amount;
+        }
+
+        return $normalized;
+    }
+
+    private function NormalizeMonthCount($month_count)
+    {
+        if ($month_count === null || $month_count === '') {
+            return null;
+        }
+
+        return (int) $month_count;
     }
 
     private function CalculatePerMatchingCourseDiscountResult(array $receipt_context, PromotionReward $promotion_reward, array $reward_config)
@@ -167,7 +255,43 @@ class PromotionRewardCalculator
         return in_array((int) $month_count, $matching_months, true);
     }
 
-    private function buildRewardResult(PromotionReward $promotion_reward, $discount_amount, array $calculation_detail = [])
+    /**
+     * Determine whether a receipt meets a reward's minimum-months requirement,
+     * based on the highest month commitment among its course lines. Rewards
+     * without the requirement always qualify.
+     */
+    private function QualifiesByMinMonths(array $receipt_context, PromotionReward $promotion_reward)
+    {
+        $reward_config = $promotion_reward->reward_config_json ?? [];
+
+        if (!array_key_exists(PromotionReward::CONFIG_MIN_QUALIFYING_MONTHS, $reward_config)) {
+            return true;
+        }
+
+        $min_qualifying_months = (int) $reward_config[PromotionReward::CONFIG_MIN_QUALIFYING_MONTHS];
+
+        if ($min_qualifying_months <= 0) {
+            return true;
+        }
+
+        $matching_course_type = (int) ($reward_config[PromotionReward::CONFIG_MATCHING_COURSE_TYPE] ?? PromotionReward::DEFAULT_MATCHING_COURSE_TYPE);
+
+        return $this->MaxCourseMonth($receipt_context, $matching_course_type) >= $min_qualifying_months;
+    }
+
+    private function MaxCourseMonth(array $receipt_context, $matching_course_type)
+    {
+        return collect($receipt_context['receipt_items'] ?? [])
+            ->filter(function ($receipt_item) use ($matching_course_type) {
+                return (int) ($receipt_item['course_type'] ?? PromotionReward::DEFAULT_MATCHING_COURSE_TYPE) === $matching_course_type;
+            })
+            ->map(function ($receipt_item) {
+                return (int) ($receipt_item['month_count'] ?? 0);
+            })
+            ->max() ?? 0;
+    }
+
+    private function buildRewardResult(PromotionReward $promotion_reward, $discount_amount, array $calculation_detail = [], $label_override = null)
     {
         $discount_amount = round(max(0, (float) $discount_amount), 2);
 
@@ -175,7 +299,7 @@ class PromotionRewardCalculator
             'reward_type' => $promotion_reward->reward_type,
             'discount_amount' => $discount_amount,
             'reward_config' => $promotion_reward->reward_config_json ?? [],
-            'label' => $this->buildRewardLabel($promotion_reward, $discount_amount),
+            'label' => $label_override !== null ? $label_override : $this->buildRewardLabel($promotion_reward, $discount_amount),
         ];
 
         if (!empty($calculation_detail)) {

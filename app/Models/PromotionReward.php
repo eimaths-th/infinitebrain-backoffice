@@ -20,12 +20,16 @@ class PromotionReward extends Model
     const CATEGORY_GIFT = 'GIFT';
 
     const CALCULATION_SCOPE_PER_MATCHING_COURSE = 'PER_MATCHING_COURSE';
+    const CALCULATION_SCOPE_PER_COURSE_MONTH_TIER = 'PER_COURSE_MONTH_TIER';
 
     const CONFIG_CALCULATION_SCOPE = 'calculation_scope';
     const CONFIG_MATCHING_COURSE_TYPE = 'matching_course_type';
     const CONFIG_MATCHING_MONTHS = 'matching_months';
     const CONFIG_UNIT_DISCOUNT_AMOUNT = 'unit_discount_amount';
     const CONFIG_MATCHING_COURSE_COUNT = 'matching_course_count';
+    const CONFIG_MONTH_DISCOUNT_TIERS = 'month_discount_tiers';
+    const CONFIG_LINE_DISCOUNTS = 'line_discounts';
+    const CONFIG_MIN_QUALIFYING_MONTHS = 'min_qualifying_months';
     const CONFIG_CALCULATION_DETAIL = 'calculation_detail';
 
     const DEFAULT_MATCHING_COURSE_TYPE = 1;

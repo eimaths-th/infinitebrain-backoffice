@@ -1211,6 +1211,37 @@
                                             border-radius: 8px;
                                         }
 
+                                        .demo-filter-toolbar {
+                                            display: flex;
+                                            flex-wrap: wrap;
+                                            gap: 8px;
+                                            justify-content: flex-end;
+                                        }
+
+                                        .demo-filter-group {
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 6px;
+                                        }
+
+                                        .demo-filter-label {
+                                            color: #6c757d;
+                                            font-size: 11px;
+                                            font-weight: 700;
+                                        }
+
+                                        .demo-source-filter {
+                                            background: #e0f7ff;
+                                        }
+
+                                        .demo-source-filter button {
+                                            color: #075985;
+                                        }
+
+                                        .demo-source-filter button.active {
+                                            color: #0369a1;
+                                        }
+
                                         .demo-promotion-filter button {
                                             border: 0;
                                             border-radius: 6px;
@@ -1353,6 +1384,7 @@
                                                     }
 
                                                     $color = $groupColors[$group] ?? '#607D8B';
+                                                    $source_color = '#0891B2';
                                                     $groupName = $groupNames[$group] ?? $group;
 
                                                     $showGrade = in_array($group, ['M', 'E']);
@@ -1370,9 +1402,19 @@
                                                     $promotionStudentCount = collect($students)->filter(function ($student) {
                                                         return count($student['promotions'] ?? []) > 0;
                                                     })->count();
+                                                    $source_student_count = collect($students)->filter(function ($student) {
+                                                        return count($student['sources'] ?? []) > 0;
+                                                    })->count();
                                                     $promotion_name_counts = collect($students)
                                                         ->flatMap(function ($student) {
                                                             return array_unique(array_values($student['promotions'] ?? []));
+                                                        })
+                                                        ->filter()
+                                                        ->countBy()
+                                                        ->sortKeys();
+                                                    $source_name_counts = collect($students)
+                                                        ->flatMap(function ($student) {
+                                                            return array_unique(array_values($student['sources'] ?? []));
                                                         })
                                                         ->filter()
                                                         ->countBy()
@@ -1507,22 +1549,44 @@
                                                                         <p class="demo-section-title mb-0">
                                                                             Promotion / Source
                                                                         </p>
-                                                                        <div class="demo-promotion-filter" role="group"
-                                                                            aria-label="Promotion filter">
-                                                                            <button type="button" class="active"
-                                                                                data-demo-filter="all">ทั้งหมด</button>
-                                                                            <button type="button"
-                                                                                data-demo-filter="with-promotion">มี
-                                                                                Promotion</button>
-                                                                            <button type="button"
-                                                                                data-demo-filter="without-promotion">ไม่มี
-                                                                                Promotion</button>
+                                                                        <div class="demo-filter-toolbar">
+                                                                            <div class="demo-filter-group">
+                                                                                <span class="demo-filter-label">Promotion</span>
+                                                                                <div class="demo-promotion-filter" role="group"
+                                                                                    aria-label="Promotion filter">
+                                                                                    <button type="button" class="active"
+                                                                                        data-demo-filter="all">ทั้งหมด</button>
+                                                                                    <button type="button"
+                                                                                        data-demo-filter="with-promotion">มี</button>
+                                                                                    <button type="button"
+                                                                                        data-demo-filter="without-promotion">ไม่มี</button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="demo-filter-group">
+                                                                                <span class="demo-filter-label">Source</span>
+                                                                                <div class="demo-promotion-filter demo-source-filter"
+                                                                                    role="group" aria-label="Source filter">
+                                                                                    <button type="button" class="active"
+                                                                                        data-demo-source-filter="all">ทั้งหมด</button>
+                                                                                    <button type="button"
+                                                                                        data-demo-source-filter="with-source">มี</button>
+                                                                                    <button type="button"
+                                                                                        data-demo-source-filter="without-source">ไม่มี</button>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="small text-muted mb-2">
-                                                                        มี Promotion {{ $promotionStudentCount }} คน /
-                                                                        ไม่มี Promotion
-                                                                        {{ $total - $promotionStudentCount }} คน
+                                                                        <div>
+                                                                            มี Promotion {{ $promotionStudentCount }} คน /
+                                                                            ไม่มี Promotion
+                                                                            {{ $total - $promotionStudentCount }} คน
+                                                                        </div>
+                                                                        <div>
+                                                                            มี Source {{ $source_student_count }} คน /
+                                                                            ไม่มี Source
+                                                                            {{ $total - $source_student_count }} คน
+                                                                        </div>
                                                                     </div>
                                                                     @if ($promotion_name_counts->isNotEmpty())
                                                                         <div class="d-flex flex-wrap gap-1 mb-2">
@@ -1531,6 +1595,17 @@
                                                                                     style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
                                                                                     {{ $promotion_name }}
                                                                                     <strong>{{ $promotion_count }}</strong>
+                                                                                </span>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    @endif
+                                                                    @if ($source_name_counts->isNotEmpty())
+                                                                        <div class="d-flex flex-wrap gap-1 mb-2">
+                                                                            @foreach ($source_name_counts as $source_name => $source_count)
+                                                                                <span class="demo-pill"
+                                                                                    style="border: 1.5px solid {{ $source_color }}; color: {{ $source_color }}; background: #ecfeff;">
+                                                                                    {{ $source_name }}
+                                                                                    <strong>{{ $source_count }}</strong>
                                                                                 </span>
                                                                             @endforeach
                                                                         </div>
@@ -1570,6 +1645,7 @@
                                                                                 $promotion_names = array_values($student['promotions'] ?? []);
                                                                                 $source_names = array_values($student['sources'] ?? []);
                                                                                 $has_promotion = count($promotion_names) > 0;
+                                                                                $has_source = count($source_names) > 0;
                                                                                 $student_sex = strtolower($student['sex'] ?? '');
                                                                                 if ($student_sex === 'ชาย') {
                                                                                     $student_sex = 'male';
@@ -1580,6 +1656,7 @@
                                                                             <div class="demo-student-row"
                                                                                 data-demo-sex="{{ in_array($student_sex, ['male', 'female']) ? $student_sex : 'unknown' }}"
                                                                                 data-demo-promotion="{{ $has_promotion ? 'with-promotion' : 'without-promotion' }}"
+                                                                                data-demo-source-status="{{ $has_source ? 'with-source' : 'without-source' }}"
                                                                                 data-demo-promotions='@json($promotion_names)'
                                                                                 data-demo-sources='@json($source_names)'>
                                                                                 <div>
@@ -1664,6 +1741,7 @@
                                                         }
 
                                                         $color = $groupColors[$group] ?? '#607D8B';
+                                                        $source_color = '#0891B2';
                                                         $groupName = $groupNames[$group] ?? $group;
 
                                                         $showGrade = in_array($group, ['M', 'E']);
@@ -1681,9 +1759,19 @@
                                                         $promotionStudentCount = collect($students)->filter(function ($student) {
                                                             return count($student['promotions'] ?? []) > 0;
                                                         })->count();
+                                                        $source_student_count = collect($students)->filter(function ($student) {
+                                                            return count($student['sources'] ?? []) > 0;
+                                                        })->count();
                                                         $promotion_name_counts = collect($students)
                                                             ->flatMap(function ($student) {
                                                                 return array_unique(array_values($student['promotions'] ?? []));
+                                                            })
+                                                            ->filter()
+                                                            ->countBy()
+                                                            ->sortKeys();
+                                                        $source_name_counts = collect($students)
+                                                            ->flatMap(function ($student) {
+                                                                return array_unique(array_values($student['sources'] ?? []));
                                                             })
                                                             ->filter()
                                                             ->countBy()
@@ -1818,22 +1906,44 @@
                                                                             <p class="demo-section-title mb-0">
                                                                                 Promotion / Source
                                                                             </p>
-                                                                            <div class="demo-promotion-filter" role="group"
-                                                                                aria-label="Promotion filter">
-                                                                                <button type="button" class="active"
-                                                                                    data-demo-filter="all">ทั้งหมด</button>
-                                                                                <button type="button"
-                                                                                    data-demo-filter="with-promotion">มี
-                                                                                    Promotion</button>
-                                                                                <button type="button"
-                                                                                    data-demo-filter="without-promotion">ไม่มี
-                                                                                    Promotion</button>
+                                                                            <div class="demo-filter-toolbar">
+                                                                                <div class="demo-filter-group">
+                                                                                    <span class="demo-filter-label">Promotion</span>
+                                                                                    <div class="demo-promotion-filter" role="group"
+                                                                                        aria-label="Promotion filter">
+                                                                                        <button type="button" class="active"
+                                                                                            data-demo-filter="all">ทั้งหมด</button>
+                                                                                        <button type="button"
+                                                                                            data-demo-filter="with-promotion">มี</button>
+                                                                                        <button type="button"
+                                                                                            data-demo-filter="without-promotion">ไม่มี</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="demo-filter-group">
+                                                                                    <span class="demo-filter-label">Source</span>
+                                                                                    <div class="demo-promotion-filter demo-source-filter"
+                                                                                        role="group" aria-label="Source filter">
+                                                                                        <button type="button" class="active"
+                                                                                            data-demo-source-filter="all">ทั้งหมด</button>
+                                                                                        <button type="button"
+                                                                                            data-demo-source-filter="with-source">มี</button>
+                                                                                        <button type="button"
+                                                                                            data-demo-source-filter="without-source">ไม่มี</button>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="small text-muted mb-2">
-                                                                            มี Promotion {{ $promotionStudentCount }} คน /
-                                                                            ไม่มี Promotion
-                                                                            {{ $total - $promotionStudentCount }} คน
+                                                                            <div>
+                                                                                มี Promotion {{ $promotionStudentCount }} คน /
+                                                                                ไม่มี Promotion
+                                                                                {{ $total - $promotionStudentCount }} คน
+                                                                            </div>
+                                                                            <div>
+                                                                                มี Source {{ $source_student_count }} คน /
+                                                                                ไม่มี Source
+                                                                                {{ $total - $source_student_count }} คน
+                                                                            </div>
                                                                         </div>
                                                                         @if ($promotion_name_counts->isNotEmpty())
                                                                             <div class="d-flex flex-wrap gap-1 mb-2">
@@ -1842,6 +1952,17 @@
                                                                                         style="border: 1.5px solid {{ $color }}; color: {{ $color }};">
                                                                                         {{ $promotion_name }}
                                                                                         <strong>{{ $promotion_count }}</strong>
+                                                                                    </span>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        @endif
+                                                                        @if ($source_name_counts->isNotEmpty())
+                                                                            <div class="d-flex flex-wrap gap-1 mb-2">
+                                                                                @foreach ($source_name_counts as $source_name => $source_count)
+                                                                                    <span class="demo-pill"
+                                                                                        style="border: 1.5px solid {{ $source_color }}; color: {{ $source_color }}; background: #ecfeff;">
+                                                                                        {{ $source_name }}
+                                                                                        <strong>{{ $source_count }}</strong>
                                                                                     </span>
                                                                                 @endforeach
                                                                             </div>
@@ -1883,6 +2004,7 @@
                                                                                     $promotion_names = array_values($student['promotions'] ?? []);
                                                                                     $source_names = array_values($student['sources'] ?? []);
                                                                                     $has_promotion = count($promotion_names) > 0;
+                                                                                    $has_source = count($source_names) > 0;
                                                                                     $student_sex = strtolower($student['sex'] ?? '');
                                                                                     if ($student_sex === 'ชาย') {
                                                                                         $student_sex = 'male';
@@ -1893,6 +2015,7 @@
                                                                                 <div class="demo-student-row"
                                                                                     data-demo-sex="{{ in_array($student_sex, ['male', 'female']) ? $student_sex : 'unknown' }}"
                                                                                     data-demo-promotion="{{ $has_promotion ? 'with-promotion' : 'without-promotion' }}"
+                                                                                    data-demo-source-status="{{ $has_source ? 'with-source' : 'without-source' }}"
                                                                                     data-demo-promotions='@json($promotion_names)'
                                                                                     data-demo-sources='@json($source_names)'>
                                                                                     <div>
@@ -2102,6 +2225,8 @@
                     const selected_sex = card.attr('data-demo-selected-sex') || '';
                     const selected_filter = card.find('.demo-promotion-filter [data-demo-filter].active').data(
                         'demo-filter') || 'all';
+                    const selected_source_filter = card.find('.demo-source-filter [data-demo-source-filter].active').data(
+                        'demo-source-filter') || 'all';
                     const selected_promotion = card.find('[data-demo-promotion-select]').val() || '';
                     const selected_source = card.find('[data-demo-source-select]').val() || '';
                     const rows = card.find('.demo-student-row');
@@ -2114,14 +2239,17 @@
                         const row = $(this);
                         const student_sex = row.data('demo-sex');
                         const promotion_status = row.data('demo-promotion');
+                        const source_status = row.data('demo-source-status');
                         const promotion_names = ReadDemoFilterValues(row, 'data-demo-promotions');
                         const source_names = ReadDemoFilterValues(row, 'data-demo-sources');
                         const matches_sex = selected_sex === '' || selected_sex === 'all' || student_sex === selected_sex;
                         const matches_toggle = selected_filter === 'all' || promotion_status === selected_filter;
+                        const matches_source_toggle = selected_source_filter === 'all' || source_status === selected_source_filter;
                         const matches_promotion = selected_promotion === '' || promotion_names.includes(
                             selected_promotion);
                         const matches_source = selected_source === '' || source_names.includes(selected_source);
-                        const should_show = matches_sex && matches_toggle && matches_promotion && matches_source;
+                        const should_show = matches_sex && matches_toggle && matches_source_toggle &&
+                            matches_promotion && matches_source;
 
                         row.toggle(should_show);
                         if (should_show) {
@@ -2175,6 +2303,15 @@
                     const card = $(this).closest('.demo-card');
 
                     $(this).closest('.demo-promotion-filter').find('[data-demo-filter]').removeClass('active');
+                    $(this).addClass('active');
+
+                    ApplyDemoCardFilters(card);
+                });
+
+                $(document).on('click', '[data-demo-source-filter]', function() {
+                    const card = $(this).closest('.demo-card');
+
+                    $(this).closest('.demo-source-filter').find('[data-demo-source-filter]').removeClass('active');
                     $(this).addClass('active');
 
                     ApplyDemoCardFilters(card);

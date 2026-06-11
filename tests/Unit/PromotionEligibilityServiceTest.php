@@ -676,6 +676,72 @@ class PromotionEligibilityServiceTest extends TestCase
         $this->assertSame(600.0, $play->first()['discount_amount']);
     }
 
+    public function testPackageMonthTierDiscountIsPerSubjectByItsOwnMonths()
+    {
+        $service = new PromotionEligibilityService(new PromotionRewardCalculator());
+
+        $campaign = $this->makeCampaign([
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_NEW_STUDENT,
+            ]),
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_EXACT_MONTHS,
+                'rule_config_json' => ['months' => [12]],
+            ]),
+        ], $this->MakePackageBundleRewards([2 => 150, 4 => 350, 6 => 600, 12 => 2000]), 1);
+
+        $result = $service->getEligiblePromotions([
+            'promotion_id' => 1,
+            'is_new_student' => true,
+            'entrance_fee_amount' => 535,
+            'receipt_items' => [
+                ['subject_group' => 'M', 'course_type' => 1, 'month_count' => 12],
+                ['subject_group' => 'E', 'course_type' => 1, 'month_count' => 2],
+            ],
+        ], collect([$campaign]));
+
+        $reward_results = $result->first()['reward_results'];
+
+        $this->assertCount(1, $result);
+        $this->assertSame(2685.0, $result->first()['discount_amount']);
+        $this->assertSame(2150.0, $reward_results[0]['discount_amount']);
+        $this->assertSame('ลด 2,150.00 บาท + ฟรีค่าลงทะเบียน + กระเป๋านักเรียน 1 ใบ', $result->first()['reward_summary']);
+
+        $line_discounts = $reward_results[0][PromotionReward::CONFIG_CALCULATION_DETAIL][PromotionReward::CONFIG_LINE_DISCOUNTS];
+        $this->assertCount(2, $line_discounts);
+        $this->assertSame(2000.0, $line_discounts[0]['discount_amount']);
+        $this->assertSame(150.0, $line_discounts[1]['discount_amount']);
+    }
+
+    public function testPackageBundleGivesEntranceButNoGiftForTwoMonthOnlyReceipt()
+    {
+        $service = new PromotionEligibilityService(new PromotionRewardCalculator());
+
+        $campaign = $this->makeCampaign([
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_NEW_STUDENT,
+            ]),
+            new PromotionRule([
+                'rule_type' => PromotionRule::TYPE_EXACT_MONTHS,
+                'rule_config_json' => ['months' => [2, 4, 6, 12]],
+            ]),
+        ], $this->MakePackageBundleRewards([2 => 150, 4 => 350, 6 => 600, 12 => 2000]), 1);
+
+        $result = $service->getEligiblePromotions([
+            'promotion_id' => 1,
+            'is_new_student' => true,
+            'entrance_fee_amount' => 535,
+            'receipt_items' => [
+                ['subject_group' => 'M', 'course_type' => 1, 'month_count' => 2],
+                ['subject_group' => 'E', 'course_type' => 1, 'month_count' => 2],
+            ],
+        ], collect([$campaign]));
+
+        $this->assertCount(1, $result);
+        $this->assertSame(835.0, $result->first()['discount_amount']);
+        $this->assertSame('ลด 300.00 บาท + ฟรีค่าลงทะเบียน', $result->first()['reward_summary']);
+    }
+
     public function testExactMonthTiersDoNotStackForSamePackage()
     {
         $service = new PromotionEligibilityService(new PromotionRewardCalculator());
@@ -733,5 +799,40 @@ class PromotionEligibilityServiceTest extends TestCase
                 PromotionReward::CONFIG_UNIT_DISCOUNT_AMOUNT => $unit_discount_amount,
             ],
         ]);
+    }
+
+    private function MakeMonthTierReward(array $month_discount_tiers)
+    {
+        return new PromotionReward([
+            'reward_type' => PromotionReward::TYPE_FIXED_DISCOUNT,
+            'discount_amount' => 0,
+            'reward_config_json' => [
+                PromotionReward::CONFIG_CALCULATION_SCOPE => PromotionReward::CALCULATION_SCOPE_PER_COURSE_MONTH_TIER,
+                PromotionReward::CONFIG_MATCHING_COURSE_TYPE => PromotionReward::DEFAULT_MATCHING_COURSE_TYPE,
+                PromotionReward::CONFIG_MONTH_DISCOUNT_TIERS => $month_discount_tiers,
+            ],
+        ]);
+    }
+
+    private function MakePackageBundleRewards(array $month_discount_tiers)
+    {
+        return [
+            $this->MakeMonthTierReward($month_discount_tiers),
+            new PromotionReward([
+                'reward_type' => PromotionReward::TYPE_FREE_ENTRANCE_FEE,
+                'reward_config_json' => [
+                    PromotionReward::CONFIG_MATCHING_COURSE_TYPE => PromotionReward::DEFAULT_MATCHING_COURSE_TYPE,
+                    PromotionReward::CONFIG_MIN_QUALIFYING_MONTHS => 2,
+                ],
+            ]),
+            new PromotionReward([
+                'reward_type' => PromotionReward::TYPE_GIFT,
+                'reward_config_json' => [
+                    'gift_name' => 'กระเป๋านักเรียน 1 ใบ',
+                    PromotionReward::CONFIG_MATCHING_COURSE_TYPE => PromotionReward::DEFAULT_MATCHING_COURSE_TYPE,
+                    PromotionReward::CONFIG_MIN_QUALIFYING_MONTHS => 4,
+                ],
+            ]),
+        ];
     }
 }

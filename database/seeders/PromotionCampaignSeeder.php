@@ -219,84 +219,64 @@ class PromotionCampaignSeeder extends Seeder
     }
 
     /**
-     * Seed per-package monthly prepay discount tiers for new students.
+     * Seed one monthly prepay discount Campaign per package for new students.
      *
      * The two packages share subject groups (Play Math is group M, English Sparks
      * is group E), so the package is distinguished by promotion_id, not subject
-     * group. Each tier uses EXACT_MONTHS so a given month count maps to exactly
-     * one tier (no stacking of lower tiers). Each tier is one complete Campaign
-     * because receipts can select only one Campaign.
+     * group. Each package is a single Campaign that holds the full month-to-discount
+     * table: cash discount is computed per course line by that line's own month
+     * count, while the free entrance fee and student bag are receipt-level benefits
+     * gated by the highest month commitment on the receipt.
      */
     private function SeedPackageMonthlyDiscountTiers()
     {
-        $package_tiers = [
+        $packages = [
             [
                 'name' => 'Promotion Package for Math/English',
                 'aliases' => [],
-                'tiers' => [
-                    ['months' => 2, 'discount' => 150],
-                    ['months' => 4, 'discount' => 350],
-                    ['months' => 6, 'discount' => 600],
-                    ['months' => 12, 'discount' => 2000],
-                ],
+                'tiers' => [2 => 150, 4 => 350, 6 => 600, 12 => 2000],
             ],
             [
                 'name' => self::PLAY_MATH_ENGLISH_SPARKS_PROMOTION_NAME,
                 'aliases' => [self::LEGACY_PLAY_MATH_PROMOTION_NAME],
-                'tiers' => [
-                    ['months' => 2, 'discount' => 100],
-                    ['months' => 4, 'discount' => 300],
-                    ['months' => 6, 'discount' => 600],
-                ],
+                'tiers' => [2 => 100, 4 => 300, 6 => 600],
             ],
         ];
 
-        foreach ($package_tiers as $package_data) {
+        foreach ($packages as $package_data) {
             $promotion_name = $package_data['name'];
             $promotion = $this->ResolvePackagePromotion($promotion_name, $package_data['aliases']);
 
             if (!$promotion) {
-                $this->command->warn("Skipped tiers: promotion '{$promotion_name}' not found.");
+                $this->command->warn("Skipped package: promotion '{$promotion_name}' not found.");
                 continue;
             }
 
-            foreach ($package_data['tiers'] as $tier) {
-                $name = $this->BuildPackageCampaignName($promotion_name, $tier);
-                $legacy_names = collect($package_data['aliases'])
-                    ->map(function ($alias_name) use ($tier) {
-                        return $this->BuildPackageCampaignName($alias_name, $tier);
-                    })
-                    ->all();
+            $month_discount_tiers = collect($package_data['tiers'])
+                ->mapWithKeys(function ($discount, $months) {
+                    return [(int) $months => (float) $discount];
+                })
+                ->all();
 
-                $campaign = PromotionCampaign::whereIn('name', array_merge([$name], $legacy_names))->first();
+            $this->DeleteLegacyPackageTierCampaigns($promotion->id, $promotion_name, $package_data['aliases']);
 
-                if ($campaign) {
-                    $campaign->update([
-                        'name' => $name,
-                        'promotion_id' => $promotion->id,
-                        'promotion_type' => PromotionCampaign::TYPE_CUSTOM,
-                        'is_active' => true,
-                        'priority' => 50,
-                    ]);
-                } else {
-                    $campaign = PromotionCampaign::create([
-                        'name' => $name,
-                        'promotion_id' => $promotion->id,
-                        'promotion_type' => PromotionCampaign::TYPE_CUSTOM,
-                        'is_active' => true,
-                        'priority' => 50,
-                    ]);
-                }
+            $campaign = PromotionCampaign::updateOrCreate(
+                ['name' => $promotion_name, 'promotion_id' => $promotion->id],
+                [
+                    'promotion_type' => PromotionCampaign::TYPE_CUSTOM,
+                    'is_active' => true,
+                    'priority' => 50,
+                ]
+            );
 
-                $campaign->rules()->delete();
-                foreach ($this->BuildPackageTierRules($tier['months']) as $rule_data) {
-                    $campaign->rules()->create($rule_data);
-                }
+            $campaign->rules()->delete();
+            foreach ($this->BuildPackageRules(array_keys($month_discount_tiers)) as $rule_data) {
+                $campaign->rules()->create($rule_data);
+            }
 
-                $campaign->rewards()->delete();
-                foreach ($this->BuildPackageTierRewards($tier) as $reward_data) {
-                    $campaign->rewards()->create($reward_data);
-                }
+            $campaign->rewards()->delete();
+            foreach ($this->BuildPackageRewards($month_discount_tiers) as $reward_data) {
+                $campaign->rewards()->create($reward_data);
             }
         }
     }
@@ -316,12 +296,33 @@ class PromotionCampaignSeeder extends Seeder
         return $promotion;
     }
 
-    private function BuildPackageCampaignName($promotion_name, array $tier)
+    /**
+     * Remove the old one-campaign-per-tier records (named "<package> - N เดือน
+     * ส่วนลด X") that the single package Campaign replaces. Linked usage snapshots
+     * keep their data because the foreign key nulls on delete.
+     */
+    private function DeleteLegacyPackageTierCampaigns($promotion_id, $promotion_name, array $aliases)
     {
-        return $promotion_name . ' - ' . $tier['months'] . ' เดือน ส่วนลด ' . $tier['discount'];
+        $name_prefixes = collect(array_merge([$promotion_name], $aliases))
+            ->map(function ($name) {
+                return $name . ' - ';
+            });
+
+        PromotionCampaign::where('promotion_id', $promotion_id)
+            ->where(function ($query) use ($name_prefixes) {
+                foreach ($name_prefixes as $name_prefix) {
+                    $query->orWhere('name', 'like', $name_prefix . '%');
+                }
+            })
+            ->get()
+            ->each(function (PromotionCampaign $campaign) {
+                $campaign->rules()->delete();
+                $campaign->rewards()->delete();
+                $campaign->delete();
+            });
     }
 
-    private function BuildPackageTierRules($month_count)
+    private function BuildPackageRules(array $tier_months)
     {
         return [
             [
@@ -332,38 +333,44 @@ class PromotionCampaignSeeder extends Seeder
             ],
             [
                 'rule_type' => PromotionRule::TYPE_EXACT_MONTHS,
-                'rule_config_json' => ['months' => [(int) $month_count]],
+                'rule_config_json' => ['months' => array_values(array_map('intval', $tier_months))],
             ],
         ];
     }
 
-    private function BuildPackageTierRewards(array $tier)
+    /**
+     * Build the bundled rewards for a package Campaign:
+     * - cash discount per course line by its own month (PER_COURSE_MONTH_TIER),
+     * - free entrance fee when any course line is 2+ months,
+     * - student bag when any course line is 4+ months.
+     */
+    private function BuildPackageRewards(array $month_discount_tiers)
     {
-        $rewards = [
+        return [
             [
                 'reward_type' => PromotionReward::TYPE_FIXED_DISCOUNT,
-                'discount_amount' => $tier['discount'],
+                'discount_amount' => 0,
                 'reward_config_json' => [
-                    PromotionReward::CONFIG_CALCULATION_SCOPE => PromotionReward::CALCULATION_SCOPE_PER_MATCHING_COURSE,
+                    PromotionReward::CONFIG_CALCULATION_SCOPE => PromotionReward::CALCULATION_SCOPE_PER_COURSE_MONTH_TIER,
                     PromotionReward::CONFIG_MATCHING_COURSE_TYPE => PromotionReward::DEFAULT_MATCHING_COURSE_TYPE,
-                    PromotionReward::CONFIG_MATCHING_MONTHS => [(int) $tier['months']],
-                    PromotionReward::CONFIG_UNIT_DISCOUNT_AMOUNT => $tier['discount'],
+                    PromotionReward::CONFIG_MONTH_DISCOUNT_TIERS => $month_discount_tiers,
                 ],
             ],
             [
                 'reward_type' => PromotionReward::TYPE_FREE_ENTRANCE_FEE,
+                'reward_config_json' => [
+                    PromotionReward::CONFIG_MATCHING_COURSE_TYPE => PromotionReward::DEFAULT_MATCHING_COURSE_TYPE,
+                    PromotionReward::CONFIG_MIN_QUALIFYING_MONTHS => 2,
+                ],
             ],
-        ];
-
-        if ((int) $tier['months'] >= 4) {
-            $rewards[] = [
+            [
                 'reward_type' => PromotionReward::TYPE_GIFT,
                 'reward_config_json' => [
                     'gift_name' => 'กระเป๋านักเรียน 1 ใบ',
+                    PromotionReward::CONFIG_MATCHING_COURSE_TYPE => PromotionReward::DEFAULT_MATCHING_COURSE_TYPE,
+                    PromotionReward::CONFIG_MIN_QUALIFYING_MONTHS => 4,
                 ],
-            ];
-        }
-
-        return $rewards;
+            ],
+        ];
     }
 }
