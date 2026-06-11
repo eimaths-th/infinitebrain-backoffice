@@ -109,7 +109,7 @@
         }
 
         .info-label {
-            color: #666;
+            color: #d0d0d0;
             white-space: nowrap;
         }
 
@@ -138,7 +138,7 @@
             border-bottom: 1px solid #81c784;
             padding: 8px;
             text-align: center;
-            color: #666;
+            color: #d0d0d0;
             font-weight: normal;
         }
 
@@ -248,7 +248,7 @@
                         border-bottom: 1px solid #85ac30;
                         padding: 8px;
                         text-align: center;
-                        color: #666;
+                        color: #d0d0d0;
                         font-weight: normal;
                     }
 
@@ -280,7 +280,7 @@
                         border-bottom: 1px solid rgb(255, 115, 0);
                         padding: 8px;
                         text-align: center;
-                        color: #666;
+                        color: #d0d0d0;
                         font-weight: normal;
                     }
 
@@ -309,7 +309,7 @@
                         border-bottom: 1px solid rgb(255, 115, 0);
                         padding: 8px;
                         text-align: center;
-                        color: #666;
+                        color: #d0d0d0;
                         font-weight: normal;
                     }
 
@@ -360,7 +360,7 @@
             <div class="info-value">
                 {{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}
             </div>
-            <div style="width: 100px; color: #666;">ที่อยู่</div>
+            <div style="width: 100px; color: #d0d0d0;">ที่อยู่</div>
             <div style="flex: 1;">
                 {{ $voucher->pay_to_address ?? '-' }}
             </div>
@@ -494,7 +494,7 @@
                     <div style="font-weight: bold; margin-bottom: 20px; text-align: left; width: 100%;">
                         เอกสารแนบ: {{ $attachment->file_name }} <br>
                         <span
-                            style="font-weight: normal; font-size: 12px; color: #666;">{{ $attachment->description }}</span>
+                            style="font-weight: normal; font-size: 12px; color: #d0d0d0;">{{ $attachment->description }}</span>
                     </div>
                     <img src="{{ $attachment->file_url }}"
                         style="max-width: 100%; max-height: 250mm; object-fit: contain;">

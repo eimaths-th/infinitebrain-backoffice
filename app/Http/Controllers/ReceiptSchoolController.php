@@ -1843,10 +1843,83 @@ class ReceiptSchoolController extends Controller
             $price_val = number_format($all_price, 2);
         }
 
+        // Distribute per-course campaign discount onto each matching course line
+        // using the reward calculation snapshot, so the receipt shows the discount
+        // under each subject instead of one combined total at the bottom.
+        $per_line_discount_total = 0;
+        foreach ($receipt_promotion_usages as $usage) {
+            foreach (($usage->reward_snapshot_json ?? []) as $reward_result) {
+                $calculation_detail = $reward_result[\App\Models\PromotionReward::CONFIG_CALCULATION_DETAIL] ?? null;
+
+                if (!is_array($calculation_detail)) {
+                    continue;
+                }
+
+                $calculation_scope = $calculation_detail[\App\Models\PromotionReward::CONFIG_CALCULATION_SCOPE] ?? null;
+                $matching_course_type = (int) ($calculation_detail[\App\Models\PromotionReward::CONFIG_MATCHING_COURSE_TYPE] ?? \App\Models\PromotionReward::DEFAULT_MATCHING_COURSE_TYPE);
+
+                // Resolve a per-line discount lookup keyed by month count for the
+                // current reward, regardless of how the snapshot encoded the scope.
+                $month_discount_lookup = [];
+
+                if ($calculation_scope === \App\Models\PromotionReward::CALCULATION_SCOPE_PER_COURSE_MONTH_TIER) {
+                    foreach (($calculation_detail[\App\Models\PromotionReward::CONFIG_MONTH_DISCOUNT_TIERS] ?? []) as $month => $tier_discount) {
+                        $month_discount_lookup[(int) $month] = (float) $tier_discount;
+                    }
+                } elseif ($calculation_scope === \App\Models\PromotionReward::CALCULATION_SCOPE_PER_MATCHING_COURSE) {
+                    $unit_discount = (float) ($calculation_detail[\App\Models\PromotionReward::CONFIG_UNIT_DISCOUNT_AMOUNT] ?? 0);
+                    foreach (($calculation_detail[\App\Models\PromotionReward::CONFIG_MATCHING_MONTHS] ?? []) as $month) {
+                        $month_discount_lookup[(int) $month] = $unit_discount;
+                    }
+                } else {
+                    continue;
+                }
+
+                $month_discount_lookup = array_filter($month_discount_lookup, function ($discount) {
+                    return $discount > 0;
+                });
+
+                if (empty($month_discount_lookup)) {
+                    continue;
+                }
+
+                foreach ($receipt_detail_arr as $index => $receipt_detail) {
+                    if ((int) ($receipt_detail['course_type'] ?? 0) !== $matching_course_type) {
+                        continue;
+                    }
+
+                    $line_month = (int) ($receipt_detail['quantity'] ?? 0);
+
+                    if (!array_key_exists($line_month, $month_discount_lookup)) {
+                        continue;
+                    }
+
+                    if (!empty($receipt_detail_arr[$index]['promo_discount'])) {
+                        continue;
+                    }
+
+                    $line_discount = $month_discount_lookup[$line_month];
+                    $receipt_detail_arr[$index]['promo_discount'] = $line_discount;
+                    $receipt_detail_arr[$index]['promo_discount_name'] = $this->BuildPromotionLineLabel(
+                        $usage->promotion_name_snapshot,
+                        $calculation_scope,
+                        $line_month,
+                        $line_discount
+                    );
+                    $per_line_discount_total += $line_discount;
+                }
+            }
+        }
+
+        // Any discount not attributed to a course line (e.g. legacy receipt-level
+        // promotions) still shows as one combined total at the bottom.
+        $campaign_discount_remaining = max(0, round($campaign_discount - $per_line_discount_total, 2));
+        $summary_discount = $discount + $campaign_discount;
+
         // dd($data,$receipt_detail_arr);
 
         return view($viewr)->with(['id' => $id])
-            ->with(['discount' => $discount])
+            ->with(['discount' => $summary_discount])
             ->with(['vat_price' => $vat_price])
             ->with(['booksum' => $booksum])
             ->with(['html' => $html])
@@ -1871,7 +1944,23 @@ class ReceiptSchoolController extends Controller
             ->with(['group_rec' => $group_rec])
             ->with(['file_att' => $file_att])
             ->with(['campaign_discount' => $campaign_discount])
-            ->with(['campaign_discount_name' => $campaign_discount_name]);
+            ->with(['campaign_discount_name' => $campaign_discount_name])
+            ->with(['campaign_discount_remaining' => $campaign_discount_remaining]);
+    }
+
+    /**
+     * Build the per-line promotion label shown under each course line. For the
+     * single package Campaign (per-course month tier), append the line's own tier
+     * so each subject reads its own months and discount; legacy per-tier snapshots
+     * keep the stored campaign name unchanged.
+     */
+    private function BuildPromotionLineLabel($promotion_name, $calculation_scope, $line_month, $line_discount)
+    {
+        if ($calculation_scope !== \App\Models\PromotionReward::CALCULATION_SCOPE_PER_COURSE_MONTH_TIER) {
+            return $promotion_name;
+        }
+
+        return $promotion_name . ' - ' . (int) $line_month . ' เดือน ส่วนลด ' . number_format($line_discount, 0);
     }
 
     public function find($parent)
@@ -2158,6 +2247,7 @@ class ReceiptSchoolController extends Controller
             $oldfile = FileUpload::where('oldname', $fileb)->first();
             if ($oldfile) {
                 $filebs .= $oldfile->filename . "|";
+                File::ensureDirectoryExists(public_path('receipts_form_school'));
                 File::move(public_path() . '/receipt_form_school/' . $oldfile->filename, public_path() . '/receipts_form_school/' . $oldfile->filename);
                 FileUpload::where('filename', $oldfile->filename)->delete();
             }
@@ -2424,6 +2514,7 @@ class ReceiptSchoolController extends Controller
                 $oldfile = FileUpload::where('oldname', $fileb)->first();
                 if ($oldfile) {
                     $stu .= $oldfile->filename . "|";
+                    File::ensureDirectoryExists(public_path('receipts_form_school'));
                     File::move(public_path() . '/receipt_form_school/' . $oldfile->filename, public_path() . '/receipts_form_school/' . $oldfile->filename);
                     FileUpload::where('filename', $oldfile->filename)->delete();
                 }

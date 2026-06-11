@@ -572,6 +572,19 @@
                                         @endif
 
                                     </tr>
+
+                                    @if (!empty($receipt_detail['promo_discount']))
+                                        <tr>
+                                            <td></td>
+                                            <td align="left">ส่วนลดโปรโมชั่น@if(!empty($receipt_detail['promo_discount_name'])) : {{ $receipt_detail['promo_discount_name'] }}@endif</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td align="center" style="vertical-align: top;">{{ number_format($receipt_detail['promo_discount'], 2) }}</td>
+                                            <td></td>
+                                        </tr>
+                                    @endif
                                 @elseif ($receipt_detail['course_type'] == 2)
                                     <tr>
                                         <td align="center" style="vertical-align: top;">
@@ -624,7 +637,7 @@
                             <td>&nbsp;</td>
 
                         </tr> --}}
-                            @if(isset($campaign_discount) && $campaign_discount > 0)
+                            @if(isset($campaign_discount_remaining) && $campaign_discount_remaining > 0)
                             <tr>
                                 <td></td>
                                 <td align="left">ส่วนลดโปรโมชั่น@if($campaign_discount_name) : {{ $campaign_discount_name }}@endif</td>
@@ -633,7 +646,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td align="center" style="vertical-align: top;">-{{ number_format($campaign_discount, 2) }}</td>
+                                <td align="center" style="vertical-align: top;">-{{ number_format($campaign_discount_remaining, 2) }}</td>
                             </tr>
                             @endif
                             <tr>
@@ -924,6 +937,19 @@
                                         @endif
 
                                     </tr>
+
+                                    @if (!empty($receipt_detail['promo_discount']))
+                                        <tr>
+                                            <td></td>
+                                            <td align="left">ส่วนลดโปรโมชั่น@if(!empty($receipt_detail['promo_discount_name'])) : {{ $receipt_detail['promo_discount_name'] }}@endif</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td align="center" style="vertical-align: top;">{{ number_format($receipt_detail['promo_discount'], 2) }}</td>
+                                            <td></td>
+                                        </tr>
+                                    @endif
                                 @elseif ($receipt_detail['course_type'] == 2)
                                     <tr>
                                         <td align="center" style="vertical-align: top;">
@@ -976,7 +1002,7 @@
                             <td>&nbsp;</td>
 
                         </tr> --}}
-                            @if(isset($campaign_discount) && $campaign_discount > 0)
+                            @if(isset($campaign_discount_remaining) && $campaign_discount_remaining > 0)
                             <tr>
                                 <td></td>
                                 <td align="left">ส่วนลดโปรโมชั่น@if($campaign_discount_name) : {{ $campaign_discount_name }}@endif</td>
@@ -985,7 +1011,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td align="center" style="vertical-align: top;">-{{ number_format($campaign_discount, 2) }}</td>
+                                <td align="center" style="vertical-align: top;">-{{ number_format($campaign_discount_remaining, 2) }}</td>
                             </tr>
                             @endif
                             <tr>
