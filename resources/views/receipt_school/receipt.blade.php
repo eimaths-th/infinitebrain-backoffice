@@ -1040,7 +1040,7 @@
                                         <div class="promotion-workflow-header">
                                             <div>
                                                 <div class="promotion-workflow-title">Campaign ส่วนลด</div>
-                                                <div class="promotion-workflow-subtitle">Campaign ที่ตรงกับ Promotion และรายการเรียน (เลือกได้ 1 Campaign ต่อใบเสร็จ)</div>
+                                                <div class="promotion-workflow-subtitle">Campaign ที่ตรงกับ Promotion และรายการเรียน (นักเรียนใหม่คำนวณแยกตามวิชา)</div>
                                             </div>
                                             <span class="promotion-status-pill">คำนวณอัตโนมัติ</span>
                                         </div>
@@ -1785,7 +1785,7 @@
                                         <div class="promotion-workflow-header">
                                             <div>
                                                 <div class="promotion-workflow-title">Campaign ส่วนลด</div>
-                                                <div class="promotion-workflow-subtitle">Campaign ที่ตรงกับ Promotion และรายการเรียน (เลือกได้ 1 Campaign ต่อใบเสร็จ)</div>
+                                                <div class="promotion-workflow-subtitle">Campaign ที่ตรงกับ Promotion และรายการเรียน (นักเรียนใหม่คำนวณแยกตามวิชา)</div>
                                             </div>
                                             <span class="promotion-status-pill">คำนวณอัตโนมัติ</span>
                                         </div>
