@@ -520,13 +520,6 @@
                 </div>
 
                 <div class="page-title-actions">
-                    <div class="d-inline-block">
-                        <select id="type_filter" class="form-control" style="width: 200px; display: inline-block; margin-right: 10px;">
-                            <option value="">-- All Types --</option>
-                            <option value="0">Normal Receipt</option>
-                            <option value="2">Credit Note</option>
-                        </select>
-                    </div>
                     <div class="d-inline-block dropdown">
                         <a class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg"
                             id="CreateButton"><i class="fa fa-plus"></i> Create New
@@ -555,6 +548,82 @@
 
 
 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-card mb-3 card" id="filter_card">
+            <div class="card-body">
+                <div class="form-row align-items-end">
+                    <div class="col-md col-sm-6">
+                        <div class="position-relative form-group">
+                            <label for="type_filter">ประเภทเอกสาร:</label>
+                            <select id="type_filter" class="form-control">
+                                <option value="">-- ทั้งหมด --</option>
+                                <option value="0">Normal Receipt</option>
+                                <option value="2">Credit Note</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md col-sm-6">
+                        <div class="position-relative form-group">
+                            <label for="filter_date_start">วันที่เริ่ม:</label>
+                            <input type="text" class="FilterDate form-control" id="filter_date_start"
+                                placeholder="DD/MM/YYYY" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="col-md col-sm-6">
+                        <div class="position-relative form-group">
+                            <label for="filter_date_end">วันที่ถึง:</label>
+                            <input type="text" class="FilterDate form-control" id="filter_date_end"
+                                placeholder="DD/MM/YYYY" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="col-md col-sm-6">
+                        <div class="position-relative form-group">
+                            <label for="filter_promotion">Promotion:</label>
+                            <select id="filter_promotion" class="form-control">
+                                <option value="">-- ทั้งหมด --</option>
+                                @foreach ($promotions as $promotion)
+                                    <option value="{{ $promotion->id }}">{{ $promotion->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md col-sm-6">
+                        <div class="position-relative form-group">
+                            <label for="filter_payment">Payment Type:</label>
+                            <select id="filter_payment" class="form-control">
+                                <option value="">-- ทั้งหมด --</option>
+                                @foreach ($datap as $keyp)
+                                    <option value="{{ $keyp['id'] }}">{{ $keyp['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md col-sm-6">
+                        <div class="position-relative form-group">
+                            <label for="filter_source">Source:</label>
+                            <select id="filter_source" class="form-control">
+                                <option value="">-- ทั้งหมด --</option>
+                                <option value="Facebook">Facebook</option>
+                                <option value="Line">Line</option>
+                                <option value="Website">Website</option>
+                                <option value="Walk-in">Walk-in</option>
+                                <option value="คนรู้จักแนะนำ">คนรู้จักแนะนำ</option>
+                                <option value="อื่นๆ">อื่นๆ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-auto col-sm-12 mt-3">
+                        <div class="form-group mb-0">
+                            <button type="button" class="btn btn-success text-nowrap" id="filter_apply">
+                                <i class="fa fa-search"></i> ค้นหา
+                            </button>
+                            <button type="button" class="btn btn-secondary text-nowrap" id="filter_clear">
+                                <i class="fa fa-eraser"></i> ล้างค่า
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2257,7 +2326,12 @@
                 dateFormat: "yy-mm"
             });
 
+            $(".FilterDate").datepicker({
+                dateFormat: "dd/mm/yy"
+            });
+
             $(".AddDate").inputmask("9999-99-99");
+            $(".FilterDate").inputmask("99/99/9999");
             $(".AddMonth").inputmask("9999-99");
             $(".AddPhone").inputmask("(999) 999-9999");
 
@@ -2650,12 +2724,35 @@
                 }
             });
 
+            // แปลงวันที่จากรูปแบบ DD/MM/YYYY (ที่ผู้ใช้กรอก) เป็น YYYY-MM-DD ที่ใช้เทียบกับ DB
+            function toIsoDate(value) {
+                if (!value) {
+                    return '';
+                }
+                var parts = value.split('/');
+                if (parts.length !== 3) {
+                    return '';
+                }
+                var day = parts[0],
+                    month = parts[1],
+                    year = parts[2];
+                if (day.length !== 2 || month.length !== 2 || year.length !== 4) {
+                    return '';
+                }
+                return year + '-' + month + '-' + day;
+            }
+
             var table = $('#Listview').DataTable({
 
                 ajax: {
                     url: '',
                     data: function(d) {
                         d.type_filter = $('#type_filter').val();
+                        d.promotion_filter = $('#filter_promotion').val();
+                        d.payment_filter = $('#filter_payment').val();
+                        d.source_filter = $('#filter_source').val();
+                        d.date_start = toIsoDate($('#filter_date_start').val());
+                        d.date_end = toIsoDate($('#filter_date_end').val());
                     }
                 },
                 serverSide: true,
@@ -2752,7 +2849,17 @@
                 }
             });
 
-            $('#type_filter').on('change', function() {
+            $('#filter_apply').on('click', function() {
+                table.draw();
+            });
+
+            $('#filter_clear').on('click', function() {
+                $('#type_filter').val('');
+                $('#filter_promotion').val('');
+                $('#filter_payment').val('');
+                $('#filter_source').val('');
+                $('#filter_date_start').val('');
+                $('#filter_date_end').val('');
                 table.draw();
             });
 

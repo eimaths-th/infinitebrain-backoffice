@@ -1066,6 +1066,26 @@ class ReceiptSchoolController extends Controller
                 $receipt->where('receipt_school.type', $request->type_filter);
             }
 
+            if ($request->filled('promotion_filter')) {
+                $receipt->where('receipt_school.promotion_id', $request->promotion_filter);
+            }
+
+            if ($request->filled('payment_filter')) {
+                $receipt->where('receipt_school.payment_type', $request->payment_filter);
+            }
+
+            if ($request->filled('source_filter')) {
+                $receipt->where('receipt_school.source', $request->source_filter);
+            }
+
+            if ($request->filled('date_start')) {
+                $receipt->where('receipt_school.submission_date', '>=', $request->date_start);
+            }
+
+            if ($request->filled('date_end')) {
+                $receipt->where('receipt_school.submission_date', '<=', $request->date_end);
+            }
+
             $receipt = $receipt->orderBy("receipt_school.id", "desc")
                 ->get();
 
