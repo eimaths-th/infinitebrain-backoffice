@@ -955,6 +955,7 @@ class ReceiptSchoolController extends Controller
         // ค้นหา SchoolPrice ที่มีอยู่แล้วสำหรับ student + subject
         $existing_records = SchoolPrice::where('student_id', $student_id)
             ->where('subject', $subject_id)
+            ->where('course_type', 1)
             ->when($exclude_school_price_id, function ($query) use ($exclude_school_price_id) {
                 return $query->where('id', '!=', $exclude_school_price_id);
             })
@@ -1007,6 +1008,7 @@ class ReceiptSchoolController extends Controller
         // ค้นหา SchoolPrice ที่มีอยู่แล้วสำหรับ student + subject
         $existing_records = SchoolPrice::where('student_id', $student_id)
             ->where('subject', $subject_id)
+            ->where('course_type', 1)
             ->whereNotIn('id', $exclude_ids)
             ->whereNotNull('period')
             ->where('period', '!=', '')
@@ -2633,7 +2635,7 @@ class ReceiptSchoolController extends Controller
         $period_errors = [];
 
         for ($xx = 0; $xx < count($rrsub); $xx++) {
-            if (!empty($rrperiod[$xx]) && !empty($std_id[$xx]) && !empty($rrsub[$xx])) {
+            if (!empty($rrperiod[$xx]) && !empty($std_id[$xx]) && !empty($rrsub[$xx]) && (string) ($rrcourse[$xx] ?? '') === '1') {
                 // ตรวจสอบ overlap โดยไม่รวม records ที่มีอยู่แล้วของ receipt นี้
                 $overlap = $this->CheckPeriodOverlapForUpdate(
                     $std_id[$xx],
