@@ -208,8 +208,8 @@
                         </div>
                         <div class="form-group">
                             <label for="Name">วันเกิด:</label>
-                            <input type="date" class="form-control" name="birth_date" id="AddBirthDate"
-                                value="">
+                            <input type="text" class="form-control student-birth-date" name="birth_date"
+                                id="AddBirthDate" placeholder="dd/mm/yyyy" autocomplete="off" value="">
                         </div>
                         <div class="form-group">
                             <label for="Name">เพศ:</label>
@@ -387,6 +387,58 @@
                 $(':checkbox.flat').prop('checked', this.checked);
             });
 
+            var BIRTH_DATE_YEAR_RANGE = '1900:2100';
+
+            function FormatDateForDisplay(stored_date) {
+                if (!stored_date || !/^\d{4}-\d{2}-\d{2}$/.test(stored_date)) {
+                    return stored_date;
+                }
+
+                var date_parts = stored_date.split('-');
+                return date_parts[2] + '/' + date_parts[1] + '/' + date_parts[0];
+            }
+
+            function FormatDateForStorage(display_date) {
+                if (!display_date) {
+                    return '';
+                }
+
+                if (/^\d{4}-\d{2}-\d{2}$/.test(display_date)) {
+                    return display_date;
+                }
+
+                if (!/^\d{2}\/\d{2}\/\d{4}$/.test(display_date)) {
+                    return display_date;
+                }
+
+                var date_parts = display_date.split('/');
+                return date_parts[2] + '-' + date_parts[1] + '-' + date_parts[0];
+            }
+
+            function InitializeStudentBirthDatePicker(selector) {
+                var birth_date_input = $(selector);
+
+                birth_date_input.each(function() {
+                    var current_input = $(this);
+                    var current_value = current_input.val();
+
+                    current_input.val(FormatDateForDisplay(current_value));
+
+                    if (current_input.hasClass('hasDatepicker')) {
+                        current_input.datepicker('destroy');
+                    }
+
+                    current_input.datepicker({
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: BIRTH_DATE_YEAR_RANGE
+                    });
+                });
+            }
+
+            InitializeStudentBirthDatePicker('.student-birth-date');
+
             //$.noConflict();
             var token = ''
             $.ajaxSetup({
@@ -498,6 +550,7 @@
                 $('.alert-danger').hide();
                 $('.alert-success').html('');
                 $('.alert-success').hide();
+                InitializeStudentBirthDatePicker('#AddBirthDate');
                 $('#CreateModal').modal('show');
             });
 
@@ -518,6 +571,7 @@
                         $('#EditParent').html(res.parent);
                         $('#Editreason').html(res.select_reaon);
                         $('#EditModal').modal('show');
+                        InitializeStudentBirthDatePicker('#EditBirthDate');
                         $('#textReason').hide();
 
                         $(document).ready(function() {
@@ -586,7 +640,7 @@
                         name: $('#AddName').val(),
                         lastname: $('#AddLastname').val(),
                         nick_name: $('#AddNickname').val(),
-                        birth_date: $('#AddBirthDate').val(),
+                        birth_date: FormatDateForStorage($('#AddBirthDate').val()),
                         sex: $('#AddSex').val(),
                         mobile: $('#AddMobile').val(),
                         grade: $('#AddGrade').val(),
@@ -638,7 +692,7 @@
                         first_name: $('#EditName').val(),
                         last_name: $('#EditLastname').val(),
                         nick_name: $('#EditNickname').val(),
-                        birth_date: $('#EditBirthDate').val(),
+                        birth_date: FormatDateForStorage($('#EditBirthDate').val()),
                         sex: $('#EditSex').val(),
                         mobile: $('#EditMobile').val(),
                         grade: $('#Editgrade').val(),

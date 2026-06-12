@@ -848,7 +848,7 @@ class StudentController extends Controller
 
                 <div class="form-group">
                     <label for="Name">Birth Date:</label>
-                    <input type="date" class="form-control" name="birth_date" id="EditBirthDate" value="' . $data->birth_date . '">
+                    <input type="text" class="form-control student-birth-date" name="birth_date" id="EditBirthDate" placeholder="dd/mm/yyyy" autocomplete="off" value="' . $data->birth_date . '">
                 </div>
 
                 <div class="form-group">
