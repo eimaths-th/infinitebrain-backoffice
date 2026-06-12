@@ -576,7 +576,7 @@
 
         .print-chart-layout {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 14px;
         }
 
@@ -685,79 +685,31 @@
             margin-top: 3px;
         }
 
-        .channel-donut-row {
-            align-items: center;
+        .channel-bar-summary {
+            align-items: baseline;
             display: flex;
-            gap: 14px;
-            margin-bottom: 14px;
+            gap: 7px;
+            margin-bottom: 8px;
         }
 
-        .channel-donut-canvas {
-            flex: 0 0 118px;
-            height: 118px;
-            position: relative;
-            width: 118px;
-        }
-
-        .channel-donut-center {
-            align-items: center;
-            display: flex;
-            flex-direction: column;
-            inset: 0;
-            justify-content: center;
-            position: absolute;
-            text-align: center;
-        }
-
-        .channel-donut-center strong {
+        .channel-bar-pct {
             color: #111827;
-            font-size: 24px;
+            font-size: 22px;
+            font-weight: 800;
             line-height: 1;
         }
 
-        .channel-donut-center span {
+        .channel-bar-pct-label {
             color: #64748b;
-            font-size: 9px;
-            font-weight: 700;
-            margin-top: 3px;
-        }
-
-        .channel-donut-legend {
-            flex: 1;
-        }
-
-        .channel-legend-item {
-            align-items: center;
-            display: flex;
-            font-size: 11px;
-            gap: 7px;
-            margin-bottom: 6px;
-        }
-
-        .channel-legend-item .dot {
-            border-radius: 3px;
-            flex: 0 0 11px;
-            height: 11px;
-            width: 11px;
-        }
-
-        .channel-legend-item .lbl {
-            color: #475569;
-            flex: 1;
-        }
-
-        .channel-legend-item .val {
-            color: #111827;
-            font-weight: 800;
-        }
-
-        .channel-legend-total {
-            border-top: 1px dashed #e2e8f0;
-            color: #94a3b8;
             font-size: 10px;
             font-weight: 700;
-            margin-top: 6px;
-            padding-top: 6px;
+        }
+
+        .channel-bar-canvas {
+            height: 260px;
+            margin-bottom: 14px;
+            position: relative;
+            width: 100%;
         }
 
         .channel-rank-title {
@@ -844,7 +796,7 @@
             }
 
             .print-chart-layout {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1604,6 +1556,7 @@
             $channel_students = [];
             $channel_month_students = [];
             $channel_month_promotion_students = [];
+            $channel_month_source_students = [];
 
             if ($latest_channel_year !== null) {
                 $channel_month_start = $channel_demo_month === 'all' ? 1 : $channel_demo_month;
@@ -1613,6 +1566,7 @@
                     $month_key = sprintf('%04d-%02d', $latest_channel_year, $month_number);
                     $channel_month_students[$month_key] = [];
                     $channel_month_promotion_students[$month_key] = [];
+                    $channel_month_source_students[$month_key] = [];
                 }
 
                 foreach ($parsed_channel_school_prices as $parsed_school_price) {
@@ -1631,6 +1585,7 @@
                     if (!isset($channel_students[$student_id])) {
                         $channel_students[$student_id] = [
                             'promotions' => [],
+                            'all_promotions' => [],
                             'sources' => [],
                         ];
                     }
@@ -1648,21 +1603,29 @@
                     // "No Promotion" ถือว่าไม่ได้ใช้โปรโมชั่น (ไม่นับเป็น "มี Promotion")
                     $is_real_promotion = $promotion_name !== '' && !str_contains(strtolower($promotion_name), 'no promotion');
 
-                    if ($is_real_promotion) {
-                        $channel_students[$student_id]['promotions'][$promotion_name] = $promotion_name;
-                        $channel_month_students[$month_key][$student_id]['has_promotion'] = true;
+                    if ($promotion_name !== '') {
+                        // เก็บทุกชื่อ (รวม No Promotion) ไว้สำหรับกราฟ/ลิสต์
+                        $channel_students[$student_id]['all_promotions'][$promotion_name] = $promotion_name;
                         $channel_month_promotion_students[$month_key][$promotion_name][$student_id] = true;
+
+                        if ($is_real_promotion) {
+                            // นับเป็น "มี Promotion" เฉพาะโปรจริง (ไม่รวม No Promotion)
+                            $channel_students[$student_id]['promotions'][$promotion_name] = $promotion_name;
+                            $channel_month_students[$month_key][$student_id]['has_promotion'] = true;
+                        }
                     }
 
                     if ($source_name !== '') {
                         $channel_students[$student_id]['sources'][$source_name] = $source_name;
                         $channel_month_students[$month_key][$student_id]['has_source'] = true;
+                        $channel_month_source_students[$month_key][$source_name][$student_id] = true;
                     }
                 }
             }
 
             ksort($channel_month_students);
             ksort($channel_month_promotion_students);
+            ksort($channel_month_source_students);
 
             $channel_students = collect($channel_students);
             $channel_student_total = $channel_students->count();
@@ -1716,7 +1679,7 @@
             $channel_promotion_ranking = [];
             $channel_source_ranking = [];
             foreach ($channel_students as $channel_student) {
-                foreach ($channel_student['promotions'] ?? [] as $promotion_name) {
+                foreach ($channel_student['all_promotions'] ?? [] as $promotion_name) {
                     $channel_promotion_ranking[$promotion_name] = ($channel_promotion_ranking[$promotion_name] ?? 0) + 1;
                 }
                 foreach ($channel_student['sources'] ?? [] as $source_name) {
@@ -1729,6 +1692,97 @@
             $channel_source_rank_max = count($channel_source_ranking) ? max($channel_source_ranking) : 0;
             $channel_promotion_percent = $channel_student_total > 0 ? round(($channel_promotion_student_count / $channel_student_total) * 100) : 0;
             $channel_source_percent = $channel_student_total > 0 ? round(($channel_source_student_count / $channel_student_total) * 100) : 0;
+            $channel_bar_palette = [
+                '#22a447', '#0ea5c6', '#f59e0b', '#ef4444', '#8b5cf6',
+                '#ec4899', '#14b8a6', '#6366f1', '#84cc16', '#f97316',
+                '#0891b2', '#a855f7', '#e11d48', '#65a30d', '#2563eb', '#d97706',
+            ];
+
+            // ป้ายแกน X = เดือนย่อภาษาไทย
+            $thai_month_abbr = [
+                1 => 'ม.ค.', 2 => 'ก.พ.', 3 => 'มี.ค.', 4 => 'เม.ย.',
+                5 => 'พ.ค.', 6 => 'มิ.ย.', 7 => 'ก.ค.', 8 => 'ส.ค.',
+                9 => 'ก.ย.', 10 => 'ต.ค.', 11 => 'พ.ย.', 12 => 'ธ.ค.',
+            ];
+            $channel_month_keys = array_keys($channel_month_students);
+            $channel_month_chart_labels = collect($channel_month_keys)
+                ->map(function ($month_key) use ($thai_month_abbr) {
+                    return $thai_month_abbr[(int) substr($month_key, 5, 2)] ?? $month_key;
+                })
+                ->values();
+
+            $channel_others_color = '#cbd5e1';
+            $channel_no_promotion_color = '#94a3b8';
+            $channel_series_top_n = 7;
+
+            // แมปสีของแต่ละชื่อ ใช้ร่วมกันทั้งกราฟและลิสต์ ให้สีตรงกันเป๊ะ
+            // - โปรจริง: ผูกสีกับ "ชื่อ" แบบ deterministic (hash) → โปรเดียวกันได้สีเดิมเสมอ ไม่ขึ้นกับอันดับ
+            // - No Promotion: สีเทาเข้ม / เกิน Top N: สีเทาอ่อน (รวมเป็น "อื่นๆ")
+            $channel_build_color_map = function (array $ranking) use ($channel_bar_palette, $channel_series_top_n, $channel_others_color, $channel_no_promotion_color) {
+                $palette_count = count($channel_bar_palette);
+                $map = [];
+                $used = [];
+                $rank_index = 0;
+                foreach (array_keys($ranking) as $name) {
+                    $is_no_promotion = str_contains(strtolower($name), 'no promotion');
+                    if ($rank_index >= $channel_series_top_n) {
+                        $map[$name] = $channel_others_color;
+                    } elseif ($is_no_promotion) {
+                        $map[$name] = $channel_no_promotion_color;
+                    } else {
+                        // hash ชื่อให้ได้สีที่ต้องการ (คงที่ต่อชื่อ) จัดการค่าติดลบบน PHP 32-bit ด้วย
+                        $palette_index = ((crc32($name) % $palette_count) + $palette_count) % $palette_count;
+                        // ถ้าสีชนกับตัวที่จองไปแล้วในใบนี้ เลื่อนไปสีถัดไป (กันสีซ้ำในรายงานเดียว)
+                        $probe = 0;
+                        while (isset($used[$palette_index]) && $probe < $palette_count) {
+                            $palette_index = ($palette_index + 1) % $palette_count;
+                            $probe++;
+                        }
+                        $used[$palette_index] = true;
+                        $map[$name] = $channel_bar_palette[$palette_index];
+                    }
+                    $rank_index++;
+                }
+                return $map;
+            };
+            $channel_promotion_color_map = $channel_build_color_map($channel_promotion_ranking);
+            $channel_source_color_map = $channel_build_color_map($channel_source_ranking);
+
+            // สร้าง grouped series: แสดงทีละตัวตามอันดับ (Top N) เกินกว่านั้นยุบเป็น "อื่นๆ (รวม)"
+            $build_channel_stacked_series = function (array $ranking, array $month_name_students, array $month_keys, array $color_map) use ($channel_series_top_n, $channel_others_color) {
+                $top_names = array_slice(array_keys($ranking), 0, $channel_series_top_n);
+                $top_lookup = array_flip($top_names);
+                $series = [];
+
+                foreach ($top_names as $name) {
+                    $series[] = [
+                        'label' => $name,
+                        'color' => $color_map[$name] ?? $channel_others_color,
+                        'data' => array_map(function ($month_key) use ($month_name_students, $name) {
+                            return count($month_name_students[$month_key][$name] ?? []);
+                        }, $month_keys),
+                    ];
+                }
+
+                if (count($ranking) > count($top_names)) {
+                    $others = array_map(function ($month_key) use ($month_name_students, $top_lookup) {
+                        $sum = 0;
+                        foreach ($month_name_students[$month_key] ?? [] as $name => $student_ids) {
+                            if (!isset($top_lookup[$name])) {
+                                $sum += count($student_ids);
+                            }
+                        }
+                        return $sum;
+                    }, $month_keys);
+
+                    $series[] = ['label' => 'อื่นๆ (รวม)', 'color' => $channel_others_color, 'data' => $others];
+                }
+
+                return $series;
+            };
+
+            $channel_promotion_series = $build_channel_stacked_series($channel_promotion_ranking, $channel_month_promotion_students, $channel_month_keys, $channel_promotion_color_map);
+            $channel_source_series = $build_channel_stacked_series($channel_source_ranking, $channel_month_source_students, $channel_month_keys, $channel_source_color_map);
         @endphp
 
         <div class="page">
@@ -1758,27 +1812,12 @@
                             <div class="print-chart-panel-note">นับนักเรียนไม่ซ้ำจากวันที่สมัครใน receipt {{ $channel_period_label }}</div>
                         </div>
                         <div class="print-chart-panel-body">
-                            <div class="channel-donut-row">
-                                <div class="channel-donut-canvas">
-                                    <canvas id="promotionDonutChart"></canvas>
-                                    <div class="channel-donut-center">
-                                        <strong>{{ $channel_promotion_percent }}%</strong>
-                                        <span>มี Promotion</span>
-                                    </div>
-                                </div>
-                                <div class="channel-donut-legend">
-                                    <div class="channel-legend-item">
-                                        <span class="dot" style="background: #22a447;"></span>
-                                        <span class="lbl">มี Promotion</span>
-                                        <span class="val">{{ $channel_promotion_student_count }} คน</span>
-                                    </div>
-                                    <div class="channel-legend-item">
-                                        <span class="dot" style="background: #e2e8f0;"></span>
-                                        <span class="lbl">ไม่มี Promotion</span>
-                                        <span class="val">{{ $channel_student_total - $channel_promotion_student_count }} คน</span>
-                                    </div>
-                                    <div class="channel-legend-total">จากนักเรียนทั้งหมด {{ $channel_student_total }} คน</div>
-                                </div>
+                            <div class="channel-bar-summary">
+                                <span class="channel-bar-pct">{{ $channel_promotion_percent }}%</span>
+                                <span class="channel-bar-pct-label">มี Promotion · {{ $channel_promotion_student_count }}/{{ $channel_student_total }} คน</span>
+                            </div>
+                            <div class="channel-bar-canvas">
+                                <canvas id="promotionBarChart"></canvas>
                             </div>
 
                             <div class="channel-rank-title">อันดับ Promotion ที่ใช้มากที่สุด</div>
@@ -1787,6 +1826,7 @@
                                 @php
                                     $is_no_promotion = str_contains(strtolower($promotion_name), 'no promotion');
                                     $promotion_bar_width = $channel_promotion_rank_max > 0 ? round(($promotion_count / $channel_promotion_rank_max) * 100) : 0;
+                                    $promotion_bar_color = $channel_promotion_color_map[$promotion_name] ?? '#cbd5e1';
                                 @endphp
                                 <div class="channel-rank-item {{ $is_no_promotion ? 'is-muted' : '' }}">
                                     <div class="channel-rank-main">
@@ -1795,7 +1835,7 @@
                                             <span class="channel-rank-name">{{ $promotion_name }}</span>
                                         </div>
                                         <div class="channel-rank-track">
-                                            <span class="channel-rank-fill" style="width: {{ $promotion_bar_width }}%; background: #22a447;"></span>
+                                            <span class="channel-rank-fill" style="width: {{ $promotion_bar_width }}%; background: {{ $promotion_bar_color }};"></span>
                                         </div>
                                     </div>
                                     <div class="channel-rank-val">{{ $promotion_count }}</div>
@@ -1812,27 +1852,12 @@
                             <div class="print-chart-panel-note">นับนักเรียนไม่ซ้ำจากวันที่สมัครใน receipt {{ $channel_period_label }}</div>
                         </div>
                         <div class="print-chart-panel-body">
-                            <div class="channel-donut-row">
-                                <div class="channel-donut-canvas">
-                                    <canvas id="sourceDonutChart"></canvas>
-                                    <div class="channel-donut-center">
-                                        <strong>{{ $channel_source_percent }}%</strong>
-                                        <span>มี Source</span>
-                                    </div>
-                                </div>
-                                <div class="channel-donut-legend">
-                                    <div class="channel-legend-item">
-                                        <span class="dot" style="background: #0ea5c6;"></span>
-                                        <span class="lbl">มี Source</span>
-                                        <span class="val">{{ $channel_source_student_count }} คน</span>
-                                    </div>
-                                    <div class="channel-legend-item">
-                                        <span class="dot" style="background: #e2e8f0;"></span>
-                                        <span class="lbl">ไม่มี Source</span>
-                                        <span class="val">{{ $channel_student_total - $channel_source_student_count }} คน</span>
-                                    </div>
-                                    <div class="channel-legend-total">จากนักเรียนทั้งหมด {{ $channel_student_total }} คน</div>
-                                </div>
+                            <div class="channel-bar-summary">
+                                <span class="channel-bar-pct">{{ $channel_source_percent }}%</span>
+                                <span class="channel-bar-pct-label">มี Source · {{ $channel_source_student_count }}/{{ $channel_student_total }} คน</span>
+                            </div>
+                            <div class="channel-bar-canvas">
+                                <canvas id="sourceBarChart"></canvas>
                             </div>
 
                             <div class="channel-rank-title">อันดับ Source ที่มามากที่สุด</div>
@@ -1840,6 +1865,7 @@
                             @forelse ($channel_source_ranking as $source_name => $source_count)
                                 @php
                                     $source_bar_width = $channel_source_rank_max > 0 ? round(($source_count / $channel_source_rank_max) * 100) : 0;
+                                    $source_bar_color = $channel_source_color_map[$source_name] ?? '#cbd5e1';
                                 @endphp
                                 <div class="channel-rank-item">
                                     <div class="channel-rank-main">
@@ -1848,7 +1874,7 @@
                                             <span class="channel-rank-name">{{ $source_name }}</span>
                                         </div>
                                         <div class="channel-rank-track">
-                                            <span class="channel-rank-fill" style="width: {{ $source_bar_width }}%; background: #0ea5c6;"></span>
+                                            <span class="channel-rank-fill" style="width: {{ $source_bar_width }}%; background: {{ $source_bar_color }};"></span>
                                         </div>
                                     </div>
                                     <div class="channel-rank-val">{{ $source_count }}</div>
@@ -2318,59 +2344,123 @@
         @endif
 
         @if (in_array('promotion-source-chart', $sections))
-            const promotion_donut_values = [
-                {{ $channel_promotion_student_count }},
-                {{ $channel_student_total - $channel_promotion_student_count }}
-            ];
-            const source_donut_values = [
-                {{ $channel_source_student_count }},
-                {{ $channel_student_total - $channel_source_student_count }}
-            ];
+            const channel_month_labels = @json($channel_month_chart_labels);
+            const promotion_series = @json($channel_promotion_series);
+            const source_series = @json($channel_source_series);
 
-            function CreateChannelDonut(canvas_id, values, active_label, active_color) {
+            // วาดจำนวนคนไว้บนหัวแท่งแต่ละแท่ง (เฉพาะแท่งที่มีค่า)
+            const channelGroupedValuePlugin = {
+                id: 'channelGroupedValue',
+                afterDatasetsDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    ctx.save();
+                    ctx.font = 'bold 8px sans-serif';
+                    ctx.fillStyle = '#475569';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    chart.data.datasets.forEach(function(dataset, dataset_index) {
+                        const meta = chart.getDatasetMeta(dataset_index);
+                        if (meta.hidden) {
+                            return;
+                        }
+                        meta.data.forEach(function(bar, index) {
+                            const value = dataset.data[index] || 0;
+                            if (value > 0) {
+                                ctx.fillText(value, bar.x, bar.y - 2);
+                            }
+                        });
+                    });
+                    ctx.restore();
+                }
+            };
+
+            function CreateChannelGroupedBar(canvas_id, labels, series) {
                 const canvas = document.getElementById(canvas_id);
-                if (!canvas) {
+                if (!canvas || series.length === 0) {
                     return;
                 }
 
+                const datasets = series.map(function(item) {
+                    return {
+                        label: item.label,
+                        data: item.data,
+                        // ใช้สีจาก color map (ฝั่ง PHP) ให้ตรงกับลิสต์อันดับด้านล่างเป๊ะ
+                        backgroundColor: item.color,
+                        borderWidth: 0,
+                        borderRadius: 3,
+                    };
+                });
+
                 new Chart(canvas, {
-                    type: 'doughnut',
+                    type: 'bar',
                     data: {
-                        labels: [active_label, 'ไม่มี'],
-                        datasets: [{
-                            data: values,
-                            backgroundColor: [active_color, '#e2e8f0'],
-                            borderWidth: 0,
-                        }]
+                        labels: labels,
+                        datasets: datasets
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         animation: false,
-                        cutout: '70%',
+                        layout: {
+                            padding: {
+                                top: 16
+                            }
+                        },
                         plugins: {
                             legend: {
-                                display: false
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    boxWidth: 12,
+                                    boxHeight: 12,
+                                    padding: 10,
+                                    font: {
+                                        size: 10
+                                    }
+                                }
                             },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
-                                        const value = context.parsed || 0;
-                                        const total = values.reduce(function(a, b) {
-                                            return a + b;
-                                        }, 0);
-                                        const percent = total > 0 ? Math.round((value / total) * 100) : 0;
-                                        return context.label + ': ' + value + ' คน (' + percent + '%)';
+                                        return context.dataset.label + ': ' + context.parsed.y + ' คน';
                                     }
                                 }
                             }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 9
+                                    },
+                                    autoSkip: false,
+                                    maxRotation: 0,
+                                    minRotation: 0
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0,
+                                    font: {
+                                        size: 9
+                                    }
+                                },
+                                grid: {
+                                    color: '#eef2f7'
+                                }
+                            }
                         }
-                    }
+                    },
+                    plugins: [channelGroupedValuePlugin]
                 });
             }
 
-            CreateChannelDonut('promotionDonutChart', promotion_donut_values, 'มี Promotion', '#22a447');
-            CreateChannelDonut('sourceDonutChart', source_donut_values, 'มี Source', '#0ea5c6');
+            CreateChannelGroupedBar('promotionBarChart', channel_month_labels, promotion_series);
+            CreateChannelGroupedBar('sourceBarChart', channel_month_labels, source_series);
         @endif
     </script>
 </body>
