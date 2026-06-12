@@ -313,6 +313,12 @@
                                 <label class="form-check-label" for="chk-demographics">ข้อมูลประชากรนักเรียน
                                     (อายุ/เพศ/ชั้นเรียน)</label>
                             </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="chk-promotion-source-chart"
+                                    value="section-promotion-source-chart" checked>
+                                <label class="form-check-label" for="chk-promotion-source-chart">กราฟ Promotion /
+                                    Source</label>
+                            </div>
                             {{-- <div class="form-check mb-2">
                                 <input class="form-check-input" type="checkbox" id="chk-paper-table"
                                     value="section-paper-table" checked>
@@ -1509,6 +1515,12 @@
                                             font-weight: 700;
                                         }
 
+                                        .demo-print-list-action {
+                                            display: flex;
+                                            justify-content: flex-end;
+                                            margin: 8px 0;
+                                        }
+
                                         @media (max-width: 767.98px) {
                                             .demo-channel-grid {
                                                 grid-template-columns: 1fr;
@@ -1619,7 +1631,8 @@
                                                     $maxAge = max(array_values($ageRanges)) ?: 1;
                                                 @endphp
                                                 <div class="col-lg-6 col-md-6 demo-card-column">
-                                                    <div class="demo-card">
+                                                    <div class="demo-card" data-demo-group="{{ $group }}"
+                                                        data-demo-month="all">
                                                         <div class="demo-card-header"
                                                             style="background: {{ $color }};">
                                                             <div class="icon-circle"
@@ -1855,6 +1868,13 @@
                                                                         data-demo-result-summary>
                                                                         แสดงผล: 0 คน | ชาย 0 | หญิง 0
                                                                     </div>
+                                                                    <div class="demo-print-list-action no-print">
+                                                                        <button type="button"
+                                                                            class="btn btn-outline-primary btn-sm"
+                                                                            data-demo-print-list>
+                                                                            <i class="fa fa-print"></i> พิมพ์รายชื่อ
+                                                                        </button>
+                                                                    </div>
                                                                     <div class="demo-student-list">
                                                                         @foreach (collect($students)->sortBy('code') as $student)
                                                                             @php
@@ -2032,7 +2052,8 @@
                                                         $maxAge = max(array_values($ageRanges)) ?: 1;
                                                     @endphp
                                                     <div class="col-lg-4 col-md-6 demo-card-column">
-                                                        <div class="demo-card">
+                                                        <div class="demo-card" data-demo-group="{{ $group }}"
+                                                            data-demo-month="{{ $m }}">
                                                             <div class="demo-card-header"
                                                                 style="background: {{ $color }};">
                                                                 <div class="icon-circle"
@@ -2269,6 +2290,13 @@
                                                                         <div class="demo-result-summary mb-2"
                                                                             data-demo-result-summary>
                                                                             แสดงผล: 0 คน | ชาย 0 | หญิง 0
+                                                                        </div>
+                                                                        <div class="demo-print-list-action no-print">
+                                                                            <button type="button"
+                                                                                class="btn btn-outline-primary btn-sm"
+                                                                                data-demo-print-list>
+                                                                                <i class="fa fa-print"></i> พิมพ์รายชื่อ
+                                                                            </button>
                                                                         </div>
                                                                         <div class="demo-student-list">
                                                                             @foreach (collect($students)->sortBy('code') as $student)
@@ -2660,6 +2688,40 @@
                 $(document).on('change', '[data-demo-promotion-select], [data-demo-source-select]', function() {
                     ApplyDemoCardFilters($(this).closest('.demo-card'));
                 });
+
+                function OpenFilteredStudentListPrint(card) {
+                    const year_select = document.getElementById('selectMonth');
+                    const selected_year = year_select ? year_select.value : '{{ $year }}';
+                    const selected_group = card.attr('data-demo-group') || '';
+                    const selected_month = card.attr('data-demo-month') || currentDemoMonth || 'all';
+                    const selected_sex = card.attr('data-demo-selected-sex') || 'all';
+                    const selected_enrollment = card.attr('data-demo-selected-enrollment') || '';
+                    const selected_promotion_filter = card.find('.demo-promotion-filter [data-demo-filter].active').data(
+                        'demo-filter') || 'all';
+                    const selected_source_filter = card.find('.demo-source-filter [data-demo-source-filter].active').data(
+                        'demo-source-filter') || 'all';
+                    const selected_promotion_name = card.find('[data-demo-promotion-select]').val() || '';
+                    const selected_source_name = card.find('[data-demo-source-select]').val() || '';
+                    const print_params = new URLSearchParams({
+                        year: selected_year,
+                        sections: 'filtered-student-list',
+                        orientation: 'portrait',
+                        demo_month: selected_month,
+                        demo_group: selected_group,
+                        demo_sex: selected_sex,
+                        demo_enrollment: selected_enrollment,
+                        demo_promotion_filter: selected_promotion_filter,
+                        demo_source_filter: selected_source_filter,
+                        demo_promotion_name: selected_promotion_name,
+                        demo_source_name: selected_source_name,
+                    });
+
+                    window.open(`{{ route('reportRecieptStdPrint') }}?${print_params.toString()}`, '_blank');
+                }
+
+                $(document).on('click', '[data-demo-print-list]', function() {
+                    OpenFilteredStudentListPrint($(this).closest('.demo-card'));
+                });
             </script>
             <script>
                 var groupLabels = [
@@ -2823,6 +2885,7 @@
                         'chk-timeline': 'timeline',
                         'chk-summary-table': 'summary-table',
                         'chk-demographics': 'demographics',
+                        'chk-promotion-source-chart': 'promotion-source-chart',
                         'chk-paper-table': 'paper-table',
                     };
 
