@@ -615,6 +615,46 @@
             width: 100%;
         }
 
+        .promotion-detail-table-wrap {
+            margin-top: 12px;
+            max-height: 220px;
+            overflow: hidden;
+        }
+
+        .promotion-detail-title {
+            color: #14532d;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .promotion-detail-table {
+            border-collapse: collapse;
+            font-size: 9px;
+            width: 100%;
+        }
+
+        .promotion-detail-table th {
+            background: #edf7ee;
+            color: #14532d;
+            font-weight: 800;
+            padding: 5px 6px;
+            text-align: left;
+        }
+
+        .promotion-detail-table td {
+            border-bottom: 1px solid #edf2f7;
+            color: #334155;
+            padding: 5px 6px;
+            vertical-align: top;
+        }
+
+        .promotion-detail-table td:last-child {
+            font-weight: 800;
+            text-align: right;
+            white-space: nowrap;
+        }
+
         .print-metric-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -643,6 +683,159 @@
             font-size: 9px;
             font-weight: 700;
             margin-top: 3px;
+        }
+
+        .channel-donut-row {
+            align-items: center;
+            display: flex;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .channel-donut-canvas {
+            flex: 0 0 118px;
+            height: 118px;
+            position: relative;
+            width: 118px;
+        }
+
+        .channel-donut-center {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            inset: 0;
+            justify-content: center;
+            position: absolute;
+            text-align: center;
+        }
+
+        .channel-donut-center strong {
+            color: #111827;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .channel-donut-center span {
+            color: #64748b;
+            font-size: 9px;
+            font-weight: 700;
+            margin-top: 3px;
+        }
+
+        .channel-donut-legend {
+            flex: 1;
+        }
+
+        .channel-legend-item {
+            align-items: center;
+            display: flex;
+            font-size: 11px;
+            gap: 7px;
+            margin-bottom: 6px;
+        }
+
+        .channel-legend-item .dot {
+            border-radius: 3px;
+            flex: 0 0 11px;
+            height: 11px;
+            width: 11px;
+        }
+
+        .channel-legend-item .lbl {
+            color: #475569;
+            flex: 1;
+        }
+
+        .channel-legend-item .val {
+            color: #111827;
+            font-weight: 800;
+        }
+
+        .channel-legend-total {
+            border-top: 1px dashed #e2e8f0;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 700;
+            margin-top: 6px;
+            padding-top: 6px;
+        }
+
+        .channel-rank-title {
+            color: #145aa5;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .channel-rank-note {
+            color: #94a3b8;
+            font-size: 9px;
+            font-weight: 600;
+            margin-bottom: 9px;
+        }
+
+        .channel-rank-item {
+            align-items: center;
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .channel-rank-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .channel-rank-head {
+            align-items: baseline;
+            display: flex;
+            gap: 6px;
+            margin-bottom: 3px;
+        }
+
+        .channel-rank-no {
+            color: #94a3b8;
+            flex: 0 0 16px;
+            font-size: 9px;
+            font-weight: 800;
+        }
+
+        .channel-rank-name {
+            color: #334155;
+            font-size: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .channel-rank-track {
+            background: #eef2f7;
+            border-radius: 999px;
+            height: 9px;
+            overflow: hidden;
+        }
+
+        .channel-rank-fill {
+            border-radius: 999px;
+            display: block;
+            height: 100%;
+        }
+
+        .channel-rank-val {
+            color: #111827;
+            flex: 0 0 30px;
+            font-size: 12px;
+            font-weight: 800;
+            text-align: right;
+        }
+
+        .channel-rank-item.is-muted .channel-rank-name {
+            color: #9aa6b2;
+            font-style: italic;
+        }
+
+        .channel-rank-item.is-muted .channel-rank-fill {
+            background: #cbd5e1 !important;
         }
 
         @media print {
@@ -1366,13 +1559,74 @@
     {{-- ==================== PROMOTION / SOURCE CHART SECTION ==================== --}}
     @if (in_array('promotion-source-chart', $sections))
         @php
-            $channel_students = [];
+            $channel_school_price_collection = $channel_school_prices ?? collect();
+            $parsed_channel_school_prices = [];
+            $latest_channel_year = (int) ($year ?? date('Y'));
 
-            foreach ($reportYear_schoolPrice as $student_id => $grouped_data) {
-                foreach ($grouped_data as $school_price) {
-                    if (!$school_price->std) {
+            $channel_demo_month_param = request()->get('demo_month', 'all');
+            $channel_demo_month = $channel_demo_month_param === 'all' ? 'all' : (int) $channel_demo_month_param;
+            if ($channel_demo_month !== 'all' && ($channel_demo_month < 1 || $channel_demo_month > 12)) {
+                $channel_demo_month = 'all';
+            }
+
+            $channel_period_label = $channel_demo_month === 'all'
+                ? 'ปี ' . $latest_channel_year
+                : 'เดือน ' . thaidate('F', Carbon::create($latest_channel_year, (int) $channel_demo_month, 1)->format('F')) . ' ' . $latest_channel_year;
+
+            foreach ($channel_school_price_collection as $school_price) {
+                if (!$school_price->std || !$school_price->rec_school || empty($school_price->rec_school->submission_date)) {
+                    continue;
+                }
+
+                try {
+                    $submission_date = Carbon::parse($school_price->rec_school->submission_date);
+                } catch (\Exception $exception) {
+                    continue;
+                }
+
+                $student_id = $school_price->student_id;
+
+                if (empty($student_id)) {
+                    continue;
+                }
+
+                $submission_year = (int) $submission_date->format('Y');
+                $month_key = $submission_date->format('Y-m');
+
+                $parsed_channel_school_prices[] = [
+                    'school_price' => $school_price,
+                    'student_id' => $student_id,
+                    'year' => $submission_year,
+                    'month_key' => $month_key,
+                ];
+            }
+
+            $channel_students = [];
+            $channel_month_students = [];
+            $channel_month_promotion_students = [];
+
+            if ($latest_channel_year !== null) {
+                $channel_month_start = $channel_demo_month === 'all' ? 1 : $channel_demo_month;
+                $channel_month_end = $channel_demo_month === 'all' ? 12 : $channel_demo_month;
+
+                for ($month_number = $channel_month_start; $month_number <= $channel_month_end; $month_number++) {
+                    $month_key = sprintf('%04d-%02d', $latest_channel_year, $month_number);
+                    $channel_month_students[$month_key] = [];
+                    $channel_month_promotion_students[$month_key] = [];
+                }
+
+                foreach ($parsed_channel_school_prices as $parsed_school_price) {
+                    if ($parsed_school_price['year'] !== $latest_channel_year) {
                         continue;
                     }
+
+                    if ($channel_demo_month !== 'all' && (int) Carbon::parse($parsed_school_price['month_key'] . '-01')->format('n') !== $channel_demo_month) {
+                        continue;
+                    }
+
+                    $school_price = $parsed_school_price['school_price'];
+                    $student_id = $parsed_school_price['student_id'];
+                    $month_key = $parsed_school_price['month_key'];
 
                     if (!isset($channel_students[$student_id])) {
                         $channel_students[$student_id] = [
@@ -1381,18 +1635,34 @@
                         ];
                     }
 
-                    $promotion_name = $school_price->rec_school->promotion->name ?? null;
-                    $source_name = $school_price->rec_school->source ?? null;
-
-                    if (!empty($promotion_name)) {
-                        $channel_students[$student_id]['promotions'][$promotion_name] = $promotion_name;
+                    if (!isset($channel_month_students[$month_key][$student_id])) {
+                        $channel_month_students[$month_key][$student_id] = [
+                            'has_promotion' => false,
+                            'has_source' => false,
+                        ];
                     }
 
-                    if (!empty($source_name)) {
+                    $promotion_name = trim((string) ($school_price->rec_school->promotion->name ?? ''));
+                    $source_name = trim((string) ($school_price->rec_school->source ?? ''));
+
+                    // "No Promotion" ถือว่าไม่ได้ใช้โปรโมชั่น (ไม่นับเป็น "มี Promotion")
+                    $is_real_promotion = $promotion_name !== '' && !str_contains(strtolower($promotion_name), 'no promotion');
+
+                    if ($is_real_promotion) {
+                        $channel_students[$student_id]['promotions'][$promotion_name] = $promotion_name;
+                        $channel_month_students[$month_key][$student_id]['has_promotion'] = true;
+                        $channel_month_promotion_students[$month_key][$promotion_name][$student_id] = true;
+                    }
+
+                    if ($source_name !== '') {
                         $channel_students[$student_id]['sources'][$source_name] = $source_name;
+                        $channel_month_students[$month_key][$student_id]['has_source'] = true;
                     }
                 }
             }
+
+            ksort($channel_month_students);
+            ksort($channel_month_promotion_students);
 
             $channel_students = collect($channel_students);
             $channel_student_total = $channel_students->count();
@@ -1402,26 +1672,63 @@
             $channel_source_student_count = $channel_students->filter(function ($student) {
                 return count($student['sources'] ?? []) > 0;
             })->count();
-            $channel_promotion_name_counts = $channel_students
-                ->flatMap(function ($student) {
-                    return array_unique(array_values($student['promotions'] ?? []));
+            $channel_month_labels = collect(array_keys($channel_month_students))->values();
+            $channel_month_total_values = collect($channel_month_students)
+                ->map(function ($month_students) {
+                    return count($month_students);
                 })
-                ->filter()
-                ->countBy()
-                ->sortDesc();
-            $channel_source_name_counts = $channel_students
-                ->flatMap(function ($student) {
-                    return array_unique(array_values($student['sources'] ?? []));
+                ->values();
+            $channel_promotion_month_values = collect($channel_month_students)
+                ->map(function ($month_students) {
+                    return collect($month_students)
+                        ->filter(function ($student) {
+                            return $student['has_promotion'] ?? false;
+                        })
+                        ->count();
                 })
-                ->filter()
-                ->countBy()
-                ->sortDesc();
-            $max_promotion_count = $channel_promotion_name_counts->max() ?: 1;
-            $max_source_count = $channel_source_name_counts->max() ?: 1;
-            $channel_promotion_labels = $channel_promotion_name_counts->keys()->values();
-            $channel_promotion_values = $channel_promotion_name_counts->values();
-            $channel_source_labels = $channel_source_name_counts->keys()->values();
-            $channel_source_values = $channel_source_name_counts->values();
+                ->values();
+            $channel_source_month_values = collect($channel_month_students)
+                ->map(function ($month_students) {
+                    return collect($month_students)
+                        ->filter(function ($student) {
+                            return $student['has_source'] ?? false;
+                        })
+                        ->count();
+                })
+                ->values();
+            $channel_month_promotion_rows = collect($channel_month_promotion_students)
+                ->flatMap(function ($promotion_students_by_name, $month_key) {
+                    ksort($promotion_students_by_name);
+
+                    return collect($promotion_students_by_name)
+                        ->map(function ($student_ids, $promotion_name) use ($month_key) {
+                            return [
+                                'month' => $month_key,
+                                'promotion_name' => $promotion_name,
+                                'student_count' => count($student_ids),
+                            ];
+                        })
+                        ->values();
+                })
+                ->values();
+
+            // อันดับ Promotion / Source (นับนักเรียนไม่ซ้ำต่อชื่อ)
+            $channel_promotion_ranking = [];
+            $channel_source_ranking = [];
+            foreach ($channel_students as $channel_student) {
+                foreach ($channel_student['promotions'] ?? [] as $promotion_name) {
+                    $channel_promotion_ranking[$promotion_name] = ($channel_promotion_ranking[$promotion_name] ?? 0) + 1;
+                }
+                foreach ($channel_student['sources'] ?? [] as $source_name) {
+                    $channel_source_ranking[$source_name] = ($channel_source_ranking[$source_name] ?? 0) + 1;
+                }
+            }
+            arsort($channel_promotion_ranking);
+            arsort($channel_source_ranking);
+            $channel_promotion_rank_max = count($channel_promotion_ranking) ? max($channel_promotion_ranking) : 0;
+            $channel_source_rank_max = count($channel_source_ranking) ? max($channel_source_ranking) : 0;
+            $channel_promotion_percent = $channel_student_total > 0 ? round(($channel_promotion_student_count / $channel_student_total) * 100) : 0;
+            $channel_source_percent = $channel_student_total > 0 ? round(($channel_source_student_count / $channel_student_total) * 100) : 0;
         @endphp
 
         <div class="page">
@@ -1429,81 +1736,126 @@
                 <div class="logo-area">IB</div>
                 <div class="header-text">
                     <h1>กราฟ Promotion / Source</h1>
-                    <p>Annual Channel Overview</p>
+                    <p>Channel Overview</p>
                 </div>
                 <div class="header-right">
-                    <div class="year-badge">ปี {{ $year }}</div>
+                    <div class="year-badge">{{ $channel_period_label }}</div>
                     <div class="print-date">พิมพ์เมื่อ {{ Carbon::now()->format('d/m/Y H:i') }}</div>
                 </div>
             </div>
 
             <div class="section-title">
-                <span class="icon">📊</span> ภาพรวม Promotion / Source ทุกวิชา ปี {{ $year }}
+                <span class="icon">📊</span> ภาพรวม Promotion / Source {{ $channel_demo_month === 'all' ? 'รายเดือน ' : '' }}{{ $channel_period_label }}
             </div>
 
             @if ($channel_student_total === 0)
-                <div class="empty-state">ไม่มีข้อมูลนักเรียนในปีที่เลือก</div>
+                <div class="empty-state">ไม่มีข้อมูลนักเรียนใน{{ $channel_period_label }}</div>
             @else
                 <div class="print-chart-layout">
                     <div class="print-chart-panel">
                         <div class="print-chart-panel-head">
                             <div class="print-chart-panel-title">Promotion</div>
-                            <div class="print-chart-panel-note">นับนักเรียนไม่ซ้ำจากทุกวิชาในปีที่เลือก</div>
+                            <div class="print-chart-panel-note">นับนักเรียนไม่ซ้ำจากวันที่สมัครใน receipt {{ $channel_period_label }}</div>
                         </div>
                         <div class="print-chart-panel-body">
-                            <div class="print-metric-row">
-                                <div class="print-metric-box">
-                                    <strong>{{ $channel_student_total }}</strong>
-                                    <span>ทั้งหมด</span>
+                            <div class="channel-donut-row">
+                                <div class="channel-donut-canvas">
+                                    <canvas id="promotionDonutChart"></canvas>
+                                    <div class="channel-donut-center">
+                                        <strong>{{ $channel_promotion_percent }}%</strong>
+                                        <span>มี Promotion</span>
+                                    </div>
                                 </div>
-                                <div class="print-metric-box">
-                                    <strong>{{ $channel_promotion_student_count }}</strong>
-                                    <span>มี Promotion</span>
-                                </div>
-                                <div class="print-metric-box">
-                                    <strong>{{ $channel_student_total - $channel_promotion_student_count }}</strong>
-                                    <span>ไม่มี Promotion</span>
+                                <div class="channel-donut-legend">
+                                    <div class="channel-legend-item">
+                                        <span class="dot" style="background: #22a447;"></span>
+                                        <span class="lbl">มี Promotion</span>
+                                        <span class="val">{{ $channel_promotion_student_count }} คน</span>
+                                    </div>
+                                    <div class="channel-legend-item">
+                                        <span class="dot" style="background: #e2e8f0;"></span>
+                                        <span class="lbl">ไม่มี Promotion</span>
+                                        <span class="val">{{ $channel_student_total - $channel_promotion_student_count }} คน</span>
+                                    </div>
+                                    <div class="channel-legend-total">จากนักเรียนทั้งหมด {{ $channel_student_total }} คน</div>
                                 </div>
                             </div>
 
-                            @if ($channel_promotion_name_counts->isEmpty())
-                                <div class="empty-state">ไม่มี Promotion ในปีที่เลือก</div>
-                            @else
-                                <div class="print-chart-canvas">
-                                    <canvas id="promotionSourcePromotionChart"></canvas>
+                            <div class="channel-rank-title">อันดับ Promotion ที่ใช้มากที่สุด</div>
+                            <div class="channel-rank-note">* นับตามรายการโปร — 1 คนใช้ได้หลายโปร ผลรวมจึงมากกว่าจำนวนคนได้</div>
+                            @forelse ($channel_promotion_ranking as $promotion_name => $promotion_count)
+                                @php
+                                    $is_no_promotion = str_contains(strtolower($promotion_name), 'no promotion');
+                                    $promotion_bar_width = $channel_promotion_rank_max > 0 ? round(($promotion_count / $channel_promotion_rank_max) * 100) : 0;
+                                @endphp
+                                <div class="channel-rank-item {{ $is_no_promotion ? 'is-muted' : '' }}">
+                                    <div class="channel-rank-main">
+                                        <div class="channel-rank-head">
+                                            <span class="channel-rank-no">{{ $loop->iteration }}.</span>
+                                            <span class="channel-rank-name">{{ $promotion_name }}</span>
+                                        </div>
+                                        <div class="channel-rank-track">
+                                            <span class="channel-rank-fill" style="width: {{ $promotion_bar_width }}%; background: #22a447;"></span>
+                                        </div>
+                                    </div>
+                                    <div class="channel-rank-val">{{ $promotion_count }}</div>
                                 </div>
-                            @endif
+                            @empty
+                                <div class="empty-state">ไม่มี Promotion ใน{{ $channel_period_label }}</div>
+                            @endforelse
                         </div>
                     </div>
 
                     <div class="print-chart-panel">
                         <div class="print-chart-panel-head">
                             <div class="print-chart-panel-title">Source</div>
-                            <div class="print-chart-panel-note">นับนักเรียนไม่ซ้ำจากทุกวิชาในปีที่เลือก</div>
+                            <div class="print-chart-panel-note">นับนักเรียนไม่ซ้ำจากวันที่สมัครใน receipt {{ $channel_period_label }}</div>
                         </div>
                         <div class="print-chart-panel-body">
-                            <div class="print-metric-row">
-                                <div class="print-metric-box">
-                                    <strong>{{ $channel_student_total }}</strong>
-                                    <span>ทั้งหมด</span>
+                            <div class="channel-donut-row">
+                                <div class="channel-donut-canvas">
+                                    <canvas id="sourceDonutChart"></canvas>
+                                    <div class="channel-donut-center">
+                                        <strong>{{ $channel_source_percent }}%</strong>
+                                        <span>มี Source</span>
+                                    </div>
                                 </div>
-                                <div class="print-metric-box">
-                                    <strong>{{ $channel_source_student_count }}</strong>
-                                    <span>มี Source</span>
-                                </div>
-                                <div class="print-metric-box">
-                                    <strong>{{ $channel_student_total - $channel_source_student_count }}</strong>
-                                    <span>ไม่มี Source</span>
+                                <div class="channel-donut-legend">
+                                    <div class="channel-legend-item">
+                                        <span class="dot" style="background: #0ea5c6;"></span>
+                                        <span class="lbl">มี Source</span>
+                                        <span class="val">{{ $channel_source_student_count }} คน</span>
+                                    </div>
+                                    <div class="channel-legend-item">
+                                        <span class="dot" style="background: #e2e8f0;"></span>
+                                        <span class="lbl">ไม่มี Source</span>
+                                        <span class="val">{{ $channel_student_total - $channel_source_student_count }} คน</span>
+                                    </div>
+                                    <div class="channel-legend-total">จากนักเรียนทั้งหมด {{ $channel_student_total }} คน</div>
                                 </div>
                             </div>
 
-                            @if ($channel_source_name_counts->isEmpty())
-                                <div class="empty-state">ไม่มี Source ในปีที่เลือก</div>
-                            @else
-                                <div class="print-chart-canvas">
-                                    <canvas id="promotionSourceSourceChart"></canvas>
+                            <div class="channel-rank-title">อันดับ Source ที่มามากที่สุด</div>
+                            <div class="channel-rank-note">* นับตามรายการ source — 1 คนมีได้หลาย source ผลรวมจึงมากกว่าจำนวนคนได้</div>
+                            @forelse ($channel_source_ranking as $source_name => $source_count)
+                                @php
+                                    $source_bar_width = $channel_source_rank_max > 0 ? round(($source_count / $channel_source_rank_max) * 100) : 0;
+                                @endphp
+                                <div class="channel-rank-item">
+                                    <div class="channel-rank-main">
+                                        <div class="channel-rank-head">
+                                            <span class="channel-rank-no">{{ $loop->iteration }}.</span>
+                                            <span class="channel-rank-name">{{ $source_name }}</span>
+                                        </div>
+                                        <div class="channel-rank-track">
+                                            <span class="channel-rank-fill" style="width: {{ $source_bar_width }}%; background: #0ea5c6;"></span>
+                                        </div>
+                                    </div>
+                                    <div class="channel-rank-val">{{ $source_count }}</div>
                                 </div>
-                            @endif
+                            @empty
+                                <div class="empty-state">ไม่มี Source ใน{{ $channel_period_label }}</div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -1966,68 +2318,49 @@
         @endif
 
         @if (in_array('promotion-source-chart', $sections))
-            const promotionSourceStudentTotal = {{ $channel_student_total ?? 0 }};
-            const promotionChartLabels = {!! json_encode($channel_promotion_labels ?? []) !!};
-            const promotionChartValues = {!! json_encode($channel_promotion_values ?? []) !!};
-            const sourceChartLabels = {!! json_encode($channel_source_labels ?? []) !!};
-            const sourceChartValues = {!! json_encode($channel_source_values ?? []) !!};
+            const promotion_donut_values = [
+                {{ $channel_promotion_student_count }},
+                {{ $channel_student_total - $channel_promotion_student_count }}
+            ];
+            const source_donut_values = [
+                {{ $channel_source_student_count }},
+                {{ $channel_student_total - $channel_source_student_count }}
+            ];
 
-            function CreatePromotionSourceBarChart(canvas_id, labels, values, color, title) {
+            function CreateChannelDonut(canvas_id, values, active_label, active_color) {
                 const canvas = document.getElementById(canvas_id);
-                if (!canvas || labels.length === 0) {
+                if (!canvas) {
                     return;
                 }
 
                 new Chart(canvas, {
-                    type: 'bar',
+                    type: 'doughnut',
                     data: {
-                        labels: labels,
+                        labels: [active_label, 'ไม่มี'],
                         datasets: [{
-                            label: 'จำนวนนักเรียน',
                             data: values,
-                            backgroundColor: color,
-                            borderColor: color,
-                            borderWidth: 1,
-                            borderRadius: 6,
-                            barThickness: 16,
+                            backgroundColor: [active_color, '#e2e8f0'],
+                            borderWidth: 0,
                         }]
                     },
                     options: {
-                        indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
                         animation: false,
+                        cutout: '70%',
                         plugins: {
                             legend: {
                                 display: false
                             },
-                            title: {
-                                display: true,
-                                text: title
-                            },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
-                                        const value = context.parsed.x || 0;
-                                        const percent = promotionSourceStudentTotal > 0 ?
-                                            Math.round((value / promotionSourceStudentTotal) * 100) : 0;
-                                        return value + ' คน (' + percent + '%)';
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                beginAtZero: true,
-                                ticks: {
-                                    precision: 0
-                                }
-                            },
-                            y: {
-                                ticks: {
-                                    autoSkip: false,
-                                    font: {
-                                        size: 10
+                                        const value = context.parsed || 0;
+                                        const total = values.reduce(function(a, b) {
+                                            return a + b;
+                                        }, 0);
+                                        const percent = total > 0 ? Math.round((value / total) * 100) : 0;
+                                        return context.label + ': ' + value + ' คน (' + percent + '%)';
                                     }
                                 }
                             }
@@ -2036,20 +2369,8 @@
                 });
             }
 
-            CreatePromotionSourceBarChart(
-                'promotionSourcePromotionChart',
-                promotionChartLabels,
-                promotionChartValues,
-                '#22a447',
-                'Top Promotion'
-            );
-            CreatePromotionSourceBarChart(
-                'promotionSourceSourceChart',
-                sourceChartLabels,
-                sourceChartValues,
-                '#0ea5c6',
-                'Top Source'
-            );
+            CreateChannelDonut('promotionDonutChart', promotion_donut_values, 'มี Promotion', '#22a447');
+            CreateChannelDonut('sourceDonutChart', source_donut_values, 'มี Source', '#0ea5c6');
         @endif
     </script>
 </body>

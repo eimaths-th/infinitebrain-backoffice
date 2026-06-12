@@ -557,6 +557,7 @@ class StdlogController extends Controller
 
         $reportMonth_schoolPrice = $this->getMatchingSchoolPrices2($month, $year);
         $reportYear_schoolPrice = $this->getMatchingSchoolPrices3($year, $year);
+        $channel_school_prices = $this->GetPromotionSourceChannelSchoolPrices();
         $student_subject_first_period_dates = $this->GetStudentSubjectFirstPeriodDates();
 
         $paper = PaperReport::whereMonth('submission_date', $month)
@@ -571,6 +572,7 @@ class StdlogController extends Controller
         return view('students.print_report_recipt_std', [
             'reportMonth_schoolPrice' => $reportMonth_schoolPrice,
             'reportYear_schoolPrice' => $reportYear_schoolPrice,
+            'channel_school_prices' => $channel_school_prices,
             'totalForAllMonths' => $totalForAllMonths,
             'percentageChangeForAllMonths' => $percentageChangeForAllMonths,
             'paper' => $paper,
@@ -580,6 +582,17 @@ class StdlogController extends Controller
             'orientation' => $orientation,
             'student_subject_first_period_dates' => $student_subject_first_period_dates,
         ]);
+    }
+
+    private function GetPromotionSourceChannelSchoolPrices()
+    {
+        return SchoolPrice::where('course_type', 1)
+            ->whereHas('std')
+            ->whereHas('rec_school')
+            ->with(['std', 'rec_school.promotion'])
+            ->orderBy('student_id')
+            ->orderBy('rid', 'asc')
+            ->get();
     }
 
     public function reportRecieptStdSearch(Request $request)
