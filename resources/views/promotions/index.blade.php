@@ -621,6 +621,7 @@
 
             function ApplyCampaignPreset(campaignType) {
                 $('#CampaignRules').html('');
+                $('#CampaignRewards').html('');
 
                 if (campaignType === 'TWO_SUBJECTS') {
                     BuildCampaignRuleRow({

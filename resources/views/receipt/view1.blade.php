@@ -148,7 +148,7 @@
                             <td align="right" class="grey">ชื่อนักเรียน/Nickname</td>
                             <td align="left" width="30%"> <b> {{ $student }} </b></td>
                             <td align="right" class="grey">วันที่ / Date</td>
-                            <td> <b>{{ $data->submission_date }}</b></td>
+                            <td> <b>{{ $submission_date_display }}</b></td>
                         </tr>
                         <tr>
                             {{-- <td>
@@ -494,7 +494,7 @@
                             <td align="right" class="grey">ชื่อนักเรียน/Nickname</td>
                             <td align="left" width="30%"> <b> {{ $student }} </b></td>
                             <td align="right" class="grey">วันที่ / Date</td>
-                            <td> <b>{{ $data->submission_date }}</b></td>
+                            <td> <b>{{ $submission_date_display }}</b></td>
                         </tr>
                         <tr>
                             {{-- <td>
@@ -850,7 +850,7 @@
                             <td align="right" class="grey">ชื่อนักเรียน/Nickname</td>
                             <td align="left" width="30%"> <b> {{ $student }} </b></td>
                             <td align="right" class="grey">วันที่ / Date</td>
-                            <td> <b>{{ $data->submission_date }}</b></td>
+                            <td> <b>{{ $submission_date_display }}</b></td>
                         </tr>
                         <tr>
                             {{-- <td>

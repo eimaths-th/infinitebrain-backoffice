@@ -1962,12 +1962,17 @@ class ReceiptSchoolController extends Controller
 
         // dd($data,$receipt_detail_arr);
 
+        $submission_date_display = $data->submission_date
+            ? date('d-m-Y', strtotime($data->submission_date))
+            : '';
+
         return view($viewr)->with(['id' => $id])
             ->with(['discount' => $summary_discount])
             ->with(['vat_price' => $vat_price])
             ->with(['booksum' => $booksum])
             ->with(['html' => $html])
             ->with(['data' => $data])
+            ->with(['submission_date_display' => $submission_date_display])
             ->with(['data2' => $data2])
             ->with(['student' => $student])
             ->with(['student_code' => $student_code])

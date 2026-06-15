@@ -146,7 +146,7 @@
                             <td width="20%" align="left" style="padding-left:15px;"> <b>{{ $student }} </b>
                             </td>
                             <td width="20%" align="right" class="grey">วันที่ / Date</td>
-                            <td width="10%" style="padding-left:10px;"> <b>{{ $data->submission_date }}</b></td>
+                            <td width="10%" style="padding-left:10px;"> <b>{{ $submission_date_display }}</b></td>
                         </tr>
                         <tr>
                             <!-- <td colspan="3"><font class="grey">ที่อยู่</font> <b>{{ $data->street_address }} {{ $data->street_address2 }}
@@ -452,7 +452,7 @@
                             <td width="20%" align="left" style="padding-left:15px;"> <b>{{ $student }}
                                 </b></td>
                             <td width="20%" align="right" class="grey">วันที่ / Date</td>
-                            <td width="10%" style="padding-left:10px;"> <b>{{ $data->submission_date }}</b></td>
+                            <td width="10%" style="padding-left:10px;"> <b>{{ $submission_date_display }}</b></td>
                         </tr>
                         <tr>
                             <!-- <td colspan="3"><font class="grey">ที่อยู่</font> <b>{{ $data->street_address }} {{ $data->street_address2 }}
@@ -807,7 +807,7 @@
                             <td width="20%" align="left" style="padding-left:15px;"> <b>{{ $student }}
                                 </b></td>
                             <td width="20%" align="right" class="grey">วันที่ / Date</td>
-                            <td width="10%" style="padding-left:10px;"> <b>{{ $data->submission_date }}</b></td>
+                            <td width="10%" style="padding-left:10px;"> <b>{{ $submission_date_display }}</b></td>
                         </tr>
                         <tr>
                             <!-- <td colspan="3"><font class="grey">ที่อยู่</font> <b>{{ $data->street_address }} {{ $data->street_address2 }}
