@@ -1109,14 +1109,14 @@
                                         <div class="promotion-workflow-header">
                                             <div>
                                                 <div class="promotion-workflow-title">Campaign ส่วนลด</div>
-                                                <div class="promotion-workflow-subtitle">Campaign ที่ตรงกับ Promotion และรายการเรียน (นักเรียนใหม่คำนวณแยกตามวิชา)</div>
+                                                <div class="promotion-workflow-subtitle">Staff เลือก Campaign ที่เข้าเงื่อนไขได้หลายรายการ</div>
                                             </div>
                                             <span class="promotion-status-pill">คำนวณอัตโนมัติ</span>
                                         </div>
                                         <input type="hidden" id="CreateCalculatedPromotionCampaignId" value="">
                                         <label class="promotion-context-toggle" for="CreateIsNewStudentPromotionContext">
                                             <input type="checkbox" id="CreateIsNewStudentPromotionContext" value="1" disabled>
-                                            <span>นักเรียนใหม่</span>
+                                            <span>นักเรียนใหม่ (ข้อมูลประกอบ)</span>
                                         </label>
                                         <div id="CreateCalculatedPromotionResult" class="small text-muted">
                                             <div class="promotion-state-message">เลือก Promotion เพื่อดู Campaign ที่ใช้ได้</div>
@@ -1854,7 +1854,7 @@
                                         <div class="promotion-workflow-header">
                                             <div>
                                                 <div class="promotion-workflow-title">Campaign ส่วนลด</div>
-                                                <div class="promotion-workflow-subtitle">Campaign ที่ตรงกับ Promotion และรายการเรียน (นักเรียนใหม่คำนวณแยกตามวิชา)</div>
+                                                <div class="promotion-workflow-subtitle">Staff เลือก Campaign ที่เข้าเงื่อนไขได้หลายรายการ</div>
                                             </div>
                                             <span class="promotion-status-pill">คำนวณอัตโนมัติ</span>
                                         </div>
@@ -1862,7 +1862,7 @@
                                         <input type="hidden" id="EditCalculatedPromotionTouched" value="0">
                                         <label class="promotion-context-toggle" for="EditIsNewStudentPromotionContext">
                                             <input type="checkbox" id="EditIsNewStudentPromotionContext" value="1" disabled>
-                                            <span>นักเรียนใหม่</span>
+                                            <span>นักเรียนใหม่ (ข้อมูลประกอบ)</span>
                                         </label>
                                         <div id="EditCalculatedPromotionResult" class="small text-muted">
                                             <div class="promotion-state-message">Campaign เดิมจะถูกเก็บไว้จนกว่าจะเลือกใหม่</div>
@@ -2382,7 +2382,7 @@
                             course_type: $(obj).find('#course_type').val(),
                             month_count: $(obj).find('#qty').val(),
                             net_amount: $(obj).find('#pp').val(),
-                            discount_amount: $(obj).find('#discount').val()
+                            discount_amount: $(obj).find('#discount').val() === '' ? 0 : $(obj).find('#discount').val()
                         });
                     }
                 });
@@ -2400,7 +2400,7 @@
                         course_type: $(obj).find("select[name='course_type[]']").val(),
                         month_count: $(obj).find("select[name='rrqty[]']").val(),
                         net_amount: $(obj).find("input[name='rrtotal[]']").val(),
-                        discount_amount: $(obj).find("input[name='rrdiscount[]']").val()
+                        discount_amount: $(obj).find("input[name='rrdiscount[]']").val() === '' ? 0 : $(obj).find("input[name='rrdiscount[]']").val()
                     });
                 });
 
@@ -2487,7 +2487,7 @@
                     html += '<label class="campaign-option-card' + (isPreSelected ? ' is-selected' : '') + '" for="' + inputId + '">';
                     html += '<div class="campaign-option-main">';
                     html += '<div>';
-                    html += '<input class="mr-2 calculated-promotion-option" type="radio" name="' + mode + '_calculated_promotion" id="' + inputId + '" value="' + promotion.promotion_campaign_id + '" data-categories="' + EscapeHtml(categories) + '"' + (isPreSelected ? ' checked' : '') + '>';
+                    html += '<input class="mr-2 calculated-promotion-option" type="checkbox" name="' + mode + '_calculated_promotion" id="' + inputId + '" value="' + promotion.promotion_campaign_id + '" data-categories="' + EscapeHtml(categories) + '"' + (isPreSelected ? ' checked' : '') + '>';
                     html += '<span class="campaign-option-name">' + EscapeHtml(promotion.name) + '</span>';
                     html += '<div><span class="campaign-option-type">' + EscapeHtml(BuildCampaignTypeLabel(promotion.promotion_type)) + '</span></div>';
                     html += '</div>';
@@ -2686,11 +2686,11 @@
                 window.ScheduleCalculatedPromotionPreview('edit', true);
             });
 
-            $(document).on('change keyup', "#CreateModal select[name='subject_id'], #CreateModal select[name='qty'], #CreateModal select[name='course_type']", function() {
+            $(document).on('change keyup', "#CreateModal select[name='subject_id'], #CreateModal select[name='qty'], #CreateModal select[name='course_type'], #CreateModal input[name='discount']", function() {
                 window.ScheduleCalculatedPromotionPreview('create', false);
             });
 
-            $(document).on('change keyup', "#EditModal select[name='rrsub[]'], #EditModal select[name='rrqty[]'], #EditModal select[name='course_type[]'], #EditModal input[name='rrtotal[]']", function() {
+            $(document).on('change keyup', "#EditModal select[name='rrsub[]'], #EditModal select[name='rrqty[]'], #EditModal select[name='course_type[]'], #EditModal input[name='rrdiscount[]'], #EditModal input[name='rrtotal[]']", function() {
                 window.ScheduleCalculatedPromotionPreview('edit', true);
             });
 
@@ -3019,6 +3019,7 @@
                         }
 
                         $('#myTbl3 tbody').html(res.data_html);
+                        $('#myTbl3 tbody .firstTr3').trigger('change');
                         //append
                         //$('#EditFile').val(res.data.file_att);
                         $('#EditModal').modal('show');
@@ -3365,6 +3366,10 @@
                 var price = parent.find('#rrprice').val();
                 var qty = parent.find('#rrqty').val();
                 var discount = parent.find('#rrdiscount').val();
+                if (discount === '' || discount === null) {
+                    discount = 0;
+                    parent.find('#rrdiscount').val(0);
+                }
                 var book_price = parent.find('#rrbookprice').val();
                 var type = parent.find('#rrtype').val();
                 var media_price = parent.find('#rrmedia_price').val();
@@ -3441,7 +3446,7 @@
                     // if (entrace_edit > 0) {
                     //     entrance_fee = 0;
                     // }
-                    if (sub_id != "" && level_id != "" && price != "" && discount != "" && book_price !=
+                    if (sub_id != "" && level_id != "" && price != "" && book_price !=
                         "" &&
                         type != "" && course_type != "") {
                         $.ajax({
@@ -3516,6 +3521,10 @@
                 var price = parent.find('#price').val();
                 var qty = parent.find('#qty').val();
                 var discount = parent.find('#discount').val();
+                if (discount === '' || discount === null) {
+                    discount = 0;
+                    parent.find('#discount').val(0);
+                }
                 var book_price = parent.find('#book_price').val();
                 var type = parent.find('#type').val();
                 var media_price = parent.find('#media_price').val();
@@ -3594,7 +3603,7 @@
                     }
 
                     // console.log(period);
-                    if (sub_id != "" && level_id != "" && price != "" && discount != "" && book_price !=
+                    if (sub_id != "" && level_id != "" && price != "" && book_price !=
                         "" &&
                         type != "" && course_type != "" && period != "") {
                         //alert();
@@ -3657,7 +3666,7 @@
                             qty: $(obj).find('#qty').val(),
                             book: $(obj).find('#book').val(),
                             book_price: book_price,
-                            discount: $(obj).find('#discount').val(),
+                            discount: $(obj).find('#discount').val() === '' ? 0 : $(obj).find('#discount').val(),
                             price: $(obj).find('#price').val(),
                             period: $(obj).find('#period').val(),
                             pp: $(obj).find('#pp').val(),
@@ -3845,6 +3854,10 @@
                     rrtype.push(this.value);
                 });
                 $("input[name='rrdiscount[]']").each(function() {
+                    if (this.value === '') {
+                        this.value = 0;
+                    }
+
                     rrdiscount.push(this.value);
                 });
 

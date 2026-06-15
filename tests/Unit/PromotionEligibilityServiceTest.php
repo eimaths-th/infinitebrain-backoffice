@@ -144,7 +144,7 @@ class PromotionEligibilityServiceTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    public function testNewStudentMinimumCoursesPromotionRequiresNewStudentFlag()
+    public function testNewStudentMinimumCoursesPromotionAllowsExistingStudents()
     {
         $service = new PromotionEligibilityService(new PromotionRewardCalculator());
         $campaign = $this->makeCampaign([
@@ -166,7 +166,7 @@ class PromotionEligibilityServiceTest extends TestCase
 
         $result = $service->getEligiblePromotions([
             'subtotal_amount' => 10000,
-            'is_new_student' => true,
+            'is_new_student' => false,
             'receipt_items' => [
                 ['course_type' => 1],
                 ['course_type' => 1],
@@ -178,7 +178,7 @@ class PromotionEligibilityServiceTest extends TestCase
         $this->assertSame(900.0, $result->first()['discount_amount']);
     }
 
-    public function testDynamicRulesCanCombineNewStudentAndMinimumCourses()
+    public function testDynamicRulesCanUseNewStudentPresetForAnyStudent()
     {
         $service = new PromotionEligibilityService(new PromotionRewardCalculator());
         $campaign = $this->makeCampaign([
@@ -203,7 +203,7 @@ class PromotionEligibilityServiceTest extends TestCase
 
         $result = $service->getEligiblePromotions([
             'subtotal_amount' => 10000,
-            'is_new_student' => true,
+            'is_new_student' => false,
             'receipt_items' => [
                 ['course_type' => 1],
                 ['course_type' => 1],
@@ -497,7 +497,7 @@ class PromotionEligibilityServiceTest extends TestCase
         $this->assertSame(300.0, $play->first()['discount_amount']);
     }
 
-    public function testPackageTierDiscountRequiresNewStudentContext()
+    public function testPackageTierDiscountAllowsExistingStudentContext()
     {
         $service = new PromotionEligibilityService(new PromotionRewardCalculator());
 
@@ -522,7 +522,8 @@ class PromotionEligibilityServiceTest extends TestCase
             'receipt_items' => [['subject_group' => 'M', 'month_count' => 4]],
         ], collect([$campaign]));
 
-        $this->assertCount(0, $result);
+        $this->assertCount(1, $result);
+        $this->assertSame(350.0, $result->first()['discount_amount']);
     }
 
     public function testPackageTierCampaignCanCombineDiscountEntranceAndGiftRewards()
