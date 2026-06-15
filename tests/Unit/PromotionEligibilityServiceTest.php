@@ -772,6 +772,29 @@ class PromotionEligibilityServiceTest extends TestCase
         $this->assertSame(600.0, $result->first()['discount_amount']);
     }
 
+    public function testSpecialCampaignIsEligibleWithoutRules()
+    {
+        $service = new PromotionEligibilityService(new PromotionRewardCalculator());
+        $campaign = $this->makeCampaign([], [
+            new PromotionReward([
+                'reward_type' => PromotionReward::TYPE_PERCENT_DISCOUNT,
+                'discount_percent' => 10,
+            ]),
+        ]);
+        $campaign->promotion_type = PromotionCampaign::TYPE_SPECIAL;
+
+        $result = $service->getEligiblePromotions([
+            'subtotal_amount' => 5000,
+            'receipt_items' => [
+                ['subject_group' => 'M', 'course_type' => 1, 'month_count' => 1],
+            ],
+        ], collect([$campaign]));
+
+        $this->assertCount(1, $result);
+        $this->assertSame(PromotionCampaign::TYPE_SPECIAL, $result->first()['promotion_type']);
+        $this->assertSame(500.0, $result->first()['discount_amount']);
+    }
+
     private function makeCampaign(array $rules, array $rewards, $promotion_id = null)
     {
         $campaign = new PromotionCampaign([

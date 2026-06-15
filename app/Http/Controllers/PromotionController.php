@@ -59,7 +59,8 @@ class PromotionController extends Controller
                     $toggle_class = ((int) $promotion->is_active === 1) ? 'btn-secondary' : 'btn-success';
 
                     $html = '<a href="#" class="btn btn-xs btn-warning btn-edit" id="getEditData" data-id="' . $promotion->id . '"><i class="fa fa-edit"></i> Edit</a> ';
-                    $html .= '<a href="#" class="btn btn-xs ' . $toggle_class . ' btn-toggle-status" data-id="' . $promotion->id . '"><i class="fa fa-power-off"></i> ' . $toggle_label . '</a>';
+                    $html .= '<a href="#" class="btn btn-xs ' . $toggle_class . ' btn-toggle-status" data-id="' . $promotion->id . '"><i class="fa fa-power-off"></i> ' . $toggle_label . '</a> ';
+                    $html .= '<a href="#" class="btn btn-xs btn-danger btn-delete-promotion" data-id="' . $promotion->id . '"><i class="fa fa-trash"></i> Delete</a>';
 
                     return $html;
                 })
@@ -150,6 +151,37 @@ class PromotionController extends Controller
         ]);
 
         return response()->json(['success' => 'Promotion status updated successfully']);
+    }
+
+    public function Destroy($id)
+    {
+        $this->CheckPermission();
+
+        $promotion = Promotion::withCount(['receipts', 'campaigns'])->findOrFail($id);
+        $dependency_errors = $this->BuildPromotionDeleteDependencyErrors($promotion);
+
+        if (!empty($dependency_errors)) {
+            return response()->json(['errors' => $dependency_errors]);
+        }
+
+        $promotion->delete();
+
+        return response()->json(['success' => 'Promotion deleted successfully']);
+    }
+
+    private function BuildPromotionDeleteDependencyErrors(Promotion $promotion)
+    {
+        $errors = [];
+
+        if ((int) $promotion->receipts_count > 0) {
+            $errors[] = 'ไม่สามารถลบ Promotion นี้ได้ เนื่องจากมีใบเสร็จที่ใช้งานอยู่ ' . number_format($promotion->receipts_count) . ' รายการ';
+        }
+
+        if ((int) $promotion->campaigns_count > 0) {
+            $errors[] = 'ไม่สามารถลบ Promotion นี้ได้ เนื่องจากมี Campaign ที่เชื่อมอยู่ ' . number_format($promotion->campaigns_count) . ' รายการ';
+        }
+
+        return $errors;
     }
 
     public function CampaignsIndex(Request $request)
@@ -327,6 +359,7 @@ class PromotionController extends Controller
             PromotionCampaign::TYPE_NEW_STUDENT_FREE_ENTRANCE_GIFT,
             PromotionCampaign::TYPE_NEW_STUDENT_FREE_ENTRANCE,
             PromotionCampaign::TYPE_NEW_STUDENT_GIFT,
+            PromotionCampaign::TYPE_SPECIAL,
             PromotionCampaign::TYPE_CUSTOM,
         ];
 
@@ -341,7 +374,9 @@ class PromotionController extends Controller
             'promotion_type' => ['required', Rule::in($valid_types)],
             'campaign_is_active' => 'required|in:0,1',
             'priority' => 'required|integer|min:0|max:999',
-            'campaign_rules' => 'required|array|min:1',
+            'campaign_rules' => $request->get('promotion_type') === PromotionCampaign::TYPE_SPECIAL
+                ? 'nullable|array'
+                : 'required|array|min:1',
             'campaign_rules.*.rule_type' => [
                 'required',
                 Rule::in([
@@ -411,7 +446,7 @@ class PromotionController extends Controller
         $campaign->rules()->delete();
         $campaign->rewards()->delete();
 
-        foreach ($request->get('campaign_rules', []) as $campaign_rule) {
+        foreach (($request->get('campaign_rules') ?: []) as $campaign_rule) {
             $campaign->rules()->create([
                 'rule_type' => $campaign_rule['rule_type'],
                 'rule_config_json' => $this->BuildRuleConfig($campaign_rule),
