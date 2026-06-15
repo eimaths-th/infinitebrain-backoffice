@@ -493,6 +493,7 @@ class ReceiptSchoolController extends Controller
             'is_new_student' => 'nullable|boolean',
             'name_parent' => 'nullable|integer|exists:parent,id',
             'referent_parent_id' => 'nullable|integer|exists:parent,id',
+            'referent_parent_name' => 'nullable|string|max:255',
             'receipt_school_id' => 'nullable|integer|exists:receipt_school,id',
             'evaluation_date' => 'nullable|date',
         ]);
@@ -560,13 +561,18 @@ class ReceiptSchoolController extends Controller
     {
         $source = trim((string) $request->get('source', ''));
         $referent_parent_id = $request->get('referent_parent_id');
+        $referent_parent_name = trim((string) $request->get('referent_parent_name', ''));
         $receipt_parent_id = $request->get('name_parent');
 
-        if ($source !== self::SOURCE_REFERRAL || empty($referent_parent_id)) {
+        if ($source !== self::SOURCE_REFERRAL) {
             return false;
         }
 
-        if (!empty($receipt_parent_id) && (int) $referent_parent_id === (int) $receipt_parent_id) {
+        if (empty($referent_parent_id) && $referent_parent_name === '') {
+            return false;
+        }
+
+        if (!empty($referent_parent_id) && !empty($receipt_parent_id) && (int) $referent_parent_id === (int) $receipt_parent_id) {
             return false;
         }
 
@@ -849,21 +855,22 @@ class ReceiptSchoolController extends Controller
     {
         $source = trim((string) $request->get('source', ''));
         $referent_parent_id = $request->get('referent_parent_id');
+        $referent_parent_name = trim((string) $request->get('referent_parent_name', ''));
         $receipt_parent_id = $request->get('name_parent');
 
         if ($source !== self::SOURCE_REFERRAL) {
             return [];
         }
 
-        if (empty($referent_parent_id)) {
-            return ['กรุณาเลือกผู้แนะนำเมื่อแหล่งที่มาเป็นคนรู้จักแนะนำ'];
+        if (empty($referent_parent_id) && $referent_parent_name === '') {
+            return ['กรุณาเลือกหรือกรอกผู้แนะนำเมื่อแหล่งที่มาเป็นคนรู้จักแนะนำ'];
         }
 
-        if (!empty($receipt_parent_id) && (int) $referent_parent_id === (int) $receipt_parent_id) {
+        if (!empty($referent_parent_id) && !empty($receipt_parent_id) && (int) $referent_parent_id === (int) $receipt_parent_id) {
             return ['ผู้แนะนำต้องไม่เป็นผู้ปกครองคนเดียวกับใบเสร็จนี้'];
         }
 
-        $referent_parent_exists = ParentRegister::where('id', $referent_parent_id)->exists();
+        $referent_parent_exists = empty($referent_parent_id) ? true : ParentRegister::where('id', $referent_parent_id)->exists();
         if (!$referent_parent_exists) {
             return ['ผู้แนะนำที่เลือกไม่มีอยู่ในระบบ'];
         }
@@ -880,6 +887,17 @@ class ReceiptSchoolController extends Controller
         $referent_parent_id = $request->get('referent_parent_id');
 
         return empty($referent_parent_id) ? null : (int) $referent_parent_id;
+    }
+
+    private function ResolveReceiptReferentParentName(Request $request)
+    {
+        if (trim((string) $request->get('source', '')) !== self::SOURCE_REFERRAL) {
+            return null;
+        }
+
+        $referent_parent_name = trim((string) $request->get('referent_parent_name', ''));
+
+        return $referent_parent_name === '' ? null : $referent_parent_name;
     }
 
     /**
@@ -1892,6 +1910,8 @@ class ReceiptSchoolController extends Controller
         // under each subject instead of one combined total at the bottom.
         $per_line_discount_total = 0;
         foreach ($receipt_promotion_usages as $usage) {
+            $usage_distributed = 0;
+
             foreach (($usage->reward_snapshot_json ?? []) as $reward_result) {
                 $calculation_detail = $reward_result[\App\Models\PromotionReward::CONFIG_CALCULATION_DETAIL] ?? null;
 
@@ -1951,7 +1971,33 @@ class ReceiptSchoolController extends Controller
                         $line_discount
                     );
                     $per_line_discount_total += $line_discount;
+                    $usage_distributed += $line_discount;
                 }
+            }
+
+            // Receipt-level cash discounts (e.g. a percentage or flat campaign
+            // discount such as "Resume Learning Special – 10%") carry no per-course
+            // snapshot, so spread whatever cash discount was not attributed to a
+            // specific course across the course-fee lines and show it under each
+            // subject too. Entrance-fee waivers and gifts are excluded so they are
+            // not mistaken for a course discount.
+            $usage_cash_total = 0;
+            foreach (($usage->reward_snapshot_json ?? []) as $reward_result) {
+                if (\App\Models\PromotionReward::categoryForType($reward_result['reward_type'] ?? null) !== \App\Models\PromotionReward::CATEGORY_CASH) {
+                    continue;
+                }
+
+                $usage_cash_total += (float) ($reward_result['discount_amount'] ?? 0);
+            }
+
+            $usage_remaining = round($usage_cash_total - $usage_distributed, 2);
+
+            if ($usage_remaining > 0) {
+                $per_line_discount_total += $this->DistributeReceiptLevelDiscountPerLine(
+                    $receipt_detail_arr,
+                    $usage_remaining,
+                    $usage->promotion_name_snapshot
+                );
             }
         }
 
@@ -2010,6 +2056,87 @@ class ReceiptSchoolController extends Controller
         }
 
         return $promotion_name . ' - ' . (int) $line_month . ' เดือน ส่วนลด ' . number_format($line_discount, 0);
+    }
+
+    /**
+     * Spread a receipt-level campaign discount (a percentage or flat amount with
+     * no per-course snapshot) across the course-fee lines in proportion to each
+     * line's price, so the discount shows under each subject instead of one
+     * combined total at the bottom. Returns the amount actually distributed.
+     */
+    private function DistributeReceiptLevelDiscountPerLine(array &$receipt_detail_arr, $discount_amount, $promotion_name)
+    {
+        $discount_amount = round((float) $discount_amount, 2);
+
+        if ($discount_amount <= 0) {
+            return 0;
+        }
+
+        // Only spread across course-fee lines that do not already carry a
+        // per-course promotion discount, weighted by each line's displayed amount
+        // (course fee + book) so each subject is discounted in proportion to the
+        // amount the percentage/flat campaign was calculated on.
+        $eligible_indexes = [];
+        $base_total = 0;
+
+        foreach ($receipt_detail_arr as $index => $receipt_detail) {
+            if ((int) ($receipt_detail['course_type'] ?? 0) !== 1) {
+                continue;
+            }
+
+            if (!empty($receipt_detail['promo_discount'])) {
+                continue;
+            }
+
+            $line_amount = $this->ResolveReceiptLineAmount($receipt_detail);
+
+            if ($line_amount <= 0) {
+                continue;
+            }
+
+            $eligible_indexes[] = $index;
+            $base_total += $line_amount;
+        }
+
+        if (empty($eligible_indexes) || $base_total <= 0) {
+            return 0;
+        }
+
+        // Give the rounding remainder to the last line so the per-line discounts
+        // always sum back to the full campaign discount.
+        $distributed_total = 0;
+        $last_index = end($eligible_indexes);
+
+        foreach ($eligible_indexes as $index) {
+            if ($index === $last_index) {
+                $line_discount = round($discount_amount - $distributed_total, 2);
+            } else {
+                $line_amount = $this->ResolveReceiptLineAmount($receipt_detail_arr[$index]);
+                $line_discount = round($discount_amount * ($line_amount / $base_total), 2);
+            }
+
+            if ($line_discount <= 0) {
+                continue;
+            }
+
+            $receipt_detail_arr[$index]['promo_discount'] = $line_discount;
+            $receipt_detail_arr[$index]['promo_discount_name'] = $promotion_name;
+            $distributed_total += $line_discount;
+        }
+
+        return $distributed_total;
+    }
+
+    /**
+     * Resolve the displayed amount of a course-fee line (course fee plus book)
+     * used as the weight when spreading a receipt-level discount per subject.
+     */
+    private function ResolveReceiptLineAmount(array $receipt_detail)
+    {
+        $line_price = (float) str_replace(',', '', (string) ($receipt_detail['price'] ?? '0'));
+        $book_price = (float) str_replace(',', '', (string) ($receipt_detail['bookprice'] ?? '0'));
+
+        return $line_price + $book_price;
     }
 
     public function find($parent)
@@ -2194,6 +2321,7 @@ class ReceiptSchoolController extends Controller
                 'mobile' => 'required|string',
                 'source' => 'nullable|string|max:255',
                 'referent_parent_id' => 'nullable|integer|exists:parent,id',
+                'referent_parent_name' => 'nullable|string|max:255',
                 'student' => 'required|array',
                 'img' => 'required|array',
                 'receipt' => 'required|array',
@@ -2329,6 +2457,7 @@ class ReceiptSchoolController extends Controller
             'type' => $typeRec,
             'source' => $request->get('source'),
             'referent_parent_id' => $this->ResolveReceiptReferentParentId($request),
+            'referent_parent_name' => $this->ResolveReceiptReferentParentName($request),
             'remark' => $request->get('remark'),
             'promotion_id' => $request->get('promotion_id'),
             // 'sid' => $request->get('student'),
@@ -2514,6 +2643,7 @@ class ReceiptSchoolController extends Controller
                 'promotion_id' => 'nullable|exists:promotions,id',
                 'source' => 'nullable|string|max:255',
                 'referent_parent_id' => 'nullable|integer|exists:parent,id',
+                'referent_parent_name' => 'nullable|string|max:255',
                 'student_id' => 'required|array', // Validate that it's an array
                 'student_id.*' => 'required', // Validate each element in the array
 
@@ -2641,6 +2771,7 @@ class ReceiptSchoolController extends Controller
         // Ensure is_vat is captured as 0 or 1
         $update_data['is_vat'] = $request->get('is_vat', 1);
         $update_data['referent_parent_id'] = $this->ResolveReceiptReferentParentId($request);
+        $update_data['referent_parent_name'] = $this->ResolveReceiptReferentParentName($request);
         
         $Receipt_School->update($update_data);
         $Receipt_School_arry = $Receipt_School->toArray();

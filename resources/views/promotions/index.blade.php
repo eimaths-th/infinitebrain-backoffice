@@ -79,6 +79,11 @@
         <div class="main-card mb-3 card" id="x_content">
             <div class="card-body">
                 <h5 class="card-title">Promotion Tracking</h5>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                    <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
                 <table style="width: 100%;" id="Listview"
                     class="table table-striped table-hover table-bordered responsive-utilities jambo_table bulk_action">
                     <thead>
@@ -86,7 +91,7 @@
                             <th width="80px">ID</th>
                             <th>Name</th>
                             <th width="120px">Status</th>
-                            <th width="180px">Action</th>
+                            <th width="260px">Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -282,6 +287,7 @@
                                             <option value="NEW_STUDENT_FREE_ENTRANCE_GIFT">New student free entrance + gift</option>
                                             <option value="NEW_STUDENT_FREE_ENTRANCE">New student free entrance</option>
                                             <option value="NEW_STUDENT_GIFT">New student gift</option>
+                                            <option value="SPECIAL">Special</option>
                                         </select>
                                     </div>
                                 </div>
@@ -619,9 +625,16 @@
                 }
             }
 
+            function SyncSpecialCampaignRuleControls(campaignType) {
+                var isSpecialCampaign = campaignType === 'SPECIAL';
+                $('#AddCampaignRule').prop('disabled', isSpecialCampaign);
+                $('#AddCampaignRule').toggle(!isSpecialCampaign);
+            }
+
             function ApplyCampaignPreset(campaignType) {
                 $('#CampaignRules').html('');
                 $('#CampaignRewards').html('');
+                SyncSpecialCampaignRuleControls(campaignType);
 
                 if (campaignType === 'TWO_SUBJECTS') {
                     BuildCampaignRuleRow({
@@ -710,6 +723,11 @@
                             gift_name: 'กระเป๋านักเรียน 1 ใบ'
                         }
                     });
+                } else if (campaignType === 'SPECIAL') {
+                    BuildCampaignRewardRow({
+                        reward_type: 'PERCENT_DISCOUNT',
+                        discount_percent: 10
+                    });
                 } else {
                     BuildCampaignRuleRow();
                     BuildCampaignRewardRow();
@@ -734,31 +752,34 @@
             function BuildCampaignPayload() {
                 var campaignRules = [];
                 var campaignRewards = [];
+                var promotionType = $('#CampaignPromotionType').val();
 
-                $('.campaign-rule-row').each(function(index, row) {
-                    var ruleType = $(row).find('.campaign-rule-type').val();
-                    var campaignRule = {
-                        rule_type: ruleType
-                    };
+                if (promotionType !== 'SPECIAL') {
+                    $('.campaign-rule-row').each(function(index, row) {
+                        var ruleType = $(row).find('.campaign-rule-type').val();
+                        var campaignRule = {
+                            rule_type: ruleType
+                        };
 
-                    if (ruleType === 'SUBJECT_COMBINATION') {
-                        campaignRule.subject_groups = $(row).find('.campaign-rule-subject-groups').val();
-                    }
+                        if (ruleType === 'SUBJECT_COMBINATION') {
+                            campaignRule.subject_groups = $(row).find('.campaign-rule-subject-groups').val();
+                        }
 
-                    if (ruleType === 'MIN_COURSES') {
-                        campaignRule.minimum_courses = $(row).find('.campaign-rule-minimum-courses').val();
-                    }
+                        if (ruleType === 'MIN_COURSES') {
+                            campaignRule.minimum_courses = $(row).find('.campaign-rule-minimum-courses').val();
+                        }
 
-                    if (ruleType === 'MIN_MONTHS') {
-                        campaignRule.minimum_months = $(row).find('.campaign-rule-minimum-months').val();
-                    }
+                        if (ruleType === 'MIN_MONTHS') {
+                            campaignRule.minimum_months = $(row).find('.campaign-rule-minimum-months').val();
+                        }
 
-                    if (ruleType === 'EXACT_MONTHS') {
-                        campaignRule.exact_months = $(row).find('.campaign-rule-exact-months').val();
-                    }
+                        if (ruleType === 'EXACT_MONTHS') {
+                            campaignRule.exact_months = $(row).find('.campaign-rule-exact-months').val();
+                        }
 
-                    campaignRules.push(campaignRule);
-                });
+                        campaignRules.push(campaignRule);
+                    });
+                }
 
                 $('.campaign-reward-row').each(function(index, row) {
                     var rewardType = $(row).find('.campaign-reward-type').val();
@@ -774,7 +795,7 @@
                 return {
                     campaign_name: $('#CampaignName').val(),
                     linked_promotion_id: $('#CampaignLinkedPromotion').val(),
-                    promotion_type: $('#CampaignPromotionType').val(),
+                    promotion_type: promotionType,
                     campaign_is_active: $('#CampaignIsActive').val(),
                     priority: $('#CampaignPriority').val(),
                     campaign_rules: campaignRules,
@@ -799,6 +820,10 @@
             });
 
             $('#AddCampaignRule').click(function() {
+                if ($('#CampaignPromotionType').val() === 'SPECIAL') {
+                    return;
+                }
+
                 BuildCampaignRuleRow();
             });
 
@@ -910,6 +935,32 @@
                 });
             });
 
+            $(document).on('click', '.btn-delete-promotion', function(e) {
+                e.preventDefault();
+                ResetAlerts();
+
+                if (!confirm("Delete this promotion?")) {
+                    return;
+                }
+
+                var promotion_id = $(this).data('id');
+                $.ajax({
+                    url: "{{ url('promotions/destroy') }}/" + promotion_id,
+                    method: 'DELETE',
+                    success: function(result) {
+                        if (result.errors) {
+                            ShowErrors(result.errors);
+                            return;
+                        }
+
+                        toastr.success(result.success, {
+                            timeOut: 5000
+                        });
+                        $('#Listview').DataTable().ajax.reload();
+                    }
+                });
+            });
+
             $(document).on('click', '.btn-campaign-edit', function(e) {
                 e.preventDefault();
                 ResetCampaignForm();
@@ -936,9 +987,10 @@
                         $.each(campaign.campaign_rules || [], function(index, campaignRule) {
                             BuildCampaignRuleRow(campaignRule);
                         });
-                        if ((campaign.campaign_rules || []).length === 0) {
+                        if ((campaign.campaign_rules || []).length === 0 && campaign.promotion_type !== 'SPECIAL') {
                             BuildCampaignRuleRow();
                         }
+                        SyncSpecialCampaignRuleControls(campaign.promotion_type);
                         $.each(campaign.campaign_rewards || [], function(index, campaignReward) {
                             BuildCampaignRewardRow(campaignReward);
                         });

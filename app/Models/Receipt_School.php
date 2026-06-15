@@ -27,6 +27,7 @@ class Receipt_School extends Model
         'pid',
         'source',
         'referent_parent_id',
+        'referent_parent_name',
         'remark',
         'promotion_id',
         'approv_id',

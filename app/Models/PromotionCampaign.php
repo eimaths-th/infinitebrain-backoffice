@@ -15,6 +15,7 @@ class PromotionCampaign extends Model
     const TYPE_NEW_STUDENT_FREE_ENTRANCE_GIFT = 'NEW_STUDENT_FREE_ENTRANCE_GIFT';
     const TYPE_NEW_STUDENT_FREE_ENTRANCE = 'NEW_STUDENT_FREE_ENTRANCE';
     const TYPE_NEW_STUDENT_GIFT = 'NEW_STUDENT_GIFT';
+    const TYPE_SPECIAL = 'SPECIAL';
     const TYPE_CUSTOM = 'CUSTOM';
 
     protected $fillable = [

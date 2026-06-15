@@ -454,6 +454,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/promotions/edit/{id}', [PromotionController::class, 'Edit'])->name('promotions.edit');
     Route::put('/promotions/save/{id}', [PromotionController::class, 'Update'])->name('promotions.save');
     Route::put('/promotions/toggle-status/{id}', [PromotionController::class, 'ToggleStatus'])->name('promotions.toggle-status');
+    Route::delete('/promotions/destroy/{id}', [PromotionController::class, 'Destroy'])->name('promotions.destroy');
     Route::get('/campaigns', [PromotionController::class, 'CampaignsPage'])->name('campaigns');
     Route::get('/promotions/campaigns/list', [PromotionController::class, 'CampaignsIndex'])->name('promotions.campaigns');
     Route::post('/promotions/campaigns/store', [PromotionController::class, 'CampaignStore'])->name('promotions.campaigns.store');
