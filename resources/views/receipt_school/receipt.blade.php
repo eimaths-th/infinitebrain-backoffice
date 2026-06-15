@@ -986,6 +986,9 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                                <input type="text" class="form-control mt-2" id="AddReferentParentName"
+                                                    name="referent_parent_name"
+                                                    placeholder="หรือระบุชื่อผู้แนะนำที่ไม่มีในระบบ">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -1712,6 +1715,9 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                                <input type="text" class="form-control mt-2" id="EditReferentParentName"
+                                                    name="referent_parent_name"
+                                                    placeholder="หรือระบุชื่อผู้แนะนำที่ไม่มีในระบบ">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -2412,6 +2418,7 @@
                 var receiptItems = isCreate ? BuildCreateReceiptItems() : BuildEditReceiptItems();
                 var source = isCreate ? $('#AddSource').val() : $('#EditSource').val();
                 var referentParentId = isCreate ? $('#AddReferentParentId').val() : $('#EditReferentParentId').val();
+                var referentParentName = isCreate ? $('#AddReferentParentName').val() : $('#EditReferentParentName').val();
                 var promotionId = isCreate ? $('#AddPromotion').val() : $('#EditPromotion').val();
 
                 return {
@@ -2420,6 +2427,7 @@
                     name_parent: isCreate ? ($('#AddParent').val() ? $('#AddParent').val()[0] : null) : ($('#EditParent').val() ? $('#EditParent').val()[0] : null),
                     source: source,
                     referent_parent_id: referentParentId,
+                    referent_parent_name: referentParentName,
                     receipt_items: receiptItems,
                     submission_date: isCreate ? $('#AddSubmissiondate').val() : $('#EditSubmissiondate').val(),
                     entrance_fee_amount: SumEntranceFeeAmount(mode)
@@ -2449,12 +2457,14 @@
                 var sourceTarget = isCreate ? $('#AddSource') : $('#EditSource');
                 var referentWrapper = isCreate ? $('#AddReferentParentWrapper') : $('#EditReferentParentWrapper');
                 var referentTarget = isCreate ? $('#AddReferentParentId') : $('#EditReferentParentId');
+                var referentNameTarget = isCreate ? $('#AddReferentParentName') : $('#EditReferentParentName');
                 var shouldShow = sourceTarget.val() === 'คนรู้จักแนะนำ';
 
                 referentWrapper.toggle(shouldShow);
 
                 if (!shouldShow && shouldClear) {
                     referentTarget.val('');
+                    referentNameTarget.val('');
                 }
             }
 
@@ -2668,12 +2678,26 @@
 
             window.ScheduleCalculatedPromotionPreview = ScheduleCalculatedPromotionPreview;
 
-            $(document).on('change', '#AddPromotion, #AddReferentParentId, #CreateIsNewStudentPromotionContext, #AddSubmissiondate', function() {
+            $(document).on('change', '#AddPromotion, #AddReferentParentId, #AddReferentParentName, #CreateIsNewStudentPromotionContext, #AddSubmissiondate', function() {
                 window.ScheduleCalculatedPromotionPreview('create', false);
             });
 
-            $(document).on('change', '#EditPromotion, #EditReferentParentId, #EditIsNewStudentPromotionContext, #EditSubmissiondate', function() {
+            $(document).on('change', '#EditPromotion, #EditReferentParentId, #EditReferentParentName, #EditIsNewStudentPromotionContext, #EditSubmissiondate', function() {
                 window.ScheduleCalculatedPromotionPreview('edit', true);
+            });
+
+            // เลือกจาก dropdown แล้วเคลียร์ช่องกรอกชื่อ และในทางกลับกัน เพื่อไม่ให้ใช้ทั้งสองพร้อมกัน
+            $(document).on('change', '#AddReferentParentId', function() {
+                if ($(this).val()) $('#AddReferentParentName').val('');
+            });
+            $(document).on('input', '#AddReferentParentName', function() {
+                if ($(this).val().trim() !== '') $('#AddReferentParentId').val('');
+            });
+            $(document).on('change', '#EditReferentParentId', function() {
+                if ($(this).val()) $('#EditReferentParentName').val('');
+            });
+            $(document).on('input', '#EditReferentParentName', function() {
+                if ($(this).val().trim() !== '') $('#EditReferentParentId').val('');
             });
 
             $(document).on('change', '#AddSource', function() {
@@ -2997,6 +3021,7 @@
                         $('#EditPromotion').html(res.promotion_options);
                         $('#EditSource').val(res.data.source);
                         $('#EditReferentParentId').val(res.data.referent_parent_id);
+                        $('#EditReferentParentName').val(res.data.referent_parent_name || '');
                         SyncReferentParentVisibility('edit', false);
                         $('#EditRemark').val(res.data.remark);
                         //$('#EditPackage').val(res.data.package);
@@ -3714,6 +3739,7 @@
                         mobile: $('#AddMobile').val(),
                         source: $('#AddSource').val(),
                         referent_parent_id: $('#AddReferentParentId').val(),
+                        referent_parent_name: $('#AddReferentParentName').val(),
                         remark: $('#AddRemark').val(),
                         promotion_id: $('#AddPromotion').val(),
                         calculated_promotion_campaign_ids: GetSelectedCalculatedPromotionIds('create'),
@@ -3908,6 +3934,7 @@
                     mobile: $('#EditMobile').val(),
                     source: $('#EditSource').val(),
                     referent_parent_id: $('#EditReferentParentId').val(),
+                    referent_parent_name: $('#EditReferentParentName').val(),
                     remark: $('#EditRemark').val(),
                     promotion_id: $('#EditPromotion').val(),
                     is_vat: $('#EditIsVat').is(':checked') ? 1 : 0,
