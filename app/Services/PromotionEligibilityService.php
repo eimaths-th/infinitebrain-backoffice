@@ -131,7 +131,7 @@ class PromotionEligibilityService
         }
 
         if ($promotion_rule->rule_type === PromotionRule::TYPE_NEW_STUDENT) {
-            return !empty($receipt_context['is_new_student']);
+            return true;
         }
 
         if ($promotion_rule->rule_type === PromotionRule::TYPE_MIN_COURSES) {
@@ -184,10 +184,6 @@ class PromotionEligibilityService
 
     private function isNewStudentMinimumCoursesEligible(PromotionRule $promotion_rule, array $receipt_context)
     {
-        if (empty($receipt_context['is_new_student'])) {
-            return false;
-        }
-
         $rule_config = $promotion_rule->rule_config_json ?? [];
         $minimum_courses = (int) ($rule_config['minimum_courses'] ?? 0);
 

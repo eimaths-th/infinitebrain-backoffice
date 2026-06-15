@@ -781,10 +781,6 @@ class ReceiptSchoolController extends Controller
             return ['selected' => []];
         }
 
-        if (count($campaign_ids) > 1) {
-            return ['errors' => ['เลือกได้เพียง 1 Campaign ต่อใบเสร็จ']];
-        }
-
         $campaigns = PromotionCampaign::with(['rules', 'rewards', 'branchEligibilities'])
             ->whereIn('id', $campaign_ids)
             ->get()

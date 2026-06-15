@@ -58,7 +58,8 @@ changes.
 - Global Campaigns are eligible for any selected Promotion if their rules pass.
 - Linked Campaigns are eligible only when their `promotion_id` matches the
   selected receipt `promotion_id`.
-- Only one Campaign may be selected per receipt in the current system.
+- Multiple Campaigns may be selected per receipt when their reward categories do
+  not overlap.
 - The backend validates the selected Campaign again during create/update.
 - A Campaign may contain multiple rewards, such as cash discount plus free
   entrance fee plus gift.
@@ -66,17 +67,18 @@ changes.
 - Promotion and non-promotion subjects cannot be mixed in one school receipt.
 - Campaign expected-vs-actual mismatch warns and audits, but does not block save.
 
-## New Student Definition for Campaigns
+## New Student Context for Campaigns
 
-Campaign `นักเรียนใหม่` is calculated per subject group, not globally per
-student.
+The backend still calculates the `นักเรียนใหม่` context per subject group, not
+globally per student. This context is shown to staff as supporting information.
+It no longer blocks Campaign eligibility by itself.
 
 For each course receipt line where `course_type = 1`, the system checks the pair:
 
 - `student_id`
 - `subject_group`
 
-A receipt is considered new-student eligible only when every course line in the
+A receipt is marked as new-student context only when every course line in the
 receipt has no previous `school_price` record for the same
 `student_id + subject_group`, excluding the current receipt during edit.
 
@@ -86,8 +88,8 @@ Examples:
   new for English.
 - A student who already studied Math before is not new for a Math Campaign.
 - If a receipt mixes one new subject and one old subject, the receipt-level
-  Campaign `is_new_student` context is false, so new-student Campaigns do not
-  appear for that receipt.
+  Campaign `is_new_student` context is false, but staff may still select
+  Campaigns that use the legacy new-student preset when the other rules pass.
 - If a course line is incomplete and has no student or subject group yet, the
   receipt is not treated as new-student eligible.
 
@@ -178,7 +180,8 @@ Rule behavior:
 - All rules on a Campaign must pass.
 - Subject rules use `receipt_items[].subject_group`.
 - Month rules use normalized `receipt_items[].month_count`.
-- New-student rules use the receipt context `is_new_student`.
+- New-student rules are treated as staff-selectable presets and do not block
+  eligibility by `is_new_student`.
 - Referral rules use the receipt context `has_referral`.
 
 ### `promotion_rewards`
@@ -299,7 +302,7 @@ Month count:
    - all configured rules
 6. `PromotionRewardCalculator` calculates reward results.
 7. Frontend renders eligible Campaign options.
-8. Staff selects one Campaign.
+8. Staff selects one or more Campaigns.
 9. Store/update validates the selected Campaign again using latest request data.
 10. `ReceiptPromotionUsageService` replaces the usage snapshot after receipt
     save.
@@ -465,15 +468,16 @@ Campaign panel behavior:
 - Shows current context flags, including `นักเรียนใหม่`.
 - `นักเรียนใหม่` is read-only and calculated by the backend.
 - Shows eligible Campaign options.
-- Allows staff to select one Campaign.
+- Allows staff to select multiple Campaigns.
+- Prevents selecting multiple Campaigns that share the same reward category,
+  such as two cash-discount Campaigns.
 - Clears selected Campaign if the receipt context changes and the Campaign is no
   longer eligible.
 - On edit, existing Campaign usage is kept unless staff touches/replaces
   Campaign selection.
 
-Campaign panel text should make clear:
-
-> นักเรียนใหม่คำนวณแยกตามวิชา
+Campaign panel text should make clear that staff may choose multiple eligible
+Campaigns.
 
 ## API Contract
 
@@ -523,7 +527,7 @@ During store/update:
 - Revalidate selected Campaign.
 - Reject unknown, inactive, date-invalid, branch-invalid, or rule-invalid
   Campaigns.
-- Reject more than one selected Campaign.
+- Reject selected Campaign combinations that share the same reward category.
 - Apply special policy for `NEW_STUDENT_GIFT`: the one-month new-student gift
   Campaign requires entrance fee amount 535.
 - Save receipt and line items.
@@ -539,7 +543,7 @@ The current Campaign system does not include:
 - Applying Campaigns outside `receipt_school`.
 - Deleting Promotion records as normal workflow.
 - Recomputing historical receipt Campaign amounts after Campaign setup changes.
-- Combining multiple Campaigns on one receipt.
+- Combining Campaigns that share the same reward category on one receipt.
 
 ## Current Test Coverage
 
@@ -553,7 +557,7 @@ Important tested behaviors:
 
 - linked Promotion Campaign eligibility
 - global Campaign eligibility
-- new-student rule eligibility from `is_new_student`
+- new-student preset eligibility for existing and new students
 - exact/min month rules
 - subject combination rules
 - referral rules
@@ -566,7 +570,8 @@ Important tested behaviors:
 - Create receipt with package Promotion and mixed course months; verify per-line
   cash discount follows each line's own month.
 - Create receipt for a student who is new to English but old to Math; verify
-  new-student Campaign only appears when all course lines are new by subject.
+  Campaigns using the legacy new-student preset can still appear when the other
+  rules pass.
 - Create receipt with old subject history; verify `นักเรียนใหม่` is unchecked.
 - Change Promotion; verify Campaign list recalculates.
 - Change receipt item month count; verify Campaign list and reward amount
