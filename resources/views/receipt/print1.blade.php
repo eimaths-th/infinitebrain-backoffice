@@ -187,25 +187,12 @@
                             @foreach ($receipt_detail_arr as $receipt_detail)
                                 @if ($receipt_detail['course_type'] == 1)
                                     @php
-                                        $startDate = new DateTime('2024-02-07');
-                                        $currentDate = new DateTime($data->submission_date); //2024-02-08
-                                        $checkDate = $currentDate > $startDate;
-                                        $unitBook = $receipt_detail['bookprice'] / $receipt_detail['book'];
-                                    @endphp
-                                    @php
-                                        $startDate = new DateTime('2024-02-07');
-                                        $currentDate = new DateTime($data->submission_date); //2024-02-08
-                                        $checkDate = $currentDate > $startDate;
-
-                                        $bookPrice = (float) $receipt_detail['bookprice'];
-                                        $bookQuantity = (int) $receipt_detail['book'];
-                                        // $bookQuantity = (int) $receipt_detail['book'];
-                                        $unitpriceQuantity = (int) str_replace(',', '', $receipt_detail['unitprice']);
-                                        // dd($unitpriceQuantity,$receipt_detail['unitprice']);
-
-                                        $unitBook = $bookPrice / $bookQuantity;
-                                        $unitpriceBook = $unitpriceQuantity + $unitBook;
-                                        // dd($unitpriceQuantity,$receipt_detail['unitprice'],$unitpriceBook,$unitBook,$receipt_detail['price']);
+                                        $receipt_detail_quantity = (float) str_replace(',', '', $receipt_detail['quantity']);
+                                        $receipt_detail_quantity = $receipt_detail_quantity > 0 ? $receipt_detail_quantity : 1;
+                                        $receipt_detail_discount = (float) str_replace(',', '', $receipt_detail['discount']);
+                                        $receipt_detail_amount = (float) str_replace(',', '', $receipt_detail['price'])
+                                            + (float) str_replace(',', '', $receipt_detail['bookprice']);
+                                        $receipt_detail_unitprice = ($receipt_detail_amount + $receipt_detail_discount) / $receipt_detail_quantity;
                                     @endphp
                                     <tr>
                                         <td align="center" style="vertical-align: top;">{{ $receipt_detail['no'] }}
@@ -214,10 +201,10 @@
                                         <td align="center"> {{ $receipt_detail['period'] }}</td>
                                         <td align="center">{{ $receipt_detail['quantity'] }}</td>
                                         <td align="center">{{ $receipt_detail['unit'] }}</td>
-                                        <td align="center">{{ number_format($unitpriceBook, 2) }}</td>
+                                        <td align="center">{{ number_format($receipt_detail_unitprice, 2) }}</td>
                                         <td align="center">{{ $receipt_detail['discount'] }}</td>
                                         <td align="center" style="vertical-align: top;">
-                                            {{ number_format($unitpriceBook, 2) }}</td>
+                                            {{ number_format($receipt_detail_amount, 2) }}</td>
                                     </tr>
 
                                     @if ($receipt_detail['entrance_fee'] > 0)
