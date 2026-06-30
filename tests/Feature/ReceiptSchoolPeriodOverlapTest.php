@@ -10,6 +10,7 @@ use App\Services\StatusService;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Mockery;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Tests\TestCase;
 
 class ReceiptSchoolPeriodOverlapTest extends TestCase
@@ -17,6 +18,10 @@ class ReceiptSchoolPeriodOverlapTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        if (!extension_loaded('pdo_sqlite')) {
+            $this->markTestSkipped('pdo_sqlite extension is required for in-memory database tests.');
+        }
 
         config([
             'database.default' => 'sqlite',
@@ -42,10 +47,25 @@ class ReceiptSchoolPeriodOverlapTest extends TestCase
             $table->increments('id');
             $table->string('title')->nullable();
         });
+
+        Schema::create('receipt_school', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('payment_type')->nullable();
+            $table->integer('type')->nullable();
+            $table->string('receipt_number')->nullable();
+            $table->string('pid')->nullable();
+            $table->integer('name_parent')->nullable();
+            $table->string('file_att')->nullable();
+            $table->integer('is_vat')->nullable();
+            $table->date('submission_date')->nullable();
+            $table->integer('course_type')->nullable();
+            $table->timestamps();
+        });
     }
 
     protected function tearDown(): void
     {
+        Schema::dropIfExists('receipt_school');
         Schema::dropIfExists('subjects');
         Schema::dropIfExists('students');
         Schema::dropIfExists('school_price');
@@ -94,17 +114,30 @@ class ReceiptSchoolPeriodOverlapTest extends TestCase
         $this->assertSame('2026-06 - 2026-06', $overlap['existing_period']);
     }
 
+    /** @test */
+    public function ShowReturns404WhenReceiptSchoolDoesNotExist()
+    {
+        $this->expectException(NotFoundHttpException::class);
+
+        $this->MakeController()->show('view', 999999);
+    }
+
     private function InvokeCheckPeriodOverlap($student_id, $subject_id, $period)
     {
-        $controller = new ReceiptSchoolController(
-            Mockery::mock(StatusService::class),
-            Mockery::mock(PromotionEligibilityService::class),
-            Mockery::mock(ReceiptPromotionUsageService::class)
-        );
+        $controller = $this->MakeController();
 
         $method = new \ReflectionMethod($controller, 'CheckPeriodOverlap');
         $method->setAccessible(true);
 
         return $method->invoke($controller, $student_id, $subject_id, $period);
+    }
+
+    private function MakeController()
+    {
+        return new ReceiptSchoolController(
+            Mockery::mock(StatusService::class),
+            Mockery::mock(PromotionEligibilityService::class),
+            Mockery::mock(ReceiptPromotionUsageService::class)
+        );
     }
 }
