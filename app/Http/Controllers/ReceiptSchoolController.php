@@ -1587,7 +1587,9 @@ class ReceiptSchoolController extends Controller
         // dd($url);
         $data = Receipt_School::find($id);
 
-
+        if (!$data) {
+            abort(404, 'ไม่พบข้อมูลใบเสร็จ');
+        }
 
         $dataDate = date('Y-m-d', strtotime($data->created_at));
         $fixDate = date('Y-m-d', strtotime('2024-09-09'));
@@ -1641,6 +1643,7 @@ class ReceiptSchoolController extends Controller
         $booksum = 0;
         $pricesub = 0;
         $discount = 0;
+        $booktotal = (object)['book_price' => 0];
 
         $test = [];
         // dd($receipts_detail);
@@ -1813,16 +1816,21 @@ class ReceiptSchoolController extends Controller
         $stu = explode('|', $data->pid);
         if ($data->pid != "") {
             foreach ($stu as $stus) {
-                $stus = Student::where('id', $stus)->get();
-                $student .= $stus[0]->nick_name . "/";
-                $student_code .= $stus[0]->code . "-";
+                $student_record = Student::find($stus);
+
+                if (!$student_record) {
+                    continue;
+                }
+
+                $student .= $student_record->nick_name . "/";
+                $student_code .= $student_record->code . "-";
             }
             $student = rtrim($student, "/");
             $student_code = rtrim($student_code, "-");
         }
 
 
-        $data2 = ParentRegister::find($data->name_parent);
+        $data2 = ParentRegister::find($data->name_parent) ?: (object)['name_parent' => ''];
         $html = "";
         $pic = explode('|', $data->file_att);
 
