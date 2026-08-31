@@ -172,7 +172,7 @@
                                             data-no="{{ $voucher->voucher_no }}"
                                             data-date="{{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}"
                                             data-payee="{{ $voucher->pay_to }}"
-                                            data-amount="{{ $voucher->total_amount }}">
+                                            data-amount="{{ $voucher->net_amount }}">
                                     </td>
                                     <td>{{ $vouchers->firstItem() + $index }}</td>
                                     <td>
@@ -183,7 +183,7 @@
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($voucher->voucher_date)->format('d/m/Y') }}</td>
                                     <td>{{ $voucher->pay_to }}</td>
-                                    <td class="text-end">{{ number_format($voucher->total_amount, 2) }}</td>
+                                    <td class="text-end">{{ number_format($voucher->net_amount, 2) }}</td>
                                     <td>{{ $voucher->created_by_name }}</td>
                                     <td>
                                         <a href="{{ route('payment-voucher.show', $voucher->id) }}"
@@ -213,7 +213,7 @@
                                                     <p><strong>เลขที่:</strong> {{ $voucher->voucher_no }}</p>
                                                     <p><strong>จ่ายให้:</strong> {{ $voucher->pay_to }}</p>
                                                     <p><strong>จำนวนเงิน:</strong>
-                                                        {{ number_format($voucher->total_amount, 2) }} บาท</p>
+                                                        {{ number_format($voucher->net_amount, 2) }} บาท</p>
                                                     <p><strong>ผู้สร้าง:</strong> {{ $voucher->created_by_name }}</p>
                                                     <div class="mb-3">
                                                         <label class="form-label">หมายเหตุ (ถ้ามี)</label>
